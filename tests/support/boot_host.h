@@ -39,6 +39,7 @@ static inline bool restore_position(int32_t (*position)[N_AXIS])
 }
 static const char *boot_startup_program = "";
 static void (*boot_during_setup)(settings_t *settings);
+static void (*boot_during_init)(void);
 static uint8_t boot_spindle_reference;
 static bool setup(settings_t *s) { CHECK(s == &settings); boot_setup_calls++; if(boot_during_setup) boot_during_setup(s); return boot_setup_success; }
 static bool release_driver(void) { boot_release_calls++; return false; }
@@ -122,5 +123,6 @@ bool __wrap_driver_init(void)
     CHECK(strlen(boot_startup_program) < sizeof(startup));
     strcpy(startup, boot_startup_program);
     settings_write_startup_line(0, startup);
+    if(boot_during_init) boot_during_init();
     return boot_init_success;
 }
