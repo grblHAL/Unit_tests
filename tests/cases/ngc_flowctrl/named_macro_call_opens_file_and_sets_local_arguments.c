@@ -1,11 +1,11 @@
-#include "support/flow_named_macro_host.h"
+#include "support/flow_static_macro_host.h"
 #include "check.h"
 
 int main(void)
 {
-    prepare_named_macro();
+    prepare_static_macro();
     CHECK(ngc_param_set(1, 99));
-    CHECK(flow_command(named_macro_label, "CALL[12][34]") == Status_OK);
+    CHECK(flow_command(static_macro_label, "CALL[12][34]") == Status_OK);
     CHECK(hal.stream.file != NULL);
     CHECK(ngc_call_level() == 1);
     float value;

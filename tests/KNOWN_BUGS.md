@@ -84,23 +84,19 @@ removal policy as the ASCII test above.
 handle (`core/fs_ram.c:174`). It then reads `file->status.update` at `vfs.c:367`.
 Confirmed by native Clang AddressSanitizer with `fs_ram.close_lifetime`.
 
-**Additional reproductions confirmed:** 2026-10-10. Embedded-file close also frees
-the handle at `core/fs_embedded.c:86`. Named macros hit the same VFS read during
-[call cleanup](cases/ngc_flowctrl/named_macro_call_opens_file_and_sets_local_arguments.c),
-[EOF cleanup](cases/ngc_flowctrl/named_macro_eof_restores_caller_stream_and_parameter_scope.c),
-and [explicit return](cases/ngc_flowctrl/named_macro_return_closes_file_and_restores_caller_scope.c).
-Remove their [additional exceptions](known_bugs.cmake#L168) and replace their
-`vfs_lifetime_regression.py` registrations in `CMakeLists.txt` with direct tests when fixed.
-These fixtures install a filesystem-change callback so GCC also evaluates
-the stale handle read; otherwise GCC can skip it while Clang still reports it.
-The matcher accepts only the documented VFS heap-use-after-free; unrelated failures
-or a fix fail the regression instead of being silently accepted.
+**Additional reproduction confirmed:** 2026-10-10. Embedded-file close also frees
+the handle at `core/fs_embedded.c:86`. [Named macro return](cases/ngc_flowctrl/named_macro_return_closes_file_and_restores_caller_scope.c)
+reproduces this on Clang; GCC instead reaches the separately documented freed
+subroutine callback at `ngc_flowctrl.c:316`. Its strict
+[named-macro matcher](../scripts/named_macro_cleanup_regression.py) accepts only
+those two exact lifetime defects on this cleanup path.
+Remove its additional exception in `known_bugs.cmake` and replace the wrapper
+registration in `CMakeLists.txt` with a direct test when both defects are fixed.
 
-This regression uses a diagnostic matcher: only a heap-use-after-free summary at
-`core/vfs.c:367` or the following notification access at line 368 counts as the
-expected defect. The regression mounts RAM visibly and installs a notification
-callback so both invalid accesses are exercised. An unrelated crash or unexpected
-success fails CI. Without sanitizers this case is skipped, not counted as passed.
+The ordinary passing [call/EOF cleanup](cases/ngc_flowctrl/named_macro_call_opens_file_and_sets_local_arguments.c)
+and [EOF restoration](cases/ngc_flowctrl/named_macro_eof_restores_caller_stream_and_parameter_scope.c)
+tests use a static file backend to verify stream and parameter restoration
+independently of the defects caused by freeing file or subroutine records.
 
 ## Read-only named parameter assignment
 
