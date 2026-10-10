@@ -38,7 +38,9 @@ static inline bool restore_position(int32_t (*position)[N_AXIS])
     return true;
 }
 static const char *boot_startup_program = "";
-static bool setup(settings_t *s) { CHECK(s == &settings); boot_setup_calls++; return boot_setup_success; }
+static void (*boot_during_setup)(settings_t *settings);
+static uint8_t boot_spindle_reference;
+static bool setup(settings_t *s) { CHECK(s == &settings); boot_setup_calls++; if(boot_during_setup) boot_during_setup(s); return boot_setup_success; }
 static bool release_driver(void) { boot_release_calls++; return false; }
 static control_signals_t controls(void) { return boot_control_signals; }
 static limit_signals_t limits(void) { return boot_limit_signals; }
@@ -98,6 +100,7 @@ bool __wrap_driver_init(void)
     hal.coolant.set_state = coolant_set; hal.coolant.get_state = coolant_get;
     hal.stream.read = read_char; hal.stream.reset_read_buffer = reset_read; hal.stream.get_tx_buffer_count = count;
     hal.stream.get_rx_buffer_free = count; hal.stream.is_connected = connected; hal.stream.write_char = write_char;
+    settings.spindle.ref_id = boot_spindle_reference;
     settings.flags.force_initialization_alarm = boot_force_alarm;
     settings.flags.sleep_enable = boot_sleep_enabled;
     settings.steppers.idle_lock_time = boot_idle_lock_time;
