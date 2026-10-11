@@ -196,3 +196,7 @@ endif()
 if(TEST ngc_flowctrl.error_expression_errors_are_reported)
   set_tests_properties(ngc_flowctrl.error_expression_errors_are_reported PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+if(TEST feature_compile.legacy_compatibility_level_2_reporting)
+  set_tests_properties(feature_compile.legacy_compatibility_level_2_reporting PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

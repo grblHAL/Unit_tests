@@ -653,3 +653,23 @@ checking the flow-control command. The correct expectation remains status 72.
 **Remove exceptions when fixed:** [CMake registrations](known_bugs.cmake#L192).
 These ordinary assertion regressions need no sanitizer wrapper. Keep both tests
 and remove their `WILL_FAIL` and `known_bug` properties when errors propagate.
+
+## Legacy compatibility reporting does not compile
+
+**Marked known:** 2026-10-11
+
+`COMPATIBILITY_LEVEL=2` removes the extended G59.1-G59.3 coordinate-system
+enums from `core/gcode.h:194-196`. The tool-reference position report still
+uses `CoordinateSystem_G59_3` unconditionally at `core/report.c:718`, so
+compilation fails with an undeclared-identifier diagnostic. The feature cannot
+be exercised as a linked firmware build until the report handles coordinate
+systems available at the selected compatibility level.
+
+**Regression:** [compile case](compile/report_compatibility.c). The
+[diagnostic matcher](../scripts/report_compatibility_compile_regression.py)
+first requires the same source to compile at level 1, then accepts only the
+missing `CoordinateSystem_G59_3` error at `core/report.c:718`. Fixed builds
+and unrelated errors fail classification and require review.
+
+**Remove exceptions when fixed:**
+- Level 2: [CMake exception](known_bugs.cmake#L200) for `feature_compile.legacy_compatibility_level_2_reporting`.
