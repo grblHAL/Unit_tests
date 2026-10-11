@@ -9,11 +9,12 @@ static void settings_changed(settings_t *current, settings_changed_flags_t chang
     CHECK(current == &settings);
     (void)changed;
 }
-static inline void prepare_delta(void)
+static inline void prepare_delta_with_callbacks(void (*configure)(void))
 {
     engine_prepare();
     hal.nvs.type = NVS_EEPROM;
     grbl.on_settings_changed = settings_changed;
+    if(configure) configure();
     delta_robot_init();
     setting_details_t *details = NULL;
     CHECK(setting_get_details(Setting_Kinematics0, &details) != NULL);
@@ -22,3 +23,5 @@ static inline void prepare_delta(void)
     details->load();
     details->on_changed(&settings, (settings_changed_flags_t){0});
 }
+
+static inline void prepare_delta(void) { prepare_delta_with_callbacks(NULL); }
