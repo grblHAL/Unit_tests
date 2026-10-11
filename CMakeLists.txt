@@ -163,6 +163,10 @@ function(add_core_test name module source)
     OR name STREQUAL "report.setting_group_fallback_lists_available_groups")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=calloc)
   endif()
+  if(name STREQUAL "report.pins_report_survives_sort_allocation_failure"
+    OR name STREQUAL "report.uart_report_survives_sort_allocation_failure")
+    target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc)
+  endif()
   if(name STREQUAL "fs_ram.close_lifetime")
     find_package(Python3 REQUIRED COMPONENTS Interpreter)
     add_test(NAME ${name} COMMAND ${Python3_EXECUTABLE}
