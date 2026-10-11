@@ -77,12 +77,15 @@ and add `--gcov-executable "C:/path/to/llvm-mingw/bin/llvm-cov.exe gcov"` to gco
 Open `coverage.html` to inspect uncovered lines and branches. For a fresh measurement,
 use a new build directory so old execution counts cannot carry over.
 
-The host variants currently exercise the default configuration, NGC expressions,
+The host variants currently exercise the default configuration, legacy protocol
+compatibility level 1, NGC expressions,
 CoreXY, polar, wall-plotter, delta and five-axis RTCP kinematics, backlash
 compensation, four-axis asymmetric ganging with and without auto-squaring,
 the eight-axis maximum, six-axis UVW remapping, and three registered spindles
 with two active spindle slots, optional spindle PWM linearization, and enabled PID logging. All variants run in one
-CTest suite; coverage merges their executed source lines. The `separate` function
+CTest suite; coverage merges their executed source lines. Compatibility levels
+2 and 10 currently have linked compile regressions in [Known core defects](tests/KNOWN_BUGS.md#legacy-compatibility-reporting-does-not-compile) because the pinned
+core cannot compile their coordinate report. The `separate` function
 merge mode retains functions compiled at different locations under feature guards. Other feature combinations
 still need tests. A green suite or a covered module does not establish full coverage;
 use the source-by-source coverage table to choose the next behavior to test.

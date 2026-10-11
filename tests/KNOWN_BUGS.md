@@ -672,6 +672,7 @@ missing `CoordinateSystem_G59_3` error at `core/report.c:718`. Fixed builds
 and unrelated errors fail classification and require review.
 
 **Remove exceptions when fixed:**
+
 - Level 2: [CMake exception](known_bugs.cmake#L200) for `feature_compile.legacy_compatibility_level_2_reporting`.
 - Level 10: [CMake exception](known_bugs.cmake#L204) for `feature_compile.legacy_compatibility_level_10_reporting`.
 
