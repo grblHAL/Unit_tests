@@ -234,5 +234,10 @@ if(NOT MSVC)
     ${CMAKE_C_COMPILER} ${CMAKE_CURRENT_SOURCE_DIR}/core
     ${CMAKE_CURRENT_SOURCE_DIR}/tests/compile/report_compatibility.c 2)
   set_tests_properties(feature_compile.legacy_compatibility_level_2_reporting PROPERTIES TIMEOUT 15)
+  add_test(NAME feature_compile.legacy_compatibility_level_10_reporting
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/scripts/report_compatibility_compile_regression.py
+    ${CMAKE_C_COMPILER} ${CMAKE_CURRENT_SOURCE_DIR}/core
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/compile/report_compatibility.c 10)
+  set_tests_properties(feature_compile.legacy_compatibility_level_10_reporting PROPERTIES TIMEOUT 15)
 endif()
 include(tests/known_bugs.cmake)

@@ -658,7 +658,7 @@ and remove their `WILL_FAIL` and `known_bug` properties when errors propagate.
 
 **Marked known:** 2026-10-11
 
-`COMPATIBILITY_LEVEL=2` removes the extended G59.1-G59.3 coordinate-system
+`COMPATIBILITY_LEVEL=2` and `COMPATIBILITY_LEVEL=10` remove the extended G59.1-G59.3 coordinate-system
 enums from `core/gcode.h:194-196`. The tool-reference position report still
 uses `CoordinateSystem_G59_3` unconditionally at `core/report.c:718`, so
 compilation fails with an undeclared-identifier diagnostic. The feature cannot
@@ -673,3 +673,8 @@ and unrelated errors fail classification and require review.
 
 **Remove exceptions when fixed:**
 - Level 2: [CMake exception](known_bugs.cmake#L200) for `feature_compile.legacy_compatibility_level_2_reporting`.
+- Level 10: [CMake exception](known_bugs.cmake#L204) for `feature_compile.legacy_compatibility_level_10_reporting`.
+
+Remove the matcher and special compile commands in [CMakeLists.txt](../CMakeLists.txt),
+and replace these compile regressions with ordinary runtime tests for the
+working compatibility configurations.
