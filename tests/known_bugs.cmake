@@ -204,3 +204,15 @@ endif()
 if(TEST feature_compile.legacy_compatibility_level_10_reporting)
   set_tests_properties(feature_compile.legacy_compatibility_level_10_reporting PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+if(TEST gcode.dynamic_laser_cutting_move_uses_rate_adjusted_power)
+  set_tests_properties(gcode.dynamic_laser_cutting_move_uses_rate_adjusted_power PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+if(TEST gcode.switching_dynamic_to_constant_laser_disables_rate_adjustment_in_same_move)
+  set_tests_properties(gcode.switching_dynamic_to_constant_laser_disables_rate_adjustment_in_same_move PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+if(TEST gcode.laser_check_mode_speed_change_does_not_call_driver)
+  set_tests_properties(gcode.laser_check_mode_speed_change_does_not_call_driver PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

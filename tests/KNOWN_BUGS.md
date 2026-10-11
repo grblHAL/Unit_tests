@@ -736,3 +736,50 @@ They match only the named getter/type diagnostic at the public callback test's
 line 10 and `core/report.c:673`; unrelated diagnostics still fail the run.
 Keep both functional tests. GCC does not detect this function-signature
 violation with the current sanitizer configuration.
+
+## Laser power adjustment uses the previous spindle mode on M3/M4 transitions
+
+**Marked known:** 2026-10-11
+
+In laser mode, `G1X10F100M4S500` should plan dynamically adjusted laser power
+for that move. Instead, the block's `is_rpm_rate_adjusted` flag is false.
+Conversely, `M4S500` followed by `G1X10F100M3` leaves that move dynamically
+adjusted even though it explicitly selects constant power.
+
+[core/gcode.c:4076](../core/gcode.c#L4076) calculates the flag from
+`sspindle->state.ccw`, which still represents the previous spindle mode.
+The requested block state is applied later at
+[core/gcode.c:4297](../core/gcode.c#L4297), and the stale adjustment flag is
+copied into the plan at [core/gcode.c:4400](../core/gcode.c#L4400).
+Determine laser adjustment from the spindle mode requested for the current
+block. Separate `M4` followed by a cutting block passes as a control.
+
+**Regressions and removable exceptions:**
+
+- [dynamic_laser_cutting_move_uses_rate_adjusted_power](cases/gcode/dynamic_laser_cutting_move_uses_rate_adjusted_power.c): [CMake exception](known_bugs.cmake#L209).
+- [switching_dynamic_to_constant_laser_disables_rate_adjustment_in_same_move](cases/gcode/switching_dynamic_to_constant_laser_disables_rate_adjustment_in_same_move.c): [CMake exception](known_bugs.cmake#L213).
+
+Keep both correct planner expectations and remove their linked `WILL_FAIL`
+blocks when the core fix makes them pass normally.
+
+## Spindle speed updates call the laser driver during check mode
+
+**Marked known:** 2026-10-11
+
+In check mode, `M3S500` correctly updates the parser without calling the
+registered PWM laser driver. A following speed-only `S250` block calls the
+driver with the spindle enabled and power 250. Check mode should update
+parser state without issuing hardware output commands.
+
+[core/gcode.c:4118-4121](../core/gcode.c#L4118) synchronizes and calls
+`spindle_set_state` directly when the speed changes without motion. This
+path does not check `check_mode`. In contrast, the synchronized spindle-state
+path suppresses driver output in
+[core/spindle_control.c:777](../core/spindle_control.c#L777).
+Guard this speed-update hardware call in check mode while retaining the
+correct parsed spindle speed.
+
+**Regression:** [laser_check_mode_speed_change_does_not_call_driver](cases/gcode/laser_check_mode_speed_change_does_not_call_driver.c).
+
+**Remove exception when fixed:** remove its [CMake exception](known_bugs.cmake#L217),
+keeping the expected speed of 250 and zero driver calls.
