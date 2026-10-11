@@ -81,7 +81,7 @@ The host variants currently exercise the default configuration, NGC expressions,
 CoreXY, polar, wall-plotter, delta and five-axis RTCP kinematics, backlash
 compensation, four-axis asymmetric ganging with and without auto-squaring,
 the eight-axis maximum, six-axis UVW remapping, and three registered spindles
-with two active spindle slots, plus optional spindle PWM linearization. All variants run in one
+with two active spindle slots, optional spindle PWM linearization, and enabled PID logging. All variants run in one
 CTest suite; coverage merges their executed source lines. The `separate` function
 merge mode retains functions compiled at different locations under feature guards. Other feature combinations
 still need tests. A green suite or a covered module does not establish full coverage;
