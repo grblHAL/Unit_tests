@@ -318,8 +318,14 @@ the listing with the active spindle, as confirmed by the ordinary passing
 [machine listing](cases/multi_spindle/machine_listing_reports_secondary_with_registered_slot_setting.c)
 and [human listing](cases/multi_spindle/human_listing_reports_secondary_with_registered_slot_setting.c) tests.
 
-The test registers all three spindles before `gc_init()`, with two available
-active slots, so late spindle registration does not cause this reproduction. It verifies
+The direct-API test registers all three spindles before `gc_init()`, with two
+available active slots. It bypasses `grbl_enter()`, so that timing alone does not
+validate the board startup contract. A separate ordinary passing
+[full startup test](cases/boot_multi_spindle/setup_enabled_secondary_is_reported_with_registered_slot_settings.c)
+registers the primary during `driver_init()` and the secondary during
+`hal.driver_setup()`, before the sanity checks in `core/grbllib.c:385`.
+With the secondary slot setting registered, both enabled spindles are listed
+correctly after real startup. The direct-API regression verifies
 that `spindle_enable(1)` returns slot 1, `spindle_is_enabled(1)` is true, and
 `spindle_get(1)->id` is 1 before checking the report.
 `spindle_get_num()` in `core/spindle_control.c:338-355` reads setting values
