@@ -17,5 +17,23 @@
     ],
     "message_pattern": "call to function get_axis_mask through pointer to incorrect function type 'unsigned int \\(\\*\\)\\(setting_id_t\\)'",
     "documentation": "tests/KNOWN_BUGS.md#axis-mask-getter-is-called-through-an-incompatible-function-pointer"
+  },
+  {
+    "issue": "tool-table-index-getter-callback-signature",
+    "source": "tests/cases/tool_table/index_lookup_returns_persisted_tool_and_matching_pocket.c",
+    "lines": [
+      10
+    ],
+    "message_pattern": "call to function settings_get_tool_data through pointer to incorrect function type 'tool_table_entry_t \\*\\(\\*\\)\\(unsigned int\\)'",
+    "documentation": "tests/KNOWN_BUGS.md#tool-table-index-getter-is-called-through-an-incompatible-function-pointer"
+  },
+  {
+    "issue": "tool-table-index-getter-callback-signature",
+    "source": "core/report.c",
+    "lines": [
+      673
+    ],
+    "message_pattern": "call to function settings_get_tool_data through pointer to incorrect function type 'tool_table_entry_t \\*\\(\\*\\)\\(unsigned int\\)'",
+    "documentation": "tests/KNOWN_BUGS.md#tool-table-index-getter-is-called-through-an-incompatible-function-pointer"
   }
 ]

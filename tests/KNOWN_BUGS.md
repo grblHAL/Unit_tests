@@ -708,3 +708,31 @@ violation with the current sanitizer configuration.
 [known_sanitizer_diagnostics.json](known_sanitizer_diagnostics.json). The
 summary accepts only the named callback diagnostic at `core/settings.c:2054`;
 other sanitizer diagnostics still fail the run. Keep the functional tests.
+
+## Tool-table index getter is called through an incompatible function pointer
+
+**Marked known:** 2026-10-11
+
+With `N_TOOLS=4`, [core/settings.c:3732](../core/settings.c#L3732) casts
+`settings_get_tool_data` to `get_tool_by_idx_ptr`. The getter at
+[core/settings.c:2912](../core/settings.c#L2912) takes a signed `tool_id_t`
+(`int32_t`), while the index callback in
+[core/core_handlers.h:150](../core/core_handlers.h#L150) takes `uint32_t`.
+Calling through this incompatible function pointer is undefined behavior.
+Clang UBSan reproduces it both through the public callback and in the actual
+coordinate/tool report at [core/report.c:673](../core/report.c#L673).
+Use a callback with the declared index signature instead of casting the signed
+getter. The current functional tool data and report output remain correct.
+
+**Regressions:** [indexed lookup](cases/tool_table/index_lookup_returns_persisted_tool_and_matching_pocket.c)
+and [parameter report](cases/tool_table/parameter_report_reads_persisted_tool_slots.c)
+retain their correct tool, pocket, offset, radius, and output expectations.
+These are passing functional tests with a known sanitizer diagnostic.
+
+**Remove exception when fixed:** delete the two
+`tool-table-index-getter-callback-signature` entries from
+[known_sanitizer_diagnostics.json](known_sanitizer_diagnostics.json).
+They match only the named getter/type diagnostic at the public callback test's
+line 10 and `core/report.c:673`; unrelated diagnostics still fail the run.
+Keep both functional tests. GCC does not detect this function-signature
+violation with the current sanitizer configuration.
