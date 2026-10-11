@@ -7,7 +7,7 @@ static void sync_output(spindle_ptrs_t *spindle, spindle_state_t state, float rp
 {
     CHECK(spindle == spindle_get(0));
     (void)state;
-    sync_feedback.rpm = rpm;
+    (void)rpm;
 }
 static spindle_data_t *sync_data(spindle_data_request_t request)
 {
