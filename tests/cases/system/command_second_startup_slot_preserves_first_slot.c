@@ -4,7 +4,8 @@
 int main(void)
 {
     prepare_system_metadata();
-    settings_write_startup_line(0, "G21");
+    stored_line_t first_line = "G21";
+    settings_write_startup_line(0, first_line);
     CHECK(system_command("$N1=G90") == Status_OK);
     char line[sizeof(stored_line_t)];
     CHECK(settings_read_startup_line(0, line));
