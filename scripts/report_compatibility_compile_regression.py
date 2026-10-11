@@ -5,7 +5,7 @@ import sys
 
 compiler, core, source, level = sys.argv[1:]
 def compile_level(value):
-    return subprocess.run([compiler, "-std=c11", "-fsyntax-only", "-DCOMPATIBILITY_LEVEL=" + value,
+    return subprocess.run([compiler, "-std=gnu11", "-fsyntax-only", "-DCOMPATIBILITY_LEVEL=" + value,
                            "-I" + core, source], stdout=subprocess.PIPE,
                           stderr=subprocess.STDOUT, text=True)
 
