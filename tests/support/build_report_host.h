@@ -5,8 +5,8 @@ static atc_status_t build_atc_state;
 static unsigned build_options_calls;
 static bool build_options_phase[4], build_plugin_output;
 static atc_status_t get_build_atc_state(void) { return build_atc_state; }
-static bool build_suspend(bool suspend) { return suspend; }
-static uint32_t build_free_memory(void) { return 12288; }
+static inline bool build_suspend(bool suspend) { return suspend; }
+static inline uint32_t build_free_memory(void) { return 12288; }
 static void build_options(bool new_options)
 {
     CHECK(build_options_calls < 4);
