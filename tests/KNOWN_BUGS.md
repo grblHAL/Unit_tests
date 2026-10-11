@@ -679,3 +679,32 @@ and unrelated errors fail classification and require review.
 Remove the matcher and special compile commands in [CMakeLists.txt](../CMakeLists.txt),
 and replace these compile regressions with ordinary runtime tests for the
 working compatibility configurations.
+
+## Axis-mask getter is called through an incompatible function pointer
+
+**Marked known:** 2026-10-11
+
+`get_axis_mask` in [core/settings.c:709](../core/settings.c#L709) takes two
+arguments, `(setting_id_t id, uint_fast16_t int_value)`. The numeric setting
+reader at [core/settings.c:2054](../core/settings.c#L2054) casts it to a
+one-argument getter and calls it with only the setting ID. Clang UBSan reports
+`call to function get_axis_mask through pointer to incorrect function type`.
+The unused second argument means the selected motor mask currently reads
+correctly in these host runs, but the incompatible callback call is undefined
+behavior. Match the getter implementation to the callback signature.
+
+**Regressions:** the motor [warning enable](cases/settings/motor_warning_enable_persists_axis_mask.c),
+[warning inversion](cases/settings/motor_warning_inversion_persists_axis_mask.c),
+[fault enable](cases/settings/motor_fault_enable_persists_axis_mask.c), and
+[fault inversion](cases/settings/motor_fault_inversion_persists_axis_mask.c)
+tests keep the correct getter values and persisted axis masks.
+
+These are passing functional tests with a known sanitizer diagnostic, rather
+than expected assertion failures. GCC does not detect this callback-signature
+violation with the current sanitizer configuration.
+
+**Remove exception when fixed:** delete only the
+`axis-mask-getter-callback-signature` entry from
+[known_sanitizer_diagnostics.json](known_sanitizer_diagnostics.json). The
+summary accepts only the named callback diagnostic at `core/settings.c:2054`;
+other sanitizer diagnostics still fail the run. Keep the functional tests.
