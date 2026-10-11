@@ -159,6 +159,10 @@ function(add_core_test name module source)
       target_link_options(test_${name} PRIVATE --coverage)
     endif()
   endif()
+  if(name STREQUAL "report.group_metadata_fallback_keeps_visible_settings"
+    OR name STREQUAL "report.setting_group_fallback_lists_available_groups")
+    target_link_options(test_${name} PRIVATE -Wl,--wrap=calloc)
+  endif()
   if(name STREQUAL "fs_ram.close_lifetime")
     find_package(Python3 REQUIRED COMPONENTS Interpreter)
     add_test(NAME ${name} COMMAND ${Python3_EXECUTABLE}
