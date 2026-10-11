@@ -3,12 +3,14 @@
 #include "spindle_control.h"
 #include <string.h>
 static unsigned program_complete_calls, program_pause_calls, program_pallet_calls;
+static unsigned program_pallet_calls_at_completion;
 static program_flow_t program_completion;
 static bool program_completion_check_mode;
 static status_code_t program_pause_result = Status_Handled;
 static void program_completed(program_flow_t flow, bool check_mode)
 {
     program_complete_calls++;
+    program_pallet_calls_at_completion = program_pallet_calls;
     program_completion = flow;
     program_completion_check_mode = check_mode;
 }
