@@ -4,6 +4,13 @@
 #include <string.h>
 static unsigned delta_option_calls, delta_realtime_calls, delta_unit_calls, delta_description_calls;
 static bool delta_option_new;
+static unsigned delta_homing_calls;
+static bool delta_homing_success;
+static axes_signals_t delta_homing_axes;
+static bool delta_connected(void) { return true; }
+static control_signals_t delta_controls(void) { return (control_signals_t){0}; }
+static void delta_homing_previous(axes_signals_t cycle, bool success)
+{ delta_homing_calls++; delta_homing_axes = cycle; delta_homing_success = success; }
 static void delta_options_previous(bool newopt) { delta_option_calls++; delta_option_new = newopt; }
 static void delta_realtime_previous(stream_write_ptr write, report_tracking_flags_t flags)
 {
@@ -19,6 +26,10 @@ static const char *delta_description_previous(setting_id_t id)
 }
 static void delta_configure_callbacks(void)
 {
+    limits_init();
+    hal.stream.is_connected = delta_connected;
+    hal.control.get_state = delta_controls;
+    grbl.on_homing_completed = delta_homing_previous;
     grbl.on_report_options = delta_options_previous;
     grbl.on_realtime_report = delta_realtime_previous;
     grbl.on_set_axis_setting_unit = delta_units_previous;
