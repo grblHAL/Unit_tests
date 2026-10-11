@@ -291,50 +291,6 @@ sets G21 and `$13=1`; it expects 25.4 but gets 645.16. Remove its
 [separate exception](known_bugs.cmake#L84) along with the G20 exception
 when this defect is fixed.
 
-## Spindle listing reports an API-enabled spindle as disabled
-
-**Marked known:** 2026-10-09
-
-**Scope:** Low-priority API edge case. No affected shipped driver or plugin
-has been identified, and there is no known impact on settings-based spindle setup.
-
-**Regression:** [test](cases/multi_spindle/report_machine_format_shows_enabled_slots.c).
-
-**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L76).
-
-After software enables the secondary spindle with `spindle_enable(1)`,
-it becomes available to G-code as spindle slot 1. The spindle listing still
-labels it disabled:
-
-- Expected: `[SPINDLE:1|1|...]` — spindle 1 is assigned to slot 1.
-- Actual: `[SPINDLE:1|-|...]` — spindle 1 has no enabled slot.
-
-Here “enabled” means available for G-code control. This regression checks
-availability and reporting; it does not establish a failure to drive the motor.
-The trigger is direct API activation while the saved spindle-enable settings
-still describe that spindle as disabled. The secondary slot setting is normally supplied by a plugin; this direct-API
-regression does not register that metadata. Registering the slot setting aligns
-the listing with the active spindle, as confirmed by the ordinary passing
-[machine listing](cases/multi_spindle/machine_listing_reports_secondary_with_registered_slot_setting.c)
-and [human listing](cases/multi_spindle/human_listing_reports_secondary_with_registered_slot_setting.c) tests.
-
-The direct-API test registers all three spindles before `gc_init()`, with two
-available active slots. It bypasses `grbl_enter()`, so that timing alone does not
-validate the board startup contract. A separate ordinary passing
-[full startup test](cases/boot_multi_spindle/setup_enabled_secondary_is_reported_with_registered_slot_settings.c)
-registers the primary during `driver_init()` and the secondary during
-`hal.driver_setup()`, before the sanity checks in `core/grbllib.c:385`.
-With the secondary slot setting registered, both enabled spindles are listed
-correctly after real startup. The direct-API regression verifies
-that `spindle_enable(1)` returns slot 1, `spindle_is_enabled(1)` is true, and
-`spindle_get(1)->id` is 1 before checking the report.
-`spindle_get_num()` in `core/spindle_control.c:338-355` reads setting values
-rather than the live enabled spindle array. Enumeration at lines 419-420
-then derives `num` and `enabled` from that setting-based mapping. Report the
-live slot assignments, or synchronize the settings mapping when API activation
-succeeds. Keep the regression's expected slot 1 and remove the linked exception
-when corrected.
-
 ## Negative broadcast spindle selector fails on Linux
 
 **Marked known:** 2026-10-09
