@@ -12,6 +12,8 @@ defects, remove the diagnostic matcher and retain an ordinary successful compile
 check. Recovering sanitizer diagnostics have a separate, narrowly scoped
 [manifest](known_sanitizer_diagnostics.json); remove its linked entries when fixed.
 
+Source links point to the tested core revision, rather than the latest upstream code.
+
 ## UTF-8 ASCII encoding
 
 **Marked known:** 2026-10-08
@@ -481,7 +483,7 @@ explicitly skipped when sanitizers are disabled.
 
 After `M3S1000`, the spindle modal state is on and clockwise, but
 `#<_spindle_cw>` returns 0 instead of 1. The getter in
-[core/ngc_params.c](../core/ngc_params.c#L607) returns the counterclockwise
+[core/ngc_params.c](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/ngc_params.c#L607) returns the counterclockwise
 flag without inverting it. This affects macros that inspect spindle direction.
 The expected clockwise meaning follows the
 [LinuxCNC named parameter definition](https://www.linuxcnc.org/docs/2.9/html/gcode/overview.html).
@@ -502,9 +504,9 @@ the block, the core changes the X offset to 10 and calls the tool table's
 `set_tool` persistence callback. The expected result is an error with the
 existing tool data and persistent storage unchanged.
 
-[core/gcode.c:3153](../core/gcode.c#L3153) mutates the table during validation,
-and [core/gcode.c:3169](../core/gcode.c#L3169) calls `set_tool` before
-[core/gcode.c:3985](../core/gcode.c#L3985) rejects remaining unused words.
+[core/gcode.c:3153](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/gcode.c#L3153) mutates the table during validation,
+and [core/gcode.c:3169](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/gcode.c#L3169) calls `set_tool` before
+[core/gcode.c:3985](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/gcode.c#L3985) rejects remaining unused words.
 The regression runs in idle mode and captures the actual persistence callback.
 
 **Remove exception when fixed:** remove the registration for
@@ -531,9 +533,9 @@ the block, the core enables scaling and sets the X factor to 2. Later X motion
 can therefore be scaled by a command that was reported as unsuccessful.
 The correct expectation is unchanged scaling state and factor 1.
 
-[core/gcode.c:2758](../core/gcode.c#L2758) changes the live factor and
-[core/gcode.c:2799](../core/gcode.c#L2799) changes the live modal flag before
-[core/gcode.c:3985](../core/gcode.c#L3985) rejects unused words. The regression
+[core/gcode.c:2758](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/gcode.c#L2758) changes the live factor and
+[core/gcode.c:2799](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/gcode.c#L2799) changes the live modal flag before
+[core/gcode.c:3985](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/gcode.c#L3985) rejects unused words. The regression
 runs in idle mode.
 
 **Remove exception when fixed:** remove the registration for
@@ -554,8 +556,8 @@ degrees modulo a full turn, so the reported angle no longer matches it.
 Check mode should simulate the parser result while preserving actual machine
 position.
 
-[core/gcode.c:4591](../core/gcode.c#L4591) and
-[core/gcode.c:4601](../core/gcode.c#L4601) rewrite `sys.position` during rotary
+[core/gcode.c:4591](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/gcode.c#L4591) and
+[core/gcode.c:4601](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/gcode.c#L4601) rewrite `sys.position` during rotary
 G28 without a check-mode guard. Separate normal-mode tests verify wrapping
 through actual motor pulses.
 
@@ -575,7 +577,7 @@ and leave `Off,N/A,Auto`. Instead it produces `Off,N/A`, removing the available
 `Auto` option. The test supplies a mutable 64-byte buffer with enough room
 for the replacement.
 
-[core/settings.c:3373](../core/settings.c#L3373)'s `remove_element` writes
+[core/settings.c:3373](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/settings.c#L3373)'s `remove_element` writes
 the three-character `N/A` placeholder before finding the original end of
 the option. For a name shorter than three characters, that overwrites the
 separator and loses subsequent labels. This is an option-metadata API edge
@@ -602,9 +604,9 @@ fixture's 80 steps/mm. The tests also accept an explicit
 `Status_GcodeUnsupportedCommand` with no motion; silently returning success
 without drilling is the defect.
 
-[core/gcode.c:1606](../core/gcode.c#L1606) accepts these modes and
-[core/gcode.c:3540](../core/gcode.c#L3540) prepares their cycle data. The
-execution dispatch at [core/gcode.c:4864](../core/gcode.c#L4864) includes
+[core/gcode.c:1606](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/gcode.c#L1606) accepts these modes and
+[core/gcode.c:3540](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/gcode.c#L3540) prepares their cycle data. The
+execution dispatch at [core/gcode.c:4864](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/gcode.c#L4864) includes
 G73 and G81 through G84, but omits G85, G86, and G89.
 
 **Remove exceptions when fixed:** remove the three matching
@@ -684,9 +686,9 @@ working compatibility configurations.
 
 **Marked known:** 2026-10-11
 
-`get_axis_mask` in [core/settings.c:709](../core/settings.c#L709) takes two
+`get_axis_mask` in [core/settings.c:709](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/settings.c#L709) takes two
 arguments, `(setting_id_t id, uint_fast16_t int_value)`. The numeric setting
-reader at [core/settings.c:2054](../core/settings.c#L2054) casts it to a
+reader at [core/settings.c:2054](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/settings.c#L2054) casts it to a
 one-argument getter and calls it with only the setting ID. Clang UBSan reports
 `call to function get_axis_mask through pointer to incorrect function type`.
 The unused second argument means the selected motor mask currently reads
@@ -713,14 +715,14 @@ other sanitizer diagnostics still fail the run. Keep the functional tests.
 
 **Marked known:** 2026-10-11
 
-With `N_TOOLS=4`, [core/settings.c:3732](../core/settings.c#L3732) casts
+With `N_TOOLS=4`, [core/settings.c:3732](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/settings.c#L3732) casts
 `settings_get_tool_data` to `get_tool_by_idx_ptr`. The getter at
-[core/settings.c:2912](../core/settings.c#L2912) takes a signed `tool_id_t`
+[core/settings.c:2912](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/settings.c#L2912) takes a signed `tool_id_t`
 (`int32_t`), while the index callback in
-[core/core_handlers.h:150](../core/core_handlers.h#L150) takes `uint32_t`.
+[core/core_handlers.h:150](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/core_handlers.h#L150) takes `uint32_t`.
 Calling through this incompatible function pointer is undefined behavior.
 Clang UBSan reproduces it both through the public callback and in the actual
-coordinate/tool report at [core/report.c:673](../core/report.c#L673).
+coordinate/tool report at [core/report.c:673](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/report.c#L673).
 Use a callback with the declared index signature instead of casting the signed
 getter. The current functional tool data and report output remain correct.
 
@@ -746,11 +748,11 @@ for that move. Instead, the block's `is_rpm_rate_adjusted` flag is false.
 Conversely, `M4S500` followed by `G1X10F100M3` leaves that move dynamically
 adjusted even though it explicitly selects constant power.
 
-[core/gcode.c:4076](../core/gcode.c#L4076) calculates the flag from
+[core/gcode.c:4076](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/gcode.c#L4076) calculates the flag from
 `sspindle->state.ccw`, which still represents the previous spindle mode.
 The requested block state is applied later at
-[core/gcode.c:4297](../core/gcode.c#L4297), and the stale adjustment flag is
-copied into the plan at [core/gcode.c:4400](../core/gcode.c#L4400).
+[core/gcode.c:4297](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/gcode.c#L4297), and the stale adjustment flag is
+copied into the plan at [core/gcode.c:4400](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/gcode.c#L4400).
 Determine laser adjustment from the spindle mode requested for the current
 block. Separate `M4` followed by a cutting block passes as a control.
 
@@ -771,11 +773,11 @@ registered PWM laser driver. A following speed-only `S250` block calls the
 driver with the spindle enabled and power 250. Check mode should update
 parser state without issuing hardware output commands.
 
-[core/gcode.c:4118-4121](../core/gcode.c#L4118) synchronizes and calls
+[core/gcode.c:4118-4121](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/gcode.c#L4118) synchronizes and calls
 `spindle_set_state` directly when the speed changes without motion. This
 path does not check `check_mode`. In contrast, the synchronized spindle-state
 path suppresses driver output in
-[core/spindle_control.c:777](../core/spindle_control.c#L777).
+[core/spindle_control.c:777](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/spindle_control.c#L777).
 Guard this speed-update hardware call in check mode while retaining the
 correct parsed spindle speed.
 
