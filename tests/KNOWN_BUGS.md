@@ -3,7 +3,8 @@
 When updating the pinned core, run the regressions before removing exceptions.
 For a fixed defect, keep its regression test and remove its CMake `WILL_FAIL` and
 `known_bug` properties so it becomes an ordinary passing test. Record the fix date
-and core revision here. Each entry below links to its test and exception.
+and core revision in the cleanup commit message, then delete the resolved defect
+section from this file. Each entry below links to its test and exception.
 All expected-failure blocks live in [known_bugs.cmake](known_bugs.cmake), so
 adding host configurations does not move the linked exceptions.
 For memory defects, also replace the diagnostic-wrapper registration with a direct

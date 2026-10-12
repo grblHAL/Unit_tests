@@ -52,6 +52,126 @@ ctest --test-dir build -C Debug --output-on-failure
 Checks remain active in Release builds; they do not depend on C `assert()`.
 The existing `src/driver.c` firmware entry point is not part of the host tests.
 
+## Update core and retest a fix
+
+The `core` directory is a Git submodule: this repository records an exact core
+commit, not whichever upstream commit is newest. Make and commit fixes in the
+core repository first. Push those core commits to a branch reachable through the
+submodule URL in `.gitmodules` before publishing the updated test repository;
+GitHub Actions must be able to fetch the recorded commit.
+
+### Select the core commit to test
+
+From the root of this test repository, check for local changes before switching
+core revisions. Preserve any unfinished core changes first.
+
+```sh
+git status --short
+git -C core status --short
+git -C core fetch origin
+git -C core checkout <fixed-core-commit>
+git -C core rev-parse HEAD
+git diff --submodule=log -- core
+```
+
+Replace `<fixed-core-commit>` with the actual published commit hash. Checking out
+that hash leaves the submodule at a detached HEAD, which is normal when testing a
+specific revision. The parent repository now shows `core` as modified; it records
+the new hash only when you stage and commit that submodule change.
+
+### Run the tests before changing exceptions
+
+Use a sanitizer build, including the summary check. For Windows llvm-mingw,
+replace the compiler path below with your installation and put its `bin`
+directory on `PATH` as described under [Run locally](#run-locally).
+
+```sh
+cmake -S . -B build-asan -G Ninja -DCMAKE_C_COMPILER=C:/path/to/llvm-mingw/bin/clang.exe -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=ON
+cmake --build build-asan --parallel
+ctest --test-dir build-asan --output-on-failure --output-junit results.xml
+python scripts/summary.py tests build-asan/results.xml
+```
+
+On Linux, use `-DCMAKE_C_COMPILER=clang` or `gcc` instead. If an existing build
+uses another compiler or generator, use a new build directory. Reconfigure after
+changing exception registrations so CTest picks up the changes.
+
+A fixed assertion regression may initially appear as a CTest failure because its
+`WILL_FAIL` exception expects the executable to fail. Confirm the executable now
+passes its correct assertions; do not change those assertions to match the old
+bug. For one test, inspect its output with:
+
+```sh
+ctest --test-dir build-asan -V -R '^utf8\.ascii$'
+```
+
+Replace `utf8.ascii` with the test name listed in the defect entry. Run the full
+suite as well: a core update can affect more than the defect being fixed.
+
+### Remove the fixed defect's exceptions
+
+Start with its entry in [tests/KNOWN_BUGS.md](tests/KNOWN_BUGS.md). Each entry
+links to the affected tests and says exactly which exception registrations or
+scripts need cleanup. Depending on the defect, cleanup is in these places:
+
+- **Wrong result / expected assertion failure:** remove the matching complete
+  `if(TEST ...) ... endif()` block from
+  [tests/known_bugs.cmake](tests/known_bugs.cmake). This removes `WILL_FAIL` and the
+  `known_bug` label, making the test an ordinary passing test.
+- **Correct result with an undefined-behavior warning:** delete every JSON object
+  with that defect's `issue` identifier from
+  [tests/known_sanitizer_diagnostics.json](tests/known_sanitizer_diagnostics.json).
+  These exceptions are documented in `KNOWN_BUGS.md`, but the actual warning
+  allowance is stored in this JSON file. One defect can have several objects.
+  For example, the tool-table getter defect has two objects with
+  `"issue": "tool-table-index-getter-callback-signature"`. Keep valid JSON after
+  deleting them. The summary must then report those tests as clean passes.
+- **Memory defect checked by a diagnostic wrapper:** follow the defect's linked
+  instructions to replace its special Python-wrapper registration in
+  [CMakeLists.txt](CMakeLists.txt) with a normal executable test. Remove the
+  matching exception in `tests/known_bugs.cmake` and any obsolete matcher. The
+  executable must pass under sanitizers without relying on the old diagnostic.
+- **Feature configuration that previously could not compile:** replace the
+  linked diagnostic-matching compile check with a normal successful compile
+  check for that configuration. Remove its expected-failure registration and
+  obsolete matcher, following the links in the defect entry.
+
+**Keep the regression test** means keep its file in `tests/cases/` and its check
+for the correct behavior. For example, `tests/cases/utf8/ascii.c` must continue
+checking that `A` encodes as byte `0x41` after the encoding bug is fixed. The test
+then guards against a future change reintroducing that bug. Delete the exception
+that tolerates the bug, rather than deleting the test that catches it.
+
+After removing the exceptions, reconfigure, rebuild and rerun the full sanitizer
+suite and summary using the commands above. All affected tests must be ordinary
+clean passes. Also run the coverage build under [Measure coverage locally](#measure-coverage-locally).
+Do not weaken expectations or broaden diagnostic allowances to make an update green.
+
+### Remove the known-bug entry and commit
+
+Once the fix passes without its exceptions, delete the entire resolved defect
+section from [tests/KNOWN_BUGS.md](tests/KNOWN_BUGS.md). That file lists outstanding
+defects only. Put the fix date and core commit in the Git commit message, where
+history preserves them. If only part of a multi-test defect is fixed, retain an
+entry covering the remaining failures and their exceptions.
+
+Check that remaining documentation links still point to the correct exception
+blocks and source lines; deleting blocks can shift line numbers. Refresh any
+remaining diagnostic source-line matches if upstream edits moved them, after
+confirming the same defect still reproduces.
+
+```sh
+git diff --check
+git diff --submodule=log
+git add core
+```
+
+Stage the documentation, exception and registration files you actually changed
+as well. Commit the new core pin and its cleanup together, then push and verify
+both GCC and Clang sanitizer jobs and the coverage job in GitHub Actions. If the
+new core introduces an additional defect, add a separate correctly expected
+regression and dated known-bug entry; do not silently waive it.
+
 ## GitHub Actions
 
 `.github/workflows/tests.yml` runs on pushes, pull requests and manual dispatch.
