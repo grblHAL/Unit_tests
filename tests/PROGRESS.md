@@ -6,21 +6,24 @@ This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 ## Current baseline
 
 - Repository: https://github.com/petervanderwalt/Unit_tests, branch `master`.
-- Latest verified committed/pushed revision: `a6daeddd6f790547148d75696889e25cc5b878f9` (prior delivery).
+- Latest verified committed/pushed revision: `4ff2bd5645cc17753e5cdfecc9e3a8f1d11e840d` (prior delivery).
 - Core pin: `451a539c6ed0f00499b8b48258f9aa7971fac384` from
   https://github.com/grblHAL/core. Core has not been patched locally.
-- Full Windows Clang ASan/UBSan run: **2,132 tests**; **2,029 clean passes**,
-  **46 passes with known sanitizer diagnostics**, **57 known regressions**,
+- Full Windows Clang ASan/UBSan run: **2,141 tests**; **2,040 clean passes**,
+  **46 passes with known sanitizer diagnostics**, **55 known regressions**,
   **0 unexpected failures**, **0 skipped**. The summary check passed too.
 - Latest verified GitHub Actions run:
-  https://github.com/petervanderwalt/Unit_tests/actions/runs/38266906954
-  at `a6daedd`, all three jobs completed successfully. CI platform/compiler diagnostic counts
+  https://github.com/petervanderwalt/Unit_tests/actions/runs/38285326639
+  at `4ff2bd5`, all three jobs completed successfully. CI platform/compiler diagnostic counts
   can differ; inspect actual results instead of assuming Windows totals.
-- Latest merged coverage at `020cde1` / 2,091 tests:
-  **80.6% lines (14,653/18,178)**, **84.4% functions (1,014/1,202)**,
-  **67.8% branches (8,378/12,365)** across 52 core C source files.
-  Merge completed successfully; scratch log: `spindle-sync-feature-coverage.log`.
-  The 14 jog/laser, 19 settings and eight toolsetter cases are not included in that measurement.
+- Latest merged coverage at `ddcff89` / 2,132 tests:
+  **81.5% lines (14,813/18,178)**, **84.8% functions (1,019/1,202)**,
+  **68.5% branches (8,476/12,365)** across 52 core C source files.
+  Merge completed successfully; scratch log: `settings-toolsetter-coverage.log`.
+  The nine new report cases and G71/G72 reclassification are not included in
+  that measurement. Source scope/denominator did not shrink for this gain.
+  Tool change improved from 58.9% (202/343) to 82.8% (284/343); settings is
+  85.4% (1,234/1,445), motion control 78.3% (462/590).
 - The prior delivery added 17 `acceleration_profiles` cases through `9501ee1`:
   G187 P1-P5 scaling of actual planned moves, validation, initialization,
   program-end resets, same-block selection and preservation of queued moves.
@@ -63,19 +66,27 @@ This is a snapshot, not proof that future checkouts or CI runs are unchanged.
   Full sanitizers and strict summary passed: `jog-laser-tests.log` and
   `jog-laser-summary.log`. The two negative-jog cases reproduce the existing
   documented numeric-cast diagnostic; no new exception was introduced.
-- Current delivery adds 19 settings cases through `6285797`: per-axis homing
+- The prior delivery added 19 settings cases through `6285797`: per-axis homing
   rates/availability, auto-square offsets/availability, acceleration/travel
   conversion, persistent reload and probe/limit/parking/PWM option readback.
 - Eight toolsetter workflow cases through `e03837d` exercise G59.3 positioning,
   G30 return, actual seek/locate/release probing, first/existing reference,
   travel clipping, failure cleanup and restore options. A pulse callback
   verifies XY motion occurs at retracted Z. Tool-change baseline before this
-  batch was 202/343 lines (58.9%); measure the gain from the pending refresh.
+  batch was 202/343 lines (58.9%); the completed refresh measured 284/343 (82.8%).
 - Full sanitizer suite and strict summary passed for all 2,132 cases:
   `settings-toolsetter-tests.log`, `settings-toolsetter-summary.log`.
-- Coverage refresh for all 2,132 cases is running in session 51685. Logs:
-  `settings-toolsetter-coverage-build.log`, `settings-toolsetter-coverage-tests.log`,
-  `settings-toolsetter-coverage.log`. Revalidate this handle before any restart.
+- Current delivery adds nine modal-report tests through `eb3d407`: actual
+  M0/M1/M2/M30 callbacks, override-disable states and actual pending manual M6.
+  The parser resets program flow after callbacks, so reporting is observed
+  from the real callback before that intentional reset.
+- User clarified that plain G71/G72 is pending implementation, not a failure.
+  Its entry moved from KNOWN_BUGS.md to TODO.md (linked in README). Both cases
+  now pass by checking current rejection, no plugin dispatch and no position
+  change; their expected-failure labels are removed. Fractional controls remain.
+- Full suite plus strict summary passed after this correction:
+  `modal-report-todo-tests.log` and `modal-report-todo-summary.log`.
+- No coverage process remains active; session 51685 completed successfully.
   Temporary root `.gcov` files must not be committed or removed during a merge.
 - The five value-helper and four initial file tool cases were delivered at
   `8f74f64` and passed CI. The combined host has NGC expressions and N_TOOLS=4.
@@ -90,7 +101,7 @@ The full coverage goal was explicitly re-established on 2026-10-12.
 
 ## Next work
 
-1. Read the pending settings/toolsetter coverage refresh before selecting new gaps. Prior measured gaps: settings 240 executable lines, motion control 152,
+1. Read the completed settings/toolsetter coverage refresh before selecting new gaps. Prior measured gaps: settings 240 executable lines, motion control 152,
    G-code 521, report 187. Protocol is now below
    150 uncovered lines. Read the JSON for exact remaining line/branch targets.
    Current settings ranges worth inspecting include 1032-1038 (now covered by
@@ -188,7 +199,7 @@ These paths are machine-specific conveniences, not portable requirements:
   validates and commits one case), `list_coverage_gaps.py`, and batch generators.
   They are outside Git, optional, and must be inspected before execution.
   A new agent can write cases manually with the checked-in workflow instead.
-- Evidence files in scratch: `settings-toolsetter-summary.log` (latest sanitizer results), `jog-laser-summary.log`, `spindle-sync-feature-summary.log`, `rotation-feature-summary.log`, `jerk-feature-summary.log`, `acceleration-summary.log`, `cutter-feature-summary.log`, `lathe-feature-summary.log`, `ngc-file-change-summary.log`, `ngc-tools-values-summary.log`, `settings-owners-summary.log`, `feedback-soft-limits-summary.log`, `report-fields-summary.log`, `protocol-lock-summary.log`, `css-execution-summary.log`,
+- Evidence files in scratch: `modal-report-todo-summary.log` (latest sanitizer results), `settings-toolsetter-summary.log`, `jog-laser-summary.log`, `spindle-sync-feature-summary.log`, `rotation-feature-summary.log`, `jerk-feature-summary.log`, `acceleration-summary.log`, `cutter-feature-summary.log`, `lathe-feature-summary.log`, `ngc-file-change-summary.log`, `ngc-tools-values-summary.log`, `settings-owners-summary.log`, `feedback-soft-limits-summary.log`, `report-fields-summary.log`, `protocol-lock-summary.log`, `css-execution-summary.log`,
   `css-execution-tests.log`, `delta-laser-coverage-report.log`,
   `local-core-coverage-latest.json`. Rebuild/retest if these are missing or stale.
 - Local gcovr 8.4 was installed under `<workspace>/work/coverage-python`; an

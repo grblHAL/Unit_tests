@@ -179,3 +179,11 @@ GitHub submodule. Check remaining anchors after deleting exception blocks.
 - Select substantial uncovered workflows from fresh line/branch evidence.
   Aggregate function coverage across variants before calling a function untouched;
   a zero-count record in one configuration can be covered in another.
+
+- Plain G71/G72 roughing is pending implementation per the maintainer/user
+  clarification, not a known failure. See `tests/TODO.md`; do not restore its
+  old known-bug labels. Current tests verify rejection without movement. Update
+  them to successful functionality when implementation lands and remove the TODO.
+- Program flow is intentionally reset after parser pause/completion callbacks.
+  To verify transient M0/M1/M2/M30 serial reporting, observe/report from the
+  real callback before that reset; install required realtime callbacks.
