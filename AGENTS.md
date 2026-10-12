@@ -15,8 +15,11 @@ weaken assertions, or add artificial tests solely to inflate coverage.
 - Make one focused commit per new test, with a descriptive behavior-based name.
   Keep infrastructure and documentation changes in separate commits.
 - Use separate maintainable case files, shared fixtures only where useful.
-- Push at a completed module or logical batch boundary after validation when
-  authorized. A user instruction not to push overrides this workflow.
+- Prefer larger delivery batches spanning related workflows/modules. Keep one
+  commit per test with focused validation, but run the full sanitizer suite and
+  push/verify CI at substantial delivery boundaries rather than every few tests.
+  Continue independent coverage work while CI runs; avoid repeated polling.
+  A user instruction not to push overrides this workflow.
 - Preserve unrelated work. Inspect status before edits, commits and delivery.
 - Do not stop an explicitly authorized coverage run after routine batch reports.
   Keep the full objective intact; report blockers and measured limits honestly.
