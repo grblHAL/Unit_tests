@@ -156,3 +156,9 @@ GitHub submodule. Check remaining anchors after deleting exception blocks.
   G91 omitted axes must represent zero incremental movement. The documented
   regression must retain that expectation; explicit-zero and absolute-motion
   control cases prevent accidentally treating the current defect as intended.
+
+- Spindle-sync startup waits for two new encoder index pulses before waking the
+  driver. A constant-feedback mock without elapsed-time/index progression hangs
+  the fixture. `spindle_sync_motion_host.h` models both startup and running
+  feedback from measured RPM/time independently of commanded displacement.
+  Keep the missing-index alarm and stop/reset tests distinct from normal motion.
