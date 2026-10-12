@@ -242,3 +242,7 @@ endif()
 if(TEST rotation.incremental_single_axis_executes_only_rotated_delta)
   set_tests_properties(rotation.incremental_single_axis_executes_only_rotated_delta PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+if(TEST fs_ram.populated_reset_clears_files_and_allows_reuse)
+  set_tests_properties(fs_ram.populated_reset_clears_files_and_allows_reuse PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

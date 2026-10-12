@@ -209,6 +209,12 @@ function(add_core_test name module source)
       ${CMAKE_CURRENT_SOURCE_DIR}/scripts/vfs_lifetime_regression.py
       $<BOOL:${ENABLE_SANITIZERS}> $<TARGET_FILE:test_${name}>)
     set_tests_properties(${name} PROPERTIES SKIP_RETURN_CODE 77)
+  elseif(name STREQUAL "fs_ram.populated_reset_clears_files_and_allows_reuse")
+    find_package(Python3 REQUIRED COMPONENTS Interpreter)
+    add_test(NAME ${name} COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/scripts/ram_reset_regression.py
+      $<BOOL:${ENABLE_SANITIZERS}> $<TARGET_FILE:test_${name}>)
+    set_tests_properties(${name} PROPERTIES SKIP_RETURN_CODE 77)
   elseif(name STREQUAL "ngc_flowctrl.named_macro_return_closes_file_and_restores_caller_scope")
     find_package(Python3 REQUIRED COMPONENTS Interpreter)
     add_test(NAME ${name} COMMAND ${Python3_EXECUTABLE}

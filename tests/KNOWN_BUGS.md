@@ -873,3 +873,26 @@ The explicit-zero incremental and absolute single-axis controls remain separate.
 and [pulse block](known_bugs.cmake#L242) from `tests/known_bugs.cmake`.
 Keep both tests with their correct expectations. Delete this section once both
 pass without exceptions.
+
+## RAM filesystem retains freed files after reset
+
+**Marked known:** 2026-10-12
+
+**Regression:** [populated reset and reuse](cases/fs_ram/populated_reset_clears_files_and_allows_reuse.c).
+
+After a RAM file has been written and its writer closed, calling
+`hal.driver_reset()` frees the file nodes but leaves the `files` list head
+pointing to freed memory. A subsequent `vfs_stat()` on the old filename reads
+that memory instead of reporting that the file is absent. Clang AddressSanitizer
+confirmed the use-after-free in [find_file at line 85](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/fs_ram.c#L85),
+after [fs_reset frees the node at line 337](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/fs_ram.c#L326-L339).
+The passing empty-reset test verifies driver callback chaining and mount reuse;
+the failing regression additionally requires stored files to disappear and
+new files to work after reset.
+
+**Remove exception when fixed:** delete the [CMake expected-failure block](known_bugs.cmake#L246),
+replace this case's wrapper registration in `CMakeLists.txt` with a direct test,
+and delete [the narrow reset diagnostic matcher](../scripts/ram_reset_regression.py).
+Keep the regression's safe-reset assertions and delete this known-bug entry
+once the updated core passes. No entry in `known_sanitizer_diagnostics.json`
+is involved.
