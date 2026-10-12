@@ -6,31 +6,29 @@ This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 ## Current baseline
 
 - Repository: https://github.com/petervanderwalt/Unit_tests, branch `master`.
-- Latest verified committed/pushed revision: `54705840105b6245eb4df13815c10d8a779e44af`.
+- Latest verified committed/pushed revision: `8f74f641e85c3f86e7c4a2e666cb81ddfc63c3ef`.
 - Core pin: `451a539c6ed0f00499b8b48258f9aa7971fac384` from
   https://github.com/grblHAL/core. Core has not been patched locally.
-- Full Windows Clang ASan/UBSan run: **1,975 tests**; **1,884 clean passes**,
+- Full Windows Clang ASan/UBSan run: **1,984 tests**; **1,893 clean passes**,
   **42 passes with known sanitizer diagnostics**, **49 known regressions**,
   **0 unexpected failures**, **0 skipped**. The summary check passed too.
 - Latest verified GitHub Actions run:
-  https://github.com/petervanderwalt/Unit_tests/actions/runs/38254261691
-  at `5470584`, all three jobs completed successfully. CI platform/compiler diagnostic counts
+  https://github.com/petervanderwalt/Unit_tests/actions/runs/38255275812
+  at `8f74f64`, completed successfully. CI platform/compiler diagnostic counts
   can differ; inspect actual results instead of assuming Windows totals.
-- Latest merged coverage at `6ed3c20` / 1,943 tests:
-  **80.1% lines (14,229/17,765)**, **84.2% functions (1,003/1,191)**,
-  **67.0% branches (8,076/12,059)** across 52 core C source files.
-  The merge completed successfully; scratch log: `protocol-report-coverage.log`.
-  Thirty-two subsequent cases are not included in that measurement.
-- Current delivery adds five settings value-helper cases and four file-based
-  tool-change cases through `1d5b8c3`. The new host variant combines
-  `NGC_EXPRESSIONS_ENABLE=1` and `N_TOOLS=4`, routed through `ngc_tools`.
-  Full sanitizer suite and strict summary passed; evidence:
-  `ngc-tools-values-summary.log` and `ngc-tools-values-tests.log`.
+- Latest merged coverage at `1d5b8c3` / 1,975 tests:
+  **80.4% lines (14,285/17,765)**, **84.3% functions (1,004/1,191)**,
+  **67.4% branches (8,132/12,059)** across 52 core C source files.
+  Merge completed successfully; scratch log: `settings-ngc-tools-coverage.log`.
+  Nine subsequent file/tool-change cases are not included in that measurement.
+- Current delivery adds nine `ngc_tools` cases through `136b849`: rejected M61
+  cleanup, file-versus-serial reselection, asynchronous M6 offsets completed via
+  actual M61, H0 pending-tool resolution, separate offset tools and synchronous
+  completion. Full sanitizers and strict summary passed; evidence:
+  `ngc-file-change-summary.log` and `ngc-file-change-tests.log`.
+- The five value-helper and four initial file tool cases were delivered at
+  `8f74f64` and passed CI. The combined host has NGC expressions and N_TOOLS=4.
 - The 14 restore/probe-getter cases were delivered at `5470584` and passed CI.
-- A merged coverage refresh for all 1,975 tests is running. Scratch logs:
-  `settings-ngc-tools-coverage-build.log`, `settings-ngc-tools-coverage-tests.log`,
-  `settings-ngc-tools-coverage.log`. At this snapshot its live execution session
-  was 65111; verify that handle/process or resulting files before restarting.
 - The nine feedback/soft-limit cases were delivered at `746fa1a` and passed CI.
 - The 18 report cases were delivered at `4850815` and passed CI.
 - The 16 protocol cases were delivered at `a4293fb` and passed CI.
@@ -41,8 +39,8 @@ The full coverage goal was explicitly re-established on 2026-10-12.
 
 ## Next work
 
-1. First read the pending merged coverage result. Continue settings gaps (261 executable lines at the older measured snapshot),
-   motion control (152), G-code (466), and report (190). Protocol is now below
+1. Continue fresh gaps: settings 239 executable lines, motion control 152,
+   G-code 455, report 182. Protocol is now below
    150 uncovered lines. Read the JSON for exact remaining line/branch targets.
    Current settings ranges worth inspecting include 1032-1038 (now covered by
    new soft-limit tests), 3050-3056 (plugin restore callbacks, now exercised), 1728-1733 (probe
@@ -50,7 +48,11 @@ The full coverage goal was explicitly re-established on 2026-10-12.
    (decimal/string/IP callback paths now have tests too).
 2. Combined NGC/tool-table file execution now checks M61 deferred-offset
    application, explicit G43/G49 precedence and no pending offset. Candidate
-   next paths include M6 deferred offsets, macro completion and validation errors.
+   M6 deferred offsets, M61 completion and validation cleanup now have tests.
+   Next feature configuration to inspect: LATHE_UVW_OPTION=1 with NGC expressions
+   (currently not compiled). It enables G70/G71/G72 validation and plugin hooks;
+   actual roughing/finishing may be plugin-owned, so assert the core interface
+   contract without inventing a core implementation.
    Use `ngc_tool_file_host.h`; settings initialization must install a valid
    settings-changed callback before reinitializing the parser.
 
@@ -126,7 +128,7 @@ These paths are machine-specific conveniences, not portable requirements:
   validates and commits one case), `list_coverage_gaps.py`, and batch generators.
   They are outside Git, optional, and must be inspected before execution.
   A new agent can write cases manually with the checked-in workflow instead.
-- Evidence files in scratch: `ngc-tools-values-summary.log` (latest sanitizer results), `settings-owners-summary.log`, `feedback-soft-limits-summary.log`, `report-fields-summary.log`, `protocol-lock-summary.log`, `css-execution-summary.log`,
+- Evidence files in scratch: `ngc-file-change-summary.log` (latest sanitizer results), `ngc-tools-values-summary.log`, `settings-owners-summary.log`, `feedback-soft-limits-summary.log`, `report-fields-summary.log`, `protocol-lock-summary.log`, `css-execution-summary.log`,
   `css-execution-tests.log`, `delta-laser-coverage-report.log`,
   `local-core-coverage-latest.json`. Rebuild/retest if these are missing or stale.
 - Local gcovr 8.4 was installed under `<workspace>/work/coverage-python`; an

@@ -125,6 +125,9 @@ GitHub submodule. Check remaining anchors after deleting exception blocks.
   output state as well as update callbacks.
 - Encoder feedback must remain measured input: output mocks must not overwrite
   it merely to mimic requested RPM.
+- Parser errors deliberately discard pending tool actions and deferred offsets.
+  Test that cleanup while verifying the current tool is not changed; do not
+  classify loss of deferred state on an error as an unintended mutation.
 - Hooks that the core captures during initialization must be installed before
   that initialization. Supply real connected/control/report callbacks when a
   tested path can emit reports.
