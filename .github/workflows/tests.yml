@@ -1,0 +1,55 @@
+name: Core tests
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [gcc, clang]
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+      - name: Configure
+        env:
+          CC: ${{ matrix.compiler }}
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=ON
+      - name: Build
+        run: cmake --build build --parallel
+      - name: Test
+        run: ctest --test-dir build --output-on-failure --output-junit results.xml
+      - name: Display individual test results
+        if: always()
+        run: python scripts/summary.py tests build/results.xml
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: results-${{ matrix.compiler }}
+          path: |
+            build/results.xml
+            build/Testing/Temporary/LastTest.log
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+      - run: pip install gcovr==8.4
+      - run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON -DCMAKE_C_COMPILER=gcc
+      - run: cmake --build build --parallel
+      - run: ctest --test-dir build --output-on-failure
+      - name: Report coverage of tested modules
+        run: gcovr --merge-mode-functions=separate --root . --filter 'core/.*\.c$' --html-details coverage.html --xml coverage.xml --print-summary
+      - name: Display coverage table
+        run: python scripts/summary.py coverage coverage.xml
+      - uses: actions/upload-artifact@v7
+        with:
+          name: coverage
+          path: coverage*

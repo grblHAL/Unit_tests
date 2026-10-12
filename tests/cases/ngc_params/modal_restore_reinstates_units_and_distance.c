@@ -1,0 +1,20 @@
+#include "support/engine_host.h"
+#include "ngc_params.h"
+#include "check.h"
+
+int main(void)
+{
+    engine_parser_prepare();
+    char original[] = "G20G91";
+    CHECK(gc_execute_block(original) == Status_OK);
+    gc_override_values_t overrides = {.feed_rate = 100, .rapid_rate = 100, .spindle_rpm = {100}};
+    CHECK(ngc_modal_state_save(&gc_state.modal, &overrides, 125, false));
+    char changed[] = "G21G90";
+    CHECK(gc_execute_block(changed) == Status_OK);
+    CHECK(ngc_modal_state_restore());
+    CHECK(gc_state.modal.units_imperial);
+    CHECK(gc_state.modal.distance_incremental);
+    NEAR(gc_state.feed_rate, 125);
+    ngc_modal_state_invalidate();
+    return EXIT_SUCCESS;
+}

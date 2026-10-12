@@ -1,0 +1,39 @@
+[
+  {
+    "issue": "negative-gcode-word-conversion",
+    "source": "core/gcode.c",
+    "lines": [
+      1486,
+      1487
+    ],
+    "message_pattern": "-[0-9].*is outside the range of representable values of type 'unsigned (?:int|short|long(?: long)?)'",
+    "documentation": "tests/KNOWN_BUGS.md#negative-broadcast-spindle-selector-fails-on-linux"
+  },
+  {
+    "issue": "axis-mask-getter-callback-signature",
+    "source": "core/settings.c",
+    "lines": [
+      2054
+    ],
+    "message_pattern": "call to function get_axis_mask through pointer to incorrect function type 'unsigned int \\(\\*\\)\\(setting_id_t\\)'",
+    "documentation": "tests/KNOWN_BUGS.md#axis-mask-getter-is-called-through-an-incompatible-function-pointer"
+  },
+  {
+    "issue": "tool-table-index-getter-callback-signature",
+    "source": "tests/cases/tool_table/index_lookup_returns_persisted_tool_and_matching_pocket.c",
+    "lines": [
+      10
+    ],
+    "message_pattern": "call to function settings_get_tool_data through pointer to incorrect function type 'tool_table_entry_t \\*\\(\\*\\)\\(unsigned int\\)'",
+    "documentation": "tests/KNOWN_BUGS.md#tool-table-index-getter-is-called-through-an-incompatible-function-pointer"
+  },
+  {
+    "issue": "tool-table-index-getter-callback-signature",
+    "source": "core/report.c",
+    "lines": [
+      673
+    ],
+    "message_pattern": "call to function settings_get_tool_data through pointer to incorrect function type 'tool_table_entry_t \\*\\(\\*\\)\\(unsigned int\\)'",
+    "documentation": "tests/KNOWN_BUGS.md#tool-table-index-getter-is-called-through-an-incompatible-function-pointer"
+  }
+]

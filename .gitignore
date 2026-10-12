@@ -41,3 +41,8 @@ build
 
 .vscode/settings.json
 .vscode/c_cpp_properties.json
+
+/build*/
+/coverage*/
+
+__pycache__/
