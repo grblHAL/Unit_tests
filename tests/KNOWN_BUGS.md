@@ -817,3 +817,34 @@ endpoint and default argument expectations.
 [G71 block](known_bugs.cmake#L220) and [G72 block](known_bugs.cmake#L224)
 from `tests/known_bugs.cmake`, rerun both tests as clean passes and retain all
 fractional-variant controls. Delete this section when both are fixed.
+
+## G40 exit-distance validation reads arc offsets instead of the linear target
+
+**Marked known:** 2026-10-12
+
+With `CUTTER_COMP_ENABLE=1`, accept cutter configuration `G41.1D6` through
+the plugin interface, then cancel it with standalone `G40`. The core requires
+the next linear exit to be at least the cutter diameter (6 mm in this example).
+The regressions isolate core parsing with a configuration-accepting plugin
+replacement; they do not implement compensated geometry or physical motion.
+
+[core/gcode.c:3363-3365](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/gcode.c#L3363-L3365)
+computes that exit vector from `gc_block.values.ijk`, the arc-offset fields,
+instead of the actual linear XYZ target. With no I/J/K words these are zero:
+the comparison effectively depends on the current distance from the origin.
+
+- Starting at X0, `G1X10F100` is a valid 10 mm exit, but it is rejected.
+- Starting at X10, `G1X11F100` is a 1 mm exit and should be rejected; it returns
+  `Status_OK` and advances the parser position to X11.
+
+Use the resolved linear target and current position to calculate exit distance,
+accounting for units, offsets and distance mode. The existing short-exit-from-
+origin control must continue to reject a move shorter than the cutter diameter.
+
+**Regressions:** [valid long exit](cases/cutter_comp/g40_long_linear_exit_is_validated_from_xyz_target.c)
+and [invalid short exit](cases/cutter_comp/g40_short_exit_away_from_origin_is_rejected.c).
+
+**Remove exceptions when fixed:** delete the [long-exit block](known_bugs.cmake#L228)
+and [short-exit block](known_bugs.cmake#L232) from `tests/known_bugs.cmake`.
+Keep both correct expectations and the passing boundary/control cases. Delete
+this section once both regressions pass without exceptions.
