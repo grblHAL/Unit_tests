@@ -1,6 +1,7 @@
 #pragma once
 #include "support/homing_host.h"
 static int32_t squared_primary, squared_secondary;
+static int32_t primary_switch_steps = 80, secondary_switch_steps = 120;
 static bool primary_disabled, secondary_disabled;
 static unsigned squared_disable_calls, primary_stops, secondary_stops;
 static axes_signals_t squared_axis(bool auto_squared)
@@ -28,8 +29,11 @@ static void squared_pulse(stepper_t *stepper)
 }
 static home_signals_t squared_switches(void)
 {
-    return (home_signals_t){.a = {.mask = squared_primary >= 80 ? X_AXIS_BIT : 0},
-                            .b = {.mask = squared_secondary >= 120 ? X_AXIS_BIT : 0}};
+    bool negative = (settings.homing.dir_mask.value & X_AXIS_BIT) != 0;
+    bool primary = negative ? squared_primary <= -primary_switch_steps : squared_primary >= primary_switch_steps;
+    bool secondary = negative ? squared_secondary <= -secondary_switch_steps : squared_secondary >= secondary_switch_steps;
+    return (home_signals_t){.a = {.mask = primary ? X_AXIS_BIT : 0},
+                            .b = {.mask = secondary ? X_AXIS_BIT : 0}};
 }
 static inline void prepare_autosquare_homing(void)
 {
