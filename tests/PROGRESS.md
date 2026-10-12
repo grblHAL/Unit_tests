@@ -9,8 +9,8 @@ This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 - Latest verified committed/pushed revision: `b64ce14308dcfbc84701ac39da09e4edb16eafdb` (prior delivery).
 - Core pin: `451a539c6ed0f00499b8b48258f9aa7971fac384` from
   https://github.com/grblHAL/core. Core has not been patched locally.
-- Full Windows Clang ASan/UBSan run: **2,150 tests**; **2,049 clean passes**,
-  **46 passes with known sanitizer diagnostics**, **55 known regressions**,
+- Full Windows Clang ASan/UBSan run: **2,151 tests**; **2,049 clean passes**,
+  **46 passes with known sanitizer diagnostics**, **56 known regressions**,
   **0 unexpected failures**, **0 skipped**. The summary check passed too.
 - Latest verified GitHub Actions run:
   https://github.com/petervanderwalt/Unit_tests/actions/runs/38286148402
@@ -31,9 +31,12 @@ This is a snapshot, not proof that future checkouts or CI runs are unchanged.
   rejection. Full sanitizer and strict summary passed: `ram-final-tests.log`
   and `ram-final-summary.log`. RAM deletion tests explicitly make the mount
   visible because the default hidden mount rejects public mutations.
-  Next investigate populated reset: `fs_reset()` frees file nodes without
-  clearing its list head; confirm with a narrowly matched sanitizer regression
-  before classifying/documenting a defect. No exception was added for this yet.
+  Populated reset confirmed a stale-list use-after-free: regression `6d25ee7`
+  and narrow wrapper/docs `2769903` retain safe reset/reuse assertions. Details
+  and exact cleanup are in KNOWN_BUGS.md. Full sanitizer and strict summary
+  passed at 2,151 cases: `ram-reset-full-tests.log` and
+  `ram-reset-full-summary.log`. Prior pushed batch CI run `38287310214` at
+  `f930f38` remains in progress; verify it before the next push.
 - The prior delivery added 17 `acceleration_profiles` cases through `9501ee1`:
   G187 P1-P5 scaling of actual planned moves, validation, initialization,
   program-end resets, same-block selection and preservation of queued moves.
@@ -209,7 +212,7 @@ These paths are machine-specific conveniences, not portable requirements:
   validates and commits one case), `list_coverage_gaps.py`, and batch generators.
   They are outside Git, optional, and must be inspected before execution.
   A new agent can write cases manually with the checked-in workflow instead.
-- Evidence files in scratch: `ram-final-summary.log` (latest sanitizer results), `modal-report-todo-summary.log`, `settings-toolsetter-summary.log`, `jog-laser-summary.log`, `spindle-sync-feature-summary.log`, `rotation-feature-summary.log`, `jerk-feature-summary.log`, `acceleration-summary.log`, `cutter-feature-summary.log`, `lathe-feature-summary.log`, `ngc-file-change-summary.log`, `ngc-tools-values-summary.log`, `settings-owners-summary.log`, `feedback-soft-limits-summary.log`, `report-fields-summary.log`, `protocol-lock-summary.log`, `css-execution-summary.log`,
+- Evidence files in scratch: `ram-reset-full-summary.log` (latest sanitizer results), `ram-final-summary.log`, `modal-report-todo-summary.log`, `settings-toolsetter-summary.log`, `jog-laser-summary.log`, `spindle-sync-feature-summary.log`, `rotation-feature-summary.log`, `jerk-feature-summary.log`, `acceleration-summary.log`, `cutter-feature-summary.log`, `lathe-feature-summary.log`, `ngc-file-change-summary.log`, `ngc-tools-values-summary.log`, `settings-owners-summary.log`, `feedback-soft-limits-summary.log`, `report-fields-summary.log`, `protocol-lock-summary.log`, `css-execution-summary.log`,
   `css-execution-tests.log`, `delta-laser-coverage-report.log`,
   `local-core-coverage-latest.json`. Rebuild/retest if these are missing or stale.
 - Local gcovr 8.4 was installed under `<workspace>/work/coverage-python`; an
