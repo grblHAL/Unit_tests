@@ -28,11 +28,11 @@ static void laser_output(spindle_ptrs_t *spindle, spindle_state_t state, float r
 static spindle_state_t laser_input(spindle_ptrs_t *spindle) { (void)spindle; return laser_output_state; }
 static control_signals_t laser_controls(void) { return (control_signals_t){0}; }
 static bool laser_connected(void) { return true; }
-static inline void prepare_laser_program(bool check_mode)
+static inline void prepare_pwm_program_mode(machine_mode_t mode, bool check_mode)
 {
     engine_prepare();
     sys.cold_start = true;
-    settings.mode = Mode_Laser;
+    settings.mode = mode;
     settings.arc_tolerance = 0.02f;
     settings.planner_buffer_blocks = 64;
     laser_pwm_context.settings = &settings.pwm_spindle;
@@ -54,7 +54,7 @@ static inline void prepare_laser_program(bool check_mode)
     grbl.on_execute_realtime = protocol_execute_noop;
     report_init_fns(); report_init();
     state_set(check_mode ? STATE_CHECK_MODE : STATE_IDLE);
-    CHECK(spindle_get(0)->cap.laser);
+    CHECK(spindle_get(0)->cap.laser == (mode == Mode_Laser));
     laser_output_calls = 0;
 }
 static inline status_code_t laser_block(const char *text)
@@ -62,3 +62,6 @@ static inline status_code_t laser_block(const char *text)
     char block[96]; CHECK(strlen(text) < sizeof(block)); strcpy(block, text);
     return gc_execute_block(block);
 }
+
+static inline void prepare_laser_program(bool check_mode)
+{ prepare_pwm_program_mode(Mode_Laser, check_mode); }
