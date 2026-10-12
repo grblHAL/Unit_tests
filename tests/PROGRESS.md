@@ -6,21 +6,21 @@ This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 ## Current baseline
 
 - Repository: https://github.com/petervanderwalt/Unit_tests, branch `master`.
-- Latest verified committed/pushed revision: `70fe3b8212219239c4578db0e107f82995445d6c` (prior delivery).
+- Latest verified committed/pushed revision: `44c59e0708a7a3078263bf9bf942155f301e724e` (prior delivery).
 - Core pin: `451a539c6ed0f00499b8b48258f9aa7971fac384` from
   https://github.com/grblHAL/core. Core has not been patched locally.
-- Full Windows Clang ASan/UBSan run: **2,060 tests**; **1,961 clean passes**,
-  **44 passes with known sanitizer diagnostics**, **55 known regressions**,
+- Full Windows Clang ASan/UBSan run: **2,075 tests**; **1,974 clean passes**,
+  **44 passes with known sanitizer diagnostics**, **57 known regressions**,
   **0 unexpected failures**, **0 skipped**. The summary check passed too.
 - Latest verified GitHub Actions run:
-  https://github.com/petervanderwalt/Unit_tests/actions/runs/38262059238
-  at `70fe3b8`, all three jobs completed successfully. CI platform/compiler diagnostic counts
+  https://github.com/petervanderwalt/Unit_tests/actions/runs/38263515220
+  at `44c59e0`, all three jobs completed successfully. CI platform/compiler diagnostic counts
   can differ; inspect actual results instead of assuming Windows totals.
-- Latest merged coverage at `0668e93` / 2,020 tests:
-  **80.3% lines (14,443/17,977)**, **84.2% functions (1,008/1,197)**,
-  **67.4% branches (8,237/12,225)** across 52 core C source files.
-  Merge completed successfully; scratch log: `cutter-feature-coverage.log`.
-  The new acceleration-profile and jerk variants are not included in that measurement.
+- Latest merged coverage at `7f7f58f` / 2,060 tests:
+  **80.4% lines (14,535/18,072)**, **84.2% functions (1,011/1,200)**,
+  **67.6% branches (8,304/12,293)** across 52 core C source files.
+  Merge completed successfully; scratch log: `jerk-feature-coverage.log`.
+  The 15 new rotation cases/configuration are not included in that measurement.
 - The prior delivery added 17 `acceleration_profiles` cases through `9501ee1`:
   G187 P1-P5 scaling of actual planned moves, validation, initialization,
   program-end resets, same-block selection and preservation of queued moves.
@@ -30,18 +30,26 @@ This is a snapshot, not proof that future checkouts or CI runs are unchanged.
   Two correct regressions demonstrate changed state and slower following motion;
   dated source links and exact cleanup instructions are in KNOWN_BUGS.md.
 - The cutter-compensation delivery passed all three CI jobs at `3941003`.
-- Current delivery adds 23 cases through `2448c9d`: jerk ramp regimes and
+- The jerk delivery added 23 cases through `2448c9d`: jerk ramp regimes and
   boundaries, axis limits, jog/system/synchronized exclusions, real stepper
   pulse endpoints, settings conversion/initialization/overrides, hold/resume
   and jerk combined with G187 profiles. Full sanitizers and strict summary
   passed: `jerk-feature-tests.log` and `jerk-feature-summary.log`.
   Two negative-motion tests reproduce the existing documented gcode.c numeric
   cast diagnostic; no new exception or weakened assertion was added.
-- Coverage refresh for all 2,060 tests is running in session 24837; build,
-  test and merge logs are `jerk-feature-coverage-build.log`,
-  `jerk-feature-coverage-tests.log`, `jerk-feature-coverage.log`.
-  Revalidate that process before any restart. Temporary root `.gcov` files
-  must not be committed or removed while a merge is active.
+- Current delivery adds 15 rotation cases through `0f611a8`: XY/ZX/YZ
+  plane transformations, normal-axis preservation, angle direction/zero,
+  G53, actual motor pulses, persisted G10 rotation, reports/NGC parameters,
+  absolute omitted axes and incremental explicit-zero controls.
+  Full sanitizers and strict summary passed: `rotation-feature-tests.log`
+  and `rotation-feature-summary.log`.
+- A confirmed rotation defect adds unwanted movement for omitted incremental
+  axes: after a 90-degree G55 move to local X3/Y4, G91 X2 reaches machine
+  X=-8/Y=5 instead of X=-4/Y=5. Actual driver pulse regression independently
+  confirms 640 instead of 320 negative X pulses. Exact cleanup links and
+  dated source anchors are in KNOWN_BUGS.md; correct assertions are preserved.
+- No coverage process remains active; session 24837 completed successfully.
+  Temporary root `.gcov` files must not be committed or removed during a merge.
 - The five value-helper and four initial file tool cases were delivered at
   `8f74f64` and passed CI. The combined host has NGC expressions and N_TOOLS=4.
 - The 14 restore/probe-getter cases were delivered at `5470584` and passed CI.
@@ -55,8 +63,8 @@ The full coverage goal was explicitly re-established on 2026-10-12.
 
 ## Next work
 
-1. Read the pending jerk coverage refresh before selecting new gaps. Prior measured gaps: settings 239 executable lines, motion control 152,
-   G-code 502, report 187. Protocol is now below
+1. Read the completed jerk coverage refresh before selecting new gaps. Prior measured gaps: settings 240 executable lines, motion control 152,
+   G-code 503, report 187. Protocol is now below
    150 uncovered lines. Read the JSON for exact remaining line/branch targets.
    Current settings ranges worth inspecting include 1032-1038 (now covered by
    new soft-limit tests), 3050-3056 (plugin restore callbacks, now exercised), 1728-1733 (probe
@@ -74,7 +82,7 @@ The full coverage goal was explicitly re-established on 2026-10-12.
    pre-execution hooks, cancellation modes and compound motion restrictions.
    ENABLE_ACCELERATION_PROFILES=1 and ENABLE_JERK_ACCELERATION=1 now have
    standalone and combined host configurations. Remaining candidates include
-   jerk feed overrides/queued transitions, ROTATION_ENABLE parser/hooks, and
+   jerk feed overrides/queued transitions, more rotation offset/arc contracts, and
    SPINDLE_SYNC_ENABLE stepper synchronization (encoder contracts required). ENABLE_PATH_BLENDING is explicitly unfinished in config.h;
    do not invent a supported contract for it.
    Use `ngc_tool_file_host.h`; settings initialization must install a valid
@@ -152,7 +160,7 @@ These paths are machine-specific conveniences, not portable requirements:
   validates and commits one case), `list_coverage_gaps.py`, and batch generators.
   They are outside Git, optional, and must be inspected before execution.
   A new agent can write cases manually with the checked-in workflow instead.
-- Evidence files in scratch: `jerk-feature-summary.log` (latest sanitizer results), `acceleration-summary.log`, `cutter-feature-summary.log`, `lathe-feature-summary.log`, `ngc-file-change-summary.log`, `ngc-tools-values-summary.log`, `settings-owners-summary.log`, `feedback-soft-limits-summary.log`, `report-fields-summary.log`, `protocol-lock-summary.log`, `css-execution-summary.log`,
+- Evidence files in scratch: `rotation-feature-summary.log` (latest sanitizer results), `jerk-feature-summary.log`, `acceleration-summary.log`, `cutter-feature-summary.log`, `lathe-feature-summary.log`, `ngc-file-change-summary.log`, `ngc-tools-values-summary.log`, `settings-owners-summary.log`, `feedback-soft-limits-summary.log`, `report-fields-summary.log`, `protocol-lock-summary.log`, `css-execution-summary.log`,
   `css-execution-tests.log`, `delta-laser-coverage-report.log`,
   `local-core-coverage-latest.json`. Rebuild/retest if these are missing or stale.
 - Local gcovr 8.4 was installed under `<workspace>/work/coverage-python`; an

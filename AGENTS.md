@@ -143,3 +143,16 @@ GitHub submodule. Check remaining anchors after deleting exception blocks.
 - PID deadband and `p_max_error` are not implemented contracts in the pinned
   source. Zero sample rate needs an upstream-defined contract before assigning
   an expected result.
+
+## Additional feature fixtures
+
+- Jerk acceleration has standalone and G187-combined hosts. Initialize every
+  moving axis jerk in motion fixtures; fixture defaults leave it zero. Tests
+  must check planner limits and actual pulse/endpoint behavior independently.
+- Spindle-synchronized planner data requires a valid `get_data` encoder callback,
+  even when only testing the planner's jerk exclusion. Missing driver callbacks
+  are fixture contract errors, not automatic evidence of a core defect.
+- Rotation tests use the actual core rotate function and persisted coordinates.
+  G91 omitted axes must represent zero incremental movement. The documented
+  regression must retain that expectation; explicit-zero and absolute-motion
+  control cases prevent accidentally treating the current defect as intended.

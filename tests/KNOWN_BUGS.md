@@ -875,3 +875,32 @@ The passing P1-P5, same-block and queued-move controls remain separate tests.
 and [planned-move block](known_bugs.cmake#L240) from `tests/known_bugs.cmake`.
 Retain both tests with their correct expectations; delete this section once
 they pass without exceptions.
+
+## Rotated single-axis incremental moves add movement from the omitted axis
+
+**Marked known:** 2026-10-12
+
+With `ROTATION_ENABLE=1`, set G55 rotation to 90 degrees. From the origin,
+`G55G1X3Y4F100` reaches machine X=-4, Y=3 mm. Follow it with `G91G1X2`:
+the correct endpoint is X=-4, Y=5 mm, since omitted incremental Y means zero.
+The pinned core instead reaches X=-8, Y=5 mm. At 80 steps/mm, the real stepper
+code sends the driver 640 negative X pulses instead of 320 over these two moves.
+The equivalent explicit-zero command `G91G1X2Y0` passes, as does absolute
+single-axis motion, so the defect is specific to omitted incremental axes.
+
+[core/gcode.c:3226-3233](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/gcode.c#L3226-L3233)
+fills the omitted rotated-plane axis from the unrotated current absolute
+position, even for G91. The later
+[incremental addition](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/gcode.c#L3266-L3267)
+then adds that unwanted component to the current machine position. Fill omitted
+incremental components with zero before rotating the delta; retain absolute
+single-axis completion behavior.
+
+**Regressions:** [parser/planner endpoint](cases/rotation/incremental_single_axis_keeps_omitted_delta_zero.c)
+and [actual driver pulses](cases/rotation/incremental_single_axis_executes_only_rotated_delta.c).
+The explicit-zero incremental and absolute single-axis controls remain separate.
+
+**Remove exceptions when fixed:** delete the [endpoint block](known_bugs.cmake#L244)
+and [pulse block](known_bugs.cmake#L248) from `tests/known_bugs.cmake`.
+Keep both tests with their correct expectations. Delete this section once both
+pass without exceptions.

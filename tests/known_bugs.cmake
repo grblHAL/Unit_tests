@@ -240,3 +240,11 @@ endif()
 if(TEST acceleration_profiles.rejected_profile_command_does_not_slow_next_planned_move)
   set_tests_properties(acceleration_profiles.rejected_profile_command_does_not_slow_next_planned_move PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+if(TEST rotation.incremental_single_axis_keeps_omitted_delta_zero)
+  set_tests_properties(rotation.incremental_single_axis_keeps_omitted_delta_zero PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+if(TEST rotation.incremental_single_axis_executes_only_rotated_delta)
+  set_tests_properties(rotation.incremental_single_axis_executes_only_rotated_delta PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
