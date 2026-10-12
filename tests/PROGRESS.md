@@ -6,27 +6,29 @@ This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 ## Current baseline
 
 - Repository: https://github.com/petervanderwalt/Unit_tests, branch `master`.
-- Latest verified committed/pushed revision: `ceb69640302f95c95ec809574c1b16e6694ca1f5`.
+- Latest verified committed/pushed revision: `a4293fb2f96d7fb5f77a62db800bad7bd701b260`.
 - Core pin: `451a539c6ed0f00499b8b48258f9aa7971fac384` from
   https://github.com/grblHAL/core. Core has not been patched locally.
-- Full Windows Clang ASan/UBSan run: **1,925 tests**; **1,834 clean passes**,
+- Full Windows Clang ASan/UBSan run: **1,943 tests**; **1,852 clean passes**,
   **42 passes with known sanitizer diagnostics**, **49 known regressions**,
   **0 unexpected failures**, **0 skipped**. The summary check passed too.
 - Latest verified GitHub Actions run:
-  https://github.com/petervanderwalt/Unit_tests/actions/runs/38251127952
-  at `ceb6964`, all three jobs completed successfully. CI platform/compiler diagnostic counts
+  https://github.com/petervanderwalt/Unit_tests/actions/runs/38251798485
+  at `a4293fb`, completed successfully. CI platform/compiler diagnostic counts
   can differ; inspect actual results instead of assuming Windows totals.
 - Latest merged coverage at `e88cceb` / 1,903 tests:
   **79.4% lines (14,108/17,765)**, **84.2% functions (1,003/1,191)**,
   **66.1% branches (7,977/12,059)** across 52 core C source files.
   Six subsequent CSS cases have passed full sanitizers but are not included in
   that measurement. Coverage remains incomplete.
-- Current delivery adds 16 protocol cases through `3259702`: critical-alarm
-  motion rejection, setting queries and editing; coolant toggle/capability/alarm/
-  delay/plugin handling; reset with E-stop, motor fault or no fault.
-  Full sanitizer suite and strict summary passed before this handoff update.
-- The earlier six CSS radius/execution/rejection cases were delivered at
-  `ceb6964` and passed GCC, Clang and coverage CI jobs.
+- Current delivery adds 18 report cases through `6ed3c20`: realtime switch,
+  limit and probe fields; MPG/automatic-report fields; tool-reference axes;
+  multiline setting descriptions and reboot-note ordering.
+  Full sanitizer suite and strict summary passed.
+- The 16 protocol cases were delivered at `a4293fb` and passed CI.
+- A new local coverage build/test/merge is running for all 1,943 cases. Its
+  scratch log is `protocol-report-coverage.log`; inspect the live process before
+  deciding whether to wait, restart or claim a refreshed measurement.
 
 The handoff documents were committed and pushed as `e88cceb`; the earlier
 no-push restriction was lifted by the user's explicit commit/push request.
@@ -34,9 +36,9 @@ The full coverage goal was explicitly re-established on 2026-10-12.
 
 ## Next work
 
-1. Continue report gaps (currently 1,508/1,764 executable lines), including
-   realtime status pin/MPG/override fields. Sixteen protocol cases now exercise
-   several previous gaps; refresh coverage after the next batch.
+1. Read the pending refreshed coverage and choose remaining source branches.
+   Recent protocol/report batches cover many previous realtime gaps. Continue
+   settings, motion control, G-code and report paths according to fresh evidence.
 2. Continue CSS integration: positive-radius inward travel, nonzero start radius,
    coordinate/tool offsets, spindle-off behavior, RPM mode transitions and
    relevant planes. Read parser synchronization before assuming multiple CSS
@@ -109,7 +111,7 @@ These paths are machine-specific conveniences, not portable requirements:
   validates and commits one case), `list_coverage_gaps.py`, and batch generators.
   They are outside Git, optional, and must be inspected before execution.
   A new agent can write cases manually with the checked-in workflow instead.
-- Evidence files in scratch: `protocol-lock-summary.log` (latest sanitizer results), `css-execution-summary.log`,
+- Evidence files in scratch: `report-fields-summary.log` (latest sanitizer results), `protocol-lock-summary.log`, `css-execution-summary.log`,
   `css-execution-tests.log`, `delta-laser-coverage-report.log`,
   `local-core-coverage-latest.json`. Rebuild/retest if these are missing or stale.
 - Local gcovr 8.4 was installed under `<workspace>/work/coverage-python`; an
