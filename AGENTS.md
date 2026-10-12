@@ -170,3 +170,12 @@ GitHub submodule. Check remaining anchors after deleting exception blocks.
 - Zero-length constant-power laser lines use buffer synchronization before
   applying output. Verify pulse completion and an empty planner from the output
   callback, not only the final requested power.
+
+- `toolsetter_motion_host.h` runs actual G59.3/G30 tool-change positioning and
+  semi-automatic probe workflows. Its Z contact sensor reads machine steps;
+  XY pulse checks require retracted Z. Set the real work-envelope bounds before
+  automatic probing, since probe travel is clipped for homed axes. Test both
+  contact/release reference modes, existing-reference offsets and failure cleanup.
+- Select substantial uncovered workflows from fresh line/branch evidence.
+  Aggregate function coverage across variants before calling a function untouched;
+  a zero-count record in one configuration can be covered in another.
