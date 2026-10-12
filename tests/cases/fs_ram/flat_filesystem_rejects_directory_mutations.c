@@ -1,0 +1,20 @@
+#include "hal.h"
+#include "fs_ram.h"
+#include "support/backend_close.h"
+#include "check.h"
+
+int main(void)
+{
+    fs_ram_mount();
+    CHECK(vfs_mount_set_mode("/ram", (vfs_st_mode_t){ .directory = true }));
+    CHECK(vfs_mkdir("/ram/subdir") == -1);
+    CHECK(vfs_rmdir("/ram/subdir") == -1);
+    CHECK(vfs_chdir("/ram/subdir") == -1);
+    vfs_file_t *file = vfs_open("/ram/job", "w");
+    CHECK(file != NULL);
+    CHECK(vfs_write("ok", 1, 2, file) == 2);
+    backend_close(file);
+    vfs_stat_t st = {0};
+    CHECK(vfs_stat("/ram/job", &st) == 0 && st.st_size == 2);
+    return EXIT_SUCCESS;
+}
