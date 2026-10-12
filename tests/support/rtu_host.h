@@ -8,6 +8,10 @@ void modbus_rtu_init(int8_t instance, int8_t direction);
 static uint8_t tx_bytes[MODBUS_MAX_ADU_SIZE], rx_bytes[MODBUS_MAX_ADU_SIZE];
 static uint16_t tx_length, rx_length, rx_position;
 static unsigned tx_calls, rx_calls, exceptions;
+static unsigned option_report_calls;
+static bool option_report_new;
+static bool rtu_connected(void) { return true; }
+static void original_options(bool newopt) { option_report_calls++; option_report_new = newopt; }
 static uint8_t exception_code;
 static modbus_message_t reply;
 static bool baud_rate(uint32_t baud) { CHECK(baud == 19200); return true; }
@@ -46,6 +50,8 @@ static inline void prepare_rtu_with_reset(driver_reset_ptr reset)
     static io_stream_details_t streams = {.n_streams = 1, .streams = &serial};
     engine_prepare();
     hal.driver_reset = reset;
+    hal.stream.is_connected = rtu_connected;
+    grbl.on_report_options = original_options;
     hal.nvs.type = NVS_EEPROM;
     serial.flags.claimable = serial.flags.modbus_ready = true;
     stream_register_streams(&streams);
