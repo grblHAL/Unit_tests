@@ -6,26 +6,31 @@ This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 ## Current baseline
 
 - Repository: https://github.com/petervanderwalt/Unit_tests, branch `master`.
-- Latest verified committed/pushed revision: `746fa1a8b4bbe265f442a3d53dd02a0f5765ceda`.
+- Latest verified committed/pushed revision: `54705840105b6245eb4df13815c10d8a779e44af`.
 - Core pin: `451a539c6ed0f00499b8b48258f9aa7971fac384` from
   https://github.com/grblHAL/core. Core has not been patched locally.
-- Full Windows Clang ASan/UBSan run: **1,966 tests**; **1,875 clean passes**,
+- Full Windows Clang ASan/UBSan run: **1,975 tests**; **1,884 clean passes**,
   **42 passes with known sanitizer diagnostics**, **49 known regressions**,
   **0 unexpected failures**, **0 skipped**. The summary check passed too.
 - Latest verified GitHub Actions run:
-  https://github.com/petervanderwalt/Unit_tests/actions/runs/38253515729
-  at `746fa1a`, all three jobs completed successfully. CI platform/compiler diagnostic counts
+  https://github.com/petervanderwalt/Unit_tests/actions/runs/38254261691
+  at `5470584`, all three jobs completed successfully. CI platform/compiler diagnostic counts
   can differ; inspect actual results instead of assuming Windows totals.
 - Latest merged coverage at `6ed3c20` / 1,943 tests:
   **80.1% lines (14,229/17,765)**, **84.2% functions (1,003/1,191)**,
   **67.0% branches (8,076/12,059)** across 52 core C source files.
   The merge completed successfully; scratch log: `protocol-report-coverage.log`.
-  Twenty-three subsequent cases are not included in that measurement.
-- Current delivery adds 14 settings cases through `5ebd75a`: registered core/
-  driver restore selection and optional callbacks, preserved custom build info,
-  and capability-aware primary/toolsetter/secondary probe inversion getters.
-  Full sanitizer suite and strict summary passed; scratch evidence:
-  `settings-owners-summary.log` and `settings-owners-tests.log`.
+  Thirty-two subsequent cases are not included in that measurement.
+- Current delivery adds five settings value-helper cases and four file-based
+  tool-change cases through `1d5b8c3`. The new host variant combines
+  `NGC_EXPRESSIONS_ENABLE=1` and `N_TOOLS=4`, routed through `ngc_tools`.
+  Full sanitizer suite and strict summary passed; evidence:
+  `ngc-tools-values-summary.log` and `ngc-tools-values-tests.log`.
+- The 14 restore/probe-getter cases were delivered at `5470584` and passed CI.
+- A merged coverage refresh for all 1,975 tests is running. Scratch logs:
+  `settings-ngc-tools-coverage-build.log`, `settings-ngc-tools-coverage-tests.log`,
+  `settings-ngc-tools-coverage.log`. At this snapshot its live execution session
+  was 65111; verify that handle/process or resulting files before restarting.
 - The nine feedback/soft-limit cases were delivered at `746fa1a` and passed CI.
 - The 18 report cases were delivered at `4850815` and passed CI.
 - The 16 protocol cases were delivered at `a4293fb` and passed CI.
@@ -36,13 +41,20 @@ The full coverage goal was explicitly re-established on 2026-10-12.
 
 ## Next work
 
-1. Continue settings gaps (261 executable lines at the measured snapshot),
+1. First read the pending merged coverage result. Continue settings gaps (261 executable lines at the older measured snapshot),
    motion control (152), G-code (466), and report (190). Protocol is now below
    150 uncovered lines. Read the JSON for exact remaining line/branch targets.
    Current settings ranges worth inspecting include 1032-1038 (now covered by
    new soft-limit tests), 3050-3056 (plugin restore callbacks, now exercised), 1728-1733 (probe
-   inversion getters, now exercised), and numeric/string formatting paths.
-2. CSS inward travel, nonzero start, G92 offsets, alternative plane and stopped/
+   inversion getters, now exercised), and numeric/string formatting paths
+   (decimal/string/IP callback paths now have tests too).
+2. Combined NGC/tool-table file execution now checks M61 deferred-offset
+   application, explicit G43/G49 precedence and no pending offset. Candidate
+   next paths include M6 deferred offsets, macro completion and validation errors.
+   Use `ngc_tool_file_host.h`; settings initialization must install a valid
+   settings-changed callback before reinitializing the parser.
+
+   CSS inward travel, nonzero start, G92 offsets, alternative plane and stopped/
    zero-speed rejection have passing tests. Remaining candidates include tool
    offsets, RPM mode transitions and coordinated queue behavior. Read parser
    synchronization before assuming multiple CSS moves remain queued.
@@ -114,7 +126,7 @@ These paths are machine-specific conveniences, not portable requirements:
   validates and commits one case), `list_coverage_gaps.py`, and batch generators.
   They are outside Git, optional, and must be inspected before execution.
   A new agent can write cases manually with the checked-in workflow instead.
-- Evidence files in scratch: `settings-owners-summary.log` (latest sanitizer results), `feedback-soft-limits-summary.log`, `report-fields-summary.log`, `protocol-lock-summary.log`, `css-execution-summary.log`,
+- Evidence files in scratch: `ngc-tools-values-summary.log` (latest sanitizer results), `settings-owners-summary.log`, `feedback-soft-limits-summary.log`, `report-fields-summary.log`, `protocol-lock-summary.log`, `css-execution-summary.log`,
   `css-execution-tests.log`, `delta-laser-coverage-report.log`,
   `local-core-coverage-latest.json`. Rebuild/retest if these are missing or stale.
 - Local gcovr 8.4 was installed under `<workspace>/work/coverage-python`; an
