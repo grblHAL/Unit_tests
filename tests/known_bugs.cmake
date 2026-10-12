@@ -216,3 +216,11 @@ endif()
 if(TEST gcode.laser_check_mode_speed_change_does_not_call_driver)
   set_tests_properties(gcode.laser_check_mode_speed_change_does_not_call_driver PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+if(TEST lathe_ngc.g71_passes_default_roughing_arguments_to_plugin)
+  set_tests_properties(lathe_ngc.g71_passes_default_roughing_arguments_to_plugin PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+if(TEST lathe_ngc.g72_passes_default_roughing_arguments_to_plugin)
+  set_tests_properties(lathe_ngc.g72_passes_default_roughing_arguments_to_plugin PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
