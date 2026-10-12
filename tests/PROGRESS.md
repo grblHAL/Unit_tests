@@ -6,29 +6,27 @@ This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 ## Current baseline
 
 - Repository: https://github.com/petervanderwalt/Unit_tests, branch `master`.
-- Latest verified committed/pushed revision: `a4293fb2f96d7fb5f77a62db800bad7bd701b260`.
+- Latest verified committed/pushed revision: `4850815600e415074b9a436453d58fa5cf8df94e`.
 - Core pin: `451a539c6ed0f00499b8b48258f9aa7971fac384` from
   https://github.com/grblHAL/core. Core has not been patched locally.
-- Full Windows Clang ASan/UBSan run: **1,943 tests**; **1,852 clean passes**,
+- Full Windows Clang ASan/UBSan run: **1,952 tests**; **1,861 clean passes**,
   **42 passes with known sanitizer diagnostics**, **49 known regressions**,
   **0 unexpected failures**, **0 skipped**. The summary check passed too.
 - Latest verified GitHub Actions run:
-  https://github.com/petervanderwalt/Unit_tests/actions/runs/38251798485
-  at `a4293fb`, completed successfully. CI platform/compiler diagnostic counts
+  https://github.com/petervanderwalt/Unit_tests/actions/runs/38252616638
+  at `4850815`, completed successfully. CI platform/compiler diagnostic counts
   can differ; inspect actual results instead of assuming Windows totals.
-- Latest merged coverage at `e88cceb` / 1,903 tests:
-  **79.4% lines (14,108/17,765)**, **84.2% functions (1,003/1,191)**,
-  **66.1% branches (7,977/12,059)** across 52 core C source files.
-  Six subsequent CSS cases have passed full sanitizers but are not included in
-  that measurement. Coverage remains incomplete.
-- Current delivery adds 18 report cases through `6ed3c20`: realtime switch,
-  limit and probe fields; MPG/automatic-report fields; tool-reference axes;
-  multiline setting descriptions and reboot-note ordering.
+- Latest merged coverage at `6ed3c20` / 1,943 tests:
+  **80.1% lines (14,229/17,765)**, **84.2% functions (1,003/1,191)**,
+  **67.0% branches (8,076/12,059)** across 52 core C source files.
+  The merge completed successfully; scratch log: `protocol-report-coverage.log`.
+  Nine subsequent cases are not included in that measurement.
+- Current delivery adds nine cases through `e788dc5`: commanded versus measured
+  spindle RPM, stopped/fixed-speed spindle status, unknown override dispatch,
+  soft-limit homing prerequisite, configured travel filtering and disable cleanup.
   Full sanitizer suite and strict summary passed.
+- The 18 report cases were delivered at `4850815` and passed CI.
 - The 16 protocol cases were delivered at `a4293fb` and passed CI.
-- A new local coverage build/test/merge is running for all 1,943 cases. Its
-  scratch log is `protocol-report-coverage.log`; inspect the live process before
-  deciding whether to wait, restart or claim a refreshed measurement.
 
 The handoff documents were committed and pushed as `e88cceb`; the earlier
 no-push restriction was lifted by the user's explicit commit/push request.
@@ -36,13 +34,16 @@ The full coverage goal was explicitly re-established on 2026-10-12.
 
 ## Next work
 
-1. Read the pending refreshed coverage and choose remaining source branches.
-   Recent protocol/report batches cover many previous realtime gaps. Continue
-   settings, motion control, G-code and report paths according to fresh evidence.
-2. Continue CSS integration: positive-radius inward travel, nonzero start radius,
-   coordinate/tool offsets, spindle-off behavior, RPM mode transitions and
-   relevant planes. Read parser synchronization before assuming multiple CSS
-   moves can remain queued simultaneously.
+1. Continue settings gaps (261 executable lines at the measured snapshot),
+   motion control (152), G-code (466), and report (190). Protocol is now below
+   150 uncovered lines. Read the JSON for exact remaining line/branch targets.
+   Current settings ranges worth inspecting include 1032-1038 (now covered by
+   new soft-limit tests), 3050-3056 (plugin restore callbacks), 1728-1733 (probe
+   inversion getters), and numeric/string formatting paths.
+2. CSS inward travel, nonzero start, G92 offsets, alternative plane and stopped/
+   zero-speed rejection have passing tests. Remaining candidates include tool
+   offsets, RPM mode transitions and coordinated queue behavior. Read parser
+   synchronization before assuming multiple CSS moves remain queued.
 3. Investigate whether consecutive queued CSS blocks can overwrite another
    block's interpolation data. `planner.c` copies `spindle_t`, which contains a
    pointer to CSS data; it writes target/delta RPM through that pointer. This is
@@ -51,7 +52,7 @@ The full coverage goal was explicitly re-established on 2026-10-12.
    adding any exception or known-bug entry.
 4. Use fresh gaps to tackle the large remaining sources and configurations.
    From the latest coverage snapshot, uncovered executable lines included:
-   `gcode.c` 467, `settings.c` 261, `report.c` 256, `protocol.c` 162,
+   `gcode.c` 466, `settings.c` 261, `report.c` 190,
    `motion_control.c` 152. These are starting hints, not current measurements.
 5. Expand supported feature configurations where source guards remain uncovered.
    Preserve genuine hardware/contract limitations explicitly; do not silently
@@ -111,7 +112,7 @@ These paths are machine-specific conveniences, not portable requirements:
   validates and commits one case), `list_coverage_gaps.py`, and batch generators.
   They are outside Git, optional, and must be inspected before execution.
   A new agent can write cases manually with the checked-in workflow instead.
-- Evidence files in scratch: `report-fields-summary.log` (latest sanitizer results), `protocol-lock-summary.log`, `css-execution-summary.log`,
+- Evidence files in scratch: `feedback-soft-limits-summary.log` (latest sanitizer results), `report-fields-summary.log`, `protocol-lock-summary.log`, `css-execution-summary.log`,
   `css-execution-tests.log`, `delta-laser-coverage-report.log`,
   `local-core-coverage-latest.json`. Rebuild/retest if these are missing or stale.
 - Local gcovr 8.4 was installed under `<workspace>/work/coverage-python`; an
