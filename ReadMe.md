@@ -9,6 +9,8 @@ and appears individually in CTest and GitHub Actions. Shared mocks live in
 
 ## Known issues
 
+[Pending core features](tests/TODO.md) lists functionality not fully added yet.
+
 [Known core defects](tests/KNOWN_BUGS.md) lists each confirmed defect and the date
 it was marked known.
 Their labelled regressions reproduce the defect; they are not counted as ordinary

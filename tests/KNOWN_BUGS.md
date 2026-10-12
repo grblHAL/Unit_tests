@@ -787,37 +787,6 @@ correct parsed spindle speed.
 **Remove exception when fixed:** remove its [CMake exception](known_bugs.cmake#L217),
 keeping the expected speed of 250 and zero driver calls.
 
-## Plain G71 and G72 use the wrong motion codes
-
-**Marked known:** 2026-10-12
-
-With `LATHE_UVW_OPTION=1` and `NGC_EXPRESSIONS_ENABLE=1`, select G18, then
-execute `G71X10Z20Q7F100` or `G72X10Z20Q7F100`. Both should validate and
-forward the roughing cycle to the `mc_lathe_cycle` replacement supplied by a
-plugin. The pinned core rejects them before calling that handler. The tests
-provide an argument-capturing replacement; they do not implement roughing
-geometry. G70 and the G71.1/G71.2/G72.1/G72.2 controls use the same setup.
-
-[core/gcode.c:1594](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/gcode.c#L1594) stores plain G71/G72 as 71/72.
-However, [core/gcode.h:107-112](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/gcode.h#L107-L112) defines their
-motion codes as 710/720, so they miss the matching validation cases at
-[core/gcode.c:3936](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/gcode.c#L3936-L3941) and execution dispatch at
-[core/gcode.c:4842](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/gcode.c#L4842-L4847). G71 reproduces an unused-word
-error with no handler call. The fractional commands are correctly multiplied
-by ten at [core/gcode.c:1597](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/gcode.c#L1597).
-Map the plain commands to the corresponding enum values while preserving
-G70's code and fractional variant mapping.
-
-**Regressions:** [G71](cases/lathe_ngc/g71_passes_default_roughing_arguments_to_plugin.c)
-and [G72](cases/lathe_ngc/g72_passes_default_roughing_arguments_to_plugin.c).
-Each retains the correct successful dispatch, motion mode, subroutine label,
-endpoint and default argument expectations.
-
-**Remove exceptions when fixed:** delete only the
-[G71 block](known_bugs.cmake#L220) and [G72 block](known_bugs.cmake#L224)
-from `tests/known_bugs.cmake`, rerun both tests as clean passes and retain all
-fractional-variant controls. Delete this section when both are fixed.
-
 ## G40 exit-distance validation reads arc offsets instead of the linear target
 
 **Marked known:** 2026-10-12
@@ -844,8 +813,8 @@ origin control must continue to reject a move shorter than the cutter diameter.
 **Regressions:** [valid long exit](cases/cutter_comp/g40_long_linear_exit_is_validated_from_xyz_target.c)
 and [invalid short exit](cases/cutter_comp/g40_short_exit_away_from_origin_is_rejected.c).
 
-**Remove exceptions when fixed:** delete the [long-exit block](known_bugs.cmake#L228)
-and [short-exit block](known_bugs.cmake#L232) from `tests/known_bugs.cmake`.
+**Remove exceptions when fixed:** delete the [long-exit block](known_bugs.cmake#L222)
+and [short-exit block](known_bugs.cmake#L226) from `tests/known_bugs.cmake`.
 Keep both correct expectations and the passing boundary/control cases. Delete
 this section once both regressions pass without exceptions.
 
@@ -871,8 +840,8 @@ blocks' original acceleration.
 and [next planned move](cases/acceleration_profiles/rejected_profile_command_does_not_slow_next_planned_move.c).
 The passing P1-P5, same-block and queued-move controls remain separate tests.
 
-**Remove exceptions when fixed:** delete the [modal-state block](known_bugs.cmake#L236)
-and [planned-move block](known_bugs.cmake#L240) from `tests/known_bugs.cmake`.
+**Remove exceptions when fixed:** delete the [modal-state block](known_bugs.cmake#L230)
+and [planned-move block](known_bugs.cmake#L234) from `tests/known_bugs.cmake`.
 Retain both tests with their correct expectations; delete this section once
 they pass without exceptions.
 
@@ -900,7 +869,7 @@ single-axis completion behavior.
 and [actual driver pulses](cases/rotation/incremental_single_axis_executes_only_rotated_delta.c).
 The explicit-zero incremental and absolute single-axis controls remain separate.
 
-**Remove exceptions when fixed:** delete the [endpoint block](known_bugs.cmake#L244)
-and [pulse block](known_bugs.cmake#L248) from `tests/known_bugs.cmake`.
+**Remove exceptions when fixed:** delete the [endpoint block](known_bugs.cmake#L238)
+and [pulse block](known_bugs.cmake#L242) from `tests/known_bugs.cmake`.
 Keep both tests with their correct expectations. Delete this section once both
 pass without exceptions.
