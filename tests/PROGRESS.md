@@ -6,21 +6,21 @@ This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 ## Current baseline
 
 - Repository: https://github.com/petervanderwalt/Unit_tests, branch `master`.
-- Latest verified committed/pushed revision: `3aab01c397f914185be03658cb977db0e4dc5d9d` (prior delivery).
+- Latest verified committed/pushed revision: `0009a021fb435b0cdbbaec82a9c6bf398b382aac` (prior delivery).
 - Core pin: `451a539c6ed0f00499b8b48258f9aa7971fac384` from
   https://github.com/grblHAL/core. Core has not been patched locally.
-- Full Windows Clang ASan/UBSan run: **2,091 tests**; **1,990 clean passes**,
-  **44 passes with known sanitizer diagnostics**, **57 known regressions**,
+- Full Windows Clang ASan/UBSan run: **2,105 tests**; **2,002 clean passes**,
+  **46 passes with known sanitizer diagnostics**, **57 known regressions**,
   **0 unexpected failures**, **0 skipped**. The summary check passed too.
 - Latest verified GitHub Actions run:
-  https://github.com/petervanderwalt/Unit_tests/actions/runs/38264526068
-  at `3aab01c`, all three jobs completed successfully. CI platform/compiler diagnostic counts
+  https://github.com/petervanderwalt/Unit_tests/actions/runs/38265826539
+  at `0009a02`, all three jobs completed successfully. CI platform/compiler diagnostic counts
   can differ; inspect actual results instead of assuming Windows totals.
-- Latest merged coverage at `7f7f58f` / 2,060 tests:
-  **80.4% lines (14,535/18,072)**, **84.2% functions (1,011/1,200)**,
-  **67.6% branches (8,304/12,293)** across 52 core C source files.
-  Merge completed successfully; scratch log: `jerk-feature-coverage.log`.
-  The 15 rotation and 16 spindle-sync cases/configurations are not included in that measurement.
+- Latest merged coverage at `020cde1` / 2,091 tests:
+  **80.6% lines (14,653/18,178)**, **84.4% functions (1,014/1,202)**,
+  **67.8% branches (8,378/12,365)** across 52 core C source files.
+  Merge completed successfully; scratch log: `spindle-sync-feature-coverage.log`.
+  The 14 new jog/laser cases are not included in that measurement.
 - The prior delivery added 17 `acceleration_profiles` cases through `9501ee1`:
   G187 P1-P5 scaling of actual planned moves, validation, initialization,
   program-end resets, same-block selection and preservation of queued moves.
@@ -48,18 +48,23 @@ This is a snapshot, not proof that future checkouts or CI runs are unchanged.
   X=-8/Y=5 instead of X=-4/Y=5. Actual driver pulse regression independently
   confirms 640 instead of 320 negative X pulses. Exact cleanup links and
   dated source anchors are in KNOWN_BUGS.md; correct assertions are preserved.
-- Current delivery adds 16 spindle-sync cases through `c587f8c`: encoder
+- The spindle-sync delivery added 16 spindle-sync cases through `c587f8c`: encoder
   capability/PPR, settings hook forwarding and real initialization, synchronized
   Z pulse endpoints, handler reset/normal-block restoration, G95 bypass,
   two-index startup, missing-index/zero-RPM alarms, stop/reset before wakeup,
   and cruising angular feedback with configured PID. Full sanitizers and strict
   summary passed: `spindle-sync-feature-tests.log` and
   `spindle-sync-feature-summary.log`; all 16 additions passed cleanly.
-- Merged coverage refresh for all 2,091 tests is running in session 87092.
-  Check the live process handle and `spindle-sync-feature-coverage-build.log`,
-  `spindle-sync-feature-coverage-tests.log`, `spindle-sync-feature-coverage.log`
-  before restarting. Temporary root `.gcov` files must not be committed or
-  removed during a merge.
+- Current delivery adds 14 motion-control cases through `8abf6ff`:
+  real jog commands/driver pulses, temporary inch/incremental modal settings,
+  feed-override suppression, queued targets, zero distance, soft-limit rejection
+  and clipping; coincident M3/M4/off/nonlaser/check-mode behavior and a power
+  update proven to occur only after the queued move emits all 80 X pulses.
+  Full sanitizers and strict summary passed: `jog-laser-tests.log` and
+  `jog-laser-summary.log`. The two negative-jog cases reproduce the existing
+  documented numeric-cast diagnostic; no new exception was introduced.
+- No coverage process remains active. Session 87092 completed successfully.
+  Temporary root `.gcov` files must not be committed or removed during a merge.
 - The five value-helper and four initial file tool cases were delivered at
   `8f74f64` and passed CI. The combined host has NGC expressions and N_TOOLS=4.
 - The 14 restore/probe-getter cases were delivered at `5470584` and passed CI.
@@ -73,8 +78,8 @@ The full coverage goal was explicitly re-established on 2026-10-12.
 
 ## Next work
 
-1. Read the completed jerk coverage refresh before selecting new gaps. Prior measured gaps: settings 240 executable lines, motion control 152,
-   G-code 503, report 187. Protocol is now below
+1. Read the completed spindle-sync coverage refresh before selecting new gaps. Prior measured gaps: settings 240 executable lines, motion control 152,
+   G-code 521, report 187. Protocol is now below
    150 uncovered lines. Read the JSON for exact remaining line/branch targets.
    Current settings ranges worth inspecting include 1032-1038 (now covered by
    new soft-limit tests), 3050-3056 (plugin restore callbacks, now exercised), 1728-1733 (probe
@@ -171,7 +176,7 @@ These paths are machine-specific conveniences, not portable requirements:
   validates and commits one case), `list_coverage_gaps.py`, and batch generators.
   They are outside Git, optional, and must be inspected before execution.
   A new agent can write cases manually with the checked-in workflow instead.
-- Evidence files in scratch: `spindle-sync-feature-summary.log` (latest sanitizer results), `rotation-feature-summary.log`, `jerk-feature-summary.log`, `acceleration-summary.log`, `cutter-feature-summary.log`, `lathe-feature-summary.log`, `ngc-file-change-summary.log`, `ngc-tools-values-summary.log`, `settings-owners-summary.log`, `feedback-soft-limits-summary.log`, `report-fields-summary.log`, `protocol-lock-summary.log`, `css-execution-summary.log`,
+- Evidence files in scratch: `jog-laser-summary.log` (latest sanitizer results), `spindle-sync-feature-summary.log`, `rotation-feature-summary.log`, `jerk-feature-summary.log`, `acceleration-summary.log`, `cutter-feature-summary.log`, `lathe-feature-summary.log`, `ngc-file-change-summary.log`, `ngc-tools-values-summary.log`, `settings-owners-summary.log`, `feedback-soft-limits-summary.log`, `report-fields-summary.log`, `protocol-lock-summary.log`, `css-execution-summary.log`,
   `css-execution-tests.log`, `delta-laser-coverage-report.log`,
   `local-core-coverage-latest.json`. Rebuild/retest if these are missing or stale.
 - Local gcovr 8.4 was installed under `<workspace>/work/coverage-python`; an

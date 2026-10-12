@@ -111,7 +111,7 @@ GitHub submodule. Check remaining anchors after deleting exception blocks.
 
 ## Established contracts and fixture lessons
 
-- NGC coordinate parameters use `gc_state.modal.units` (G20/G21), not the `$13`
+- NGC coordinate parameters use `gc_state.modal.units_imperial` (G20/G21 in the pinned core), not the `$13`
   serial display setting. Set modal units in those tests.
 - MPG buffered commands may overwrite queued lines by design. Pendants must
   wait for the response before sending another command; this is not a bug.
@@ -162,3 +162,11 @@ GitHub submodule. Check remaining anchors after deleting exception blocks.
   the fixture. `spindle_sync_motion_host.h` models both startup and running
   feedback from measured RPM/time independently of commanded displacement.
   Keep the missing-index alarm and stop/reset tests distinct from normal motion.
+
+- `jog_motion_host.h` drives real $J system commands through planning, stepping
+  and protocol completion. Jog G20/G91 settings apply to that command while
+  preserving program modal units/distance. Rejected jogs must preserve position
+  and avoid motor wakeup; clipped jogs must execute the actual clipped endpoint.
+- Zero-length constant-power laser lines use buffer synchronization before
+  applying output. Verify pulse completion and an empty planner from the output
+  callback, not only the final requested power.
