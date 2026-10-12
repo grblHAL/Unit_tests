@@ -12,11 +12,12 @@ weaken assertions, or add artificial tests solely to inflate coverage.
   that does not depend on the answer.
 - Never add AI, ChatGPT or Codex attribution/branding to branches, commits or
   project artifacts.
-- Make one focused commit per new test, with a descriptive behavior-based name.
-  Keep infrastructure and documentation changes in separate commits.
+- Commit meaningful batches of related tests with descriptive behavior-based
+  messages. The earlier one-commit-per-test rule was revoked by the user.
+  Keep unrelated changes out of the batch.
 - Use separate maintainable case files, shared fixtures only where useful.
-- Prefer larger delivery batches spanning related workflows/modules. Keep one
-  commit per test with focused validation, but run the full sanitizer suite and
+- Prefer larger delivery batches spanning related workflows/modules. Validate
+  focused cases together, and run the full sanitizer suite and
   push/verify CI at substantial delivery boundaries rather than every few tests.
   Continue independent coverage work while CI runs; avoid repeated polling.
   A user instruction not to push overrides this workflow.
@@ -50,9 +51,9 @@ not required project dependencies. Never assume a new machine has them.
 - Route new modules/configurations in `add_core_test()` and the host variants
   in `CMakeLists.txt` when needed. Feature compile definitions must be consistent
   between the test and the linked host core.
-- Validate the individual case before committing it. Reconfigure when adding
-  files or changing registrations. Build the exact target, then run an anchored
-  CTest regex. Run the full sanitizer suite plus `scripts/summary.py` before
+- Validate new cases as a focused batch before committing. Reconfigure when
+  adding files or changing registrations. Build the relevant targets, then run
+  a CTest regex covering the new behavior. Run the full sanitizer suite plus `scripts/summary.py` before
   pushing a batch. The summary can reject diagnostics even when CTest is green.
 - Verify GCC and Clang sanitizer jobs and the coverage job after delivery. Avoid
   rapidly pushing consecutive batches that cancel an earlier running CI job.

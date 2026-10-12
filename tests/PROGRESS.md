@@ -3,6 +3,13 @@
 Last verified: **2026-10-12**. Read this with the root `AGENTS.md` and README.
 This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 
+## Current delivery preference
+
+The user revoked one-commit-per-test on 2026-10-12. Keep separate maintainable
+case files, but commit meaningful related test batches. Focused checks precede
+batch commits; full sanitizer/summary and CI checks happen at substantial push
+boundaries. Do useful coverage work while CI runs rather than repeatedly polling.
+
 ## Current baseline
 
 - Repository: https://github.com/petervanderwalt/Unit_tests, branch `master`.
