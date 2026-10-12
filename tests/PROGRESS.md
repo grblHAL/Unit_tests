@@ -6,35 +6,37 @@ This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 ## Current baseline
 
 - Repository: https://github.com/petervanderwalt/Unit_tests, branch `master`.
-- Latest verified committed/pushed revision: `ef466c92df81d89a21771f3aec14e23d20ab7a4f`.
+- Latest verified committed/pushed revision: `d46afc746172d63d7c379cb0d9f7b96e1b39e9af`.
 - Core pin: `451a539c6ed0f00499b8b48258f9aa7971fac384` from
   https://github.com/grblHAL/core. Core has not been patched locally.
-- Full Windows Clang ASan/UBSan run: **2,000 tests**; **1,907 clean passes**,
-  **42 passes with known sanitizer diagnostics**, **51 known regressions**,
+- Full Windows Clang ASan/UBSan run: **2,020 tests**; **1,925 clean passes**,
+  **42 passes with known sanitizer diagnostics**, **53 known regressions**,
   **0 unexpected failures**, **0 skipped**. The summary check passed too.
 - Latest verified GitHub Actions run:
-  https://github.com/petervanderwalt/Unit_tests/actions/runs/38256523374
-  at `ef466c9`, completed successfully. CI platform/compiler diagnostic counts
+  https://github.com/petervanderwalt/Unit_tests/actions/runs/38258084666
+  at `d46afc7`, all three jobs completed successfully. CI platform/compiler diagnostic counts
   can differ; inspect actual results instead of assuming Windows totals.
-- Latest merged coverage at `1d5b8c3` / 1,975 tests:
-  **80.4% lines (14,285/17,765)**, **84.3% functions (1,004/1,191)**,
-  **67.4% branches (8,132/12,059)** across 52 core C source files.
-  Merge completed successfully; scratch log: `settings-ngc-tools-coverage.log`.
-  Nine subsequent file/tool-change cases are not included in that measurement.
-- Current delivery adds 16 lathe cases through `40a6db7` and a host with
-  `LATHE_UVW_OPTION=1`, `NGC_EXPRESSIONS_ENABLE=1`: U/V/W aliases, imperial/G7
-  diameter semantics, G70 validation, weak handler fallback, G70/G71/G72 plugin
-  argument dispatch and fractional variants. Full sanitizers and summary passed.
-  Evidence: `lathe-feature-summary.log`, `lathe-feature-tests.log`.
-- Plain G71/G72 motion mapping is a newly confirmed defect. Two correct dispatch
-  regressions are expected failures; dated reproduction and cleanup links are in
-  `tests/KNOWN_BUGS.md`. All four fractional controls pass with the same fixture.
-- The nine M61/M6 file cases were delivered at `ef466c9` and passed CI.
-- A fresh coverage build/test/merge for all 2,000 tests is running in session
-  73469. Logs: `lathe-feature-coverage-build.log`,
-  `lathe-feature-coverage-tests.log`, `lathe-feature-coverage.log`.
-  New feature guards expand the denominator; wait for the actual result rather
-  than assuming the older percentage still describes the compiled scope.
+- Latest merged coverage at `40a6db7` / 2,000 tests:
+  **80.4% lines (14,371/17,869)**, **84.2% functions (1,006/1,195)**,
+  **67.5% branches (8,178/12,116)** across 52 core C source files.
+  Merge completed successfully; scratch log: `lathe-feature-coverage.log`.
+  Twenty subsequent cutter-compensation cases are not included in that measurement.
+- Current delivery adds 20 `cutter_comp` cases through `0668e93` with a host
+  combining CUTTER_COMP_ENABLE, LATHE_UVW_OPTION, NGC expressions and N_TOOLS=4:
+  parser validation, default plugin behavior, accepted/refused configuration,
+  tool radii, imperial radius conversion, modal conflicts and lathe orientations.
+  Full sanitizers and strict summary passed; evidence: `cutter-feature-summary.log`
+  and `cutter-feature-tests.log`.
+- G40 exit-distance validation is a newly confirmed defect: it reads IJK instead
+  of linear targets, rejecting valid long exits and accepting too-short exits
+  away from the origin. Two correctly expected regressions and a passing short-
+  exit control are retained; exact dated cleanup links are in KNOWN_BUGS.md.
+- The 16 lathe cases and G71/G72 regressions were delivered at `d46afc7` and passed CI.
+- A merged coverage refresh for all 2,020 tests is running in session 75541.
+  Logs: `cutter-feature-coverage-build.log`, `cutter-feature-coverage-tests.log`,
+  `cutter-feature-coverage.log`. Verify the live handle or completion before
+  restarting; temporary root `.gcov` files must not be committed or removed
+  while a merge is active.
 - The five value-helper and four initial file tool cases were delivered at
   `8f74f64` and passed CI. The combined host has NGC expressions and N_TOOLS=4.
 - The 14 restore/probe-getter cases were delivered at `5470584` and passed CI.
@@ -48,7 +50,7 @@ The full coverage goal was explicitly re-established on 2026-10-12.
 
 ## Next work
 
-1. Read the pending lathe coverage refresh before selecting new gaps. Older measured gaps: settings 239 executable lines, motion control 152,
+1. Read the pending cutter coverage refresh before selecting new gaps. Older measured gaps: settings 239 executable lines, motion control 152,
    G-code 455, report 182. Protocol is now below
    150 uncovered lines. Read the JSON for exact remaining line/branch targets.
    Current settings ranges worth inspecting include 1032-1038 (now covered by
@@ -61,10 +63,15 @@ The full coverage goal was explicitly re-established on 2026-10-12.
    LATHE_UVW_OPTION with NGC expressions is now compiled and tested under
    `lathe_ngc`. `lathe_cycle_capture_host.h` captures a plugin replacement
    interface; it deliberately does not implement roughing geometry.
-   Next major uncompiled guard: CUTTER_COMP_ENABLE. Inspect its supported core
-   validation/modal/plugin contract and add a consistent host variant. Consider
-   combining it with N_TOOLS=4, NGC expressions and LATHE_UVW_OPTION to cover
-   tool radii and lathe orientations. Do not invent plugin geometry behavior.
+   CUTTER_COMP_ENABLE is now compiled with a configuration-capturing weak
+   plugin replacement. It verifies core parsing/state and transfer of parameters,
+   not compensated geometry. Further candidates: tool D0/current-tool radius,
+   pre-execution hooks, cancellation modes and compound motion restrictions.
+   Next uncompiled configuration: ENABLE_ACCELERATION_PROFILES=1. G187 P1..P5
+   factors are 1.0, 0.8, 0.6, 0.4, 0.2. Cover parser validation, planner scaling,
+   initialization and program-end reset. ENABLE_JERK_ACCELERATION remains another
+   uncompiled guard. ENABLE_PATH_BLENDING is explicitly unfinished in config.h;
+   do not invent a supported contract for it.
    Use `ngc_tool_file_host.h`; settings initialization must install a valid
    settings-changed callback before reinitializing the parser.
 
@@ -140,7 +147,7 @@ These paths are machine-specific conveniences, not portable requirements:
   validates and commits one case), `list_coverage_gaps.py`, and batch generators.
   They are outside Git, optional, and must be inspected before execution.
   A new agent can write cases manually with the checked-in workflow instead.
-- Evidence files in scratch: `lathe-feature-summary.log` (latest sanitizer results), `ngc-file-change-summary.log`, `ngc-tools-values-summary.log`, `settings-owners-summary.log`, `feedback-soft-limits-summary.log`, `report-fields-summary.log`, `protocol-lock-summary.log`, `css-execution-summary.log`,
+- Evidence files in scratch: `cutter-feature-summary.log` (latest sanitizer results), `lathe-feature-summary.log`, `ngc-file-change-summary.log`, `ngc-tools-values-summary.log`, `settings-owners-summary.log`, `feedback-soft-limits-summary.log`, `report-fields-summary.log`, `protocol-lock-summary.log`, `css-execution-summary.log`,
   `css-execution-tests.log`, `delta-laser-coverage-report.log`,
   `local-core-coverage-latest.json`. Rebuild/retest if these are missing or stale.
 - Local gcovr 8.4 was installed under `<workspace>/work/coverage-python`; an
