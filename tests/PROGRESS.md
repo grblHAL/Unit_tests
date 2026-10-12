@@ -13,15 +13,15 @@ boundaries. Do useful coverage work while CI runs rather than repeatedly polling
 ## Current baseline
 
 - Repository: https://github.com/petervanderwalt/Unit_tests, branch `master`.
-- Latest verified committed/pushed revision: `eccf396af402f69fec947ac6f5f3edcd7f382d7c` (prior delivery).
+- Latest verified committed/pushed revision: `453aa68396dc3acc4c523d10648ca3c14ddbb795` (prior delivery).
 - Core pin: `451a539c6ed0f00499b8b48258f9aa7971fac384` from
   https://github.com/grblHAL/core. Core has not been patched locally.
-- Full Windows Clang ASan/UBSan run: **2,186 tests**; **2,084 clean passes**,
+- Full Windows Clang ASan/UBSan run: **2,203 tests**; **2,101 clean passes**,
   **46 passes with known sanitizer diagnostics**, **56 known regressions**,
   **0 unexpected failures**, **0 skipped**. The summary check passed too.
 - Latest verified GitHub Actions run:
-  https://github.com/petervanderwalt/Unit_tests/actions/runs/38288352461
-  at `eccf396`, all three jobs completed successfully. CI platform/compiler diagnostic counts
+  https://github.com/petervanderwalt/Unit_tests/actions/runs/38289733133
+  at `453aa68`, all three jobs completed successfully. CI platform/compiler diagnostic counts
   can differ; inspect actual results instead of assuming Windows totals.
 - Latest fresh merged coverage at the `b670a6f` code snapshot / 2,164 tests:
   **82.4% lines (14,985/18,178)**, **86.6% functions (1,041/1,202)**,
@@ -29,7 +29,7 @@ boundaries. Do useful coverage work while CI runs rather than repeatedly polling
   Source denominators stayed unchanged. Built in a new directory to avoid old
   execution counts; merge completed with exit 0. Logs/output:
   `filesystem-fresh-coverage-summary.log`, `filesystem-fresh-coverage.json`.
-  The newer 22 probe/I/O/NGC tests are not included in this measurement.
+  The newer 22 probe/I/O/NGC and 17 Modbus tests are not included in this measurement.
 - New batch through `6e7cebe`: ten probe tests exercise registered IRQ callbacks,
   latching/inversion, protection signals, fallback polling, connection events,
   per-probe trigger queries and interrupt teardown/rearm order; five I/O cases
@@ -41,11 +41,22 @@ boundaries. Do useful coverage work while CI runs rather than repeatedly polling
   Missing-pin fixture corrected in `16f904f`: index 255 was invalid; the test
   now models a driver returning no pin for valid port 0. No exception added.
   G92 restoration explicitly disables volatile G92 storage in its fixture.
+- Modbus RTU expanded by seventeen cases through `637bd4e`: queue flush preserves
+  active transactions, resets chain driver hooks and clean up abort callbacks,
+  stream readiness, baud/timeout persistence, synchronous timeout/CRC retries
+  and exhaustion, serial framing, statistics/reset command, plugin reporting,
+  unavailable format and blocking-event asynchronous dispatch. Full sanitizer
+  and strict summary passed at 2,203 cases: `modbus-expanded-tests.log` and
+  `modbus-expanded-summary.log`. The RTU blocking fixture bounds realtime polls
+  and injects bytes through the actual stream; it does not emulate the protocol.
+  RTU hooks are installed before initialization and reporting has an explicit
+  connected-stream callback. Next substantial module: stepper2 reset, stop and
+  motor callbacks, preserving existing correct known finite-motion regression.
 - Fresh largest remaining gaps: gcode 501 lines, settings 211, report 172,
   Modbus RTU 144, stepper2 139, motion control 128, machine limits 125,
   NGC flow control 123. Untouched functions are aggregated across variants.
-  Next: Modbus queue/reset/retry workflow using `tests/support/rtu_host.h`,
-  then secondary stepper and limits workflows. Existing RTU fixture's reset
+  Next: secondary stepper and limits workflows; Modbus queue/reset/retry has
+  since received the batch above. Existing RTU fixture's reset
   callback must be non-NULL before RTU wraps it. No active coverage process.
 - Expanded filesystem batch through `b670a6f` adds seven embedded filesystem
   tests (directory/list registration, hidden file visibility, storage totals,
@@ -242,7 +253,7 @@ These paths are machine-specific conveniences, not portable requirements:
   validates and commits one case), `list_coverage_gaps.py`, and batch generators.
   They are outside Git, optional, and must be inspected before execution.
   A new agent can write cases manually with the checked-in workflow instead.
-- Evidence files in scratch: `probe-io-ngc-summary.log` (latest sanitizer results), `filesystem-expanded-summary.log`, `ram-reset-full-summary.log`, `ram-final-summary.log`, `modal-report-todo-summary.log`, `settings-toolsetter-summary.log`, `jog-laser-summary.log`, `spindle-sync-feature-summary.log`, `rotation-feature-summary.log`, `jerk-feature-summary.log`, `acceleration-summary.log`, `cutter-feature-summary.log`, `lathe-feature-summary.log`, `ngc-file-change-summary.log`, `ngc-tools-values-summary.log`, `settings-owners-summary.log`, `feedback-soft-limits-summary.log`, `report-fields-summary.log`, `protocol-lock-summary.log`, `css-execution-summary.log`,
+- Evidence files in scratch: `modbus-expanded-summary.log` (latest sanitizer results), `probe-io-ngc-summary.log`, `filesystem-expanded-summary.log`, `ram-reset-full-summary.log`, `ram-final-summary.log`, `modal-report-todo-summary.log`, `settings-toolsetter-summary.log`, `jog-laser-summary.log`, `spindle-sync-feature-summary.log`, `rotation-feature-summary.log`, `jerk-feature-summary.log`, `acceleration-summary.log`, `cutter-feature-summary.log`, `lathe-feature-summary.log`, `ngc-file-change-summary.log`, `ngc-tools-values-summary.log`, `settings-owners-summary.log`, `feedback-soft-limits-summary.log`, `report-fields-summary.log`, `protocol-lock-summary.log`, `css-execution-summary.log`,
   `css-execution-tests.log`, `delta-laser-coverage-report.log`,
   `local-core-coverage-latest.json`. Rebuild/retest if these are missing or stale.
 - Local gcovr 8.4 was installed under `<workspace>/work/coverage-python`; an
