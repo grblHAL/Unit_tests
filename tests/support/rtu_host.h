@@ -40,11 +40,12 @@ static const io_stream_t *claim_serial(uint32_t baud)
 }
 static void received(modbus_message_t *message) { reply = *message; rx_calls++; }
 static void failed(uint8_t code, void *context) { CHECK(context == NULL); exception_code = code; exceptions++; }
-static inline void prepare_rtu(void)
+static inline void prepare_rtu_with_reset(driver_reset_ptr reset)
 {
     static io_stream_properties_t serial = {.type = StreamType_Serial, .instance = 0, .claim = claim_serial};
     static io_stream_details_t streams = {.n_streams = 1, .streams = &serial};
     engine_prepare();
+    hal.driver_reset = reset;
     hal.nvs.type = NVS_EEPROM;
     serial.flags.claimable = serial.flags.modbus_ready = true;
     stream_register_streams(&streams);
@@ -58,6 +59,7 @@ static inline void prepare_rtu(void)
     CHECK(tx_calls == 0 && rx_calls == 0 && exceptions == 0 && exception_code == 0);
     CHECK(tx_length == 0 && reply.rx_length == 0);
 }
+static inline void prepare_rtu(void) { prepare_rtu_with_reset(NULL); }
 static inline void poll_rtu(void) { engine_ticks++; engine_execute_tasks(STATE_IDLE); }
 static inline void send_request(void)
 {
