@@ -202,7 +202,7 @@ compatibility level 1, NGC expressions,
 CoreXY, polar, wall-plotter, delta and five-axis RTCP kinematics, backlash
 compensation, four-axis asymmetric ganging with and without auto-squaring,
 the eight-axis maximum, six-axis UVW remapping, and three registered spindles
-with two active spindle slots, a four-slot persistent tool table, optional spindle PWM linearization, and enabled PID logging. All variants run in one
+with two active spindle slots, a four-slot persistent tool table with and without NGC expressions, optional spindle PWM linearization, and enabled PID logging. All variants run in one
 CTest suite; coverage merges their executed source lines. Compatibility levels
 2 and 10 currently have linked compile regressions in [Known core defects](tests/KNOWN_BUGS.md#legacy-compatibility-reporting-does-not-compile) because the pinned
 core cannot compile their coordinate report. The `separate` function
