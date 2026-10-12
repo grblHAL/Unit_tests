@@ -13,24 +13,40 @@ boundaries. Do useful coverage work while CI runs rather than repeatedly polling
 ## Current baseline
 
 - Repository: https://github.com/petervanderwalt/Unit_tests, branch `master`.
-- Latest verified committed/pushed revision: `f930f38d1d937aa882f64cb5870627c1bf062b4c` (prior delivery).
+- Latest verified committed/pushed revision: `eccf396af402f69fec947ac6f5f3edcd7f382d7c` (prior delivery).
 - Core pin: `451a539c6ed0f00499b8b48258f9aa7971fac384` from
   https://github.com/grblHAL/core. Core has not been patched locally.
-- Full Windows Clang ASan/UBSan run: **2,164 tests**; **2,062 clean passes**,
+- Full Windows Clang ASan/UBSan run: **2,186 tests**; **2,084 clean passes**,
   **46 passes with known sanitizer diagnostics**, **56 known regressions**,
   **0 unexpected failures**, **0 skipped**. The summary check passed too.
 - Latest verified GitHub Actions run:
-  https://github.com/petervanderwalt/Unit_tests/actions/runs/38287310214
-  at `f930f38`, all three jobs completed successfully. CI platform/compiler diagnostic counts
+  https://github.com/petervanderwalt/Unit_tests/actions/runs/38288352461
+  at `eccf396`, all three jobs completed successfully. CI platform/compiler diagnostic counts
   can differ; inspect actual results instead of assuming Windows totals.
-- Latest merged coverage at `ddcff89` / 2,132 tests:
-  **81.5% lines (14,813/18,178)**, **84.8% functions (1,019/1,202)**,
-  **68.5% branches (8,476/12,365)** across 52 core C source files.
-  Merge completed successfully; scratch log: `settings-toolsetter-coverage.log`.
-  The nine new report cases, nine RAM filesystem cases and G71/G72 reclassification are not included in
-  that measurement. Source scope/denominator did not shrink for this gain.
-  Tool change improved from 58.9% (202/343) to 82.8% (284/343); settings is
-  85.4% (1,234/1,445), motion control 78.3% (462/590).
+- Latest fresh merged coverage at the `b670a6f` code snapshot / 2,164 tests:
+  **82.4% lines (14,985/18,178)**, **86.6% functions (1,041/1,202)**,
+  **69.4% branches (8,586/12,365)** across 52 core C source files.
+  Source denominators stayed unchanged. Built in a new directory to avoid old
+  execution counts; merge completed with exit 0. Logs/output:
+  `filesystem-fresh-coverage-summary.log`, `filesystem-fresh-coverage.json`.
+  The newer 22 probe/I/O/NGC tests are not included in this measurement.
+- New batch through `6e7cebe`: ten probe tests exercise registered IRQ callbacks,
+  latching/inversion, protection signals, fallback polling, connection events,
+  per-probe trigger queries and interrupt teardown/rearm order; five I/O cases
+  cover legacy assignment contracts, explicit-claim capabilities and settings
+  readback; seven numbered NGC parameter cases cover probe coordinates/results,
+  M66, stored G28/G30, work-system selection and G92 suspend/restore.
+  Full sanitizer/strict summary passed at 2,186 cases:
+  `probe-io-ngc-tests.log` and `probe-io-ngc-summary.log`.
+  Missing-pin fixture corrected in `16f904f`: index 255 was invalid; the test
+  now models a driver returning no pin for valid port 0. No exception added.
+  G92 restoration explicitly disables volatile G92 storage in its fixture.
+- Fresh largest remaining gaps: gcode 501 lines, settings 211, report 172,
+  Modbus RTU 144, stepper2 139, motion control 128, machine limits 125,
+  NGC flow control 123. Untouched functions are aggregated across variants.
+  Next: Modbus queue/reset/retry workflow using `tests/support/rtu_host.h`,
+  then secondary stepper and limits workflows. Existing RTU fixture's reset
+  callback must be non-NULL before RTU wraps it. No active coverage process.
 - Expanded filesystem batch through `b670a6f` adds seven embedded filesystem
   tests (directory/list registration, hidden file visibility, storage totals,
   relative reads and read-only mutation protection) and six device tests
@@ -38,12 +54,6 @@ boundaries. Do useful coverage work while CI runs rather than repeatedly polling
   registration prerequisites and unsupported directory operations).
   Full sanitizers plus strict summary passed at 2,164 cases:
   `filesystem-expanded-tests.log` and `filesystem-expanded-summary.log`.
-  Fresh coverage is building in `build-coverage-filesystem`, process session
-  `69440`; re-poll that handle before restarting anything. Its logs are
-  `filesystem-fresh-coverage-build.log`, `filesystem-fresh-coverage-tests.log`,
-  `filesystem-fresh-coverage-summary.log`; output will be
-  `filesystem-fresh-coverage.json`. Keep the old measured percentages until
-  the fresh merge completes. Do not change shared headers during this build.
 - RAM filesystem batch adds nine separately committed tests through `9064721`:
   rename content preservation/errors, truncate-to-zero, open-handle deletion,
   directory enumeration/EOF, storage accounting after head/middle deletion,
@@ -232,7 +242,7 @@ These paths are machine-specific conveniences, not portable requirements:
   validates and commits one case), `list_coverage_gaps.py`, and batch generators.
   They are outside Git, optional, and must be inspected before execution.
   A new agent can write cases manually with the checked-in workflow instead.
-- Evidence files in scratch: `filesystem-expanded-summary.log` (latest sanitizer results), `ram-reset-full-summary.log`, `ram-final-summary.log`, `modal-report-todo-summary.log`, `settings-toolsetter-summary.log`, `jog-laser-summary.log`, `spindle-sync-feature-summary.log`, `rotation-feature-summary.log`, `jerk-feature-summary.log`, `acceleration-summary.log`, `cutter-feature-summary.log`, `lathe-feature-summary.log`, `ngc-file-change-summary.log`, `ngc-tools-values-summary.log`, `settings-owners-summary.log`, `feedback-soft-limits-summary.log`, `report-fields-summary.log`, `protocol-lock-summary.log`, `css-execution-summary.log`,
+- Evidence files in scratch: `probe-io-ngc-summary.log` (latest sanitizer results), `filesystem-expanded-summary.log`, `ram-reset-full-summary.log`, `ram-final-summary.log`, `modal-report-todo-summary.log`, `settings-toolsetter-summary.log`, `jog-laser-summary.log`, `spindle-sync-feature-summary.log`, `rotation-feature-summary.log`, `jerk-feature-summary.log`, `acceleration-summary.log`, `cutter-feature-summary.log`, `lathe-feature-summary.log`, `ngc-file-change-summary.log`, `ngc-tools-values-summary.log`, `settings-owners-summary.log`, `feedback-soft-limits-summary.log`, `report-fields-summary.log`, `protocol-lock-summary.log`, `css-execution-summary.log`,
   `css-execution-tests.log`, `delta-laser-coverage-report.log`,
   `local-core-coverage-latest.json`. Rebuild/retest if these are missing or stale.
 - Local gcovr 8.4 was installed under `<workspace>/work/coverage-python`; an
