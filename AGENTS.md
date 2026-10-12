@@ -121,6 +121,8 @@ GitHub submodule. Check remaining anchors after deleting exception blocks.
   was withdrawn; do not reintroduce it as a known defect.
 - Register PWM capability in the intended machine mode before parser startup.
   Switching fixture mode after registration can retain stale capabilities.
+- With LATHE_UVW_OPTION, U is always an incremental diameter (half its value
+  changes X radius); V/W increment Y/Z. These differ from six-axis UVW remapping.
 - Constant RPM output does not require redundant PWM writes. Verify retained
   output state as well as update callbacks.
 - Encoder feedback must remain measured input: output mocks must not overwrite
