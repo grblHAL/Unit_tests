@@ -848,3 +848,30 @@ and [invalid short exit](cases/cutter_comp/g40_short_exit_away_from_origin_is_re
 and [short-exit block](known_bugs.cmake#L232) from `tests/known_bugs.cmake`.
 Keep both correct expectations and the passing boundary/control cases. Delete
 this section once both regressions pass without exceptions.
+
+## Rejected G187 commands still change the acceleration profile
+
+**Marked known:** 2026-10-12
+
+With `ENABLE_ACCELERATION_PROFILES=1`, start at the default 100% acceleration
+profile and execute `G187P5R1`. The R word is unused, so the core returns
+`Status_GcodeUnusedWords` (error 36). Despite rejecting the block, it changes
+the active profile to P5 (20%). The following valid move therefore receives
+20% acceleration instead of the unchanged default. At 36,000 mm/min squared configured
+X acceleration, a subsequent `G1X10F100` is planned at 7,200 instead of 36,000.
+
+[core/gcode.c:3206](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/gcode.c#L3206)
+writes directly to `gc_state.modal.acceleration_factor` during validation,
+before the [unused-word check](https://github.com/grblHAL/core/blob/451a539c6ed0f00499b8b48258f9aa7971fac384/gcode.c#L3984-L3985).
+Stage the requested factor in block state and commit it only after successful
+validation. Preserve valid same-block G187/motion behavior and already queued
+blocks' original acceleration.
+
+**Regressions:** [modal state](cases/acceleration_profiles/unused_word_error_preserves_acceleration_profile.c)
+and [next planned move](cases/acceleration_profiles/rejected_profile_command_does_not_slow_next_planned_move.c).
+The passing P1-P5, same-block and queued-move controls remain separate tests.
+
+**Remove exceptions when fixed:** delete the [modal-state block](known_bugs.cmake#L236)
+and [planned-move block](known_bugs.cmake#L240) from `tests/known_bugs.cmake`.
+Retain both tests with their correct expectations; delete this section once
+they pass without exceptions.

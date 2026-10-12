@@ -232,3 +232,11 @@ endif()
 if(TEST cutter_comp.g40_short_exit_away_from_origin_is_rejected)
   set_tests_properties(cutter_comp.g40_short_exit_away_from_origin_is_rejected PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+if(TEST acceleration_profiles.unused_word_error_preserves_acceleration_profile)
+  set_tests_properties(acceleration_profiles.unused_word_error_preserves_acceleration_profile PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+if(TEST acceleration_profiles.rejected_profile_command_does_not_slow_next_planned_move)
+  set_tests_properties(acceleration_profiles.rejected_profile_command_does_not_slow_next_planned_move PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
