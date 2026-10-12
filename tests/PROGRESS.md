@@ -6,24 +6,34 @@ This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 ## Current baseline
 
 - Repository: https://github.com/petervanderwalt/Unit_tests, branch `master`.
-- Latest verified committed/pushed revision: `4ff2bd5645cc17753e5cdfecc9e3a8f1d11e840d` (prior delivery).
+- Latest verified committed/pushed revision: `b64ce14308dcfbc84701ac39da09e4edb16eafdb` (prior delivery).
 - Core pin: `451a539c6ed0f00499b8b48258f9aa7971fac384` from
   https://github.com/grblHAL/core. Core has not been patched locally.
-- Full Windows Clang ASan/UBSan run: **2,141 tests**; **2,040 clean passes**,
+- Full Windows Clang ASan/UBSan run: **2,150 tests**; **2,049 clean passes**,
   **46 passes with known sanitizer diagnostics**, **55 known regressions**,
   **0 unexpected failures**, **0 skipped**. The summary check passed too.
 - Latest verified GitHub Actions run:
-  https://github.com/petervanderwalt/Unit_tests/actions/runs/38285326639
-  at `4ff2bd5`, all three jobs completed successfully. CI platform/compiler diagnostic counts
+  https://github.com/petervanderwalt/Unit_tests/actions/runs/38286148402
+  at `b64ce14`, all three jobs completed successfully. CI platform/compiler diagnostic counts
   can differ; inspect actual results instead of assuming Windows totals.
 - Latest merged coverage at `ddcff89` / 2,132 tests:
   **81.5% lines (14,813/18,178)**, **84.8% functions (1,019/1,202)**,
   **68.5% branches (8,476/12,365)** across 52 core C source files.
   Merge completed successfully; scratch log: `settings-toolsetter-coverage.log`.
-  The nine new report cases and G71/G72 reclassification are not included in
+  The nine new report cases, nine RAM filesystem cases and G71/G72 reclassification are not included in
   that measurement. Source scope/denominator did not shrink for this gain.
   Tool change improved from 58.9% (202/343) to 82.8% (284/343); settings is
   85.4% (1,234/1,445), motion control 78.3% (462/590).
+- RAM filesystem batch adds nine separately committed tests through `9064721`:
+  rename content preservation/errors, truncate-to-zero, open-handle deletion,
+  directory enumeration/EOF, storage accounting after head/middle deletion,
+  driver memory reporting, empty reset callback chaining, and flat-directory
+  rejection. Full sanitizer and strict summary passed: `ram-final-tests.log`
+  and `ram-final-summary.log`. RAM deletion tests explicitly make the mount
+  visible because the default hidden mount rejects public mutations.
+  Next investigate populated reset: `fs_reset()` frees file nodes without
+  clearing its list head; confirm with a narrowly matched sanitizer regression
+  before classifying/documenting a defect. No exception was added for this yet.
 - The prior delivery added 17 `acceleration_profiles` cases through `9501ee1`:
   G187 P1-P5 scaling of actual planned moves, validation, initialization,
   program-end resets, same-block selection and preservation of queued moves.
@@ -199,7 +209,7 @@ These paths are machine-specific conveniences, not portable requirements:
   validates and commits one case), `list_coverage_gaps.py`, and batch generators.
   They are outside Git, optional, and must be inspected before execution.
   A new agent can write cases manually with the checked-in workflow instead.
-- Evidence files in scratch: `modal-report-todo-summary.log` (latest sanitizer results), `settings-toolsetter-summary.log`, `jog-laser-summary.log`, `spindle-sync-feature-summary.log`, `rotation-feature-summary.log`, `jerk-feature-summary.log`, `acceleration-summary.log`, `cutter-feature-summary.log`, `lathe-feature-summary.log`, `ngc-file-change-summary.log`, `ngc-tools-values-summary.log`, `settings-owners-summary.log`, `feedback-soft-limits-summary.log`, `report-fields-summary.log`, `protocol-lock-summary.log`, `css-execution-summary.log`,
+- Evidence files in scratch: `ram-final-summary.log` (latest sanitizer results), `modal-report-todo-summary.log`, `settings-toolsetter-summary.log`, `jog-laser-summary.log`, `spindle-sync-feature-summary.log`, `rotation-feature-summary.log`, `jerk-feature-summary.log`, `acceleration-summary.log`, `cutter-feature-summary.log`, `lathe-feature-summary.log`, `ngc-file-change-summary.log`, `ngc-tools-values-summary.log`, `settings-owners-summary.log`, `feedback-soft-limits-summary.log`, `report-fields-summary.log`, `protocol-lock-summary.log`, `css-execution-summary.log`,
   `css-execution-tests.log`, `delta-laser-coverage-report.log`,
   `local-core-coverage-latest.json`. Rebuild/retest if these are missing or stale.
 - Local gcovr 8.4 was installed under `<workspace>/work/coverage-python`; an
