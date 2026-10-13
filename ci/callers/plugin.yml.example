@@ -18,3 +18,5 @@ jobs:
       source_repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
       source_ref: ${{ github.event.pull_request.head.sha || github.sha }}
       core_ref: master
+      source_base_ref: ${{ github.event.pull_request.base.sha || github.event.before || '' }}
+      source_base_repository: ${{ (github.event.pull_request.base.sha || github.event.before) && github.repository || '' }}

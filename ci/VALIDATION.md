@@ -109,3 +109,21 @@ passed source resolution, GCC, Clang sanitizers and coverage on merged harness
 2,242 tests and zero unexpected failures. This confirms the selected candidate,
 not an untested default-core revision. PR #4 has merged and its fork branch was
 removed; fork master is synchronized to this upstream harness revision.
+
+## Concise diagnosis implementation
+
+Branch `ci-actionable-reports` includes the instructional README cleanup. It
+captures setup/build/test/classifier exit codes and full logs, groups matching
+compiler findings in a final CI diagnosis, links exact locked source revisions,
+and warns about added executable C lines not exercised relative to a locked base.
+Source PRs lock their base automatically; caller push baselines and manual base
+inputs are supported. Coverage warnings do not fail an otherwise successful run.
+
+Local verification: 41 helper tests pass; workflow/caller actionlint passes.
+A fresh full Clang sanitizer run against Terje's `4b128e6` passes all 2,242 cases
+(2,221 clean, 21 known, zero unexpected failures). The new reporter accepts that
+JUnit output. Replaying the actual failed run 38363912997 groups GCC/Clang callback
+errors into one finding at `tests/support/g10_tool_host.h:25`. Real temporary Git
+history tests verify changed-line selection, ignored historical gaps, merged
+variant hits and separate unmeasured-file warnings. Hosted validation follows
+publication of this branch. No core source or unfinished coverage tests changed.

@@ -86,6 +86,40 @@ gh workflow run tests.yml --repo grblHAL/Unit_tests --ref master -f source_pr=12
 gh workflow run tests.yml --repo grblHAL/Unit_tests --ref master -f source_repository=yourname/core -f source_ref=my-fix
 ```
 
+### Read a failed run
+
+Open the **CI diagnosis** job summary first. It groups matching GCC, Clang and
+coverage findings and shows the first useful compiler error or test diagnostic,
+source links, affected jobs and a focused CTest reproduction command. Full command
+logs and JSON findings are in the `report-<suite>-<job>` artifacts; individual
+JUnit results and coverage HTML remain available in the existing artifacts.
+
+Unexpected assertion/sanitizer failures are suspected regressions until their
+contract and fixture are checked. A changed known regression links to its cleanup
+instructions: it may be a fixed regression, but a different crash is not a fix.
+Setup/build failures are reported even when tests never execute. Missing reports
+and failed jobs cannot produce a successful diagnosis.
+
+Changed-code coverage is a **warning**, not a required coverage threshold. A source
+PR automatically supplies its base repository and SHA. The upstream caller templates
+supply the PR base or the previous source commit for pushes. For a branch/SHA run,
+provide an explicit baseline:
+
+```sh
+gh workflow run tests.yml --repo grblHAL/Unit_tests --ref master \
+  -f source_repository=yourname/core -f source_ref=my-fix \
+  -f source_base_repository=grblHAL/core -f source_base_ref=master
+```
+
+Both revisions are resolved once. Coverage compares the candidate with their Git
+merge base and lists added executable C lines with zero hits. Covered feature
+variants are combined before checking hits. Changed C files absent from coverage
+are listed separately: check CMake inclusion and feature flags before concluding
+that tests are missing. This assessment covers the selected suite's coverage
+filter; it does not establish test quality, header/configuration coverage or full
+coverage of all dependencies. Without a baseline, coverage data, or reachable
+history, the report explicitly says changed-code coverage was not assessed.
+
 ### Which revision gets tested?
 
 There are two independent selections:

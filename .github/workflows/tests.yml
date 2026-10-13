@@ -12,6 +12,14 @@ on:
         description: 'Branch, tag or SHA (blank = upstream master)'
         type: string
         default: ''
+      source_base_ref:
+        description: 'Optional comparison base branch, tag or SHA for changed-code coverage'
+        type: string
+        default: ''
+      source_base_repository:
+        description: 'Optional base repository (blank = selected source repository)'
+        type: string
+        default: ''
       source_pr:
         description: 'PR number; leave source_ref blank'
         type: string
@@ -27,3 +35,5 @@ jobs:
       source_repository: ${{ inputs.source_repository || '' }}
       source_ref: ${{ inputs.source_ref || '' }}
       source_pr: ${{ inputs.source_pr || '' }}
+      source_base_ref: ${{ inputs.source_base_ref || '' }}
+      source_base_repository: ${{ inputs.source_base_repository || '' }}

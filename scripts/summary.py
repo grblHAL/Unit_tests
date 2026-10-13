@@ -126,6 +126,9 @@ else:
             else:
                 lines.append(f"| {filename} | ⬜ Not instrumented | — | — |")
         lines.extend(["", "Download the coverage artifact for annotated source and branch details. Known defects have separate labelled regressions; coverage does not imply correctness."])
+# Detailed inventories remain expandable; CI diagnosis contains short findings.
+if args.path.exists():
+    lines = ["<details><summary>Detailed " + args.kind + " results</summary>", ""] + lines + ["", "</details>"]
 report = "\n".join(lines) + "\n"
 if target := os.environ.get("GITHUB_STEP_SUMMARY"):
     with open(target, "a", encoding="utf-8") as stream:
