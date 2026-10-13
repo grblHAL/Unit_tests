@@ -191,3 +191,16 @@ Its 2,363-case local merged coverage is 86.5% lines (15,757/18,206),
 The next 35 cases pass local ASan/UBSan and strict summary: 2,398 tests,
 2,369 clean passes, 29 known regressions, zero unexpected failures/skips.
 Hosted validation and coverage refresh of these later cases remain pending.
+
+
+Hosted GCC, Clang, coverage and diagnosis passed the 2,398-case batch on harness
+`8e4392b`, Terje source `e65020a`, baseline `4b128e`:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/38435512145
+Its GCC artifact reports 86.3% lines (14,919/17,282), 72.3% branches
+(9,700/13,422). These denominators differ from Windows Clang instrumentation;
+do not present the measurements as directly comparable.
+
+The subsequent RS485-direction extension passes 2,404 local sanitizer tests:
+2,374 clean and 30 known regressions, no unexpected failures/skips. All 47 Python
+helpers pass, including strict Windows/Linux-form crash matcher tests. Actual
+hosted execution of the new fatal-startup regression remains pending delivery.

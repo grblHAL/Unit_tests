@@ -3,6 +3,34 @@
 Last verified: **2026-10-13**. Read this with the root `AGENTS.md` and README.
 This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 
+## Batch 3 RS485 direction checkpoint
+
+Six further separate RTU cases pass full Clang ASan/UBSan and strict summary:
+**2,404 tests, 2,374 clean passes, 30 documented known regressions, no unexpected
+failures/skips**. All 47 Python helper tests pass. Three cases verify explicit
+first/last auxiliary direction pins and automatic selection through real
+request/reply exchanges. A fourth verifies invalid-pin rejection/self-test alarm;
+a fifth proves serial-owned direction works without auxiliary outputs.
+
+The sixth reproduces a startup crash when no auxiliary outputs exist. Its exact
+fault address/source/regression-origin matcher is linked from KNOWN_BUGS.md with
+proposed guard and complete exception cleanup instructions. It skips only without
+sanitizers; coverage now has five fatal-memory wrapper skips. The RTU fixture
+initializes alarm reporting for negative startup tests and permits optional pin
+description clearing. Core source is unchanged. Hosted validation of the new
+wrapper is the next delivery check; do not claim its Linux matcher validated yet.
+
+Hosted GCC, Clang, coverage and diagnosis passed the preceding 2,398-case batch:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/38435512145
+(harness `8e4392b`, Terje core `e65020a`, baseline `4b128e`). Its GCC coverage
+artifact measures **86.3% lines (14,919/17,282), 72.3% branches (9,700/13,422)**.
+Keep this separate from Windows Clang's latest 2,363-case 86.5%/72.9% measurement:
+compiler instrumentation and platform branches have different denominators.
+Use a consistent compiler/source configuration when comparing progress.
+
+Next: validate the new crash wrapper in both hosted compilers, then continue
+remaining kinematic, parser and motion gaps. Goal stays active.
+
 ## Batch 3 allocation, reporting and motor-power checkpoint
 
 Thirty-five further focused cases pass full Clang ASan/UBSan and strict summary:

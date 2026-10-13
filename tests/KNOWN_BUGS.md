@@ -313,3 +313,37 @@ states independently of the active probe's toward/away cycle configuration.
 [known_bugs.cmake](known_bugs.cmake), retain correct assertions and the control,
 run probe/realtime tests and the full sanitizer suite, then delete this section.
 No sanitizer diagnostic allowance applies.
+
+
+## Modbus RTU startup crashes when no direction output is available
+
+**Marked known:** 2026-10-13, Terje's core
+`e65020a8389b19d3c03277e02f34219e25800e6a`.
+
+With a valid serial stream lacking its own direction callback and no auxiliary
+outputs, `modbus_rtu_init(0, -1)` crashes instead of leaving RTU disabled.
+[modbus_rtu.c:601](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/modbus_rtu.c#L601)
+calls `d_out.claim` even though `ioports_cfg()` returned an empty configuration.
+The Windows sanitizer reports an access violation at address `0xfffffffffffffff8`
+in that exact initialization line.
+
+**Regression:** [unavailable outputs](cases/modbus_rtu/aux_direction_without_outputs_disables_transport_safely.c).
+**Passing controls:** separate first-output, last-output and automatic-selection
+`aux_direction_*` cases complete a real RTU request/reply exchange with two
+claimed-capable outputs and verify TX/RX direction transitions.
+
+**Suggested fix (proposal, not runtime-verified):** Check `d_out.n_ports`,
+`d_out.claim` and the selected port before attempting a claim. When no usable
+output exists, leave direction unset and `hal.driver_cap.modbus_rtu` false.
+Preserve serial-provided direction callbacks and explicit automatic-direction
+mode (`dir_aux == -2`).
+
+**Remove exception when fixed:** delete its block in [known_bugs.cmake](known_bugs.cmake)
+and the specialized registration in CMakeLists.txt; the default registration
+then runs the unchanged C regression directly. Delete
+[scripts/rtu_direction_regression.py](../scripts/rtu_direction_regression.py) and
+its matcher tests. Run RTU/I/O tests, Python helpers and full sanitizers, then
+delete this section. The wrapper matches only the known fault address, source
+line and regression origin. A fixed regression or different crash fails CI;
+coverage mode skips it explicitly until the memory fault is fixed. No general
+sanitizer diagnostic allowance applies.

@@ -137,3 +137,8 @@ endif()
 if(TEST probe.aggregate_states_respects_independent_toolsetter_inversion)
   set_tests_properties(probe.aggregate_states_respects_independent_toolsetter_inversion PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# No auxiliary direction outputs crashes Modbus RTU startup on e65020a.
+if(TEST modbus_rtu.aux_direction_without_outputs_disables_transport_safely)
+  set_tests_properties(modbus_rtu.aux_direction_without_outputs_disables_transport_safely PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
