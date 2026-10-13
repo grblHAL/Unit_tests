@@ -99,3 +99,13 @@ coverage all passed in [run 38367839505](https://github.com/petervanderwalt/Unit
 using harness `90c890d` and the same exact candidate source.
 The default upstream core may not yet contain these fixes; older-source failures
 are genuine regressions against the retained correct expectations.
+
+## Upstream master confirmation
+
+On 2026-10-13, [run 38369552031](https://github.com/grblHAL/Unit_tests/actions/runs/38369552031)
+passed source resolution, GCC, Clang sanitizers and coverage on merged harness
+`66b7d90c8b644d44fc2c3f2b0131f8f022255a98` against Terje's core
+`4b128e68bc63f9a3af11a01a7d8fbb5d5ccc98aa`. Both compiler logs report
+2,242 tests and zero unexpected failures. This confirms the selected candidate,
+not an untested default-core revision. PR #4 has merged and its fork branch was
+removed; fork master is synchronized to this upstream harness revision.
