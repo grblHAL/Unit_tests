@@ -12,9 +12,9 @@ int main(void)
     CHECK(gc_state.modal.override_ctrl.feed_rates_disable);
     plan_feed_override(110, 100);
     CHECK(program_block("M72") == Status_OK);
-    fprintf(stderr, "after M72: modal disable=%u, runtime disable=%u, feed=%u, rapid=%u\n",
+    fprintf(stderr, "after M72: modal disable=%u, runtime disable=%u, feed=%lu, rapid=%lu\n",
         gc_state.modal.override_ctrl.feed_rates_disable, sys.override.control.feed_rates_disable,
-        sys.override.feed_rate, sys.override.rapid_rate);
+        (unsigned long)sys.override.feed_rate, (unsigned long)sys.override.rapid_rate);
     CHECK(!gc_state.modal.override_ctrl.feed_rates_disable);
     CHECK(!sys.override.control.feed_rates_disable);
     CHECK(sys.override.feed_rate == 80 && sys.override.rapid_rate == 50);
