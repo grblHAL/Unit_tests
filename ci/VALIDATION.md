@@ -3,7 +3,7 @@
 2026-10-13, branch `ci-source-selection` (separate from paused coverage work).
 
 - No gitlink or `.gitmodules` on this branch; source directories are ignored.
-- Seventeen CI helper tests pass, including fork PR resolution,
+- Twenty CI helper tests pass, including fork PR resolution,
   independent plugin/core locking, unknown suites, dirty checkout preservation,
   path escape rejection and immutable fetch arguments. Reporting tests also
   verify custom suite manifests, rejection of unknown sanitizer warnings and
@@ -33,6 +33,12 @@
 README verification identified and corrected an extra positional diagnostics
 argument in `run_suite.py`. `summary.py` now accepts explicit diagnostics,
 source inventory and suite-name options; existing two-argument invocations
-retain core defaults. Reusable jobs run all 17 helper/reporting regressions.
+retain core defaults. Reusable jobs run all 20 helper/reporting regressions.
 The original hosted run predates this reporting correction; its build failures
 remain separate from the corrected summary invocation.
+
+Actionable-reporting checks verify that changed known regressions link to the
+recorded harness's known-bug file and give precise cleanup guidance, ordinary
+failures give reproduction/contract-review guidance, and missing coverage files
+are flagged without claiming they are newly added code. No changed-line coverage
+comparison is implemented; that needs an explicit source baseline.

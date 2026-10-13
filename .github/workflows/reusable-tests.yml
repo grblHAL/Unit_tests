@@ -57,6 +57,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           HARNESS_SHA: ${{ steps.harness.outputs.sha }}
+          HARNESS_REPOSITORY: ${{ inputs.harness_repository }}
           SUITE: ${{ inputs.suite }}
           SOURCE_REPOSITORY: ${{ inputs.source_repository }}
           SOURCE_REF: ${{ inputs.source_ref }}

@@ -74,6 +74,7 @@ def main():
     suites = json.loads(Path("ci/suites.json").read_text())
     source = resolve_plan(suites, args.suite, args.repository, args.ref, args.pr, args.core_ref)
     source["harness_sha"] = os.environ.get("HARNESS_SHA", "local")
+    source["harness_repository"] = os.environ.get("HARNESS_REPOSITORY", "")
     Path("source-lock.json").write_text(json.dumps(source, indent=2) + "\n")
     print(json.dumps(source, indent=2))
     if os.environ.get("GITHUB_OUTPUT"):

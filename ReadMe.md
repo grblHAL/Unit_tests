@@ -244,7 +244,17 @@ resolved source SHA. Download artifacts from that same run:
 - `coverage-<run_label>`: source lock, HTML/XML coverage and available test logs.
 
 The result summary distinguishes clean passes, passes with known sanitizer
-warnings, reproduced known defects, failures and skips. A build failure is a
+warnings, reproduced known defects, failures and skips.
+Failed known regressions include a **see known bugs; it may be a fixed regression**
+link to the tested harness revision, plus instructions to confirm the result,
+retain the test, remove its precise exception and delete the resolved defect entry.
+A different crash/failure must be investigated before declaring a fix. Ordinary
+failures include reproduction and source-contract/fixture review guidance; intended
+API changes need corresponding test updates rather than weakened assertions.
+Coverage gaps include guidance to add behavioral tests or fix missing build/feature
+instrumentation. The report does not claim a file is newly added or untested just
+because it is missing from coverage; detecting newly uncovered additions requires
+an explicit baseline diff, which is not implemented yet. A build failure is a
 failed run even if no JUnit report could be produced; inspect the failed build
 step first. Coverage percentages describe the selected suite/configurations.
 A green core run does not establish plugin or physical-board coverage.
