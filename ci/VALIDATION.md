@@ -223,4 +223,3 @@ The automatic default-source run 38441824898 failed against upstream core
 `ca26fc9`, which does not contain Terje's reviewed fixes. The explicit candidate
 run above is the latest-source validation; do not restore resolved exceptions
 for compatibility with that older source.
-
