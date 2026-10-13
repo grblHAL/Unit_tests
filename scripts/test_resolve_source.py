@@ -60,5 +60,29 @@ class DependencyPlanTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             resolve_plan({"core": SUITE}, "missing")
 
+class ComparisonBaselineTests(unittest.TestCase):
+    def test_pr_locks_base_repository_and_sha(self):
+        def request(repo, endpoint):
+            return {"head": {"repo": {"full_name": "fork/core"}, "sha": "a"*40}, "base": {"repo": {"full_name": "grblHAL/core"}, "sha": "b"*40}}
+        result = resolve(SUITE, pr="42", request=request)
+        self.assertEqual(result["comparison"], {"repository": "grblHAL/core", "sha": "b"*40})
+
+    def test_explicit_baseline_is_resolved_independently(self):
+        calls=[]
+        def request(repo, endpoint):
+            calls.append((repo,endpoint))
+            return {"sha": ("a" if repo=="fork/core" else "b")*40}
+        lock=resolve_plan({"core":SUITE},"core",repository="fork/core",ref="candidate",source_base_ref="release/base",source_base_repository="grblHAL/core",request=request)
+        self.assertEqual(lock["comparison"]["sha"],"b"*40)
+        self.assertEqual(calls,[("fork/core","commits/candidate"),("grblHAL/core","commits/release%2Fbase")])
+
+    def test_first_push_has_no_comparison(self):
+        lock=resolve_plan({"core":SUITE},"core",source_base_ref="0"*40,source_base_repository="grblHAL/core",request=lambda *args:{"sha":"a"*40})
+        self.assertNotIn("comparison",lock)
+
+    def test_baseline_repository_requires_revision(self):
+        with self.assertRaises(ValueError):
+            resolve_plan({"core":SUITE},"core",source_base_repository="owner/core",request=lambda *args:{"sha":"a"*40})
+
 if __name__ == "__main__":
     unittest.main()

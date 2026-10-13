@@ -99,3 +99,54 @@ coverage all passed in [run 38367839505](https://github.com/petervanderwalt/Unit
 using harness `90c890d` and the same exact candidate source.
 The default upstream core may not yet contain these fixes; older-source failures
 are genuine regressions against the retained correct expectations.
+
+## Upstream master confirmation
+
+On 2026-10-13, [run 38369552031](https://github.com/grblHAL/Unit_tests/actions/runs/38369552031)
+passed source resolution, GCC, Clang sanitizers and coverage on merged harness
+`66b7d90c8b644d44fc2c3f2b0131f8f022255a98` against Terje's core
+`4b128e68bc63f9a3af11a01a7d8fbb5d5ccc98aa`. Both compiler logs report
+2,242 tests and zero unexpected failures. This confirms the selected candidate,
+not an untested default-core revision. PR #4 has merged and its fork branch was
+removed; fork master is synchronized to this upstream harness revision.
+
+## Concise diagnosis implementation
+
+Branch `ci-actionable-reports` includes the instructional README cleanup. It
+captures setup/build/test/classifier exit codes and full logs, groups matching
+compiler findings in a final CI diagnosis, links exact locked source revisions,
+and warns about added executable C lines not exercised relative to a locked base.
+Source PRs lock their base automatically; caller push baselines and manual base
+inputs are supported. Coverage warnings do not fail an otherwise successful run.
+
+Local verification: 44 helper tests pass; workflow/caller actionlint passes.
+A fresh full Clang sanitizer run against Terje's `4b128e6` passes all 2,242 cases
+(2,221 clean, 21 known, zero unexpected failures). The new reporter accepts that
+JUnit output. Replaying the actual failed run 38363912997 groups GCC/Clang callback
+errors into one finding at `tests/support/g10_tool_host.h:25`. Real temporary Git
+history tests verify changed-line selection, ignored historical gaps, merged
+variant hits and separate unmeasured-file warnings. Hosted [run 38373299801](https://github.com/petervanderwalt/Unit_tests/actions/runs/38373299801)
+passed source resolution, GCC, Clang, coverage and final CI diagnosis on harness
+`f8b4d05` against Terje's `4b128e6` with baseline core `ca26fc9`. Its coverage
+artifact reports nine warnings, including uncovered added executable lines and
+an unmeasured changed `scara.c`; warnings did not fail the run. The concurrent
+default-source run also produced concise structured test failures, confirming
+failure reporting independently of the passing candidate. Subsequent parser
+checks cover CMake reason/location, timeouts and namespaced HTTP errors; all
+44 local helpers pass without changing the core/test assertions. No core source or unfinished coverage tests changed.
+
+## Axis claiming contract and Modbus documentation correction
+
+On 2026-10-13, Terje's remote master was checked directly with `git ls-remote`
+and matched the tested `4b128e68bc63f9a3af11a01a7d8fbb5d5ccc98aa` revision.
+The axis claiming test now checks validated X-only returns zero, masks 3 and 2
+claim only numeric Y, and a zero validation mask claims both present words.
+Its known-bug entry and expected-failure registration were removed.
+The full Clang sanitizer suite and strict summary pass: 2,242 tests, 2,222 clean
+passes, 20 documented known regressions, zero unexpected failures/skips. All
+44 helper tests pass.
+
+The Modbus three-register regression was rerun and still observes `_value2=51`
+instead of 34. Its surviving entry now links the reviewed handler at lines
+1266/1271-1274 and describes the remaining third-value overwrite, rather than
+the stale exactly-two-values condition. The core was not patched.

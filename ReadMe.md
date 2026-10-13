@@ -1,6 +1,6 @@
 # Unit tests for the grblHAL core
 
-[![Core tests](https://github.com/petervanderwalt/Unit_tests/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/petervanderwalt/Unit_tests/actions/workflows/tests.yml)
+[![Core tests](https://github.com/grblHAL/Unit_tests/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/grblHAL/Unit_tests/actions/workflows/tests.yml)
 
 Host tests compile actual source from an ordinary `core` checkout. No CNC
 controller is needed. Each new behavior lives in `tests/cases/<module>/<case>.c`
@@ -42,7 +42,7 @@ For sanitizers, add `-DENABLE_SANITIZERS=ON` to configure. On Windows, put the
 compiler's `bin` directory on `PATH` so its sanitizer DLL can load.
 
 ```sh
-git clone https://github.com/petervanderwalt/Unit_tests.git
+git clone https://github.com/grblHAL/Unit_tests.git
 cd Unit_tests
 python scripts/resolve_source.py
 python scripts/prepare_sources.py
@@ -82,9 +82,46 @@ artifacts identify the repository, source SHA and harness SHA. Manual dispatch
 requires the workflow on the default branch and write access to this test repo.
 
 ```sh
-gh workflow run tests.yml --repo petervanderwalt/Unit_tests --ref master -f source_pr=123
-gh workflow run tests.yml --repo petervanderwalt/Unit_tests --ref master -f source_repository=yourname/core -f source_ref=my-fix
+gh workflow run tests.yml --repo grblHAL/Unit_tests --ref master -f source_pr=123
+gh workflow run tests.yml --repo grblHAL/Unit_tests --ref master -f source_repository=yourname/core -f source_ref=my-fix
 ```
+
+### Read a failed run
+
+Open the **CI diagnosis** job summary first. It groups matching GCC, Clang and
+coverage findings and shows the first useful compiler error or test diagnostic,
+source links, affected jobs and a focused CTest reproduction command. Numeric
+expected/actual values are shown when the test emits them; otherwise the report
+shows its failing expression. New tests should print the triggering input and
+measured versus expected values when an assertion alone is ambiguous. Full command
+logs and JSON findings are in the `report-<suite>-<job>` artifacts; individual
+JUnit results and coverage HTML remain available in the existing artifacts.
+
+Unexpected assertion/sanitizer failures are suspected regressions until their
+contract and fixture are checked. A changed known regression links to its cleanup
+instructions: it may be a fixed regression, but a different crash is not a fix.
+Setup/build failures are reported even when tests never execute. Missing reports
+and failed jobs cannot produce a successful diagnosis.
+
+Changed-code coverage is a **warning**, not a required coverage threshold. A source
+PR automatically supplies its base repository and SHA. The upstream caller templates
+supply the PR base or the previous source commit for pushes. For a branch/SHA run,
+provide an explicit baseline:
+
+```sh
+gh workflow run tests.yml --repo grblHAL/Unit_tests --ref master \
+  -f source_repository=yourname/core -f source_ref=my-fix \
+  -f source_base_repository=grblHAL/core -f source_base_ref=master
+```
+
+Both revisions are resolved once. Coverage compares the candidate with their Git
+merge base and lists added executable C lines with zero hits. Covered feature
+variants are combined before checking hits. Changed C files absent from coverage
+are listed separately: check CMake inclusion and feature flags before concluding
+that tests are missing. This assessment covers the selected suite's coverage
+filter; it does not establish test quality, header/configuration coverage or full
+coverage of all dependencies. Without a baseline, coverage data, or reachable
+history, the report explicitly says changed-code coverage was not assessed.
 
 ### Which revision gets tested?
 
@@ -283,20 +320,6 @@ pins. They include build settings, so inspect them before using a lock from
 outside a trusted run. A source or harness commit must remain reachable from
 its repository for a future fresh fetch.
 
-### Current rollout validation
-
-See [ci/VALIDATION.md](ci/VALIDATION.md) for dated evidence. Resolver/checkout
-helper tests and workflow lint pass. The first hosted source job succeeded,
-but its GCC/Clang/coverage builds failed against the newly selected core. A full
-local build reproduced undeclared math functions in current `stepper2.h` when
-included by secondary-stepper fixtures. Representative parser/settings sanitizer
-smoke tests passed at that stage. The subsequent `ci-core-compatibility` follow-up
-adapts the host fixtures to the current scheduler/Modbus APIs and removes the
-fixed finite-stepper exception. Its full Windows Clang sanitizer/summary run
-passes all 2,242 cases with zero unexpected failures or skips; hosted GCC/Clang
-and coverage validation remains separate. Caller installation in upstream
-repositories is still required.
-
 ## Retest a core fix locally
 
 The ignored `core` directory can be a fresh ordinary clone, an existing local
@@ -475,18 +498,3 @@ PID tests currently specify existing sample-rate behavior. Deadband and
 `p_max_error` are not asserted as supported features; the implementation does not
 apply them. Zero sample rate needs an upstream-defined contract before testing
 an expected result.
-
-## Testing the October 13 core fixes
-
-The `ci-terje-fix-validation` follow-up adapts the tool-table callback and host
-startup/foreground-task behavior for Terje's fixes. Run **Core tests** from this
-branch with `source_repository=terjeio/grblHAL_core` and
-`source_ref=4b128e68bc63f9a3af11a01a7d8fbb5d5ccc98aa` to reproduce that review.
-The SHA identifies the reviewed source; it is not a tracked submodule or default pin.
-
-Resolved exceptions and their bug entries are removed, while the regression
-assertions remain. Outstanding faults, including embedded seek, VFS close,
-separate-command dynamic laser power and empty tool slots, are documented in
-[known bugs](tests/KNOWN_BUGS.md). A green run still includes explicitly labelled
-known defects. Testing older core revisions can fail the now ordinary fixed
-regressions; check the selected source revision before changing an assertion.

@@ -24,6 +24,14 @@ on:
         type: string
         required: false
         default: ''
+      source_base_ref:
+        type: string
+        required: false
+        default: ''
+      source_base_repository:
+        type: string
+        required: false
+        default: ''
       core_ref:
         type: string
         required: false
@@ -51,7 +59,7 @@ jobs:
         id: harness
         run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       - name: Test CI helpers
-        run: python -m unittest discover -s scripts -p 'test_*.py'
+        run: python scripts/report_stage.py --job source --stage helpers -- python -m unittest discover -s scripts -p 'test_*.py'
       - name: Resolve source revisions once
         id: resolve
         env:
@@ -63,11 +71,24 @@ jobs:
           SOURCE_REF: ${{ inputs.source_ref }}
           SOURCE_PR: ${{ inputs.source_pr }}
           CORE_REF: ${{ inputs.core_ref }}
-        run: python scripts/resolve_source.py --suite "$SUITE" --repository "$SOURCE_REPOSITORY" --ref "$SOURCE_REF" --pr "$SOURCE_PR" --core-ref "$CORE_REF"
+          SOURCE_BASE_REF: ${{ inputs.source_base_ref }}
+          SOURCE_BASE_REPOSITORY: ${{ inputs.source_base_repository }}
+        run: python scripts/report_stage.py --job source --stage resolve -- python scripts/resolve_source.py --suite "$SUITE" --repository "$SOURCE_REPOSITORY" --ref "$SOURCE_REF" --pr "$SOURCE_PR" --core-ref "$CORE_REF" --source-base-ref "$SOURCE_BASE_REF" --source-base-repository "$SOURCE_BASE_REPOSITORY"
       - uses: actions/upload-artifact@v7
         with:
           name: source-lock-${{ inputs.run_label }}
           path: source-lock.json
+      - name: Collect source diagnostics
+        if: always()
+        run: python scripts/ci_report.py --job source
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: report-${{ inputs.run_label }}-source
+          path: |
+            report-source.json
+            source-lock.json
+            logs/
   test:
     needs: source
     runs-on: ubuntu-latest
@@ -86,18 +107,29 @@ jobs:
         with:
           name: source-lock-${{ inputs.run_label }}
       - name: Fetch locked sources
-        run: python scripts/prepare_sources.py
+        run: python scripts/report_stage.py --job "${{ matrix.compiler }}" --stage fetch -- python scripts/prepare_sources.py
       - name: Configure
         env:
           COMPILER: ${{ matrix.compiler }}
-        run: python scripts/configure_suite.py --mode sanitizers --compiler "$COMPILER"
+        run: python scripts/report_stage.py --job "$COMPILER" --stage configure -- python scripts/configure_suite.py --mode sanitizers --compiler "$COMPILER"
       - name: Build
-        run: cmake --build build --parallel 2
+        run: python scripts/report_stage.py --job "${{ matrix.compiler }}" --stage build -- cmake --build build --parallel 2
       - name: Test
-        run: python scripts/run_suite.py test
+        run: python scripts/report_stage.py --job "${{ matrix.compiler }}" --stage test -- python scripts/run_suite.py test
       - name: Classify individual results and sanitizer diagnostics
         if: always()
-        run: python scripts/run_suite.py summary
+        run: python scripts/report_stage.py --job "${{ matrix.compiler }}" --stage classify -- python scripts/run_suite.py summary
+      - name: Collect concise test diagnostics
+        if: always()
+        run: python scripts/ci_report.py --job "${{ matrix.compiler }}"
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: report-${{ inputs.run_label }}-${{ matrix.compiler }}
+          path: |
+            report-*.json
+            source-lock.json
+            logs/
       - uses: actions/upload-artifact@v7
         if: always()
         with:
@@ -120,18 +152,29 @@ jobs:
         with:
           name: source-lock-${{ inputs.run_label }}
       - name: Fetch locked sources
-        run: python scripts/prepare_sources.py
-      - run: pip install gcovr==8.4
-      - run: python scripts/configure_suite.py --mode coverage --compiler gcc
-      - run: cmake --build build --parallel 2
-      - run: python scripts/run_suite.py test
+        run: python scripts/report_stage.py --job coverage --stage fetch -- python scripts/prepare_sources.py
+      - run: python scripts/report_stage.py --job coverage --stage tooling -- pip install gcovr==8.4
+      - run: python scripts/report_stage.py --job coverage --stage configure -- python scripts/configure_suite.py --mode coverage --compiler gcc
+      - run: python scripts/report_stage.py --job coverage --stage build -- cmake --build build --parallel 2
+      - run: python scripts/report_stage.py --job coverage --stage test -- python scripts/run_suite.py test
       - name: Classify coverage test results
         if: always()
-        run: python scripts/run_suite.py summary
+        run: python scripts/report_stage.py --job coverage --stage classify -- python scripts/run_suite.py summary
       - name: Report coverage
         env:
           COVERAGE_FILTER: ${{ needs.source.outputs.coverage_filter }}
-        run: gcovr --merge-mode-functions=separate --root . --filter "$COVERAGE_FILTER" --html-details coverage.html --xml coverage.xml --print-summary
+        run: python scripts/report_stage.py --job coverage --stage coverage -- gcovr --merge-mode-functions=separate --root . --filter "$COVERAGE_FILTER" --html-details coverage.html --xml coverage.xml --print-summary
+      - name: Collect concise coverage diagnostics
+        if: always()
+        run: python scripts/ci_report.py --job coverage
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: report-${{ inputs.run_label }}-coverage
+          path: |
+            report-coverage.json
+            source-lock.json
+            logs/
       - run: python scripts/run_suite.py coverage-summary
       - uses: actions/upload-artifact@v7
         if: always()
@@ -142,3 +185,33 @@ jobs:
             coverage*
             build/results.xml
             build/Testing/Temporary/LastTest.log
+  diagnosis:
+    name: CI diagnosis
+    if: always()
+    needs: [source, test, coverage]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        id: report_checkout
+        with:
+          repository: ${{ inputs.harness_repository }}
+          ref: ${{ needs.source.outputs.harness_sha || inputs.harness_ref }}
+          persist-credentials: false
+      - uses: actions/download-artifact@v7
+        continue-on-error: true
+        with:
+          pattern: report-${{ inputs.run_label }}-*
+          path: reports
+      - name: Restore tested source record
+        run: |
+          python -c "from pathlib import Path; import shutil; records=list(Path('reports').rglob('source-lock.json')); shutil.copyfile(records[0], 'source-lock.json') if records else None"
+      - name: Report harness checkout failure
+        if: always() && steps.report_checkout.outcome == 'failure'
+        run: |
+          echo "## Why this run failed" >> "$GITHUB_STEP_SUMMARY"
+          echo "The test harness could not be checked out. Verify harness repository/ref and access; tests and diagnostic collection could not run." >> "$GITHUB_STEP_SUMMARY"
+      - name: Why this run failed
+        if: always() && steps.report_checkout.outcome == 'success'
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+        run: python scripts/ci_report.py --aggregate

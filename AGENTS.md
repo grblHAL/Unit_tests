@@ -211,3 +211,14 @@ GitHub submodule. Check remaining anchors after deleting exception blocks.
 - Program flow is intentionally reset after parser pause/completion callbacks.
   To verify transient M0/M1/M2/M30 serial reporting, observe/report from the
   real callback before that reset; install required realtime callbacks.
+
+## CI diagnosis maintenance
+
+Concise reporting work belongs on `ci-actionable-reports`, separate from coverage
+expansion. `report_stage.py` preserves command exit codes and full logs;
+`ci_report.py` groups first-error/test findings across jobs; `changed_coverage.py`
+warns on added executable C lines relative to the locked source merge base.
+Warnings must not be described as proof that code has no tests. Missing diagnostic
+artifacts or unexpected sanitizer output must never turn a failed job green.
+Caller baseline refs/repositories and source PR bases resolve once in the lock.
+Keep README instructions, not dated progress reports; record validation separately.
