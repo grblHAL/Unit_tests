@@ -2,7 +2,7 @@
 
 [![Core tests](https://github.com/petervanderwalt/Unit_tests/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/petervanderwalt/Unit_tests/actions/workflows/tests.yml)
 
-Host tests compile actual source from the pinned `core` submodule. No CNC
+Host tests compile actual source from an ordinary `core` checkout. No CNC
 controller is needed. Each new behavior lives in `tests/cases/<module>/<case>.c`
 and appears individually in CTest and GitHub Actions. Shared mocks live in
 `tests/support/`; unexpected mock calls fail explicitly.
@@ -42,10 +42,10 @@ For sanitizers, add `-DENABLE_SANITIZERS=ON` to configure. On Windows, put the
 compiler's `bin` directory on `PATH` so its sanitizer DLL can load.
 
 ```sh
-git clone --recurse-submodules https://github.com/petervanderwalt/Unit_tests.git
+git clone https://github.com/petervanderwalt/Unit_tests.git
 cd Unit_tests
-# For an existing checkout:
-git submodule update --init --recursive
+python scripts/resolve_source.py
+python scripts/prepare_sources.py
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
 cmake --build build --config Debug --parallel
 ctest --test-dir build -C Debug --output-on-failure
@@ -54,84 +54,107 @@ ctest --test-dir build -C Debug --output-on-failure
 Checks remain active in Release builds; they do not depend on C `assert()`.
 The existing `src/driver.c` firmware entry point is not part of the host tests.
 
-## Test branches, forks and PRs in Actions
+## Source selection and upstream CI
 
-Open Actions > Core tests > Run workflow. Select the test-suite branch and inputs:
+There are no tracked submodules. [ci/suites.json](ci/suites.json) is a small JSON
+registry of suites, source repositories/default branches, dependency suites,
+CMake configuration, test selection and coverage filters. The core default is
+`grblHAL/core` at `master`. Nothing requires updating commit hashes in this repo.
+Each run resolves branches to exact SHAs once, records them in `source-lock.json`,
+and uses that same lock in all jobs. Test-harness source is also locked once.
+A rerun against moving master can select newer code; use an archived SHA for an
+exact reproduction. The historical coverage snapshots describe their recorded
+core revision, not today's upstream master.
+
+In Actions > Core tests > Run workflow, select the test-suite branch and inputs:
 
 | Candidate | source_repository | source_ref | source_pr |
 |---|---|---|---|
-| Pinned baseline | blank | blank | blank |
+| Current upstream core | blank | blank | blank |
 | Upstream branch/tag/commit | blank | branch, tag or SHA | blank |
 | Upstream PR, including fork PR | blank | blank | PR number |
 | Fork branch | `owner/core` | branch or SHA | blank |
 
-PR runs test the head commit, not a synthetic merge. Selection resolves once to
-an immutable SHA used by GCC, Clang and coverage. The source job summary and
-`source-lock` artifact record the actual repository and SHA. Ordinary pushes and
-test-repository PRs use the baseline. The submodule pin is unchanged.
+PR selection tests the head commit, not a synthetic merge. Source summaries and
+artifacts identify the repository, source SHA and harness SHA. Manual dispatch
+requires the workflow on the default branch and write access to this test repo.
 
 ```sh
-gh workflow run tests.yml --repo petervanderwalt/Unit_tests --ref initial-batch-part-2 -f source_pr=123
-gh workflow run tests.yml --repo petervanderwalt/Unit_tests --ref initial-batch-part-2 -f source_repository=yourname/core -f source_ref=my-fix
+gh workflow run tests.yml --repo petervanderwalt/Unit_tests --ref ci-source-selection -f source_pr=123
+gh workflow run tests.yml --repo petervanderwalt/Unit_tests --ref ci-source-selection -f source_repository=yourname/core -f source_ref=my-fix
 ```
 
-Replace example numbers/names. Dispatch requires write access to the test repo.
-The workflow must exist on the default branch for manual dispatch: merge these
-workflow changes there before relying on the new inputs. The selected test branch
-supplies tests and exceptions independently of the core candidate. Fixed known
-regressions still force cleanup of their documented exceptions; use a test branch
-with that cleanup to obtain a clean candidate result.
+### Caller installation for Terje
 
-### Automatic upstream triggers
+[ci/callers/core.yml](ci/callers/core.yml) is the complete core caller. After this
+branch is published, copy it to `.github/workflows/host-tests.yml` in core.
+It calls [reusable-tests.yml](.github/workflows/reusable-tests.yml) on pushes,
+PRs and manual runs, passing the PR head repository/SHA for fork PRs and the
+pushed commit otherwise. GCC, Clang and coverage run as jobs of the upstream
+workflow, so results appear on the upstream PR itself. No dispatch token,
+webhook or write-back status bot is needed.
 
-Upstream pushes/PRs do not automatically trigger this test repository. An upstream
-workflow or GitHub App can call the workflow-dispatch API for `tests.yml`, passing
-`source_repository` and `source_ref` with the upstream event's exact commit SHA,
-or passing `source_pr`. This needs permission to dispatch in the test repository;
-an upstream repository's ordinary GITHUB_TOKEN does not grant cross-repository
-write access. No upstream workflow, credential or PR status publisher is installed
-by this change. Candidate jobs have read-only permissions and do not retain
-checkout credentials. A fix only needs publishing to your fork, not upstream.
+The caller explicitly identifies the test harness because a reusable workflow
+inherits the caller's GitHub context: a bare checkout would fetch core instead
+of this repository. Keep its `uses` ref and `harness_ref` on the same reviewed
+release tag or SHA; the supplied branch ref is for rollout testing. SHA pinning
+the **test harness** is optional and separate from automatically testing each
+new **source** commit. Publish a reviewed harness version before configuring
+required PR checks. Enable Actions/reusable-workflow access in the upstream repo;
+GitHub may require approval for first-time fork contributors. Use `pull_request`,
+not `pull_request_target`, and do not pass inherited secrets. Candidate source
+runs only on hosted runners with read-only contents permission; fetch credentials
+are not persisted. These templates target public source repositories.
 
-### Plugin extension strategy
+### Extending to plugins
 
-[ci/suites.json](ci/suites.json) registers source repositories, checkout paths and
-coverage filters; core is currently the only implemented suite. The Plugins repo
-is an overview: register each plugin's actual source repository when its tests
-are added, alongside suite-specific host fixtures/build configuration.
+[ci/callers/plugin.yml.example](ci/callers/plugin.yml.example) is intentionally a
+template until the plugin's tests exist. Install callers in actual plugin repos;
+the Plugins overview is a catalogue, not a combined source checkout.
 
-Resolve core and plugin revisions independently: plugin PR plus pinned core,
-then optionally plugin PR plus candidate core. Extend the source lock to contain
-both immutable SHAs and have every job consume that same lock. Add suite-specific
-coverage filters/artifact names and scope defect allowances to the relevant suite.
-Do not count plugin code as core coverage. Plugin testing is a next phase, not
-implemented by registering source metadata alone.
+To add a suite, register its repository, branch, path under `plugins/<name>`,
+`dependencies: ["core"]`, CMake source/options, CTest regex, diagnostics directory
+and coverage filter in `ci/suites.json`. Add its fixtures/tests and CMake support
+first, then replace the template's suite/run label and install it upstream.
+Unknown suites fail explicitly instead of silently running only core tests.
+The resolver already locks dependency sources independently: a plugin candidate
+is selected from its PR or commit, while `core_ref` defaults to core's configured
+branch and can select another branch/tag/SHA. All jobs fetch both exact SHAs.
+Each invocation must have a unique `run_label` when multiple suites/core versions
+are called in one upstream run, to keep artifacts distinct.
 
-## Update core and retest a fix
+Core and plugin tests share compiler/sanitizer/coverage execution, but each suite
+selects its tests, diagnostic inventory and coverage files. Plugin fixtures may
+also require representative core tests in their regex. Defect cleanup retains
+correct regression assertions; new upstream fixes may legitimately fail the
+existing expected-failure inventory until that inventory is updated.
 
-The submodule records the reproducible default baseline. Candidate CI runs can
-test published branches, forks, commits and PR heads without changing this pin
-or merging upstream. Local builds also test uncommitted changes in `core`.
-Updating the recorded baseline is a separate decision after reviewing a revision.
+## Retest a core fix locally
 
-### Select the core commit to test
+The ignored `core` directory can be a fresh ordinary clone, an existing local
+checkout or a worktree. It is not staged in this test repository. You can test
+uncommitted fixes without publishing them. Hosted CI needs a reachable commit,
+but pushing to your fork is enough; no upstream merge is required.
 
-From the root of this test repository, check for local changes before switching
-core revisions. Preserve any unfinished core changes first.
+For a fresh checkout, resolve and fetch:
 
 ```sh
-git status --short
+python scripts/resolve_source.py --repository yourname/core --ref my-fix
+python scripts/prepare_sources.py
+```
+
+The fetch helper refuses to overwrite dirty checkouts or silently change existing
+revisions. For an existing checkout, preserve local changes and switch explicitly:
+
+```sh
 git -C core status --short
-git -C core fetch origin
-git -C core checkout <fixed-core-commit>
+git -C core fetch origin my-fix
+git -C core checkout --detach FETCH_HEAD
 git -C core rev-parse HEAD
-git diff --submodule=log -- core
 ```
 
-Replace `<fixed-core-commit>` with the actual published commit hash. Checking out
-that hash leaves the submodule at a detached HEAD, which is normal when testing a
-specific revision. The parent repository now shows `core` as modified; it records
-the new hash only when you stage and commit that submodule change.
+Use a fresh build directory when switching revisions. Save the tested SHA with
+your results, then follow the regression cleanup steps below.
 
 ### Run the tests before changing exceptions
 
@@ -216,12 +239,11 @@ confirming the same defect still reproduces.
 
 ```sh
 git diff --check
-git diff --submodule=log
-git add core
+git diff
 ```
 
 Stage the documentation, exception and registration files you actually changed
-as well. Commit the new core pin and its cleanup together, then push and verify
+as well. Commit the test and exception cleanup, then push and verify
 both GCC and Clang sanitizer jobs and the coverage job in GitHub Actions. If the
 new core introduces an additional defect, add a separate correctly expected
 regression and dated known-bug entry; do not silently waive it.
@@ -278,9 +300,8 @@ use the source-by-source coverage table to choose the next behavior to test.
 Create `tests/cases/<module>/<case>.c`; CMake discovers each case automatically.
 Add module dependencies in `add_core_test()` when needed.
 Each regression should name the triggering input and check the expected behavior.
-Avoid tests that merely reproduce the implementation. Keep commits to the core
-submodule deliberate: `git -C core fetch`, check out the desired revision, rerun
-tests, then commit the updated submodule pointer here.
+Avoid tests that merely reproduce the implementation. Core changes belong in
+their own repository; this repository commits tests and source-selection metadata.
 
 PID tests currently specify existing sample-rate behavior. Deadband and
 `p_max_error` are not asserted as supported features; the implementation does not

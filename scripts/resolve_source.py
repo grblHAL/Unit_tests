@@ -3,7 +3,6 @@ import argparse
 import json
 import os
 import re
-import subprocess
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -39,26 +38,42 @@ def resolve(suite, repository="", ref="", pr="", request=api):
     else:
         if repository != suite["repository"]:
             raise ValueError("A different repository requires a ref or PR")
-        entry = subprocess.check_output(
-            ["git", "ls-tree", "HEAD", "--", suite["path"]], text=True).split()
-        if len(entry) < 3 or entry[0] != "160000":
-            raise ValueError("Suite needs a pinned gitlink or an explicit ref")
-        sha = entry[2]
-        selected = "pinned baseline"
+        ref = suite["ref"]
+        sha = request(repository, "commits/" + urllib.parse.quote(ref, safe=""))["sha"]
+        selected = ref
     if not re.fullmatch(r"[0-9a-fA-F]{40}", sha):
         raise ValueError("GitHub did not resolve an exact commit")
     return {**suite, "repository": repository, "sha": sha, "selection": selected}
 
 
+def resolve_plan(suites, suite_name, repository="", ref="", pr="", core_ref="", request=api):
+    if suite_name not in suites:
+        raise ValueError("Suite has no tests registered: " + suite_name)
+    source = resolve(suites[suite_name], repository, ref, pr, request)
+    if core_ref and "core" not in source.get("dependencies", []):
+        raise ValueError("core-ref only applies to suites depending on core")
+    sources = [source]
+    for dependency in source.get("dependencies", []):
+        sources.append(resolve(suites[dependency], ref=core_ref if dependency == "core" else "", request=request))
+    paths = [item["path"] for item in sources]
+    if len(paths) != len(set(paths)):
+        raise ValueError("Source checkout paths must be distinct")
+    source["sources"] = [{key: item[key] for key in ("repository", "sha", "path", "selection")} for item in sources]
+    source["suite"] = suite_name
+    return source
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--suite", default="core")
+    parser.add_argument("--core-ref", default="")
     parser.add_argument("--repository", default="")
     parser.add_argument("--ref", default="")
     parser.add_argument("--pr", default="")
     args = parser.parse_args()
     suites = json.loads(Path("ci/suites.json").read_text())
-    source = resolve(suites[args.suite], args.repository, args.ref, args.pr)
+    source = resolve_plan(suites, args.suite, args.repository, args.ref, args.pr, args.core_ref)
+    source["harness_sha"] = os.environ.get("HARNESS_SHA", "local")
     Path("source-lock.json").write_text(json.dumps(source, indent=2) + "\n")
     print(json.dumps(source, indent=2))
     if os.environ.get("GITHUB_OUTPUT"):

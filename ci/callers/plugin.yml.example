@@ -1,0 +1,20 @@
+# Template only: enable AFTER this plugin's tests and registry entry exist.
+# Install in the actual plugin repository, not the Plugins overview.
+name: Plugin host tests
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  plugin:
+    uses: petervanderwalt/Unit_tests/.github/workflows/reusable-tests.yml@ci-source-selection
+    with:
+      harness_repository: petervanderwalt/Unit_tests
+      harness_ref: ci-source-selection
+      suite: REPLACE_WITH_REGISTERED_PLUGIN_SUITE
+      run_label: REPLACE_WITH_REGISTERED_PLUGIN_SUITE
+      source_repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+      source_ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      core_ref: master

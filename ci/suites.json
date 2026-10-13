@@ -1,7 +1,13 @@
 {
   "core": {
     "repository": "grblHAL/core",
+    "ref": "master",
     "path": "core",
-    "coverage_filter": "core/.*\\.c$"
+    "dependencies": [],
+    "cmake_source": ".",
+    "cmake_options": [],
+    "test_regex": ".*",
+    "coverage_filter": "core/.*\\.c$",
+    "diagnostics_directory": "tests"
   }
 }

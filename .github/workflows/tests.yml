@@ -9,103 +9,21 @@ on:
         type: string
         default: ''
       source_ref:
-        description: 'Branch, tag or commit (blank = pinned baseline)'
+        description: 'Branch, tag or SHA (blank = upstream master)'
         type: string
         default: ''
       source_pr:
-        description: 'PR number in source repository; leave source_ref blank'
+        description: 'PR number; leave source_ref blank'
         type: string
         default: ''
 permissions:
   contents: read
 jobs:
-  source:
-    runs-on: ubuntu-latest
-    outputs:
-      repository: ${{ steps.resolve.outputs.repository }}
-      sha: ${{ steps.resolve.outputs.sha }}
-      path: ${{ steps.resolve.outputs.path }}
-      coverage_filter: ${{ steps.resolve.outputs.coverage_filter }}
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          persist-credentials: false
-      - name: Test revision resolver
-        run: python scripts/test_resolve_source.py
-      - name: Resolve tested revision
-        id: resolve
-        env:
-          GH_TOKEN: ${{ github.token }}
-          SOURCE_REPOSITORY: ${{ inputs.source_repository }}
-          SOURCE_REF: ${{ inputs.source_ref }}
-          SOURCE_PR: ${{ inputs.source_pr }}
-        run: python scripts/resolve_source.py --repository "$SOURCE_REPOSITORY" --ref "$SOURCE_REF" --pr "$SOURCE_PR"
-      - uses: actions/upload-artifact@v7
-        with:
-          name: source-lock
-          path: source-lock.json
-  test:
-    needs: source
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        compiler: [gcc, clang]
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          persist-credentials: false
-      - name: Checkout tested source
-        uses: actions/checkout@v7
-        with:
-          repository: ${{ needs.source.outputs.repository }}
-          ref: ${{ needs.source.outputs.sha }}
-          path: ${{ needs.source.outputs.path }}
-          persist-credentials: false
-      - name: Configure
-        env:
-          CC: ${{ matrix.compiler }}
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=ON
-      - name: Build
-        run: cmake --build build --parallel
-      - name: Test
-        run: ctest --test-dir build --output-on-failure --output-junit results.xml
-      - name: Display individual test results
-        if: always()
-        run: python scripts/summary.py tests build/results.xml
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: results-${{ matrix.compiler }}
-          path: |
-            build/results.xml
-            build/Testing/Temporary/LastTest.log
-  coverage:
-    needs: source
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          persist-credentials: false
-      - name: Checkout tested source
-        uses: actions/checkout@v7
-        with:
-          repository: ${{ needs.source.outputs.repository }}
-          ref: ${{ needs.source.outputs.sha }}
-          path: ${{ needs.source.outputs.path }}
-          persist-credentials: false
-      - run: pip install gcovr==8.4
-      - run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON -DCMAKE_C_COMPILER=gcc
-      - run: cmake --build build --parallel
-      - run: ctest --test-dir build --output-on-failure
-      - name: Report coverage of tested modules
-        env:
-          COVERAGE_FILTER: ${{ needs.source.outputs.coverage_filter }}
-        run: gcovr --merge-mode-functions=separate --root . --filter "$COVERAGE_FILTER" --html-details coverage.html --xml coverage.xml --print-summary
-      - name: Display coverage table
-        run: python scripts/summary.py coverage coverage.xml
-      - uses: actions/upload-artifact@v7
-        with:
-          name: coverage
-          path: coverage*
+  core:
+    uses: ./.github/workflows/reusable-tests.yml
+    with:
+      harness_repository: ${{ github.repository }}
+      harness_ref: ${{ github.sha }}
+      source_repository: ${{ inputs.source_repository || '' }}
+      source_ref: ${{ inputs.source_ref || '' }}
+      source_pr: ${{ inputs.source_pr || '' }}
