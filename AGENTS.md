@@ -2,7 +2,8 @@
 
 ## Objective and delivery
 
-Coverage work belongs on `initial-batch-part-2`. The separate CI design task,
+Current coverage work belongs on `coverage-batch-3`, using Terje's core.
+`initial-batch-part-2` is an archived earlier batch. The separate CI design task,
 authorized on 2026-10-13, belongs on `ci-source-selection`. Do not mix these
 branches or commit unfinished coverage cases with CI changes. No AI branding.
 Do not commit/push master/main or open an early coverage PR.
@@ -222,3 +223,14 @@ Warnings must not be described as proof that code has no tests. Missing diagnost
 artifacts or unexpected sanitizer output must never turn a failed job green.
 Caller baseline refs/repositories and source PR bases resolve once in the lock.
 Keep README instructions, not dated progress reports; record validation separately.
+
+## Batch 3 coverage continuation
+
+The user started batch 3 on 2026-10-13: coverage work now belongs on
+`coverage-batch-3`, based on upstream master after PR #5 merged. The older
+`initial-batch-part-2` instructions above describe previous work, not the current
+branch. Use Terje's `terjeio/grblHAL_core` master as the candidate source and
+record the exact tested SHA at each substantial batch. Do not pin the registry or
+restore submodules. Keep production core untouched and validate resolved known
+regressions before removing exceptions. Separate the proposed-fix documentation
+PR #6 from coverage work.

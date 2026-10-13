@@ -1,4 +1,4 @@
-"""Match only the two confirmed lifetime defects on embedded named-macro return."""
+"""Match only the remaining subroutine lifetime defect on embedded macro return."""
 import re
 import subprocess
 import sys
@@ -9,23 +9,12 @@ if sys.argv[1] != "1":
 result = subprocess.run([sys.argv[2]], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
 print(result.stdout)
 print(f"Regression executable exit code: {result.returncode}")
-vfs_defect = (
-    re.search(r"SUMMARY: AddressSanitizer: heap-use-after-free[^\n]*core[/\\]vfs\.c:(?:367|368)\b", result.stdout)
-    and re.search(r"fs_close[^\n]*core[/\\]fs_embedded\.c:86\b", result.stdout)
-    and re.search(r"stream_redirect_close[^\n]*core[/\\]stream_file\.c:203\b", result.stdout)
-)
 sub_defect = (
     "READ of size 8" in result.stdout
     and re.search(r"SUMMARY: AddressSanitizer: heap-use-after-free[^\n]*core[/\\]ngc_flowctrl\.c:316\b", result.stdout)
     and re.search(r"clear_subs[^\n]*core[/\\]ngc_flowctrl\.c:259\b", result.stdout)
 )
-# Compilers expose different first faults on the same cleanup path.
-# Only these documented faults pass WILL_FAIL; success or any different fault
-# returns zero and requires review.
-seek_defect = re.search(r"SUMMARY: AddressSanitizer: global-buffer-overflow[^\n]*core[/\\]fs_embedded\.c:122\b", result.stdout) and "READ of size 8" in result.stdout
-if seek_defect:
-    print("Macro cleanup is blocked by the known embedded seek overread; see KNOWN_BUGS.md#embedded-filesystem-seek.")
-if result.returncode != 0 and (vfs_defect or sub_defect or seek_defect):
+if result.returncode != 0 and sub_defect:
     print("Confirmed known embedded named-macro cleanup lifetime defect.")
     sys.exit(1)
 print("Expected sanitizer diagnostic was not reproduced; review this regression.")

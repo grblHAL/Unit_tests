@@ -1,7 +1,41 @@
 # Coverage progress and continuation handoff
 
-Last verified: **2026-10-12**. Read this with the root `AGENTS.md` and README.
+Last verified: **2026-10-13**. Read this with the root `AGENTS.md` and README.
 This is a snapshot, not proof that future checkouts or CI runs are unchanged.
+
+## Batch 3: Terje core and modal/storage/filesystem paths
+
+Current coverage branch: `coverage-batch-3`, based on upstream master after PR #5
+merged. Candidate source: `terjeio/grblHAL_core` master resolved to
+`e65020a8389b19d3c03277e02f34219e25800e6a` on 2026-10-13. The ordinary ignored
+core checkout was updated without production-source edits; no default registry
+pin or submodule was introduced.
+
+Added 16 focused cases covering nested automatic modal restoration, explicit
+restoration, M71 cancellation, spindle/coolant/feed behavior, tool persistence
+failure and volatile/no-storage writes, and embedded seek bounds/recovery.
+The two preserved unfinished modal cases are now corrected and included; G93
+uses an explicit per-block F word when saving. VFS close now verifies backend
+close precedes its one notification and passes the correct filesystem pointer.
+Plain G71/G72 tests now verify core plugin dispatch; roughing geometry stays TODO.
+
+Terje fixed six documented issues: century leap, VFS close, embedded seek,
+three-register Modbus, dynamic laser power and empty tool identities. Thirteen
+obsolete allowances, their resolved entries and two obsolete diagnostic wrappers
+were removed. Embedded macro return now matches only the outstanding subroutine
+callback lifetime defect. Correct regression assertions remain.
+
+New confirmed M72 override-control regression and its passing direct-restore
+control are in KNOWN_BUGS.md. Full Windows Clang ASan/UBSan run: **2,258 tests,
+2,250 clean passes, eight known regressions, zero unexpected failures/skips**;
+strict summary passes. All 40 remaining Python helper tests pass. Fresh full
+coverage build/measurement is in progress; the percentages below remain historical.
+
+Next: use the fresh coverage gaps, restore/revalidate any useful parser tests
+from the archived earlier batch, then expand additional module/configuration paths.
+Archived commits remain in the verified local Git bundle under
+`../branch-cleanup-backup-20261013/unit-tests-all-branches.bundle`. Do not restore
+obsolete fixture/exception changes wholesale.
 
 ## October 13 compatibility follow-up
 
