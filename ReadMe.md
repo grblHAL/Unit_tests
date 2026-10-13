@@ -82,8 +82,8 @@ artifacts identify the repository, source SHA and harness SHA. Manual dispatch
 requires the workflow on the default branch and write access to this test repo.
 
 ```sh
-gh workflow run tests.yml --repo petervanderwalt/Unit_tests --ref ci-source-selection -f source_pr=123
-gh workflow run tests.yml --repo petervanderwalt/Unit_tests --ref ci-source-selection -f source_repository=yourname/core -f source_ref=my-fix
+gh workflow run tests.yml --repo petervanderwalt/Unit_tests --ref master -f source_pr=123
+gh workflow run tests.yml --repo petervanderwalt/Unit_tests --ref master -f source_repository=yourname/core -f source_ref=my-fix
 ```
 
 ### Which revision gets tested?
@@ -131,7 +131,7 @@ are not persisted. These templates target public source repositories.
 
 1. Review/publish this CI branch in the chosen public test-harness repository.
    For the initial rollout, the supplied caller uses
-   `petervanderwalt/Unit_tests` at `ci-source-selection`.
+   `grblHAL/Unit_tests` at `master`.
 2. Copy [ci/callers/core.yml](ci/callers/core.yml) into the core repository as
    `.github/workflows/host-tests.yml`. If hosting the harness elsewhere, update
    both `jobs.core.uses` and `harness_repository`; keep `uses` and `harness_ref`
