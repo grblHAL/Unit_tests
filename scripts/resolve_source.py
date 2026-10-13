@@ -82,8 +82,11 @@ def main():
                 output.write(key + "=" + source[key] + "\n")
     if os.environ.get("GITHUB_STEP_SUMMARY"):
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as summary:
-            summary.write("### Tested source\n\n" + source["repository"] + " at `" +
-                          source["sha"] + "` (" + source["selection"] + ")\n")
+            summary.write("### Tested sources\n\n")
+            summary.write("Test harness: `" + source["harness_sha"] + "`\n\n")
+            for item in source["sources"]:
+                summary.write("- " + item["repository"] + " at `" + item["sha"] +
+                              "` (" + item["selection"] + ")\n")
 
 
 if __name__ == "__main__":

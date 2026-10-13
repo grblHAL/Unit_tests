@@ -60,6 +60,8 @@ There are no tracked submodules. [ci/suites.json](ci/suites.json) is a small JSO
 registry of suites, source repositories/default branches, dependency suites,
 CMake configuration, test selection and coverage filters. The core default is
 `grblHAL/core` at `master`. Nothing requires updating commit hashes in this repo.
+Current-source runs can reveal new build incompatibilities as well as assertion
+failures; an older suite does not promise a green result against new code.
 Each run resolves branches to exact SHAs once, records them in `source-lock.json`,
 and uses that same lock in all jobs. Test-harness source is also locked once.
 A rerun against moving master can select newer code; use an archived SHA for an
