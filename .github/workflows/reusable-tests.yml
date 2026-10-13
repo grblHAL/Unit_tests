@@ -211,7 +211,7 @@ jobs:
           echo "## Why this run failed" >> "$GITHUB_STEP_SUMMARY"
           echo "The test harness could not be checked out. Verify harness repository/ref and access; tests and diagnostic collection could not run." >> "$GITHUB_STEP_SUMMARY"
       - name: Why this run failed
-        if: always() && steps.report_checkout.outcome == 'success' 
+        if: always() && steps.report_checkout.outcome == 'success'
         env:
           NEEDS_JSON: ${{ toJSON(needs) }}
         run: python scripts/ci_report.py --aggregate
