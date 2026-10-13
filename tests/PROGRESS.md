@@ -3,6 +3,18 @@
 Last verified: **2026-10-13**. Read this with the root `AGENTS.md` and README.
 This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 
+## Batch 3 parser startup and cutter restoration
+
+Eleven further cases pass full sanitizers and strict summary: **2,363 tests,
+2,334 clean passes, 29 known regressions, no unexpected failures/skips**.
+They cover direct compensation restoration (side/radius and cancellation), cold
+saved-tool restoration with and without a tool table, unavailable-tool fallback,
+persistence disabled, warm stop versus reset, saved G92 versus volatile G92 and
+parser-init callback ordering. No new exceptions or production core changes.
+Latest coverage remains the 2,337-case measurement below; 26 later cases are not
+yet included. Refresh coverage at the next substantial boundary and continue
+remaining parser/motion/configuration gaps.
+
 ## Batch 3 modal and multiple-probe extension
 
 Twelve further cases pass full Windows Clang ASan/UBSan validation:
@@ -19,11 +31,11 @@ no production core edits. Latest measured coverage remains the 2,337-case snapsh
 below; these twelve subsequent cases and the three later spindle cases are not
 included in that measurement.
 
-Hosted validation of the preceding pushed 2,340-case checkpoint is running:
+Hosted GCC, Clang, coverage and diagnosis passed for the preceding pushed
+2,340-case checkpoint:
 https://github.com/petervanderwalt/Unit_tests/actions/runs/38430798382
-(harness `31fd05b`, Terje source `e65020a`, baseline `4b128e`). Continue parser,
-motion and configuration gaps while it builds. Do not push small follow-ups that
-cancel it. These extensions belong on the same coverage branch; goal is active.
+(harness `31fd05b`, Terje source `e65020a`, baseline `4b128e`). Continue parser, motion and configuration gaps. Deliver further substantial
+batches without pushing after every few cases. These extensions belong on the same coverage branch; goal is active.
 
 ## Batch 3 reporting and parameter checkpoint
 

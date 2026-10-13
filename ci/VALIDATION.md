@@ -172,7 +172,9 @@ https://github.com/petervanderwalt/Unit_tests/actions/runs/38426592992
 
 The next local reporting/parameter extension passes 2,340 sanitizer tests:
 2,315 clean passes and 25 documented known regressions, zero unexpected
-failures/skips. Strict summary and 40 Python helper tests pass. Hosted validation
-of this extension is pending delivery. Its completed 2,337-test coverage
+failures/skips. Strict summary and 40 Python helper tests pass. Hosted GCC, Clang, coverage and CI diagnosis pass on harness `31fd05b`,
+Terje source `e65020a`, baseline `4b128e`:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/38430798382
+Later modal/multiple-probe cases remain locally validated only. Its completed 2,337-test coverage
 snapshot is 86.2% lines (15,689/18,206), 91.8% functions (1,114/1,214)
 and 72.4% branches (8,997/12,424).
