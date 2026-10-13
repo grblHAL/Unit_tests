@@ -1,0 +1,144 @@
+name: Reusable host tests
+on:
+  workflow_call:
+    inputs:
+      harness_repository:
+        type: string
+        required: true
+      harness_ref:
+        type: string
+        required: true
+      suite:
+        type: string
+        required: false
+        default: 'core'
+      source_repository:
+        type: string
+        required: false
+        default: ''
+      source_ref:
+        type: string
+        required: false
+        default: ''
+      source_pr:
+        type: string
+        required: false
+        default: ''
+      core_ref:
+        type: string
+        required: false
+        default: ''
+      run_label:
+        type: string
+        required: false
+        default: 'core'
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    outputs:
+      harness_sha: ${{ steps.harness.outputs.sha }}
+      coverage_filter: ${{ steps.resolve.outputs.coverage_filter }}
+    steps:
+      - name: Checkout test harness
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ inputs.harness_repository }}
+          ref: ${{ inputs.harness_ref }}
+          persist-credentials: false
+      - name: Record harness revision
+        id: harness
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - name: Test CI helpers
+        run: python -m unittest discover -s scripts -p 'test_*.py'
+      - name: Resolve source revisions once
+        id: resolve
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HARNESS_SHA: ${{ steps.harness.outputs.sha }}
+          HARNESS_REPOSITORY: ${{ inputs.harness_repository }}
+          SUITE: ${{ inputs.suite }}
+          SOURCE_REPOSITORY: ${{ inputs.source_repository }}
+          SOURCE_REF: ${{ inputs.source_ref }}
+          SOURCE_PR: ${{ inputs.source_pr }}
+          CORE_REF: ${{ inputs.core_ref }}
+        run: python scripts/resolve_source.py --suite "$SUITE" --repository "$SOURCE_REPOSITORY" --ref "$SOURCE_REF" --pr "$SOURCE_PR" --core-ref "$CORE_REF"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: source-lock-${{ inputs.run_label }}
+          path: source-lock.json
+  test:
+    needs: source
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [gcc, clang]
+    steps:
+      - name: Checkout test harness
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ inputs.harness_repository }}
+          ref: ${{ needs.source.outputs.harness_sha }}
+          persist-credentials: false
+      - uses: actions/download-artifact@v7
+        with:
+          name: source-lock-${{ inputs.run_label }}
+      - name: Fetch locked sources
+        run: python scripts/prepare_sources.py
+      - name: Configure
+        env:
+          COMPILER: ${{ matrix.compiler }}
+        run: python scripts/configure_suite.py --mode sanitizers --compiler "$COMPILER"
+      - name: Build
+        run: cmake --build build --parallel
+      - name: Test
+        run: python scripts/run_suite.py test
+      - name: Classify individual results and sanitizer diagnostics
+        if: always()
+        run: python scripts/run_suite.py summary
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: results-${{ inputs.run_label }}-${{ matrix.compiler }}
+          path: |
+            source-lock.json
+            build/results.xml
+            build/Testing/Temporary/LastTest.log
+  coverage:
+    needs: source
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout test harness
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ inputs.harness_repository }}
+          ref: ${{ needs.source.outputs.harness_sha }}
+          persist-credentials: false
+      - uses: actions/download-artifact@v7
+        with:
+          name: source-lock-${{ inputs.run_label }}
+      - name: Fetch locked sources
+        run: python scripts/prepare_sources.py
+      - run: pip install gcovr==8.4
+      - run: python scripts/configure_suite.py --mode coverage --compiler gcc
+      - run: cmake --build build --parallel
+      - run: python scripts/run_suite.py test
+      - name: Classify coverage test results
+        if: always()
+        run: python scripts/run_suite.py summary
+      - name: Report coverage
+        env:
+          COVERAGE_FILTER: ${{ needs.source.outputs.coverage_filter }}
+        run: gcovr --merge-mode-functions=separate --root . --filter "$COVERAGE_FILTER" --html-details coverage.html --xml coverage.xml --print-summary
+      - run: python scripts/run_suite.py coverage-summary
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: coverage-${{ inputs.run_label }}
+          path: |
+            source-lock.json
+            coverage*
+            build/results.xml
+            build/Testing/Temporary/LastTest.log

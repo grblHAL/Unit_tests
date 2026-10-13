@@ -10,13 +10,32 @@ import xml.etree.ElementTree as ET
 parser = argparse.ArgumentParser()
 parser.add_argument("kind", choices=["tests", "coverage"])
 parser.add_argument("path", type=Path)
+parser.add_argument("--diagnostics-directory", type=Path, default=Path(__file__).resolve().parents[1] / "tests")
+parser.add_argument("--source-directory", type=Path, default=Path("core"))
+parser.add_argument("--suite-name", default="Core")
 args = parser.parse_args()
+def harness_link(path):
+    path = Path(path)
+    if path.is_absolute():
+        try:
+            path = path.relative_to(Path(__file__).resolve().parents[1])
+        except ValueError:
+            return path.as_posix()
+    if Path("source-lock.json").exists():
+        lock = json.loads(Path("source-lock.json").read_text(encoding="utf-8"))
+        repository, sha = lock.get("harness_repository", ""), lock.get("harness_sha", "")
+        if re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repository) and re.fullmatch(r"[0-9a-fA-F]{40}", sha):
+            return "https://github.com/" + repository + "/blob/" + sha + "/" + path.as_posix()
+    return path.as_posix()
+
+known_link = "[known bugs](" + harness_link(args.diagnostics_directory / "KNOWN_BUGS.md") + ")"
+failed = 0
 lines = []
 sanitizer_failures = []
 known_diagnostics = []
-manifest = json.loads((Path(__file__).resolve().parents[1] / "tests/known_sanitizer_diagnostics.json").read_text(encoding="utf-8"))
+manifest = json.loads((args.diagnostics_directory / "known_sanitizer_diagnostics.json").read_text(encoding="utf-8")) if args.kind == "tests" else []
 if not args.path.exists():
-    lines = ["## Report unavailable", "Build or test execution did not produce the expected report."]
+    lines = ["## Report unavailable", "Build or test execution did not produce the expected report.", "Inspect the first failing Configure/Build/Test step and its compiler output. Check the source-lock artifact for the exact source and harness revisions, then reproduce that configuration locally. Resolve source/API or fixture compatibility errors; no test result or coverage conclusion is available until the build and tests run."]
 else:
     root = ET.parse(args.path).getroot()
     if args.kind == "tests":
@@ -47,11 +66,26 @@ else:
                 case.set("sanitizer_output", "\n".join(line for line, _ in diagnostics))
         failed += len(sanitizer_failures)
         skipped = sum(c.find("skipped") is not None for c in cases)
-        lines = ["## Core test results", "Tests labelled `known_bug` are expected failures confirming documented upstream defects; see tests/KNOWN_BUGS.md.", f"**{len(cases) - failed - skipped - known - len(known_diagnostics)} clean passes · {len(known_diagnostics)} passed with known sanitizer diagnostics · {known} known regressions reproduced · {failed} failed · {skipped} skipped**", "", "| Test | Result | Seconds |", "|---|---|---:|"]
+        lines = [f"## {args.suite_name} test results", f"Tests labelled `known_bug` are expected failures confirming documented defects; see {args.diagnostics_directory.as_posix()}/KNOWN_BUGS.md.", f"**{len(cases) - failed - skipped - known - len(known_diagnostics)} clean passes · {len(known_diagnostics)} passed with known sanitizer diagnostics · {known} known regressions reproduced · {failed} failed · {skipped} skipped**", "", "| Test | Result | Seconds |", "|---|---|---:|"]
+        affected = [case for case in cases if case.find("failure") is not None or case.find("error") is not None or case.get("sanitizer_status") == "failed"]
+        if affected:
+            guidance = ["", "### Failure guidance", ""]
+            for case in affected:
+                name = html.escape(case.get("name", "unknown")).replace("|", "&#124;")
+                labelled = any(p.get("name") == "cmake_labels" and "known_bug" in p.get("value", "").split(";") for p in case.findall("./properties/property"))
+                if labelled:
+                    advice = "See " + known_link + "; it may be a fixed regression. Inspect the actual assertion/diagnostic before concluding it is fixed. If the correct expectations now pass, retain the test, remove only its linked WILL_FAIL/sanitizer/wrapper exception, delete the resolved known-bug entry, and rerun the suite plus summary. An unrelated crash or different failure is not proof of a fix."
+                else:
+                    advice = "Inspect the failing assertion and LastTest.log; reproduce with `ctest --test-dir build -V -R` and this test's name. Compare the selected source change with the intended contract and fixture startup/configuration. Fix a source regression, or update the test/fixture only for a confirmed intended API/behavior change. Add boundary/error coverage for new behavior; do not weaken assertions or broadly suppress sanitizer failures."
+                case.set("failure_guidance", advice)
+                guidance.append("- **" + name + ":** " + advice)
+            lines[3:3] = guidance + [""]
         for case in cases:
             status = "❌ Failed" if case.find("failure") is not None or case.find("error") is not None else "⏭ Skipped" if case.find("skipped") is not None else "✅ Passed"
             if any(p.get("name") == "cmake_labels" and "known_bug" in p.get("value", "").split(";") for p in case.findall("./properties/property")) and case.find("failure") is None and case.find("skipped") is None:
                 status = "⚠️ Known defect reproduced"
+            if any(p.get("name") == "cmake_labels" and "known_bug" in p.get("value", "").split(";") for p in case.findall("./properties/property")) and (case.find("failure") is not None or case.find("error") is not None):
+                status = "❌ Known regression changed; see guidance"
             if case.get("sanitizer_status"):
                 status = "⚠️ Assertions passed; known sanitizer diagnostic" if case.get("sanitizer_status") == "known" else "❌ Unexpected sanitizer diagnostic"
                 if case.get("sanitizer_status") == "failed" and os.environ.get("GITHUB_ACTIONS") == "true":
@@ -65,7 +99,7 @@ else:
                     lines.extend(["", f"<details><summary>{name} failure</summary><pre>{html.escape(''.join(detail.itertext()))}</pre></details>", ""])
                     if os.environ.get("GITHUB_ACTIONS") == "true":
                         output = case.findtext("system-out", "")
-                        description = "\n".join(part for part in (case.get("name", "unknown"), detail.get("message", ""), "".join(detail.itertext()), output) if part)
+                        description = "\n".join(part for part in (case.get("name", "unknown"), case.get("failure_guidance", ""), detail.get("message", ""), "".join(detail.itertext()), output) if part)
                         # Escape workflow commands so test output remains data.
                         message = description[-6000:].replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
                         title = ("Test " + case.get("name", "unknown")).replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A").replace(":", "%3A").replace(",", "%2C")
@@ -74,11 +108,15 @@ else:
             if case.get("sanitizer_output"):
                 lines.extend(["", "<details><summary>Sanitizer output: " + html.escape(case.get("name", "unknown")) + "</summary><pre>" + html.escape(case.get("sanitizer_output")) + "</pre></details>", ""])
         if known_diagnostics and os.environ.get("GITHUB_ACTIONS") == "true":
-            print(f"::warning title=Known sanitizer diagnostics::{len(known_diagnostics)} tests passed assertions but reproduced diagnostics documented in tests/KNOWN_BUGS.md; review tests/known_sanitizer_diagnostics.json when updating core.")
+            print(f"::warning title=Known sanitizer diagnostics::{len(known_diagnostics)} tests passed assertions but reproduced diagnostics documented in {args.diagnostics_directory.as_posix()}/KNOWN_BUGS.md; review its known_sanitizer_diagnostics.json when updating sources.")
     else:
         measured = {entry.get("filename", "").replace("\\", "/"): entry for entry in root.iter("class")}
-        inventory = sorted(path.as_posix() for path in Path("core").rglob("*.c"))
-        lines = ["## Core coverage", f"**{len(measured)} of {len(inventory)} core source files instrumented**", "The remaining files are visible below; percentages apply to this build configuration.", "", "| Module | Line coverage | Lines | Branches |", "|---|---|---:|---:|"]
+        inventory = sorted(path.as_posix() for path in args.source_directory.rglob("*.c"))
+        lines = [f"## {args.suite_name} coverage", f"**{len(measured)} of {len(inventory)} source files instrumented**", "The remaining files are visible below; percentages apply to this build configuration.", "", "| Module | Line coverage | Lines | Branches |", "|---|---|---:|---:|"]
+        missing = [name for name in inventory if name not in measured]
+        uncovered = [name for name in inventory if name in measured and float(measured[name].get("line-rate", "0")) < 1]
+        if missing or uncovered:
+            lines[3:3] = ["", "### Coverage guidance", "", f"{len(missing)} files are absent from this coverage configuration; {len(uncovered)} measured files have uncovered executable lines.", "For new or changed code, inspect annotated HTML coverage and add meaningful tests for uncovered behavior and error paths. If a source file is absent, check its CMake inclusion, feature flags and coverage filter before concluding it lacks tests. Register new modules/plugin suites and their representative host fixtures/configurations.", "Coverage gaps alone do not establish that code is newly added or has no tests; that requires a source diff against a specified baseline. These gaps are reported for review, not automatically waived or treated as proof of correctness.", ""]
         for filename in inventory:
             if entry := measured.get(filename):
                 rate = float(entry.get("line-rate", "0"))
@@ -95,5 +133,5 @@ if target := os.environ.get("GITHUB_STEP_SUMMARY"):
 else:
     print(report.encode("ascii", "backslashreplace").decode("ascii"))
 
-if sanitizer_failures:
+if sanitizer_failures or failed or not args.path.exists():
     raise SystemExit(1)

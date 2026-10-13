@@ -2,6 +2,11 @@
 
 ## Objective and delivery
 
+Coverage work belongs on `initial-batch-part-2`. The separate CI design task,
+authorized on 2026-10-13, belongs on `ci-source-selection`. Do not mix these
+branches or commit unfinished coverage cases with CI changes. No AI branding.
+Do not commit/push master/main or open an early coverage PR.
+
 Continue toward meaningful full grblHAL core coverage: every core module and
 supported feature configuration, with line and branch coverage guiding the work.
 Do not declare completion from a green suite, test count, or covered filenames.
@@ -28,13 +33,13 @@ weaken assertions, or add artificial tests solely to inflate coverage.
 ## Start or resume
 
 Read [tests/PROGRESS.md](tests/PROGRESS.md), [ReadMe.md](ReadMe.md), and
-[tests/KNOWN_BUGS.md](tests/KNOWN_BUGS.md). Inspect current Git status, core pin,
+[tests/KNOWN_BUGS.md](tests/KNOWN_BUGS.md). Inspect current Git status, tested core revision,
 latest test outputs and CI. Progress snapshots can become stale; commands and
 current files are authoritative. Keep `tests/PROGRESS.md` updated at delivery
 boundaries with evidence, next work and any unfinished changes.
 
 The repository root contains `CMakeLists.txt`, `ReadMe.md`, `tests/`, and the
-`core` submodule. Parent workspace scratch files are optional local conveniences,
+ignored ordinary `core` checkout. Parent workspace scratch files are optional local conveniences,
 not required project dependencies. Never assume a new machine has them.
 
 ## Write and validate tests
@@ -76,13 +81,23 @@ in the README. GNU-compatible Clang/GCC is required for the full suite; MSVC
 skips many modules. Compile checks should preserve GNU language extensions;
 strict C11 previously produced an unrelated Linux `ffs` declaration error.
 
+## CI source selection
+
+`tests.yml` calls `reusable-tests.yml`. No tracked submodules remain on this
+branch. `ci/suites.json` defaults to upstream core master. Resolution locks both
+source/dependency SHAs and the test harness SHA once per run; all jobs use them.
+Upstream callers live in `ci/callers/`, with fork PR head selection and read-only
+permissions. Plugin caller is a template until a real suite is registered.
+Run `python -m unittest discover -s scripts -p 'test_*.py'` for helpers.
+Never overwrite dirty source checkouts, pass inherited secrets to candidate jobs,
+or claim upstream caller installation/hosted validation before verifying them.
+
 ## Core and known defects
 
-The core is independently versioned. Do not patch it to make tests pass, change
-its pin, or push from its directory unless the task explicitly authorizes that
-work. Forking this test repository does not fork the submodule: inspect its
-remote before any core delivery. Use published core commits for CI-fetchable
-pins. Parent-repository PRs carry a pointer, not an upstream core push.
+The core is independently versioned and ignored here. Do not patch or push its
+repository without authorization. Forking the test repository does not fork core.
+Inspect its remote before delivery. Test source revisions independently using
+CI inputs or local checkouts; never stage the core directory in this repository.
 
 Before classifying a core defect, verify startup order, feature flags, buffer
 sizes, callback signatures and the intended contract. Use a passing control

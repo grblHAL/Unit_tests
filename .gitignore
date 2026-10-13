@@ -46,3 +46,8 @@ build
 /coverage*/
 
 __pycache__/
+
+/source-lock.json
+
+/core/
+/plugins/
