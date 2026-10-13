@@ -94,7 +94,8 @@ was validated against `terjeio/grblHAL_core` revision
   Workflow actionlint passes.
 
 Evidence: workspace scratch `terje-tests-verified.log`,
-`terje-results-verified.xml`, `terje-summary-verified.log`. Hosted GCC, Clang and
-coverage validation is requested against the same exact candidate source.
+`terje-results-verified.xml`, `terje-summary-verified.log`. Hosted GCC, Clang sanitizers and
+coverage all passed in [run 38367839505](https://github.com/petervanderwalt/Unit_tests/actions/runs/38367839505)
+using harness `90c890d` and the same exact candidate source.
 The default upstream core may not yet contain these fixes; older-source failures
 are genuine regressions against the retained correct expectations.

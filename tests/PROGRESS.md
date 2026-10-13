@@ -12,7 +12,8 @@ core source. Tool callback, check-mode, task startup and settings fixtures are
 adapted. Resolved exceptions and bug entries are removed; correct assertions stay.
 Remaining core regressions are documented in KNOWN_BUGS.md. See ci/VALIDATION.md
 for the final verification result: 2,242 tests, 2,221 clean passes and 21
-documented known regressions; zero unexpected failures under Windows Clang sanitizers. The coverage percentages below remain historical;
+documented known regressions; zero unexpected failures under Windows Clang sanitizers.
+Hosted GCC, Clang and coverage passed in run 38367839505 on harness `90c890d`. The coverage percentages below remain historical;
 this compatibility run does not establish a new coverage percentage.
 The two untracked modal-restore coverage cases remain unfinished and unstaged.
 
