@@ -6,6 +6,8 @@ Coverage work belongs on `initial-batch-part-2`. The separate CI design task,
 authorized on 2026-10-13, belongs on `ci-source-selection`. Do not mix these
 branches or commit unfinished coverage cases with CI changes. No AI branding.
 Do not commit/push master/main or open an early coverage PR.
+After PR #2 merged, its compatibility follow-up belongs on
+`ci-core-compatibility`, based on updated upstream master (2026-10-13).
 
 Continue toward meaningful full grblHAL core coverage: every core module and
 supported feature configuration, with line and branch coverage guiding the work.

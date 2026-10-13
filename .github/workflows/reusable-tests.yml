@@ -92,7 +92,7 @@ jobs:
           COMPILER: ${{ matrix.compiler }}
         run: python scripts/configure_suite.py --mode sanitizers --compiler "$COMPILER"
       - name: Build
-        run: cmake --build build --parallel
+        run: cmake --build build --parallel 2
       - name: Test
         run: python scripts/run_suite.py test
       - name: Classify individual results and sanitizer diagnostics
@@ -123,7 +123,7 @@ jobs:
         run: python scripts/prepare_sources.py
       - run: pip install gcovr==8.4
       - run: python scripts/configure_suite.py --mode coverage --compiler gcc
-      - run: cmake --build build --parallel
+      - run: cmake --build build --parallel 2
       - run: python scripts/run_suite.py test
       - name: Classify coverage test results
         if: always()

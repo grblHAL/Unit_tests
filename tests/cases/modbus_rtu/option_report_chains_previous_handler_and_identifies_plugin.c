@@ -10,6 +10,6 @@ int main(void)
     grbl.on_report_options(false);
     CHECK(option_report_calls == 2 && !option_report_new);
     CHECK(strstr(engine_output, "MODBUS") != NULL);
-    CHECK(strstr(engine_output, "0.23") != NULL);
+    CHECK(strstr(engine_output, "[PLUGIN:MODBUS v") != NULL);
     return EXIT_SUCCESS;
 }

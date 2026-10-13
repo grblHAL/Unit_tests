@@ -53,7 +53,8 @@ static inline void prepare_homing(void)
     hal.stream.is_connected = connected;
     report_init_fns();
     report_init();
-    grbl.on_execute_realtime = execute_foreground;
+    /* Current core dispatches homing progress through its delay hook too. */
+    grbl.on_execute_realtime = grbl.on_execute_delay = execute_foreground;
     grbl.on_homing_completed = homing_completed;
     settings.homing.flags.enabled = true;
     settings.homing.flags.single_axis_commands = true;

@@ -42,3 +42,33 @@ recorded harness's known-bug file and give precise cleanup guidance, ordinary
 failures give reproduction/contract-review guidance, and missing coverage files
 are flagged without claiming they are newly added code. No changed-line coverage
 comparison is implemented; that needs an explicit source baseline.
+
+## Merged-PR follow-up: ci-core-compatibility
+
+2026-10-13, based on upstream master `6a5dada` after PR #2 merged.
+Failed upstream run 38354097113 logs confirmed `task_execute` linker failures
+in standalone limits tests for GCC, Clang and coverage.
+
+The follow-up supplies a fail-on-unexpected-call scheduler mock for isolated
+limits cases, adapts the real scheduler wrapper to its old state/new wait API,
+installs valid host foreground hooks, connects homing ISR simulation to both
+hooks, and provides math declarations for secondary-stepper header consumers.
+Modbus tests invoke the new public reset API where available and verify actual
+transaction integrity rather than obsolete callback counts/version numbers.
+Critical-alarm checks retain actual hard-limit/critical-lock assertions while
+supporting callback-context changes. Timer fallback checks verify polling/output.
+
+The finite-move regression now passes with exactly ten pulses/position ten.
+Its expected-failure block and resolved bug entry were removed; assertions stay.
+Fix verified in core `ca26fc98f1b2171251c946ab91d5912b733efa78` on 2026-10-13.
+The unchanged Modbus null-descriptor defect was reconfirmed at line 1291; its
+matcher accepts only verified lines 1225/1291 plus the original strict diagnostic.
+Exception documentation anchors were rechecked after cleanup.
+
+Full Windows Clang ASan/UBSan and strict summary: 2,242 tests, 2,141 clean passes,
+46 passes with known sanitizer diagnostics, 55 known regressions reproduced,
+zero unexpected failures, zero skipped. Evidence in local workspace scratch:
+`ci-compatibility-verified-tests.log` / `ci-compatibility-verified-summary.log`.
+Nine representative compatibility cases also passed on historical core 451a539.
+CI helpers: 20 passing; workflow actionlint passes. Core source was not patched.
+Hosted compiler/coverage validation for this follow-up is pending publication.

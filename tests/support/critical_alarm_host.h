@@ -8,7 +8,11 @@ static status_code_t lock_status(status_code_t status)
 { lock_last_status = status; status_calls++; return original_status(status); }
 static void lock_foreground(sys_state_t state)
 {
-    CHECK(state == STATE_ESTOP); CHECK(++realtime_calls < 1000);
+    /* Legacy critical-loop callbacks used ESTOP context; the public scheduler
+       now passes the actual ALARM state. Both must remain critically locked. */
+    CHECK(state == STATE_ESTOP || state == STATE_ALARM);
+    CHECK(sys.alarm == Alarm_HardLimit && sys.blocking_event);
+    CHECK(++realtime_calls < 1000);
     if(serial_text[serial_position] == 0 && status_calls >= expected_status_calls)
         system_set_exec_state_flag(EXEC_RESET);
 }

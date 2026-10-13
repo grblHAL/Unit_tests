@@ -14,7 +14,8 @@ int main(void)
     for(unsigned ticks = 0; ticks < 50 && modbus_isbusy(); ticks++)
         poll_rtu();
     CHECK(!modbus_isbusy());
+    unsigned before_blocking = blocking_callbacks;
     CHECK(stream_tx_blocking());
-    CHECK(blocking_callbacks == 1);
+    CHECK(blocking_callbacks == before_blocking + 1);
     return EXIT_SUCCESS;
 }

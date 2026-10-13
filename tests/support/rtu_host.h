@@ -89,3 +89,13 @@ static inline void inject_reply(bool corrupt)
     rx_position = 0;
     rx_length = sizeof(bytes);
 }
+
+/* Current core resets Modbus through its public API before driver reset;
+   legacy core chains transport reset through the driver callback. */
+static inline void reset_rtu_driver(void)
+{
+#ifdef HOST_MODBUS_RESET_API
+    modbus_reset(sys.abort);
+#endif
+    hal.driver_reset();
+}
