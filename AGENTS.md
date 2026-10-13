@@ -88,7 +88,7 @@ branch. `ci/suites.json` defaults to upstream core master. Resolution locks both
 source/dependency SHAs and the test harness SHA once per run; all jobs use them.
 Upstream callers live in `ci/callers/`, with fork PR head selection and read-only
 permissions. Plugin caller is a template until a real suite is registered.
-Run `python -m unittest discover -s scripts -p 'test_*source*.py'` for helpers.
+Run `python -m unittest discover -s scripts -p 'test_*.py'` for helpers.
 Never overwrite dirty source checkouts, pass inherited secrets to candidate jobs,
 or claim upstream caller installation/hosted validation before verifying them.
 

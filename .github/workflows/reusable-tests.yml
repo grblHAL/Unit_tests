@@ -51,7 +51,7 @@ jobs:
         id: harness
         run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       - name: Test CI helpers
-        run: python -m unittest discover -s scripts -p 'test_*source*.py'
+        run: python -m unittest discover -s scripts -p 'test_*.py'
       - name: Resolve source revisions once
         id: resolve
         env:
@@ -131,7 +131,7 @@ jobs:
         env:
           COVERAGE_FILTER: ${{ needs.source.outputs.coverage_filter }}
         run: gcovr --merge-mode-functions=separate --root . --filter "$COVERAGE_FILTER" --html-details coverage.html --xml coverage.xml --print-summary
-      - run: python scripts/summary.py coverage coverage.xml
+      - run: python scripts/run_suite.py coverage-summary
       - uses: actions/upload-artifact@v7
         if: always()
         with:

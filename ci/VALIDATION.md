@@ -3,9 +3,11 @@
 2026-10-13, branch `ci-source-selection` (separate from paused coverage work).
 
 - No gitlink or `.gitmodules` on this branch; source directories are ignored.
-- Fourteen resolver/checkout helper tests pass, including fork PR resolution,
+- Seventeen CI helper tests pass, including fork PR resolution,
   independent plugin/core locking, unknown suites, dirty checkout preservation,
-  path escape rejection and immutable fetch arguments.
+  path escape rejection and immutable fetch arguments. Reporting tests also
+  verify custom suite manifests, rejection of unknown sanitizer warnings and
+  plugin-only coverage inventories.
 - `actionlint` passes both workflows and both caller templates.
 - A fresh clone resolved/fetched upstream master at
   `ca26fc98f1b2171251c946ab91d5912b733efa78` without submodules.
@@ -27,3 +29,10 @@
   Plugin caller is a template until actual plugin fixtures/tests are registered.
 - Existing historical core regressions may be fixed in current upstream, which
   intentionally produces cleanup failures rather than silently passing them.
+
+README verification identified and corrected an extra positional diagnostics
+argument in `run_suite.py`. `summary.py` now accepts explicit diagnostics,
+source inventory and suite-name options; existing two-argument invocations
+retain core defaults. Reusable jobs run all 17 helper/reporting regressions.
+The original hosted run predates this reporting correction; its build failures
+remain separate from the corrected summary invocation.

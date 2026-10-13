@@ -10,11 +10,14 @@ import xml.etree.ElementTree as ET
 parser = argparse.ArgumentParser()
 parser.add_argument("kind", choices=["tests", "coverage"])
 parser.add_argument("path", type=Path)
+parser.add_argument("--diagnostics-directory", type=Path, default=Path(__file__).resolve().parents[1] / "tests")
+parser.add_argument("--source-directory", type=Path, default=Path("core"))
+parser.add_argument("--suite-name", default="Core")
 args = parser.parse_args()
 lines = []
 sanitizer_failures = []
 known_diagnostics = []
-manifest = json.loads((Path(__file__).resolve().parents[1] / "tests/known_sanitizer_diagnostics.json").read_text(encoding="utf-8"))
+manifest = json.loads((args.diagnostics_directory / "known_sanitizer_diagnostics.json").read_text(encoding="utf-8")) if args.kind == "tests" else []
 if not args.path.exists():
     lines = ["## Report unavailable", "Build or test execution did not produce the expected report."]
 else:
@@ -47,7 +50,7 @@ else:
                 case.set("sanitizer_output", "\n".join(line for line, _ in diagnostics))
         failed += len(sanitizer_failures)
         skipped = sum(c.find("skipped") is not None for c in cases)
-        lines = ["## Core test results", "Tests labelled `known_bug` are expected failures confirming documented upstream defects; see tests/KNOWN_BUGS.md.", f"**{len(cases) - failed - skipped - known - len(known_diagnostics)} clean passes · {len(known_diagnostics)} passed with known sanitizer diagnostics · {known} known regressions reproduced · {failed} failed · {skipped} skipped**", "", "| Test | Result | Seconds |", "|---|---|---:|"]
+        lines = [f"## {args.suite_name} test results", f"Tests labelled `known_bug` are expected failures confirming documented defects; see {args.diagnostics_directory.as_posix()}/KNOWN_BUGS.md.", f"**{len(cases) - failed - skipped - known - len(known_diagnostics)} clean passes · {len(known_diagnostics)} passed with known sanitizer diagnostics · {known} known regressions reproduced · {failed} failed · {skipped} skipped**", "", "| Test | Result | Seconds |", "|---|---|---:|"]
         for case in cases:
             status = "❌ Failed" if case.find("failure") is not None or case.find("error") is not None else "⏭ Skipped" if case.find("skipped") is not None else "✅ Passed"
             if any(p.get("name") == "cmake_labels" and "known_bug" in p.get("value", "").split(";") for p in case.findall("./properties/property")) and case.find("failure") is None and case.find("skipped") is None:
@@ -74,11 +77,11 @@ else:
             if case.get("sanitizer_output"):
                 lines.extend(["", "<details><summary>Sanitizer output: " + html.escape(case.get("name", "unknown")) + "</summary><pre>" + html.escape(case.get("sanitizer_output")) + "</pre></details>", ""])
         if known_diagnostics and os.environ.get("GITHUB_ACTIONS") == "true":
-            print(f"::warning title=Known sanitizer diagnostics::{len(known_diagnostics)} tests passed assertions but reproduced diagnostics documented in tests/KNOWN_BUGS.md; review tests/known_sanitizer_diagnostics.json when updating core.")
+            print(f"::warning title=Known sanitizer diagnostics::{len(known_diagnostics)} tests passed assertions but reproduced diagnostics documented in {args.diagnostics_directory.as_posix()}/KNOWN_BUGS.md; review its known_sanitizer_diagnostics.json when updating sources.")
     else:
         measured = {entry.get("filename", "").replace("\\", "/"): entry for entry in root.iter("class")}
-        inventory = sorted(path.as_posix() for path in Path("core").rglob("*.c"))
-        lines = ["## Core coverage", f"**{len(measured)} of {len(inventory)} core source files instrumented**", "The remaining files are visible below; percentages apply to this build configuration.", "", "| Module | Line coverage | Lines | Branches |", "|---|---|---:|---:|"]
+        inventory = sorted(path.as_posix() for path in args.source_directory.rglob("*.c"))
+        lines = [f"## {args.suite_name} coverage", f"**{len(measured)} of {len(inventory)} source files instrumented**", "The remaining files are visible below; percentages apply to this build configuration.", "", "| Module | Line coverage | Lines | Branches |", "|---|---|---:|---:|"]
         for filename in inventory:
             if entry := measured.get(filename):
                 rate = float(entry.get("line-rate", "0"))

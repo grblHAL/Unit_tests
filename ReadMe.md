@@ -86,6 +86,25 @@ gh workflow run tests.yml --repo petervanderwalt/Unit_tests --ref ci-source-sele
 gh workflow run tests.yml --repo petervanderwalt/Unit_tests --ref ci-source-selection -f source_repository=yourname/core -f source_ref=my-fix
 ```
 
+### Which revision gets tested?
+
+There are two independent selections:
+
+- **Test harness:** this repository's tests, fixtures, workflows and exception
+  inventory. The caller selects it with `harness_repository` / `harness_ref`.
+- **Source under test:** core or plugin code. The caller passes the push/PR SHA;
+  manual runs can select a branch, tag, commit or PR number.
+
+A core PR does not need a commit in this test repository. A fork PR does not
+need merging into upstream core. Once the caller is installed, pushing another
+commit to that PR starts another upstream run automatically. The caller tests
+PR head code; it does not test GitHub's synthetic merge commit. To check a merge
+candidate explicitly, provide its published SHA in a manual run.
+
+GitHub's **Re-run jobs** retains the upstream caller event SHA, but source defaults
+and branch-based dependencies are resolved again if the source-resolution job
+reruns. For exact reproduction, use the saved source SHAs and harness SHA.
+
 ### Caller installation for Terje
 
 [ci/callers/core.yml](ci/callers/core.yml) is the complete core caller. After this
@@ -107,6 +126,50 @@ GitHub may require approval for first-time fork contributors. Use `pull_request`
 not `pull_request_target`, and do not pass inherited secrets. Candidate source
 runs only on hosted runners with read-only contents permission; fetch credentials
 are not persisted. These templates target public source repositories.
+
+### Install and verify the core caller
+
+1. Review/publish this CI branch in the chosen public test-harness repository.
+   For the initial rollout, the supplied caller uses
+   `petervanderwalt/Unit_tests` at `ci-source-selection`.
+2. Copy [ci/callers/core.yml](ci/callers/core.yml) into the core repository as
+   `.github/workflows/host-tests.yml`. If hosting the harness elsewhere, update
+   both `jobs.core.uses` and `harness_repository`; keep `uses` and `harness_ref`
+   on the same harness version. No Personal Access Token is needed.
+3. Commit the caller on a core branch and open a PR. Check its Actions run:
+   the `source` job should record the PR head repository and commit, followed by
+   GCC, Clang and coverage jobs. Compare the recorded SHA with the PR's latest
+   commit, including a fork PR.
+4. Push another commit to that PR and verify a new run tests its new SHA. Merge
+   the caller so later core pushes and PRs receive the same checks.
+5. Once the complete suite is passing for supported core and the chosen harness
+   version, configure required checks using their actual names from the upstream
+   run. Keep them optional while resolving existing compatibility/known-defect
+   cleanup failures. Updates to the harness's tests can be deployed independently
+   by advancing its branch/tag or updating the caller's reviewed harness version.
+
+The workflow runs in the **core repository's Actions context**, consuming that
+repository's runner allocation. Artifacts and logs live on that upstream run.
+It does not create a separate run in this test repository or post a bot comment.
+
+### Reusable workflow inputs
+
+| Input | Purpose | Default |
+|---|---|---|
+| `harness_repository` | Repository containing these tests/workflows | Required |
+| `harness_ref` | Harness branch, tag or commit | Required |
+| `suite` | Key in the harness's source registry | `core` |
+| `source_repository` | Candidate source repository, including a fork | Registry repository |
+| `source_ref` | Candidate branch, tag or commit | Registry branch |
+| `source_pr` | PR number in `source_repository`; cannot combine with `source_ref` | Empty |
+| `core_ref` | Core dependency branch/tag/SHA for a plugin suite | Core registry branch |
+| `run_label` | Unique artifact suffix for this invocation | `core` |
+
+Manual **Core tests** exposes only the three candidate source inputs; the
+upstream caller/reusable workflow supports the full set. A different candidate
+repository needs an explicit ref or PR number. Unknown suites and ambiguous
+PR/ref combinations fail before building. Caller inputs are passed as data,
+not evaluated as shell commands. Core-only calls should leave `core_ref` empty.
 
 ### Extending to plugins
 
@@ -130,6 +193,95 @@ selects its tests, diagnostic inventory and coverage files. Plugin fixtures may
 also require representative core tests in their regex. Defect cleanup retains
 correct regression assertions; new upstream fixes may legitimately fail the
 existing expected-failure inventory until that inventory is updated.
+
+### Source registry fields and a future plugin example
+
+The registry contains metadata, not source code or submodule commit hashes:
+
+| Field | Meaning |
+|---|---|
+| `repository`, `ref` | Public source repository and default branch/tag |
+| `path` | Ignored checkout directory inside this workspace |
+| `dependencies` | Other registered source suites to fetch, such as `core` |
+| `cmake_source`, `cmake_options` | CMake project directory and configure arguments |
+| `test_regex` | CTest names included in this suite; selecting zero tests fails |
+| `coverage_filter` | gcovr file filter for this suite's measured code |
+| `diagnostics_directory` | Directory with the suite's diagnostic exception inventory |
+
+Example entry **after adding a real plugin host project and tests**:
+
+```json
+"example_plugin": {
+  "repository": "OWNER/ACTUAL_PLUGIN_REPOSITORY",
+  "ref": "master",
+  "path": "plugins/example_plugin",
+  "dependencies": ["core"],
+  "cmake_source": "tests/plugins/example_plugin",
+  "cmake_options": [],
+  "test_regex": "^example_plugin[.]",
+  "coverage_filter": "plugins/example_plugin/.*\\.c$",
+  "diagnostics_directory": "tests/plugins/example_plugin"
+}
+```
+
+These are placeholders, not an existing plugin suite. Its CMake project must
+build the original plugin source against the fetched core and arrange host mocks,
+CTest names and sanitizer/coverage instrumentation. `dependencies` fetches source;
+it does not automatically link that source or run the dependency's entire suite.
+The diagnostics directory must supply the manifest used by `scripts/summary.py`.
+Register explicit additional dependencies if a plugin needs other repositories.
+The current resolver supports the listed direct dependencies; it does not recurse
+through arbitrary dependency graphs.
+
+## Read results and reproduce a run
+
+Expand the upstream **source** job summary to see the harness SHA and every
+resolved source SHA. Download artifacts from that same run:
+
+- `source-lock-<run_label>`: immutable source selections and suite configuration.
+- `results-<run_label>-gcc` / `results-<run_label>-clang`: source lock, JUnit
+  results and `LastTest.log`, with individual test names and failures.
+- `coverage-<run_label>`: source lock, HTML/XML coverage and available test logs.
+
+The result summary distinguishes clean passes, passes with known sanitizer
+warnings, reproduced known defects, failures and skips. A build failure is a
+failed run even if no JUnit report could be produced; inspect the failed build
+step first. Coverage percentages describe the selected suite/configurations.
+A green core run does not establish plugin or physical-board coverage.
+
+For an exact local reproduction, check out the recorded harness SHA in a fresh
+clone, place the downloaded `source-lock.json` at its root, then:
+
+```sh
+python scripts/prepare_sources.py
+python scripts/configure_suite.py --mode sanitizers --compiler clang
+cmake --build build --parallel 2
+python scripts/run_suite.py test
+python scripts/run_suite.py summary
+```
+
+On Windows, use GNU-compatible Clang on PATH with Ninja installed and set the
+CMake generator before configuring, for example in PowerShell:
+
+```powershell
+$env:CMAKE_GENERATOR = "Ninja"
+```
+
+The source-fetch helper refuses dirty or mismatched existing checkouts; use the
+fresh clone for this reproduction. Downloaded locks are run records, not tracked
+pins. They include build settings, so inspect them before using a lock from
+outside a trusted run. A source or harness commit must remain reachable from
+its repository for a future fresh fetch.
+
+### Current rollout validation
+
+See [ci/VALIDATION.md](ci/VALIDATION.md) for dated evidence. Resolver/checkout
+helper tests and workflow lint pass. The first hosted source job succeeded,
+but its GCC/Clang/coverage builds failed against the newly selected core. A full
+local build reproduced undeclared math functions in current `stepper2.h` when
+included by secondary-stepper fixtures. Representative parser/settings sanitizer
+smoke tests passed; the entire latest-core suite is **not yet green**. Caller
+installation in upstream repositories is still required.
 
 ## Retest a core fix locally
 
@@ -255,7 +407,8 @@ regression and dated known-bug entry; do not silently waive it.
 `.github/workflows/tests.yml` runs on pushes, pull requests and manual dispatch.
 GCC and Clang run the tests with address/undefined-behavior sanitizers. A separate
 GCC job publishes HTML and XML coverage as an Actions artifact. Coverage describes
-the instrumented modules in this configuration. The summary lists every core source file, including gaps. No token or external service is needed.
+the instrumented modules in this configuration. The summary lists every core source file, including gaps. No separately managed
+credential or external reporting service is required.
 
 ## Measure coverage locally
 
