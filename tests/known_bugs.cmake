@@ -29,10 +29,6 @@ endif()
 # The test follows supported setup and passes normally.
 # No known-bug exception is needed.
 
-if(TEST gcode.claim_axis_words_validation_retains_valueless_axis)
-  set_tests_properties(gcode.claim_axis_words_validation_retains_valueless_axis PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
 # MPG commands intentionally allow one outstanding command at a time.
 # Covered by stream.mpg_buffered_commands_wait_for_response.
 # This is an ordinary passing test of the supported command/response protocol.

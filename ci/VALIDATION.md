@@ -134,3 +134,19 @@ default-source run also produced concise structured test failures, confirming
 failure reporting independently of the passing candidate. Subsequent parser
 checks cover CMake reason/location, timeouts and namespaced HTTP errors; all
 44 local helpers pass without changing the core/test assertions. No core source or unfinished coverage tests changed.
+
+## Axis claiming contract and Modbus documentation correction
+
+On 2026-10-13, Terje's remote master was checked directly with `git ls-remote`
+and matched the tested `4b128e68bc63f9a3af11a01a7d8fbb5d5ccc98aa` revision.
+The axis claiming test now checks validated X-only returns zero, masks 3 and 2
+claim only numeric Y, and a zero validation mask claims both present words.
+Its known-bug entry and expected-failure registration were removed.
+The full Clang sanitizer suite and strict summary pass: 2,242 tests, 2,222 clean
+passes, 20 documented known regressions, zero unexpected failures/skips. All
+44 helper tests pass.
+
+The Modbus three-register regression was rerun and still observes `_value2=51`
+instead of 34. Its surviving entry now links the reviewed handler at lines
+1266/1271-1274 and describes the remaining third-value overwrite, rather than
+the stale exactly-two-values condition. The core was not patched.

@@ -126,42 +126,31 @@ truncates fractional values before immediate output at line 4201 or synchronized
 M67 output in `core/stepper.c:515`. Preserve the numeric value through command
 storage. The regression retains the fractional output expectation.
 
-## Axis-word validation accepts a valueless axis
-
-**Marked known:** 2026-10-09
-
-**Regression:** [test](cases/gcode/claim_axis_words_validation_retains_valueless_axis.c).
-
-**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L33).
-
-`gc_claim_axis_words()` with validation enabled for X accepts an X word whose
-value is `NaN`, clears that word from the block, and reports X as claimed.
-The regression expects X to remain unclaimed while the numeric Y word is
-claimed. `core/gcode.c:392` uses the mutating `bit_true` macro inside the
-validation condition. The macro expands to an unparenthesized `|=` assignment;
-its existing nonzero mask makes the expression true even when `!isnan()` is
-false. Use an explicit validation condition with the intended mask semantics,
-and retain the numeric-value check before claiming a validated axis.
-
 ## Three-register Modbus macro reply loses its second value
 
 **Marked known:** 2026-10-09
 
 **Regression:** [test](cases/ngc_params/builtin_modbus_macro_preserves_three_register_results.c).
 
-**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L41).
+**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L37).
 
 A `G65P7` read requesting three registers reports `_value_returned=3`, but
 returns only the first and third register values. For a reply containing
 17, 34, and 51, the expected results are `_value=17`, `_value2=34`, and
 `_value3=51`. Instead, `_value2` becomes 51 and `_value3` is not created.
 
-`modbus_response_handler()` in `core/ngc_params.c:1204-1207` copies the
-second register only when the reply has exactly two values. For three values,
-it copies the third register into `_value2` instead. Copy the second register
-when at least two values are present, and the third into `_value3` when three
-are present. The regression passes a packet through the real Modbus reply
-parser and keeps the correct expectations for all three values.
+**Reconfirmed:** 2026-10-13 against Terje's latest revision
+`4b128e68bc63f9a3af11a01a7d8fbb5d5ccc98aa`.
+
+The [handler starts at line 1266](https://github.com/terjeio/grblHAL_core/blob/4b128e68bc63f9a3af11a01a7d8fbb5d5ccc98aa/ngc_params.c#L1266).
+[Lines 1271-1274](https://github.com/terjeio/grblHAL_core/blob/4b128e68bc63f9a3af11a01a7d8fbb5d5ccc98aa/ngc_params.c#L1271)
+now correctly copy the second register when more than one value is present,
+but the three-value branch still writes the third register to `_value2`.
+It overwrites 34 with 51 and never creates `_value3`. That branch needs to
+write `_value3` instead. The regression passes a packet through the real
+Modbus reply parser and retains all three correct expected values.
+The direct executable still fails with `observed second result=51, expected=34`;
+CTest's green `known_bug` result confirms reproduction, not a successful fix.
 
 ## Named macro cleanup reads a freed subroutine callback
 
@@ -178,7 +167,7 @@ isolating this defect from the known VFS close use-after-free.
 [ENDSUB](cases/ngc_flowctrl/named_macro_end_sub_preserves_subroutine_callback_lifetime.c),
 and [error cleanup](cases/ngc_flowctrl/named_macro_error_preserves_subroutine_callback_lifetime.c).
 
-**Remove exceptions when fixed:** [CMake registrations](known_bugs.cmake#L57).
+**Remove exceptions when fixed:** [CMake registrations](known_bugs.cmake#L53).
 Also replace their `named_sub_lifetime_regression.py` registrations in
 `CMakeLists.txt` with direct executable tests. The matcher requires the exact
 callback read at line 316 and the freeing frame at line 259; a successful fix
