@@ -16,6 +16,25 @@ check. Recovering sanitizer diagnostics have a separate, narrowly scoped
 Source links point to the revision where each defect was verified. CI can test
 a newer revision; a fixed regression forces review and cleanup of its exception.
 
+
+## Using the suggested fixes
+
+Each **Suggested fix (proposal)** below is based on source inspection of
+Terje's core revision `4b128e68bc63f9a3af11a01a7d8fbb5d5ccc98aa`
+(reviewed 2026-10-13). These are review suggestions, not applied or runtime-verified
+patches. Source links deliberately identify that revision; check the current
+code before applying a suggestion. Snippets show the relevant edit, not complete
+patches, unless stated otherwise.
+
+Apply a proposal in a separate core checkout, select that checkout as the test
+source using the README instructions, and run the linked regressions and related
+module tests under sanitizers. A correct fix makes an expected-failure test turn
+red because its exception is now obsolete. Follow the entry's cleanup links:
+remove the allowance, replace diagnostic wrappers with direct tests where needed,
+keep the regression assertions, and delete the resolved entry. Then run the full
+suite and strict diagnostic summary before committing. Multiple defects can
+block the same test; remove only allowances whose underlying faults are fixed.
+
 ## datetime century leap
 
 **Marked known:** 2026-10-08
@@ -28,6 +47,21 @@ Year 2000 is a Gregorian leap year, but the date parser rejects February 29.
 
 `nuts_bolts.datetime_century_leap` is a labelled expected failure, with the same
 removal policy described above.
+
+**Suggested fix (proposal):** In [the date validation at nuts_bolts.c:404](https://github.com/terjeio/grblHAL_core/blob/4b128e68bc63f9a3af11a01a7d8fbb5d5ccc98aa/nuts_bolts.c#L404),
+replace the special exclusion of `tm_year == 100` with the Gregorian rule using
+the full year (`tm_year` is years since 1900):
+
+```c
+int year = dt.tm_year + 1900;
+bool leap = year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
+```
+
+Use `dt.tm_mon == 1 && leap` for the extra February day in the existing range
+check. This accepts 2000-02-29 without accepting February 29 in ordinary years.
+Retain the parser's existing 1970–2099 year range. Validate the linked regression
+and ordinary leap/non-leap date cases; do not widen supported dates to test 2100.
+
 
 ## VFS close use-after-free
 
@@ -60,6 +94,25 @@ and [EOF restoration](cases/ngc_flowctrl/named_macro_eof_restores_caller_stream_
 tests use a static file backend to verify stream and parameter restoration
 independently of the defects caused by freeing file or subroutine records.
 
+**Suggested fix (proposal):** Save both the update flag and filesystem pointer
+before the backend frees the file. The relevant replacement is:
+
+```c
+bool update = file->status.update;
+vfs_t *fs = (vfs_t *)file->fs;
+vfs_errno = 0;
+fs->fclose(file);
+if(update && vfs.on_fs_changed)
+    vfs.on_fs_changed(fs);
+```
+
+This preserves close-before-notification ordering and avoids all reads of `file`
+after close. It assumes the mounted filesystem object outlives its file handles,
+as the existing callback API requires. Validate RAM close and named-macro cleanup
+with ASan, including a write-close notification; the separate macro callback and
+embedded-seek defects may still prevent the shared macro regression from passing.
+
+
 ## Embedded filesystem seek
 
 **Marked known:** 2026-10-08; memory failure reconfirmed 2026-10-13.
@@ -81,6 +134,19 @@ then rerun macro cleanup to determine whether its separate lifetime exception is
 Both wrappers accept only the verified global overread at line 122 with an eight-byte read;
 other faults fail the run. The correct seek and macro assertions remain intact.
 
+**Suggested fix (proposal):** Correct the inline-handle cast at line 122:
+
+```diff
+-    if((fileh = (embedded_filehandle_t *)file->handle) && (vfs_errno = offset <= fileh->file->size ? 0 : EINVAL) == 0)
++    if((fileh = (embedded_filehandle_t *)&file->handle) && (vfs_errno = offset <= fileh->file->size ? 0 : EINVAL) == 0)
+```
+
+The handle is stored inside the allocated VFS object; `file->handle` is not a
+pointer to a separate embedded handle. Preserve the offset bounds and remaining
+byte calculation. Validate seek/read/tell, EOF and out-of-range seek under ASan,
+then rerun embedded macro return to expose any remaining cleanup defect.
+
+
 ## Delta travel check accepts an unreachable Cartesian target
 
 **Marked known:** 2026-10-09
@@ -95,6 +161,21 @@ returns true. `core/kinematics/delta.c:603` tests successful inverse kinematics
 as an error, while a failed inverse can leave zero joint angles that pass the
 following range checks. Reject inverse-kinematics failure before checking the
 joint-angle bounds. The regression retains the correct rejection expectation.
+
+**Suggested fix (proposal):** In [delta.c:603](https://github.com/terjeio/grblHAL_core/blob/4b128e68bc63f9a3af11a01a7d8fbb5d5ccc98aa/kinematics/delta.c#L603),
+negate the inverse-kinematics result in the rejection condition:
+
+```diff
+-    else if(delta_calcInverse((coord_data_t *)target, &pos) || !pos_ok(&pos))
++    else if(!delta_calcInverse((coord_data_t *)target, &pos) || !pos_ok(&pos))
+```
+
+`delta_calcInverse()` returns true on success. Reject failure before using joint
+positions, while retaining `pos_ok()` and homed-axis bounds. Validate the linked
+unreachable target alongside reachable Cartesian and joint-space targets and
+cuboid-limit settings; this edit addresses the inverse branch, not every geometry
+or early-return path.
+
 
 ## RTCP rotary segmentation overshoots the endpoint
 
@@ -111,6 +192,26 @@ RTCP position with the endpoint before interpolation at lines 373-377 adds the
 move delta. Preserve the original starting position throughout segmentation.
 The regression retains the correct machine endpoint and rotary angle.
 
+**Suggested fix (proposal):** In [rtcp_ac.c:313–378](https://github.com/terjeio/grblHAL_core/blob/4b128e68bc63f9a3af11a01a7d8fbb5d5ccc98aa/kinematics/rtcp_ac.c#L313),
+keep a separate immutable interpolation origin for each move. Add a static
+`coord_data_t segment_start`, copy `start_rtcp` into it on `init` before line 348,
+and use `segment_start` instead of `start_rtcp` in all five components of `out`.
+For example:
+
+```c
+/* On init, before updating start_rtcp to end_rtcp: */
+memcpy(&segment_start, &start_rtcp, sizeof(segment_start));
+/* In the interpolated output: */
+.x = segment_start.x + s_out * delta.x,
+```
+
+Keep the existing update of `start_rtcp` to the commanded endpoint: simply deleting
+it risks breaking consecutive moves and displayed RTCP coordinates. Validate the
+endpoint regression, consecutive rotary moves, nonzero rotary centers, linear-only
+moves and abort/restart behavior. The lifetime of the global RTCP position on abort
+needs maintainer review; the proposal isolates the demonstrated interpolation error.
+
+
 ## Analog output commands truncate fractional values
 
 **Marked known:** 2026-10-09
@@ -125,6 +226,21 @@ is an `int32_t` (`core/gcode.h:312`). Assigning Q at `core/gcode.c:2604`
 truncates fractional values before immediate output at line 4201 or synchronized
 M67 output in `core/stepper.c:515`. Preserve the numeric value through command
 storage. The regression retains the fractional output expectation.
+
+**Suggested fix (proposal):** Preserve the floating-point Q value in
+[output_command_t at gcode.h:312](https://github.com/terjeio/grblHAL_core/blob/4b128e68bc63f9a3af11a01a7d8fbb5d5ccc98aa/gcode.h#L312):
+
+```diff
+-    int32_t value;
++    float value;
+```
+
+Immediate M68 and queued M67 then carry the same value through storage to the
+float callback. Review every `output_command_t.value` consumer: digital M62/M63
+must retain their boolean 0/1 behavior. This changes a shared structure's type;
+rebuild core and dependent plugins/drivers together. Validate fractional immediate
+and synchronized output, queued command ordering and digital output controls.
+
 
 ## Three-register Modbus macro reply loses its second value
 
@@ -152,6 +268,20 @@ Modbus reply parser and retains all three correct expected values.
 The direct executable still fails with `observed second result=51, expected=34`;
 CTest's green `known_bug` result confirms reproduction, not a successful fix.
 
+**Suggested fix (proposal):** Change only the third register's destination
+at the linked handler's line 1274:
+
+```diff
+-            ngc_named_param_set("_value2", (float)(response->exception ? response->exception : response->values[2]));
++            ngc_named_param_set("_value3", (float)(response->exception ? response->exception : response->values[2]));
+```
+
+This keeps the already corrected second-register condition and prevents overwriting
+its value. Validate the linked three-register packet test plus one/two-register
+replies and Modbus exceptions. This proposal does not define whether results from
+an earlier longer reply should be deleted after a shorter reply.
+
+
 ## Named macro cleanup reads a freed subroutine callback
 
 **Marked known:** 2026-10-10
@@ -172,6 +302,26 @@ Also replace their `named_sub_lifetime_regression.py` registrations in
 `CMakeLists.txt` with direct executable tests. The matcher requires the exact
 callback read at line 316 and the freeing frame at line 259; a successful fix
 or any different failure fails the regression and requires review.
+
+**Suggested fix (proposal):** Move the callback capture before any cleanup
+that can free the subroutine, inside the `if(stack_idx >= 0)` block at
+[ngc_flowctrl.c:306](https://github.com/terjeio/grblHAL_core/blob/4b128e68bc63f9a3af11a01a7d8fbb5d5ccc98aa/ngc_flowctrl.c#L306):
+
+```c
+on_endsub_ptr callback = stack[stack_idx].sub->callback;
+/* Existing clear_subs()/stream cleanup follows. */
+/* Remove the old callback declaration after that cleanup. */
+stack_pull();
+if(callback)
+    callback(o_label, success);
+```
+
+Save the function pointer, not the soon-to-be-freed subroutine pointer. Keep callback
+invocation after stack removal to preserve ordering. Validate RETURN, ENDSUB and
+error cleanup under ASan with the static backend, then the embedded backend once
+its seek and VFS defects are fixed. Also verify a non-null callback runs exactly
+once with the expected label/success flag and restored caller scope.
+
 
 ## Dynamic laser power is not restored after a separate M4 command
 
@@ -196,6 +346,24 @@ and [stepper PWM](cases/stepper/dynamic_laser_pwm_tracks_acceleration_and_return
 **Remove exception when fixed:** delete the five associated blocks in
 [known_bugs.cmake](known_bugs.cmake), retain the assertions, and delete this section.
 
+**Suggested fix (proposal):** Recompute the current block's dynamic-laser flag
+from the effective modal spindle state for every accepted block, rather than only
+inside the M-code spindle-state-change branch. Immediately before the planner
+condition assignment at the linked line 4402, the intended expression is:
+
+```c
+gc_state.is_rpm_rate_adjusted = gc_state.spindle->state.ccw
+    && !gc_parser_flags.laser_disable && gc_state.spindle->hal->cap.laser;
+```
+
+Review placement against null/disabled spindle configurations, multi-spindle
+selection, modal restoration and check mode before applying; this is a proposed
+placement, not a verified complete patch. Retain rapid-motion laser suppression,
+M3 constant power and M5 shutdown. Validate all five linked regressions plus
+combined M4/motion, cutting-to-rapid-to-cutting transitions and multi-spindle
+controls. Check actual stepper PWM behavior, not only parser flags.
+
+
 ## Empty tool-table slots lose their tool identity
 
 **Marked known:** 2026-10-13
@@ -218,3 +386,19 @@ Corrupt-storage tests reload settings before lookup because the tool table is no
 
 **Remove exception when fixed:** delete the four associated blocks in
 [known_bugs.cmake](known_bugs.cmake), retain the assertions, and delete this section.
+
+**Suggested fix (proposal):** Restore each nonzero slot's identity after its
+load/validation branch in the linked `settings_load_tool_data()` loop:
+
+```c
+for(idx = 1; idx <= N_TOOLS; idx++) {
+    /* Existing storage read, ID validation and zeroing. */
+    tool_data[idx].tool_id = (tool_id_t)idx;
+}
+```
+
+Place the assignment outside the `hal.nvs.type != NVS_None` condition so no-storage
+slots also retain identity. Keep CRC/wrong-ID rejection and zero offsets/radius;
+leave reserved tool zero unchanged. Validate all four linked regressions plus
+valid stored tools, reload persistence, no-storage mode and invalid tool IDs.
+Do not repair a corrupt payload by keeping its offsets and merely changing its ID.
