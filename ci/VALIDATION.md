@@ -178,3 +178,16 @@ https://github.com/petervanderwalt/Unit_tests/actions/runs/38430798382
 Later modal/multiple-probe cases remain locally validated only. Its completed 2,337-test coverage
 snapshot is 86.2% lines (15,689/18,206), 91.8% functions (1,114/1,214)
 and 72.4% branches (8,997/12,424).
+
+
+## Later batch 3 checkpoints
+
+Hosted GCC, Clang, coverage and diagnosis passed harness `01a5df6` against Terje
+core `e65020a`, baseline `4b128e`:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/38433324502
+
+Its 2,363-case local merged coverage is 86.5% lines (15,757/18,206),
+91.8% functions (1,115/1,214), 72.9% branches (9,061/12,424).
+The next 35 cases pass local ASan/UBSan and strict summary: 2,398 tests,
+2,369 clean passes, 29 known regressions, zero unexpected failures/skips.
+Hosted validation and coverage refresh of these later cases remain pending.

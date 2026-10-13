@@ -23,6 +23,8 @@ static void prepare_spindle_listing(void)
     CHECK(spindle_register(&listed_spindle, "fixture spindle") == 0);
     if(listed_spindle.cap.laser)
         settings.mode = Mode_Laser;
+    if(listed_spindle.get_data)
+        hal.spindle_data.get = listed_spindle.get_data;
     CHECK(spindle_select(0));
     CHECK(spindle_is_enabled(0));
     report_init_fns();

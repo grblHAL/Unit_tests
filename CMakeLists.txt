@@ -209,6 +209,11 @@ function(add_core_test name module source)
     OR name STREQUAL "ngc_params.virtual_registration_allocation_failure_preserves_existing_list")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc)
   endif()
+  if(name STREQUAL "ngc_params.string_growth_allocation_failure_preserves_neighbors_and_allows_retry"
+    OR name STREQUAL "ngc_params.string_insert_allocation_failure_preserves_existing_values"
+    OR name STREQUAL "ngc_params.string_name_allocation_failure_reports_zero_and_allows_retry")
+    target_link_options(test_${name} PRIVATE -Wl,--wrap=realloc)
+  endif()
   if(name MATCHES "^motion_control\\.thread_plan_")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=plan_buffer_line)
   endif()

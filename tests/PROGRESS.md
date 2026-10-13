@@ -3,6 +3,28 @@
 Last verified: **2026-10-13**. Read this with the root `AGENTS.md` and README.
 This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 
+## Batch 3 allocation, reporting and motor-power checkpoint
+
+Thirty-five further focused cases pass full Clang ASan/UBSan and strict summary:
+**2,398 tests, 2,369 clean passes, 29 documented known regressions, no unexpected
+failures/skips**. New cases cover string allocation failure/recovery and size
+boundaries, integer-reader boundaries/cursor preservation, byte-size formatting,
+spindle pulse/encoder capability reports, modal report requests, scheduled motor
+release/cancellation/enable delay/homing, and the default virtual root filesystem.
+No new known-bug allowances were required. The allocation fixture wraps only
+`realloc` in the three specific failure tests; production functions remain linked.
+
+The completed 2,363-case measurement is **86.5% lines (15,757/18,206),
+91.8% functions (1,115/1,214), 72.9% branches (9,061/12,424)**. Later 35 cases
+have not yet been merged into a refreshed measurement. Four fatal-memory wrappers
+skip only in coverage mode and run under sanitizers.
+
+Hosted GCC, Clang, coverage and diagnosis all passed the preceding checkpoint:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/38433324502
+(harness `01a5df6`, Terje core `e65020a`, baseline `4b128e`). Next inspect the
+Modbus RTU auxiliary RS485-direction path, remaining kinematic callbacks and
+parser/motion configuration gaps. Goal remains active; do not modify core source.
+
 ## Batch 3 parser startup and cutter restoration
 
 Eleven further cases pass full sanitizers and strict summary: **2,363 tests,
