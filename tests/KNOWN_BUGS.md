@@ -13,38 +13,11 @@ defects, remove the diagnostic matcher and retain an ordinary successful compile
 check. Recovering sanitizer diagnostics have a separate, narrowly scoped
 [manifest](known_sanitizer_diagnostics.json); remove its linked entries when fixed.
 
-Source links point to the revision where each defect was verified. CI can test
+Outstanding regressions were reconfirmed on 2026-10-13 against Terje core
+`d216287a6cf1f9ec278a92ac403c30a8cf5fad3b`.
+Source links point to the revision where each defect was first verified. CI can test
 a newer revision; a fixed regression forces review and cleanup of its exception.
 
-## Delta travel check accepts an unreachable Cartesian target
-
-**Marked known:** 2026-10-09
-
-**Regression:** [test](cases/delta/unreachable_cartesian_target_rejected.c).
-
-**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L4).
-
-With the default delta geometry and all axes homed, the Cartesian target
-`X1000 Y1000 Z-300` is physically unreachable, yet `grbl.check_travel_limits()`
-returns true. [kinematics/delta.c:603](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/kinematics/delta.c#L603) tests successful inverse kinematics
-as an error, while a failed inverse can leave zero joint angles that pass the
-following range checks. Reject inverse-kinematics failure before checking the
-joint-angle bounds. The regression retains the correct rejection expectation.
-
-## RTCP rotary segmentation overshoots the endpoint
-
-**Marked known:** 2026-10-09
-
-**Regression:** [test](cases/rtcp_ac/rotary_segment_endpoint.c).
-
-**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L8).
-
-With both rotary centers at zero, an RTCP move from the origin to `X10 C90`
-should finish at machine position `X0 Y10 C90`. The segmented move finishes
-at `X-20 Y0 C180` instead. [kinematics/rtcp_ac.c:348](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/kinematics/rtcp_ac.c#L348) replaces the starting
-RTCP position with the endpoint before interpolation at lines 373-377 adds the
-move delta. Preserve the original starting position throughout segmentation.
-The regression retains the correct machine endpoint and rotary angle.
 
 ## Analog output commands truncate fractional values
 
@@ -52,7 +25,7 @@ The regression retains the correct machine endpoint and rotary angle.
 
 **Regression:** [test](cases/gcode/m68_preserves_fractional_output.c).
 
-**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L12).
+**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L4).
 
 `M68E1Q1.25` passes 1.0 to the analog output callback instead of 1.25.
 The callback accepts a float (`core/ioports.h:49`), but `output_command_t.value`
@@ -61,32 +34,6 @@ truncates fractional values before immediate output at line 4201 or synchronized
 M67 output in `core/stepper.c:515`. Preserve the numeric value through command
 storage. The regression retains the fractional output expectation.
 
-## Named macro cleanup reads a freed subroutine callback
-
-**Marked known:** 2026-10-10
-
-A named macro's `RETURN`, `ENDSUB`, or error cleanup calls `clear_subs()` at
-[ngc_flowctrl.c:311](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/ngc_flowctrl.c#L311), freeing its record at line 259. `stack_unwind_sub()`
-then reads `stack[stack_idx].sub->callback` from that freed record at line 316.
-AddressSanitizer confirms an eight-byte heap-use-after-free even when the callback
-is null. The static-file backend keeps its file handle alive, independently
-isolating the callback lifetime independently of file-handle allocation.
-
-**Reconfirmed:** 2026-10-13 against `e65020a8389b19d3c03277e02f34219e25800e6a` under Clang ASan.
-
-**Regressions:** [RETURN](cases/ngc_flowctrl/named_macro_return_preserves_subroutine_callback_lifetime.c),
-[ENDSUB](cases/ngc_flowctrl/named_macro_end_sub_preserves_subroutine_callback_lifetime.c),
-and [error cleanup](cases/ngc_flowctrl/named_macro_error_preserves_subroutine_callback_lifetime.c).
-
-**Additional regression:** [embedded named-macro return](cases/ngc_flowctrl/named_macro_return_closes_file_and_restores_caller_scope.c)
-now reaches this same callback fault after the VFS close and seek fixes. Its
-[narrow matcher](../scripts/named_macro_cleanup_regression.py) accepts only this remaining defect.
-
-**Remove exceptions when fixed:** [CMake registrations](known_bugs.cmake#L36).
-Also replace the embedded return and `named_sub_lifetime_regression.py` registrations in
-`CMakeLists.txt` with direct executable tests. The matcher requires the exact
-callback read at line 316 and the freeing frame at line 259; a successful fix
-or any different failure fails the regression and requires review.
 
 ## M72 restores runtime overrides but leaves parser overrides disabled
 
@@ -114,7 +61,7 @@ copy the restored override control into parser state before clearing the action:
 `plan_data.overrides` and `mc_override_ctrl_update()` ordering too; verify subsequent
 motion and M51/M53 controls rather than treating a flag-only change as a complete fix.
 
-**Remove exception when fixed:** delete the [CMake block](known_bugs.cmake#L49),
+**Remove exception when fixed:** delete the [CMake block](known_bugs.cmake#L25),
 retain the correct regression and passing control, rerun the modal/planner tests
 and full sanitizer suite, then delete this section.
 
@@ -141,7 +88,7 @@ before continuing ordinary block parsing, using the existing `RETURN(status)`
 cleanup path when `status != Status_OK` after handling demarcation. Retain valid
 serial markers, file completion callbacks and check-mode behavior.
 
-**Remove exception when fixed:** delete the [CMake block](known_bugs.cmake#L54),
+**Remove exception when fixed:** delete the [CMake block](known_bugs.cmake#L30),
 retain the correct regression and passing controls, then delete this section.
 No sanitizer diagnostic allowance applies.
 
@@ -175,7 +122,7 @@ enums: integer G71/G72 for variants ending in zero, with `.1` or `.2` for the
 fractional variants. Preserve G70, G5.1, G33.1 and normal probe formatting.
 
 **Remove exceptions when fixed:** delete all six
-[CMake blocks](known_bugs.cmake#L59), keep the correct report assertions and
+[CMake blocks](known_bugs.cmake#L35), keep the correct report assertions and
 G70 control, run the lathe/parser/report tests and full sanitizer suite, then
 delete this section. No sanitizer allowance applies.
 
@@ -204,7 +151,7 @@ factor formatter for this record, retaining all configured axis factors and deci
 precision without applying `INCH_PER_MM` or diameter doubling. Keep the existing
 coordinate formatter for positions, work offsets and probe results.
 
-**Remove exceptions when fixed:** delete both [CMake blocks](known_bugs.cmake#L84),
+**Remove exceptions when fixed:** delete both [CMake blocks](known_bugs.cmake#L60),
 retain all three tests, run the scaling/parser/report cases and full sanitizer
 suite, then delete this section. No sanitizer diagnostic allowance applies.
 
@@ -324,8 +271,10 @@ With a valid serial stream lacking its own direction callback and no auxiliary
 outputs, `modbus_rtu_init(0, -1)` crashes instead of leaving RTU disabled.
 [modbus_rtu.c:601](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/modbus_rtu.c#L601)
 calls `d_out.claim` even though `ioports_cfg()` returned an empty configuration.
-The Windows sanitizer reports an access violation at address `0xfffffffffffffff8`
-in that exact initialization line.
+Windows reports an access violation at `0xfffffffffffffff8` on that initialization
+line. GCC reports a null indirect call with PC zero and the caller at
+`tests/support/rtu_host.h:63`; the strict wrapper also requires this exact
+regression origin, fault type and address.
 
 **Regression:** [unavailable outputs](cases/modbus_rtu/aux_direction_without_outputs_disables_transport_safely.c).
 **Passing controls:** separate first-output, last-output and automatic-selection
@@ -347,3 +296,35 @@ delete this section. The wrapper matches only the known fault address, source
 line and regression origin. A fixed regression or different crash fails CI;
 coverage mode skips it explicitly until the memory fault is fixed. No general
 sanitizer diagnostic allowance applies.
+
+
+## Homing Z resets the unhomed secondary ganged Y counter
+
+**Marked known:** 2026-10-13, Terje's core
+`e65020a8389b19d3c03277e02f34219e25800e6a`.
+
+With asymmetric Y ganging, let Y have home position -1 mm but subsequently be
+at -5 mm: both motor counters are -400 at 80 steps/mm. Homing only Z leaves the
+primary Y counter at -400, but resets the secondary counter to -80. Neither Y
+motor belongs to this homing cycle. The counters now describe different Y
+positions despite no Y motion.
+
+[set_machine_positions() at asymmetric_ganging.c:205](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/kinematics/asymmetric_ganging.c#L205)
+unconditionally reassigns the secondary counter from the primary's saved home
+position whenever forced origin is disabled. This violates the callback's
+requirement to leave non-homed axes unchanged.
+
+**Regressions:** [ganging Z-only homing](cases/asymmetric_ganging/homing_z_preserves_unhomed_secondary_motor_position.c)
+and [auto-square Z-only homing](cases/asymmetric_auto_square/homing_z_preserves_unhomed_secondary_motor_position.c).
+**Passing controls:** [primary homing with independent motor resolution](cases/asymmetric_ganging/homing_primary_sets_secondary_with_its_own_resolution.c)
+and [forced-origin Z homing](cases/asymmetric_ganging/force_origin_z_preserves_unhomed_secondary_counter.c).
+
+**Suggested fix (proposal, not runtime-verified):** Recalculate the secondary
+counter from the primary home position only when the cycle includes the primary
+axis. Preserve unrelated counters; keep normal primary/ganged homing and
+force-origin behavior intact. Review the shared asymmetric-auto-square path too.
+
+**Remove exceptions when fixed:** delete both Z-only homing blocks in
+[known_bugs.cmake](known_bugs.cmake), retain their correct assertions and
+controls, run ganging/homing/auto-square tests and full sanitizers, then delete
+this section. No sanitizer diagnostic allowance applies.

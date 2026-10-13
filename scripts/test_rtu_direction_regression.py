@@ -12,7 +12,27 @@ LINUX = """ERROR: AddressSanitizer: SEGV on unknown address 0x000000000000
 """
 
 
+GCC = """ERROR: AddressSanitizer: SEGV on unknown address 0x000000000000 (pc 0x000000000000 bp 0x123 sp 0x456 T0)
+Hint: pc points to the zero page.
+#0 0x0  (<unknown module>)
+#1 0x123 in initialize_rtu_transport /checkout/tests/support/rtu_host.h:63
+#2 0x456 in main /checkout/tests/cases/modbus_rtu/aux_direction_without_outputs_disables_transport_safely.c:5
+"""
+
+
 class DirectionCrashMatcherTests(unittest.TestCase):
+    def test_captured_gcc_null_call(self):
+        self.assertTrue(matches_known_crash(GCC))
+
+    def test_gcc_other_callsite_rejected(self):
+        self.assertFalse(matches_known_crash(GCC.replace("rtu_host.h:63", "rtu_host.h:64")))
+
+    def test_gcc_nonzero_pc_rejected(self):
+        self.assertFalse(matches_known_crash(GCC.replace("pc 0x000000000000", "pc 0x1234")))
+
+    def test_gcc_other_initializer_rejected(self):
+        self.assertFalse(matches_known_crash(GCC.replace("initialize_rtu_transport", "unrelated")))
+
     def test_windows_access_violation(self):
         self.assertTrue(matches_known_crash(WINDOWS))
 

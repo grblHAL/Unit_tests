@@ -5,9 +5,17 @@ import sys
 
 
 def matches_known_crash(output):
+    # GCC's null indirect call has no callee frame. Require the captured zero-PC
+    # diagnostic and the exact initializer callsite, as well as this regression.
+    gcc_null_call = (
+        re.search(r"pc 0x0+\b", output)
+        and "Hint: pc points to the zero page." in output
+        and re.search(r"#0 0x0+\s+\(<unknown module>\)", output)
+        and re.search(r"#1 [^\n]*in initialize_rtu_transport[^\n]*tests[/\\]support[/\\]rtu_host\.h:63\b", output)
+    )
     return bool(
         re.search(r"ERROR: AddressSanitizer: (?:SEGV|access-violation) on unknown address 0x(?:0+|f+8)\b", output)
-        and re.search(r"#(?:0|1) [^\n]*modbus_rtu_init[^\n]*core[/\\]modbus_rtu\.c:601\b", output)
+        and (gcc_null_call or re.search(r"#(?:0|1) [^\n]*modbus_rtu_init[^\n]*core[/\\]modbus_rtu\.c:601\b", output))
         and re.search(r"in main[^\n]*aux_direction_without_outputs_disables_transport_safely\.c:5\b", output)
     )
 

@@ -223,20 +223,6 @@ function(add_core_test name module source)
       ${CMAKE_CURRENT_SOURCE_DIR}/scripts/rtu_direction_regression.py
       $<BOOL:${ENABLE_SANITIZERS}> $<TARGET_FILE:test_${name}>)
     set_tests_properties(${name} PROPERTIES SKIP_RETURN_CODE 77)
-  elseif(name STREQUAL "ngc_flowctrl.named_macro_return_closes_file_and_restores_caller_scope")
-    find_package(Python3 REQUIRED COMPONENTS Interpreter)
-    add_test(NAME ${name} COMMAND ${Python3_EXECUTABLE}
-      ${CMAKE_CURRENT_SOURCE_DIR}/scripts/named_macro_cleanup_regression.py
-      $<BOOL:${ENABLE_SANITIZERS}> $<TARGET_FILE:test_${name}>)
-    set_tests_properties(${name} PROPERTIES SKIP_RETURN_CODE 77)
-  elseif(name STREQUAL "ngc_flowctrl.named_macro_return_preserves_subroutine_callback_lifetime"
-    OR name STREQUAL "ngc_flowctrl.named_macro_end_sub_preserves_subroutine_callback_lifetime"
-    OR name STREQUAL "ngc_flowctrl.named_macro_error_preserves_subroutine_callback_lifetime")
-    find_package(Python3 REQUIRED COMPONENTS Interpreter)
-    add_test(NAME ${name} COMMAND ${Python3_EXECUTABLE}
-      ${CMAKE_CURRENT_SOURCE_DIR}/scripts/named_sub_lifetime_regression.py
-      $<BOOL:${ENABLE_SANITIZERS}> $<TARGET_FILE:test_${name}>)
-    set_tests_properties(${name} PROPERTIES SKIP_RETURN_CODE 77)
   else()
     add_test(NAME ${name} COMMAND test_${name})
   endif()

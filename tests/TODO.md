@@ -23,3 +23,23 @@ also remains a placeholder.
 
 When roughing geometry is implemented, add execution and endpoint tests against
 that implementation, retain the parser/interface tests, and delete this TODO entry.
+
+## Possible improvement: asymmetric ganging resolution validation
+
+**Recorded:** 2026-10-13; reviewed with the user as an improvement, not a failure.
+
+Writing an out-of-range secondary motor resolution through setting 103 currently
+returns OK, then resets the value to the primary motor resolution and prints a
+warning. The registered kinematics validator instead returns
+`Status_SettingValueOutOfRange` without changing the previous secondary value.
+The public lookup normalizes the axis setting ID and selects the generic axis
+handler before the custom secondary-motor handler.
+
+**Suggestion:** consider routing setting 103 to the registered kinematics validator
+before the generic axis handler, so invalid writes return a clear error and preserve
+the previous value. Keep the current warning/reset behavior until the maintainer
+chooses that contract. The tests exercise the public valid write and the registered
+validator independently; no expected-failure exception applies.
+
+See [registered validator](cases/asymmetric_ganging/registered_resolution_validator_rejects_large_difference_without_mutating_motor.c)
+and [public valid write](cases/asymmetric_ganging/resolution_setting_accepts_and_reports_small_motor_difference.c).

@@ -1,14 +1,6 @@
 # Confirmed defects: keep each regression and remove its block when fixed.
 # Dates, reproductions, and removal instructions: KNOWN_BUGS.md
 
-if(TEST delta.unreachable_cartesian_target_rejected)
-  set_tests_properties(delta.unreachable_cartesian_target_rejected PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
-if(TEST rtcp_ac.rotary_segment_endpoint)
-  set_tests_properties(rtcp_ac.rotary_segment_endpoint PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
 if(TEST gcode.m68_preserves_fractional_output)
   set_tests_properties(gcode.m68_preserves_fractional_output PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
@@ -28,22 +20,6 @@ endif()
 # ngc_flowctrl.named_macro_eof_restores_caller_stream_and_parameter_scope
 # Uses a static backend to test EOF restoration independently of file freeing.
 # Ordinary passing test; no known-bug exception.
-
-if(TEST ngc_flowctrl.named_macro_return_closes_file_and_restores_caller_scope)
-  set_tests_properties(ngc_flowctrl.named_macro_return_closes_file_and_restores_caller_scope PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
-if(TEST ngc_flowctrl.named_macro_return_preserves_subroutine_callback_lifetime)
-  set_tests_properties(ngc_flowctrl.named_macro_return_preserves_subroutine_callback_lifetime PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
-if(TEST ngc_flowctrl.named_macro_end_sub_preserves_subroutine_callback_lifetime)
-  set_tests_properties(ngc_flowctrl.named_macro_end_sub_preserves_subroutine_callback_lifetime PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
-if(TEST ngc_flowctrl.named_macro_error_preserves_subroutine_callback_lifetime)
-  set_tests_properties(ngc_flowctrl.named_macro_error_preserves_subroutine_callback_lifetime PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
 
 # M72 leaves parser feed override control disabled; verified 2026-10-13 on e65020a.
 if(TEST ngc_params.m72_restores_feed_and_rapid_overrides_after_m50_disable)
@@ -141,4 +117,13 @@ endif()
 # No auxiliary direction outputs crashes Modbus RTU startup on e65020a.
 if(TEST modbus_rtu.aux_direction_without_outputs_disables_transport_safely)
   set_tests_properties(modbus_rtu.aux_direction_without_outputs_disables_transport_safely PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+# Homing a separate axis resets the internal ganged counter on e65020a.
+if(TEST asymmetric_ganging.homing_z_preserves_unhomed_secondary_motor_position)
+  set_tests_properties(asymmetric_ganging.homing_z_preserves_unhomed_secondary_motor_position PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+if(TEST asymmetric_auto_square.homing_z_preserves_unhomed_secondary_motor_position)
+  set_tests_properties(asymmetric_auto_square.homing_z_preserves_unhomed_secondary_motor_position PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
