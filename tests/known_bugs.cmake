@@ -29,10 +29,6 @@ if(TEST fs_embedded.seek_within_file)
   set_tests_properties(fs_embedded.seek_within_file PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
-if(TEST stepper2.finite_polled_move)
-  set_tests_properties(stepper2.finite_polled_move PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
 if(TEST stream_json.escaped_quote)
   set_tests_properties(stream_json.escaped_quote PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()

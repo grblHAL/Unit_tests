@@ -1,4 +1,4 @@
-# Confirmed defects in pinned core
+# Confirmed core defects
 
 When updating the pinned core, run the regressions before removing exceptions.
 For a fixed defect, keep its regression test and remove its CMake `WILL_FAIL` and
@@ -13,7 +13,8 @@ defects, remove the diagnostic matcher and retain an ordinary successful compile
 check. Recovering sanitizer diagnostics have a separate, narrowly scoped
 [manifest](known_sanitizer_diagnostics.json); remove its linked entries when fixed.
 
-Source links point to the tested core revision, rather than the latest upstream code.
+Source links point to the revision where each defect was verified. CI can test
+a newer revision; a fixed regression forces review and cleanup of its exception.
 
 ## UTF-8 ASCII encoding
 
@@ -128,26 +129,13 @@ position unchanged. `core/fs_embedded.c:120` reverses the valid-offset test;
 line 123 also returns failure for valid offsets. The correct seek expectation
 is retained in `fs_embedded.seek_within_file`, labelled as an expected failure.
 
-## Secondary stepper finite-move overshoot
-
-**Marked known:** 2026-10-08
-
-**Regression:** [test](cases/stepper2/finite_polled_move.c).
-
-**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L33).
-
-`st2_motor_move(motor, 10, 100, Stepper2_Steps)` emits 12 pulses and leaves
-position at 12 instead of 10 in polling mode. The acceleration/deceleration
-state transitions in `core/stepper2.c:501-530` continue into the unconditional
-step output at line 554. The regression retains the correct 10-pulse expectation.
-
 ## JSON escaped-string serialization
 
 **Marked known:** 2026-10-08
 
 **Regression:** [test](cases/stream_json/escaped_quote.c).
 
-**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L37).
+**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L33).
 
 Serializing the string `a"b` should preserve both letters and escape the quote.
 `json_add_string()` instead loses text and produces invalid JSON. The escape path
@@ -161,7 +149,7 @@ tracks byte counts explicitly so embedded NUL bytes cannot hide malformed output
 
 **Regression:** [test](cases/fs_device/read_byte_count.c).
 
-**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L41).
+**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L37).
 
 Reading three available bytes transfers `abc` correctly but returns `SIZE_MAX`
 instead of 3. `core/fs_device.c:151` decrements the unsigned counter through zero
@@ -174,7 +162,7 @@ EOF, and the correct byte count; retain the test when removing the exception.
 
 **Regression:** [test](cases/gcode/quadratic_nonzero_j_accepted.c).
 
-**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L45).
+**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L41).
 
 `G5.1X1Y1I0J1F100` defines a valid quadratic spline with a nonzero J control
 offset. The parser returns `Status_GcodeValueOutOfRange` (39) instead of
@@ -188,7 +176,7 @@ zero. The regression keeps the accepted-command and final-position expectations.
 
 **Regression:** [test](cases/delta/unreachable_cartesian_target_rejected.c).
 
-**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L49).
+**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L45).
 
 With the default delta geometry and all axes homed, the Cartesian target
 `X1000 Y1000 Z-300` is physically unreachable, yet `grbl.check_travel_limits()`
@@ -203,7 +191,7 @@ joint-angle bounds. The regression retains the correct rejection expectation.
 
 **Regression:** [test](cases/rtcp_ac/rotary_segment_endpoint.c).
 
-**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L53).
+**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L49).
 
 With both rotary centers at zero, an RTCP move from the origin to `X10 C90`
 should finish at machine position `X0 Y10 C90`. The segmented move finishes
@@ -218,7 +206,7 @@ The regression retains the correct machine endpoint and rotary angle.
 
 **Regression:** [test](cases/protocol/serial_delete_edits_block.c).
 
-**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L57).
+**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L53).
 
 Receiving `G0X12`, DEL (0x7f), then `3` and a newline should edit the command
 into `G0X13`. The serial realtime filter discards DEL, so the main loop instead
@@ -232,7 +220,7 @@ branch can handle it. Retain the intended edited-command endpoint expectation.
 
 **Regression:** [test](cases/gcode/m66_large_port_rejected.c).
 
-**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L61).
+**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L57).
 
 With two digital inputs registered, `M66P256L0` should reject unavailable port
 256 with `Status_GcodeValueOutOfRange` (39). It instead succeeds and reads
@@ -246,7 +234,7 @@ value before narrowing it. The regression keeps rejection and zero-read expectat
 
 **Regression:** [test](cases/gcode/m68_preserves_fractional_output.c).
 
-**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L64).
+**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L60).
 
 `M68E1Q1.25` passes 1.0 to the analog output callback instead of 1.25.
 The callback accepts a float (`core/ioports.h:49`), but `output_command_t.value`
@@ -261,7 +249,7 @@ storage. The regression retains the fractional output expectation.
 
 **Regression:** [test](cases/ngc_expr/name_over_maximum_rejected.c).
 
-**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L68).
+**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L64).
 
 `ngc_read_name()` accepts a 31-character name although `NGC_MAX_PARAM_LENGTH`
 is 30. The `len <= NGC_MAX_PARAM_LENGTH` check at `core/ngc_expr.c:602`
@@ -277,7 +265,7 @@ correct rejection without relying on a memory-corruption crash.
 
 **Regression:** [G20 test](cases/ngc_params/absolute_position_parameter_inches.c).
 
-**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L72).
+**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L68).
 
 At 80 steps/mm, an X position of 2032 steps is 25.4 mm, or one inch.
 After executing `G20`, `#<_abs_x>` should return 1.0; the pinned core
@@ -291,7 +279,7 @@ exemptions in multi-axis builds. The G20 regression leaves `$13` untouched;
 the separate G21 metric case expects 25.4 mm.
 The [display-independence regression](cases/ngc_params/absolute_position_metric_ignores_display_inches.c)
 sets G21 and `$13=1`; it expects 25.4 but gets 645.16. Remove its
-[separate exception](known_bugs.cmake#L84) along with the G20 exception
+[separate exception](known_bugs.cmake#L80) along with the G20 exception
 when this defect is fixed.
 
 ## Negative broadcast spindle selector fails on Linux
@@ -300,7 +288,7 @@ when this defect is fixed.
 
 **Regression:** [test](cases/multi_spindle/gcode_m5_broadcast_stops_enabled_spindles.c).
 
-**Remove exception when fixed:** [Linux-only CMake registration](known_bugs.cmake#L80).
+**Remove exception when fixed:** [Linux-only CMake registration](known_bugs.cmake#L76).
 
 `M5$-1` is the supported command to stop all enabled spindle slots, but both
 Linux GCC and Clang reject it. `core/gcode.c:1486` converts the negative
@@ -327,7 +315,7 @@ from clean passes and fails on any unrecognized sanitizer diagnostic.
 
 **Regression:** [test](cases/settings/pulse_width_minimum_reports_specific_error.c).
 
-**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L88).
+**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L84).
 
 With a driver minimum of 2 microseconds, storing `$0=1.9` correctly rejects
 and preserves the previous pulse width, but returns
@@ -344,7 +332,7 @@ timing and no change notification before checking the correct status code.
 
 **Regression:** [test](cases/settings/initialize_bad_version_restores_defaults.c).
 
-**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L92),
+**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L88),
 [diagnostic matcher](../scripts/settings_recovery_regression.py), and its
 special test command in [CMakeLists.txt](../CMakeLists.txt).
 
@@ -365,7 +353,7 @@ Without sanitizers, this memory regression is explicitly skipped.
 
 **Regression:** [compile case](compile/ioports_aux_pullup.c).
 
-**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L96)
+**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L92)
 and [diagnostic matcher](../scripts/aux_pullup_compile_regression.py);
 retain an ordinary successful syntax check for this feature.
 
@@ -383,7 +371,7 @@ fixes and unrelated build errors force review of the exception.
 
 **Regression:** [test](cases/gcode/css_negative_speed_preserves_rpm_mode.c).
 
-**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L100).
+**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L96).
 
 With a variable-speed spindle in lathe mode, `G96S-1` correctly returns
 `Status_NegativeValue` but changes the existing RPM mode to CSS mode.
@@ -396,7 +384,7 @@ prints the observed mode 1 versus expected mode 0.
 The reverse transition has the same defect: after a valid `G96S100`,
 `G97S-1` returns `Status_NegativeValue` but changes CSS mode to RPM mode.
 Keep the [G97 regression](cases/gcode/g97_negative_speed_preserves_css_mode.c)
-and remove its [separate exception](known_bugs.cmake#L104) when fixed.
+and remove its [separate exception](known_bugs.cmake#L100) when fixed.
 
 ## Axis-word validation accepts a valueless axis
 
@@ -404,7 +392,7 @@ and remove its [separate exception](known_bugs.cmake#L104) when fixed.
 
 **Regression:** [test](cases/gcode/claim_axis_words_validation_retains_valueless_axis.c).
 
-**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L108).
+**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L104).
 
 `gc_claim_axis_words()` with validation enabled for X accepts an X word whose
 value is `NaN`, clears that word from the block, and reports X as claimed.
@@ -422,8 +410,8 @@ and retain the numeric-value check before claiming a validated axis.
 **Regressions:** [boolean read](cases/ngc_params/builtin_setting_macro_reads_boolean.c)
 and [boolean write](cases/ngc_params/builtin_setting_macro_writes_boolean_and_returns_value.c).
 
-**Remove exceptions when fixed:** [read registration](known_bugs.cmake#L116)
-and [write registration](known_bugs.cmake#L120).
+**Remove exceptions when fixed:** [read registration](known_bugs.cmake#L112)
+and [write registration](known_bugs.cmake#L116).
 
 `G65P1Q13` returns `Status_OK` but leaves `_value_returned` at zero instead
 of returning the current boolean setting. `G65P1Q13S1` also succeeds but
@@ -440,7 +428,7 @@ expected successful reads, writes, return values, and notifications.
 
 **Regression:** [test](cases/ngc_params/builtin_modbus_macro_preserves_three_register_results.c).
 
-**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L124).
+**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L120).
 
 A `G65P7` read requesting three registers reports `_value_returned=3`, but
 returns only the first and third register values. For a reply containing
@@ -460,7 +448,7 @@ parser and keeps the correct expectations for all three values.
 
 **Regression:** [test](cases/ngc_params/builtin_modbus_macro_rejects_unknown_function.c).
 
-**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L128)
+**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L124)
 and [diagnostic matcher](../scripts/modbus_function_regression.py); register
 this as an ordinary test after the fix.
 
@@ -472,7 +460,9 @@ Validate the function descriptor before accessing its fields.
 
 The regression keeps the expected rejection and zero transport calls. Its
 wrapper accepts only a sanitizer-confirmed read through a null pointer at
-line 1225, together with the matching Modbus macro stack frame. A fix or
+line 1225, or the same descriptor dereference at
+[line 1291 in ca26fc9](https://github.com/grblHAL/core/blob/ca26fc98f1b2171251c946ab91d5912b733efa78/ngc_params.c#L1291),
+together with the matching Modbus macro stack frame. A fix or
 unrelated failure forces exception review. This memory regression is
 explicitly skipped when sanitizers are disabled.
 
@@ -632,7 +622,7 @@ isolating this defect from the known VFS close use-after-free.
 [ENDSUB](cases/ngc_flowctrl/named_macro_end_sub_preserves_subroutine_callback_lifetime.c),
 and [error cleanup](cases/ngc_flowctrl/named_macro_error_preserves_subroutine_callback_lifetime.c).
 
-**Remove exceptions when fixed:** [CMake registrations](known_bugs.cmake#L180).
+**Remove exceptions when fixed:** [CMake registrations](known_bugs.cmake#L176).
 Also replace their `named_sub_lifetime_regression.py` registrations in
 `CMakeLists.txt` with direct executable tests. The matcher requires the exact
 callback read at line 316 and the freeing frame at line 259; a successful fix
@@ -653,7 +643,7 @@ and [ERROR](cases/ngc_flowctrl/error_expression_errors_are_reported.c).
 Each independently confirms that evaluating `[1/0]` returns status 72 before
 checking the flow-control command. The correct expectation remains status 72.
 
-**Remove exceptions when fixed:** [CMake registrations](known_bugs.cmake#L192).
+**Remove exceptions when fixed:** [CMake registrations](known_bugs.cmake#L188).
 These ordinary assertion regressions need no sanitizer wrapper. Keep both tests
 and remove their `WILL_FAIL` and `known_bug` properties when errors propagate.
 
@@ -676,8 +666,8 @@ and unrelated errors fail classification and require review.
 
 **Remove exceptions when fixed:**
 
-- Level 2: [CMake exception](known_bugs.cmake#L200) for `feature_compile.legacy_compatibility_level_2_reporting`.
-- Level 10: [CMake exception](known_bugs.cmake#L204) for `feature_compile.legacy_compatibility_level_10_reporting`.
+- Level 2: [CMake exception](known_bugs.cmake#L196) for `feature_compile.legacy_compatibility_level_2_reporting`.
+- Level 10: [CMake exception](known_bugs.cmake#L200) for `feature_compile.legacy_compatibility_level_10_reporting`.
 
 Remove the matcher and special compile commands in [CMakeLists.txt](../CMakeLists.txt),
 and replace these compile regressions with ordinary runtime tests for the
@@ -759,8 +749,8 @@ block. Separate `M4` followed by a cutting block passes as a control.
 
 **Regressions and removable exceptions:**
 
-- [dynamic_laser_cutting_move_uses_rate_adjusted_power](cases/gcode/dynamic_laser_cutting_move_uses_rate_adjusted_power.c): [CMake exception](known_bugs.cmake#L209).
-- [switching_dynamic_to_constant_laser_disables_rate_adjustment_in_same_move](cases/gcode/switching_dynamic_to_constant_laser_disables_rate_adjustment_in_same_move.c): [CMake exception](known_bugs.cmake#L213).
+- [dynamic_laser_cutting_move_uses_rate_adjusted_power](cases/gcode/dynamic_laser_cutting_move_uses_rate_adjusted_power.c): [CMake exception](known_bugs.cmake#L205).
+- [switching_dynamic_to_constant_laser_disables_rate_adjustment_in_same_move](cases/gcode/switching_dynamic_to_constant_laser_disables_rate_adjustment_in_same_move.c): [CMake exception](known_bugs.cmake#L209).
 
 Keep both correct planner expectations and remove their linked `WILL_FAIL`
 blocks when the core fix makes them pass normally.
@@ -784,7 +774,7 @@ correct parsed spindle speed.
 
 **Regression:** [laser_check_mode_speed_change_does_not_call_driver](cases/gcode/laser_check_mode_speed_change_does_not_call_driver.c).
 
-**Remove exception when fixed:** remove its [CMake exception](known_bugs.cmake#L217),
+**Remove exception when fixed:** remove its [CMake exception](known_bugs.cmake#L213),
 keeping the expected speed of 250 and zero driver calls.
 
 ## G40 exit-distance validation reads arc offsets instead of the linear target
@@ -813,8 +803,8 @@ origin control must continue to reject a move shorter than the cutter diameter.
 **Regressions:** [valid long exit](cases/cutter_comp/g40_long_linear_exit_is_validated_from_xyz_target.c)
 and [invalid short exit](cases/cutter_comp/g40_short_exit_away_from_origin_is_rejected.c).
 
-**Remove exceptions when fixed:** delete the [long-exit block](known_bugs.cmake#L222)
-and [short-exit block](known_bugs.cmake#L226) from `tests/known_bugs.cmake`.
+**Remove exceptions when fixed:** delete the [long-exit block](known_bugs.cmake#L218)
+and [short-exit block](known_bugs.cmake#L222) from `tests/known_bugs.cmake`.
 Keep both correct expectations and the passing boundary/control cases. Delete
 this section once both regressions pass without exceptions.
 
@@ -840,8 +830,8 @@ blocks' original acceleration.
 and [next planned move](cases/acceleration_profiles/rejected_profile_command_does_not_slow_next_planned_move.c).
 The passing P1-P5, same-block and queued-move controls remain separate tests.
 
-**Remove exceptions when fixed:** delete the [modal-state block](known_bugs.cmake#L230)
-and [planned-move block](known_bugs.cmake#L234) from `tests/known_bugs.cmake`.
+**Remove exceptions when fixed:** delete the [modal-state block](known_bugs.cmake#L226)
+and [planned-move block](known_bugs.cmake#L230) from `tests/known_bugs.cmake`.
 Retain both tests with their correct expectations; delete this section once
 they pass without exceptions.
 
@@ -869,8 +859,8 @@ single-axis completion behavior.
 and [actual driver pulses](cases/rotation/incremental_single_axis_executes_only_rotated_delta.c).
 The explicit-zero incremental and absolute single-axis controls remain separate.
 
-**Remove exceptions when fixed:** delete the [endpoint block](known_bugs.cmake#L238)
-and [pulse block](known_bugs.cmake#L242) from `tests/known_bugs.cmake`.
+**Remove exceptions when fixed:** delete the [endpoint block](known_bugs.cmake#L234)
+and [pulse block](known_bugs.cmake#L238) from `tests/known_bugs.cmake`.
 Keep both tests with their correct expectations. Delete this section once both
 pass without exceptions.
 
@@ -890,7 +880,7 @@ The passing empty-reset test verifies driver callback chaining and mount reuse;
 the failing regression additionally requires stored files to disappear and
 new files to work after reset.
 
-**Remove exception when fixed:** delete the [CMake expected-failure block](known_bugs.cmake#L246),
+**Remove exception when fixed:** delete the [CMake expected-failure block](known_bugs.cmake#L242),
 replace this case's wrapper registration in `CMakeLists.txt` with a direct test,
 and delete [the narrow reset diagnostic matcher](../scripts/ram_reset_regression.py).
 Keep the regression's safe-reset assertions and delete this known-bug entry

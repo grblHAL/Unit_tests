@@ -1,4 +1,5 @@
 #include "support/engine_host.h"
+#include <math.h>
 #include "stepper2.h"
 #include "check.h"
 static uint64_t clock_us;

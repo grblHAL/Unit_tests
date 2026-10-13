@@ -290,8 +290,12 @@ helper tests and workflow lint pass. The first hosted source job succeeded,
 but its GCC/Clang/coverage builds failed against the newly selected core. A full
 local build reproduced undeclared math functions in current `stepper2.h` when
 included by secondary-stepper fixtures. Representative parser/settings sanitizer
-smoke tests passed; the entire latest-core suite is **not yet green**. Caller
-installation in upstream repositories is still required.
+smoke tests passed at that stage. The subsequent `ci-core-compatibility` follow-up
+adapts the host fixtures to the current scheduler/Modbus APIs and removes the
+fixed finite-stepper exception. Its full Windows Clang sanitizer/summary run
+passes all 2,242 cases with zero unexpected failures or skips; hosted GCC/Clang
+and coverage validation remains separate. Caller installation in upstream
+repositories is still required.
 
 ## Retest a core fix locally
 

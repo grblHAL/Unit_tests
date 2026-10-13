@@ -14,3 +14,7 @@ bool protocol_execute_realtime(void) { CHECK(false); return false; }
 bool protocol_exec_rt_system(void) { CHECK(false); return false; }
 bool state_door_reopened(void) { CHECK(false); return false; }
 void report_realtime_status(stream_write_ptr write, status_report_tracking_t *report) { (void)write; (void)report; CHECK(false); }
+
+/* Isolated geometry cases must not execute a homing scheduler. The newer
+   core references this public hook from homing paths in the same object. */
+void task_execute(bool wait) { (void)wait; CHECK(false); }

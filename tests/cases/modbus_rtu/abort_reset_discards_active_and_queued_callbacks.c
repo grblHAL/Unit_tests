@@ -11,7 +11,7 @@ int main(void)
     CHECK(modbus_send(&message, &callbacks, false));
     inject_reply(false);
     sys.abort = true;
-    hal.driver_reset();
+    reset_rtu_driver();
     CHECK(resets == 1 && rx_count() == 0);
     sys.abort = false;
     for(unsigned i = 0; i < 600; i++) poll_rtu();
