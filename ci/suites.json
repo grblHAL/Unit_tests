@@ -1,0 +1,7 @@
+{
+  "core": {
+    "repository": "grblHAL/core",
+    "path": "core",
+    "coverage_filter": "core/.*\\.c$"
+  }
+}

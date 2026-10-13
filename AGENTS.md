@@ -76,6 +76,18 @@ in the README. GNU-compatible Clang/GCC is required for the full suite; MSVC
 skips many modules. Compile checks should preserve GNU language extensions;
 strict C11 previously produced an unrelated Linux `ffs` declaration error.
 
+## CI source selection
+
+`tests.yml` resolves candidate sources once with `scripts/resolve_source.py`.
+Push/PR defaults use the recorded core gitlink. Dispatch inputs select a branch,
+tag, SHA, fork or PR head without changing that pin. All compiler/coverage jobs
+consume the same resolved SHA. `ci/suites.json` is the source registry; plugin
+suites must add actual build/fixture support and independently lock their core
+dependency. Keep tokens out of candidate build jobs and checkout credentials off.
+Run `python scripts/test_resolve_source.py` after changing revision selection.
+Upstream automatic dispatch/status publishing requires separate integration;
+do not claim it exists merely because manual candidate inputs are implemented.
+
 ## Core and known defects
 
 The core is independently versioned. Do not patch it to make tests pass, change

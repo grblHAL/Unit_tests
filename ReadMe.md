@@ -54,13 +54,65 @@ ctest --test-dir build -C Debug --output-on-failure
 Checks remain active in Release builds; they do not depend on C `assert()`.
 The existing `src/driver.c` firmware entry point is not part of the host tests.
 
+## Test branches, forks and PRs in Actions
+
+Open Actions > Core tests > Run workflow. Select the test-suite branch and inputs:
+
+| Candidate | source_repository | source_ref | source_pr |
+|---|---|---|---|
+| Pinned baseline | blank | blank | blank |
+| Upstream branch/tag/commit | blank | branch, tag or SHA | blank |
+| Upstream PR, including fork PR | blank | blank | PR number |
+| Fork branch | `owner/core` | branch or SHA | blank |
+
+PR runs test the head commit, not a synthetic merge. Selection resolves once to
+an immutable SHA used by GCC, Clang and coverage. The source job summary and
+`source-lock` artifact record the actual repository and SHA. Ordinary pushes and
+test-repository PRs use the baseline. The submodule pin is unchanged.
+
+```sh
+gh workflow run tests.yml --repo petervanderwalt/Unit_tests --ref initial-batch-part-2 -f source_pr=123
+gh workflow run tests.yml --repo petervanderwalt/Unit_tests --ref initial-batch-part-2 -f source_repository=yourname/core -f source_ref=my-fix
+```
+
+Replace example numbers/names. Dispatch requires write access to the test repo.
+The workflow must exist on the default branch for manual dispatch: merge these
+workflow changes there before relying on the new inputs. The selected test branch
+supplies tests and exceptions independently of the core candidate. Fixed known
+regressions still force cleanup of their documented exceptions; use a test branch
+with that cleanup to obtain a clean candidate result.
+
+### Automatic upstream triggers
+
+Upstream pushes/PRs do not automatically trigger this test repository. An upstream
+workflow or GitHub App can call the workflow-dispatch API for `tests.yml`, passing
+`source_repository` and `source_ref` with the upstream event's exact commit SHA,
+or passing `source_pr`. This needs permission to dispatch in the test repository;
+an upstream repository's ordinary GITHUB_TOKEN does not grant cross-repository
+write access. No upstream workflow, credential or PR status publisher is installed
+by this change. Candidate jobs have read-only permissions and do not retain
+checkout credentials. A fix only needs publishing to your fork, not upstream.
+
+### Plugin extension strategy
+
+[ci/suites.json](ci/suites.json) registers source repositories, checkout paths and
+coverage filters; core is currently the only implemented suite. The Plugins repo
+is an overview: register each plugin's actual source repository when its tests
+are added, alongside suite-specific host fixtures/build configuration.
+
+Resolve core and plugin revisions independently: plugin PR plus pinned core,
+then optionally plugin PR plus candidate core. Extend the source lock to contain
+both immutable SHAs and have every job consume that same lock. Add suite-specific
+coverage filters/artifact names and scope defect allowances to the relevant suite.
+Do not count plugin code as core coverage. Plugin testing is a next phase, not
+implemented by registering source metadata alone.
+
 ## Update core and retest a fix
 
-The `core` directory is a Git submodule: this repository records an exact core
-commit, not whichever upstream commit is newest. Make and commit fixes in the
-core repository first. Push those core commits to a branch reachable through the
-submodule URL in `.gitmodules` before publishing the updated test repository;
-GitHub Actions must be able to fetch the recorded commit.
+The submodule records the reproducible default baseline. Candidate CI runs can
+test published branches, forks, commits and PR heads without changing this pin
+or merging upstream. Local builds also test uncommitted changes in `core`.
+Updating the recorded baseline is a separate decision after reviewing a revision.
 
 ### Select the core commit to test
 
