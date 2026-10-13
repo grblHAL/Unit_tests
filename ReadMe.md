@@ -12,7 +12,8 @@ and appears individually in CTest and GitHub Actions. Shared mocks live in
 [Pending core features](tests/TODO.md) lists functionality not fully added yet.
 
 [Known core defects](tests/KNOWN_BUGS.md) lists each confirmed defect and the date
-it was marked known.
+it was marked known, with suggested core fixes and validation/exception-removal
+guidance. Suggestions are proposals until tested against the selected core revision.
 Their labelled regressions reproduce the defect; they are not counted as ordinary
 passes in the Actions summary. A fixed core forces review of each exception.
 Recovering sanitizer errors are also checked: the narrow

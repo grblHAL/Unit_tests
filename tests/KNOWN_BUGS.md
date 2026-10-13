@@ -19,6 +19,25 @@ Source links point to the revision where each defect was first verified. CI can 
 a newer revision; a fixed regression forces review and cleanup of its exception.
 
 
+## Using the suggested fixes
+
+Each **Suggested fix (proposal)** below is based on source inspection of
+Terje's core revision `4b128e68bc63f9a3af11a01a7d8fbb5d5ccc98aa`
+(reviewed 2026-10-13). These are review suggestions, not applied or runtime-verified
+patches. Source links deliberately identify that revision; check the current
+code before applying a suggestion. Snippets show the relevant edit, not complete
+patches, unless stated otherwise.
+
+Apply a proposal in a separate core checkout, select that checkout as the test
+source using the README instructions, and run the linked regressions and related
+module tests under sanitizers. A correct fix makes an expected-failure test turn
+red because its exception is now obsolete. Follow the entry's cleanup links:
+remove the allowance, replace diagnostic wrappers with direct tests where needed,
+keep the regression assertions, and delete the resolved entry. Then run the full
+suite and strict diagnostic summary before committing. Multiple defects can
+block the same test; remove only allowances whose underlying faults are fixed.
+
+
 ## Analog output commands truncate fractional values
 
 **Marked known:** 2026-10-09
@@ -34,6 +53,20 @@ truncates fractional values before immediate output at line 4201 or synchronized
 M67 output in `core/stepper.c:515`. Preserve the numeric value through command
 storage. The regression retains the fractional output expectation.
 
+
+**Suggested fix (proposal):** Preserve the floating-point Q value in
+[output_command_t at gcode.h:312](https://github.com/terjeio/grblHAL_core/blob/4b128e68bc63f9a3af11a01a7d8fbb5d5ccc98aa/gcode.h#L312):
+
+```diff
+-    int32_t value;
++    float value;
+```
+
+Immediate M68 and queued M67 then carry the same value through storage to the
+float callback. Review every `output_command_t.value` consumer: digital M62/M63
+must retain their boolean 0/1 behavior. This changes a shared structure's type;
+rebuild core and dependent plugins/drivers together. Validate fractional immediate
+and synchronized output, queued command ordering and digital output controls.
 
 ## M72 restores runtime overrides but leaves parser overrides disabled
 
