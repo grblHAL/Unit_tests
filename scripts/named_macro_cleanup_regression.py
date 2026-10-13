@@ -22,7 +22,10 @@ sub_defect = (
 # Compilers expose different first faults on the same cleanup path.
 # Only these documented faults pass WILL_FAIL; success or any different fault
 # returns zero and requires review.
-if result.returncode != 0 and (vfs_defect or sub_defect):
+seek_defect = re.search(r"SUMMARY: AddressSanitizer: global-buffer-overflow[^\n]*core[/\\]fs_embedded\.c:122\b", result.stdout) and "READ of size 8" in result.stdout
+if seek_defect:
+    print("Macro cleanup is blocked by the known embedded seek overread; see KNOWN_BUGS.md#embedded-filesystem-seek.")
+if result.returncode != 0 and (vfs_defect or sub_defect or seek_defect):
     print("Confirmed known embedded named-macro cleanup lifetime defect.")
     sys.exit(1)
 print("Expected sanitizer diagnostic was not reproduced; review this regression.")

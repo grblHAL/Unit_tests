@@ -12,7 +12,7 @@ static inline vfs_file_t *prepare_ngc_tool_file(void)
     gc_init(false); grbl.on_execute_realtime = protocol_execute_noop;
     CHECK(grbl.tool_table.n_tools == 4);
     tool_data_t tool = {.tool_id = 2, .offset.values = {1, 2, 3}};
-    CHECK(grbl.tool_table.set_tool(&tool));
+    CHECK(host_save_tool(&tool));
     vfs_file_t *file = stream_redirect_read("/fixture/program", NULL, NULL);
     CHECK(file != NULL && hal.stream.file == file); return file;
 }

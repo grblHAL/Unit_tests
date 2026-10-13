@@ -7,7 +7,7 @@ int main(void)
     prepare_initialized_settings(2);
     for(tool_id_t id = 1; id <= 4; id++) {
         tool_data_t tool = {.tool_id = id, .radius = 3, .offset.values = {1, 2, 3}};
-        CHECK(grbl.tool_table.set_tool(&tool));
+        CHECK(host_save_tool(&tool));
     }
     CHECK(grbl.tool_table.clear());
     for(tool_id_t id = 1; id <= 4; id++) {

@@ -3,6 +3,19 @@
 Last verified: **2026-10-12**. Read this with the root `AGENTS.md` and README.
 This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 
+## October 13 compatibility follow-up
+
+Coverage expansion remains paused for the CI/source-update task. The current
+follow-up branch is `ci-terje-fix-validation`, based on merged upstream `63323b5`.
+It tests Terje's core `4b128e68bc63f9a3af11a01a7d8fbb5d5ccc98aa` without changing
+core source. Tool callback, check-mode, task startup and settings fixtures are
+adapted. Resolved exceptions and bug entries are removed; correct assertions stay.
+Remaining core regressions are documented in KNOWN_BUGS.md. See ci/VALIDATION.md
+for the final verification result: 2,242 tests, 2,221 clean passes and 21
+documented known regressions; zero unexpected failures under Windows Clang sanitizers. The coverage percentages below remain historical;
+this compatibility run does not establish a new coverage percentage.
+The two untracked modal-restore coverage cases remain unfinished and unstaged.
+
 ## Current delivery preference
 
 The user revoked one-commit-per-test on 2026-10-12. Keep separate maintainable
