@@ -119,11 +119,18 @@ and warns about added executable C lines not exercised relative to a locked base
 Source PRs lock their base automatically; caller push baselines and manual base
 inputs are supported. Coverage warnings do not fail an otherwise successful run.
 
-Local verification: 41 helper tests pass; workflow/caller actionlint passes.
+Local verification: 44 helper tests pass; workflow/caller actionlint passes.
 A fresh full Clang sanitizer run against Terje's `4b128e6` passes all 2,242 cases
 (2,221 clean, 21 known, zero unexpected failures). The new reporter accepts that
 JUnit output. Replaying the actual failed run 38363912997 groups GCC/Clang callback
 errors into one finding at `tests/support/g10_tool_host.h:25`. Real temporary Git
 history tests verify changed-line selection, ignored historical gaps, merged
-variant hits and separate unmeasured-file warnings. Hosted validation follows
-publication of this branch. No core source or unfinished coverage tests changed.
+variant hits and separate unmeasured-file warnings. Hosted [run 38373299801](https://github.com/petervanderwalt/Unit_tests/actions/runs/38373299801)
+passed source resolution, GCC, Clang, coverage and final CI diagnosis on harness
+`f8b4d05` against Terje's `4b128e6` with baseline core `ca26fc9`. Its coverage
+artifact reports nine warnings, including uncovered added executable lines and
+an unmeasured changed `scara.c`; warnings did not fail the run. The concurrent
+default-source run also produced concise structured test failures, confirming
+failure reporting independently of the passing candidate. Subsequent parser
+checks cover CMake reason/location, timeouts and namespaced HTTP errors; all
+44 local helpers pass without changing the core/test assertions. No core source or unfinished coverage tests changed.

@@ -11,7 +11,8 @@ import xml.etree.ElementTree as ET
 def location(text):
     match = re.search(r"((?:[A-Za-z]:)?[^\n]*?(?:core/|tests/|plugins/|scripts/)[^: \n]+):(\d+)(?::\d+)?", text.replace("\\", "/"))
     if not match:
-        return "", None
+        cmake = re.search(r"(CMakeLists\.txt):(\d+)", text)
+        return (cmake[1], int(cmake[2])) if cmake else ("", None)
     path = match[1]
     for prefix in ("core/", "tests/", "plugins/", "scripts/"):
         marker = re.search(r"(?:^|/)" + re.escape(prefix), path)
@@ -48,8 +49,12 @@ def finding(kind, name, message, detail="", severity="error"):
 def build_failure(stage, output):
     lines = output.splitlines()
     primary = next((line for line in lines if re.search(r"(?:fatal )?error:|undefined reference|undefined symbol|CMake Error|Traceback", line)), "")
+    if "CMake Error" in primary:
+        index = lines.index(primary)
+        reason = next((line.strip() for line in lines[index + 1:] if line.strip()), "")
+        primary += " " + reason
     if "Traceback" in primary:
-        primary = next((line for line in reversed(lines) if re.match(r"[A-Za-z]+(?:Error|Exception):", line)), primary)
+        primary = next((line for line in reversed(lines) if re.match(r"[\w.]+(?:Error|Exception):", line)), primary)
     return finding("build" if stage == "build" else "setup", stage, concise(primary or output), primary or output)
 
 
@@ -78,6 +83,8 @@ def test_findings(path, diagnostics):
                     unexpected.append(line)
         if error is not None or unexpected:
             text = "\n".join(unexpected) if unexpected else output or error.get("message", "") + "\n" + "".join(error.itertext())
+            if error is not None and "timeout" in error.get("message", "").lower():
+                text = "Test timed out: " + error.get("message")
             kind = "known_changed" if known else "sanitizer" if unexpected or "AddressSanitizer" in text else "test"
             item = finding(kind, name, concise(text), text)
             item["reproduce"] = "ctest --test-dir build -V -R '^" + re.escape(name) + "$'"

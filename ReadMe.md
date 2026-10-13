@@ -90,7 +90,10 @@ gh workflow run tests.yml --repo grblHAL/Unit_tests --ref master -f source_repos
 
 Open the **CI diagnosis** job summary first. It groups matching GCC, Clang and
 coverage findings and shows the first useful compiler error or test diagnostic,
-source links, affected jobs and a focused CTest reproduction command. Full command
+source links, affected jobs and a focused CTest reproduction command. Numeric
+expected/actual values are shown when the test emits them; otherwise the report
+shows its failing expression. New tests should print the triggering input and
+measured versus expected values when an assertion alone is ambiguous. Full command
 logs and JSON findings are in the `report-<suite>-<job>` artifacts; individual
 JUnit results and coverage HTML remain available in the existing artifacts.
 

@@ -21,6 +21,25 @@ class DiagnosisTests(unittest.TestCase):
         report = build_failure("build", "/home/runner/work/Unit_tests/Unit_tests/tests/support/tool.h:25:3: error: bad callback")
         self.assertEqual(report["file"], "tests/support/tool.h")
 
+    def test_cmake_failure_includes_reason_and_location(self):
+        report = build_failure("configure", "CMake Error at CMakeLists.txt:11 (message):\n  Missing source checkout\n\n-- Configuring incomplete")
+        self.assertEqual(report["file"], "CMakeLists.txt")
+        self.assertEqual(report["line"], 11)
+        self.assertIn("Missing source checkout", report["message"])
+
+    def test_timeout_is_not_reported_as_partial_test_output(self):
+        with tempfile.TemporaryDirectory() as d:
+            p=Path(d); (p/'known_sanitizer_diagnostics.json').write_text('[]')
+            (p/'results.xml').write_text('<testsuite><testcase name="module.case"><failure message="Timeout"/><system-out>Startup message</system-out></testcase></testsuite>')
+            findings, counts=test_findings(p/'results.xml',p)
+            self.assertIn('timed out', findings[0]['message'])
+            self.assertEqual(counts['failed'],1)
+
+    def test_resolution_failure_reports_http_error_not_traceback_header(self):
+        report = build_failure("resolve", "Traceback (most recent call last):\n  request failed\nurllib.error.HTTPError: HTTP Error 404: Not Found")
+        self.assertIn("HTTP Error 404", report["message"])
+        self.assertNotIn("Traceback", report["message"])
+
     def test_same_location_merges_different_compiler_wording(self):
         reports = [dict(job=c, findings=[build_failure("build", "/checkout/core/gcode.c:2794:3: error: " + msg)]) for c,msg in [("gcc","not an array"),("clang","not an array or vector")]]
         merged = merge_reports(reports)
