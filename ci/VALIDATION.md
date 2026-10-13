@@ -204,3 +204,23 @@ The subsequent RS485-direction extension passes 2,404 local sanitizer tests:
 2,374 clean and 30 known regressions, no unexpected failures/skips. All 47 Python
 helpers pass, including strict Windows/Linux-form crash matcher tests. Actual
 hosted execution of the new fatal-startup regression remains pending delivery.
+
+## Batch 3 final local validation
+
+Terje source `d216287a6cf1f9ec278a92ac403c30a8cf5fad3b`, baseline `e65020a`:
+2,436 Clang ASan/UBSan cases, 2,410 clean passes and 26 known regressions,
+zero unexpected failures/skips. Strict summary and all 51 Python helpers pass.
+Fresh Windows Clang coverage: 87.8% lines (15,980/18,207),
+93.9% functions (1,140/1,214), 73.8% branches (9,173/12,424).
+The coverage suite explicitly skips only the remaining fatal RS485 startup
+regression; ASan runs it. No real source exclusion was added.
+
+Candidate hosted run is https://github.com/petervanderwalt/Unit_tests/actions/runs/38441824483
+(harness `f615275`): source, GCC ASan/UBSan, Clang ASan/UBSan, coverage and
+CI diagnosis all completed successfully. Hosted GCC coverage artifact:
+87.2% lines (15,076/17,283), 72.8% branches (9,774/13,422).
+The automatic default-source run 38441824898 failed against upstream core
+`ca26fc9`, which does not contain Terje's reviewed fixes. The explicit candidate
+run above is the latest-source validation; do not restore resolved exceptions
+for compatibility with that older source.
+

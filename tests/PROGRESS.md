@@ -3,6 +3,45 @@
 Last verified: **2026-10-13**. Read this with the root `AGENTS.md` and README.
 This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 
+## Batch 3 final stopping point
+
+The user requested closing batch 3 with a PR and stopping coverage expansion.
+Latest reviewed source: Terje core `d216287a6cf1f9ec278a92ac403c30a8cf5fad3b`,
+comparison baseline `e65020a8389b19d3c03277e02f34219e25800e6a`.
+
+Full local Clang ASan/UBSan and strict summary: **2,436 tests, 2,410 clean passes,
+26 documented known regressions, zero unexpected failures/skips**. All **51**
+Python helper tests pass. Fresh Windows Clang coverage: **87.8% lines
+(15,980/18,207), 93.9% functions (1,140/1,214), 73.8% branches (9,173/12,424)**.
+Coverage has one explicit skip for the outstanding fatal RS485 startup regression;
+the sanitizer suite executes it through its narrow diagnostic wrapper.
+
+The final 32 cases exercise CoreXY travel conversion, coupled-axis homing,
+feed scaling, ganging and auto-square counter preservation, reporting and resolution
+callbacks. Z-only homing still resets the unrelated secondary ganged Y counter;
+two regressions and a proposed guard are documented in KNOWN_BUGS.md.
+Public ganging resolution warning/reset behavior is a **possible improvement**
+in TODO.md, not an expected failure.
+
+Laser assertions use planner block conditions after the parser refactor.
+Delta rejection, RTCP endpoint and four named-macro lifetime regressions now pass
+directly; their obsolete exceptions and two diagnostic wrappers are removed.
+Earlier resolved entries stay deleted, with correct regression assertions retained.
+Upstream PR #6 documentation is merged; its remaining analog-output proposal is
+preserved. Source/file/exception links were rechecked after cleanup.
+
+Hosted candidate validation (harness `f615275`, latest Terje source above):
+https://github.com/petervanderwalt/Unit_tests/actions/runs/38441824483
+**Completed: source, GCC ASan/UBSan, Clang ASan/UBSan, coverage and diagnosis all
+passed.** Hosted GCC coverage is **87.2% lines (15,076/17,283) / 72.8% branches
+(9,774/13,422)**. Its platform/compiler denominator differs from local Clang. Default upstream core `ca26fc9` lacks these Terje fixes,
+so default-source runs are separate compatibility evidence, not the candidate run.
+Production source and registry defaults remain unchanged.
+
+Resume full coverage only on a new user request. Inspect fresh per-file/function
+and branch evidence rather than treating this snapshot or a green suite as full
+coverage. Historical checkpoints below describe earlier states.
+
 ## Batch 3 RS485 direction checkpoint
 
 Six further separate RTU cases pass full Clang ASan/UBSan and strict summary:
@@ -454,6 +493,6 @@ space-separated absolute Windows executable path caused parsing trouble locally.
 Never remove coverage data while a merge runs. A merge can take several minutes;
 continue independent work without changing headers under an active build.
 
-The testing goal is active, with no token budget. No scheduled background continuation was configured. A fresh chat should read
+The user requested pausing coverage after batch 3 delivery. No scheduled background continuation was configured. A fresh chat should read
 these files, verify current state, and be explicitly asked to resume the full
 coverage objective; do not assume deleting a chat schedules future execution.
