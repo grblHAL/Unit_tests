@@ -11,9 +11,9 @@ print(result.stdout)
 print(f"Regression executable exit code: {result.returncode}")
 # CTest WILL_FAIL expects 1 only for this confirmed diagnostic. A fix or any
 # different failure returns 0, making CTest fail and requiring review.
-expected = re.search(r"SUMMARY: AddressSanitizer: heap-use-after-free[^\n]*core[/\\]vfs\.c:(?:367|368)\b", result.stdout)
+expected = re.search(r"SUMMARY: AddressSanitizer: heap-use-after-free[^\n]*core[/\\]vfs\.c:(?:367|368|369)\b", result.stdout)
 if result.returncode != 0 and expected:
-    print("Confirmed known VFS close lifetime defect at core/vfs.c:367-368.")
+    print("Confirmed known VFS close lifetime defect at core/vfs.c:367-369.")
     sys.exit(1)
 print("Expected sanitizer diagnostic was not reproduced; review this regression.")
 sys.exit(0)

@@ -14,6 +14,10 @@ file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/core/modbus.h" HOST_MODBUS_RESET_DECLA
 if(HOST_MODBUS_RESET_DECLARATION)
   set(HOST_API_DEFINITIONS HOST_MODBUS_RESET_API=1)
 endif()
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/core/core_handlers.h" HOST_TOOL_PERSIST_DECLARATION REGEX "set_tool_data_ptr.*bool persist")
+if(HOST_TOOL_PERSIST_DECLARATION)
+  list(APPEND HOST_API_DEFINITIONS HOST_TOOL_PERSIST_API=1)
+endif()
 function(add_host_core target)
   add_library(${target} STATIC EXCLUDE_FROM_ALL tests/support/engine_host.c tests/support/task_host.c)
   target_link_libraries(${target} PRIVATE grbl)
@@ -213,10 +217,10 @@ function(add_core_test name module source)
       ${CMAKE_CURRENT_SOURCE_DIR}/scripts/vfs_lifetime_regression.py
       $<BOOL:${ENABLE_SANITIZERS}> $<TARGET_FILE:test_${name}>)
     set_tests_properties(${name} PROPERTIES SKIP_RETURN_CODE 77)
-  elseif(name STREQUAL "fs_ram.populated_reset_clears_files_and_allows_reuse")
+  elseif(name STREQUAL "fs_embedded.seek_within_file")
     find_package(Python3 REQUIRED COMPONENTS Interpreter)
     add_test(NAME ${name} COMMAND ${Python3_EXECUTABLE}
-      ${CMAKE_CURRENT_SOURCE_DIR}/scripts/ram_reset_regression.py
+      ${CMAKE_CURRENT_SOURCE_DIR}/scripts/embedded_seek_regression.py
       $<BOOL:${ENABLE_SANITIZERS}> $<TARGET_FILE:test_${name}>)
     set_tests_properties(${name} PROPERTIES SKIP_RETURN_CODE 77)
   elseif(name STREQUAL "ngc_flowctrl.named_macro_return_closes_file_and_restores_caller_scope")
@@ -231,18 +235,6 @@ function(add_core_test name module source)
     find_package(Python3 REQUIRED COMPONENTS Interpreter)
     add_test(NAME ${name} COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/scripts/named_sub_lifetime_regression.py
-      $<BOOL:${ENABLE_SANITIZERS}> $<TARGET_FILE:test_${name}>)
-    set_tests_properties(${name} PROPERTIES SKIP_RETURN_CODE 77)
-  elseif(name STREQUAL "settings.initialize_bad_version_restores_defaults")
-    find_package(Python3 REQUIRED COMPONENTS Interpreter)
-    add_test(NAME ${name} COMMAND ${Python3_EXECUTABLE}
-      ${CMAKE_CURRENT_SOURCE_DIR}/scripts/settings_recovery_regression.py
-      $<BOOL:${ENABLE_SANITIZERS}> $<TARGET_FILE:test_${name}>)
-    set_tests_properties(${name} PROPERTIES SKIP_RETURN_CODE 77)
-  elseif(name STREQUAL "ngc_params.builtin_modbus_macro_rejects_unknown_function")
-    find_package(Python3 REQUIRED COMPONENTS Interpreter)
-    add_test(NAME ${name} COMMAND ${Python3_EXECUTABLE}
-      ${CMAKE_CURRENT_SOURCE_DIR}/scripts/modbus_function_regression.py
       $<BOOL:${ENABLE_SANITIZERS}> $<TARGET_FILE:test_${name}>)
     set_tests_properties(${name} PROPERTIES SKIP_RETURN_CODE 77)
   else()
@@ -265,19 +257,14 @@ endforeach()
 if(NOT MSVC)
   find_package(Python3 REQUIRED COMPONENTS Interpreter)
   add_test(NAME feature_compile.auxiliary_pullup_configuration
-    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/scripts/aux_pullup_compile_regression.py
-    ${CMAKE_C_COMPILER} ${CMAKE_CURRENT_SOURCE_DIR}/core
-    ${CMAKE_CURRENT_SOURCE_DIR}/tests/compile/ioports_aux_pullup.c)
+    COMMAND ${CMAKE_C_COMPILER} -std=gnu11 -fsyntax-only -DAUX_SETTINGS_PULLUP=1
+    -I${CMAKE_CURRENT_SOURCE_DIR}/core ${CMAKE_CURRENT_SOURCE_DIR}/tests/compile/ioports_aux_pullup.c)
+  foreach(level 2 10)
+    add_test(NAME feature_compile.legacy_compatibility_level_${level}_reporting
+      COMMAND ${CMAKE_C_COMPILER} -std=gnu11 -fsyntax-only -DCOMPATIBILITY_LEVEL=${level}
+      -I${CMAKE_CURRENT_SOURCE_DIR}/core ${CMAKE_CURRENT_SOURCE_DIR}/tests/compile/report_compatibility.c)
+    set_tests_properties(feature_compile.legacy_compatibility_level_${level}_reporting PROPERTIES TIMEOUT 15)
+  endforeach()
   set_tests_properties(feature_compile.auxiliary_pullup_configuration PROPERTIES TIMEOUT 15)
-  add_test(NAME feature_compile.legacy_compatibility_level_2_reporting
-    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/scripts/report_compatibility_compile_regression.py
-    ${CMAKE_C_COMPILER} ${CMAKE_CURRENT_SOURCE_DIR}/core
-    ${CMAKE_CURRENT_SOURCE_DIR}/tests/compile/report_compatibility.c 2)
-  set_tests_properties(feature_compile.legacy_compatibility_level_2_reporting PROPERTIES TIMEOUT 15)
-  add_test(NAME feature_compile.legacy_compatibility_level_10_reporting
-    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/scripts/report_compatibility_compile_regression.py
-    ${CMAKE_C_COMPILER} ${CMAKE_CURRENT_SOURCE_DIR}/core
-    ${CMAKE_CURRENT_SOURCE_DIR}/tests/compile/report_compatibility.c 10)
-  set_tests_properties(feature_compile.legacy_compatibility_level_10_reporting PROPERTIES TIMEOUT 15)
 endif()
 include(tests/known_bugs.cmake)

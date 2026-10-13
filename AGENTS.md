@@ -8,6 +8,9 @@ branches or commit unfinished coverage cases with CI changes. No AI branding.
 Do not commit/push master/main or open an early coverage PR.
 After PR #2 merged, its compatibility follow-up belongs on
 `ci-core-compatibility`, based on updated upstream master (2026-10-13).
+After that follow-up merged as upstream `63323b5`, validation of Terje's
+October 13 fixes belongs on `ci-terje-fix-validation`. Keep this separate from
+coverage work; do not restore resolved exceptions merely to support old core.
 
 Continue toward meaningful full grblHAL core coverage: every core module and
 supported feature configuration, with line and branch coverage guiding the work.

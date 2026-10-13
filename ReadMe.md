@@ -82,8 +82,8 @@ artifacts identify the repository, source SHA and harness SHA. Manual dispatch
 requires the workflow on the default branch and write access to this test repo.
 
 ```sh
-gh workflow run tests.yml --repo petervanderwalt/Unit_tests --ref ci-source-selection -f source_pr=123
-gh workflow run tests.yml --repo petervanderwalt/Unit_tests --ref ci-source-selection -f source_repository=yourname/core -f source_ref=my-fix
+gh workflow run tests.yml --repo petervanderwalt/Unit_tests --ref master -f source_pr=123
+gh workflow run tests.yml --repo petervanderwalt/Unit_tests --ref master -f source_repository=yourname/core -f source_ref=my-fix
 ```
 
 ### Which revision gets tested?
@@ -131,7 +131,7 @@ are not persisted. These templates target public source repositories.
 
 1. Review/publish this CI branch in the chosen public test-harness repository.
    For the initial rollout, the supplied caller uses
-   `petervanderwalt/Unit_tests` at `ci-source-selection`.
+   `grblHAL/Unit_tests` at `master`.
 2. Copy [ci/callers/core.yml](ci/callers/core.yml) into the core repository as
    `.github/workflows/host-tests.yml`. If hosting the harness elsewhere, update
    both `jobs.core.uses` and `harness_repository`; keep `uses` and `harness_ref`
@@ -449,8 +449,7 @@ compensation, four-axis asymmetric ganging with and without auto-squaring,
 the eight-axis maximum, six-axis UVW remapping, and three registered spindles
 with two active spindle slots, a four-slot persistent tool table with and without NGC expressions, optional spindle PWM linearization, and enabled PID logging. All variants run in one
 CTest suite; coverage merges their executed source lines. Compatibility levels
-2 and 10 currently have linked compile regressions in [Known core defects](tests/KNOWN_BUGS.md#legacy-compatibility-reporting-does-not-compile) because the pinned
-core cannot compile their coordinate report. The `separate` function
+2 and 10 have ordinary compile checks for their coordinate reports. The `separate` function
 merge mode retains functions compiled at different locations under feature guards. Other feature combinations
 still need tests. A green suite or a covered module does not establish full coverage;
 use the source-by-source coverage table to choose the next behavior to test.
@@ -476,3 +475,18 @@ PID tests currently specify existing sample-rate behavior. Deadband and
 `p_max_error` are not asserted as supported features; the implementation does not
 apply them. Zero sample rate needs an upstream-defined contract before testing
 an expected result.
+
+## Testing the October 13 core fixes
+
+The `ci-terje-fix-validation` follow-up adapts the tool-table callback and host
+startup/foreground-task behavior for Terje's fixes. Run **Core tests** from this
+branch with `source_repository=terjeio/grblHAL_core` and
+`source_ref=4b128e68bc63f9a3af11a01a7d8fbb5d5ccc98aa` to reproduce that review.
+The SHA identifies the reviewed source; it is not a tracked submodule or default pin.
+
+Resolved exceptions and their bug entries are removed, while the regression
+assertions remain. Outstanding faults, including embedded seek, VFS close,
+separate-command dynamic laser power and empty tool slots, are documented in
+[known bugs](tests/KNOWN_BUGS.md). A green run still includes explicitly labelled
+known defects. Testing older core revisions can fail the now ordinary fixed
+regressions; check the selected source revision before changing an assertion.

@@ -3,7 +3,7 @@
 
 int main(void)
 {
-    prepare_multi_spindle();
+    prepare_multi_spindle_program();
     CHECK(spindle_enable(1) == 1);
     CHECK(!spindle_is_on());
     CHECK(spindle_set_state(spindle_get(1), (spindle_state_t){.on = true}, 7000));

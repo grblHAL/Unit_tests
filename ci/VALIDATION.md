@@ -72,3 +72,30 @@ zero unexpected failures, zero skipped. Evidence in local workspace scratch:
 Nine representative compatibility cases also passed on historical core 451a539.
 CI helpers: 20 passing; workflow actionlint passes. Core source was not patched.
 Hosted compiler/coverage validation for this follow-up is pending publication.
+
+## Terje's October 13 fixes
+
+Branch `ci-terje-fix-validation`, based on merged upstream harness `63323b5`,
+was validated against `terjeio/grblHAL_core` revision
+`4b128e68bc63f9a3af11a01a7d8fbb5d5ccc98aa`. Core source was not patched.
+
+- Full Windows Clang ASan/UBSan: **2,242 tests; 2,221 clean passes, 21 documented
+  known regressions, zero unexpected failures, zero skipped**. Strict summary passes.
+- 44 obsolete expected-failure registrations and all four recovering sanitizer
+  manifest entries were removed. Five resolved diagnostic wrappers were deleted;
+  compile and executable regressions now run normally.
+- Tool callbacks support the new persistence flag. Fixtures model validated tool
+  copies, cached tool reload, driver startup, foreground synchronized I/O, valid
+  check-mode behavior, alarm callbacks and expanded status-report bits.
+- Remaining VFS close and embedded seek memory defects were reproduced with
+  strict diagnostic matching. Nine existing laser/tool cases expose two newly
+  confirmed defects, documented with source and cleanup links in KNOWN_BUGS.md.
+- CI helper tests: 24 passing, including rejection of unrelated sanitizer faults.
+  Workflow actionlint passes.
+
+Evidence: workspace scratch `terje-tests-verified.log`,
+`terje-results-verified.xml`, `terje-summary-verified.log`. Hosted GCC, Clang sanitizers and
+coverage all passed in [run 38367839505](https://github.com/petervanderwalt/Unit_tests/actions/runs/38367839505)
+using harness `90c890d` and the same exact candidate source.
+The default upstream core may not yet contain these fixes; older-source failures
+are genuine regressions against the retained correct expectations.

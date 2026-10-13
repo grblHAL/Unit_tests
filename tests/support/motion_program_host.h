@@ -1,9 +1,12 @@
 #pragma once
 #include "support/stepper_host.h"
+#include "report.h"
 #include <string.h>
 static inline void prepare_motion_program(void)
 {
     prepare_stepper();
+    sys.driver_started = true;
+    report_init_fns();
     settings.arc_tolerance = .02f;
 }
 static inline void queue_motion_program(const char *text)
@@ -21,6 +24,7 @@ static inline void execute_motion_program(void)
     for(unsigned ticks = 0; ticks < 100000 && !(sys.rt_exec_state & EXEC_CYCLE_COMPLETE); ticks++) {
         st_prep_buffer();
         stepper_driver_interrupt_handler();
+        engine_execute_tasks(STATE_CYCLE);
     }
     CHECK(sys.rt_exec_state & EXEC_CYCLE_COMPLETE);
     CHECK(plan_get_current_block() == NULL);

@@ -9,11 +9,24 @@ static tool_table_entry_t *g10_get_tool(tool_id_t id)
 {
     return id == 3 ? &g10_entry : id == 0 ? &g10_current : &g10_missing;
 }
-static bool g10_save_tool(tool_data_t *tool)
+static bool g10_save_tool(tool_data_t *tool
+#ifdef HOST_TOOL_PERSIST_API
+    , bool persist
+#endif
+)
 {
+#ifdef HOST_TOOL_PERSIST_API
+    CHECK(tool->tool_id == g10_tool.tool_id);
+    g10_tool = *tool;
+    if(persist) {
+        persisted_tool = *tool;
+        g10_save_calls++;
+    }
+#else
     CHECK(tool == &g10_tool);
     persisted_tool = *tool;
     g10_save_calls++;
+#endif
     return true;
 }
 static inline void prepare_g10_tool(void)

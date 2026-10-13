@@ -3,7 +3,7 @@
 
 int main(void)
 {
-    prepare_multi_spindle();
+    prepare_multi_spindle_program();
     sys.abort = true;
     CHECK(!spindle_set_state(spindle_get(0), (spindle_state_t){.on = true}, 5000));
     CHECK(spindle_output_calls[0] == 0);
