@@ -3,6 +3,28 @@
 Last verified: **2026-10-13**. Read this with the root `AGENTS.md` and README.
 This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 
+## Batch 3 modal and multiple-probe extension
+
+Twelve further cases pass full Windows Clang ASan/UBSan validation:
+**2,352 tests, 2,323 clean passes, 29 documented known regressions, no unexpected
+failures/skips**; strict summary passes. New cases cover dynamic/static cutter
+compensation parameter values, lathe diameter/radius mode, runtime tool selection
+and pocket identity, UVW offsets, rotary-unit preservation, three-input probe
+state aggregation and extended realtime probe/release indicators.
+
+Four new regression cases document cancelled dynamic compensation reporting 401,
+aggregate probe reads changing the selected probe and aggregate reads ignoring
+independent toolsetter inversion. Correct assertions and passing controls remain;
+no production core edits. Latest measured coverage remains the 2,337-case snapshot
+below; these twelve subsequent cases and the three later spindle cases are not
+included in that measurement.
+
+Hosted validation of the preceding pushed 2,340-case checkpoint is running:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/38430798382
+(harness `31fd05b`, Terje source `e65020a`, baseline `4b128e`). Continue parser,
+motion and configuration gaps while it builds. Do not push small follow-ups that
+cancel it. These extensions belong on the same coverage branch; goal is active.
+
 ## Batch 3 reporting and parameter checkpoint
 
 Branch `coverage-batch-3`, unchanged Terje core `e65020a8389b19d3c03277e02f34219e25800e6a`.

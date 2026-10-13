@@ -121,3 +121,19 @@ endif()
 if(TEST ngc_params.named_motion_mode_reports_quadratic_spline_code)
   set_tests_properties(ngc_params.named_motion_mode_reports_quadratic_spline_code PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Cancelled dynamic cutter compensation reports G40.1; verified on e65020a.
+if(TEST cutter_comp.dynamic_left_compensation_named_parameter_tracks_enable_and_cancel)
+  set_tests_properties(cutter_comp.dynamic_left_compensation_named_parameter_tracks_enable_and_cancel PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+if(TEST cutter_comp.dynamic_right_compensation_named_parameter_tracks_enable_and_cancel)
+  set_tests_properties(cutter_comp.dynamic_right_compensation_named_parameter_tracks_enable_and_cancel PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+# Aggregate probe reads alter selection and ignore per-input inversion (e65020a).
+if(TEST probe.aggregate_states_preserves_selected_probe_and_trigger_input)
+  set_tests_properties(probe.aggregate_states_preserves_selected_probe_and_trigger_input PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+if(TEST probe.aggregate_states_respects_independent_toolsetter_inversion)
+  set_tests_properties(probe.aggregate_states_respects_independent_toolsetter_inversion PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

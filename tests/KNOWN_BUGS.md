@@ -237,3 +237,79 @@ conversion. Preserve G0/G1/G80 and G70, and cover all fractional motion modes.
 [known_bugs.cmake](known_bugs.cmake), retain their correct assertions and passing
 controls, run parameter/probe/lathe tests and the full sanitizer suite, then
 delete this section. No sanitizer diagnostic allowance applies.
+
+## Cancelled dynamic compensation reports a nonexistent G40.1 mode
+
+**Marked known:** 2026-10-13, Terje's core
+`e65020a8389b19d3c03277e02f34219e25800e6a`.
+
+After G41.1 or G42.1, G40 and a completed sufficiently long linear exit,
+`#<_ccomp>` returns 401. It should return 400 for cancelled compensation, as
+specified by the [named parameter contract](https://www.linuxcnc.org/docs/2.8/html/gcode/overview.html).
+The side is off and the pending exit has completed, but the retained dynamic bit
+is still added by the [getter at ngc_params.c:531](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/ngc_params.c#L531).
+Static G42 followed by G40 returns the correct 400.
+
+**Regressions:** [left](cases/cutter_comp/dynamic_left_compensation_named_parameter_tracks_enable_and_cancel.c)
+and [right](cases/cutter_comp/dynamic_right_compensation_named_parameter_tracks_enable_and_cancel.c).
+**Passing control:** [static compensation](cases/cutter_comp/static_right_compensation_named_parameter_uses_integer_code.c).
+The fixture captures the plugin configuration and checks parser state; it does
+not implement compensated toolpath geometry.
+
+**Suggested fix (proposal, not runtime-verified):** Return 400 when the side is
+`CComp_Off`; add the dynamic fractional part only for active G41/G42 modes.
+Retain any compensation data needed to complete an exit move.
+
+**Remove exceptions when fixed:** delete both dynamic-compensation named-parameter
+blocks in [known_bugs.cmake](known_bugs.cmake), retain all three tests, run
+cutter/parser/parameter tests and the full sanitizer suite, then delete this
+section. No sanitizer diagnostic allowance applies.
+
+## Reading all probe inputs changes the selected probe
+
+**Marked known:** 2026-10-13, Terje's core
+`e65020a8389b19d3c03277e02f34219e25800e6a`.
+
+Register the default probe, toolsetter and second probe; select the default probe
+with its input false and the second probe input true. After `probes_get_state()`,
+`hal.probe.get_state()` reports Probe_2 and triggered=true, without a selection
+command. This is the aggregate reader used by extended realtime reports.
+
+[probe.c:223](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/probe.c#L223)
+assigns each input to the shared active `probe` pointer during enumeration.
+
+**Regression:** [selection preservation](cases/probe/aggregate_states_preserves_selected_probe_and_trigger_input.c).
+**Passing control:** [aggregate input flags](cases/probe/aggregate_states_reports_each_registered_probe_input.c).
+
+**Suggested fix (proposal, not runtime-verified):** Iterate using a local
+`probe_t *entry` instead of overwriting the active `probe`. Leave active IRQ,
+connection and probing state unchanged during reporting.
+
+**Remove exception when fixed:** delete the selection-preservation block in
+[known_bugs.cmake](known_bugs.cmake), retain the test and control, run probe and
+realtime report cases plus the full sanitizer suite, then delete this section.
+No sanitizer diagnostic allowance applies.
+
+## Aggregate probe states ignore independent input inversion
+
+**Marked known:** 2026-10-13, Terje's core
+`e65020a8389b19d3c03277e02f34219e25800e6a`.
+
+With three false raw inputs, default probe selected and only toolsetter inversion
+enabled, `hal.probe.is_triggered(Probe_Toolsetter)` correctly returns true.
+`probes_get_state()` instead reports the toolsetter untriggered. Its
+[conversion at probe.c:224](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/probe.c#L224)
+applies the selected probe's shared inversion to every input.
+
+**Regression:** [independent toolsetter inversion](cases/probe/aggregate_states_respects_independent_toolsetter_inversion.c).
+**Passing control:** [uninverted inputs](cases/probe/aggregate_states_reports_each_registered_probe_input.c).
+
+**Suggested fix (proposal, not runtime-verified):** Convert each raw input using
+its own `inverted_bit` and `settings.probe.value`, consistently with
+`hal.probe.is_triggered()`. Aggregate reporting should describe physical input
+states independently of the active probe's toward/away cycle configuration.
+
+**Remove exception when fixed:** delete the independent-inversion block in
+[known_bugs.cmake](known_bugs.cmake), retain correct assertions and the control,
+run probe/realtime tests and the full sanitizer suite, then delete this section.
+No sanitizer diagnostic allowance applies.
