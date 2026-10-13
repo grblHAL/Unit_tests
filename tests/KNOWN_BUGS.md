@@ -125,7 +125,7 @@ and full sanitizer suite, then delete this section.
 
 After parsing a normal block from a redirected file without an opening `%`, a
 later `%` should return `Status_UnexpectedDemarcation`. The parser detects it at
-[gcode.c:1293�1294](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/gcode.c#L1293),
+[gcode.c:1293–1294](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/gcode.c#L1293),
 then clears the block and returns `Status_OK` from the
 [empty-block path at line 1343](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/gcode.c#L1343).
 The caller therefore receives success for the detected invalid marker.
@@ -144,3 +144,96 @@ serial markers, file completion callbacks and check-mode behavior.
 **Remove exception when fixed:** delete the [CMake block](known_bugs.cmake#L54),
 retain the correct regression and passing controls, then delete this section.
 No sanitizer diagnostic allowance applies.
+
+## Lathe roughing modal reports use invalid probe command codes
+
+**Marked known:** 2026-10-13, Terje's core
+`e65020a8389b19d3c03277e02f34219e25800e6a`.
+
+After successfully dispatching a roughing cycle to the plugin interface, `$G`
+reports G71 as `G38.572` and G72 as `G38.582`. Fractional G71.1/G71.2/G72.1/G72.2
+report `G38.573`/`G38.574`/`G38.583`/`G38.584`. Each accepted motion must instead
+retain its actual G71/G72 command name in the modal report.
+
+The [motion formatter](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/report.c#L744)
+treats every motion enum at or above `MotionMode_ProbeToward` as a probe code.
+The encoded roughing enums 710–722 also enter that branch. Core plugin dispatch
+is tested; pending roughing geometry remains separately documented in TODO.md.
+
+**Regressions:** [G71](cases/lathe_ngc/roughing_modal_report_uses_g71.c),
+[G71.1](cases/lathe_ngc/roughing_modal_report_uses_g71_1.c),
+[G71.2](cases/lathe_ngc/roughing_modal_report_uses_g71_2.c),
+[G72](cases/lathe_ngc/roughing_modal_report_uses_g72.c),
+[G72.1](cases/lathe_ngc/roughing_modal_report_uses_g72_1.c), and
+[G72.2](cases/lathe_ngc/roughing_modal_report_uses_g72_2.c).
+**Passing control:** [G70](cases/lathe_ngc/finishing_modal_report_uses_g70.c),
+using the same initialized parser, plugin capture and report fixture.
+
+**Suggested fix (proposal, not runtime-verified):** Limit the probe-format branch
+to the actual G38 probe enums. Add explicit formatting for the encoded roughing
+enums: integer G71/G72 for variants ending in zero, with `.1` or `.2` for the
+fractional variants. Preserve G70, G5.1, G33.1 and normal probe formatting.
+
+**Remove exceptions when fixed:** delete all six
+[CMake blocks](known_bugs.cmake#L59), keep the correct report assertions and
+G70 control, run the lathe/parser/report tests and full sanitizer suite, then
+delete this section. No sanitizer allowance applies.
+
+## Scaling-factor reports apply coordinate unit and diameter conversions
+
+**Marked known:** 2026-10-13, Terje's core
+`e65020a8389b19d3c03277e02f34219e25800e6a`.
+
+With `G51X2Y3Z4`, the scaling factors are dimensionless 2, 3 and 4. The `$#`
+`[G51:...]` record instead reports 0.0787, 0.1181 and 0.1575 when `$13=1` selects
+inch display. In lathe G7 diameter mode it reports 4, 3 and 4: the X factor is
+doubled. Metric radius-mode output correctly reports 2, 3 and 4. The tests check
+the unchanged parser scaling factors before inspecting the serialized report.
+
+[report_ngc_parameters() at report.c:620](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/report.c#L620)
+passes the factor vector through the coordinate formatter, which converts inches
+and doubles X for diameter mode. These conversions are appropriate for positions
+but change the meaning of scaling factors.
+
+**Regressions:** [inch display](cases/report/scaling_parameter_report_keeps_dimensionless_factors_in_inches.c)
+and [lathe diameter mode](cases/lathe_ngc/scaling_parameter_report_does_not_double_diameter_mode_factor.c).
+**Passing control:** [metric factors](cases/report/scaling_parameter_report_preserves_metric_factors.c).
+
+**Suggested fix (proposal, not runtime-verified):** Use a dedicated dimensionless
+factor formatter for this record, retaining all configured axis factors and decimal
+precision without applying `INCH_PER_MM` or diameter doubling. Keep the existing
+coordinate formatter for positions, work offsets and probe results.
+
+**Remove exceptions when fixed:** delete both [CMake blocks](known_bugs.cmake#L84),
+retain all three tests, run the scaling/parser/report cases and full sanitizer
+suite, then delete this section. No sanitizer diagnostic allowance applies.
+
+## Named motion-mode parameter exposes internal enum encoding
+
+**Marked known:** 2026-10-13, Terje's core
+`e65020a8389b19d3c03277e02f34219e25800e6a`.
+
+After G38.2/G38.3/G38.4/G38.5, `#<_motion_mode>` returns
+1400/1410/1420/1430 instead of 382/383/384/385. The
+[documented parameter contract](https://www.linuxcnc.org/docs/2.8/html/gcode/overview.html)
+uses ten times the numerical G-code value. Applying that convention to G5.1,
+G71, G71.1 and G72 also exposes 510, 7100, 7110 and 7200 instead of
+51, 710, 711 and 720. G70 and ordinary G0/G1/G80 controls pass.
+
+The [getter at ngc_params.c:521-522](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/ngc_params.c#L521)
+multiplies the internal motion enum by ten. Special enums already encode
+fractional commands or use an unrelated probe range.
+
+**Regressions:** separate `named_motion_mode_reports_*` cases under
+[cases/ngc_params](cases/ngc_params) and [cases/lathe_ngc](cases/lathe_ngc).
+The G38 cases execute real simulated probe motion; lathe cases verify accepted
+plugin dispatch. The G70 case is an ordinary passing control.
+
+**Suggested fix (proposal, not runtime-verified):** Map special motion enums to
+their numerical G-code parameter values before applying the ordinary integer
+conversion. Preserve G0/G1/G80 and G70, and cover all fractional motion modes.
+
+**Remove exceptions when fixed:** delete the eight named-motion-mode blocks in
+[known_bugs.cmake](known_bugs.cmake), retain their correct assertions and passing
+controls, run parameter/probe/lathe tests and the full sanitizer suite, then
+delete this section. No sanitizer diagnostic allowance applies.

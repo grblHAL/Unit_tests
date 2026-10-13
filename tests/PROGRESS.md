@@ -3,6 +3,30 @@
 Last verified: **2026-10-13**. Read this with the root `AGENTS.md` and README.
 This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 
+## Batch 3 reporting and parameter checkpoint
+
+Branch `coverage-batch-3`, unchanged Terje core `e65020a8389b19d3c03277e02f34219e25800e6a`.
+The reporting/parameter extension adds 38 separate cases: real cycle/probe status,
+plugin settings channel availability, lathe modal text, dimensionless scaling
+reports, string reallocation preservation, persisted inactive work offsets,
+coordinate-system parameters, setting metadata and numerical motion parameters.
+Full Clang ASan/UBSan: **2,340 tests, 2,315 clean passes, 25 documented known
+regressions, zero unexpected failures/skips**. Strict summary and all 40 Python
+helper tests pass. Newly reproduced report/parameter defects and cleanup guidance
+are in KNOWN_BUGS.md; original expected correct assertions remain.
+
+The earlier 2,302-test checkpoint passed hosted GCC, Clang, coverage and diagnosis:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/38426592992
+(harness `bcafe18`, source `e65020a`). The first hosted attempt found a Linux
+printf type mismatch in test diagnostics; portable casts fixed it before this
+successful run. This hosted result does not validate later unpushed cases.
+
+Latest completed coverage snapshot, at 2,337 tests: **86.2% lines
+(15,689/18,206), 91.8% functions (1,114/1,214), 72.4% branches
+(8,997/12,424)**. Three subsequent spindle listing cases pass focused and full sanitizer
+validation and are not included in that measurement. Next examine spindle capability reports,
+then remaining parser/motion gaps. Goal remains active.
+
 ## Batch 3: Terje core and modal/storage/filesystem paths
 
 Current coverage branch: `coverage-batch-3`, based on upstream master after PR #5
