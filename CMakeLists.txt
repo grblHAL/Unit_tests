@@ -205,7 +205,8 @@ function(add_core_test name module source)
     target_link_options(test_${name} PRIVATE -Wl,--wrap=calloc)
   endif()
   if(name STREQUAL "report.pins_report_survives_sort_allocation_failure"
-    OR name STREQUAL "report.uart_report_survives_sort_allocation_failure")
+    OR name STREQUAL "report.uart_report_survives_sort_allocation_failure"
+    OR name STREQUAL "ngc_params.virtual_registration_allocation_failure_preserves_existing_list")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc)
   endif()
   if(name MATCHES "^motion_control\\.thread_plan_")

@@ -150,3 +150,20 @@ The Modbus three-register regression was rerun and still observes `_value2=51`
 instead of 34. Its surviving entry now links the reviewed handler at lines
 1266/1271-1274 and describes the remaining third-value overwrite, rather than
 the stale exactly-two-values condition. The core was not patched.
+
+## Batch 3 coverage checkpoint
+
+On 2026-10-13, `coverage-batch-3` tests Terje's
+`e65020a8389b19d3c03277e02f34219e25800e6a` core without production-source edits.
+The branch adds 48 new cases and restores/revalidates 12 archived parser cases.
+Six fixed issues lose 13 obsolete expected-failure allowances; their assertions
+remain. The M72 override-control defect is new; the archived unexpected-file-marker
+error is still reproduced and its exception has been restored.
+
+Full Windows Clang ASan/UBSan: 2,302 tests, 2,293 clean passes, nine known
+regressions, zero unexpected failures/skips. Strict summary passes; all 40 Python
+helper tests pass. Fresh Clang coverage build, followed by full tests and merged
+feature variants: 85.9% lines (15,637/18,206), 91.7% functions (1,113/1,214),
+72.1% branches (8,954/12,424). CAN covers all 61 executable lines and all measured
+branches. Four fatal-memory wrappers explicitly skip in coverage mode and run
+under sanitizers. These are local results; hosted GCC/Clang validation is pending.

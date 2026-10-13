@@ -11,13 +11,16 @@ merged. Candidate source: `terjeio/grblHAL_core` master resolved to
 core checkout was updated without production-source edits; no default registry
 pin or submodule was introduced.
 
-Added 16 focused cases covering nested automatic modal restoration, explicit
-restoration, M71 cancellation, spindle/coolant/feed behavior, tool persistence
-failure and volatile/no-storage writes, and embedded seek bounds/recovery.
-The two preserved unfinished modal cases are now corrected and included; G93
-uses an explicit per-block F word when saving. VFS close now verifies backend
-close precedes its one notification and passes the correct filesystem pointer.
-Plain G71/G72 tests now verify core plugin dispatch; roughing geometry stays TODO.
+Added 48 new focused cases and restored/revalidated 12 archived parser cases.
+New coverage includes nested automatic modal restoration, M71 cancellation,
+spindle/coolant/feed behavior, tool persistence failure and volatile/no-storage
+writes, embedded seek bounds/recovery, CAN settings/queue/fallback behavior,
+polar path segmentation/angle continuity/cancellation, lathe tool geometry,
+numbered tool/scaling/work parameters, and the new virtual-parameter API including
+allocation failure. The two preserved unfinished modal cases are corrected and
+included; G93 saves an explicit per-block F word. VFS close verifies close-before-
+notification ordering and the correct filesystem pointer. Plain G71/G72 tests
+verify plugin dispatch; roughing geometry stays TODO.
 
 Terje fixed six documented issues: century leap, VFS close, embedded seek,
 three-register Modbus, dynamic laser power and empty tool identities. Thirteen
@@ -26,21 +29,28 @@ were removed. Embedded macro return now matches only the outstanding subroutine
 callback lifetime defect. Correct regression assertions remain.
 
 New confirmed M72 override-control regression and its passing direct-restore
-control are in KNOWN_BUGS.md. Full Windows Clang ASan/UBSan run: **2,258 tests,
-2,250 clean passes, eight known regressions, zero unexpected failures/skips**;
-strict summary passes. All 40 remaining Python helper tests pass. Fresh full
-coverage build/measurement is in progress; the percentages below remain historical.
+control are in KNOWN_BUGS.md. The archived unexpected-file-marker defect is also
+restored and reconfirmed. Full Windows Clang ASan/UBSan run: **2,302 tests,
+2,293 clean passes, nine known regressions, zero unexpected failures/skips**;
+strict summary passes. All 40 remaining Python helper tests pass. Fresh coverage includes every new case: **85.9% lines (15,637/18,206),
+91.7% functions (1,113/1,214), 72.1% branches (8,954/12,424)**. CAN reaches
+all 61 executable lines and all measured branches. Polar reaches 125/136 lines;
+remaining gaps are its unfinished homing/limit callbacks. Coverage-mode tests
+pass with four explicitly skipped fatal-memory regressions that require ASan;
+the sanitizer run executes and classifies all four. No sources are excluded to
+inflate coverage. Old snapshots below use older source revisions.
 
-Next: use the fresh coverage gaps, restore/revalidate any useful parser tests
-from the archived earlier batch, then expand additional module/configuration paths.
-Archived commits remain in the verified local Git bundle under
-`../branch-cleanup-backup-20261013/unit-tests-all-branches.bundle`. Do not restore
-obsolete fixture/exception changes wholesale.
+Next: use the fresh coverage gaps to expand realtime reporting and repeated/plugin
+settings reports, then additional parser/motion paths. The 12 archived parser
+cases have been restored; the verified Git bundle remains under
+`../branch-cleanup-backup-20261013/unit-tests-all-branches.bundle` for recovery.
+Do not restore obsolete fixture/exception changes wholesale. Coverage work is
+active on this branch; the CI/source-update sections below are historical.
 
 ## October 13 compatibility follow-up
 
-Coverage expansion remains paused for the CI/source-update task. The current
-follow-up branch is `ci-terje-fix-validation`, based on merged upstream `63323b5`.
+Earlier CI/source-update work paused coverage expansion. Its
+follow-up branch was `ci-terje-fix-validation`, based on merged upstream `63323b5`.
 It tests Terje's core `4b128e68bc63f9a3af11a01a7d8fbb5d5ccc98aa` without changing
 core source. Tool callback, check-mode, task startup and settings fixtures are
 adapted. Resolved exceptions and bug entries are removed; correct assertions stay.

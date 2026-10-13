@@ -49,3 +49,8 @@ endif()
 if(TEST ngc_params.m72_restores_feed_and_rapid_overrides_after_m50_disable)
   set_tests_properties(ngc_params.m72_restores_feed_and_rapid_overrides_after_m50_disable PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Restored archived regression; still reproduced on Terje e65020a (2026-10-13).
+if(TEST gcode.file_percent_marker_after_unmarked_start_is_rejected)
+  set_tests_properties(gcode.file_percent_marker_after_unmarked_start_is_rejected PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

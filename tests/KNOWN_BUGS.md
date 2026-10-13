@@ -117,3 +117,30 @@ motion and M51/M53 controls rather than treating a flag-only change as a complet
 **Remove exception when fixed:** delete the [CMake block](known_bugs.cmake#L49),
 retain the correct regression and passing control, rerun the modal/planner tests
 and full sanitizer suite, then delete this section.
+
+## Unexpected file percent marker reports success
+
+**Marked known:** 2026-10-12. **Reconfirmed:** 2026-10-13 against Terje's core
+`e65020a8389b19d3c03277e02f34219e25800e6a`.
+
+After parsing a normal block from a redirected file without an opening `%`, a
+later `%` should return `Status_UnexpectedDemarcation`. The parser detects it at
+[gcode.c:1293–1294](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/gcode.c#L1293),
+then clears the block and returns `Status_OK` from the
+[empty-block path at line 1343](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/gcode.c#L1343).
+The caller therefore receives success for the detected invalid marker.
+
+**Regression:** [unmarked file start](cases/gcode/file_percent_marker_after_unmarked_start_is_rejected.c).
+[Runtime](cases/gcode/file_percent_markers_complete_once_in_runtime.c) and
+[check-mode](cases/gcode/file_percent_markers_complete_once_in_check_mode.c)
+valid-marker tests provide passing controls. This test and entry were preserved
+in the archived earlier batch; they have now been restored and revalidated.
+
+**Suggested fix (proposal, not runtime-verified):** Return the detected error
+before continuing ordinary block parsing, using the existing `RETURN(status)`
+cleanup path when `status != Status_OK` after handling demarcation. Retain valid
+serial markers, file completion callbacks and check-mode behavior.
+
+**Remove exception when fixed:** delete the [CMake block](known_bugs.cmake#L54),
+retain the correct regression and passing controls, then delete this section.
+No sanitizer diagnostic allowance applies.
