@@ -205,36 +205,22 @@ function(add_core_test name module source)
     target_link_options(test_${name} PRIVATE -Wl,--wrap=calloc)
   endif()
   if(name STREQUAL "report.pins_report_survives_sort_allocation_failure"
-    OR name STREQUAL "report.uart_report_survives_sort_allocation_failure")
+    OR name STREQUAL "report.uart_report_survives_sort_allocation_failure"
+    OR name STREQUAL "ngc_params.virtual_registration_allocation_failure_preserves_existing_list")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc)
+  endif()
+  if(name STREQUAL "ngc_params.string_growth_allocation_failure_preserves_neighbors_and_allows_retry"
+    OR name STREQUAL "ngc_params.string_insert_allocation_failure_preserves_existing_values"
+    OR name STREQUAL "ngc_params.string_name_allocation_failure_reports_zero_and_allows_retry")
+    target_link_options(test_${name} PRIVATE -Wl,--wrap=realloc)
   endif()
   if(name MATCHES "^motion_control\\.thread_plan_")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=plan_buffer_line)
   endif()
-  if(name STREQUAL "fs_ram.close_lifetime")
+  if(name STREQUAL "modbus_rtu.aux_direction_without_outputs_disables_transport_safely")
     find_package(Python3 REQUIRED COMPONENTS Interpreter)
     add_test(NAME ${name} COMMAND ${Python3_EXECUTABLE}
-      ${CMAKE_CURRENT_SOURCE_DIR}/scripts/vfs_lifetime_regression.py
-      $<BOOL:${ENABLE_SANITIZERS}> $<TARGET_FILE:test_${name}>)
-    set_tests_properties(${name} PROPERTIES SKIP_RETURN_CODE 77)
-  elseif(name STREQUAL "fs_embedded.seek_within_file")
-    find_package(Python3 REQUIRED COMPONENTS Interpreter)
-    add_test(NAME ${name} COMMAND ${Python3_EXECUTABLE}
-      ${CMAKE_CURRENT_SOURCE_DIR}/scripts/embedded_seek_regression.py
-      $<BOOL:${ENABLE_SANITIZERS}> $<TARGET_FILE:test_${name}>)
-    set_tests_properties(${name} PROPERTIES SKIP_RETURN_CODE 77)
-  elseif(name STREQUAL "ngc_flowctrl.named_macro_return_closes_file_and_restores_caller_scope")
-    find_package(Python3 REQUIRED COMPONENTS Interpreter)
-    add_test(NAME ${name} COMMAND ${Python3_EXECUTABLE}
-      ${CMAKE_CURRENT_SOURCE_DIR}/scripts/named_macro_cleanup_regression.py
-      $<BOOL:${ENABLE_SANITIZERS}> $<TARGET_FILE:test_${name}>)
-    set_tests_properties(${name} PROPERTIES SKIP_RETURN_CODE 77)
-  elseif(name STREQUAL "ngc_flowctrl.named_macro_return_preserves_subroutine_callback_lifetime"
-    OR name STREQUAL "ngc_flowctrl.named_macro_end_sub_preserves_subroutine_callback_lifetime"
-    OR name STREQUAL "ngc_flowctrl.named_macro_error_preserves_subroutine_callback_lifetime")
-    find_package(Python3 REQUIRED COMPONENTS Interpreter)
-    add_test(NAME ${name} COMMAND ${Python3_EXECUTABLE}
-      ${CMAKE_CURRENT_SOURCE_DIR}/scripts/named_sub_lifetime_regression.py
+      ${CMAKE_CURRENT_SOURCE_DIR}/scripts/rtu_direction_regression.py
       $<BOOL:${ENABLE_SANITIZERS}> $<TARGET_FILE:test_${name}>)
     set_tests_properties(${name} PROPERTIES SKIP_RETURN_CODE 77)
   else()
@@ -250,6 +236,11 @@ foreach(source IN LISTS CASE_FILES)
   get_filename_component(name "${source}" NAME_WE)
   get_filename_component(directory "${source}" DIRECTORY)
   get_filename_component(module "${directory}" NAME)
+  if(module STREQUAL "tool_table" AND name STREQUAL "nonpersistent_update_keeps_saved_tool_unchanged"
+    AND NOT HOST_TOOL_PERSIST_DECLARATION)
+    message(STATUS "Skipping nonpersistent tool update: selected core has no persist argument")
+    continue()
+  endif()
   add_core_test("${module}.${name}" "${module}" "${source}")
 endforeach()
 

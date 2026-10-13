@@ -2,10 +2,12 @@
 
 ## Objective and delivery
 
-Coverage work belongs on `initial-batch-part-2`. The separate CI design task,
+Current coverage work belongs on `coverage-batch-3`, using Terje's core.
+`initial-batch-part-2` is an archived earlier batch. The separate CI design task,
 authorized on 2026-10-13, belongs on `ci-source-selection`. Do not mix these
 branches or commit unfinished coverage cases with CI changes. No AI branding.
-Do not commit/push master/main or open an early coverage PR.
+Do not commit/push master/main. The user requested closing batch 3 with a PR
+and pausing coverage on 2026-10-13; finish validation/delivery, then stop.
 After PR #2 merged, its compatibility follow-up belongs on
 `ci-core-compatibility`, based on updated upstream master (2026-10-13).
 After that follow-up merged as upstream `63323b5`, validation of Terje's
@@ -222,3 +224,24 @@ Warnings must not be described as proof that code has no tests. Missing diagnost
 artifacts or unexpected sanitizer output must never turn a failed job green.
 Caller baseline refs/repositories and source PR bases resolve once in the lock.
 Keep README instructions, not dated progress reports; record validation separately.
+
+## Batch 3 coverage continuation
+
+The user started batch 3 on 2026-10-13: coverage work now belongs on
+`coverage-batch-3`, based on upstream master after PR #5 merged. The older
+`initial-batch-part-2` instructions above describe previous work, not the current
+branch. Use Terje's `terjeio/grblHAL_core` master as the candidate source and
+record the exact tested SHA at each substantial batch. Do not pin the registry or
+restore submodules. Keep production core untouched and validate resolved known
+regressions before removing exceptions. Separate the proposed-fix documentation
+PR #6 from coverage work.
+
+## Batch 3 stopping point
+
+The user requested a final coverage report and batch 3 PR on 2026-10-13.
+This supersedes the earlier no-early-PR and unattended-continuation instructions.
+Finish latest-Terje compatibility, current kinematics cases, known-exception
+cleanup, coverage measurement and hosted validation. Open the PR, pause the
+full-coverage goal, and stop. Resume coverage expansion only when asked.
+The secondary-motor resolution warning/reset behavior is a possible improvement
+in `tests/TODO.md`, not a confirmed defect or expected-failure allowance.

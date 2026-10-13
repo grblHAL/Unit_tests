@@ -392,9 +392,8 @@ scripts need cleanup. Depending on the defect, cleanup is in these places:
   [tests/known_sanitizer_diagnostics.json](tests/known_sanitizer_diagnostics.json).
   These exceptions are documented in `KNOWN_BUGS.md`, but the actual warning
   allowance is stored in this JSON file. One defect can have several objects.
-  For example, the tool-table getter defect has two objects with
-  `"issue": "tool-table-index-getter-callback-signature"`. Keep valid JSON after
-  deleting them. The summary must then report those tests as clean passes.
+  Remove all objects for the resolved issue, keeping valid JSON (an empty
+  manifest is `[]`). The summary must then report those tests as clean passes.
 - **Memory defect checked by a diagnostic wrapper:** follow the defect's linked
   instructions to replace its special Python-wrapper registration in
   [CMakeLists.txt](CMakeLists.txt) with a normal executable test. Remove the

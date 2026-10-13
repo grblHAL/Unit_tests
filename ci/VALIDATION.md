@@ -150,3 +150,76 @@ The Modbus three-register regression was rerun and still observes `_value2=51`
 instead of 34. Its surviving entry now links the reviewed handler at lines
 1266/1271-1274 and describes the remaining third-value overwrite, rather than
 the stale exactly-two-values condition. The core was not patched.
+
+## Batch 3 coverage checkpoint
+
+On 2026-10-13, `coverage-batch-3` tests Terje's
+`e65020a8389b19d3c03277e02f34219e25800e6a` core without production-source edits.
+The branch adds 48 new cases and restores/revalidates 12 archived parser cases.
+Six fixed issues lose 13 obsolete expected-failure allowances; their assertions
+remain. The M72 override-control defect is new; the archived unexpected-file-marker
+error is still reproduced and its exception has been restored.
+
+Full Windows Clang ASan/UBSan: 2,302 tests, 2,293 clean passes, nine known
+regressions, zero unexpected failures/skips. Strict summary passes; all 40 Python
+helper tests pass. Fresh Clang coverage build, followed by full tests and merged
+feature variants: 85.9% lines (15,637/18,206), 91.7% functions (1,113/1,214),
+72.1% branches (8,954/12,424). CAN covers all 61 executable lines and all measured
+branches. Four fatal-memory wrappers explicitly skip in coverage mode and run
+under sanitizers. Hosted GCC, Clang, coverage and diagnosis subsequently passed
+on harness `bcafe18`, Terje source `e65020a`, baseline `4b128e`:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/38426592992
+
+The next local reporting/parameter extension passes 2,340 sanitizer tests:
+2,315 clean passes and 25 documented known regressions, zero unexpected
+failures/skips. Strict summary and 40 Python helper tests pass. Hosted GCC, Clang, coverage and CI diagnosis pass on harness `31fd05b`,
+Terje source `e65020a`, baseline `4b128e`:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/38430798382
+Later modal/multiple-probe cases remain locally validated only. Its completed 2,337-test coverage
+snapshot is 86.2% lines (15,689/18,206), 91.8% functions (1,114/1,214)
+and 72.4% branches (8,997/12,424).
+
+
+## Later batch 3 checkpoints
+
+Hosted GCC, Clang, coverage and diagnosis passed harness `01a5df6` against Terje
+core `e65020a`, baseline `4b128e`:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/38433324502
+
+Its 2,363-case local merged coverage is 86.5% lines (15,757/18,206),
+91.8% functions (1,115/1,214), 72.9% branches (9,061/12,424).
+The next 35 cases pass local ASan/UBSan and strict summary: 2,398 tests,
+2,369 clean passes, 29 known regressions, zero unexpected failures/skips.
+Hosted validation and coverage refresh of these later cases remain pending.
+
+
+Hosted GCC, Clang, coverage and diagnosis passed the 2,398-case batch on harness
+`8e4392b`, Terje source `e65020a`, baseline `4b128e`:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/38435512145
+Its GCC artifact reports 86.3% lines (14,919/17,282), 72.3% branches
+(9,700/13,422). These denominators differ from Windows Clang instrumentation;
+do not present the measurements as directly comparable.
+
+The subsequent RS485-direction extension passes 2,404 local sanitizer tests:
+2,374 clean and 30 known regressions, no unexpected failures/skips. All 47 Python
+helpers pass, including strict Windows/Linux-form crash matcher tests. Actual
+hosted execution of the new fatal-startup regression remains pending delivery.
+
+## Batch 3 final local validation
+
+Terje source `d216287a6cf1f9ec278a92ac403c30a8cf5fad3b`, baseline `e65020a`:
+2,436 Clang ASan/UBSan cases, 2,410 clean passes and 26 known regressions,
+zero unexpected failures/skips. Strict summary and all 51 Python helpers pass.
+Fresh Windows Clang coverage: 87.8% lines (15,980/18,207),
+93.9% functions (1,140/1,214), 73.8% branches (9,173/12,424).
+The coverage suite explicitly skips only the remaining fatal RS485 startup
+regression; ASan runs it. No real source exclusion was added.
+
+Candidate hosted run is https://github.com/petervanderwalt/Unit_tests/actions/runs/38441824483
+(harness `f615275`): source, GCC ASan/UBSan, Clang ASan/UBSan, coverage and
+CI diagnosis all completed successfully. Hosted GCC coverage artifact:
+87.2% lines (15,076/17,283), 72.8% branches (9,774/13,422).
+The automatic default-source run 38441824898 failed against upstream core
+`ca26fc9`, which does not contain Terje's reviewed fixes. The explicit candidate
+run above is the latest-source validation; do not restore resolved exceptions
+for compatibility with that older source.

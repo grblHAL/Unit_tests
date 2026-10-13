@@ -1,26 +1,6 @@
 # Confirmed defects: keep each regression and remove its block when fixed.
 # Dates, reproductions, and removal instructions: KNOWN_BUGS.md
 
-if(TEST nuts_bolts.datetime_century_leap)
-  set_tests_properties(nuts_bolts.datetime_century_leap PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
-if(TEST fs_ram.close_lifetime)
-  set_tests_properties(fs_ram.close_lifetime PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
-if(TEST fs_embedded.seek_within_file)
-  set_tests_properties(fs_embedded.seek_within_file PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
-if(TEST delta.unreachable_cartesian_target_rejected)
-  set_tests_properties(delta.unreachable_cartesian_target_rejected PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
-if(TEST rtcp_ac.rotary_segment_endpoint)
-  set_tests_properties(rtcp_ac.rotary_segment_endpoint PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
 if(TEST gcode.m68_preserves_fractional_output)
   set_tests_properties(gcode.m68_preserves_fractional_output PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
@@ -33,10 +13,6 @@ endif()
 # Covered by stream.mpg_buffered_commands_wait_for_response.
 # This is an ordinary passing test of the supported command/response protocol.
 
-if(TEST ngc_params.builtin_modbus_macro_preserves_three_register_results)
-  set_tests_properties(ngc_params.builtin_modbus_macro_preserves_three_register_results PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
 # ngc_flowctrl.named_macro_call_opens_file_and_sets_local_arguments
 # Uses a static backend to test EOF restoration independently of file freeing.
 # Ordinary passing test; no known-bug exception.
@@ -45,57 +21,109 @@ endif()
 # Uses a static backend to test EOF restoration independently of file freeing.
 # Ordinary passing test; no known-bug exception.
 
-if(TEST ngc_flowctrl.named_macro_return_closes_file_and_restores_caller_scope)
-  set_tests_properties(ngc_flowctrl.named_macro_return_closes_file_and_restores_caller_scope PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+# M72 leaves parser feed override control disabled; verified 2026-10-13 on e65020a.
+if(TEST ngc_params.m72_restores_feed_and_rapid_overrides_after_m50_disable)
+  set_tests_properties(ngc_params.m72_restores_feed_and_rapid_overrides_after_m50_disable PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
-if(TEST ngc_flowctrl.named_macro_return_preserves_subroutine_callback_lifetime)
-  set_tests_properties(ngc_flowctrl.named_macro_return_preserves_subroutine_callback_lifetime PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+# Restored archived regression; still reproduced on Terje e65020a (2026-10-13).
+if(TEST gcode.file_percent_marker_after_unmarked_start_is_rejected)
+  set_tests_properties(gcode.file_percent_marker_after_unmarked_start_is_rejected PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
-if(TEST ngc_flowctrl.named_macro_end_sub_preserves_subroutine_callback_lifetime)
-  set_tests_properties(ngc_flowctrl.named_macro_end_sub_preserves_subroutine_callback_lifetime PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+# $G reports lathe roughing modes as probe codes; verified 2026-10-13 on e65020a.
+if(TEST lathe_ngc.roughing_modal_report_uses_g71)
+  set_tests_properties(lathe_ngc.roughing_modal_report_uses_g71 PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
-if(TEST ngc_flowctrl.named_macro_error_preserves_subroutine_callback_lifetime)
-  set_tests_properties(ngc_flowctrl.named_macro_error_preserves_subroutine_callback_lifetime PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+if(TEST lathe_ngc.roughing_modal_report_uses_g71_1)
+  set_tests_properties(lathe_ngc.roughing_modal_report_uses_g71_1 PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
-# Dynamic laser power is not restored after a separate M4 command; verified 2026-10-13 on core 4b128e6.
-if(TEST gcode.clockwise_laser_arc_segments_keep_dynamic_power)
-  set_tests_properties(gcode.clockwise_laser_arc_segments_keep_dynamic_power PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+if(TEST lathe_ngc.roughing_modal_report_uses_g71_2)
+  set_tests_properties(lathe_ngc.roughing_modal_report_uses_g71_2 PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
-if(TEST gcode.counterclockwise_laser_arc_segments_keep_dynamic_power)
-  set_tests_properties(gcode.counterclockwise_laser_arc_segments_keep_dynamic_power PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+if(TEST lathe_ngc.roughing_modal_report_uses_g72)
+  set_tests_properties(lathe_ngc.roughing_modal_report_uses_g72 PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
-if(TEST gcode.laser_check_mode_updates_parser_without_driver_output)
-  set_tests_properties(gcode.laser_check_mode_updates_parser_without_driver_output PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+if(TEST lathe_ngc.roughing_modal_report_uses_g72_1)
+  set_tests_properties(lathe_ngc.roughing_modal_report_uses_g72_1 PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
-if(TEST gcode.previously_enabled_dynamic_laser_cut_uses_rate_adjusted_power)
-  set_tests_properties(gcode.previously_enabled_dynamic_laser_cut_uses_rate_adjusted_power PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+if(TEST lathe_ngc.roughing_modal_report_uses_g72_2)
+  set_tests_properties(lathe_ngc.roughing_modal_report_uses_g72_2 PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
-if(TEST stepper.dynamic_laser_pwm_tracks_acceleration_and_returns_to_zero)
-  set_tests_properties(stepper.dynamic_laser_pwm_tracks_acceleration_and_returns_to_zero PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+# Scaling factors are dimensionless; report conversions verified on e65020a.
+if(TEST report.scaling_parameter_report_keeps_dimensionless_factors_in_inches)
+  set_tests_properties(report.scaling_parameter_report_keeps_dimensionless_factors_in_inches PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
-
-# Empty tool-table slots lose their tool identity; verified 2026-10-13 on core 4b128e6.
-if(TEST tool_table.checksum_failure_returns_zeroed_tool)
-  set_tests_properties(tool_table.checksum_failure_returns_zeroed_tool PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+if(TEST lathe_ngc.scaling_parameter_report_does_not_double_diameter_mode_factor)
+  set_tests_properties(lathe_ngc.scaling_parameter_report_does_not_double_diameter_mode_factor PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
-if(TEST tool_table.g10_l1_persists_tool_offsets_and_radius)
-  set_tests_properties(tool_table.g10_l1_persists_tool_offsets_and_radius PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+# Named motion parameter exposes internal enums; verified 2026-10-13 on e65020a.
+if(TEST lathe_ngc.named_motion_mode_reports_g71)
+  set_tests_properties(lathe_ngc.named_motion_mode_reports_g71 PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
-if(TEST tool_table.missing_storage_returns_zeroed_tool_with_requested_id)
-  set_tests_properties(tool_table.missing_storage_returns_zeroed_tool_with_requested_id PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+if(TEST lathe_ngc.named_motion_mode_reports_g71_1)
+  set_tests_properties(lathe_ngc.named_motion_mode_reports_g71_1 PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
-if(TEST tool_table.valid_checksum_with_wrong_tool_id_returns_zeroed_slot)
-  set_tests_properties(tool_table.valid_checksum_with_wrong_tool_id_returns_zeroed_slot PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+if(TEST lathe_ngc.named_motion_mode_reports_g72)
+  set_tests_properties(lathe_ngc.named_motion_mode_reports_g72 PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+if(TEST ngc_params.named_motion_mode_reports_g38_2)
+  set_tests_properties(ngc_params.named_motion_mode_reports_g38_2 PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+if(TEST ngc_params.named_motion_mode_reports_g38_3)
+  set_tests_properties(ngc_params.named_motion_mode_reports_g38_3 PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+if(TEST ngc_params.named_motion_mode_reports_g38_4)
+  set_tests_properties(ngc_params.named_motion_mode_reports_g38_4 PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+if(TEST ngc_params.named_motion_mode_reports_g38_5)
+  set_tests_properties(ngc_params.named_motion_mode_reports_g38_5 PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+if(TEST ngc_params.named_motion_mode_reports_quadratic_spline_code)
+  set_tests_properties(ngc_params.named_motion_mode_reports_quadratic_spline_code PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+# Cancelled dynamic cutter compensation reports G40.1; verified on e65020a.
+if(TEST cutter_comp.dynamic_left_compensation_named_parameter_tracks_enable_and_cancel)
+  set_tests_properties(cutter_comp.dynamic_left_compensation_named_parameter_tracks_enable_and_cancel PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+if(TEST cutter_comp.dynamic_right_compensation_named_parameter_tracks_enable_and_cancel)
+  set_tests_properties(cutter_comp.dynamic_right_compensation_named_parameter_tracks_enable_and_cancel PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+# Aggregate probe reads alter selection and ignore per-input inversion (e65020a).
+if(TEST probe.aggregate_states_preserves_selected_probe_and_trigger_input)
+  set_tests_properties(probe.aggregate_states_preserves_selected_probe_and_trigger_input PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+if(TEST probe.aggregate_states_respects_independent_toolsetter_inversion)
+  set_tests_properties(probe.aggregate_states_respects_independent_toolsetter_inversion PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+# No auxiliary direction outputs crashes Modbus RTU startup on e65020a.
+if(TEST modbus_rtu.aux_direction_without_outputs_disables_transport_safely)
+  set_tests_properties(modbus_rtu.aux_direction_without_outputs_disables_transport_safely PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+# Homing a separate axis resets the internal ganged counter on e65020a.
+if(TEST asymmetric_ganging.homing_z_preserves_unhomed_secondary_motor_position)
+  set_tests_properties(asymmetric_ganging.homing_z_preserves_unhomed_secondary_motor_position PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+if(TEST asymmetric_auto_square.homing_z_preserves_unhomed_secondary_motor_position)
+  set_tests_properties(asymmetric_auto_square.homing_z_preserves_unhomed_secondary_motor_position PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()

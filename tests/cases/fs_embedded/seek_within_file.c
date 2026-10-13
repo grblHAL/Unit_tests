@@ -1,5 +1,4 @@
 #include "fs_embedded.h"
-#include "support/backend_close.h"
 #include <string.h>
 #include "check.h"
 static const embedded_file_t fixture = {.name = "hello.txt", .size = 5, .data = {'h', 'e', 'l', 'l', 'o'}};
@@ -14,6 +13,6 @@ int main(void)
     CHECK(vfs_tell(file) == 2);
     CHECK(vfs_read(data, 1, 3, file) == 3);
     CHECK(strcmp(data, "llo") == 0);
-    backend_close(file);
+    vfs_close(file);
     return EXIT_SUCCESS;
 }

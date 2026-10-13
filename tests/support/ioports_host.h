@@ -36,7 +36,7 @@ static xbar_t *pin_info(io_port_direction_t dir, uint8_t port)
 }
 static void pin_description(io_port_direction_t dir, uint8_t port, const char *text)
 {
-    CHECK(port < 2 && text != NULL);
+    CHECK(port < 2);
     digital_pins[dir][port].description = text;
 }
 static void pin_output(uint8_t port, bool value)

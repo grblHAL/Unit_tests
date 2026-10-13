@@ -1,12 +1,203 @@
 # Coverage progress and continuation handoff
 
-Last verified: **2026-10-12**. Read this with the root `AGENTS.md` and README.
+Last verified: **2026-10-13**. Read this with the root `AGENTS.md` and README.
 This is a snapshot, not proof that future checkouts or CI runs are unchanged.
+
+## Batch 3 final stopping point
+
+The user requested closing batch 3 with a PR and stopping coverage expansion.
+Latest reviewed source: Terje core `d216287a6cf1f9ec278a92ac403c30a8cf5fad3b`,
+comparison baseline `e65020a8389b19d3c03277e02f34219e25800e6a`.
+
+Full local Clang ASan/UBSan and strict summary: **2,436 tests, 2,410 clean passes,
+26 documented known regressions, zero unexpected failures/skips**. All **51**
+Python helper tests pass. Fresh Windows Clang coverage: **87.8% lines
+(15,980/18,207), 93.9% functions (1,140/1,214), 73.8% branches (9,173/12,424)**.
+Coverage has one explicit skip for the outstanding fatal RS485 startup regression;
+the sanitizer suite executes it through its narrow diagnostic wrapper.
+
+The final 32 cases exercise CoreXY travel conversion, coupled-axis homing,
+feed scaling, ganging and auto-square counter preservation, reporting and resolution
+callbacks. Z-only homing still resets the unrelated secondary ganged Y counter;
+two regressions and a proposed guard are documented in KNOWN_BUGS.md.
+Public ganging resolution warning/reset behavior is a **possible improvement**
+in TODO.md, not an expected failure.
+
+Laser assertions use planner block conditions after the parser refactor.
+Delta rejection, RTCP endpoint and four named-macro lifetime regressions now pass
+directly; their obsolete exceptions and two diagnostic wrappers are removed.
+Earlier resolved entries stay deleted, with correct regression assertions retained.
+Upstream PR #6 documentation is merged; its remaining analog-output proposal is
+preserved. Source/file/exception links were rechecked after cleanup.
+
+Hosted candidate validation (harness `f615275`, latest Terje source above):
+https://github.com/petervanderwalt/Unit_tests/actions/runs/38441824483
+**Completed: source, GCC ASan/UBSan, Clang ASan/UBSan, coverage and diagnosis all
+passed.** Hosted GCC coverage is **87.2% lines (15,076/17,283) / 72.8% branches
+(9,774/13,422)**. Its platform/compiler denominator differs from local Clang. Default upstream core `ca26fc9` lacks these Terje fixes,
+so default-source runs are separate compatibility evidence, not the candidate run.
+Production source and registry defaults remain unchanged.
+
+Resume full coverage only on a new user request. Inspect fresh per-file/function
+and branch evidence rather than treating this snapshot or a green suite as full
+coverage. Historical checkpoints below describe earlier states.
+
+## Batch 3 RS485 direction checkpoint
+
+Six further separate RTU cases pass full Clang ASan/UBSan and strict summary:
+**2,404 tests, 2,374 clean passes, 30 documented known regressions, no unexpected
+failures/skips**. All 47 Python helper tests pass. Three cases verify explicit
+first/last auxiliary direction pins and automatic selection through real
+request/reply exchanges. A fourth verifies invalid-pin rejection/self-test alarm;
+a fifth proves serial-owned direction works without auxiliary outputs.
+
+The sixth reproduces a startup crash when no auxiliary outputs exist. Its exact
+fault address/source/regression-origin matcher is linked from KNOWN_BUGS.md with
+proposed guard and complete exception cleanup instructions. It skips only without
+sanitizers; coverage now has five fatal-memory wrapper skips. The RTU fixture
+initializes alarm reporting for negative startup tests and permits optional pin
+description clearing. Core source is unchanged. Hosted validation of the new
+wrapper is the next delivery check; do not claim its Linux matcher validated yet.
+
+Hosted GCC, Clang, coverage and diagnosis passed the preceding 2,398-case batch:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/38435512145
+(harness `8e4392b`, Terje core `e65020a`, baseline `4b128e`). Its GCC coverage
+artifact measures **86.3% lines (14,919/17,282), 72.3% branches (9,700/13,422)**.
+Keep this separate from Windows Clang's latest 2,363-case 86.5%/72.9% measurement:
+compiler instrumentation and platform branches have different denominators.
+Use a consistent compiler/source configuration when comparing progress.
+
+Next: validate the new crash wrapper in both hosted compilers, then continue
+remaining kinematic, parser and motion gaps. Goal stays active.
+
+## Batch 3 allocation, reporting and motor-power checkpoint
+
+Thirty-five further focused cases pass full Clang ASan/UBSan and strict summary:
+**2,398 tests, 2,369 clean passes, 29 documented known regressions, no unexpected
+failures/skips**. New cases cover string allocation failure/recovery and size
+boundaries, integer-reader boundaries/cursor preservation, byte-size formatting,
+spindle pulse/encoder capability reports, modal report requests, scheduled motor
+release/cancellation/enable delay/homing, and the default virtual root filesystem.
+No new known-bug allowances were required. The allocation fixture wraps only
+`realloc` in the three specific failure tests; production functions remain linked.
+
+The completed 2,363-case measurement is **86.5% lines (15,757/18,206),
+91.8% functions (1,115/1,214), 72.9% branches (9,061/12,424)**. Later 35 cases
+have not yet been merged into a refreshed measurement. Four fatal-memory wrappers
+skip only in coverage mode and run under sanitizers.
+
+Hosted GCC, Clang, coverage and diagnosis all passed the preceding checkpoint:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/38433324502
+(harness `01a5df6`, Terje core `e65020a`, baseline `4b128e`). Next inspect the
+Modbus RTU auxiliary RS485-direction path, remaining kinematic callbacks and
+parser/motion configuration gaps. Goal remains active; do not modify core source.
+
+## Batch 3 parser startup and cutter restoration
+
+Eleven further cases pass full sanitizers and strict summary: **2,363 tests,
+2,334 clean passes, 29 known regressions, no unexpected failures/skips**.
+They cover direct compensation restoration (side/radius and cancellation), cold
+saved-tool restoration with and without a tool table, unavailable-tool fallback,
+persistence disabled, warm stop versus reset, saved G92 versus volatile G92 and
+parser-init callback ordering. No new exceptions or production core changes.
+Latest coverage remains the 2,337-case measurement below; 26 later cases are not
+yet included. Refresh coverage at the next substantial boundary and continue
+remaining parser/motion/configuration gaps.
+
+## Batch 3 modal and multiple-probe extension
+
+Twelve further cases pass full Windows Clang ASan/UBSan validation:
+**2,352 tests, 2,323 clean passes, 29 documented known regressions, no unexpected
+failures/skips**; strict summary passes. New cases cover dynamic/static cutter
+compensation parameter values, lathe diameter/radius mode, runtime tool selection
+and pocket identity, UVW offsets, rotary-unit preservation, three-input probe
+state aggregation and extended realtime probe/release indicators.
+
+Four new regression cases document cancelled dynamic compensation reporting 401,
+aggregate probe reads changing the selected probe and aggregate reads ignoring
+independent toolsetter inversion. Correct assertions and passing controls remain;
+no production core edits. Latest measured coverage remains the 2,337-case snapshot
+below; these twelve subsequent cases and the three later spindle cases are not
+included in that measurement.
+
+Hosted GCC, Clang, coverage and diagnosis passed for the preceding pushed
+2,340-case checkpoint:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/38430798382
+(harness `31fd05b`, Terje source `e65020a`, baseline `4b128e`). Continue parser, motion and configuration gaps. Deliver further substantial
+batches without pushing after every few cases. These extensions belong on the same coverage branch; goal is active.
+
+## Batch 3 reporting and parameter checkpoint
+
+Branch `coverage-batch-3`, unchanged Terje core `e65020a8389b19d3c03277e02f34219e25800e6a`.
+The reporting/parameter extension adds 38 separate cases: real cycle/probe status,
+plugin settings channel availability, lathe modal text, dimensionless scaling
+reports, string reallocation preservation, persisted inactive work offsets,
+coordinate-system parameters, setting metadata and numerical motion parameters.
+Full Clang ASan/UBSan: **2,340 tests, 2,315 clean passes, 25 documented known
+regressions, zero unexpected failures/skips**. Strict summary and all 40 Python
+helper tests pass. Newly reproduced report/parameter defects and cleanup guidance
+are in KNOWN_BUGS.md; original expected correct assertions remain.
+
+The earlier 2,302-test checkpoint passed hosted GCC, Clang, coverage and diagnosis:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/38426592992
+(harness `bcafe18`, source `e65020a`). The first hosted attempt found a Linux
+printf type mismatch in test diagnostics; portable casts fixed it before this
+successful run. This hosted result does not validate later unpushed cases.
+
+Latest completed coverage snapshot, at 2,337 tests: **86.2% lines
+(15,689/18,206), 91.8% functions (1,114/1,214), 72.4% branches
+(8,997/12,424)**. Three subsequent spindle listing cases pass focused and full sanitizer
+validation and are not included in that measurement. Next examine spindle capability reports,
+then remaining parser/motion gaps. Goal remains active.
+
+## Batch 3: Terje core and modal/storage/filesystem paths
+
+Current coverage branch: `coverage-batch-3`, based on upstream master after PR #5
+merged. Candidate source: `terjeio/grblHAL_core` master resolved to
+`e65020a8389b19d3c03277e02f34219e25800e6a` on 2026-10-13. The ordinary ignored
+core checkout was updated without production-source edits; no default registry
+pin or submodule was introduced.
+
+Added 48 new focused cases and restored/revalidated 12 archived parser cases.
+New coverage includes nested automatic modal restoration, M71 cancellation,
+spindle/coolant/feed behavior, tool persistence failure and volatile/no-storage
+writes, embedded seek bounds/recovery, CAN settings/queue/fallback behavior,
+polar path segmentation/angle continuity/cancellation, lathe tool geometry,
+numbered tool/scaling/work parameters, and the new virtual-parameter API including
+allocation failure. The two preserved unfinished modal cases are corrected and
+included; G93 saves an explicit per-block F word. VFS close verifies close-before-
+notification ordering and the correct filesystem pointer. Plain G71/G72 tests
+verify plugin dispatch; roughing geometry stays TODO.
+
+Terje fixed six documented issues: century leap, VFS close, embedded seek,
+three-register Modbus, dynamic laser power and empty tool identities. Thirteen
+obsolete allowances, their resolved entries and two obsolete diagnostic wrappers
+were removed. Embedded macro return now matches only the outstanding subroutine
+callback lifetime defect. Correct regression assertions remain.
+
+New confirmed M72 override-control regression and its passing direct-restore
+control are in KNOWN_BUGS.md. The archived unexpected-file-marker defect is also
+restored and reconfirmed. Full Windows Clang ASan/UBSan run: **2,302 tests,
+2,293 clean passes, nine known regressions, zero unexpected failures/skips**;
+strict summary passes. All 40 remaining Python helper tests pass. Fresh coverage includes every new case: **85.9% lines (15,637/18,206),
+91.7% functions (1,113/1,214), 72.1% branches (8,954/12,424)**. CAN reaches
+all 61 executable lines and all measured branches. Polar reaches 125/136 lines;
+remaining gaps are its unfinished homing/limit callbacks. Coverage-mode tests
+pass with four explicitly skipped fatal-memory regressions that require ASan;
+the sanitizer run executes and classifies all four. No sources are excluded to
+inflate coverage. Old snapshots below use older source revisions.
+
+Next: use the fresh coverage gaps to expand realtime reporting and repeated/plugin
+settings reports, then additional parser/motion paths. The 12 archived parser
+cases have been restored; the verified Git bundle remains under
+`../branch-cleanup-backup-20261013/unit-tests-all-branches.bundle` for recovery.
+Do not restore obsolete fixture/exception changes wholesale. Coverage work is
+active on this branch; the CI/source-update sections below are historical.
 
 ## October 13 compatibility follow-up
 
-Coverage expansion remains paused for the CI/source-update task. The current
-follow-up branch is `ci-terje-fix-validation`, based on merged upstream `63323b5`.
+Earlier CI/source-update work paused coverage expansion. Its
+follow-up branch was `ci-terje-fix-validation`, based on merged upstream `63323b5`.
 It tests Terje's core `4b128e68bc63f9a3af11a01a7d8fbb5d5ccc98aa` without changing
 core source. Tool callback, check-mode, task startup and settings fixtures are
 adapted. Resolved exceptions and bug entries are removed; correct assertions stay.
@@ -302,6 +493,6 @@ space-separated absolute Windows executable path caused parsing trouble locally.
 Never remove coverage data while a merge runs. A merge can take several minutes;
 continue independent work without changing headers under an active build.
 
-The testing goal is active, with no token budget. No scheduled background continuation was configured. A fresh chat should read
+The user requested pausing coverage after batch 3 delivery. No scheduled background continuation was configured. A fresh chat should read
 these files, verify current state, and be explicitly asked to resume the full
 coverage objective; do not assume deleting a chat schedules future execution.

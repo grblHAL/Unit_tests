@@ -2,6 +2,7 @@
 #include "support/engine_host.h"
 #include "modbus.h"
 #include "crc.h"
+#include "report.h"
 #include "check.h"
 #include <string.h>
 void modbus_rtu_init(int8_t instance, int8_t direction);
@@ -32,31 +33,35 @@ static enqueue_realtime_command_ptr set_handler(enqueue_realtime_command_ptr han
     CHECK(handler != NULL);
     return NULL;
 }
+static void (*rtu_stream_direction)(bool);
 static const io_stream_t *claim_serial(uint32_t baud)
 {
-    static const io_stream_t serial = {.type = StreamType_Serial,
+    static io_stream_t serial = {.type = StreamType_Serial,
         .set_baud_rate = baud_rate, .get_tx_buffer_count = tx_count,
         .get_rx_buffer_count = rx_count, .read = read_serial, .write_n = write_serial,
         .reset_write_buffer = flush_tx, .reset_read_buffer = flush_rx,
         .set_enqueue_rt_handler = set_handler};
     CHECK(baud == 19200);
+    serial.set_direction = rtu_stream_direction;
     return &serial;
 }
 static void received(modbus_message_t *message) { reply = *message; rx_calls++; }
 static void failed(uint8_t code, void *context) { CHECK(context == NULL); exception_code = code; exceptions++; }
-static inline void prepare_rtu_with_reset(driver_reset_ptr reset)
+static inline bool initialize_rtu_transport(driver_reset_ptr reset, int8_t direction, void (*configure)(void))
 {
     static io_stream_properties_t serial = {.type = StreamType_Serial, .instance = 0, .claim = claim_serial};
     static io_stream_details_t streams = {.n_streams = 1, .streams = &serial};
     engine_prepare();
+    report_init_fns();
     hal.driver_reset = reset;
+    if(configure) configure();
     hal.stream.is_connected = rtu_connected;
     grbl.on_report_options = original_options;
     hal.nvs.type = NVS_EEPROM;
     serial.flags.claimable = serial.flags.modbus_ready = true;
     stream_register_streams(&streams);
-    modbus_rtu_init(0, -2);
-    CHECK(hal.driver_cap.modbus_rtu);
+    modbus_rtu_init(0, direction);
+    if(!hal.driver_cap.modbus_rtu) return false;
     setting_details_t *details = NULL;
     CHECK(setting_get_details(Settings_ModBus_BaudRate, &details) != NULL);
     CHECK(details != NULL && details->load != NULL);
@@ -64,7 +69,12 @@ static inline void prepare_rtu_with_reset(driver_reset_ptr reset)
     CHECK(modbus_isup().rtu);
     CHECK(tx_calls == 0 && rx_calls == 0 && exceptions == 0 && exception_code == 0);
     CHECK(tx_length == 0 && reply.rx_length == 0);
+    return true;
 }
+static inline void prepare_rtu_transport(driver_reset_ptr reset, int8_t direction, void (*configure)(void))
+{ CHECK(initialize_rtu_transport(reset, direction, configure)); }
+static inline void prepare_rtu_with_reset(driver_reset_ptr reset)
+{ prepare_rtu_transport(reset, -2, NULL); }
 static inline void prepare_rtu(void) { prepare_rtu_with_reset(NULL); }
 static inline void poll_rtu(void) { engine_ticks++; engine_execute_tasks(STATE_IDLE); }
 static inline void send_request(void)
