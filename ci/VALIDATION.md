@@ -238,3 +238,11 @@ regressions with dated, explicit known-bug classification. The same-source run
 38514474774 passes GCC, Clang, coverage and diagnosis; it does not claim those
 remaining firmware defects are fixed. Deferred analog/percent-status issues
 remain labelled; diameter-mode offset conventions are tracked as a design review.
+
+Standalone maintainer-follow-up run 38519491021 passed source, GCC/Clang
+sanitizers, coverage and diagnosis: 2,436 cases, 2,416 clean passes, 20 labelled
+known regressions, zero failures/skips. The reporting follow-up is verified
+against the captured GCC artifact from run 38467440282: its summary now states
+9 unexpected failures and 15 changed known-defect exceptions separately, and
+shows all nine unexpected failures before the first changed-exception detail.
+All 41 Python helpers pass, including the original-run ordering regression.
