@@ -6,20 +6,23 @@ This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 ## Batch 7 active work
 
 `coverage-batch-7` isolates new work while PR #11 is reviewed. Final batch-6
-run 38535569786 passed all jobs and PR #11 is ready. Core master still matches
+run 38535569786 passed all jobs and PR #11 is ready. Fresh hosted GCC coverage
+for batch 6: 88.3% lines (15,359/17,401), 74.2% branches. Core master matches
 39a69a22c72283ab186133b25fb89b8f5be35767 as checked on 2026-10-14.
 
-29 new cases pass focused sanitizer checks: nine legacy I/O registration,
-eight encoder binding, eight spindle capability updates and four actual PWM
-ramping cases. The 25-case intermediate full suite passed 2,665 tests: 2,653
-clean, twelve known regressions, zero failures/skips. Full verification including ramping passes 2,669 tests: 2,657 clean, twelve
-known regressions, zero failures/skips. All 51 Python helpers pass. No fresh
-batch-7 coverage measurement is claimed.
+46 new cases pass local validation: legacy I/O, encoder binding, active spindle
+capabilities, synchronous PWM ramps and delayed override transitions. Full
+ASan/UBSan and strict summary: 2,686 tests, 2,673 clean, thirteen known regressions,
+zero failures/skips. All 51 helpers pass. The pending-override stop regression
+was additionally rechecked with monotonic simulated time and still reproduces
+PWM rising from 600 to 818 before stopping. Its correct assertion remains and
+has a dated narrow exception; ordinary stops and task cancellation are controls.
 
-Encoder binding tests register the spindle before binding. The abandoned
-pre-registration persistence assertion was an unsupported startup assumption,
-not a classified defect. PWM updates use core calculations and real ramp/dwell
-code; driver callbacks observe state and output without replacing measured RPM.
+Encoder tests register before binding; unsupported pre-registration persistence
+was discarded as a fixture assumption. PWM tests execute original calculations,
+ramp/dwell and scheduler code. Production core is untouched. Hosted validation
+and fresh batch-7 coverage are pending delivery; continue from remaining gaps.
+
 
 ## Batch 6 active work
 

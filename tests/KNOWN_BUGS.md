@@ -318,3 +318,32 @@ return when stat succeeds. This avoids falling through to a stale cached result.
 **Remove exception when fixed:** remove the named `WILL_FAIL` block in
 [known_bugs.cmake](known_bugs.cmake), retain the assertion and controls, rerun
 lookup cases and full sanitizers, and delete this section.
+
+## Stopping during a pending spindle override briefly raises PWM
+
+**Marked known:** 2026-10-14 on Terje `39a69a22c72283ab186133b25fb89b8f5be35767`.
+
+With PWM ramping enabled, start at 6,000 RPM and request a 150% override without
+executing its first delayed update. A subsequent stop ramps down from the stored
+9,000 RPM target rather than the still-emitted 6,000 RPM output. The first stop
+update raises PWM from 600 to 818 before later decreasing it and disabling the
+spindle. The regression runs the original PWM, override, scheduler and stop code.
+
+The override stores its target before scheduling output in
+[spindle_set_override](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/spindle_control.c#L627).
+The stop uses that stored target as its starting speed in
+[_spindle_set_state](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/spindle_control.c#L730).
+
+**Regression:** [stop during pending override](cases/spindle_control/pending_override_stop_does_not_increase_pwm_before_disabling.c).
+Passing controls verify normal monotonic stops and cancellation of future override
+updates. The assertion requires every stop PWM update to stay at or below the
+output emitted before the stop; it does not require instantaneous physical braking.
+
+**Suggested fix (not applied):** retain the last emitted RPM of the pending ramp
+and use it when starting stop/direction-change ramps, before cancelling the delayed
+work. Keep commanded RPM and emitted output state distinct. Revalidate ordinary
+stops, partially progressed overrides, reversal and scheduler cleanup.
+
+**Remove exception when fixed:** remove the named `WILL_FAIL` block from
+[known_bugs.cmake](known_bugs.cmake), retain the assertion and controls, run the
+full sanitizer suite/strict summary, and delete this section.

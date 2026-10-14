@@ -74,3 +74,9 @@ if(TEST vfs.locate_absolute_miss_after_success_does_not_return_previous_result)
   set_tests_properties(vfs.locate_absolute_miss_after_success_does_not_return_previous_result
     PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
 endif()
+
+# Stop must ramp down from emitted output, not an unapplied override target.
+if(TEST spindle_control.pending_override_stop_does_not_increase_pwm_before_disabling)
+  set_tests_properties(spindle_control.pending_override_stop_does_not_increase_pwm_before_disabling
+    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
+endif()

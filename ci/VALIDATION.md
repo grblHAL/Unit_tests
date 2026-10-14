@@ -349,3 +349,14 @@ wait behavior. No new exceptions, exclusions or core changes were added.
 
 Final batch-6 run 38535569786 passed GCC/Clang, coverage and CI diagnosis;
 PR #11 was marked ready after that completed verification.
+
+The expanded batch-7 checkpoint adds seventeen ramp/override cases, bringing
+this batch to 46 cases. Full ASan/UBSan and strict summary pass 2,686 tests:
+2,673 clean, thirteen known regressions, zero failures/skips. All 51 helpers pass.
+A new stop-during-pending-override regression observes PWM 600 -> 818 before
+decreasing to off. Rechecking with monotonic time also reproduces it; the narrow
+expected-failure exception is documented. No core edit or exclusion was added.
+Hosted revalidation of this later checkpoint remains pending.
+
+Final batch-6 GCC coverage (run 38535569786): 88.3% lines (15,359/17,401),
+74.2% branches. These measurements precede the batch-7 additions.

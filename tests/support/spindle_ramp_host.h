@@ -10,6 +10,10 @@ static spindle_state_t ramp_state_log[16];
 static void ramp_set_state(spindle_ptrs_t *spindle, spindle_state_t state, float rpm)
 {
     CHECK(spindle == spindle_get(0)); CHECK(ramp_state_calls < 16);
+    if(ramp_hardware_state.on && state.on && ramp_hardware_state.ccw != state.ccw) {
+        CHECK(ramp_pwm_calls > 0);
+        CHECK(ramp_pwm_log[ramp_pwm_calls-1] == spindle->get_pwm(spindle,0));
+    }
     ramp_state_log[ramp_state_calls++] = state; ramp_hardware_state = state;
     ramp_initial_rpm = rpm;
 }
@@ -33,3 +37,11 @@ static inline spindle_ptrs_t *prepare_spindle_ramp(void)
 }
 static inline void clear_ramp_records(void)
 { ramp_pwm_calls = ramp_state_calls = 0; engine_ticks = 0; }
+
+static inline void advance_ramp_tasks(unsigned iterations)
+{
+    for(unsigned i = 0; i < iterations; i++) {
+        engine_ticks += DWELL_TIME_STEP;
+        engine_execute_tasks(STATE_IDLE);
+    }
+}
