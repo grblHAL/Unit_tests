@@ -8,8 +8,10 @@ This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 PR #12 merged as upstream f5ba765 after run 38581963519 passed every job.
 New coverage belongs on local-only coverage-batch-8, based on that merged
 baseline. The completed 134-case parent batch is already upstream.
-GitHub still contains only master and coverage-batch-7 after merged-branch cleanup.
+The fully merged coverage-batch-7 remote branch was also deleted after PR #12
+merged. GitHub currently contains only master; batch 8 remains local-only.
 
+Batch 8 now contains 23 committed cases before the optional pullup work.
 Eight public settings cases pass focused sanitizer checks: probe flag readback,
 encoder-dependent spindle tolerance, dedicated home-input inversion availability,
 and fifth/sixth homing phase masks. Four public backlash-setting cases verify
@@ -704,3 +706,12 @@ clarification. Do not add an exception or alter the pull-mode expectations until
 that contract is resolved. Hosted validation of final checkpoint 305f34f passed every job in run
 38581963519. Fresh GCC coverage is 89.5% lines (15,568/17,401) and
 75.6% branches (10,180/13,464). PR #12 is ready for review.
+
+## Batch 8 reporting continuation
+
+Eleven new realtime accessory/tool reporting cases pass: flood, mist, combined
+coolant, clockwise/counterclockwise spindle, combined spindle/coolant, cleared
+outputs, encoder error capability gating and distinct tool/tool-change fields.
+They use the real report renderer and driver feedback callbacks, with explicit
+report flags. Keep the full-coverage goal active; do not treat this module check
+as complete coverage or publish a new percentage without fresh instrumentation.
