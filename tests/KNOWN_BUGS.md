@@ -367,7 +367,8 @@ The [strict diagnostic wrapper](../scripts/stream_allocation_regression.py) acce
 only the injected failure, exact null-member-access source line/type, write at 0x8,
 expected connection/caller/test frames and ASan summary. Different faults remain
 failures. The fatal case skips only in unsanitized coverage runs; it is not a source
-coverage exclusion. Actual Linux GCC/Clang verification remains pending delivery.
+coverage exclusion. Linux GCC/Clang verified the diagnostic matcher in hosted run 38575541143,
+which passed all jobs.
 
 **Suggested fix (not applied):** return NULL immediately if allocation of the
 connection node fails, before assigning fields. Existing caller guards can then

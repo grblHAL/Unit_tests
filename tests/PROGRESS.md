@@ -7,9 +7,10 @@ This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 
 `coverage-batch-7` continues toward full meaningful coverage. Core under test:
 Terje 39a69a22c72283ab186133b25fb89b8f5be35767, production source untouched.
-Hosted checkpoint 38570331318 passed GCC/Clang/coverage/diagnosis. GCC coverage
-88.6% lines (15,425/17,401), 74.8% branches; spindle control 93.6% lines and
-80.3% branches. Later additions have not yet refreshed these measurements.
+Hosted checkpoint 38577228353 (5d76de0) passed GCC/Clang/coverage/diagnosis.
+Fresh GCC coverage: 89.2% lines (15,526/17,401), 75.3% branches
+(10,138/13,464). grbllib startup/scheduler coverage is now 82.7% lines
+and 68.7% branches. Later local additions have not refreshed these measurements.
 
 102 new cases since batch 6: I/O registration, encoder/capability/ramp behavior,
 stream lifecycle/allocation controls, kinematics hooks, fallback filesystem metadata,
@@ -28,8 +29,8 @@ coverage build; the fatal case skips in coverage as documented. This fix changes
 fixtures only, not the core assertion/exception. The earlier Linux GCC/Clang jobs passed the diagnostic matcher. Corrected
 checkpoint 52f726c run 38575541143 passed coverage: 88.9% lines
 (15,473/17,401), 75.0% branches (10,101/13,464). Its GCC/Clang jobs
-and diagnosis all passed. The subsequent 26 filesystem/startup cases are
-locally validated; their hosted delivery is the next checkpoint. Do not claim a fresh
+and diagnosis all passed. The subsequent 26 filesystem/startup cases
+also passed hosted run 38577228353. Do not claim a fresh
 coverage percentage from the local sanitizer checks.
 
 PR #11 is ready and remains independently reviewed; avoid a duplicate upstream
@@ -50,6 +51,13 @@ Keep these changes isolated from delivery until clarified.
 Five independent input/output inversion controls pass focused sanitizer checks:
 clearing masks, repeated values and PWM/servo exclusion. The full delivered
 checkpoint remains 2,742 cases; do not call the pending working tree fully green.
+
+Two IRQ callback controls and six scheduler deadline/cancellation/startup controls
+also pass. The current full working-tree run has 2,763 cases: 2,747 clean passes,
+fifteen known regressions and exactly one unresolved pull-mode consistency failure.
+No sanitizer diagnostic was introduced. There are 115 committed cases since batch 6,
+plus the eight uncommitted pullup cases/variant. The fixture preserves the core
+default IRQ callback across mocked driver initialization; all 68 boot tests pass.
 
 ## Batch 6 active work
 
