@@ -33,8 +33,8 @@ and diagnosis all passed. The subsequent 26 filesystem/startup cases
 also passed hosted run 38577228353. Do not claim a fresh
 coverage percentage from the local sanitizer checks.
 
-PR #11 is ready and remains independently reviewed; avoid a duplicate upstream
-PR containing its unmerged cases. Keep the full-coverage goal active and continue
+PR #11 merged as upstream f58c92d. Batch 7 includes that baseline; its PR
+contains only the subsequent 134 tests. Keep the full-coverage goal active and continue
 from real remaining gaps after hosted verification.
 
 
@@ -653,3 +653,22 @@ Fork master 331414d has no unique commits relative to freshly fetched upstream
 master 5019b8f. PR #11 remains open; packaging the next checkpoint separately or
 as a combined replacement is awaiting the user's preference. Only delete remote
 branches whose current tips are verified ancestors of upstream master.
+
+## Completed batch 7 delivery validation
+
+Clean committed checkout c5040a6 passed all 2,774 Windows Clang ASan/UBSan
+cases and strict diagnostic summary: 2,759 clean, fifteen known regressions,
+zero unexpected failures or skips. The upstream merge into 658d128 changes no
+file contents. All 56 helper tests and actionlint pass. Source under test remains
+Terje 39a69a22c72283ab186133b25fb89b8f5be35767, unchanged.
+
+PR #11 merged; batch 7 is based on upstream f58c92d. Eight remote branches
+whose current tips were verified ancestors of upstream master were deleted:
+ci-actionable-reports, core-maintainer-followup, coverage-batch-3 through -6,
+docs-current-ci-status and docs-known-bug-fixes. Fork master contains no unique
+commits; no duplicate PR is required. Remote master and coverage-batch-7 remain.
+
+The eight pullup cases and their optional host variant remain uncommitted and
+outside this delivery, with one visible consistency failure pending human
+clarification. Do not add an exception or alter the pull-mode expectations until
+that contract is resolved. Hosted validation of the final checkpoint is pending.

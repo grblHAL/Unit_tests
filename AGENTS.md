@@ -282,7 +282,10 @@ coverage gaps; new PRs remain checkpoints toward full coverage.
 
 ## Batch 7 active continuation
 
-PR #11's final run 38535569786 passed GCC/Clang/coverage/diagnosis and the PR
-is ready for review. New work is isolated on `coverage-batch-7`, based on the
-85-case batch-6 checkpoint; do not merge PR #11 without a human request.
+PR #11 merged as upstream f58c92d after its final run 38535569786 passed.
+Batch 7 is isolated on `coverage-batch-7` and includes that merged baseline.
+The user requested a review boundary and cleanup of fully merged remote branches.
+Keep unfinished AUX_SETTINGS_PULLUP cases/variant out of this delivery until the
+live/load pull-mode contract is clarified. Read PROGRESS.md for exact validation
+and branch cleanup evidence.
 Continue meaningful coverage with Terje core, preserving verified assertions.
