@@ -872,3 +872,17 @@ existing eight-axis, UVW and base builds. All 50 crossbar/eight-axis/UVW cases p
 under sanitizers and strict summary (build-asan/batch-9-mapping-results.xml).
 These exercise previously uncovered enabled-feature branches without changing
 core or adding artificial private entry points.
+
+## Batch 9 manual workpiece touch-off
+
+Four $TPW cases execute the public system command after manual tool-change
+acknowledgement, with registered probe input, real probe cycles and emitted pulses.
+A prior reference-tool touch-off is modeled in the fixture. Cases cover double
+touch-off compensation and explicit resume, fast contact-release probing, missing
+contact preserving the pending change/offset, and G30 requiring return before
+probing. The existing tool-change motion fixture ensures XY movement occurs only
+at the retracted Z position. No hardware timing/mechanical claim is made.
+
+Focused cases and the complete tool-change module pass under ASan/UBSan with
+strict summary (build-asan/batch-9-tool-results.xml). Batch 9 now adds 32 cases;
+perform full validation and a hosted checkpoint before publishing further work.
