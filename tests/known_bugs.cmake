@@ -115,3 +115,17 @@ endif()
 if(TEST nvs_buffer.failed_version_only_write_remains_pending_for_retry)
   set_tests_properties(nvs_buffer.failed_version_only_write_remains_pending_for_retry PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# VFS current-directory and cross-mount path defects; verified 2026-10-14.
+if(TEST vfs.getcwd_without_backend_handler_preserves_mount_prefix_once)
+  set_tests_properties(vfs.getcwd_without_backend_handler_preserves_mount_prefix_once PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+if(TEST vfs.parent_path_crossing_mount_passes_target_local_filename)
+  set_tests_properties(vfs.parent_path_crossing_mount_passes_target_local_filename PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+# Long filename lookup reallocates static storage on Terje 50055a2.
+if(TEST vfs.locate_long_filename_returns_mounted_file_path)
+  set_tests_properties(vfs.locate_long_filename_returns_mounted_file_path PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

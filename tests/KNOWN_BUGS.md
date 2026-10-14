@@ -39,6 +39,7 @@ block the same test; remove only allowances whose underlying faults are fixed.
 
 ## Analog output commands truncate fractional values
 
+
 **Marked known:** 2026-10-09
 
 **Regression:** [test](cases/gcode/m68_preserves_fractional_output.c).
@@ -98,6 +99,7 @@ retain the correct regression and passing control, rerun the modal/planner tests
 and full sanitizer suite, then delete this section.
 
 ## Unexpected file percent marker reports success
+
 
 **Marked known:** 2026-10-12. **Reconfirmed:** 2026-10-13 against Terje's core
 `e65020a8389b19d3c03277e02f34219e25800e6a`.
@@ -246,3 +248,82 @@ flag in the aggregate dirty expression. Preserve per-record success/failure flag
 [known_bugs.cmake](known_bugs.cmake), retain correct assertions and the control,
 run storage/version cases and full sanitizers, then delete this entry.
 No sanitizer allowance applies.
+
+## Current-directory fallback duplicates a filesystem mount prefix
+
+**Marked known:** 2026-10-14, Terje `50055a283328c3f9726bbc8f22d20a801190c66e`.
+
+Mount a filesystem at `/store` without an optional `fgetcwd` callback and change
+to `/store/dir`. `vfs_getcwd()` returns `/store/store/dir` rather than `/store/dir`.
+The [fallback at vfs.c:604](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/vfs.c#L604)
+uses the frontend's already absolute `cwd.name`; the
+[concatenation at line 615](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/vfs.c#L615)
+then prepends the mount prefix again. A backend supplying its own local `/dir`
+current-directory callback passes the separate control.
+
+**Regression:** [fallback getcwd](cases/vfs/getcwd_without_backend_handler_preserves_mount_prefix_once.c).
+**Passing control:** [backend local getcwd](cases/vfs/getcwd_with_backend_local_directory_prefixes_mount_once.c).
+
+**Suggested fix (proposal, not runtime-verified):** Copy the absolute frontend
+path directly for the fallback; prepend the mount only for a backend-local path.
+Preserve allocation, length checks and root formatting.
+
+**Remove exception when fixed:** remove its block from
+[known_bugs.cmake](known_bugs.cmake), retain correct assertions and control, run
+filesystem/current-directory tests and full sanitizers, then delete this entry.
+No sanitizer allowance applies.
+
+## Parent traversal selects the target mount but sends a malformed filename
+
+**Marked known:** 2026-10-14, Terje `50055a283328c3f9726bbc8f22d20a801190c66e`.
+
+Mount `/store` and `/elsewhere`, then unlink `/store/../elsewhere/file`.
+`mount_modifiable()` resolves the parent traversal and correctly selects the
+`/elsewhere` backend, but
+[vfs.c:453](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/vfs.c#L453)
+strips the selected mount's prefix length from the original unnormalized path.
+The target backend receives `elsewhere/file`, not its local `/file`. This can
+operate on the wrong backend-local file. Same-mount paths may retain dot segments
+for the backend to resolve; that supported delegation is covered by passing cases.
+
+**Regression:** [cross-mount parent path](cases/vfs/parent_path_crossing_mount_passes_target_local_filename.c).
+The test independently verifies selection of the target backend before checking
+its received filename.
+
+**Suggested fix (proposal, not runtime-verified):** Preserve the resolved path
+alongside the chosen mount and strip that same path's mount prefix before calling
+the backend. Check unlink/mkdir/rmdir and avoid reparsing a shared static path
+buffer through itself. Retain relative-path support for backend current directories.
+
+**Remove exception when fixed:** remove its block from
+[known_bugs.cmake](known_bugs.cmake), retain correct assertions, run filesystem
+path/permission tests and full sanitizers, then delete this entry.
+No sanitizer allowance applies.
+
+## Long filename lookup reallocates a static buffer
+
+**Marked known:** 2026-10-14, Terje `50055a283328c3f9726bbc8f22d20a801190c66e`.
+
+`vfs_locate_file("workbee_panel_fixture_01.nc")` aborts under ASan before looking
+up the file. The initial `path.name` points to static `_name[32]`, but
+[vfs.c:896](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/vfs.c#L896)
+passes it to `realloc()` when `strlen(filename) + 11` exceeds the initial capacity.
+The captured Windows diagnostic is a bad-free of the 32-byte global
+`vfs_locate_file._name` at that exact source line.
+
+**Regression:** [long file lookup](cases/vfs/locate_long_filename_returns_mounted_file_path.c).
+Its correct expectation is the mounted file path, not a crash.
+
+**Suggested fix (proposal, not runtime-verified):** Allocate a heap buffer for the
+first growth from `_name`; call `realloc()` only on an existing heap allocation.
+Keep the original pointer on failure and retain valid short-path fallback state.
+Verify initial long names, later growth and allocation failure/recovery.
+
+**Remove exception when fixed:** remove its block from
+[known_bugs.cmake](known_bugs.cmake) and the special CMake registration, then run
+the unchanged C test directly. Delete [diagnostic wrapper](../scripts/vfs_path_regression.py)
+and its matcher tests. Run filesystem/Python checks and full sanitizers, then
+delete this entry. The wrapper requires the bad-free, exact source/case frames,
+32-byte static global and summary; a fix or different fault fails classification.
+Coverage explicitly skips this fatal reproducer until fixed. No general
+sanitizer allowance applies. Actual hosted Linux validation is still pending.
