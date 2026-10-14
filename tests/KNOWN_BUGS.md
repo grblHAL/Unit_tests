@@ -21,11 +21,10 @@ a newer revision; a fixed regression forces review and cleanup of its exception.
 
 ## Using the suggested fixes
 
-Each **Suggested fix (proposal)** below is based on source inspection of
-Terje's core revision `4b128e68bc63f9a3af11a01a7d8fbb5d5ccc98aa`
-(reviewed 2026-10-13). These are review suggestions, not applied or runtime-verified
-patches. Source links deliberately identify that revision; check the current
-code before applying a suggestion. Snippets show the relevant edit, not complete
+Each **Suggested fix (proposal)** below is based on source inspection of the
+revision linked in that entry. These are review suggestions, not applied or
+runtime-verified patches. Check the linked revision and current code before
+applying a suggestion. Snippets show the relevant edit, not complete
 patches, unless stated otherwise.
 
 Apply a proposal in a separate core checkout, select that checkout as the test
@@ -39,6 +38,10 @@ block the same test; remove only allowances whose underlying faults are fixed.
 
 
 ## Analog output commands truncate fractional values
+
+**Maintainer disposition (2026-10-14):** Deferred to the longer-term TODO list.
+Keep the fractional-value regression and its explicit exception until implemented.
+See [maintainer follow-ups](TODO.md#deferred-confirmed-defects).
 
 **Marked known:** 2026-10-09
 
@@ -99,6 +102,12 @@ retain the correct regression and passing control, rerun the modal/planner tests
 and full sanitizer suite, then delete this section.
 
 ## Unexpected file percent marker reports success
+
+**Maintainer disposition (2026-10-14):** Deferred pending review of file-demarcation
+status semantics. Terje currently uses demarcation to bundle mass settings updates
+into one storage commit; avoid changing that event behavior without reviewing the
+sender/update workflow. The status regression remains explicit, with its exception.
+See [maintainer follow-ups](TODO.md#deferred-confirmed-defects).
 
 **Marked known:** 2026-10-12. **Reconfirmed:** 2026-10-13 against Terje's core
 `e65020a8389b19d3c03277e02f34219e25800e6a`.

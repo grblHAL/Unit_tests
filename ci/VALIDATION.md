@@ -223,3 +223,18 @@ The automatic default-source run 38441824898 failed against upstream core
 `ca26fc9`, which does not contain Terje's reviewed fixes. The explicit candidate
 run above is the latest-source validation; do not restore resolved exceptions
 for compatibility with that older source.
+
+## Interpreting Terje's batch-3 failure on the newer core
+
+https://github.com/grblHAL/Unit_tests/actions/runs/38467440282 selected Terje
+`50055a2` with upstream harness `36e248d` (batch 3). Its GCC diagnostic artifact
+contains 24 failures: 15 `known_changed` findings from verified fixed regressions
+whose exceptions were obsolete, and 9 ordinary failures from G5.1/G70 parsing
+and named-motion parameter encoding. The artifact reports 2,436 cases,
+2,401 clean passes, 11 reproduced known regressions and 24 failures.
+
+The core-maintainer-followup branch removes those 15 obsolete exceptions and retains the nine correct failing
+regressions with dated, explicit known-bug classification. The same-source run
+38514474774 passes GCC, Clang, coverage and diagnosis; it does not claim those
+remaining firmware defects are fixed. Deferred analog/percent-status issues
+remain labelled; diameter-mode offset conventions are tracked as a design review.
