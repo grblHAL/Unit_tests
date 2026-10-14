@@ -2,18 +2,20 @@
 
 ## Objective and delivery
 
-Current coverage work belongs on `coverage-batch-4`, using Terje's core.
-Batch 3 is merged via PR #7; the user resumed expansion on a new branch.
-`initial-batch-part-2` is an archived earlier batch. The separate CI design task,
-authorized on 2026-10-13, belongs on `ci-source-selection`. Do not mix these
-branches or commit unfinished coverage cases with CI changes. No AI branding.
-Do not commit/push master/main. The user requested closing batch 3 with a PR
-and pausing coverage on 2026-10-13; finish validation/delivery, then stop.
-After PR #2 merged, its compatibility follow-up belongs on
-`ci-core-compatibility`, based on updated upstream master (2026-10-13).
-After that follow-up merged as upstream `63323b5`, validation of Terje's
-October 13 fixes belongs on `ci-terje-fix-validation`. Keep this separate from
-coverage work; do not restore resolved exceptions merely to support old core.
+Current coverage work belongs on `coverage-batch-9`, testing Terje's latest core.
+The full-coverage goal is active; earlier stopping/overnight pause instructions
+are superseded by the user's resume. Never commit/push master/main. No AI branding.
+Keep CI design changes separate from coverage work.
+
+Batch 8 PR #13 is ready but remains the unmerged parent of batch 9. Preserve it,
+verify its live state at delivery boundaries, and avoid a duplicate upstream diff.
+Older dated batch notes below are historical context; this section and the latest
+PROGRESS.md snapshot govern current branch/pause state.
+
+DO/WHILE CONTINUE is a maintainer question in TODO.md at the user's request. Its
+candidate in tests/proposals is not registered and must await Terje's chosen
+contract. The separate WHILE false-condition regression remains documented with
+one narrow expected-failure exception and unchanged assertions.
 
 Continue toward meaningful full grblHAL core coverage: every core module and
 supported feature configuration, with line and branch coverage guiding the work.

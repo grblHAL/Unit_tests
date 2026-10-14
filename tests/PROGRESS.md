@@ -1088,3 +1088,21 @@ plus the pending DO/WHILE proposal. Eighteen follow-ups after 7ed2f01 remain loc
 run 38625823913 validates its 64-case checkpoint. Full current 2,897-case suite
 is due before another push. Continue remaining parser/feature/startup gaps from
 fresh coverage. No new bug classifications or production-core edits in this work.
+
+## Batch 9 fourth validated checkpoint
+
+The full 2,897-case ASan/UBSan suite and strict summary passed: 2,879 clean,
+18 documented regressions, zero unexpected failures/skips (38.28 s), including
+the shared boot-fixture change. Evidence: build-asan/batch-9-fourth-checkpoint-results.xml.
+The root working instructions now state the active batch-9 branch/resumed goal
+and protect the user's DO/WHILE TODO/proposal from accidental registration.
+
+Run 38625823913 passed every job for 7ed2f01 against Terje 39a69a2. Fresh coverage
+is 15,816/17,402 lines (90.8861%) and 10,417/13,464 branches (77.3693%). Crossbar
+is 100% lines/97.9% branches, flow control 87.4%/67.2%, protocol 88.3%/76.6%.
+This covers 64 cases; the current 82-case checkpoint needs hosted measurement.
+Push this completed parser/startup batch and continue the next measured gaps.
+Suggested next integration work: normal grbl_enter startup for existing wall,
+delta, polar, AC and ganged kinematics variants, using original source and valid
+HAL callbacks. Do not force private startup handlers or classify intentional
+fatal loops as bugs. PR #13 remains the unmerged parent at latest verification.
