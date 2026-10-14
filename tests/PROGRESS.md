@@ -761,3 +761,19 @@ The full-coverage goal stays paused; this work completes the requested PR fix.
 Full local ASan/UBSan and strict summary passed all 2,815 cases: 2,798 clean,
 seventeen known regressions reproduced, zero unexpected failures/skips.
 Hosted GCC/Clang/coverage validation of this classified checkpoint is pending.
+
+## Revised goal and resumed authoring approach
+
+Continue toward meaningful 100% grblHAL core line/branch coverage against Terje's
+latest source, prioritizing supported machine workflows and observable effects.
+Use coverage as gap evidence, then verify valid startup, public triggers, intended
+contracts and practical consequences. Distinguish confirmed defects from fixture
+errors, design questions and low-priority robustness work. Ask the maintainer when
+intent is unclear; correct invalid tests. Keep core unchanged, assertions honest,
+case files maintainable, and deliver substantial validated PR checkpoints.
+
+The user requested resuming on 2026-10-14 with these guardrails. The available goal
+tools cannot edit an existing objective or resume a paused goal; its stored status
+still requires the user's goal control. Work may resume under the direct request.
+PR #13's final run 38604749142 passed against harness 0e5034b and Terje 39a69a2;
+its known pullup consistency assertion is unchanged and is narrowly classified.

@@ -310,3 +310,34 @@ keep those cases out of delivery pending a mode choice. The consistency assertio
 is unchanged; only its named case has an exception. The maintainer still chooses
 no-pull versus pull-down, and mode-specific controls need review when fixed.
 The full-coverage goal remains paused for the user's overnight break.
+
+## Practical test-authoring guardrails (2026-10-14)
+
+Prioritize supported machine workflows: motion endpoints and emitted pulses,
+probing, limits, offsets, spindle/coolant control, reset/stop and persisted settings.
+Coverage identifies gaps; an uncovered line alone does not justify a test or bug.
+Keep the full-coverage objective, report unsupported/unreachable paths honestly,
+and do not exclude source, invent private-entry calls or weaken expectations to
+force a percentage.
+
+Before writing a case, identify its agreed contract, valid startup/configuration,
+public trigger and observable consequence. Prefer real parser/driver/core entry
+points. Boundary and failure-injection tests remain useful, but explain why their
+inputs/event order are valid and assign proportionate priority. Prioritize normal
+workflows before speculative or low-impact robustness cases.
+
+Before calling a result a defect, separate fixture mistakes, confirmed contract
+violations, design questions and possible robustness improvements. Include passing
+controls and a source-linked reproduction. State whether reproduction is only at
+an API boundary, from a sender command sequence, or verified on hardware. Never
+infer motor acceleration, safety severity or real-world frequency solely from a
+mocked PWM transition. Human UI reproduction is not required for a valid queued
+command ordering, but feasibility must be explained.
+
+The maintainer settles unclear contracts. Correct or withdraw invalid assumptions;
+use TODO for undecided behavior and low-priority policy work. Do not inflate the
+repair backlog merely to increase coverage. Preserve known-failure exceptions
+only for explicit documented expectations; clean them up when the chosen contract
+is implemented. Keep small case files and validate substantial batches.
+
+The user's request to resume revokes the earlier overnight pause instruction.
