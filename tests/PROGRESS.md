@@ -10,15 +10,18 @@ Hosted run 38530893125 passed GCC/Clang ASan/UBSan, coverage and diagnosis on
 Terje `39a69a22c72283ab186133b25fb89b8f5be35767`. Fresh GCC coverage:
 87.9% lines (15,289/17,396), 73.7% branches. The core remains untouched.
 
-63 new cases are validated: eight storage initialization, fourteen VFS lookup/
+The first 63 new cases are validated: eight storage initialization, fourteen VFS lookup/
 default-backend, nine drive-format/free-space, twenty-one stream-state/reporting,
 ten executing-motion-mode and one weak-debug-hook case. The absolute-miss stale
 filename regression has a narrow known exception and passing controls.
 
 Full Windows Clang ASan/UBSan and strict summary pass 2,618 cases: 2,606 clean
 passes, twelve known regressions, zero unexpected failures/skips. All 51 Python
-helpers and workflow actionlint pass. Hosted validation of these new cases is
-pending delivery. G70–G72 reporting remains an undecided contract in TODO.
+helpers and workflow actionlint pass. Hosted run 38533918509 passed GCC/Clang/coverage/diagnosis for that 63-case
+checkpoint; fresh GCC coverage is 88.1% lines (15,330/17,401), 74.1% branches.
+A further 22 public homing cases pass full local validation: 2,640 tests,
+2,628 clean, twelve known regressions, zero unexpected failures/skips.
+G70–G72 reporting remains an undecided contract in TODO.
 
 ## Batch 5 continuation
 

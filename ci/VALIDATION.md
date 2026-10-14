@@ -322,3 +322,13 @@ coordinates/build info. Lookup priority controls expose one new stale absolute
 miss result. Stream tests cover exact busy timeout, clock wrap, disconnected
 callbacks, file reservation and accepted/rejected cycle-start reporting.
 G70–G72 execution/reporting remains a maintainer design TODO, not a new defect.
+
+Hosted run [38533918509](https://github.com/petervanderwalt/Unit_tests/actions/runs/38533918509)
+passed GCC/Clang sanitizers, coverage and diagnosis for the first 63 batch-6
+cases. GCC coverage: 88.1% lines (15,330/17,401), 74.1% branches. The subsequent
+22 public homing cases pass full local ASan/UBSan and strict summary: 2,640 tests,
+2,628 clean, twelve known regressions, zero failures/skips. These exercise actual
+XYZ switch search/pulloff and safety rejection, plus manual references through
+public ABC/UVW commands in eight-axis and remapped six-axis configurations.
+No new source exclusions or production edits were made. Hosted revalidation of
+the final 85-case batch is pending delivery.
