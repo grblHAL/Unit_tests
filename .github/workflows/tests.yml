@@ -1,11 +1,9 @@
 name: Core tests
 on:
-  push:
-  pull_request:
   workflow_dispatch:
     inputs:
       source_repository:
-        description: 'Core repository (blank = grblHAL/core)'
+        description: 'Core owner/repo or GitHub URL (blank = grblHAL/core)'
         type: string
         default: ''
       source_ref:

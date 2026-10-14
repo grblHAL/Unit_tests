@@ -22,9 +22,14 @@ def api(repository, endpoint):
 def resolve(suite, repository="", ref="", pr="", request=api):
     if pr and ref:
         raise ValueError("Choose a PR number or a ref, not both")
+    repository = repository.strip()
+    if repository.startswith("https://github.com/"):
+        repository = repository[len("https://github.com/"):].rstrip("/")
+        if repository.endswith(".git"):
+            repository = repository[:-4]
     repository = repository or suite["repository"]
     if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repository):
-        raise ValueError("Repository must be owner/name")
+        raise ValueError("Repository must be owner/name (for example terjeio/grblHAL_core) or its https://github.com/owner/name URL; put branch/tag/SHA in source_ref")
     comparison = None
     if pr:
         if not pr.isdecimal() or int(pr) < 1:

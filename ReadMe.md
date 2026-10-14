@@ -69,7 +69,10 @@ A rerun against moving master can select newer code; use an archived SHA for an
 exact reproduction. The historical coverage snapshots describe their recorded
 core revision, not today's upstream master.
 
-In Actions > Core tests > Run workflow, select the test-suite branch and inputs:
+In Actions > Core tests > Run workflow, select the test-suite branch and inputs.
+The repository field accepts `terjeio/grblHAL_core` or
+`https://github.com/terjeio/grblHAL_core` (a trailing `/` or `.git` is accepted).
+Put a branch, tag or commit SHA in the separate ref field:
 
 | Candidate | source_repository | source_ref | source_pr |
 |---|---|---|---|
@@ -441,7 +444,11 @@ regression and dated known-bug entry; do not silently waive it.
 
 ## GitHub Actions
 
-`.github/workflows/tests.yml` runs on pushes, pull requests and manual dispatch.
+`.github/workflows/tests.yml` currently runs by manual dispatch only while
+upstream core trails the candidate fixes. In **Actions > Core tests > Run workflow**,
+set `source_repository=terjeio/grblHAL_core` and choose the branch or SHA to test.
+Reusable workflows and upstream caller templates remain available for source PRs.
+Restore the `push` and `pull_request` triggers once the fixes reach upstream core.
 GCC and Clang run the tests with address/undefined-behavior sanitizers. A separate
 GCC job publishes HTML and XML coverage as an Actions artifact. Coverage describes
 the instrumented modules in this configuration. The summary lists every core source file, including gaps. No separately managed
