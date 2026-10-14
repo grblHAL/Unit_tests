@@ -15,7 +15,7 @@ check. Recovering sanitizer diagnostics have a separate, narrowly scoped
 
 Outstanding regressions were reconfirmed on 2026-10-14 against Terje core
 `50055a283328c3f9726bbc8f22d20a801190c66e`.
-Source links point to the revision where each defect was first verified. CI can test
+Source links identify the revision used for the described code and reproduction. CI can test
 a newer revision; a fixed regression forces review and cleanup of its exception.
 
 

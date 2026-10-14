@@ -1,7 +1,39 @@
 # Coverage progress and continuation handoff
 
-Last verified: **2026-10-13**. Read this with the root `AGENTS.md` and README.
+Last verified: **2026-10-14**. Read this with the root `AGENTS.md` and README.
 This is a snapshot, not proof that future checkouts or CI runs are unchanged.
+
+## Batch 4 RTCP and wall-plotter extension
+
+The user resumed coverage on a new branch and requested a separate PR.
+`coverage-batch-4` starts from upstream `36e248d`, after PR #7 merged.
+Current reviewed core is Terje `50055a283328c3f9726bbc8f22d20a801190c66e`;
+production source is untouched and source-registry defaults remain unchanged.
+
+Seventeen separate new cases cover RTCP command delegation/synchronization,
+unknown-command behavior, settings persistence and corrupt-read recovery,
+segment-length bounds, consecutive rotary endpoints, the thousand-segment cap,
+axis-counter preservation, and wall-plotter width changes, Z interpolation,
+short moves and restart after cancellation. All 36 RTCP/wall-plotter cases pass.
+
+Full local Clang ASan/UBSan and strict summary: **2,453 tests, 2,433 clean passes,
+20 documented known regressions, zero unexpected failures/skips**.
+Fifteen verified fixed regressions lose their exceptions, and the final fatal
+RS485 wrapper and its matcher tests are deleted; it is now an ordinary test.
+All 40 remaining Python helpers pass. Existing G5.1 and G70 parser tests caught fresh
+motion-enum refactor defects; ordinary named-motion values are now scaled twice.
+Correct assertions remain, with dated source/reproduction/cleanup entries.
+
+Fresh hosted GCC coverage is **87.1% lines (15,064/17,287), 72.8% branches
+(9,780/13,434)**. RTCP improves from 88.9% to **96.2% lines**, and from 71.2%
+to **92.4% branches**. Overall source totals also reflect the new motion-enum
+refactor and its earlier parser exits; do not present old-source totals as a
+like-for-like test-only comparison. The previous batch's measurements below are
+historical, not new-source coverage.
+
+Hosted candidate run: https://github.com/petervanderwalt/Unit_tests/actions/runs/38514474774
+(harness `5835fda`, Terje `50055a2`, baseline `d216287`). **Source, GCC ASan/UBSan, Clang ASan/UBSan, coverage and CI diagnosis all passed.**
+After delivery, continue from refreshed line/branch evidence if requested.
 
 ## Batch 3 final stopping point
 
