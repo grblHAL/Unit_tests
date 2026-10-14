@@ -927,3 +927,21 @@ interface, log driver output transitions at actual pulse positions, and finish
 the original 20 mm move without changing programmed RPM or losing position.
 The coolant fixture's missing flood capability was corrected before classifying
 results; no core defect was inferred from that setup error.
+
+## Batch 9 powered safety-door parking
+
+Four additional cases command spindle/flood before a real move and safety-door
+parking. They verify accessory shutdown after the initial pullout, optional
+coolant retention, restoration at the waypoint before plunge, and re-parking when
+a real control_interrupt_handler door event arrives during spindle startup delay.
+The original fixture was split into preparation/start helpers so accessories can
+be initialized before queueing; original motion behavior is retained. A serialized
+sender door command is not substituted for the physical reopen event, and the
+fixture explicitly advertises the door signal capability required by the ISR.
+No mechanical timing/severity claims or new core bugs are inferred.
+
+All 43 state-machine cases pass under ASan/UBSan and strict summary
+(build-asan/batch-9-powered-parking-results.xml). Batch 9 now has 47 new cases:
+32 pushed in the running checkpoint and 15 subsequent local cases. The updated
+2,862-case suite still needs full validation before the next push. Continue from
+fresh hosted coverage when available; PR #13 remains the unmerged parent.
