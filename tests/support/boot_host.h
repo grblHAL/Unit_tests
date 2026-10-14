@@ -10,6 +10,7 @@ static unsigned boot_reads, boot_read_calls, boot_setup_calls, boot_release_call
 static const char *boot_program = "$G\n";
 static bool boot_setup_success = true, boot_init_success = true;
 static bool boot_force_alarm, boot_homing_required, boot_check_limits, boot_sleep_enabled;
+static bool boot_observe_fault_loop;
 static uint16_t boot_idle_lock_time;
 static axes_signals_t boot_enabled_axes;
 static coolant_state_t boot_coolant_state;
@@ -71,7 +72,8 @@ static int32_t read_char(void)
             return SERIAL_NO_DATA;
         return c;
     }
-    protocol_enqueue_realtime_command(CMD_EXIT);
+    if(!boot_observe_fault_loop)
+        protocol_enqueue_realtime_command(CMD_EXIT);
     return SERIAL_NO_DATA;
 }
 /* Wrap the board entry point only; all core initialization remains real. */

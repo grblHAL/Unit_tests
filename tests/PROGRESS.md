@@ -777,3 +777,385 @@ tools cannot edit an existing objective or resume a paused goal; its stored stat
 still requires the user's goal control. Work may resume under the direct request.
 PR #13's final run 38604749142 passed against harness 0e5034b and Terje 39a69a2;
 its known pullup consistency assertion is unchanged and is narrowly classified.
+
+## Batch 9 practical workflow continuation
+
+PR #13 passed final hosted run 38604749142 and is ready for review. The authoring
+guardrails/revised goal text were committed as a00c3bd. The user confirmed resuming
+the goal. New cases belong on local-only coverage-batch-9, based on PR #13; do not
+publish a duplicate PR while that parent remains unmerged.
+
+Three secondary-spindle status cases execute supported sender commands M3/M4/M5
+with $1 selection, using registered/settings-mapped spindles and the real parser,
+spindle control and status renderer. Driver outputs and emitted status fields are
+checked together. Stopping the secondary clears its RPM/direction report while
+the primary remains on. These test practical multi-spindle workflows; they do not
+claim hardware speed/timing evidence. Focused cases and the multi-spindle module
+pass under sanitizers with strict diagnostic classification.
+
+## Batch 9 secondary-spindle overrides
+
+Three additional cases verify adjusted RPM and the secondary spindle's own
+percentage, independence from primary overrides, and zero RPM after M5 while
+retaining the selected override. They use supported parser commands and the
+public spindle override API; they make no physical timing claims. All 67
+multi-spindle cases pass under ASan/UBSan and the strict diagnostic summary.
+
+The resumed goal is verified active. Final batch-8 hosted coverage is 15,641 of
+17,402 lines (89.9%) and 10,239 of 13,464 branches (76.0%). These are the last
+hosted baseline figures, not a measurement of the new local batch. Next work is
+real stream-driven jog cancellation, including the driver's ASCII_CAN contract;
+do not replace that stream path with a direct motion-cancel flag injection.
+
+## Batch 9 sender jog cancellation
+
+Four cases execute queued $J commands through protocol_main_loop and a driver
+stream mock. The realtime jog-cancel command flushes input and inserts ASCII_CAN,
+as required by the driver interface; the normal reader/state machine performs
+controlled deceleration and planner/parser resynchronization. Real stepper ISR
+calls produce counted pulses. Checks cover discarded queued motion, a subsequent
+1 mm jog from the actual stopped position, reverse travel, and preservation of
+program G20/G91 modes. Both initial jogs are verified queued before cancellation.
+No exact deceleration time or mechanical safety claim is inferred from the host.
+
+All four focused cases and all 69 motion-control cases pass under ASan/UBSan with
+strict diagnostic classification. Evidence: build-asan/batch-9-jog-results.xml
+and build-asan/batch-9-motion-results.xml. No core changes or new known defects.
+The last hosted baseline has protocol at 82.0% lines/71.0% branches and state
+machine at 83.2%/63.0%; these workflow cases address their cancellation lifecycle.
+Batch 9 now contains ten new cases; full-suite/hosted measurement remains due at
+its substantial delivery boundary. Continue from remaining state/motion gaps.
+
+## Batch 9 held-spindle workflows
+
+Seven additional state-machine cases use M3S5000, a real planned 20 mm move,
+feed hold, realtime spindle-stop toggles and cycle start. Driver callbacks log
+state/RPM and physical pulse position. They verify stopping retains programmed
+state/queued motion, a second toggle restores without moving, cycle start honors
+the restore setting, a stop requested during deceleration waits until hold is
+complete, running-cut stop overrides are ignored, and two queued toggles cancel.
+The public suspend manager is serviced as in the core's suspend loop; no private
+entry points or direct override flag injection are used. Missing stream connection
+callback in the initial fixture was corrected; it was not a core defect.
+
+All 32 state-machine cases pass under ASan/UBSan with strict summary classification
+(build-asan/batch-9-state-results.xml). Batch 9 now has 17 new cases. Continue
+practical state/motion coverage, with a full-suite check at this local checkpoint.
+
+## Batch 9 automatic sleep during pauses
+
+Five new cases enable sleep, command M8 through the real parser and use planned
+motion/realtime hold or safety-door events. A mock clock advances the actual core
+scheduler. Sleep is requested after a completed feed hold or an open-door stopped
+pause, never during hold deceleration or a closed-door pause awaiting resume.
+New sender input cancels the timeout, with a later scheduler advance confirming
+that the removed timeout does not fire. Pulse counts remain unchanged while
+sleep is considered. All 11 sleep cases pass under sanitizers and strict summary
+(build-asan/batch-9-sleep-results.xml). These address previously uncovered normal
+hold/door branches in sleep.c; allocator failure remains a lower-priority gap.
+
+The preceding 17-case checkpoint passed the full suite: 2,832 total, 2,815 clean,
+17 documented regressions, no unexpected failures/skips (90.51 s), with strict
+summary clean. The five subsequent sleep cases have focused validation; the
+current 2,837-case suite still needs full/hosted validation at delivery. Batch 9
+now has 22 new cases, local only. PR #13 remains open/ready; its head is a00c3bd.
+Terje master is still 39a69a2, freshly verified. Next measured gaps include
+state-machine accessory restore, supported tool-change workflows and crossbar
+port capability mappings. Continue substantial coverage work before another PR.
+
+## Batch 9 crossbar mappings
+
+Six additional cases cover auxiliary limit/home/fault/enable signal mappings,
+grouped enables, remapped UVW identities, rejection of unconfigured ABC functions
+and secondary XYZ motor identity. They use the production public crossbar API in
+existing eight-axis, UVW and base builds. All 50 crossbar/eight-axis/UVW cases pass
+under sanitizers and strict summary (build-asan/batch-9-mapping-results.xml).
+These exercise previously uncovered enabled-feature branches without changing
+core or adding artificial private entry points.
+
+## Batch 9 manual workpiece touch-off
+
+Four $TPW cases execute the public system command after manual tool-change
+acknowledgement, with registered probe input, real probe cycles and emitted pulses.
+A prior reference-tool touch-off is modeled in the fixture. Cases cover double
+touch-off compensation and explicit resume, fast contact-release probing, missing
+contact preserving the pending change/offset, and G30 requiring return before
+probing. The existing tool-change motion fixture ensures XY movement occurs only
+at the retracted Z position. No hardware timing/mechanical claim is made.
+
+Focused cases and the complete tool-change module pass under ASan/UBSan with
+strict summary (build-asan/batch-9-tool-results.xml). Batch 9 now adds 32 cases;
+perform full validation and a hosted checkpoint before publishing further work.
+
+## Batch 9 first hosted checkpoint
+
+Full ASan/UBSan suite and strict diagnostics passed: 2,847 total, 2,830 clean,
+17 documented regressions reproduced, zero unexpected failures/skips (39.86 s).
+Evidence: build-asan/batch-9-checkpoint-results.xml. This checkpoint adds 32 cases
+against unchanged Terje 39a69a2. Push coverage-batch-9 and dispatch manual GCC,
+Clang and coverage validation; continue independent local work while it runs.
+PR #13 is still the unmerged parent, so do not open a duplicate PR containing it.
+
+## Batch 9 toolsetter probe-selection lifecycle
+
+Four further cases register separate hand-probe and fixture-probe inputs and a
+valid driver/plugin toolsetter callback. Only the fixture input can trigger. The
+real probe selector and tool-change workflows must select it for touch-off, then
+restore the hand probe after automatic success, automatic missing contact,
+manual fixture resume or a realtime reset during an acknowledged fixture change.
+Reset also restores stream/control handlers without extra motion or position loss.
+The fixture initially assumed cleanup always names the new tool; inspection showed
+failed change cleanup correctly names the still-current tool. That fixture-only
+assumption was removed; no known bug or core change was introduced.
+
+All 53 tool-change cases pass under ASan/UBSan and strict summary
+(build-asan/batch-9-hook-results.xml). Batch 9 now adds 36 cases. Its first 32-case
+checkpoint is pushed as 011afe0; manual GCC/Clang/coverage run 38621381358 is
+confirmed in progress. These four follow-up cases remain local until that run
+finishes and another substantial validation checkpoint is appropriate. Do not
+push repeatedly and cancel the running CI. PR #13 remains the unmerged parent.
+Next: inspect fresh hosted coverage when available and continue remaining real
+state/motion/tool-change and enabled-configuration gaps; full coverage is incomplete.
+
+## Batch 9 hold accessory settings
+
+Seven further cases exercise flood/mist overrides across hold/resume with
+restoration enabled/disabled, reduced spindle RPM during completed hold, ordinary
+hold leaving output unchanged, and a queued RPM override applied on resume after
+reduced-speed hold. They command accessories through the parser and realtime
+interface, log driver output transitions at actual pulse positions, and finish
+the original 20 mm move without changing programmed RPM or losing position.
+The coolant fixture's missing flood capability was corrected before classifying
+results; no core defect was inferred from that setup error.
+
+## Batch 9 powered safety-door parking
+
+Four additional cases command spindle/flood before a real move and safety-door
+parking. They verify accessory shutdown after the initial pullout, optional
+coolant retention, restoration at the waypoint before plunge, and re-parking when
+a real control_interrupt_handler door event arrives during spindle startup delay.
+The original fixture was split into preparation/start helpers so accessories can
+be initialized before queueing; original motion behavior is retained. A serialized
+sender door command is not substituted for the physical reopen event, and the
+fixture explicitly advertises the door signal capability required by the ISR.
+No mechanical timing/severity claims or new core bugs are inferred.
+
+All 43 state-machine cases pass under ASan/UBSan and strict summary
+(build-asan/batch-9-powered-parking-results.xml). Batch 9 now has 47 new cases:
+32 pushed in the running checkpoint and 15 subsequent local cases. The updated
+2,862-case suite still needs full validation before the next push. Continue from
+fresh hosted coverage when available; PR #13 remains the unmerged parent.
+
+## Batch 9 hosted coverage and second checkpoint
+
+Run 38621381358 passed source, GCC, Clang, coverage and CI diagnosis for harness
+011afe0 against Terje 39a69a2. Fresh artifact coverage is 15,747/17,402 lines
+(90.4896%) and 10,323/13,464 branches (76.6711%). Compared with batch 8 this adds
+106 covered lines and 84 branches. Crossbar reaches 100% lines/91.7% branches;
+sleep reaches 96.8%/83.3%, tool change 92.2%/67.1%, and state machine 88.7%/69.7%.
+These measurements cover the first 32 cases, not the following 15 local cases.
+
+The current 47-case batch checkpoint also passes the full sanitizer suite and
+strict summary: 2,862 total, 2,845 clean, 17 known regressions, no unexpected
+failures/skips (41.90 s; build-asan/batch-9-second-checkpoint-results.xml). Push
+this completed state/motion checkpoint and run hosted validation, then continue
+independent gaps. PR #13 remains open, verified from GitHub; do not merge it or
+publish a duplicate upstream diff. Core remains unchanged.
+
+## Batch 9 remaining crossbar controls
+
+Four local follow-up cases cover dedicated-home configurations avoiding limit
+fallback, servo PWM not being advertised as ADC resolution, non-UART bus groups
+having no UART description, and AC-remapped motor enable/fault/limit identities.
+They target the fresh crossbar branch gaps and real advertised configurations.
+All 42 crossbar/RTCP cases pass under sanitizers and strict summary
+(build-asan/batch-9-crossbar-controls-results.xml). Batch 9 now adds 51 cases.
+
+The 47-case checkpoint was pushed as b583c96 and a second hosted run dispatched
+only after the preceding run completed successfully. Keep these four follow-up
+cases local while that run executes. The last hosted coverage remains 90.5%
+lines/76.7% branches for 011afe0. New coverage is not assumed until its fresh
+artifact is read. Continue the remaining measured gaps; full coverage is not done.
+
+## Batch 9 sender spindle overrides
+
+Five new cases use properly registered spindles, real M3S5000 and public realtime
+spindle override bytes. They verify coarse/fine decreases, fine increase, resetting
+a prior percentage, and ordered queued adjustments/reset producing one final
+driver update. Programmed RPM remains 5000 while driver output changes. All 72
+multi-spindle cases pass under ASan/UBSan and strict summary
+(build-asan/batch-9-sender-spindle-results.xml). These address uncovered protocol
+spindle-override switch branches without changing core.
+
+## Batch 9 program stop lifecycle
+
+Three new cases execute the public Ctrl-Y/CMD_STOP realtime path while real
+queued motion is running or held. A host timer advances actual stepper ISR work
+inside the core stop loop. Stop flushes pending planned moves/override commands,
+resynchronizes parser position to emitted pulses, turns off spindle/coolant and
+resets driver state. Stopping from completed hold adds no pulses. Checks distinguish
+sys.cancel from abort/reset and retain valid machine position. CMD_STOP is marked
+experimental in core; these test its implemented API behavior without inferring
+mechanical emergency-stop suitability or changing that designation.
+
+All 72 motion-control cases pass under ASan/UBSan and strict summary
+(build-asan/batch-9-program-stop-results.xml). Batch 9 now adds 59 cases; twelve
+are local follow-ups after the 47-case b583c96 hosted checkpoint. Continue remaining
+measured program/state gaps while run 38623364651 finishes; avoid cancelling it.
+
+## Batch 9 streamed macro continuation
+
+Five registered cases read real stream bytes, honor production file rewinds and
+pass normalized blocks to gc_execute_block. Ordinary WHILE/DO loops and true
+WHILE CONTINUE/DO body rewind followed by a nested BREAK are passing controls.
+The WHILE false-condition CONTINUE case executes a skipped assignment, then
+returns error 81 at ENDWHILE. Its correct assertions are retained with one narrow
+known-failure exception, a dated/source-pinned bug report and proposed cleanup.
+All 60 flow-control cases pass strict classification: 59 clean, one documented
+regression reproduced. Stream/control allocations are cleaned up before bounds
+failure. No core changes or sanitizer suppressions.
+
+The separate DO/WHILE CONTINUE behavior repeats without evaluating the trailing
+condition. The user explicitly requested a TODO for Terje to comment on. Its
+candidate is in tests/proposals, unregistered pending that contract; no test is
+weakened or source excluded. Source line links were checked against current core:
+DO rewind at 611-612; false WHILE frame removal at 622-627.
+
+Batch 9 now adds 64 registered tests plus that pending proposal. Full current
+2,879-case validation is due before another push. Run 38623364651 passed every
+job for b583c96 (47 cases), with fresh coverage 15,772/17,402 lines (90.6333%) and
+10,368/13,464 branches (77.0053%). Follow-up tests remain local. Continue actual
+remaining branches; PR #13 is still the unmerged parent at last verification.
+
+## Batch 9 third validated checkpoint
+
+Full current ASan/UBSan suite and strict summary passed: 2,879 cases, 2,861 clean,
+18 documented regressions reproduced, zero unexpected failures/skips (37.99 s).
+Evidence: build-asan/batch-9-third-checkpoint-results.xml. The added WHILE
+regression is narrowly expected; DO/WHILE intent stays in TODO/proposals exactly
+as the user requested, pending Terje's comment. No core changes.
+
+The preceding 47-case hosted run also passed every job. Fresh module coverage is
+state machine 91.2% lines/73.6% branches, tool change 95.1%/73.1%, protocol
+84.6%/74.3%; overall 90.6%/77.0%. Push this completed 64-case checkpoint and
+request hosted validation; continue other source gaps while it runs. Do not
+merge PR #13 or duplicate its upstream diff while it remains open.
+
+## Batch 9 spline conversion and validation
+
+Nine local cases cover cubic/quadratic splines in inch units and independent X/Y
+scaling, connected cubic continuation without IJ, and rejection of non-XY planes,
+third axes or missing control words before any motion is queued. A pulse fixture
+samples a known point from independent closed-form Bezier coordinates, as well as
+checking endpoints/monotonic pulse totals. This checks control-point conversions
+rather than relying solely on the endpoint. Flattening/pulse rounding allowance
+is explicit; no physical contour accuracy claim is made. Normal foreground timer
+servicing lets larger curves fill and drain the real planner without hangs.
+
+## Batch 9 explicit G-code probe selection
+
+Six further cases register default/toolsetter/second probe inputs with distinct
+contact positions, advertise their real HAL capabilities and execute G38 blocks
+through the parser. They verify the input active at probe start, contact latch,
+restoration of the previous selection, no switching for an already selected
+input, rejection before motion when capability is absent, and restoration after
+a no-error missed-contact probe. Real probe cycles and motor pulses are used.
+The fixture's initial callback signature mismatch was corrected, not treated as
+a core fault. No new failures or core changes.
+
+Focused cases and the complete parser/motion modules pass under ASan/UBSan and
+strict diagnostics (build-asan/batch-9-parser-motion-results.xml). Batch 9 now
+adds 79 registered tests plus the pending DO/WHILE proposal. The 64-case hosted
+run is 38625823913; these fifteen follow-ups stay local while it runs. Continue
+freshly measured parser/startup/configuration gaps and perform full validation
+at the next substantial checkpoint. Last measured overall coverage is 90.6%/77.0%.
+
+## Batch 9 startup-failure task isolation
+
+Three additional boot cases invoke real grbl_enter with driver init, setup or
+pulse-delay capability failure. Valid driver/plugin callbacks queue startup,
+delayed and systick work during initialization. The normal startup fault path
+must discard these tasks and stay in the self-test alarm with no queued motion.
+A host observer verifies three scheduler turns, advances mock time and terminates
+the test only after checking state/callback counts. It does not make the core's
+intentional infinite fault loop return or call private functions. A default-off
+boot fixture option supplies no sender input instead of issuing CMD_EXIT.
+Original startup case behavior remains unchanged.
+
+All boot variants pass ASan/UBSan and strict summary
+(build-asan/batch-9-boot-fault-results.xml). Batch 9 now adds 82 registered tests
+plus the pending DO/WHILE proposal. Eighteen follow-ups after 7ed2f01 remain local;
+run 38625823913 validates its 64-case checkpoint. Full current 2,897-case suite
+is due before another push. Continue remaining parser/feature/startup gaps from
+fresh coverage. No new bug classifications or production-core edits in this work.
+
+## Batch 9 fourth validated checkpoint
+
+The full 2,897-case ASan/UBSan suite and strict summary passed: 2,879 clean,
+18 documented regressions, zero unexpected failures/skips (38.28 s), including
+the shared boot-fixture change. Evidence: build-asan/batch-9-fourth-checkpoint-results.xml.
+The root working instructions now state the active batch-9 branch/resumed goal
+and protect the user's DO/WHILE TODO/proposal from accidental registration.
+
+Run 38625823913 passed every job for 7ed2f01 against Terje 39a69a2. Fresh coverage
+is 15,816/17,402 lines (90.8861%) and 10,417/13,464 branches (77.3693%). Crossbar
+is 100% lines/97.9% branches, flow control 87.4%/67.2%, protocol 88.3%/76.6%.
+This covers 64 cases; the current 82-case checkpoint needs hosted measurement.
+Push this completed parser/startup batch and continue the next measured gaps.
+Suggested next integration work: normal grbl_enter startup for existing wall,
+delta, polar, AC and ganged kinematics variants, using original source and valid
+HAL callbacks. Do not force private startup handlers or classify intentional
+fatal loops as bugs. PR #13 remains the unmerged parent at latest verification.
+
+## Batch 9 latest-core transition and known-fix cleanup
+
+Terje master advanced from 39a69a2 through a7f17b8 to 683589b while this checkpoint
+was being delivered. The ignored core checkout is now clean at 683589b, original
+source unchanged. The first full run identified seven known regressions now
+passing: pending-override spindle stop, auxiliary stream allocation, long VFS
+filename lookup, failed mount return/event, exact root buffer sizing, absolute
+lookup miss and unrelated wall-plotter settings. Their exceptions and bug entries
+are removed; correct C regression assertions remain as ordinary tests. The two
+obsolete fatal-diagnostic wrappers and their matcher tests are deleted, and both
+cases run directly in sanitized and coverage configurations. Python checks now
+pass all 43 remaining helper tests.
+
+One ordinary fault-injection test was adapted from the old malloc call to current
+realloc(NULL, size), retaining the same chdir failure/root-fallback expectations.
+The existing allocated-root getcwd regression exposed a newly introduced defect:
+vfs_getcwd(NULL, 0) constructs a buffer but returns NULL. Its correct expectation
+is retained, with a narrowly documented expected failure and a test-only observer
+reclaiming the lost buffer before assertion, rather than a sanitizer suppression.
+See KNOWN_BUGS.md for exact source anchors and cleanup of that observer/wrapper.
+DO/WHILE stays in the user's TODO/proposal; no classification changed there.
+
+Affected modules pass all 166 cases with strict classification. Full latest-core
+ASan/UBSan suite also passes: 2,897 total, 2,885 clean, 12 documented regressions,
+zero unexpected failures/skips (42.39 s; build-asan/batch-9-latest-core-final-results.xml).
+The prior 82-case push acaf9af/39a69a2 is a baseline validation run; this cleanup
+needs a separate hosted run on 683589b once that run completes. Coverage 90.9%/
+77.4% describes 39a69a2, not this changed core. Continue newest core coverage,
+including real settings-enabled multi-spindle ramp independence and normal boot
+of existing kinematics variants. PR #13 remains the unmerged parent.
+
+## Batch 9 wrap-up (2026-10-14)
+
+The final 82-case checkpoint passed every hosted job against Terje `39a69a2`
+(run 38628319147). Merged feature-variant coverage for that revision is
+15,872/17,402 lines (91.2079%) and 10,465/13,464 branches (77.7258%).
+These figures precede the latest-core cleanup and must not be attributed to
+`683589b`.
+
+Terje `683589b` fixes seven documented regressions. Their exceptions and
+entries were removed while the assertions stayed. One newly exposed VFS
+`getcwd(NULL, 0)` defect has a narrow expected-failure entry. Full local
+ASan/UBSan: 2,897 cases, 2,885 clean, 12 documented expected failures,
+zero unexpected failures/skips; 43 script checks pass. The SCARA source was
+removed upstream, so its old integration note is now historical in TODO.md.
+
+This batch is ready after hosted GCC, Clang and coverage validation of the
+latest-core cleanup. Parent PR #13 was open at this checkpoint; avoid a
+cumulative duplicate PR. Once #13 merges, rebase/merge its upstream base and
+open the batch-9 PR with only this batch's changes. Continue the full-coverage
+goal in a separate subsequent branch. The DO/WHILE CONTINUE proposal awaits
+Terje's contract decision.

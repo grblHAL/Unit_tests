@@ -162,27 +162,30 @@ their current encoded values describe the present implementation, not a decision
 about future cycle reporting. Add generated-subprogram execution, cutter-comp
 and actual-motion reporting tests once the implementation and contract land.
 
-## SCARA source integration and executable coverage
+## Removed SCARA source
 
-**Audited:** 2026-10-14 on Terje `39a69a22c72283ab186133b25fb89b8f5be35767`.
-
-`kinematics/scara.c` is absent from core's CMake source list, and SCARA_ROBOT is
-not included in core's automatic KINEMATICS_API selection. A syntax-only build
-with both `SCARA_ROBOT=1` and `KINEMATICS_API=1` still fails at
-[scara.c:319–321](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/kinematics/scara.c#L319):
-three setting definitions use undefined `Format_recimal` rather than
-`Format_Decimal`. No production source was changed.
-
-Resolve source integration and confirm SCARA support before claiming executable
-coverage for this module. Then add host variants and independent geometric
-controls, reachable/unreachable positions, segmentation, settings persistence
-and homing tests. Current aggregate percentages do not prove SCARA is covered.
-
-Reproduce the source audit with a GNU-compatible compiler:
-
-```sh
-clang -fsyntax-only -std=gnu11 -DSCARA_ROBOT=1 -DKINEMATICS_API=1 -Icore core/kinematics/scara.c
-```
+Terje's `683589bd10bb1082825bfc7e9bcee6db102b9530` removes
+`kinematics/scara.c`. The earlier source-integration and compile observations
+on `39a69a2` are historical, so there is no current SCARA module to add to
+the executable coverage inventory. Reassess support and tests if SCARA returns.
 
 Path blending is separately marked experimental and unconditionally disabled
-in `config.h`; do not silently patch that definition just to increase coverage.
+in `config.h`; do not change that definition solely to increase coverage.
+
+## DO/WHILE CONTINUE contract
+
+**Observation recorded:** 2026-10-14, Terje `39a69a2`; the user requested leaving this for Terje to comment on.
+
+CONTINUE in a DO/WHILE loop currently rewinds directly to the body at
+[ngc_flowctrl.c:611-612](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/ngc_flowctrl.c#L611).
+A finite counter loop with CONTINUE before its trailing WHILE never evaluates
+that condition and repeats until the host read bound. Ordinary DO/WHILE and
+CONTINUE with a later explicit BREAK have passing streamed-parser controls.
+
+LinuxCNC O-code CONTINUE evaluates the loop condition. Confirm whether that
+contract is intended here or whether restarting the body is a deliberate
+difference. A bounded, no-motion [candidate regression](proposals/do_continue_rechecks_trailing_condition_and_skips_remaining_body.c)
+is retained for review, outside the registered case set until intent is settled;
+there is no expected-failure exception or source exclusion for this proposal.
+Its correct resolution requires either implementing the chosen loop semantics
+or documenting the deliberate difference, then reviewing the candidate assertion.

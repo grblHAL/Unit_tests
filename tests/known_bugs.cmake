@@ -49,20 +49,8 @@ if(TEST vfs.parent_path_crossing_mount_passes_target_local_filename)
   set_tests_properties(vfs.parent_path_crossing_mount_passes_target_local_filename PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
-# Long filename lookup reallocates static storage on Terje 50055a2.
-if(TEST vfs.locate_long_filename_returns_mounted_file_path)
-  set_tests_properties(vfs.locate_long_filename_returns_mounted_file_path PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
 
-# Failed mount allocation incorrectly reports success and emits a mounted event.
-if(TEST vfs.mount_allocation_failure_reports_failure_without_notification)
-  set_tests_properties(vfs.mount_allocation_failure_reports_failure_without_notification PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
 
-# Root getcwd rejects a correctly sized two-byte buffer on Terje 50055a2.
-if(TEST vfs.root_current_directory_fits_exact_two_byte_buffer)
-  set_tests_properties(vfs.root_current_directory_fits_exact_two_byte_buffer PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
 
 # Failed cwd growth must release the old heap allocation before root fallback.
 if(TEST vfs.current_directory_reallocation_failure_falls_back_to_root)
@@ -70,29 +58,9 @@ if(TEST vfs.current_directory_reallocation_failure_falls_back_to_root)
     PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
 endif()
 
-# An absolute lookup miss must not return a previous relative lookup result.
-if(TEST vfs.locate_absolute_miss_after_success_does_not_return_previous_result)
-  set_tests_properties(vfs.locate_absolute_miss_after_success_does_not_return_previous_result
-    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
-endif()
 
-# Stop must ramp down from emitted output, not an unapplied override target.
-if(TEST spindle_control.pending_override_stop_does_not_increase_pwm_before_disabling)
-  set_tests_properties(spindle_control.pending_override_stop_does_not_increase_pwm_before_disabling
-    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
-endif()
 
-# Strict sanitizer wrapper verifies only the documented null connection write.
-if(TEST stream.auxiliary_connection_allocation_failure_preserves_primary_stream)
-  set_tests_properties(stream.auxiliary_connection_allocation_failure_preserves_primary_stream
-    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
-endif()
 
-# Unrelated settings changes must preserve existing wall-plotter motor counters.
-if(TEST wall_plotter.unrelated_setting_update_preserves_motor_step_counters)
-  set_tests_properties(wall_plotter.unrelated_setting_update_preserves_motor_step_counters
-    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
-endif()
 
 # Clearing an enabled backlash setting must stop emitting compensation pulses.
 if(TEST backlash.clearing_public_setting_disables_previously_enabled_compensation)
@@ -103,5 +71,17 @@ endif()
 # Live and loaded configuration must agree for the same pullup-disable setting.
 if(TEST ioports_pullup.pullup_disable_live_and_loaded_configuration_agree)
   set_tests_properties(ioports_pullup.pullup_disable_live_and_loaded_configuration_agree
+    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
+endif()
+
+# A false WHILE condition after CONTINUE must skip the body through ENDWHILE.
+if(TEST ngc_flowctrl.while_continue_rechecks_condition_and_skips_remaining_body)
+  set_tests_properties(ngc_flowctrl.while_continue_rechecks_condition_and_skips_remaining_body
+    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
+endif()
+
+# Allocated getcwd(NULL, 0) must return its constructed root path.
+if(TEST vfs.getcwd_allocates_root_path)
+  set_tests_properties(vfs.getcwd_allocates_root_path
     PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
 endif()
