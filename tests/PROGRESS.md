@@ -777,3 +777,18 @@ tools cannot edit an existing objective or resume a paused goal; its stored stat
 still requires the user's goal control. Work may resume under the direct request.
 PR #13's final run 38604749142 passed against harness 0e5034b and Terje 39a69a2;
 its known pullup consistency assertion is unchanged and is narrowly classified.
+
+## Batch 9 practical workflow continuation
+
+PR #13 passed final hosted run 38604749142 and is ready for review. The authoring
+guardrails/revised goal text were committed as a00c3bd. The user confirmed resuming
+the goal. New cases belong on local-only coverage-batch-9, based on PR #13; do not
+publish a duplicate PR while that parent remains unmerged.
+
+Three secondary-spindle status cases execute supported sender commands M3/M4/M5
+with $1 selection, using registered/settings-mapped spindles and the real parser,
+spindle control and status renderer. Driver outputs and emitted status fields are
+checked together. Stopping the secondary clears its RPM/direction report while
+the primary remains on. These test practical multi-spindle workflows; they do not
+claim hardware speed/timing evidence. Focused cases and the multi-spindle module
+pass under sanitizers with strict diagnostic classification.

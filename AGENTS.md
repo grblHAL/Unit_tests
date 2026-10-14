@@ -341,3 +341,11 @@ only for explicit documented expectations; clean them up when the chosen contrac
 is implemented. Keep small case files and validate substantial batches.
 
 The user's request to resume revokes the earlier overnight pause instruction.
+
+## Batch 9 continuation
+
+The user resumed the goal with the practical authoring guardrails on 2026-10-14.
+PR #13 is ready after final hosted validation; new work is isolated on local-only
+coverage-batch-9. Preserve its parent until merged and avoid duplicate PR diffs.
+Prioritize supported sender/machine workflows and explain valid triggers and
+observable consequences. Do not infer mechanical effects from mocked outputs.
