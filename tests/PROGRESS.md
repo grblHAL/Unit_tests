@@ -1137,3 +1137,25 @@ needs a separate hosted run on 683589b once that run completes. Coverage 90.9%/
 77.4% describes 39a69a2, not this changed core. Continue newest core coverage,
 including real settings-enabled multi-spindle ramp independence and normal boot
 of existing kinematics variants. PR #13 remains the unmerged parent.
+
+## Batch 9 wrap-up (2026-10-14)
+
+The final 82-case checkpoint passed every hosted job against Terje `39a69a2`
+(run 38628319147). Merged feature-variant coverage for that revision is
+15,872/17,402 lines (91.2079%) and 10,465/13,464 branches (77.7258%).
+These figures precede the latest-core cleanup and must not be attributed to
+`683589b`.
+
+Terje `683589b` fixes seven documented regressions. Their exceptions and
+entries were removed while the assertions stayed. One newly exposed VFS
+`getcwd(NULL, 0)` defect has a narrow expected-failure entry. Full local
+ASan/UBSan: 2,897 cases, 2,885 clean, 12 documented expected failures,
+zero unexpected failures/skips; 43 script checks pass. The SCARA source was
+removed upstream, so its old integration note is now historical in TODO.md.
+
+This batch is ready after hosted GCC, Clang and coverage validation of the
+latest-core cleanup. Parent PR #13 was open at this checkpoint; avoid a
+cumulative duplicate PR. Once #13 merges, rebase/merge its upstream base and
+open the batch-9 PR with only this batch's changes. Continue the full-coverage
+goal in a separate subsequent branch. The DO/WHILE CONTINUE proposal awaits
+Terje's contract decision.
