@@ -74,6 +74,12 @@ The repository field accepts `terjeio/grblHAL_core` or
 `https://github.com/terjeio/grblHAL_core` (a trailing `/` or `.git` is accepted).
 Put a branch, tag or commit SHA in the separate ref field:
 
+Manual runs show the selected source in the Actions list immediately, for example
+`Core tests: terjeio/grblHAL_core @ master` or
+`Core tests: grblHAL/core @ PR #1037`. A supplied SHA appears in place of the
+branch. The title shows the requested source; the source-lock artifact records
+the exact resolved commit. Repository URLs are displayed as entered.
+
 | Candidate | source_repository | source_ref | source_pr |
 |---|---|---|---|
 | Current upstream core | blank | blank | blank |
