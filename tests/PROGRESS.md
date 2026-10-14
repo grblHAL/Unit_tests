@@ -792,3 +792,17 @@ checked together. Stopping the secondary clears its RPM/direction report while
 the primary remains on. These test practical multi-spindle workflows; they do not
 claim hardware speed/timing evidence. Focused cases and the multi-spindle module
 pass under sanitizers with strict diagnostic classification.
+
+## Batch 9 secondary-spindle overrides
+
+Three additional cases verify adjusted RPM and the secondary spindle's own
+percentage, independence from primary overrides, and zero RPM after M5 while
+retaining the selected override. They use supported parser commands and the
+public spindle override API; they make no physical timing claims. All 67
+multi-spindle cases pass under ASan/UBSan and the strict diagnostic summary.
+
+The resumed goal is verified active. Final batch-8 hosted coverage is 15,641 of
+17,402 lines (89.9%) and 10,239 of 13,464 branches (76.0%). These are the last
+hosted baseline figures, not a measurement of the new local batch. Next work is
+real stream-driven jog cancellation, including the driver's ASCII_CAN contract;
+do not replace that stream path with a direct motion-cancel flag injection.
