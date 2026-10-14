@@ -841,3 +841,24 @@ callback in the initial fixture was corrected; it was not a core defect.
 All 32 state-machine cases pass under ASan/UBSan with strict summary classification
 (build-asan/batch-9-state-results.xml). Batch 9 now has 17 new cases. Continue
 practical state/motion coverage, with a full-suite check at this local checkpoint.
+
+## Batch 9 automatic sleep during pauses
+
+Five new cases enable sleep, command M8 through the real parser and use planned
+motion/realtime hold or safety-door events. A mock clock advances the actual core
+scheduler. Sleep is requested after a completed feed hold or an open-door stopped
+pause, never during hold deceleration or a closed-door pause awaiting resume.
+New sender input cancels the timeout, with a later scheduler advance confirming
+that the removed timeout does not fire. Pulse counts remain unchanged while
+sleep is considered. All 11 sleep cases pass under sanitizers and strict summary
+(build-asan/batch-9-sleep-results.xml). These address previously uncovered normal
+hold/door branches in sleep.c; allocator failure remains a lower-priority gap.
+
+The preceding 17-case checkpoint passed the full suite: 2,832 total, 2,815 clean,
+17 documented regressions, no unexpected failures/skips (90.51 s), with strict
+summary clean. The five subsequent sleep cases have focused validation; the
+current 2,837-case suite still needs full/hosted validation at delivery. Batch 9
+now has 22 new cases, local only. PR #13 remains open/ready; its head is a00c3bd.
+Terje master is still 39a69a2, freshly verified. Next measured gaps include
+state-machine accessory restore, supported tool-change workflows and crossbar
+port capability mappings. Continue substantial coverage work before another PR.
