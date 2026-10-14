@@ -224,6 +224,29 @@ The automatic default-source run 38441824898 failed against upstream core
 run above is the latest-source validation; do not restore resolved exceptions
 for compatibility with that older source.
 
+## Interpreting Terje's batch-3 failure on the newer core
+
+https://github.com/grblHAL/Unit_tests/actions/runs/38467440282 selected Terje
+`50055a2` with upstream harness `36e248d` (batch 3). Its GCC diagnostic artifact
+contains 24 failures: 15 `known_changed` findings from verified fixed regressions
+whose exceptions were obsolete, and 9 ordinary failures from G5.1/G70 parsing
+and named-motion parameter encoding. The artifact reports 2,436 cases,
+2,401 clean passes, 11 reproduced known regressions and 24 failures.
+
+Merged PR #8 removes those 15 obsolete exceptions and retains the nine correct
+failing regressions with dated, explicit known-bug classification. This follow-up
+adds the maintainer notes and clearer failure reporting. The same-source run
+38514474774 passes GCC, Clang, coverage and diagnosis; it does not claim those
+remaining firmware defects are fixed. Deferred analog/percent-status issues
+remain labelled; diameter-mode offset conventions are tracked as a design review.
+
+Standalone maintainer-follow-up run 38519491021 passed source, GCC/Clang
+sanitizers, coverage and diagnosis: 2,436 cases, 2,416 clean passes, 20 labelled
+known regressions, zero failures/skips. The reporting follow-up is verified
+against the captured GCC artifact from run 38467440282: its summary now states
+9 unexpected failures and 15 changed known-defect exceptions separately, and
+shows all nine unexpected failures before the first changed-exception detail.
+All 41 Python helpers pass, including the original-run ordering regression.
 ## Batch 4 RTCP and wall-plotter validation
 
 Candidate run: https://github.com/petervanderwalt/Unit_tests/actions/runs/38514474774

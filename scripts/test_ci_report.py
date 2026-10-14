@@ -57,6 +57,15 @@ class DiagnosisTests(unittest.TestCase):
         self.assertIn("A different crash is not proof", text)
         self.assertIn("retain the test", text)
 
+    def test_new_failures_are_not_hidden_by_fixed_exception_findings(self):
+        changed = [dict(kind="known_changed", name="known." + str(i), message="Expected failure changed", severity="error") for i in range(15)]
+        unexpected = [dict(kind="test", name="new." + str(i), message="Correct assertion failed", severity="error") for i in range(9)]
+        text = render([dict(job="gcc", findings=changed + unexpected)], {})
+        self.assertIn("9 unexpected failures", text)
+        self.assertIn("15 changed known-defect exceptions", text)
+        self.assertLess(text.index("**new.8**"), text.index("**known.0**"))
+        self.assertIn("remove only the fixed exception", text)
+
     def test_test_output_cannot_inject_markdown(self):
         text = render([dict(job="clang", findings=[dict(kind="test", name="<script>", message="<img onerror=x>", severity="error")])], {})
         self.assertNotIn("<script>", text)

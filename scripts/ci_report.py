@@ -129,10 +129,16 @@ def render(reports, lock, outcomes=None):
     findings = merge_reports(reports)
     errors = [f for f in findings if f.get("severity", "error") == "error"]
     warnings = [f for f in findings if f.get("severity") == "warning"]
-    lines = ["## Why this run failed" if errors else "## CI result", "", f"**{len(errors)} failure findings · {len(warnings)} coverage/review warnings**", ""]
+    changed = [f for f in errors if f["kind"] == "known_changed"]
+    unexpected = [f for f in errors if f["kind"] != "known_changed"]
+    lines = ["## Why this run failed" if errors else "## CI result", "",
+             f"**{len(unexpected)} unexpected failures · {len(changed)} changed known-defect exceptions · {len(warnings)} coverage/review warnings**", ""]
+    if changed:
+        lines.append("Changed known-defect exceptions need review: a regression may now pass while its expected-failure exception remains. Confirm the result, retain correct assertions, and remove only the fixed exception. A different fault is not proof of a fix.")
+        lines.append("")
     if not errors:
         lines.append("No unexpected failures in the collected reports. Known defects remain separately labelled.")
-    for f in (errors + warnings)[:12]:
+    for f in (unexpected + changed + warnings)[:12]:
         name = html.escape(f["name"])
         message = html.escape(f["message"]).replace("|", "&#124;")
         lines.append("- **" + name + "** (" + ", ".join(sorted(set(f["jobs"]))) + "): " + message + (" · " + source_link(f, lock) if f.get("file") else ""))
