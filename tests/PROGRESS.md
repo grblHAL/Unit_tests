@@ -10,7 +10,7 @@ run 38535569786 passed all jobs and PR #11 is ready. Fresh hosted GCC coverage
 for batch 6: 88.3% lines (15,359/17,401), 74.2% branches. Core master matches
 39a69a22c72283ab186133b25fb89b8f5be35767 as checked on 2026-10-14.
 
-46 new cases pass local validation: legacy I/O, encoder binding, active spindle
+The first 46 new cases pass local validation: legacy I/O, encoder binding, active spindle
 capabilities, synchronous PWM ramps and delayed override transitions. Full
 ASan/UBSan and strict summary: 2,686 tests, 2,673 clean, thirteen known regressions,
 zero failures/skips. All 51 helpers pass. The pending-override stop regression
@@ -22,6 +22,15 @@ Encoder tests register before binding; unsupported pre-registration persistence
 was discarded as a fixture assumption. PWM tests execute original calculations,
 ramp/dwell and scheduler code. Production core is untouched. Hosted validation
 and fresh batch-7 coverage are pending delivery; continue from remaining gaps.
+
+Thirteen more stream cases pass the full 2,699-test suite: 2,686 clean passes,
+thirteen known regressions, zero failures/skips. All 51 Python helpers pass.
+They cover MPG observers/pending fields, receive-only descriptions, multi-client
+removal, pendant control restoration and serial/USB connection fallback. The
+46-case hosted checkpoint 38570331318 is still running; do not cancel it with a
+routine follow-up push. Next inspect allocation failure in stream connection
+registration using a real focused fault injection; source inspection alone is
+not sufficient to classify a new defect.
 
 
 ## Batch 6 active work

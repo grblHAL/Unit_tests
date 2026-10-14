@@ -360,3 +360,11 @@ Hosted revalidation of this later checkpoint remains pending.
 
 Final batch-6 GCC coverage (run 38535569786): 88.3% lines (15,359/17,401),
 74.2% branches. These measurements precede the batch-7 additions.
+
+The next thirteen stream cases pass full Windows Clang ASan/UBSan and strict
+summary: 2,699 tests, 2,686 clean, thirteen known regressions, zero failures/skips.
+All 51 Python helpers pass. MPG status-field assertions enable their corresponding
+report settings; initial disabled-field fixture assumptions were corrected without
+classifying them as core defects. No new allowances or source edits were added.
+Hosted checkpoint 38570331318 covers the preceding 46-case batch and is still
+running; these later stream cases remain locally validated until delivery.
