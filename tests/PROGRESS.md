@@ -55,7 +55,7 @@ checkpoint remains 2,742 cases; do not call the pending working tree fully green
 Two IRQ callback controls and six scheduler deadline/cancellation/startup controls
 also pass. The current full working-tree run has 2,763 cases: 2,747 clean passes,
 fifteen known regressions and exactly one unresolved pull-mode consistency failure.
-No sanitizer diagnostic was introduced. There are 123 committed cases since batch 6,
+No sanitizer diagnostic was introduced. There are 134 committed cases since batch 6,
 plus the eight uncommitted pullup cases/variant. The fixture preserves the core
 default IRQ callback across mocked driver initialization; all 68 boot tests pass.
 
@@ -639,3 +639,17 @@ continue independent work without changing headers under an active build.
 The user requested pausing coverage after batch 3 delivery. No scheduled background continuation was configured. A fresh chat should read
 these files, verify current state, and be explicitly asked to resume the full
 coverage objective; do not assume deleting a chat schedules future execution.
+
+## Review boundary requested by the user
+
+On 2026-10-14 the user requested PR preparation and cleanup of branches proven
+merged upstream. Finish the eleven expression cases (comparison boundaries,
+operator-name rejection, signed expressions, invalid parameters and literal
+format preservation) and validate the completed commits independently of the
+eight uncommitted pullup cases. The mode clarification remains pending; do not
+publish a new exception or describe that working tree as fully green.
+
+Fork master 331414d has no unique commits relative to freshly fetched upstream
+master 5019b8f. PR #11 remains open; packaging the next checkpoint separately or
+as a combined replacement is awaiting the user's preference. Only delete remote
+branches whose current tips are verified ancestors of upstream master.
