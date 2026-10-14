@@ -5,45 +5,32 @@ This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 
 ## Batch 7 active work
 
-`coverage-batch-7` isolates new work while PR #11 is reviewed. Final batch-6
-run 38535569786 passed all jobs and PR #11 is ready. Fresh hosted GCC coverage
-for batch 6: 88.3% lines (15,359/17,401), 74.2% branches. Core master matches
-39a69a22c72283ab186133b25fb89b8f5be35767 as checked on 2026-10-14.
+`coverage-batch-7` continues toward full meaningful coverage. Core under test:
+Terje 39a69a22c72283ab186133b25fb89b8f5be35767, production source untouched.
+Hosted checkpoint 38570331318 passed GCC/Clang/coverage/diagnosis. GCC coverage
+88.6% lines (15,425/17,401), 74.8% branches; spindle control 93.6% lines and
+80.3% branches. Later additions have not yet refreshed these measurements.
 
-The first 46 new cases pass local validation: legacy I/O, encoder binding, active spindle
-capabilities, synchronous PWM ramps and delayed override transitions. Full
-ASan/UBSan and strict summary: 2,686 tests, 2,673 clean, thirteen known regressions,
-zero failures/skips. All 51 helpers pass. The pending-override stop regression
-was additionally rechecked with monotonic simulated time and still reproduces
-PWM rising from 600 to 818 before stopping. Its correct assertion remains and
-has a dated narrow exception; ordinary stops and task cancellation are controls.
+76 new cases since batch 6: I/O registration, encoder/capability/ramp behavior,
+stream lifecycle/allocation controls and kinematics hooks. The latest full local
+ASan/UBSan and strict summary passes 2,716 cases: 2,701 clean, fifteen known,
+zero unexpected failures/skips. All 56 Python helpers pass.
 
-Encoder tests register before binding; unsupported pre-registration persistence
-was discarded as a fixture assumption. PWM tests execute original calculations,
-ramp/dwell and scheduler code. Production core is untouched. Hosted validation
-and fresh batch-7 coverage are pending delivery; continue from remaining gaps.
+New wall-plotter regression: after initialized/started setup with valid cable
+lengths, a junction-deviation update resets Y from 18,500 to 16,000. Initialization
+and RTCP setting controls pass; the entry/exception preserves the correct result.
 
-Thirteen more stream cases pass the full 2,699-test suite: 2,686 clean passes,
-thirteen known regressions, zero failures/skips. All 51 Python helpers pass.
-They cover MPG observers/pending fields, receive-only descriptions, multi-client
-removal, pendant control restoration and serial/USB connection fallback. The
-46-case hosted checkpoint 38570331318 is still running; do not cancel it with a
-routine follow-up push. Next inspect allocation failure in stream connection
-registration using a real focused fault injection; source inspection alone is
-not sufficient to classify a new defect.
+Hosted run 38573081867 exposed allocation-fixture interference with gcov runtime
+allocations at process exit. Observation/injection is now disabled after each
+connection operation. Four targeted tests pass in ASan and a fresh instrumented
+coverage build; the fatal case skips in coverage as documented. This fix changes
+fixtures only, not the core assertion/exception. Linux diagnostic matching and
+hosted revalidation of this final checkpoint remain pending. Do not claim a fresh
+coverage percentage from the local sanitizer checks.
 
-The stream allocation audit now has four cases: primary uses no heap node,
-auxiliary success/removal releases its node, duplicate registration frees its
-rejected node, and injected allocation failure reproduces a null connection write
-at stream.c:310. An exact sanitizer wrapper classifies the last case. Full local
-ASan/UBSan and strict summary pass 2,703 tests: 2,689 clean, fourteen known
-regressions, zero failures/skips. All 56 Python helpers pass. Actual Linux matcher
-verification remains pending delivery; do not treat synthetic Linux helper text
-as hosted proof.
-
-Hosted run 38570331318 passed the preceding 46-case checkpoint. GCC coverage:
-88.6% lines (15,425/17,401), 74.8% branches; spindle_control.c is 93.6% lines and
-80.3% branches. Later stream/allocation additions are not included in those values.
+PR #11 is ready and remains independently reviewed; avoid a duplicate upstream
+PR containing its unmerged cases. Keep the full-coverage goal active and continue
+from real remaining gaps after hosted verification.
 
 
 ## Batch 6 active work

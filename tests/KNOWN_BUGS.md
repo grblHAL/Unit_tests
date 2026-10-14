@@ -378,3 +378,29 @@ return false without changing the active connection or linked list.
 normal executable test, remove [wrapper](../scripts/stream_allocation_regression.py)
 and [matcher helpers](../scripts/test_stream_allocation_regression.py), retain the
 functional regression and control, run full sanitizers/summary, and delete this entry.
+
+## Wall-plotter settings update resets the Y motor reference
+
+**Marked known:** 2026-10-14 on Terje `39a69a22c72283ab186133b25fb89b8f5be35767`.
+
+After initialization, updating junction deviation through the public settings API
+changes a wall plotter's Y motor step counter from 18,500 to 16,000 although cable
+geometry is unchanged. X and Z remain 18,000 and 789. The test uses a started
+controller and geometrically valid cable lengths, not an unfinished startup.
+
+The first-initialization flag is assigned false again at
+[wall_plotter.c:326](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/kinematics/wall_plotter.c#L326),
+so every settings callback repeats the initial Y-reference assignment.
+
+**Regression:** [unrelated runtime setting](cases/wall_plotter/unrelated_setting_update_preserves_motor_step_counters.c).
+Controls verify the intended initial cable reference and that the same junction
+setting update preserves RTCP motor counters.
+
+**Suggested fix (not applied):** mark initialization complete after the first
+reference assignment. Preserve motor counters for unrelated settings changes;
+review geometry-change recalculation separately rather than resetting a reference
+on every callback.
+
+**Remove exception when fixed:** remove the named `WILL_FAIL` block in
+[known_bugs.cmake](known_bugs.cmake), retain the regression/controls, run full
+sanitizers and strict summary, and delete this entry.

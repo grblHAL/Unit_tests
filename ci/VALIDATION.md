@@ -381,3 +381,18 @@ Actual Linux matcher execution remains pending delivery; no core edits were made
 Run 38570331318 passed GCC/Clang, coverage and diagnosis for the preceding
 46-case checkpoint. GCC coverage: 88.6% lines (15,425/17,401), 74.8% branches.
 Spindle control: 93.6% lines, 80.3% branches. These precede the later stream tests.
+
+## Kinematics hooks and coverage-fixture correction
+
+Thirteen additional RTCP/polar/wall-plotter cases pass classified local checks.
+Full ASan/UBSan and strict summary: 2,716 tests, 2,701 clean, fifteen known,
+zero failures/skips. The wall-plotter runtime setting regression resets Y counters
+with unchanged geometry; valid cable lengths and a started controller reproduce
+it, with startup and RTCP setting controls passing.
+
+Run 38573081867's coverage failure was the stream allocation fixture observing
+instrumentation allocations at process exit. Observation/injection now ends after
+each connection operation. The four resource tests pass under ASan and in a fresh
+Clang coverage build; the known fatal case skips only without sanitizers. The core
+crash assertion and strict diagnostic matching remain intact. Linux GCC/Clang
+execution of that matcher still requires hosted verification. All 56 helpers pass.
