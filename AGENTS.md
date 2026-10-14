@@ -264,3 +264,10 @@ module completion and the existing PR do not authorize stopping or pausing.
 Keep correct regressions and verified coverage/configuration evidence. Only
 pause on a later explicit human request or report a concrete blocker. Earlier
 batch-3 pause instructions are historical and superseded by this resumption.
+
+## Batch 5 continuation
+
+PRs #8 and #9 have merged. Continue on `coverage-batch-5`, preserving the
+unmerged storage/filesystem continuation and debug tests from batch 4. The user
+authorized temporary manual-only harness CI triggers in this next coverage PR;
+keep reusable source callers available. Continue toward full meaningful coverage.

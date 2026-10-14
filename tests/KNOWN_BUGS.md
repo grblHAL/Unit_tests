@@ -18,7 +18,6 @@ Outstanding regressions were reconfirmed on 2026-10-14 against Terje core
 Source links identify the revision used for the described code and reproduction. CI can test
 a newer revision; a fixed regression forces review and cleanup of its exception.
 
-
 ## Using the suggested fixes
 
 Each **Suggested fix (proposal)** below is based on source inspection of the
@@ -35,7 +34,6 @@ remove the allowance, replace diagnostic wrappers with direct tests where needed
 keep the regression assertions, and delete the resolved entry. Then run the full
 suite and strict diagnostic summary before committing. Multiple defects can
 block the same test; remove only allowances whose underlying faults are fixed.
-
 
 ## Analog output commands truncate fractional values
 
@@ -56,7 +54,6 @@ truncates fractional values before immediate output at line 4201 or synchronized
 M67 output in `core/stepper.c:515`. Preserve the numeric value through command
 storage. The regression retains the fractional output expectation.
 
-
 **Suggested fix (proposal):** Preserve the floating-point Q value in
 [output_command_t at gcode.h:312](https://github.com/terjeio/grblHAL_core/blob/4b128e68bc63f9a3af11a01a7d8fbb5d5ccc98aa/gcode.h#L312):
 
@@ -70,36 +67,6 @@ float callback. Review every `output_command_t.value` consumer: digital M62/M63
 must retain their boolean 0/1 behavior. This changes a shared structure's type;
 rebuild core and dependent plugins/drivers together. Validate fractional immediate
 and synchronized output, queued command ordering and digital output controls.
-
-## M72 restores runtime overrides but leaves parser overrides disabled
-
-**Marked known:** 2026-10-13, Terje's core `e65020a8389b19d3c03277e02f34219e25800e6a`.
-
-**Regression:** [M72 after M50 disable](cases/ngc_params/m72_restores_feed_and_rapid_overrides_after_m50_disable.c).
-**Passing control:** [direct modal restoration](cases/ngc_params/direct_modal_restore_reinstates_feed_override_controls.c).
-
-Save enabled feed overrides with `M70`, disable them with `M50P0`, then restore
-with `M72`. Runtime override control is enabled again and the saved feed/rapid
-percentages return, but `gc_state.modal.override_ctrl.feed_rates_disable` remains
-true. The parser uses that stale flag for subsequent motion's `no_feed_override`
-condition. The direct restore API correctly restores both representations.
-
-The [M72 restore branch at gcode.c:4376](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/gcode.c#L4376)
-clears the pending M9 action after restoring percentages, without copying the
-restored `gc_block.modal.override_ctrl` into `gc_state.modal.override_ctrl`.
-The [ordinary update at line 4444](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/gcode.c#L4444)
-is consequently skipped. Observed after M72: parser disable=1, runtime disable=0,
-feed=80, rapid=50; expected both disable flags=0.
-
-**Suggested fix (proposal, not runtime-verified):** In the M72 M9-action branch,
-copy the restored override control into parser state before clearing the action:
-`gc_state.modal.override_ctrl = gc_block.modal.override_ctrl;`. Review associated
-`plan_data.overrides` and `mc_override_ctrl_update()` ordering too; verify subsequent
-motion and M51/M53 controls rather than treating a flag-only change as a complete fix.
-
-**Remove exception when fixed:** delete the [CMake block](known_bugs.cmake#L25),
-retain the correct regression and passing control, rerun the modal/planner tests
-and full sanitizer suite, then delete this section.
 
 ## Unexpected file percent marker reports success
 
@@ -130,84 +97,9 @@ before continuing ordinary block parsing, using the existing `RETURN(status)`
 cleanup path when `status != Status_OK` after handling demarcation. Retain valid
 serial markers, file completion callbacks and check-mode behavior.
 
-**Remove exception when fixed:** delete the [CMake block](known_bugs.cmake#L30),
+**Remove exception when fixed:** delete the [CMake block](known_bugs.cmake#L25),
 retain the correct regression and passing controls, then delete this section.
 No sanitizer diagnostic allowance applies.
-
-
-## Named motion-mode parameter scales encoded values twice
-
-**Marked known:** 2026-10-13; reconfirmed 2026-10-14 on Terje
-`50055a283328c3f9726bbc8f22d20a801190c66e` after the motion-enum refactor.
-
-`#<_motion_mode>` must report ten times the numerical G-code value. The latest
-motion enums already use that convention, but the
-[getter at ngc_params.c:522](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/ngc_params.c#L522)
-multiplies them by ten again. G1 reports 100 instead of 10; G38.2 reports 3820
-instead of 382; G71 reports 7100 instead of 710. G0 remains a passing zero control.
-Earlier source used unrelated probe enums, so old observed values differ.
-
-**Regressions:** `named_motion_mode_reports_*` under [NGC parameters](cases/ngc_params)
-and [lathe](cases/lathe_ngc), plus
-[ordinary motion modes](cases/ngc_params/named_motion_mode_tracks_g0_g1_and_g80.c).
-G5.1 and G70 cases are also blocked by the separate parsing defects below.
-
-**Suggested fix (proposal, not runtime-verified):** Return the newly encoded enum
-without another multiplication. Recheck integer, fractional, probe and lathe modes.
-
-**Remove exceptions when fixed:** remove the named-motion blocks from
-[known_bugs.cmake](known_bugs.cmake), retain correct assertions, run parameter,
-probe and lathe cases and full sanitizers, then delete this entry. G5.1/G70 also
-require their parser fixes before shared regressions pass; remove only resolved
-allowances. No sanitizer diagnostic allowance applies.
-
-## G5.1 loses its fractional motion code during parsing
-
-**Marked known:** 2026-10-14, Terje `50055a283328c3f9726bbc8f22d20a801190c66e`.
-
-The parser accepts `.1` for G5, but
-[gcode.c:1588](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/gcode.c#L1588)
-clears the mantissa before the fall-through branch calls `cv()` at line 1593.
-G5.1 is therefore assigned the G5 cubic mode instead of the quadratic mode, and
-`G5.1X1Y1I0J1F100` is rejected. The previously passing parser and real-motion
-regressions both fail at command acceptance on this source.
-
-**Regressions:** [parser](cases/gcode/quadratic_nonzero_j_accepted.c),
-[execution](cases/motion_control/quadratic_spline_executes.c), and the shared
-[named parameter](cases/ngc_params/named_motion_mode_reports_quadratic_spline_code.c).
-
-**Suggested fix (proposal, not runtime-verified):** Preserve the validated mantissa
-until converting the G value into the motion enum, then clear it. Verify G5, G5.1
-and rejection of unsupported fractional modes as well as executed endpoints.
-
-**Remove exceptions when fixed:** remove the two quadratic parser/motion blocks
-from [known_bugs.cmake](known_bugs.cmake); the named parameter case also needs the
-getter fix above. Keep all assertions, run spline/parser/motion cases and full
-sanitizers, then delete this entry.
-
-## G70 still uses the old integer enum after the motion-code refactor
-
-**Marked known:** 2026-10-14, Terje `50055a283328c3f9726bbc8f22d20a801190c66e`.
-
-[gcode.c:1603](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/gcode.c#L1603)
-still assigns 70 to G70 while `MotionMode_LatheCycle` is now 700. Finishing-cycle
-validation and plugin dispatch no longer recognize the mode. Previously passing
-G70 default/explicit arguments, missing-Q and wrong-plane checks now fail, along
-with modal and named-parameter reporting cases.
-
-**Regressions:** separate `finishing_cycle_*`,
-[modal report](cases/lathe_ngc/finishing_modal_report_uses_g70.c) and
-[named parameter](cases/lathe_ngc/named_motion_mode_reports_g70.c) under
-[lathe tests](cases/lathe_ngc).
-
-**Suggested fix (proposal, not runtime-verified):** Use the same encoded motion
-conversion for G70 as G71/G72, preserving fractional-command validation. Verify
-successful plugin dispatch and existing missing-Q/plane error statuses.
-
-**Remove exceptions when fixed:** remove the six G70 blocks from
-[known_bugs.cmake](known_bugs.cmake), retain all assertions, run the lathe/parser
-suite and full sanitizers, then delete this entry. Named-parameter reporting also
-requires the getter fix above. No sanitizer diagnostic allowance applies.
 
 ## Failed startup-line writes are discarded instead of retried
 
@@ -382,3 +274,25 @@ without reading their previous contents.
 [known_bugs.cmake](known_bugs.cmake), retain correct assertions and controls, run
 filesystem/current-directory cases and full sanitizers, then delete this entry.
 No sanitizer allowance applies.
+
+## Directory buffer growth failure leaks the previous allocation
+
+**Marked known:** 2026-10-14.
+
+When a heap-backed current directory needs to grow and `realloc` fails,
+[vfs.c:513–521](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/vfs.c#L513)
+overwrites the old pointer before falling back to root. GCC and Clang Linux
+sanitizers both report the original 118-byte allocation as leaked in run
+[38521365384](https://github.com/petervanderwalt/Unit_tests/actions/runs/38521365384).
+
+**Regression:** [directory growth failure](cases/vfs/current_directory_reallocation_failure_falls_back_to_root.c)
+checks root fallback and release of the original allocation. It reclaims a leaked
+fixture allocation before asserting, allowing the same ownership check on Windows.
+
+**Suggested fix (not applied):** assign `realloc` to a temporary pointer; if growth
+fails and root fallback is retained, free the original buffer before replacing it.
+Alternatively retain the original directory and return failure consistently.
+
+**Remove exception when fixed:** remove the named `WILL_FAIL` block from
+[known_bugs.cmake](known_bugs.cmake), retain the ownership assertion, run GCC/Clang
+sanitizers and strict summaries, and delete this entry.

@@ -3,45 +3,30 @@
 Last verified: **2026-10-14**. Read this with the root `AGENTS.md` and README.
 This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 
-## Sustained batch 4 continuation
+## Batch 5 continuation
 
-The user clarified that PR #8 is a progress checkpoint and coverage expansion
-must keep going toward meaningful full core coverage. Do not stop or pause at a
-green suite, module boundary, commit, push or open PR.
+PRs #8 and #9 have merged. `coverage-batch-5` retains the 61 storage,
+filesystem and tool cases that followed the merged batch-4 checkpoint, plus
+new debug feature variants and parser error-path tests. Core remains unmodified.
 
-Twenty-six new storage cases pass their focused sanitizer group, with three
-narrow expected failures for failed startup/version write retries. A further
-21 VFS cases and four buffered tool-table cases passed the full 2,504-case suite:
-2,479 clean passes, 25 known regressions, zero unexpected failures/skips, strict
-summary green. Source remains Terje `50055a2`, untouched. These later cases are
-not yet included in fresh hosted coverage.
+The 50055a2 checkpoint passed 2,541 Windows sanitizer cases: 2,512 clean,
+29 known regressions, zero unexpected failures/skips. Linux GCC/Clang from run
+38521365384 exposed a failed-realloc directory leak. Its regression now checks
+ownership portably, reclaims a leaked fixture allocation before asserting, and
+has a dated narrow exception. The long-filename wrapper was accepted by both
+hosted sanitizer jobs; unrelated leak diagnostics correctly failed classification.
 
-One additional long-filename lookup case reproduces ASan bad-free at vfs.c:896,
-reallocating the static 32-byte filename buffer. It now has an exact diagnostic
-wrapper and cleanup entry. All 56 VFS cases pass their classified local run;
-48 Python helpers pass. Its actual Linux diagnostic shape still needs hosted
-verification before delivery. The full suite including this case passed: 2,505 tests, 2,479 clean and 26 known,
-zero unexpected failures/skips; strict summary green.
+The user requested temporary manual-only harness CI and support for both
+owner/repo and GitHub repository URLs. Reusable callers remain available.
+All 51 Python helpers and workflow actionlint pass locally.
 
-Terje's failed-run compatibility cleanup and deferred-fix notes are isolated in
-PR #9 (`core-maintainer-followup`) without new coverage cases. Merge it before
-coverage PR #8; shared compatibility changes then disappear from the coverage
-diff. Standalone candidate run: 38519491021. The separate checkout preserves
-ongoing coverage changes in this workspace.
+Latest Terje core has advanced to 39a69a22c72283ab186133b25fb89b8f5be35767.
+Full Windows Clang ASan/UBSan and strict summary pass: 2,555 tests, 2,544
+clean passes, 11 documented known regressions, zero unexpected failures/skips.
+Eighteen verified fixed parser/override exceptions and four resolved bug entries
+were removed; assertions remain. The batch adds 102 cases over merged master.
+Hosted GCC/Clang and coverage validation is pending publication.
 
-Nine further filesystem resource cases now cover mount/iterator allocation retry,
-long current directories, growth/realloc failure and exact-size buffers. Mount
-allocation falsely reports success/events; root getcwd rejects a valid two-byte
-buffer. Both have narrow functional regressions. Windows directory realloc-failure
-assertions pass; Linux leak-check behavior still needs validation. The complete local suite now passes: **2,514 tests, 2,486 clean passes and 28
-known regressions, zero unexpected failures/skips**. Strict summary passes.
-Fresh hosted coverage and the Linux static-buffer/leak diagnostics are next.
-
-Next continue filesystem allocation/resource-failure paths, then remaining
-protocol, state machine, motion and feature-configuration gaps from fresh evidence.
-Do not classify backend-relative path delegation as a defect: backends with their
-own current directory receive relative filenames intentionally. The confirmed
-VFS faults concern the getcwd fallback and parent traversal across mount prefixes.
 
 ## Batch 4 RTCP and wall-plotter extension
 

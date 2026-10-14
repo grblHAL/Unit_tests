@@ -1,3 +1,4 @@
+#define TRACK_FAILED_REALLOC 1
 #include "support/vfs_resource_host.h"
 int main(void)
 {
@@ -10,5 +11,9 @@ int main(void)
     CHECK(vfs_chdir(second) == -1 && realloc_failures == 1);
     char cwd[16]; CHECK(vfs_getcwd(cwd, sizeof(cwd)) != NULL);
     CHECK(strcmp(cwd, "/") == 0); cleanup_operations();
+    /* Reclaim a leaked fixture allocation before reporting the ownership failure,
+       so the assertion is portable and an unrelated sanitizer fault stays visible. */
+    if(!failed_realloc_released) __real_free(failed_realloc_allocation);
+    CHECK(failed_realloc_released);
     return EXIT_SUCCESS;
 }

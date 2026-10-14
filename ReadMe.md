@@ -206,8 +206,9 @@ It does not create a separate run in this test repository or post a bot comment.
 | `core_ref` | Core dependency branch/tag/SHA for a plugin suite | Core registry branch |
 | `run_label` | Unique artifact suffix for this invocation | `core` |
 
-Manual **Core tests** exposes only the three candidate source inputs; the
-upstream caller/reusable workflow supports the full set. A different candidate
+Manual **Core tests** exposes candidate repository/ref/PR inputs and optional
+comparison-base repository/ref inputs. The upstream caller/reusable workflow
+supports the full set. A different candidate
 repository needs an explicit ref or PR number. Unknown suites and ambiguous
 PR/ref combinations fail before building. Caller inputs are passed as data,
 not evaluated as shell commands. Core-only calls should leave `core_ref` empty.
