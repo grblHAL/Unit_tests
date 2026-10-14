@@ -37,6 +37,20 @@ PR containing its unmerged cases. Keep the full-coverage goal active and continu
 from real remaining gaps after hosted verification.
 
 
+## Uncommitted I/O continuation
+
+Eight executable AUX_SETTINGS_PULLUP cases and its host variant are being
+validated. Seven pass; live/load pullup-disable consistency fails because live
+configuration chooses PullMode_Down and loaded configuration chooses PullMode_None.
+This remains an ordinary failing test, with no new exception or known-bug entry.
+The intended mode is awaiting human clarification. Automatic approval review
+rejected changing mode assertions and adding an exception without that contract.
+Keep these changes isolated from delivery until clarified.
+
+Five independent input/output inversion controls pass focused sanitizer checks:
+clearing masks, repeated values and PWM/servo exclusion. The full delivered
+checkpoint remains 2,742 cases; do not call the pending working tree fully green.
+
 ## Batch 6 active work
 
 PR #10 merged; new coverage belongs on `coverage-batch-6` based on `5019b8f`.
