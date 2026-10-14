@@ -31,39 +31,6 @@ if(TEST gcode.file_percent_marker_after_unmarked_start_is_rejected)
   set_tests_properties(gcode.file_percent_marker_after_unmarked_start_is_rejected PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
-# $G reports lathe roughing modes as probe codes; verified 2026-10-13 on e65020a.
-if(TEST lathe_ngc.roughing_modal_report_uses_g71)
-  set_tests_properties(lathe_ngc.roughing_modal_report_uses_g71 PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
-if(TEST lathe_ngc.roughing_modal_report_uses_g71_1)
-  set_tests_properties(lathe_ngc.roughing_modal_report_uses_g71_1 PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
-if(TEST lathe_ngc.roughing_modal_report_uses_g71_2)
-  set_tests_properties(lathe_ngc.roughing_modal_report_uses_g71_2 PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
-if(TEST lathe_ngc.roughing_modal_report_uses_g72)
-  set_tests_properties(lathe_ngc.roughing_modal_report_uses_g72 PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
-if(TEST lathe_ngc.roughing_modal_report_uses_g72_1)
-  set_tests_properties(lathe_ngc.roughing_modal_report_uses_g72_1 PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
-if(TEST lathe_ngc.roughing_modal_report_uses_g72_2)
-  set_tests_properties(lathe_ngc.roughing_modal_report_uses_g72_2 PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
-# Scaling factors are dimensionless; report conversions verified on e65020a.
-if(TEST report.scaling_parameter_report_keeps_dimensionless_factors_in_inches)
-  set_tests_properties(report.scaling_parameter_report_keeps_dimensionless_factors_in_inches PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
-if(TEST lathe_ngc.scaling_parameter_report_does_not_double_diameter_mode_factor)
-  set_tests_properties(lathe_ngc.scaling_parameter_report_does_not_double_diameter_mode_factor PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
 
 # Named motion parameter exposes internal enums; verified 2026-10-13 on e65020a.
 if(TEST lathe_ngc.named_motion_mode_reports_g71)
@@ -98,32 +65,40 @@ if(TEST ngc_params.named_motion_mode_reports_quadratic_spline_code)
   set_tests_properties(ngc_params.named_motion_mode_reports_quadratic_spline_code PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
-# Cancelled dynamic cutter compensation reports G40.1; verified on e65020a.
-if(TEST cutter_comp.dynamic_left_compensation_named_parameter_tracks_enable_and_cancel)
-  set_tests_properties(cutter_comp.dynamic_left_compensation_named_parameter_tracks_enable_and_cancel PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-if(TEST cutter_comp.dynamic_right_compensation_named_parameter_tracks_enable_and_cancel)
-  set_tests_properties(cutter_comp.dynamic_right_compensation_named_parameter_tracks_enable_and_cancel PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+
+# Motion enum refactor regressions verified 2026-10-14 on Terje 50055a2.
+if(TEST gcode.quadratic_nonzero_j_accepted)
+  set_tests_properties(gcode.quadratic_nonzero_j_accepted PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
-# Aggregate probe reads alter selection and ignore per-input inversion (e65020a).
-if(TEST probe.aggregate_states_preserves_selected_probe_and_trigger_input)
-  set_tests_properties(probe.aggregate_states_preserves_selected_probe_and_trigger_input PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-if(TEST probe.aggregate_states_respects_independent_toolsetter_inversion)
-  set_tests_properties(probe.aggregate_states_respects_independent_toolsetter_inversion PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+if(TEST motion_control.quadratic_spline_executes)
+  set_tests_properties(motion_control.quadratic_spline_executes PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
-# No auxiliary direction outputs crashes Modbus RTU startup on e65020a.
-if(TEST modbus_rtu.aux_direction_without_outputs_disables_transport_safely)
-  set_tests_properties(modbus_rtu.aux_direction_without_outputs_disables_transport_safely PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+if(TEST lathe_ngc.finishing_cycle_passes_default_arguments_to_plugin)
+  set_tests_properties(lathe_ngc.finishing_cycle_passes_default_arguments_to_plugin PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
-# Homing a separate axis resets the internal ganged counter on e65020a.
-if(TEST asymmetric_ganging.homing_z_preserves_unhomed_secondary_motor_position)
-  set_tests_properties(asymmetric_ganging.homing_z_preserves_unhomed_secondary_motor_position PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+if(TEST lathe_ngc.finishing_cycle_passes_explicit_distances_and_pass_count)
+  set_tests_properties(lathe_ngc.finishing_cycle_passes_explicit_distances_and_pass_count PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
-if(TEST asymmetric_auto_square.homing_z_preserves_unhomed_secondary_motor_position)
-  set_tests_properties(asymmetric_auto_square.homing_z_preserves_unhomed_secondary_motor_position PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+if(TEST lathe_ngc.finishing_cycle_requires_subroutine_number)
+  set_tests_properties(lathe_ngc.finishing_cycle_requires_subroutine_number PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+if(TEST lathe_ngc.finishing_cycle_requires_zx_plane)
+  set_tests_properties(lathe_ngc.finishing_cycle_requires_zx_plane PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+if(TEST lathe_ngc.finishing_modal_report_uses_g70)
+  set_tests_properties(lathe_ngc.finishing_modal_report_uses_g70 PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+if(TEST lathe_ngc.named_motion_mode_reports_g70)
+  set_tests_properties(lathe_ngc.named_motion_mode_reports_g70 PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+if(TEST ngc_params.named_motion_mode_tracks_g0_g1_and_g80)
+  set_tests_properties(ngc_params.named_motion_mode_tracks_g0_g1_and_g80 PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()

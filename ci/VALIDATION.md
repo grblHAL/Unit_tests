@@ -223,3 +223,20 @@ The automatic default-source run 38441824898 failed against upstream core
 `ca26fc9`, which does not contain Terje's reviewed fixes. The explicit candidate
 run above is the latest-source validation; do not restore resolved exceptions
 for compatibility with that older source.
+
+## Batch 4 RTCP and wall-plotter validation
+
+Candidate run: https://github.com/petervanderwalt/Unit_tests/actions/runs/38514474774
+Harness `5835fda`, Terje source `50055a283328c3f9726bbc8f22d20a801190c66e`,
+comparison baseline `d216287a6cf1f9ec278a92ac403c30a8cf5fad3b`.
+Source, GCC ASan/UBSan, Clang ASan/UBSan, coverage and CI diagnosis all passed.
+Local full suite and strict summary: 2,453 cases, 2,433 clean passes and 20
+known regressions; no unexpected failures/skips. All 40 Python helpers pass.
+
+Fresh hosted GCC coverage: 87.1% lines (15,064/17,287),
+72.8% branches (9,780/13,434). RTCP improves from 88.9% to 96.2% lines,
+and 71.2% to 92.4% branches. Total denominators and exercised parser paths also
+change with the selected core refactor; these totals are not a test-only delta.
+Seventeen focused cases were added, fifteen fixed allowances removed, and
+remaining motion-refactor failures are documented with correct expectations.
+Production source and registry defaults are unchanged.

@@ -217,15 +217,7 @@ function(add_core_test name module source)
   if(name MATCHES "^motion_control\\.thread_plan_")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=plan_buffer_line)
   endif()
-  if(name STREQUAL "modbus_rtu.aux_direction_without_outputs_disables_transport_safely")
-    find_package(Python3 REQUIRED COMPONENTS Interpreter)
-    add_test(NAME ${name} COMMAND ${Python3_EXECUTABLE}
-      ${CMAKE_CURRENT_SOURCE_DIR}/scripts/rtu_direction_regression.py
-      $<BOOL:${ENABLE_SANITIZERS}> $<TARGET_FILE:test_${name}>)
-    set_tests_properties(${name} PROPERTIES SKIP_RETURN_CODE 77)
-  else()
-    add_test(NAME ${name} COMMAND test_${name})
-  endif()
+  add_test(NAME ${name} COMMAND test_${name})
   set_tests_properties(${name} PROPERTIES TIMEOUT 15)
 endfunction()
 

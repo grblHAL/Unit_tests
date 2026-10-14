@@ -2,7 +2,8 @@
 
 ## Objective and delivery
 
-Current coverage work belongs on `coverage-batch-3`, using Terje's core.
+Current coverage work belongs on `coverage-batch-4`, using Terje's core.
+Batch 3 is merged via PR #7; the user resumed expansion on a new branch.
 `initial-batch-part-2` is an archived earlier batch. The separate CI design task,
 authorized on 2026-10-13, belongs on `ci-source-selection`. Do not mix these
 branches or commit unfinished coverage cases with CI changes. No AI branding.
@@ -245,3 +246,11 @@ cleanup, coverage measurement and hosted validation. Open the PR, pause the
 full-coverage goal, and stop. Resume coverage expansion only when asked.
 The secondary-motor resolution warning/reset behavior is a possible improvement
 in `tests/TODO.md`, not a confirmed defect or expected-failure allowance.
+
+## Batch 4 coverage expansion
+
+The user resumed coverage on 2026-10-14 and requested a new branch and separate
+PR. `coverage-batch-4` starts from upstream `36e248d` after PR #7 merged.
+This overrides the batch 3 pause. Use latest Terje core, verify fixed exceptions,
+add meaningful tests from measured gaps, validate locally and in hosted CI,
+then open the separate batch PR. Keep production core unchanged.
