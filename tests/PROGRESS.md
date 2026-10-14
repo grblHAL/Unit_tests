@@ -1051,3 +1051,21 @@ checking endpoints/monotonic pulse totals. This checks control-point conversions
 rather than relying solely on the endpoint. Flattening/pulse rounding allowance
 is explicit; no physical contour accuracy claim is made. Normal foreground timer
 servicing lets larger curves fill and drain the real planner without hangs.
+
+## Batch 9 explicit G-code probe selection
+
+Six further cases register default/toolsetter/second probe inputs with distinct
+contact positions, advertise their real HAL capabilities and execute G38 blocks
+through the parser. They verify the input active at probe start, contact latch,
+restoration of the previous selection, no switching for an already selected
+input, rejection before motion when capability is absent, and restoration after
+a no-error missed-contact probe. Real probe cycles and motor pulses are used.
+The fixture's initial callback signature mismatch was corrected, not treated as
+a core fault. No new failures or core changes.
+
+Focused cases and the complete parser/motion modules pass under ASan/UBSan and
+strict diagnostics (build-asan/batch-9-parser-motion-results.xml). Batch 9 now
+adds 79 registered tests plus the pending DO/WHILE proposal. The 64-case hosted
+run is 38625823913; these fifteen follow-ups stay local while it runs. Continue
+freshly measured parser/startup/configuration gaps and perform full validation
+at the next substantial checkpoint. Last measured overall coverage is 90.6%/77.0%.
