@@ -332,3 +332,67 @@ XYZ switch search/pulloff and safety rejection, plus manual references through
 public ABC/UVW commands in eight-axis and remapped six-axis configurations.
 No new source exclusions or production edits were made. Hosted revalidation of
 the final 85-case batch is pending delivery.
+
+## Batch 7 encoder, capabilities and PWM ramp checkpoint
+
+Terje core `39a69a22c72283ab186133b25fb89b8f5be35767` remains unchanged and
+matches remote master. Twenty-nine additional cases pass full Windows Clang
+ASan/UBSan and strict summary: 2,669 tests, 2,657 clean, twelve known regressions,
+zero failures/skips. All 51 Python helpers pass. Coverage/hosted validation of
+this later checkpoint remains pending; no fresh percentage is claimed.
+
+Encoder cases bind registered spindles, retain native callbacks on unbinding and
+verify measured feedback independently of commanded speed. Capability cases use
+real PWM precomputation and update active RPM/ramp/laser metadata. Ramp cases run
+original ramp and dwell code, checking monotonic output, final PWM/state and short
+wait behavior. No new exceptions, exclusions or core changes were added.
+
+Final batch-6 run 38535569786 passed GCC/Clang, coverage and CI diagnosis;
+PR #11 was marked ready after that completed verification.
+
+The expanded batch-7 checkpoint adds seventeen ramp/override cases, bringing
+this batch to 46 cases. Full ASan/UBSan and strict summary pass 2,686 tests:
+2,673 clean, thirteen known regressions, zero failures/skips. All 51 helpers pass.
+A new stop-during-pending-override regression observes PWM 600 -> 818 before
+decreasing to off. Rechecking with monotonic time also reproduces it; the narrow
+expected-failure exception is documented. No core edit or exclusion was added.
+Hosted revalidation of this later checkpoint remains pending.
+
+Final batch-6 GCC coverage (run 38535569786): 88.3% lines (15,359/17,401),
+74.2% branches. These measurements precede the batch-7 additions.
+
+The next thirteen stream cases pass full Windows Clang ASan/UBSan and strict
+summary: 2,699 tests, 2,686 clean, thirteen known regressions, zero failures/skips.
+All 51 Python helpers pass. MPG status-field assertions enable their corresponding
+report settings; initial disabled-field fixture assumptions were corrected without
+classifying them as core defects. No new allowances or source edits were added.
+Hosted checkpoint 38570331318 covers the preceding 46-case batch and is still
+running; these later stream cases remain locally validated until delivery.
+
+## Stream node allocation audit
+
+Four focused cases reproduce/classify the null connection write after injected
+allocation failure, and verify heap-free primary registration, successful node
+release and duplicate-node cleanup. Full Windows ASan/UBSan and strict summary:
+2,703 cases, 2,689 clean, fourteen known regressions, zero failures/skips. All 56
+Python helpers pass, including rejection of unrelated sanitizer/assertion faults.
+Actual Linux matcher execution remains pending delivery; no core edits were made.
+
+Run 38570331318 passed GCC/Clang, coverage and diagnosis for the preceding
+46-case checkpoint. GCC coverage: 88.6% lines (15,425/17,401), 74.8% branches.
+Spindle control: 93.6% lines, 80.3% branches. These precede the later stream tests.
+
+## Kinematics hooks and coverage-fixture correction
+
+Thirteen additional RTCP/polar/wall-plotter cases pass classified local checks.
+Full ASan/UBSan and strict summary: 2,716 tests, 2,701 clean, fifteen known,
+zero failures/skips. The wall-plotter runtime setting regression resets Y counters
+with unchanged geometry; valid cable lengths and a started controller reproduce
+it, with startup and RTCP setting controls passing.
+
+Run 38573081867's coverage failure was the stream allocation fixture observing
+instrumentation allocations at process exit. Observation/injection now ends after
+each connection operation. The four resource tests pass under ASan and in a fresh
+Clang coverage build; the known fatal case skips only without sanitizers. The core
+crash assertion and strict diagnostic matching remain intact. Linux GCC/Clang
+execution of that matcher still requires hosted verification. All 56 helpers pass.

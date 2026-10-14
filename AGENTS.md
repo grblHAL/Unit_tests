@@ -279,3 +279,13 @@ based on upstream master `5019b8f`. PR #10's GCC/Clang/coverage/diagnosis run
 38530893125 passed against Terje `39a69a22c72283ab186133b25fb89b8f5be35767`.
 Keep manual-only harness triggers and reusable callers. Continue from fresh
 coverage gaps; new PRs remain checkpoints toward full coverage.
+
+## Batch 7 active continuation
+
+PR #11 merged as upstream f58c92d after its final run 38535569786 passed.
+Batch 7 is isolated on `coverage-batch-7` and includes that merged baseline.
+The user requested a review boundary and cleanup of fully merged remote branches.
+Keep unfinished AUX_SETTINGS_PULLUP cases/variant out of this delivery until the
+live/load pull-mode contract is clarified. Read PROGRESS.md for exact validation
+and branch cleanup evidence.
+Continue meaningful coverage with Terje core, preserving verified assertions.

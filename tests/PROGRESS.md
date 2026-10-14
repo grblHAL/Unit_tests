@@ -3,6 +3,72 @@
 Last verified: **2026-10-14**. Read this with the root `AGENTS.md` and README.
 This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 
+## Batch 7 active work
+
+`coverage-batch-7` continues toward full meaningful coverage. Core under test:
+Terje 39a69a22c72283ab186133b25fb89b8f5be35767, production source untouched.
+Hosted checkpoint 38577228353 (5d76de0) passed GCC/Clang/coverage/diagnosis.
+Fresh GCC coverage: 89.2% lines (15,526/17,401), 75.3% branches
+(10,138/13,464). grbllib startup/scheduler coverage is now 82.7% lines
+and 68.7% branches. Later local additions have not refreshed these measurements.
+
+102 new cases since batch 6: I/O registration, encoder/capability/ramp behavior,
+stream lifecycle/allocation controls, kinematics hooks, fallback filesystem metadata,
+startup homing-switch wiring and automatic status-report scheduling. The latest full local
+ASan/UBSan and strict summary passes 2,742 cases: 2,727 clean, fifteen known,
+zero unexpected failures/skips. All 56 Python helpers pass.
+
+New wall-plotter regression: after initialized/started setup with valid cable
+lengths, a junction-deviation update resets Y from 18,500 to 16,000. Initialization
+and RTCP setting controls pass; the entry/exception preserves the correct result.
+
+Hosted run 38573081867 exposed allocation-fixture interference with gcov runtime
+allocations at process exit. Observation/injection is now disabled after each
+connection operation. Four targeted tests pass in ASan and a fresh instrumented
+coverage build; the fatal case skips in coverage as documented. This fix changes
+fixtures only, not the core assertion/exception. The earlier Linux GCC/Clang jobs passed the diagnostic matcher. Corrected
+checkpoint 52f726c run 38575541143 passed coverage: 88.9% lines
+(15,473/17,401), 75.0% branches (10,101/13,464). Its GCC/Clang jobs
+and diagnosis all passed. The subsequent 26 filesystem/startup cases
+also passed hosted run 38577228353. Do not claim a fresh
+coverage percentage from the local sanitizer checks.
+
+PR #11 merged as upstream f58c92d. Batch 7 includes that baseline; its PR
+contains only the subsequent 134 tests. Keep the full-coverage goal active and continue
+from real remaining gaps after hosted verification.
+
+
+## Uncommitted I/O continuation
+
+Eight executable AUX_SETTINGS_PULLUP cases and its host variant are being
+validated. Seven pass; live/load pullup-disable consistency fails because live
+configuration chooses PullMode_Down and loaded configuration chooses PullMode_None.
+This remains an ordinary failing test, with no new exception or known-bug entry.
+The intended mode is awaiting human clarification. Automatic approval review
+rejected changing mode assertions and adding an exception without that contract.
+Keep these changes isolated from delivery until clarified.
+
+Five independent input/output inversion controls pass focused sanitizer checks:
+clearing masks, repeated values and PWM/servo exclusion. The full delivered
+checkpoint remains 2,742 cases; do not call the pending working tree fully green.
+
+Two IRQ callback controls and six scheduler deadline/cancellation/startup controls
+also pass. The current full working-tree run has 2,763 cases: 2,747 clean passes,
+fifteen known regressions and exactly one unresolved pull-mode consistency failure.
+No sanitizer diagnostic was introduced. There are 134 committed cases since batch 6,
+plus the eight uncommitted pullup cases/variant. The fixture preserves the core
+default IRQ callback across mocked driver initialization; all 68 boot tests pass.
+
+Eight further motion cases pass all 65 motion-control tests and strict diagnostic
+summary: clockwise/counterclockwise two-turn circles, a two-turn helix, geometry
+and one-time travel-limit callbacks in all planes, plus disabled-limit bypass.
+The callback fixture enables actual soft limits/homing and a valid envelope;
+otherwise the parser intentionally marks targets prevalidated. Independent
+step pulses and physical endpoints verify execution, not just parser acceptance.
+The current configured suite contains 2,771 cases; a new full run has not yet been
+performed after these eight additions. The unresolved pull-mode failure remains
+ordinary and uncommitted.
+
 ## Batch 6 active work
 
 PR #10 merged; new coverage belongs on `coverage-batch-6` based on `5019b8f`.
@@ -573,3 +639,36 @@ continue independent work without changing headers under an active build.
 The user requested pausing coverage after batch 3 delivery. No scheduled background continuation was configured. A fresh chat should read
 these files, verify current state, and be explicitly asked to resume the full
 coverage objective; do not assume deleting a chat schedules future execution.
+
+## Review boundary requested by the user
+
+On 2026-10-14 the user requested PR preparation and cleanup of branches proven
+merged upstream. Finish the eleven expression cases (comparison boundaries,
+operator-name rejection, signed expressions, invalid parameters and literal
+format preservation) and validate the completed commits independently of the
+eight uncommitted pullup cases. The mode clarification remains pending; do not
+publish a new exception or describe that working tree as fully green.
+
+Fork master 331414d has no unique commits relative to freshly fetched upstream
+master 5019b8f. PR #11 remains open; packaging the next checkpoint separately or
+as a combined replacement is awaiting the user's preference. Only delete remote
+branches whose current tips are verified ancestors of upstream master.
+
+## Completed batch 7 delivery validation
+
+Clean committed checkout c5040a6 passed all 2,774 Windows Clang ASan/UBSan
+cases and strict diagnostic summary: 2,759 clean, fifteen known regressions,
+zero unexpected failures or skips. The upstream merge into 658d128 changes no
+file contents. All 56 helper tests and actionlint pass. Source under test remains
+Terje 39a69a22c72283ab186133b25fb89b8f5be35767, unchanged.
+
+PR #11 merged; batch 7 is based on upstream f58c92d. Eight remote branches
+whose current tips were verified ancestors of upstream master were deleted:
+ci-actionable-reports, core-maintainer-followup, coverage-batch-3 through -6,
+docs-current-ci-status and docs-known-bug-fixes. Fork master contains no unique
+commits; no duplicate PR is required. Remote master and coverage-batch-7 remain.
+
+The eight pullup cases and their optional host variant remain uncommitted and
+outside this delivery, with one visible consistency failure pending human
+clarification. Do not add an exception or alter the pull-mode expectations until
+that contract is resolved. Hosted validation of the final checkpoint is pending.

@@ -318,3 +318,90 @@ return when stat succeeds. This avoids falling through to a stale cached result.
 **Remove exception when fixed:** remove the named `WILL_FAIL` block in
 [known_bugs.cmake](known_bugs.cmake), retain the assertion and controls, rerun
 lookup cases and full sanitizers, and delete this section.
+
+## Stopping during a pending spindle override briefly raises PWM
+
+**Marked known:** 2026-10-14 on Terje `39a69a22c72283ab186133b25fb89b8f5be35767`.
+
+With PWM ramping enabled, start at 6,000 RPM and request a 150% override without
+executing its first delayed update. A subsequent stop ramps down from the stored
+9,000 RPM target rather than the still-emitted 6,000 RPM output. The first stop
+update raises PWM from 600 to 818 before later decreasing it and disabling the
+spindle. The regression runs the original PWM, override, scheduler and stop code.
+
+The override stores its target before scheduling output in
+[spindle_set_override](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/spindle_control.c#L627).
+The stop uses that stored target as its starting speed in
+[_spindle_set_state](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/spindle_control.c#L730).
+
+**Regression:** [stop during pending override](cases/spindle_control/pending_override_stop_does_not_increase_pwm_before_disabling.c).
+Passing controls verify normal monotonic stops and cancellation of future override
+updates. The assertion requires every stop PWM update to stay at or below the
+output emitted before the stop; it does not require instantaneous physical braking.
+
+**Suggested fix (not applied):** retain the last emitted RPM of the pending ramp
+and use it when starting stop/direction-change ramps, before cancelling the delayed
+work. Keep commanded RPM and emitted output state distinct. Revalidate ordinary
+stops, partially progressed overrides, reversal and scheduler cleanup.
+
+**Remove exception when fixed:** remove the named `WILL_FAIL` block from
+[known_bugs.cmake](known_bugs.cmake), retain the assertion and controls, run the
+full sanitizer suite/strict summary, and delete this section.
+
+## Auxiliary stream allocation failure writes through a null connection
+
+**Marked known:** 2026-10-14 on Terje `39a69a22c72283ab186133b25fb89b8f5be35767`.
+
+When `malloc` fails while adding a client after the primary stream is registered,
+[add_connection at stream.c:310](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/stream.c#L310)
+writes `connection->is_up` although `connection` is NULL. Clang reports null member
+access and ASan reports a write at address 0x8. `stream_connect()` should return
+false and preserve the primary connection rather than crash.
+
+**Regression:** [failed allocation](cases/stream/auxiliary_connection_allocation_failure_preserves_primary_stream.c).
+The [successful control](cases/stream/auxiliary_connection_success_allocates_and_releases_linked_node.c)
+checks normal registration/removal and the primary broadcast path. Fault injection
+is enabled only immediately before the auxiliary registration.
+
+The [strict diagnostic wrapper](../scripts/stream_allocation_regression.py) accepts
+only the injected failure, exact null-member-access source line/type, write at 0x8,
+expected connection/caller/test frames and ASan summary. Different faults remain
+failures. The fatal case skips only in unsanitized coverage runs; it is not a source
+coverage exclusion. Linux GCC/Clang verified the diagnostic matcher in hosted run 38575541143,
+which passed all jobs.
+
+**Suggested fix (not applied):** return NULL immediately if allocation of the
+connection node fails, before assigning fields. Existing caller guards can then
+return false without changing the active connection or linked list.
+
+**Remove exception when fixed:** remove this case's `WILL_FAIL` block from
+[known_bugs.cmake](known_bugs.cmake), replace the wrapper CMake registration with a
+normal executable test, remove [wrapper](../scripts/stream_allocation_regression.py)
+and [matcher helpers](../scripts/test_stream_allocation_regression.py), retain the
+functional regression and control, run full sanitizers/summary, and delete this entry.
+
+## Wall-plotter settings update resets the Y motor reference
+
+**Marked known:** 2026-10-14 on Terje `39a69a22c72283ab186133b25fb89b8f5be35767`.
+
+After initialization, updating junction deviation through the public settings API
+changes a wall plotter's Y motor step counter from 18,500 to 16,000 although cable
+geometry is unchanged. X and Z remain 18,000 and 789. The test uses a started
+controller and geometrically valid cable lengths, not an unfinished startup.
+
+The first-initialization flag is assigned false again at
+[wall_plotter.c:326](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/kinematics/wall_plotter.c#L326),
+so every settings callback repeats the initial Y-reference assignment.
+
+**Regression:** [unrelated runtime setting](cases/wall_plotter/unrelated_setting_update_preserves_motor_step_counters.c).
+Controls verify the intended initial cable reference and that the same junction
+setting update preserves RTCP motor counters.
+
+**Suggested fix (not applied):** mark initialization complete after the first
+reference assignment. Preserve motor counters for unrelated settings changes;
+review geometry-change recalculation separately rather than resetting a reference
+on every callback.
+
+**Remove exception when fixed:** remove the named `WILL_FAIL` block in
+[known_bugs.cmake](known_bugs.cmake), retain the regression/controls, run full
+sanitizers and strict summary, and delete this entry.

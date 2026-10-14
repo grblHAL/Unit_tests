@@ -74,3 +74,21 @@ if(TEST vfs.locate_absolute_miss_after_success_does_not_return_previous_result)
   set_tests_properties(vfs.locate_absolute_miss_after_success_does_not_return_previous_result
     PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
 endif()
+
+# Stop must ramp down from emitted output, not an unapplied override target.
+if(TEST spindle_control.pending_override_stop_does_not_increase_pwm_before_disabling)
+  set_tests_properties(spindle_control.pending_override_stop_does_not_increase_pwm_before_disabling
+    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
+endif()
+
+# Strict sanitizer wrapper verifies only the documented null connection write.
+if(TEST stream.auxiliary_connection_allocation_failure_preserves_primary_stream)
+  set_tests_properties(stream.auxiliary_connection_allocation_failure_preserves_primary_stream
+    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
+endif()
+
+# Unrelated settings changes must preserve existing wall-plotter motor counters.
+if(TEST wall_plotter.unrelated_setting_update_preserves_motor_step_counters)
+  set_tests_properties(wall_plotter.unrelated_setting_update_preserves_motor_step_counters
+    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
+endif()

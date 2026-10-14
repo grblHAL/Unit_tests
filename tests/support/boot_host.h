@@ -84,6 +84,7 @@ bool __wrap_driver_init(void)
         grbl.on_execute_realtime = service_boot_events;
     }
     hal.version = core_hal.version; hal.driver_reset = core_hal.driver_reset;
+    hal.irq_claim = core_hal.irq_claim;
     hal.nvs.size = core_hal.nvs.size; hal.step_us_min = core_hal.step_us_min;
     hal.tool.atc_get_state = core_hal.tool.atc_get_state;
     hal.control.interrupt_callback = core_hal.control.interrupt_callback;
