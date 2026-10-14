@@ -731,3 +731,21 @@ eight pending pullup cases. These ten additions have been module-validated;
 full committed-only sanitizer/hosted coverage validation remains for the next
 substantial delivery boundary. Do not call the working suite fully green while
 the ordinary pullup consistency failure remains unresolved.
+
+## End-of-day snapshot, 2026-10-14
+
+The user requested saving current work and a PR, then stopping until tomorrow.
+The full-coverage goal is paused. Batch 8 has 33 completed new cases plus eight
+unfinished AUX_SETTINGS_PULLUP cases saved in a separate WIP commit. Assertions
+and exceptions for the unresolved pull-mode contract have not been changed.
+
+This snapshot is for draft review, not a passing delivery. The live/load pullup
+consistency case remains an ordinary failing test: live selects PullMode_Down,
+loaded configuration selects PullMode_None. Resolve that contract with the human
+before adjusting expectations or introducing an exception. Seven other pullup
+controls pass but their mode-specific expectations also require that review.
+
+Last full working-tree check before reporting expansion: 2,794 cases, 2,777 clean,
+sixteen expected regressions and the one ordinary pullup failure. All 219 report
+cases pass after the subsequent 21 additions; a latest full 2,815-case run and
+clean GCC/Clang/coverage delivery remain outstanding. Keep core unchanged.
