@@ -825,3 +825,19 @@ The last hosted baseline has protocol at 82.0% lines/71.0% branches and state
 machine at 83.2%/63.0%; these workflow cases address their cancellation lifecycle.
 Batch 9 now contains ten new cases; full-suite/hosted measurement remains due at
 its substantial delivery boundary. Continue from remaining state/motion gaps.
+
+## Batch 9 held-spindle workflows
+
+Seven additional state-machine cases use M3S5000, a real planned 20 mm move,
+feed hold, realtime spindle-stop toggles and cycle start. Driver callbacks log
+state/RPM and physical pulse position. They verify stopping retains programmed
+state/queued motion, a second toggle restores without moving, cycle start honors
+the restore setting, a stop requested during deceleration waits until hold is
+complete, running-cut stop overrides are ignored, and two queued toggles cancel.
+The public suspend manager is serviced as in the core's suspend loop; no private
+entry points or direct override flag injection are used. Missing stream connection
+callback in the initial fixture was corrected; it was not a core defect.
+
+All 32 state-machine cases pass under ASan/UBSan with strict summary classification
+(build-asan/batch-9-state-results.xml). Batch 9 now has 17 new cases. Continue
+practical state/motion coverage, with a full-suite check at this local checkpoint.
