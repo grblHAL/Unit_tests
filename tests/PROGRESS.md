@@ -976,3 +976,13 @@ only after the preceding run completed successfully. Keep these four follow-up
 cases local while that run executes. The last hosted coverage remains 90.5%
 lines/76.7% branches for 011afe0. New coverage is not assumed until its fresh
 artifact is read. Continue the remaining measured gaps; full coverage is not done.
+
+## Batch 9 sender spindle overrides
+
+Five new cases use properly registered spindles, real M3S5000 and public realtime
+spindle override bytes. They verify coarse/fine decreases, fine increase, resetting
+a prior percentage, and ordered queued adjustments/reset producing one final
+driver update. Programmed RPM remains 5000 while driver output changes. All 72
+multi-spindle cases pass under ASan/UBSan and strict summary
+(build-asan/batch-9-sender-spindle-results.xml). These address uncovered protocol
+spindle-override switch branches without changing core.
