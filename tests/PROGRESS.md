@@ -32,6 +32,19 @@ routine follow-up push. Next inspect allocation failure in stream connection
 registration using a real focused fault injection; source inspection alone is
 not sufficient to classify a new defect.
 
+The stream allocation audit now has four cases: primary uses no heap node,
+auxiliary success/removal releases its node, duplicate registration frees its
+rejected node, and injected allocation failure reproduces a null connection write
+at stream.c:310. An exact sanitizer wrapper classifies the last case. Full local
+ASan/UBSan and strict summary pass 2,703 tests: 2,689 clean, fourteen known
+regressions, zero failures/skips. All 56 Python helpers pass. Actual Linux matcher
+verification remains pending delivery; do not treat synthetic Linux helper text
+as hosted proof.
+
+Hosted run 38570331318 passed the preceding 46-case checkpoint. GCC coverage:
+88.6% lines (15,425/17,401), 74.8% branches; spindle_control.c is 93.6% lines and
+80.3% branches. Later stream/allocation additions are not included in those values.
+
 
 ## Batch 6 active work
 

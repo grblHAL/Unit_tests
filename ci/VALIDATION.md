@@ -368,3 +368,16 @@ report settings; initial disabled-field fixture assumptions were corrected witho
 classifying them as core defects. No new allowances or source edits were added.
 Hosted checkpoint 38570331318 covers the preceding 46-case batch and is still
 running; these later stream cases remain locally validated until delivery.
+
+## Stream node allocation audit
+
+Four focused cases reproduce/classify the null connection write after injected
+allocation failure, and verify heap-free primary registration, successful node
+release and duplicate-node cleanup. Full Windows ASan/UBSan and strict summary:
+2,703 cases, 2,689 clean, fourteen known regressions, zero failures/skips. All 56
+Python helpers pass, including rejection of unrelated sanitizer/assertion faults.
+Actual Linux matcher execution remains pending delivery; no core edits were made.
+
+Run 38570331318 passed GCC/Clang, coverage and diagnosis for the preceding
+46-case checkpoint. GCC coverage: 88.6% lines (15,425/17,401), 74.8% branches.
+Spindle control: 93.6% lines, 80.3% branches. These precede the later stream tests.

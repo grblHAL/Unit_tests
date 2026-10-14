@@ -347,3 +347,34 @@ stops, partially progressed overrides, reversal and scheduler cleanup.
 **Remove exception when fixed:** remove the named `WILL_FAIL` block from
 [known_bugs.cmake](known_bugs.cmake), retain the assertion and controls, run the
 full sanitizer suite/strict summary, and delete this section.
+
+## Auxiliary stream allocation failure writes through a null connection
+
+**Marked known:** 2026-10-14 on Terje `39a69a22c72283ab186133b25fb89b8f5be35767`.
+
+When `malloc` fails while adding a client after the primary stream is registered,
+[add_connection at stream.c:310](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/stream.c#L310)
+writes `connection->is_up` although `connection` is NULL. Clang reports null member
+access and ASan reports a write at address 0x8. `stream_connect()` should return
+false and preserve the primary connection rather than crash.
+
+**Regression:** [failed allocation](cases/stream/auxiliary_connection_allocation_failure_preserves_primary_stream.c).
+The [successful control](cases/stream/auxiliary_connection_success_allocates_and_releases_linked_node.c)
+checks normal registration/removal and the primary broadcast path. Fault injection
+is enabled only immediately before the auxiliary registration.
+
+The [strict diagnostic wrapper](../scripts/stream_allocation_regression.py) accepts
+only the injected failure, exact null-member-access source line/type, write at 0x8,
+expected connection/caller/test frames and ASan summary. Different faults remain
+failures. The fatal case skips only in unsanitized coverage runs; it is not a source
+coverage exclusion. Actual Linux GCC/Clang verification remains pending delivery.
+
+**Suggested fix (not applied):** return NULL immediately if allocation of the
+connection node fails, before assigning fields. Existing caller guards can then
+return false without changing the active connection or linked list.
+
+**Remove exception when fixed:** remove this case's `WILL_FAIL` block from
+[known_bugs.cmake](known_bugs.cmake), replace the wrapper CMake registration with a
+normal executable test, remove [wrapper](../scripts/stream_allocation_regression.py)
+and [matcher helpers](../scripts/test_stream_allocation_regression.py), retain the
+functional regression and control, run full sanitizers/summary, and delete this entry.

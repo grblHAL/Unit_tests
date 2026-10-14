@@ -223,6 +223,9 @@ function(add_core_test name module source)
     OR name STREQUAL "report.setting_group_fallback_lists_available_groups")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=calloc)
   endif()
+  if(name MATCHES "^stream\\.auxiliary_connection_")
+    target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc -Wl,--wrap=free)
+  endif()
   if(name STREQUAL "report.pins_report_survives_sort_allocation_failure"
     OR name STREQUAL "report.uart_report_survives_sort_allocation_failure"
     OR name STREQUAL "ngc_params.virtual_registration_allocation_failure_preserves_existing_list")
@@ -251,7 +254,13 @@ function(add_core_test name module source)
   if(name MATCHES "^motion_control\\.thread_plan_")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=plan_buffer_line)
   endif()
-  if(name STREQUAL "vfs.locate_long_filename_returns_mounted_file_path")
+  if(name STREQUAL "stream.auxiliary_connection_allocation_failure_preserves_primary_stream")
+    find_package(Python3 REQUIRED COMPONENTS Interpreter)
+    add_test(NAME ${name} COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/scripts/stream_allocation_regression.py
+      $<BOOL:${ENABLE_SANITIZERS}> $<TARGET_FILE:test_${name}>)
+    set_tests_properties(${name} PROPERTIES SKIP_RETURN_CODE 77)
+  elseif(name STREQUAL "vfs.locate_long_filename_returns_mounted_file_path")
     find_package(Python3 REQUIRED COMPONENTS Interpreter)
     add_test(NAME ${name} COMMAND ${Python3_EXECUTABLE}
       ${CMAKE_CURRENT_SOURCE_DIR}/scripts/vfs_path_regression.py
