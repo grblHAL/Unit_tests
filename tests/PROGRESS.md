@@ -916,3 +916,14 @@ finishes and another substantial validation checkpoint is appropriate. Do not
 push repeatedly and cancel the running CI. PR #13 remains the unmerged parent.
 Next: inspect fresh hosted coverage when available and continue remaining real
 state/motion/tool-change and enabled-configuration gaps; full coverage is incomplete.
+
+## Batch 9 hold accessory settings
+
+Seven further cases exercise flood/mist overrides across hold/resume with
+restoration enabled/disabled, reduced spindle RPM during completed hold, ordinary
+hold leaving output unchanged, and a queued RPM override applied on resume after
+reduced-speed hold. They command accessories through the parser and realtime
+interface, log driver output transitions at actual pulse positions, and finish
+the original 20 mm move without changing programmed RPM or losing position.
+The coolant fixture's missing flood capability was corrected before classifying
+results; no core defect was inferred from that setup error.
