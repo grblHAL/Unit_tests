@@ -1026,3 +1026,17 @@ Batch 9 now adds 64 registered tests plus that pending proposal. Full current
 job for b583c96 (47 cases), with fresh coverage 15,772/17,402 lines (90.6333%) and
 10,368/13,464 branches (77.0053%). Follow-up tests remain local. Continue actual
 remaining branches; PR #13 is still the unmerged parent at last verification.
+
+## Batch 9 third validated checkpoint
+
+Full current ASan/UBSan suite and strict summary passed: 2,879 cases, 2,861 clean,
+18 documented regressions reproduced, zero unexpected failures/skips (37.99 s).
+Evidence: build-asan/batch-9-third-checkpoint-results.xml. The added WHILE
+regression is narrowly expected; DO/WHILE intent stays in TODO/proposals exactly
+as the user requested, pending Terje's comment. No core changes.
+
+The preceding 47-case hosted run also passed every job. Fresh module coverage is
+state machine 91.2% lines/73.6% branches, tool change 95.1%/73.1%, protocol
+84.6%/74.3%; overall 90.6%/77.0%. Push this completed 64-case checkpoint and
+request hosted validation; continue other source gaps while it runs. Do not
+merge PR #13 or duplicate its upstream diff while it remains open.
