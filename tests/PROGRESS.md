@@ -11,10 +11,10 @@ Hosted checkpoint 38570331318 passed GCC/Clang/coverage/diagnosis. GCC coverage
 88.6% lines (15,425/17,401), 74.8% branches; spindle control 93.6% lines and
 80.3% branches. Later additions have not yet refreshed these measurements.
 
-89 new cases since batch 6: I/O registration, encoder/capability/ramp behavior,
+102 new cases since batch 6: I/O registration, encoder/capability/ramp behavior,
 stream lifecycle/allocation controls, kinematics hooks, fallback filesystem metadata,
 startup homing-switch wiring and automatic status-report scheduling. The latest full local
-ASan/UBSan and strict summary passes 2,729 cases: 2,714 clean, fifteen known,
+ASan/UBSan and strict summary passes 2,742 cases: 2,727 clean, fifteen known,
 zero unexpected failures/skips. All 56 Python helpers pass.
 
 New wall-plotter regression: after initialized/started setup with valid cable
@@ -28,7 +28,8 @@ coverage build; the fatal case skips in coverage as documented. This fix changes
 fixtures only, not the core assertion/exception. The earlier Linux GCC/Clang jobs passed the diagnostic matcher. Corrected
 checkpoint 52f726c run 38575541143 passed coverage: 88.9% lines
 (15,473/17,401), 75.0% branches (10,101/13,464). Its GCC/Clang jobs
-remain in progress; the later thirteen cases are locally validated only. Do not claim a fresh
+and diagnosis all passed. The subsequent 26 filesystem/startup cases are
+locally validated; their hosted delivery is the next checkpoint. Do not claim a fresh
 coverage percentage from the local sanitizer checks.
 
 PR #11 is ready and remains independently reviewed; avoid a duplicate upstream
