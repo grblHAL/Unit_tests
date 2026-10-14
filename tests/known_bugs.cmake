@@ -26,7 +26,8 @@ if(TEST gcode.file_percent_marker_after_unmarked_start_is_rejected)
   set_tests_properties(gcode.file_percent_marker_after_unmarked_start_is_rejected PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
-# Failed EEPROM sync drops pending startup/version writes; verified 2026-10-14.
+# Deferred storage failure policy: tests/TODO.md#storage-write-failure-policy.
+# Retain current exceptions until the maintainer chooses/implements the contract.
 if(TEST nvs_buffer.startup_slot_0_failed_sync_remains_pending_for_retry)
   set_tests_properties(nvs_buffer.startup_slot_0_failed_sync_remains_pending_for_retry PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
