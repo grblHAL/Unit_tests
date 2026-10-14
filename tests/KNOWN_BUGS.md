@@ -198,3 +198,51 @@ successful plugin dispatch and existing missing-Q/plane error statuses.
 [known_bugs.cmake](known_bugs.cmake), retain all assertions, run the lathe/parser
 suite and full sanitizers, then delete this entry. Named-parameter reporting also
 requires the getter fix above. No sanitizer diagnostic allowance applies.
+
+## Failed startup-line writes are discarded instead of retried
+
+**Marked known:** 2026-10-14, Terje `50055a283328c3f9726bbc8f22d20a801190c66e`.
+
+Write startup slot 0 or 1 through `settings_write_startup_line()`, then have the
+physical EEPROM handler reject its first write. RAM accepted the new command,
+but `nvs_buffer_sync_physical()` clears the slot's pending bit
+[before attempting the physical write at nvs_buffer.c:345](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/nvs_buffer.c#L345).
+The pending mask and aggregate dirty flag both become zero. Subsequent syncs
+therefore never retry the command, and physical storage retains the old text.
+Coordinate, global, build-info and driver writes retain their dirty flag on
+failure and have passing retry controls.
+
+**Regressions:** [slot 0](cases/nvs_buffer/startup_slot_0_failed_sync_remains_pending_for_retry.c)
+and [slot 1](cases/nvs_buffer/startup_slot_1_failed_sync_remains_pending_for_retry.c).
+Separate `startup_slot_*_sync_preserves_text_and_checksum` cases verify successful
+persistence and CRCs without an injected failure.
+
+**Suggested fix (proposal, not runtime-verified):** Remove the unconditional
+pre-write clear; clear that slot only after the physical handler reports success.
+Leave failed slots dirty so another idle sync can retry them.
+
+**Remove exceptions when fixed:** remove the two startup retry blocks in
+[known_bugs.cmake](known_bugs.cmake), keep all assertions, run storage/startup
+cases and full sanitizers, then delete this entry. No sanitizer allowance applies.
+
+## Failed version-only writes lose the aggregate retry flag
+
+**Marked known:** 2026-10-14, Terje `50055a283328c3f9726bbc8f22d20a801190c66e`.
+
+Write the settings version byte through buffered `hal.nvs.memcpy_to_nvs()`, then
+reject its first physical write. The version flag correctly remains true, but
+[the aggregate dirty calculation at nvs_buffer.c:379](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/nvs_buffer.c#L379)
+omits `settings_dirty.version` and makes `is_dirty` false when no other record is
+pending. Later syncs return immediately without retrying the version byte.
+
+**Regression:** [failed version sync](cases/nvs_buffer/failed_version_only_write_remains_pending_for_retry.c).
+**Passing control:** [successful version sync](cases/nvs_buffer/version_only_successful_sync_clears_pending_write.c).
+Both exercise the public buffer-write API without manually changing dirty flags.
+
+**Suggested fix (proposal, not runtime-verified):** Include the pending version
+flag in the aggregate dirty expression. Preserve per-record success/failure flags.
+
+**Remove exception when fixed:** remove the version retry block in
+[known_bugs.cmake](known_bugs.cmake), retain correct assertions and the control,
+run storage/version cases and full sanitizers, then delete this entry.
+No sanitizer allowance applies.

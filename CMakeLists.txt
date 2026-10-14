@@ -214,6 +214,11 @@ function(add_core_test name module source)
     OR name STREQUAL "ngc_params.string_name_allocation_failure_reports_zero_and_allows_retry")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=realloc)
   endif()
+  if(name STREQUAL "nvs_buffer.buffer_allocation_failure_can_retry_without_changing_storage_handlers"
+    OR name STREQUAL "nvs_buffer.driver_allocation_failure_can_retry_without_reserving_area"
+    OR name STREQUAL "nvs_buffer.initialization_without_buffer_reports_startup_warning")
+    target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc)
+  endif()
   if(name MATCHES "^motion_control\\.thread_plan_")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=plan_buffer_line)
   endif()

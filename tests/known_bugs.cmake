@@ -102,3 +102,16 @@ endif()
 if(TEST ngc_params.named_motion_mode_tracks_g0_g1_and_g80)
   set_tests_properties(ngc_params.named_motion_mode_tracks_g0_g1_and_g80 PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Failed EEPROM sync drops pending startup/version writes; verified 2026-10-14.
+if(TEST nvs_buffer.startup_slot_0_failed_sync_remains_pending_for_retry)
+  set_tests_properties(nvs_buffer.startup_slot_0_failed_sync_remains_pending_for_retry PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+if(TEST nvs_buffer.startup_slot_1_failed_sync_remains_pending_for_retry)
+  set_tests_properties(nvs_buffer.startup_slot_1_failed_sync_remains_pending_for_retry PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+if(TEST nvs_buffer.failed_version_only_write_remains_pending_for_retry)
+  set_tests_properties(nvs_buffer.failed_version_only_write_remains_pending_for_retry PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
