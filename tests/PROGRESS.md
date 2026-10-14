@@ -1069,3 +1069,22 @@ adds 79 registered tests plus the pending DO/WHILE proposal. The 64-case hosted
 run is 38625823913; these fifteen follow-ups stay local while it runs. Continue
 freshly measured parser/startup/configuration gaps and perform full validation
 at the next substantial checkpoint. Last measured overall coverage is 90.6%/77.0%.
+
+## Batch 9 startup-failure task isolation
+
+Three additional boot cases invoke real grbl_enter with driver init, setup or
+pulse-delay capability failure. Valid driver/plugin callbacks queue startup,
+delayed and systick work during initialization. The normal startup fault path
+must discard these tasks and stay in the self-test alarm with no queued motion.
+A host observer verifies three scheduler turns, advances mock time and terminates
+the test only after checking state/callback counts. It does not make the core's
+intentional infinite fault loop return or call private functions. A default-off
+boot fixture option supplies no sender input instead of issuing CMD_EXIT.
+Original startup case behavior remains unchanged.
+
+All boot variants pass ASan/UBSan and strict summary
+(build-asan/batch-9-boot-fault-results.xml). Batch 9 now adds 82 registered tests
+plus the pending DO/WHILE proposal. Eighteen follow-ups after 7ed2f01 remain local;
+run 38625823913 validates its 64-case checkpoint. Full current 2,897-case suite
+is due before another push. Continue remaining parser/feature/startup gaps from
+fresh coverage. No new bug classifications or production-core edits in this work.
