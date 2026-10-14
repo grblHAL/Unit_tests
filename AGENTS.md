@@ -289,3 +289,14 @@ Keep unfinished AUX_SETTINGS_PULLUP cases/variant out of this delivery until the
 live/load pull-mode contract is clarified. Read PROGRESS.md for exact validation
 and branch cleanup evidence.
 Continue meaningful coverage with Terje core, preserving verified assertions.
+
+## Batch 8 local continuation
+
+PR #12 (134 new cases) merged as upstream f5ba765 after final run
+38581963519 passed every job.
+New work is isolated on local-only coverage-batch-8, based on its merged
+upstream baseline. Keep the pending
+AUX_SETTINGS_PULLUP cases/variant out of delivery until the mode contract is
+clarified. Revalidate the shared host default settings callback under the full
+suite before delivery; it must match normal core startup, not mask real failures.
+Continue meaningful full coverage from measured gaps without modifying core.

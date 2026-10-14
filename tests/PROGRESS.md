@@ -3,9 +3,39 @@
 Last verified: **2026-10-14**. Read this with the root `AGENTS.md` and README.
 This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 
-## Batch 7 active work
+## Batch 8 local continuation
 
-`coverage-batch-7` continues toward full meaningful coverage. Core under test:
+PR #12 merged as upstream f5ba765 after run 38581963519 passed every job.
+New coverage belongs on local-only coverage-batch-8, based on that merged
+baseline. The completed 134-case parent batch is already upstream.
+GitHub still contains only master and coverage-batch-7 after merged-branch cleanup.
+
+Eight public settings cases pass focused sanitizer checks: probe flag readback,
+encoder-dependent spindle tolerance, dedicated home-input inversion availability,
+and fifth/sixth homing phase masks. Four public backlash-setting cases verify
+live enable, distance changes, fresh zero and clearing existing compensation.
+The clear regression reproduces stale compensation after its setting reads zero;
+see KNOWN_BUGS.md and known_bugs.cmake. Core source is unchanged.
+
+The default host settings callback now matches the core's initialized no-op,
+installed before parser hooks capture it. The initial new backlash crashes came
+from a missing fixture callback, and were fixed before checking emitted pulses.
+The full working suite contains 2,794 cases: 2,777 clean passes, sixteen known
+regressions reproduced, one ordinary pullup consistency failure, zero skips.
+No other sanitizer diagnostic or failure occurred after the shared fixture change.
+The backlash regression records 88 X pulses versus the correct 80 after clearing
+its setting. A clean committed-only delivery run has not yet been made for batch 8. The separate eight pullup cases/variant
+remain uncommitted with one ordinary failure pending mode clarification.
+
+The settings audit found disconnected availability branches: safety-door delay
+and auto-report metadata have NULL availability callbacks, and timezone metadata
+is commented out. Do not manufacture calls to private predicates just to count
+those branches as covered. Test supported public behavior; preserve these source
+coverage gaps and review unreachable code separately with the maintainer.
+
+## Batch 7 review checkpoint
+
+`coverage-batch-7` is the completed 134-case PR #12 review checkpoint. Core under test:
 Terje 39a69a22c72283ab186133b25fb89b8f5be35767, production source untouched.
 Hosted checkpoint 38577228353 (5d76de0) passed GCC/Clang/coverage/diagnosis.
 Fresh GCC coverage: 89.2% lines (15,526/17,401), 75.3% branches
@@ -671,4 +701,6 @@ commits; no duplicate PR is required. Remote master and coverage-batch-7 remain.
 The eight pullup cases and their optional host variant remain uncommitted and
 outside this delivery, with one visible consistency failure pending human
 clarification. Do not add an exception or alter the pull-mode expectations until
-that contract is resolved. Hosted validation of the final checkpoint is pending.
+that contract is resolved. Hosted validation of final checkpoint 305f34f passed every job in run
+38581963519. Fresh GCC coverage is 89.5% lines (15,568/17,401) and
+75.6% branches (10,180/13,464). PR #12 is ready for review.

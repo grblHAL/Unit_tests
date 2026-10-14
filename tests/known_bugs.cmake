@@ -92,3 +92,9 @@ if(TEST wall_plotter.unrelated_setting_update_preserves_motor_step_counters)
   set_tests_properties(wall_plotter.unrelated_setting_update_preserves_motor_step_counters
     PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
 endif()
+
+# Clearing an enabled backlash setting must stop emitting compensation pulses.
+if(TEST backlash.clearing_public_setting_disables_previously_enabled_compensation)
+  set_tests_properties(backlash.clearing_public_setting_disables_previously_enabled_compensation
+    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
+endif()

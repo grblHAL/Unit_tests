@@ -405,3 +405,34 @@ on every callback.
 **Remove exception when fixed:** remove the named `WILL_FAIL` block in
 [known_bugs.cmake](known_bugs.cmake), retain the regression/controls, run full
 sanitizers and strict summary, and delete this entry.
+
+## Setting backlash to zero leaves prior compensation enabled
+
+**Marked known:** 2026-10-14 on Terje `39a69a22c72283ab186133b25fb89b8f5be35767`.
+
+With `ENABLE_BACKLASH_COMPENSATION=1`, configure X backlash to 0.1 mm at
+80 steps/mm, then store zero through the public axis-backlash setting API.
+The setting reads zero, but a 1 mm X move still emits 88 pulses rather than 80.
+The logical position reports 1 mm, so the extra physical compensation remains
+hidden from that coordinate. Controls verify fresh-zero operation, normal enable
+and a nonzero distance update.
+
+The live [setting handler](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/settings.c#L1563)
+reinitializes the axis after changing its value. In
+[mc_backlash_init](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/motion_control.c#L48),
+nonzero rounded compensation sets the enable bit, but zero never clears an
+existing bit or compensation distance.
+
+**Regression:** [clear previously enabled compensation](cases/backlash/clearing_public_setting_disables_previously_enabled_compensation.c).
+The test retains the correct 80-pulse expectation. The host supplies the normal
+core default settings callback before parser initialization; the failure is a
+pulse-count assertion, not a callback crash or incomplete startup.
+
+**Suggested fix (not applied):** for each reinitialized axis whose rounded
+compensation is zero, clear its backlash-enable bit and stored compensation.
+Leave other axes' configuration unchanged and retain position synchronization.
+Revalidate enable, distance changes, zero/substep values and direction reversals.
+
+**Remove exception when fixed:** remove this case's `WILL_FAIL` block in
+[known_bugs.cmake](known_bugs.cmake), retain its regression and passing controls,
+run the full sanitizer suite and strict summary, then delete this entry.
