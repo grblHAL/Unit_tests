@@ -806,3 +806,22 @@ The resumed goal is verified active. Final batch-8 hosted coverage is 15,641 of
 hosted baseline figures, not a measurement of the new local batch. Next work is
 real stream-driven jog cancellation, including the driver's ASCII_CAN contract;
 do not replace that stream path with a direct motion-cancel flag injection.
+
+## Batch 9 sender jog cancellation
+
+Four cases execute queued $J commands through protocol_main_loop and a driver
+stream mock. The realtime jog-cancel command flushes input and inserts ASCII_CAN,
+as required by the driver interface; the normal reader/state machine performs
+controlled deceleration and planner/parser resynchronization. Real stepper ISR
+calls produce counted pulses. Checks cover discarded queued motion, a subsequent
+1 mm jog from the actual stopped position, reverse travel, and preservation of
+program G20/G91 modes. Both initial jogs are verified queued before cancellation.
+No exact deceleration time or mechanical safety claim is inferred from the host.
+
+All four focused cases and all 69 motion-control cases pass under ASan/UBSan with
+strict diagnostic classification. Evidence: build-asan/batch-9-jog-results.xml
+and build-asan/batch-9-motion-results.xml. No core changes or new known defects.
+The last hosted baseline has protocol at 82.0% lines/71.0% branches and state
+machine at 83.2%/63.0%; these workflow cases address their cancellation lifecycle.
+Batch 9 now contains ten new cases; full-suite/hosted measurement remains due at
+its substantial delivery boundary. Continue from remaining state/motion gaps.
