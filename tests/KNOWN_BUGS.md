@@ -296,3 +296,25 @@ Alternatively retain the original directory and return failure consistently.
 **Remove exception when fixed:** remove the named `WILL_FAIL` block from
 [known_bugs.cmake](known_bugs.cmake), retain the ownership assertion, run GCC/Clang
 sanitizers and strict summaries, and delete this entry.
+
+## Failed absolute file lookup returns an earlier filename
+
+**Marked known:** 2026-10-14, Terje core `39a69a22c72283ab186133b25fb89b8f5be35767`.
+
+After `vfs_locate_file("panel.nc")` finds `/panel.nc`, a later
+`vfs_locate_file("/missing.nc")` whose backend stat fails returns `/panel.nc`
+instead of NULL. The absolute-path branch does not clear the reusable relative
+result before the common return at
+[vfs.c:927](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/vfs.c#L927).
+A caller may act on a different file after the requested path was not found.
+
+**Regression:** [absolute miss after success](cases/vfs/locate_absolute_miss_after_success_does_not_return_previous_result.c).
+Passing controls cover a fresh absolute miss and a relative miss after success.
+
+**Suggested fix (not applied):** return NULL immediately from the absolute-path
+branch when root is unavailable or stat fails, keeping the existing original-path
+return when stat succeeds. This avoids falling through to a stale cached result.
+
+**Remove exception when fixed:** remove the named `WILL_FAIL` block in
+[known_bugs.cmake](known_bugs.cmake), retain the assertion and controls, rerun
+lookup cases and full sanitizers, and delete this section.

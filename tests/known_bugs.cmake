@@ -68,3 +68,9 @@ if(TEST vfs.current_directory_reallocation_failure_falls_back_to_root)
   set_tests_properties(vfs.current_directory_reallocation_failure_falls_back_to_root
     PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
 endif()
+
+# An absolute lookup miss must not return a previous relative lookup result.
+if(TEST vfs.locate_absolute_miss_after_success_does_not_return_previous_result)
+  set_tests_properties(vfs.locate_absolute_miss_after_success_does_not_return_previous_result
+    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
+endif()

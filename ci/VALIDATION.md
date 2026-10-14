@@ -297,3 +297,38 @@ Harness push/PR triggers are temporarily disabled by user request. Manual runs
 accept owner/repo or a GitHub repository URL; reusable source callers remain.
 Hosted validation for this final batch is pending delivery; no fresh coverage
 percentage is claimed from the local sanitizer checks.
+
+Hosted batch-5 run [38530893125](https://github.com/petervanderwalt/Unit_tests/actions/runs/38530893125)
+passed source resolution, GCC/Clang ASan/UBSan, coverage and diagnosis on the
+exact `39a69a2` candidate. It used the full GitHub repository URL input. GCC
+coverage reports 87.9% lines (15,289/17,396), 73.7% branches. PR #10 merged.
+
+## Batch 6 storage, stream and executing-mode checkpoint
+
+Terje `39a69a22c72283ab186133b25fb89b8f5be35767`, production source unchanged.
+63 new maintainable cases; full Windows Clang ASan/UBSan and strict summary pass
+2,618 cases: 2,606 clean, twelve known regressions, zero failures/skips.
+All 51 Python helpers and workflow actionlint pass. Hosted validation pending.
+
+PLANNER_ADD_MOTION_MODE tests execute rapid/linear/arc motion with real planner
+and stepper code. They verify endpoints, block mode retention, reports during
+execution and realtime notification when executing mode changes independently
+of parser state. A complete report fixture initialization is required; initial
+fixture crashes were resolved without changing production code or classifying
+those missing hooks as defects.
+
+Storage initialization restores and persists valid checksums/startup lines/
+coordinates/build info. Lookup priority controls expose one new stale absolute
+miss result. Stream tests cover exact busy timeout, clock wrap, disconnected
+callbacks, file reservation and accepted/rejected cycle-start reporting.
+G70–G72 execution/reporting remains a maintainer design TODO, not a new defect.
+
+Hosted run [38533918509](https://github.com/petervanderwalt/Unit_tests/actions/runs/38533918509)
+passed GCC/Clang sanitizers, coverage and diagnosis for the first 63 batch-6
+cases. GCC coverage: 88.1% lines (15,330/17,401), 74.1% branches. The subsequent
+22 public homing cases pass full local ASan/UBSan and strict summary: 2,640 tests,
+2,628 clean, twelve known regressions, zero failures/skips. These exercise actual
+XYZ switch search/pulloff and safety rejection, plus manual references through
+public ABC/UVW commands in eight-axis and remapped six-axis configurations.
+No new source exclusions or production edits were made. Hosted revalidation of
+the final 85-case batch is pending delivery.

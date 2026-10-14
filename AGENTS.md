@@ -271,3 +271,11 @@ PRs #8 and #9 have merged. Continue on `coverage-batch-5`, preserving the
 unmerged storage/filesystem continuation and debug tests from batch 4. The user
 authorized temporary manual-only harness CI triggers in this next coverage PR;
 keep reusable source callers available. Continue toward full meaningful coverage.
+
+## Batch 6 continuation
+
+PR #10 merged on 2026-10-14. Continue new coverage on `coverage-batch-6`,
+based on upstream master `5019b8f`. PR #10's GCC/Clang/coverage/diagnosis run
+38530893125 passed against Terje `39a69a22c72283ab186133b25fb89b8f5be35767`.
+Keep manual-only harness triggers and reusable callers. Continue from fresh
+coverage gaps; new PRs remain checkpoints toward full coverage.
