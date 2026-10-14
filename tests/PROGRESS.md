@@ -986,3 +986,19 @@ driver update. Programmed RPM remains 5000 while driver output changes. All 72
 multi-spindle cases pass under ASan/UBSan and strict summary
 (build-asan/batch-9-sender-spindle-results.xml). These address uncovered protocol
 spindle-override switch branches without changing core.
+
+## Batch 9 program stop lifecycle
+
+Three new cases execute the public Ctrl-Y/CMD_STOP realtime path while real
+queued motion is running or held. A host timer advances actual stepper ISR work
+inside the core stop loop. Stop flushes pending planned moves/override commands,
+resynchronizes parser position to emitted pulses, turns off spindle/coolant and
+resets driver state. Stopping from completed hold adds no pulses. Checks distinguish
+sys.cancel from abort/reset and retain valid machine position. CMD_STOP is marked
+experimental in core; these test its implemented API behavior without inferring
+mechanical emergency-stop suitability or changing that designation.
+
+All 72 motion-control cases pass under ASan/UBSan and strict summary
+(build-asan/batch-9-program-stop-results.xml). Batch 9 now adds 59 cases; twelve
+are local follow-ups after the 47-case b583c96 hosted checkpoint. Continue remaining
+measured program/state gaps while run 38623364651 finishes; avoid cancelling it.
