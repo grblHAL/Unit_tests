@@ -240,3 +240,14 @@ change with the selected core refactor; these totals are not a test-only delta.
 Seventeen focused cases were added, fifteen fixed allowances removed, and
 remaining motion-refactor failures are documented with correct expectations.
 Production source and registry defaults are unchanged.
+
+## Sustained batch 4 storage/filesystem checkpoint
+
+On Terje `50055a2`, local Clang ASan/UBSan and strict summary pass 2,514 cases:
+2,486 clean passes, 28 known regressions, zero unexpected failures/skips.
+All 48 Python helpers pass. This adds 61 cases beyond the first batch-4 checkpoint:
+26 storage, four buffered tools and 31 filesystem/path/resource cases.
+The long-filename static-buffer fault has an exact local ASan reproducer and
+wrapper; its real Linux diagnostic and directory realloc-failure leak behavior
+still require hosted verification. No production source change or exclusion.
+Maintainer compatibility/reporting follow-ups are separately reviewed in PR #9.

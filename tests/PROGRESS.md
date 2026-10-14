@@ -33,8 +33,9 @@ Nine further filesystem resource cases now cover mount/iterator allocation retry
 long current directories, growth/realloc failure and exact-size buffers. Mount
 allocation falsely reports success/events; root getcwd rejects a valid two-byte
 buffer. Both have narrow functional regressions. Windows directory realloc-failure
-assertions pass; Linux leak-check behavior still needs validation. These later
-cases have focused validation; their complete suite and hosted measurement are next.
+assertions pass; Linux leak-check behavior still needs validation. The complete local suite now passes: **2,514 tests, 2,486 clean passes and 28
+known regressions, zero unexpected failures/skips**. Strict summary passes.
+Fresh hosted coverage and the Linux static-buffer/leak diagnostics are next.
 
 Next continue filesystem allocation/resource-failure paths, then remaining
 protocol, state machine, motion and feature-configuration gaps from fresh evidence.
