@@ -961,3 +961,18 @@ failures/skips (41.90 s; build-asan/batch-9-second-checkpoint-results.xml). Push
 this completed state/motion checkpoint and run hosted validation, then continue
 independent gaps. PR #13 remains open, verified from GitHub; do not merge it or
 publish a duplicate upstream diff. Core remains unchanged.
+
+## Batch 9 remaining crossbar controls
+
+Four local follow-up cases cover dedicated-home configurations avoiding limit
+fallback, servo PWM not being advertised as ADC resolution, non-UART bus groups
+having no UART description, and AC-remapped motor enable/fault/limit identities.
+They target the fresh crossbar branch gaps and real advertised configurations.
+All 42 crossbar/RTCP cases pass under sanitizers and strict summary
+(build-asan/batch-9-crossbar-controls-results.xml). Batch 9 now adds 51 cases.
+
+The 47-case checkpoint was pushed as b583c96 and a second hosted run dispatched
+only after the preceding run completed successfully. Keep these four follow-up
+cases local while that run executes. The last hosted coverage remains 90.5%
+lines/76.7% branches for 011afe0. New coverage is not assumed until its fresh
+artifact is read. Continue the remaining measured gaps; full coverage is not done.
