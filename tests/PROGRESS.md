@@ -1106,3 +1106,34 @@ Suggested next integration work: normal grbl_enter startup for existing wall,
 delta, polar, AC and ganged kinematics variants, using original source and valid
 HAL callbacks. Do not force private startup handlers or classify intentional
 fatal loops as bugs. PR #13 remains the unmerged parent at latest verification.
+
+## Batch 9 latest-core transition and known-fix cleanup
+
+Terje master advanced from 39a69a2 through a7f17b8 to 683589b while this checkpoint
+was being delivered. The ignored core checkout is now clean at 683589b, original
+source unchanged. The first full run identified seven known regressions now
+passing: pending-override spindle stop, auxiliary stream allocation, long VFS
+filename lookup, failed mount return/event, exact root buffer sizing, absolute
+lookup miss and unrelated wall-plotter settings. Their exceptions and bug entries
+are removed; correct C regression assertions remain as ordinary tests. The two
+obsolete fatal-diagnostic wrappers and their matcher tests are deleted, and both
+cases run directly in sanitized and coverage configurations. Python checks now
+pass all 43 remaining helper tests.
+
+One ordinary fault-injection test was adapted from the old malloc call to current
+realloc(NULL, size), retaining the same chdir failure/root-fallback expectations.
+The existing allocated-root getcwd regression exposed a newly introduced defect:
+vfs_getcwd(NULL, 0) constructs a buffer but returns NULL. Its correct expectation
+is retained, with a narrowly documented expected failure and a test-only observer
+reclaiming the lost buffer before assertion, rather than a sanitizer suppression.
+See KNOWN_BUGS.md for exact source anchors and cleanup of that observer/wrapper.
+DO/WHILE stays in the user's TODO/proposal; no classification changed there.
+
+Affected modules pass all 166 cases with strict classification. Full latest-core
+ASan/UBSan suite also passes: 2,897 total, 2,885 clean, 12 documented regressions,
+zero unexpected failures/skips (42.39 s; build-asan/batch-9-latest-core-final-results.xml).
+The prior 82-case push acaf9af/39a69a2 is a baseline validation run; this cleanup
+needs a separate hosted run on 683589b once that run completes. Coverage 90.9%/
+77.4% describes 39a69a2, not this changed core. Continue newest core coverage,
+including real settings-enabled multi-spindle ramp independence and normal boot
+of existing kinematics variants. PR #13 remains the unmerged parent.

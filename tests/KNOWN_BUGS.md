@@ -13,8 +13,8 @@ defects, remove the diagnostic matcher and retain an ordinary successful compile
 check. Recovering sanitizer diagnostics have a separate, narrowly scoped
 [manifest](known_sanitizer_diagnostics.json); remove its linked entries when fixed.
 
-Outstanding regressions were reconfirmed on 2026-10-14 against Terje core
-`50055a283328c3f9726bbc8f22d20a801190c66e`.
+Outstanding exceptions were revalidated on 2026-10-14 against Terje core
+`683589bd10bb1082825bfc7e9bcee6db102b9530` after removing seven fixed entries.
 Source links identify the revision used for the described code and reproduction. CI can test
 a newer revision; a fixed regression forces review and cleanup of its exception.
 
@@ -157,81 +157,6 @@ buffer through itself. Retain relative-path support for backend current director
 path/permission tests and full sanitizers, then delete this entry.
 No sanitizer allowance applies.
 
-## Long filename lookup reallocates a static buffer
-
-**Marked known:** 2026-10-14, Terje `50055a283328c3f9726bbc8f22d20a801190c66e`.
-
-`vfs_locate_file("workbee_panel_fixture_01.nc")` aborts under ASan before looking
-up the file. The initial `path.name` points to static `_name[32]`, but
-[vfs.c:896](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/vfs.c#L896)
-passes it to `realloc()` when `strlen(filename) + 11` exceeds the initial capacity.
-The captured Windows diagnostic is a bad-free of the 32-byte global
-`vfs_locate_file._name` at that exact source line.
-
-**Regression:** [long file lookup](cases/vfs/locate_long_filename_returns_mounted_file_path.c).
-Its correct expectation is the mounted file path, not a crash.
-
-**Suggested fix (proposal, not runtime-verified):** Allocate a heap buffer for the
-first growth from `_name`; call `realloc()` only on an existing heap allocation.
-Keep the original pointer on failure and retain valid short-path fallback state.
-Verify initial long names, later growth and allocation failure/recovery.
-
-**Remove exception when fixed:** remove its block from
-[known_bugs.cmake](known_bugs.cmake) and the special CMake registration, then run
-the unchanged C test directly. Delete [diagnostic wrapper](../scripts/vfs_path_regression.py)
-and its matcher tests. Run filesystem/Python checks and full sanitizers, then
-delete this entry. The wrapper requires the bad-free, exact source/case frames,
-32-byte static global and summary; a fix or different fault fails classification.
-Coverage explicitly skips this fatal reproducer until fixed. No general
-sanitizer allowance applies. Actual hosted Linux validation is still pending.
-
-## Mount allocation failure reports success and emits a mounted event
-
-**Marked known:** 2026-10-14, Terje `50055a283328c3f9726bbc8f22d20a801190c66e`.
-
-Reject the [mount allocation at vfs.c:680](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/vfs.c#L680). `vfs_mount()` creates no
-mount record, but still invokes `vfs.on_mount` and
-[returns true at line 719](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/vfs.c#L719). The caller sees
-a successful mount even though drive lookup still resolves to the default root.
-
-**Regression:** [return and notification contract](cases/vfs/mount_allocation_failure_reports_failure_without_notification.c).
-**Passing control:** [retry after allocation failure](cases/vfs/mount_retry_after_allocation_failure_registers_one_backend.c)
-verifies no record was registered by the failed allocation and that a retry
-creates exactly one backend entry. Iterator allocation failure/retry is also
-covered independently.
-
-**Suggested fix (proposal, not runtime-verified):** Return failure immediately
-when non-root mount allocation fails; notify only after a mount record is linked.
-Keep idempotent mounting and legitimate root-mount handling unchanged.
-
-**Remove exception when fixed:** remove its block from
-[known_bugs.cmake](known_bugs.cmake), retain correct assertions and retry controls,
-run filesystem/allocation tests and full sanitizers, then delete this entry.
-No sanitizer allowance applies.
-
-## Root current-directory output rejects an exactly sized buffer
-
-**Marked known:** 2026-10-14, Terje `50055a283328c3f9726bbc8f22d20a801190c66e`.
-
-At the default root, `/` and its terminator fit in two bytes. `vfs_getcwd(buf, 2)`
-returns NULL instead. Its [length calculation at vfs.c:605](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/vfs.c#L605)
-adds both root prefixes plus two extra bytes and rejects the caller's adequate
-buffer before copying the actual one-character result.
-
-**Regression:** [exact root buffer](cases/vfs/root_current_directory_fits_exact_two_byte_buffer.c).
-A separate too-small-buffer case and existing allocated-root-path case provide
-controls; long-directory allocation and growth are tested independently.
-
-**Suggested fix (proposal, not runtime-verified):** Determine the actual formatted
-path's size including its terminator, accounting for separator removal and whether
-backend or frontend current-directory text is being used. Reject inadequate buffers
-without reading their previous contents.
-
-**Remove exception when fixed:** remove its block from
-[known_bugs.cmake](known_bugs.cmake), retain correct assertions and controls, run
-filesystem/current-directory cases and full sanitizers, then delete this entry.
-No sanitizer allowance applies.
-
 ## Directory buffer growth failure leaks the previous allocation
 
 **Marked known:** 2026-10-14.
@@ -253,115 +178,6 @@ Alternatively retain the original directory and return failure consistently.
 **Remove exception when fixed:** remove the named `WILL_FAIL` block from
 [known_bugs.cmake](known_bugs.cmake), retain the ownership assertion, run GCC/Clang
 sanitizers and strict summaries, and delete this entry.
-
-## Failed absolute file lookup returns an earlier filename
-
-**Marked known:** 2026-10-14, Terje core `39a69a22c72283ab186133b25fb89b8f5be35767`.
-
-After `vfs_locate_file("panel.nc")` finds `/panel.nc`, a later
-`vfs_locate_file("/missing.nc")` whose backend stat fails returns `/panel.nc`
-instead of NULL. The absolute-path branch does not clear the reusable relative
-result before the common return at
-[vfs.c:927](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/vfs.c#L927).
-A caller may act on a different file after the requested path was not found.
-
-**Regression:** [absolute miss after success](cases/vfs/locate_absolute_miss_after_success_does_not_return_previous_result.c).
-Passing controls cover a fresh absolute miss and a relative miss after success.
-
-**Suggested fix (not applied):** return NULL immediately from the absolute-path
-branch when root is unavailable or stat fails, keeping the existing original-path
-return when stat succeeds. This avoids falling through to a stale cached result.
-
-**Remove exception when fixed:** remove the named `WILL_FAIL` block in
-[known_bugs.cmake](known_bugs.cmake), retain the assertion and controls, rerun
-lookup cases and full sanitizers, and delete this section.
-
-## Stopping during a pending spindle override briefly raises PWM
-
-**Marked known:** 2026-10-14 on Terje `39a69a22c72283ab186133b25fb89b8f5be35767`.
-
-With PWM ramping enabled, start at 6,000 RPM and request a 150% override without
-executing its first delayed update. A subsequent stop ramps down from the stored
-9,000 RPM target rather than the still-emitted 6,000 RPM output. The first stop
-update raises PWM from 600 to 818 before later decreasing it and disabling the
-spindle. The regression runs the original PWM, override, scheduler and stop code.
-
-The override stores its target before scheduling output in
-[spindle_set_override](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/spindle_control.c#L627).
-The stop uses that stored target as its starting speed in
-[_spindle_set_state](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/spindle_control.c#L730).
-
-**Regression:** [stop during pending override](cases/spindle_control/pending_override_stop_does_not_increase_pwm_before_disabling.c).
-Passing controls verify normal monotonic stops and cancellation of future override
-updates. The assertion requires every stop PWM update to stay at or below the
-output emitted before the stop; it does not require instantaneous physical braking.
-
-**Suggested fix (not applied):** retain the last emitted RPM of the pending ramp
-and use it when starting stop/direction-change ramps, before cancelling the delayed
-work. Keep commanded RPM and emitted output state distinct. Revalidate ordinary
-stops, partially progressed overrides, reversal and scheduler cleanup.
-
-**Remove exception when fixed:** remove the named `WILL_FAIL` block from
-[known_bugs.cmake](known_bugs.cmake), retain the assertion and controls, run the
-full sanitizer suite/strict summary, and delete this section.
-
-## Auxiliary stream allocation failure writes through a null connection
-
-**Marked known:** 2026-10-14 on Terje `39a69a22c72283ab186133b25fb89b8f5be35767`.
-
-When `malloc` fails while adding a client after the primary stream is registered,
-[add_connection at stream.c:310](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/stream.c#L310)
-writes `connection->is_up` although `connection` is NULL. Clang reports null member
-access and ASan reports a write at address 0x8. `stream_connect()` should return
-false and preserve the primary connection rather than crash.
-
-**Regression:** [failed allocation](cases/stream/auxiliary_connection_allocation_failure_preserves_primary_stream.c).
-The [successful control](cases/stream/auxiliary_connection_success_allocates_and_releases_linked_node.c)
-checks normal registration/removal and the primary broadcast path. Fault injection
-is enabled only immediately before the auxiliary registration.
-
-The [strict diagnostic wrapper](../scripts/stream_allocation_regression.py) accepts
-only the injected failure, exact null-member-access source line/type, write at 0x8,
-expected connection/caller/test frames and ASan summary. Different faults remain
-failures. The fatal case skips only in unsanitized coverage runs; it is not a source
-coverage exclusion. Linux GCC/Clang verified the diagnostic matcher in hosted run 38575541143,
-which passed all jobs.
-
-**Suggested fix (not applied):** return NULL immediately if allocation of the
-connection node fails, before assigning fields. Existing caller guards can then
-return false without changing the active connection or linked list.
-
-**Remove exception when fixed:** remove this case's `WILL_FAIL` block from
-[known_bugs.cmake](known_bugs.cmake), replace the wrapper CMake registration with a
-normal executable test, remove [wrapper](../scripts/stream_allocation_regression.py)
-and [matcher helpers](../scripts/test_stream_allocation_regression.py), retain the
-functional regression and control, run full sanitizers/summary, and delete this entry.
-
-## Wall-plotter settings update resets the Y motor reference
-
-**Marked known:** 2026-10-14 on Terje `39a69a22c72283ab186133b25fb89b8f5be35767`.
-
-After initialization, updating junction deviation through the public settings API
-changes a wall plotter's Y motor step counter from 18,500 to 16,000 although cable
-geometry is unchanged. X and Z remain 18,000 and 789. The test uses a started
-controller and geometrically valid cable lengths, not an unfinished startup.
-
-The first-initialization flag is assigned false again at
-[wall_plotter.c:326](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/kinematics/wall_plotter.c#L326),
-so every settings callback repeats the initial Y-reference assignment.
-
-**Regression:** [unrelated runtime setting](cases/wall_plotter/unrelated_setting_update_preserves_motor_step_counters.c).
-Controls verify the intended initial cable reference and that the same junction
-setting update preserves RTCP motor counters.
-
-**Suggested fix (not applied):** mark initialization complete after the first
-reference assignment. Preserve motor counters for unrelated settings changes;
-review geometry-change recalculation separately rather than resetting a reference
-on every callback.
-
-**Remove exception when fixed:** remove the named `WILL_FAIL` block in
-[known_bugs.cmake](known_bugs.cmake), retain the regression/controls, run full
-sanitizers and strict summary, and delete this entry.
 
 ## Setting backlash to zero leaves prior compensation enabled
 
@@ -473,3 +289,35 @@ commands remaining after CONTINUE and after the loop.
 **Remove exception when fixed:** remove the named WILL_FAIL block in
 [known_bugs.cmake](known_bugs.cmake), retain the regression and passing controls,
 run sanitizers and strict summary, then delete this entry.
+
+## Allocating the current directory with zero size returns NULL
+
+**Marked known:** 2026-10-14 on Terje `683589bd10bb1082825bfc7e9bcee6db102b9530`.
+
+The existing ordinary regression calls `vfs_getcwd(NULL, 0)` to request an
+allocated root path. It passed on `39a69a2` and now fails: the function allocates
+and constructs `/`, but returns NULL with no error set. The allocated buffer is
+also lost. Ordinary caller-buffer controls, including the formerly failing
+exact two-byte root buffer, now pass.
+
+The allocation branch explicitly accepts zero size at
+[vfs.c:615](https://github.com/terjeio/grblHAL_core/blob/683589bd10bb1082825bfc7e9bcee6db102b9530/vfs.c#L615),
+but [the final return at line 626](https://github.com/terjeio/grblHAL_core/blob/683589bd10bb1082825bfc7e9bcee6db102b9530/vfs.c#L626)
+still requires `cwdlen < len`. For `/`, that is `1 < 0`, which is false.
+
+**Regression:** [allocated root directory](cases/vfs/getcwd_allocates_root_path.c).
+The correct non-NULL `/` assertions are unchanged. A test-only allocation observer
+reclaims just the buffer lost by this call before asserting failure, making the
+return-value regression portable under leak sanitizers. No sanitizer suppression
+or general diagnostic exception applies.
+
+**Suggested fix (not applied):** return the constructed buffer when allocation
+succeeded with `len == 0`; return NULL for ENOMEM/ERANGE. For example, base the
+final return on the error result rather than applying the caller-buffer length
+test again. Keep ordinary buffer sizing and caller ownership/free behavior.
+
+**Remove exception when fixed:** remove the named WILL_FAIL block in
+[known_bugs.cmake](known_bugs.cmake), remove this case's allocation-observer cleanup
+and malloc/free linker wrappers in CMakeLists.txt, and retain its original pointer,
+content and caller-free assertions. Run VFS/full sanitizers and strict summary,
+then delete this entry.
