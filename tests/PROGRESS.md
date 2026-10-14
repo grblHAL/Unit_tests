@@ -886,3 +886,12 @@ at the retracted Z position. No hardware timing/mechanical claim is made.
 Focused cases and the complete tool-change module pass under ASan/UBSan with
 strict summary (build-asan/batch-9-tool-results.xml). Batch 9 now adds 32 cases;
 perform full validation and a hosted checkpoint before publishing further work.
+
+## Batch 9 first hosted checkpoint
+
+Full ASan/UBSan suite and strict diagnostics passed: 2,847 total, 2,830 clean,
+17 documented regressions reproduced, zero unexpected failures/skips (39.86 s).
+Evidence: build-asan/batch-9-checkpoint-results.xml. This checkpoint adds 32 cases
+against unchanged Terje 39a69a2. Push coverage-batch-9 and dispatch manual GCC,
+Clang and coverage validation; continue independent local work while it runs.
+PR #13 is still the unmerged parent, so do not open a duplicate PR containing it.
