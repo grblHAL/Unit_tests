@@ -332,3 +332,20 @@ XYZ switch search/pulloff and safety rejection, plus manual references through
 public ABC/UVW commands in eight-axis and remapped six-axis configurations.
 No new source exclusions or production edits were made. Hosted revalidation of
 the final 85-case batch is pending delivery.
+
+## Batch 7 encoder, capabilities and PWM ramp checkpoint
+
+Terje core `39a69a22c72283ab186133b25fb89b8f5be35767` remains unchanged and
+matches remote master. Twenty-nine additional cases pass full Windows Clang
+ASan/UBSan and strict summary: 2,669 tests, 2,657 clean, twelve known regressions,
+zero failures/skips. All 51 Python helpers pass. Coverage/hosted validation of
+this later checkpoint remains pending; no fresh percentage is claimed.
+
+Encoder cases bind registered spindles, retain native callbacks on unbinding and
+verify measured feedback independently of commanded speed. Capability cases use
+real PWM precomputation and update active RPM/ramp/laser metadata. Ramp cases run
+original ramp and dwell code, checking monotonic output, final PWM/state and short
+wait behavior. No new exceptions, exclusions or core changes were added.
+
+Final batch-6 run 38535569786 passed GCC/Clang, coverage and CI diagnosis;
+PR #11 was marked ready after that completed verification.

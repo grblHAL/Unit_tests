@@ -3,6 +3,24 @@
 Last verified: **2026-10-14**. Read this with the root `AGENTS.md` and README.
 This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 
+## Batch 7 active work
+
+`coverage-batch-7` isolates new work while PR #11 is reviewed. Final batch-6
+run 38535569786 passed all jobs and PR #11 is ready. Core master still matches
+39a69a22c72283ab186133b25fb89b8f5be35767 as checked on 2026-10-14.
+
+29 new cases pass focused sanitizer checks: nine legacy I/O registration,
+eight encoder binding, eight spindle capability updates and four actual PWM
+ramping cases. The 25-case intermediate full suite passed 2,665 tests: 2,653
+clean, twelve known regressions, zero failures/skips. Full verification including ramping passes 2,669 tests: 2,657 clean, twelve
+known regressions, zero failures/skips. All 51 Python helpers pass. No fresh
+batch-7 coverage measurement is claimed.
+
+Encoder binding tests register the spindle before binding. The abandoned
+pre-registration persistence assertion was an unsupported startup assumption,
+not a classified defect. PWM updates use core calculations and real ramp/dwell
+code; driver callbacks observe state and output without replacing measured RPM.
+
 ## Batch 6 active work
 
 PR #10 merged; new coverage belongs on `coverage-batch-6` based on `5019b8f`.

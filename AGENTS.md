@@ -279,3 +279,10 @@ based on upstream master `5019b8f`. PR #10's GCC/Clang/coverage/diagnosis run
 38530893125 passed against Terje `39a69a22c72283ab186133b25fb89b8f5be35767`.
 Keep manual-only harness triggers and reusable callers. Continue from fresh
 coverage gaps; new PRs remain checkpoints toward full coverage.
+
+## Batch 7 active continuation
+
+PR #11's final run 38535569786 passed GCC/Clang/coverage/diagnosis and the PR
+is ready for review. New work is isolated on `coverage-batch-7`, based on the
+85-case batch-6 checkpoint; do not merge PR #11 without a human request.
+Continue meaningful coverage with Terje core, preserving verified assertions.
