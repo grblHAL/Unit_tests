@@ -11,7 +11,7 @@ baseline. The completed 134-case parent batch is already upstream.
 The fully merged coverage-batch-7 remote branch was also deleted after PR #12
 merged. GitHub currently contains only master; batch 8 remains local-only.
 
-Batch 8 now contains 23 committed cases before the optional pullup work.
+Batch 8 now contains 33 committed cases before the optional pullup work.
 Eight public settings cases pass focused sanitizer checks: probe flag readback,
 encoder-dependent spindle tolerance, dedicated home-input inversion availability,
 and fifth/sixth homing phase masks. Four public backlash-setting cases verify
@@ -715,3 +715,19 @@ outputs, encoder error capability gating and distinct tool/tool-change fields.
 They use the real report renderer and driver feedback callbacks, with explicit
 report flags. Keep the full-coverage goal active; do not treat this module check
 as complete coverage or publish a new percentage without fresh instrumentation.
+
+## Batch 8 parameter and modal report expansion
+
+Ten more cases pass all 219 report tests and strict diagnostic summary: parameter
+extension ordering, early/partial/transient coordinate-read failure, G43.1/G49,
+G92/G92.1, G51/G50 and M7/M8/M9 combinations. The modal tests execute real
+parser commands in check mode and then call the real report renderer. Coordinate
+fault injection starts after fixture initialization, uses the original NVS reader
+for all nonfailed reads and verifies that failed reports stop before extension
+callbacks. Correct assertions and existing known allowances are unchanged.
+
+The completed committed suite now contains 2,807 cases; the working tree adds
+eight pending pullup cases. These ten additions have been module-validated;
+full committed-only sanitizer/hosted coverage validation remains for the next
+substantial delivery boundary. Do not call the working suite fully green while
+the ordinary pullup consistency failure remains unresolved.
