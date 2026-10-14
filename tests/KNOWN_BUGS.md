@@ -327,3 +327,50 @@ delete this entry. The wrapper requires the bad-free, exact source/case frames,
 32-byte static global and summary; a fix or different fault fails classification.
 Coverage explicitly skips this fatal reproducer until fixed. No general
 sanitizer allowance applies. Actual hosted Linux validation is still pending.
+
+## Mount allocation failure reports success and emits a mounted event
+
+**Marked known:** 2026-10-14, Terje `50055a283328c3f9726bbc8f22d20a801190c66e`.
+
+Reject the [mount allocation at vfs.c:680](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/vfs.c#L680). `vfs_mount()` creates no
+mount record, but still invokes `vfs.on_mount` and
+[returns true at line 719](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/vfs.c#L719). The caller sees
+a successful mount even though drive lookup still resolves to the default root.
+
+**Regression:** [return and notification contract](cases/vfs/mount_allocation_failure_reports_failure_without_notification.c).
+**Passing control:** [retry after allocation failure](cases/vfs/mount_retry_after_allocation_failure_registers_one_backend.c)
+verifies no record was registered by the failed allocation and that a retry
+creates exactly one backend entry. Iterator allocation failure/retry is also
+covered independently.
+
+**Suggested fix (proposal, not runtime-verified):** Return failure immediately
+when non-root mount allocation fails; notify only after a mount record is linked.
+Keep idempotent mounting and legitimate root-mount handling unchanged.
+
+**Remove exception when fixed:** remove its block from
+[known_bugs.cmake](known_bugs.cmake), retain correct assertions and retry controls,
+run filesystem/allocation tests and full sanitizers, then delete this entry.
+No sanitizer allowance applies.
+
+## Root current-directory output rejects an exactly sized buffer
+
+**Marked known:** 2026-10-14, Terje `50055a283328c3f9726bbc8f22d20a801190c66e`.
+
+At the default root, `/` and its terminator fit in two bytes. `vfs_getcwd(buf, 2)`
+returns NULL instead. Its [length calculation at vfs.c:605](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/vfs.c#L605)
+adds both root prefixes plus two extra bytes and rejects the caller's adequate
+buffer before copying the actual one-character result.
+
+**Regression:** [exact root buffer](cases/vfs/root_current_directory_fits_exact_two_byte_buffer.c).
+A separate too-small-buffer case and existing allocated-root-path case provide
+controls; long-directory allocation and growth are tested independently.
+
+**Suggested fix (proposal, not runtime-verified):** Determine the actual formatted
+path's size including its terminator, accounting for separator removal and whether
+backend or frontend current-directory text is being used. Reject inadequate buffers
+without reading their previous contents.
+
+**Remove exception when fixed:** remove its block from
+[known_bugs.cmake](known_bugs.cmake), retain correct assertions and controls, run
+filesystem/current-directory cases and full sanitizers, then delete this entry.
+No sanitizer allowance applies.

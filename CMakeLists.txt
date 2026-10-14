@@ -219,6 +219,13 @@ function(add_core_test name module source)
     OR name STREQUAL "nvs_buffer.initialization_without_buffer_reports_startup_warning")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc)
   endif()
+  if(name STREQUAL "vfs.current_directory_reallocation_failure_falls_back_to_root"
+    OR name STREQUAL "vfs.current_directory_allocation_failure_falls_back_to_root"
+    OR name STREQUAL "vfs.drive_iterator_allocation_failure_can_retry"
+    OR name STREQUAL "vfs.mount_allocation_failure_reports_failure_without_notification"
+    OR name STREQUAL "vfs.mount_retry_after_allocation_failure_registers_one_backend")
+    target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=realloc)
+  endif()
   if(name MATCHES "^motion_control\\.thread_plan_")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=plan_buffer_line)
   endif()

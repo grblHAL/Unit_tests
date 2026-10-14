@@ -129,3 +129,13 @@ endif()
 if(TEST vfs.locate_long_filename_returns_mounted_file_path)
   set_tests_properties(vfs.locate_long_filename_returns_mounted_file_path PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Failed mount allocation incorrectly reports success and emits a mounted event.
+if(TEST vfs.mount_allocation_failure_reports_failure_without_notification)
+  set_tests_properties(vfs.mount_allocation_failure_reports_failure_without_notification PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+# Root getcwd rejects a correctly sized two-byte buffer on Terje 50055a2.
+if(TEST vfs.root_current_directory_fits_exact_two_byte_buffer)
+  set_tests_properties(vfs.root_current_directory_fits_exact_two_byte_buffer PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

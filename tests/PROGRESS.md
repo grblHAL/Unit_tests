@@ -3,6 +3,45 @@
 Last verified: **2026-10-14**. Read this with the root `AGENTS.md` and README.
 This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 
+## Sustained batch 4 continuation
+
+The user clarified that PR #8 is a progress checkpoint and coverage expansion
+must keep going toward meaningful full core coverage. Do not stop or pause at a
+green suite, module boundary, commit, push or open PR.
+
+Twenty-six new storage cases pass their focused sanitizer group, with three
+narrow expected failures for failed startup/version write retries. A further
+21 VFS cases and four buffered tool-table cases passed the full 2,504-case suite:
+2,479 clean passes, 25 known regressions, zero unexpected failures/skips, strict
+summary green. Source remains Terje `50055a2`, untouched. These later cases are
+not yet included in fresh hosted coverage.
+
+One additional long-filename lookup case reproduces ASan bad-free at vfs.c:896,
+reallocating the static 32-byte filename buffer. It now has an exact diagnostic
+wrapper and cleanup entry. All 56 VFS cases pass their classified local run;
+48 Python helpers pass. Its actual Linux diagnostic shape still needs hosted
+verification before delivery. The full suite including this case passed: 2,505 tests, 2,479 clean and 26 known,
+zero unexpected failures/skips; strict summary green.
+
+Terje's failed-run compatibility cleanup and deferred-fix notes are isolated in
+PR #9 (`core-maintainer-followup`) without new coverage cases. Merge it before
+coverage PR #8; shared compatibility changes then disappear from the coverage
+diff. Standalone candidate run: 38519491021. The separate checkout preserves
+ongoing coverage changes in this workspace.
+
+Nine further filesystem resource cases now cover mount/iterator allocation retry,
+long current directories, growth/realloc failure and exact-size buffers. Mount
+allocation falsely reports success/events; root getcwd rejects a valid two-byte
+buffer. Both have narrow functional regressions. Windows directory realloc-failure
+assertions pass; Linux leak-check behavior still needs validation. These later
+cases have focused validation; their complete suite and hosted measurement are next.
+
+Next continue filesystem allocation/resource-failure paths, then remaining
+protocol, state machine, motion and feature-configuration gaps from fresh evidence.
+Do not classify backend-relative path delegation as a defect: backends with their
+own current directory receive relative filenames intentionally. The confirmed
+VFS faults concern the getcwd fallback and parent traversal across mount prefixes.
+
 ## Batch 4 RTCP and wall-plotter extension
 
 The user resumed coverage on a new branch and requested a separate PR.
