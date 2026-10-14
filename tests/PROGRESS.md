@@ -1002,3 +1002,27 @@ All 72 motion-control cases pass under ASan/UBSan and strict summary
 (build-asan/batch-9-program-stop-results.xml). Batch 9 now adds 59 cases; twelve
 are local follow-ups after the 47-case b583c96 hosted checkpoint. Continue remaining
 measured program/state gaps while run 38623364651 finishes; avoid cancelling it.
+
+## Batch 9 streamed macro continuation
+
+Five registered cases read real stream bytes, honor production file rewinds and
+pass normalized blocks to gc_execute_block. Ordinary WHILE/DO loops and true
+WHILE CONTINUE/DO body rewind followed by a nested BREAK are passing controls.
+The WHILE false-condition CONTINUE case executes a skipped assignment, then
+returns error 81 at ENDWHILE. Its correct assertions are retained with one narrow
+known-failure exception, a dated/source-pinned bug report and proposed cleanup.
+All 60 flow-control cases pass strict classification: 59 clean, one documented
+regression reproduced. Stream/control allocations are cleaned up before bounds
+failure. No core changes or sanitizer suppressions.
+
+The separate DO/WHILE CONTINUE behavior repeats without evaluating the trailing
+condition. The user explicitly requested a TODO for Terje to comment on. Its
+candidate is in tests/proposals, unregistered pending that contract; no test is
+weakened or source excluded. Source line links were checked against current core:
+DO rewind at 611-612; false WHILE frame removal at 622-627.
+
+Batch 9 now adds 64 registered tests plus that pending proposal. Full current
+2,879-case validation is due before another push. Run 38623364651 passed every
+job for b583c96 (47 cases), with fresh coverage 15,772/17,402 lines (90.6333%) and
+10,368/13,464 branches (77.0053%). Follow-up tests remain local. Continue actual
+remaining branches; PR #13 is still the unmerged parent at last verification.

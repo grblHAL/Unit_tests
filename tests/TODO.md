@@ -186,3 +186,21 @@ clang -fsyntax-only -std=gnu11 -DSCARA_ROBOT=1 -DKINEMATICS_API=1 -Icore core/ki
 
 Path blending is separately marked experimental and unconditionally disabled
 in `config.h`; do not silently patch that definition just to increase coverage.
+
+## DO/WHILE CONTINUE contract
+
+**Observation recorded:** 2026-10-14, Terje `39a69a2`; the user requested leaving this for Terje to comment on.
+
+CONTINUE in a DO/WHILE loop currently rewinds directly to the body at
+[ngc_flowctrl.c:611-612](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/ngc_flowctrl.c#L611).
+A finite counter loop with CONTINUE before its trailing WHILE never evaluates
+that condition and repeats until the host read bound. Ordinary DO/WHILE and
+CONTINUE with a later explicit BREAK have passing streamed-parser controls.
+
+LinuxCNC O-code CONTINUE evaluates the loop condition. Confirm whether that
+contract is intended here or whether restarting the body is a deliberate
+difference. A bounded, no-motion [candidate regression](proposals/do_continue_rechecks_trailing_condition_and_skips_remaining_body.c)
+is retained for review, outside the registered case set until intent is settled;
+there is no expected-failure exception or source exclusion for this proposal.
+Its correct resolution requires either implementing the chosen loop semantics
+or documenting the deliberate difference, then reviewing the candidate assertion.

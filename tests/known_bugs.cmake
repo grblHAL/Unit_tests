@@ -105,3 +105,9 @@ if(TEST ioports_pullup.pullup_disable_live_and_loaded_configuration_agree)
   set_tests_properties(ioports_pullup.pullup_disable_live_and_loaded_configuration_agree
     PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
 endif()
+
+# A false WHILE condition after CONTINUE must skip the body through ENDWHILE.
+if(TEST ngc_flowctrl.while_continue_rechecks_condition_and_skips_remaining_body)
+  set_tests_properties(ngc_flowctrl.while_continue_rechecks_condition_and_skips_remaining_body
+    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
+endif()

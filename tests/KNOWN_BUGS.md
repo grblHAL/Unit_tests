@@ -427,3 +427,49 @@ unrelated to this pin-configuration issue.
 controls' mode expectations with the agreed behavior, run all pullup tests plus
 the full sanitizer suite/strict summary, and delete this entry. No sanitizer
 suppression or diagnostic wrapper applies.
+
+## WHILE CONTINUE executes the remainder when its condition becomes false
+
+**Marked known:** 2026-10-14 on Terje `39a69a22c72283ab186133b25fb89b8f5be35767`.
+
+A normal filesystem macro increments a counter and uses `CONTINUE` to skip the
+remaining body. Once its WHILE condition becomes false, the core removes the
+loop frame immediately. It then executes the body that CONTINUE should skip and
+reports `Status_FlowControlSyntaxError` (81) at the matching ENDWHILE.
+
+```gcode
+#100=0
+#101=0
+O10 WHILE [#100 LT 3]
+  #100=[#100+1]
+  O10 CONTINUE
+  #101=99
+O10 ENDWHILE
+#102=7
+```
+
+Expected: counter `#100=3`, skipped body `#101=0`, following assignment `#102=7`,
+and successful completion. Observed: `#101=99`, error 81 and no following
+assignment. This is reproduced with real file-stream bytes/rewinds and the
+production parser, without motion, private entry points or fault injection.
+Ordinary WHILE/DO loops and a true-condition CONTINUE followed by BREAK pass.
+The expected skip behavior follows the
+[O-code CONTINUE contract](https://www.linuxcnc.org/docs/html/gcode/o-code.html).
+
+The false-condition path frees the expression and
+[pops the loop at ngc_flowctrl.c:622-627](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/ngc_flowctrl.c#L622)
+instead of retaining a skipped frame until ENDWHILE.
+
+**Regression:** [WHILE CONTINUE program](cases/ngc_flowctrl/while_continue_rechecks_condition_and_skips_remaining_body.c).
+Only this named test is an expected failure. The host's read bound prevents
+nonterminating macros from hanging tests, and closes/frees stream/control state
+before failing. No sanitizer suppression is involved.
+
+**Suggested fix (not applied):** retain the exhausted WHILE frame with its skip
+flag set until the matching ENDWHILE consumes it. Preserve outer nested control
+frames and the existing true-condition rewind behavior; test both paths with
+commands remaining after CONTINUE and after the loop.
+
+**Remove exception when fixed:** remove the named WILL_FAIL block in
+[known_bugs.cmake](known_bugs.cmake), retain the regression and passing controls,
+run sanitizers and strict summary, then delete this entry.
