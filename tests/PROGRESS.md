@@ -1040,3 +1040,14 @@ state machine 91.2% lines/73.6% branches, tool change 95.1%/73.1%, protocol
 84.6%/74.3%; overall 90.6%/77.0%. Push this completed 64-case checkpoint and
 request hosted validation; continue other source gaps while it runs. Do not
 merge PR #13 or duplicate its upstream diff while it remains open.
+
+## Batch 9 spline conversion and validation
+
+Nine local cases cover cubic/quadratic splines in inch units and independent X/Y
+scaling, connected cubic continuation without IJ, and rejection of non-XY planes,
+third axes or missing control words before any motion is queued. A pulse fixture
+samples a known point from independent closed-form Bezier coordinates, as well as
+checking endpoints/monotonic pulse totals. This checks control-point conversions
+rather than relying solely on the endpoint. Flattening/pulse rounding allowance
+is explicit; no physical contour accuracy claim is made. Normal foreground timer
+servicing lets larger curves fill and drain the real planner without hangs.
