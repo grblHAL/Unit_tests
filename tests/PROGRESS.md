@@ -895,3 +895,24 @@ Evidence: build-asan/batch-9-checkpoint-results.xml. This checkpoint adds 32 cas
 against unchanged Terje 39a69a2. Push coverage-batch-9 and dispatch manual GCC,
 Clang and coverage validation; continue independent local work while it runs.
 PR #13 is still the unmerged parent, so do not open a duplicate PR containing it.
+
+## Batch 9 toolsetter probe-selection lifecycle
+
+Four further cases register separate hand-probe and fixture-probe inputs and a
+valid driver/plugin toolsetter callback. Only the fixture input can trigger. The
+real probe selector and tool-change workflows must select it for touch-off, then
+restore the hand probe after automatic success, automatic missing contact,
+manual fixture resume or a realtime reset during an acknowledged fixture change.
+Reset also restores stream/control handlers without extra motion or position loss.
+The fixture initially assumed cleanup always names the new tool; inspection showed
+failed change cleanup correctly names the still-current tool. That fixture-only
+assumption was removed; no known bug or core change was introduced.
+
+All 53 tool-change cases pass under ASan/UBSan and strict summary
+(build-asan/batch-9-hook-results.xml). Batch 9 now adds 36 cases. Its first 32-case
+checkpoint is pushed as 011afe0; manual GCC/Clang/coverage run 38621381358 is
+confirmed in progress. These four follow-up cases remain local until that run
+finishes and another substantial validation checkpoint is appropriate. Do not
+push repeatedly and cancel the running CI. PR #13 remains the unmerged parent.
+Next: inspect fresh hosted coverage when available and continue remaining real
+state/motion/tool-change and enabled-configuration gaps; full coverage is incomplete.
