@@ -15,17 +15,16 @@ check. Recovering sanitizer diagnostics have a separate, narrowly scoped
 
 Outstanding regressions were reconfirmed on 2026-10-14 against Terje core
 `50055a283328c3f9726bbc8f22d20a801190c66e`.
-Source links point to the revision where each defect was first verified. CI can test
+Source links identify the revision used for the described code and reproduction. CI can test
 a newer revision; a fixed regression forces review and cleanup of its exception.
 
 
 ## Using the suggested fixes
 
-Each **Suggested fix (proposal)** below is based on source inspection of
-Terje's core revision `4b128e68bc63f9a3af11a01a7d8fbb5d5ccc98aa`
-(reviewed 2026-10-13). These are review suggestions, not applied or runtime-verified
-patches. Source links deliberately identify that revision; check the current
-code before applying a suggestion. Snippets show the relevant edit, not complete
+Each **Suggested fix (proposal)** below is based on source inspection of the
+revision linked in that entry. These are review suggestions, not applied or
+runtime-verified patches. Check the linked revision and current code before
+applying a suggestion. Snippets show the relevant edit, not complete
 patches, unless stated otherwise.
 
 Apply a proposal in a separate core checkout, select that checkout as the test

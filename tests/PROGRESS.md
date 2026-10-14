@@ -20,12 +20,19 @@ Full local Clang ASan/UBSan and strict summary: **2,453 tests, 2,433 clean passe
 20 documented known regressions, zero unexpected failures/skips**.
 Fifteen verified fixed regressions lose their exceptions, and the final fatal
 RS485 wrapper and its matcher tests are deleted; it is now an ordinary test.
-Remaining Python helpers pass. Existing G5.1 and G70 parser tests caught fresh
+All 40 remaining Python helpers pass. Existing G5.1 and G70 parser tests caught fresh
 motion-enum refactor defects; ordinary named-motion values are now scaled twice.
 Correct assertions remain, with dated source/reproduction/cleanup entries.
 
-Hosted GCC/Clang and fresh coverage validation is the next delivery gate.
-The previous batch's measurements below are historical, not new-source coverage.
+Fresh hosted GCC coverage is **87.1% lines (15,064/17,287), 72.8% branches
+(9,780/13,434)**. RTCP improves from 88.9% to **96.2% lines**, and from 71.2%
+to **92.4% branches**. Overall source totals also reflect the new motion-enum
+refactor and its earlier parser exits; do not present old-source totals as a
+like-for-like test-only comparison. The previous batch's measurements below are
+historical, not new-source coverage.
+
+Hosted candidate run: https://github.com/petervanderwalt/Unit_tests/actions/runs/38514474774
+(harness `5835fda`, Terje `50055a2`, baseline `d216287`). **Source, GCC ASan/UBSan, Clang ASan/UBSan, coverage and CI diagnosis all passed.**
 After delivery, continue from refreshed line/branch evidence if requested.
 
 ## Batch 3 final stopping point
