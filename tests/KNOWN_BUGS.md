@@ -13,8 +13,8 @@ defects, remove the diagnostic matcher and retain an ordinary successful compile
 check. Recovering sanitizer diagnostics have a separate, narrowly scoped
 [manifest](known_sanitizer_diagnostics.json); remove its linked entries when fixed.
 
-Outstanding regressions were reconfirmed on 2026-10-13 against Terje core
-`d216287a6cf1f9ec278a92ac403c30a8cf5fad3b`.
+Outstanding regressions were reconfirmed on 2026-10-14 against Terje core
+`50055a283328c3f9726bbc8f22d20a801190c66e`.
 Source links point to the revision where each defect was first verified. CI can test
 a newer revision; a fixed regression forces review and cleanup of its exception.
 
@@ -125,239 +125,77 @@ serial markers, file completion callbacks and check-mode behavior.
 retain the correct regression and passing controls, then delete this section.
 No sanitizer diagnostic allowance applies.
 
-## Lathe roughing modal reports use invalid probe command codes
 
-**Marked known:** 2026-10-13, Terje's core
-`e65020a8389b19d3c03277e02f34219e25800e6a`.
+## Named motion-mode parameter scales encoded values twice
 
-After successfully dispatching a roughing cycle to the plugin interface, `$G`
-reports G71 as `G38.572` and G72 as `G38.582`. Fractional G71.1/G71.2/G72.1/G72.2
-report `G38.573`/`G38.574`/`G38.583`/`G38.584`. Each accepted motion must instead
-retain its actual G71/G72 command name in the modal report.
+**Marked known:** 2026-10-13; reconfirmed 2026-10-14 on Terje
+`50055a283328c3f9726bbc8f22d20a801190c66e` after the motion-enum refactor.
 
-The [motion formatter](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/report.c#L744)
-treats every motion enum at or above `MotionMode_ProbeToward` as a probe code.
-The encoded roughing enums 710–722 also enter that branch. Core plugin dispatch
-is tested; pending roughing geometry remains separately documented in TODO.md.
+`#<_motion_mode>` must report ten times the numerical G-code value. The latest
+motion enums already use that convention, but the
+[getter at ngc_params.c:522](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/ngc_params.c#L522)
+multiplies them by ten again. G1 reports 100 instead of 10; G38.2 reports 3820
+instead of 382; G71 reports 7100 instead of 710. G0 remains a passing zero control.
+Earlier source used unrelated probe enums, so old observed values differ.
 
-**Regressions:** [G71](cases/lathe_ngc/roughing_modal_report_uses_g71.c),
-[G71.1](cases/lathe_ngc/roughing_modal_report_uses_g71_1.c),
-[G71.2](cases/lathe_ngc/roughing_modal_report_uses_g71_2.c),
-[G72](cases/lathe_ngc/roughing_modal_report_uses_g72.c),
-[G72.1](cases/lathe_ngc/roughing_modal_report_uses_g72_1.c), and
-[G72.2](cases/lathe_ngc/roughing_modal_report_uses_g72_2.c).
-**Passing control:** [G70](cases/lathe_ngc/finishing_modal_report_uses_g70.c),
-using the same initialized parser, plugin capture and report fixture.
+**Regressions:** `named_motion_mode_reports_*` under [NGC parameters](cases/ngc_params)
+and [lathe](cases/lathe_ngc), plus
+[ordinary motion modes](cases/ngc_params/named_motion_mode_tracks_g0_g1_and_g80.c).
+G5.1 and G70 cases are also blocked by the separate parsing defects below.
 
-**Suggested fix (proposal, not runtime-verified):** Limit the probe-format branch
-to the actual G38 probe enums. Add explicit formatting for the encoded roughing
-enums: integer G71/G72 for variants ending in zero, with `.1` or `.2` for the
-fractional variants. Preserve G70, G5.1, G33.1 and normal probe formatting.
+**Suggested fix (proposal, not runtime-verified):** Return the newly encoded enum
+without another multiplication. Recheck integer, fractional, probe and lathe modes.
 
-**Remove exceptions when fixed:** delete all six
-[CMake blocks](known_bugs.cmake#L35), keep the correct report assertions and
-G70 control, run the lathe/parser/report tests and full sanitizer suite, then
-delete this section. No sanitizer allowance applies.
+**Remove exceptions when fixed:** remove the named-motion blocks from
+[known_bugs.cmake](known_bugs.cmake), retain correct assertions, run parameter,
+probe and lathe cases and full sanitizers, then delete this entry. G5.1/G70 also
+require their parser fixes before shared regressions pass; remove only resolved
+allowances. No sanitizer diagnostic allowance applies.
 
-## Scaling-factor reports apply coordinate unit and diameter conversions
+## G5.1 loses its fractional motion code during parsing
 
-**Marked known:** 2026-10-13, Terje's core
-`e65020a8389b19d3c03277e02f34219e25800e6a`.
+**Marked known:** 2026-10-14, Terje `50055a283328c3f9726bbc8f22d20a801190c66e`.
 
-With `G51X2Y3Z4`, the scaling factors are dimensionless 2, 3 and 4. The `$#`
-`[G51:...]` record instead reports 0.0787, 0.1181 and 0.1575 when `$13=1` selects
-inch display. In lathe G7 diameter mode it reports 4, 3 and 4: the X factor is
-doubled. Metric radius-mode output correctly reports 2, 3 and 4. The tests check
-the unchanged parser scaling factors before inspecting the serialized report.
+The parser accepts `.1` for G5, but
+[gcode.c:1588](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/gcode.c#L1588)
+clears the mantissa before the fall-through branch calls `cv()` at line 1593.
+G5.1 is therefore assigned the G5 cubic mode instead of the quadratic mode, and
+`G5.1X1Y1I0J1F100` is rejected. The previously passing parser and real-motion
+regressions both fail at command acceptance on this source.
 
-[report_ngc_parameters() at report.c:620](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/report.c#L620)
-passes the factor vector through the coordinate formatter, which converts inches
-and doubles X for diameter mode. These conversions are appropriate for positions
-but change the meaning of scaling factors.
+**Regressions:** [parser](cases/gcode/quadratic_nonzero_j_accepted.c),
+[execution](cases/motion_control/quadratic_spline_executes.c), and the shared
+[named parameter](cases/ngc_params/named_motion_mode_reports_quadratic_spline_code.c).
 
-**Regressions:** [inch display](cases/report/scaling_parameter_report_keeps_dimensionless_factors_in_inches.c)
-and [lathe diameter mode](cases/lathe_ngc/scaling_parameter_report_does_not_double_diameter_mode_factor.c).
-**Passing control:** [metric factors](cases/report/scaling_parameter_report_preserves_metric_factors.c).
+**Suggested fix (proposal, not runtime-verified):** Preserve the validated mantissa
+until converting the G value into the motion enum, then clear it. Verify G5, G5.1
+and rejection of unsupported fractional modes as well as executed endpoints.
 
-**Suggested fix (proposal, not runtime-verified):** Use a dedicated dimensionless
-factor formatter for this record, retaining all configured axis factors and decimal
-precision without applying `INCH_PER_MM` or diameter doubling. Keep the existing
-coordinate formatter for positions, work offsets and probe results.
+**Remove exceptions when fixed:** remove the two quadratic parser/motion blocks
+from [known_bugs.cmake](known_bugs.cmake); the named parameter case also needs the
+getter fix above. Keep all assertions, run spline/parser/motion cases and full
+sanitizers, then delete this entry.
 
-**Remove exceptions when fixed:** delete both [CMake blocks](known_bugs.cmake#L60),
-retain all three tests, run the scaling/parser/report cases and full sanitizer
-suite, then delete this section. No sanitizer diagnostic allowance applies.
+## G70 still uses the old integer enum after the motion-code refactor
 
-## Named motion-mode parameter exposes internal enum encoding
+**Marked known:** 2026-10-14, Terje `50055a283328c3f9726bbc8f22d20a801190c66e`.
 
-**Marked known:** 2026-10-13, Terje's core
-`e65020a8389b19d3c03277e02f34219e25800e6a`.
+[gcode.c:1603](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/gcode.c#L1603)
+still assigns 70 to G70 while `MotionMode_LatheCycle` is now 700. Finishing-cycle
+validation and plugin dispatch no longer recognize the mode. Previously passing
+G70 default/explicit arguments, missing-Q and wrong-plane checks now fail, along
+with modal and named-parameter reporting cases.
 
-After G38.2/G38.3/G38.4/G38.5, `#<_motion_mode>` returns
-1400/1410/1420/1430 instead of 382/383/384/385. The
-[documented parameter contract](https://www.linuxcnc.org/docs/2.8/html/gcode/overview.html)
-uses ten times the numerical G-code value. Applying that convention to G5.1,
-G71, G71.1 and G72 also exposes 510, 7100, 7110 and 7200 instead of
-51, 710, 711 and 720. G70 and ordinary G0/G1/G80 controls pass.
+**Regressions:** separate `finishing_cycle_*`,
+[modal report](cases/lathe_ngc/finishing_modal_report_uses_g70.c) and
+[named parameter](cases/lathe_ngc/named_motion_mode_reports_g70.c) under
+[lathe tests](cases/lathe_ngc).
 
-The [getter at ngc_params.c:521-522](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/ngc_params.c#L521)
-multiplies the internal motion enum by ten. Special enums already encode
-fractional commands or use an unrelated probe range.
+**Suggested fix (proposal, not runtime-verified):** Use the same encoded motion
+conversion for G70 as G71/G72, preserving fractional-command validation. Verify
+successful plugin dispatch and existing missing-Q/plane error statuses.
 
-**Regressions:** separate `named_motion_mode_reports_*` cases under
-[cases/ngc_params](cases/ngc_params) and [cases/lathe_ngc](cases/lathe_ngc).
-The G38 cases execute real simulated probe motion; lathe cases verify accepted
-plugin dispatch. The G70 case is an ordinary passing control.
-
-**Suggested fix (proposal, not runtime-verified):** Map special motion enums to
-their numerical G-code parameter values before applying the ordinary integer
-conversion. Preserve G0/G1/G80 and G70, and cover all fractional motion modes.
-
-**Remove exceptions when fixed:** delete the eight named-motion-mode blocks in
-[known_bugs.cmake](known_bugs.cmake), retain their correct assertions and passing
-controls, run parameter/probe/lathe tests and the full sanitizer suite, then
-delete this section. No sanitizer diagnostic allowance applies.
-
-## Cancelled dynamic compensation reports a nonexistent G40.1 mode
-
-**Marked known:** 2026-10-13, Terje's core
-`e65020a8389b19d3c03277e02f34219e25800e6a`.
-
-After G41.1 or G42.1, G40 and a completed sufficiently long linear exit,
-`#<_ccomp>` returns 401. It should return 400 for cancelled compensation, as
-specified by the [named parameter contract](https://www.linuxcnc.org/docs/2.8/html/gcode/overview.html).
-The side is off and the pending exit has completed, but the retained dynamic bit
-is still added by the [getter at ngc_params.c:531](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/ngc_params.c#L531).
-Static G42 followed by G40 returns the correct 400.
-
-**Regressions:** [left](cases/cutter_comp/dynamic_left_compensation_named_parameter_tracks_enable_and_cancel.c)
-and [right](cases/cutter_comp/dynamic_right_compensation_named_parameter_tracks_enable_and_cancel.c).
-**Passing control:** [static compensation](cases/cutter_comp/static_right_compensation_named_parameter_uses_integer_code.c).
-The fixture captures the plugin configuration and checks parser state; it does
-not implement compensated toolpath geometry.
-
-**Suggested fix (proposal, not runtime-verified):** Return 400 when the side is
-`CComp_Off`; add the dynamic fractional part only for active G41/G42 modes.
-Retain any compensation data needed to complete an exit move.
-
-**Remove exceptions when fixed:** delete both dynamic-compensation named-parameter
-blocks in [known_bugs.cmake](known_bugs.cmake), retain all three tests, run
-cutter/parser/parameter tests and the full sanitizer suite, then delete this
-section. No sanitizer diagnostic allowance applies.
-
-## Reading all probe inputs changes the selected probe
-
-**Marked known:** 2026-10-13, Terje's core
-`e65020a8389b19d3c03277e02f34219e25800e6a`.
-
-Register the default probe, toolsetter and second probe; select the default probe
-with its input false and the second probe input true. After `probes_get_state()`,
-`hal.probe.get_state()` reports Probe_2 and triggered=true, without a selection
-command. This is the aggregate reader used by extended realtime reports.
-
-[probe.c:223](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/probe.c#L223)
-assigns each input to the shared active `probe` pointer during enumeration.
-
-**Regression:** [selection preservation](cases/probe/aggregate_states_preserves_selected_probe_and_trigger_input.c).
-**Passing control:** [aggregate input flags](cases/probe/aggregate_states_reports_each_registered_probe_input.c).
-
-**Suggested fix (proposal, not runtime-verified):** Iterate using a local
-`probe_t *entry` instead of overwriting the active `probe`. Leave active IRQ,
-connection and probing state unchanged during reporting.
-
-**Remove exception when fixed:** delete the selection-preservation block in
-[known_bugs.cmake](known_bugs.cmake), retain the test and control, run probe and
-realtime report cases plus the full sanitizer suite, then delete this section.
-No sanitizer diagnostic allowance applies.
-
-## Aggregate probe states ignore independent input inversion
-
-**Marked known:** 2026-10-13, Terje's core
-`e65020a8389b19d3c03277e02f34219e25800e6a`.
-
-With three false raw inputs, default probe selected and only toolsetter inversion
-enabled, `hal.probe.is_triggered(Probe_Toolsetter)` correctly returns true.
-`probes_get_state()` instead reports the toolsetter untriggered. Its
-[conversion at probe.c:224](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/probe.c#L224)
-applies the selected probe's shared inversion to every input.
-
-**Regression:** [independent toolsetter inversion](cases/probe/aggregate_states_respects_independent_toolsetter_inversion.c).
-**Passing control:** [uninverted inputs](cases/probe/aggregate_states_reports_each_registered_probe_input.c).
-
-**Suggested fix (proposal, not runtime-verified):** Convert each raw input using
-its own `inverted_bit` and `settings.probe.value`, consistently with
-`hal.probe.is_triggered()`. Aggregate reporting should describe physical input
-states independently of the active probe's toward/away cycle configuration.
-
-**Remove exception when fixed:** delete the independent-inversion block in
-[known_bugs.cmake](known_bugs.cmake), retain correct assertions and the control,
-run probe/realtime tests and the full sanitizer suite, then delete this section.
-No sanitizer diagnostic allowance applies.
-
-
-## Modbus RTU startup crashes when no direction output is available
-
-**Marked known:** 2026-10-13, Terje's core
-`e65020a8389b19d3c03277e02f34219e25800e6a`.
-
-With a valid serial stream lacking its own direction callback and no auxiliary
-outputs, `modbus_rtu_init(0, -1)` crashes instead of leaving RTU disabled.
-[modbus_rtu.c:601](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/modbus_rtu.c#L601)
-calls `d_out.claim` even though `ioports_cfg()` returned an empty configuration.
-Windows reports an access violation at `0xfffffffffffffff8` on that initialization
-line. GCC reports a null indirect call with PC zero and the caller at
-`tests/support/rtu_host.h:63`; the strict wrapper also requires this exact
-regression origin, fault type and address.
-
-**Regression:** [unavailable outputs](cases/modbus_rtu/aux_direction_without_outputs_disables_transport_safely.c).
-**Passing controls:** separate first-output, last-output and automatic-selection
-`aux_direction_*` cases complete a real RTU request/reply exchange with two
-claimed-capable outputs and verify TX/RX direction transitions.
-
-**Suggested fix (proposal, not runtime-verified):** Check `d_out.n_ports`,
-`d_out.claim` and the selected port before attempting a claim. When no usable
-output exists, leave direction unset and `hal.driver_cap.modbus_rtu` false.
-Preserve serial-provided direction callbacks and explicit automatic-direction
-mode (`dir_aux == -2`).
-
-**Remove exception when fixed:** delete its block in [known_bugs.cmake](known_bugs.cmake)
-and the specialized registration in CMakeLists.txt; the default registration
-then runs the unchanged C regression directly. Delete
-[scripts/rtu_direction_regression.py](../scripts/rtu_direction_regression.py) and
-its matcher tests. Run RTU/I/O tests, Python helpers and full sanitizers, then
-delete this section. The wrapper matches only the known fault address, source
-line and regression origin. A fixed regression or different crash fails CI;
-coverage mode skips it explicitly until the memory fault is fixed. No general
-sanitizer diagnostic allowance applies.
-
-
-## Homing Z resets the unhomed secondary ganged Y counter
-
-**Marked known:** 2026-10-13, Terje's core
-`e65020a8389b19d3c03277e02f34219e25800e6a`.
-
-With asymmetric Y ganging, let Y have home position -1 mm but subsequently be
-at -5 mm: both motor counters are -400 at 80 steps/mm. Homing only Z leaves the
-primary Y counter at -400, but resets the secondary counter to -80. Neither Y
-motor belongs to this homing cycle. The counters now describe different Y
-positions despite no Y motion.
-
-[set_machine_positions() at asymmetric_ganging.c:205](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/kinematics/asymmetric_ganging.c#L205)
-unconditionally reassigns the secondary counter from the primary's saved home
-position whenever forced origin is disabled. This violates the callback's
-requirement to leave non-homed axes unchanged.
-
-**Regressions:** [ganging Z-only homing](cases/asymmetric_ganging/homing_z_preserves_unhomed_secondary_motor_position.c)
-and [auto-square Z-only homing](cases/asymmetric_auto_square/homing_z_preserves_unhomed_secondary_motor_position.c).
-**Passing controls:** [primary homing with independent motor resolution](cases/asymmetric_ganging/homing_primary_sets_secondary_with_its_own_resolution.c)
-and [forced-origin Z homing](cases/asymmetric_ganging/force_origin_z_preserves_unhomed_secondary_counter.c).
-
-**Suggested fix (proposal, not runtime-verified):** Recalculate the secondary
-counter from the primary home position only when the cycle includes the primary
-axis. Preserve unrelated counters; keep normal primary/ganged homing and
-force-origin behavior intact. Review the shared asymmetric-auto-square path too.
-
-**Remove exceptions when fixed:** delete both Z-only homing blocks in
-[known_bugs.cmake](known_bugs.cmake), retain their correct assertions and
-controls, run ganging/homing/auto-square tests and full sanitizers, then delete
-this section. No sanitizer diagnostic allowance applies.
+**Remove exceptions when fixed:** remove the six G70 blocks from
+[known_bugs.cmake](known_bugs.cmake), retain all assertions, run the lathe/parser
+suite and full sanitizers, then delete this entry. Named-parameter reporting also
+requires the getter fix above. No sanitizer diagnostic allowance applies.
