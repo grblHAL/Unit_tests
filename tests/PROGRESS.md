@@ -3,9 +3,41 @@
 Last verified: **2026-10-14**. Read this with the root `AGENTS.md` and README.
 This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 
-## Batch 7 active work
+## Batch 8 local continuation
 
-`coverage-batch-7` continues toward full meaningful coverage. Core under test:
+PR #12 merged as upstream f5ba765 after run 38581963519 passed every job.
+New coverage belongs on local-only coverage-batch-8, based on that merged
+baseline. The completed 134-case parent batch is already upstream.
+The fully merged coverage-batch-7 remote branch was also deleted after PR #12
+merged. GitHub currently contains only master; batch 8 remains local-only.
+
+Batch 8 now contains 33 committed cases before the optional pullup work.
+Eight public settings cases pass focused sanitizer checks: probe flag readback,
+encoder-dependent spindle tolerance, dedicated home-input inversion availability,
+and fifth/sixth homing phase masks. Four public backlash-setting cases verify
+live enable, distance changes, fresh zero and clearing existing compensation.
+The clear regression reproduces stale compensation after its setting reads zero;
+see KNOWN_BUGS.md and known_bugs.cmake. Core source is unchanged.
+
+The default host settings callback now matches the core's initialized no-op,
+installed before parser hooks capture it. The initial new backlash crashes came
+from a missing fixture callback, and were fixed before checking emitted pulses.
+The full working suite contains 2,794 cases: 2,777 clean passes, sixteen known
+regressions reproduced, one ordinary pullup consistency failure, zero skips.
+No other sanitizer diagnostic or failure occurred after the shared fixture change.
+The backlash regression records 88 X pulses versus the correct 80 after clearing
+its setting. A clean committed-only delivery run has not yet been made for batch 8. The separate eight pullup cases/variant
+remain uncommitted with one ordinary failure pending mode clarification.
+
+The settings audit found disconnected availability branches: safety-door delay
+and auto-report metadata have NULL availability callbacks, and timezone metadata
+is commented out. Do not manufacture calls to private predicates just to count
+those branches as covered. Test supported public behavior; preserve these source
+coverage gaps and review unreachable code separately with the maintainer.
+
+## Batch 7 review checkpoint
+
+`coverage-batch-7` is the completed 134-case PR #12 review checkpoint. Core under test:
 Terje 39a69a22c72283ab186133b25fb89b8f5be35767, production source untouched.
 Hosted checkpoint 38577228353 (5d76de0) passed GCC/Clang/coverage/diagnosis.
 Fresh GCC coverage: 89.2% lines (15,526/17,401), 75.3% branches
@@ -671,4 +703,77 @@ commits; no duplicate PR is required. Remote master and coverage-batch-7 remain.
 The eight pullup cases and their optional host variant remain uncommitted and
 outside this delivery, with one visible consistency failure pending human
 clarification. Do not add an exception or alter the pull-mode expectations until
-that contract is resolved. Hosted validation of the final checkpoint is pending.
+that contract is resolved. Hosted validation of final checkpoint 305f34f passed every job in run
+38581963519. Fresh GCC coverage is 89.5% lines (15,568/17,401) and
+75.6% branches (10,180/13,464). PR #12 is ready for review.
+
+## Batch 8 reporting continuation
+
+Eleven new realtime accessory/tool reporting cases pass: flood, mist, combined
+coolant, clockwise/counterclockwise spindle, combined spindle/coolant, cleared
+outputs, encoder error capability gating and distinct tool/tool-change fields.
+They use the real report renderer and driver feedback callbacks, with explicit
+report flags. Keep the full-coverage goal active; do not treat this module check
+as complete coverage or publish a new percentage without fresh instrumentation.
+
+## Batch 8 parameter and modal report expansion
+
+Ten more cases pass all 219 report tests and strict diagnostic summary: parameter
+extension ordering, early/partial/transient coordinate-read failure, G43.1/G49,
+G92/G92.1, G51/G50 and M7/M8/M9 combinations. The modal tests execute real
+parser commands in check mode and then call the real report renderer. Coordinate
+fault injection starts after fixture initialization, uses the original NVS reader
+for all nonfailed reads and verifies that failed reports stop before extension
+callbacks. Correct assertions and existing known allowances are unchanged.
+
+The completed committed suite now contains 2,807 cases; the working tree adds
+eight pending pullup cases. These ten additions have been module-validated;
+full committed-only sanitizer/hosted coverage validation remains for the next
+substantial delivery boundary. Do not call the working suite fully green while
+the ordinary pullup consistency failure remains unresolved.
+
+## End-of-day snapshot, 2026-10-14
+
+The user requested saving current work and a PR, then stopping until tomorrow.
+The full-coverage goal is paused. Batch 8 has 33 completed new cases plus eight
+unfinished AUX_SETTINGS_PULLUP cases saved in a separate WIP commit. Assertions
+and exceptions for the unresolved pull-mode contract have not been changed.
+
+This snapshot is for draft review, not a passing delivery. The live/load pullup
+consistency case remains an ordinary failing test: live selects PullMode_Down,
+loaded configuration selects PullMode_None. Resolve that contract with the human
+before adjusting expectations or introducing an exception. Seven other pullup
+controls pass but their mode-specific expectations also require that review.
+
+Last full working-tree check before reporting expansion: 2,794 cases, 2,777 clean,
+sixteen expected regressions and the one ordinary pullup failure. All 219 report
+cases pass after the subsequent 21 additions; a latest full 2,815-case run and
+clean GCC/Clang/coverage delivery remain outstanding. Keep core unchanged.
+
+## Pullup issue classification authorized for PR #13
+
+On 2026-10-14 the user requested documenting the pullup inconsistency as a known
+issue and allowing the PR to merge after validation. Its live/load agreement
+assertion is unchanged. Only that named case receives WILL_FAIL/known_bug; the
+seven controls remain ordinary tests. The dated known-bug entry includes exact
+source anchors, the unresolved mode choice and cleanup of mode-specific controls.
+The full-coverage goal stays paused; this work completes the requested PR fix.
+Full local ASan/UBSan and strict summary passed all 2,815 cases: 2,798 clean,
+seventeen known regressions reproduced, zero unexpected failures/skips.
+Hosted GCC/Clang/coverage validation of this classified checkpoint is pending.
+
+## Revised goal and resumed authoring approach
+
+Continue toward meaningful 100% grblHAL core line/branch coverage against Terje's
+latest source, prioritizing supported machine workflows and observable effects.
+Use coverage as gap evidence, then verify valid startup, public triggers, intended
+contracts and practical consequences. Distinguish confirmed defects from fixture
+errors, design questions and low-priority robustness work. Ask the maintainer when
+intent is unclear; correct invalid tests. Keep core unchanged, assertions honest,
+case files maintainable, and deliver substantial validated PR checkpoints.
+
+The user requested resuming on 2026-10-14 with these guardrails. The available goal
+tools cannot edit an existing objective or resume a paused goal; its stored status
+still requires the user's goal control. Work may resume under the direct request.
+PR #13's final run 38604749142 passed against harness 0e5034b and Terje 39a69a2;
+its known pullup consistency assertion is unchanged and is narrowly classified.

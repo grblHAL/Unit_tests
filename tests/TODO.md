@@ -4,6 +4,76 @@ Pending implementation and design questions are separate from confirmed defects.
 The deferred-defect section links to KNOWN_BUGS.md; their existing regressions
 retain explicit expected-failure labels until fixed.
 
+## Storage write-failure policy
+
+**Maintainer disposition:** 2026-10-14, low priority; policy/design follow-up.
+
+Terje notes that failures of flash-emulated EEPROM may be permanent, and a
+simulator failure may instead involve a write-protected backing file. The driver
+reports the operation's failure and identifies the storage type. A driver may
+retry internally, but the **core decides the response to a reported failure**.
+Neither a failed write nor this TODO implies that the user needs a new board.
+
+Decide how the core reports failure, retains unsaved data and permits recovery,
+accounting for physical EEPROM, flash emulation and simulator storage. Retry
+count, timing and any alarm are undecided; five attempts is not an agreed rule.
+Existing coordinate/global/build-info/driver retry controls provide comparisons,
+not a universal retry policy for every storage backend.
+
+The observations below are retained as reproductions and review options, rather
+than urgent confirmed-bug entries. Existing expected-failure tests remain visible
+until the maintainer chooses and implements the contract. Their `known_bug`
+CTest label tracks the current exception; it does not assign priority. Revisit
+pending-state and retry assertions against that chosen contract before cleanup.
+
+### Startup-line pending state after a failed write
+
+**Observation recorded:** 2026-10-14, Terje `50055a283328c3f9726bbc8f22d20a801190c66e`.
+
+Write startup slot 0 or 1 through `settings_write_startup_line()`, then have the
+physical EEPROM handler reject its first write. RAM accepted the new command,
+but `nvs_buffer_sync_physical()` clears the slot's pending bit
+[before attempting the physical write at nvs_buffer.c:345](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/nvs_buffer.c#L345).
+The pending mask and aggregate dirty flag both become zero. Subsequent syncs
+therefore never retry the command, and physical storage retains the old text.
+Coordinate, global, build-info and driver writes retain their dirty flag on
+failure and have passing retry controls.
+
+**Regressions:** [slot 0](cases/nvs_buffer/startup_slot_0_failed_sync_remains_pending_for_retry.c)
+and [slot 1](cases/nvs_buffer/startup_slot_1_failed_sync_remains_pending_for_retry.c).
+Separate `startup_slot_*_sync_preserves_text_and_checksum` cases verify successful
+persistence and CRCs without an injected failure.
+
+**Earlier implementation option (not applied; subject to the chosen policy):** Remove the unconditional
+pre-write clear; clear that slot only after the physical handler reports success.
+Leave failed slots dirty so another idle sync can retry them.
+
+**After implementing the agreed contract:** remove the two startup retry blocks in
+[known_bugs.cmake](known_bugs.cmake), keep all assertions, run storage/startup
+cases and full sanitizers, then delete this TODO observation. No sanitizer allowance applies.
+
+### Version-only pending state after a failed write
+
+**Observation recorded:** 2026-10-14, Terje `50055a283328c3f9726bbc8f22d20a801190c66e`.
+
+Write the settings version byte through buffered `hal.nvs.memcpy_to_nvs()`, then
+reject its first physical write. The version flag correctly remains true, but
+[the aggregate dirty calculation at nvs_buffer.c:379](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/nvs_buffer.c#L379)
+omits `settings_dirty.version` and makes `is_dirty` false when no other record is
+pending. Later syncs return immediately without retrying the version byte.
+
+**Regression:** [failed version sync](cases/nvs_buffer/failed_version_only_write_remains_pending_for_retry.c).
+**Passing control:** [successful version sync](cases/nvs_buffer/version_only_successful_sync_clears_pending_write.c).
+Both exercise the public buffer-write API without manually changing dirty flags.
+
+**Earlier implementation option (not applied; subject to the chosen policy):** Include the pending version
+flag in the aggregate dirty expression. Preserve per-record success/failure flags.
+
+**After implementing the agreed contract:** remove the version retry block in
+[known_bugs.cmake](known_bugs.cmake), retain correct assertions and the control,
+run storage/version cases and full sanitizers, then delete this TODO observation.
+No sanitizer allowance applies.
+
 ## Plain G71 and G72 lathe roughing
 
 **Recorded:** 2026-10-12

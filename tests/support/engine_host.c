@@ -48,6 +48,8 @@ static bool write_nvs(uint32_t dest, uint8_t *source, uint32_t size, bool checks
     return true;
 }
 static void engine_noop_realtime(sys_state_t state) { (void)state; }
+static void engine_noop_settings(settings_t *current, settings_changed_flags_t changed)
+{ CHECK(current == &settings); (void)changed; }
 void engine_prepare(void)
 {
     memset(&hal, 0, sizeof(hal)); memset(&sys, 0, sizeof(sys));
@@ -60,6 +62,7 @@ void engine_prepare(void)
     hal.nvs.memcpy_from_nvs = read_nvs; hal.nvs.memcpy_to_nvs = write_nvs;
     grbl.tool_table.get_tool = get_tool; grbl.report.status_message = report_status;
     grbl.on_execute_realtime = grbl.on_execute_delay = engine_noop_realtime;
+    grbl.on_settings_changed = engine_noop_settings;
     sys.override.feed_rate = sys.override.rapid_rate = 100;
     settings.planner_buffer_blocks = 16; settings.junction_deviation = .01f;
     settings.flags.g92_is_volatile = true;

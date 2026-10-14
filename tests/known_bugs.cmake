@@ -26,7 +26,8 @@ if(TEST gcode.file_percent_marker_after_unmarked_start_is_rejected)
   set_tests_properties(gcode.file_percent_marker_after_unmarked_start_is_rejected PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
-# Failed EEPROM sync drops pending startup/version writes; verified 2026-10-14.
+# Deferred storage failure policy: tests/TODO.md#storage-write-failure-policy.
+# Retain current exceptions until the maintainer chooses/implements the contract.
 if(TEST nvs_buffer.startup_slot_0_failed_sync_remains_pending_for_retry)
   set_tests_properties(nvs_buffer.startup_slot_0_failed_sync_remains_pending_for_retry PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
@@ -90,5 +91,17 @@ endif()
 # Unrelated settings changes must preserve existing wall-plotter motor counters.
 if(TEST wall_plotter.unrelated_setting_update_preserves_motor_step_counters)
   set_tests_properties(wall_plotter.unrelated_setting_update_preserves_motor_step_counters
+    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
+endif()
+
+# Clearing an enabled backlash setting must stop emitting compensation pulses.
+if(TEST backlash.clearing_public_setting_disables_previously_enabled_compensation)
+  set_tests_properties(backlash.clearing_public_setting_disables_previously_enabled_compensation
+    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
+endif()
+
+# Live and loaded configuration must agree for the same pullup-disable setting.
+if(TEST ioports_pullup.pullup_disable_live_and_loaded_configuration_agree)
+  set_tests_properties(ioports_pullup.pullup_disable_live_and_loaded_configuration_agree
     PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
 endif()

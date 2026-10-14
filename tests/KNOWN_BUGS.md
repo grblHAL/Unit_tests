@@ -18,6 +18,11 @@ Outstanding regressions were reconfirmed on 2026-10-14 against Terje core
 Source links identify the revision used for the described code and reproduction. CI can test
 a newer revision; a fixed regression forces review and cleanup of its exception.
 
+Storage-write failure handling is a **low-priority maintainer TODO**, documented
+in [storage write-failure policy](TODO.md#storage-write-failure-policy), including
+its observations, existing test exceptions and cleanup links. It is not a
+settled requirement to retry physical writes a specific number of times.
+
 ## Using the suggested fixes
 
 Each **Suggested fix (proposal)** below is based on source inspection of the
@@ -100,54 +105,6 @@ serial markers, file completion callbacks and check-mode behavior.
 **Remove exception when fixed:** delete the [CMake block](known_bugs.cmake#L25),
 retain the correct regression and passing controls, then delete this section.
 No sanitizer diagnostic allowance applies.
-
-## Failed startup-line writes are discarded instead of retried
-
-**Marked known:** 2026-10-14, Terje `50055a283328c3f9726bbc8f22d20a801190c66e`.
-
-Write startup slot 0 or 1 through `settings_write_startup_line()`, then have the
-physical EEPROM handler reject its first write. RAM accepted the new command,
-but `nvs_buffer_sync_physical()` clears the slot's pending bit
-[before attempting the physical write at nvs_buffer.c:345](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/nvs_buffer.c#L345).
-The pending mask and aggregate dirty flag both become zero. Subsequent syncs
-therefore never retry the command, and physical storage retains the old text.
-Coordinate, global, build-info and driver writes retain their dirty flag on
-failure and have passing retry controls.
-
-**Regressions:** [slot 0](cases/nvs_buffer/startup_slot_0_failed_sync_remains_pending_for_retry.c)
-and [slot 1](cases/nvs_buffer/startup_slot_1_failed_sync_remains_pending_for_retry.c).
-Separate `startup_slot_*_sync_preserves_text_and_checksum` cases verify successful
-persistence and CRCs without an injected failure.
-
-**Suggested fix (proposal, not runtime-verified):** Remove the unconditional
-pre-write clear; clear that slot only after the physical handler reports success.
-Leave failed slots dirty so another idle sync can retry them.
-
-**Remove exceptions when fixed:** remove the two startup retry blocks in
-[known_bugs.cmake](known_bugs.cmake), keep all assertions, run storage/startup
-cases and full sanitizers, then delete this entry. No sanitizer allowance applies.
-
-## Failed version-only writes lose the aggregate retry flag
-
-**Marked known:** 2026-10-14, Terje `50055a283328c3f9726bbc8f22d20a801190c66e`.
-
-Write the settings version byte through buffered `hal.nvs.memcpy_to_nvs()`, then
-reject its first physical write. The version flag correctly remains true, but
-[the aggregate dirty calculation at nvs_buffer.c:379](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/nvs_buffer.c#L379)
-omits `settings_dirty.version` and makes `is_dirty` false when no other record is
-pending. Later syncs return immediately without retrying the version byte.
-
-**Regression:** [failed version sync](cases/nvs_buffer/failed_version_only_write_remains_pending_for_retry.c).
-**Passing control:** [successful version sync](cases/nvs_buffer/version_only_successful_sync_clears_pending_write.c).
-Both exercise the public buffer-write API without manually changing dirty flags.
-
-**Suggested fix (proposal, not runtime-verified):** Include the pending version
-flag in the aggregate dirty expression. Preserve per-record success/failure flags.
-
-**Remove exception when fixed:** remove the version retry block in
-[known_bugs.cmake](known_bugs.cmake), retain correct assertions and the control,
-run storage/version cases and full sanitizers, then delete this entry.
-No sanitizer allowance applies.
 
 ## Current-directory fallback duplicates a filesystem mount prefix
 
@@ -405,3 +362,68 @@ on every callback.
 **Remove exception when fixed:** remove the named `WILL_FAIL` block in
 [known_bugs.cmake](known_bugs.cmake), retain the regression/controls, run full
 sanitizers and strict summary, and delete this entry.
+
+## Setting backlash to zero leaves prior compensation enabled
+
+**Marked known:** 2026-10-14 on Terje `39a69a22c72283ab186133b25fb89b8f5be35767`.
+
+With `ENABLE_BACKLASH_COMPENSATION=1`, configure X backlash to 0.1 mm at
+80 steps/mm, then store zero through the public axis-backlash setting API.
+The setting reads zero, but a 1 mm X move still emits 88 pulses rather than 80.
+The logical position reports 1 mm, so the extra physical compensation remains
+hidden from that coordinate. Controls verify fresh-zero operation, normal enable
+and a nonzero distance update.
+
+The live [setting handler](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/settings.c#L1563)
+reinitializes the axis after changing its value. In
+[mc_backlash_init](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/motion_control.c#L48),
+nonzero rounded compensation sets the enable bit, but zero never clears an
+existing bit or compensation distance.
+
+**Regression:** [clear previously enabled compensation](cases/backlash/clearing_public_setting_disables_previously_enabled_compensation.c).
+The test retains the correct 80-pulse expectation. The host supplies the normal
+core default settings callback before parser initialization; the failure is a
+pulse-count assertion, not a callback crash or incomplete startup.
+
+**Suggested fix (not applied):** for each reinitialized axis whose rounded
+compensation is zero, clear its backlash-enable bit and stored compensation.
+Leave other axes' configuration unchanged and retain position synchronization.
+Revalidate enable, distance changes, zero/substep values and direction reversals.
+
+**Remove exception when fixed:** remove this case's `WILL_FAIL` block in
+[known_bugs.cmake](known_bugs.cmake), retain its regression and passing controls,
+run the full sanitizer suite and strict summary, then delete this entry.
+
+## Auxiliary pullup disable differs between live and loaded settings
+
+**Marked known:** 2026-10-14 on Terje `39a69a22c72283ab186133b25fb89b8f5be35767`.
+
+With `AUX_SETTINGS_PULLUP=1`, writing pullup-disable mask 2 configures input 1
+with `PullMode_Down`. Loading the same stored mask configures that input with
+`PullMode_None`. The physical input bias therefore depends on whether the setting
+was changed live or loaded. The regression requires both paths to agree; it does
+not decide which disabled-pullup mode the maintainer should choose.
+
+The live mapping is at
+[ioports.c:1335](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/ioports.c#L1335),
+and the loaded mapping is at
+[ioports.c:1594](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/ioports.c#L1594).
+
+**Regression:** [live/load consistency](cases/ioports_pullup/pullup_disable_live_and_loaded_configuration_agree.c).
+The [loaded control](cases/ioports_pullup/loaded_pullup_disable_uses_no_pull_without_changing_debounce.c)
+and other pullup cases verify selected pins, mask readback, clearing, unchanged
+values, inversion and absent driver configuration. Their mode-specific checks
+currently document each path's existing behavior and need review when aligning
+that behavior. No assertion was weakened to classify this inconsistency.
+
+**Suggested fix (not applied):** choose one disabled-pullup mode and use the same
+mapping for live changes and settings load. If disable means no pull, use
+`PullMode_None` in the live setter; otherwise align the load path to the agreed
+pull-down behavior. The number of driver retries and storage-failure TODO are
+unrelated to this pin-configuration issue.
+
+**Remove exception when fixed:** remove the named `WILL_FAIL` block in
+[known_bugs.cmake](known_bugs.cmake), retain the consistency regression, align the
+controls' mode expectations with the agreed behavior, run all pullup tests plus
+the full sanitizer suite/strict summary, and delete this entry. No sanitizer
+suppression or diagnostic wrapper applies.
