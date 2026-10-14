@@ -945,3 +945,19 @@ All 43 state-machine cases pass under ASan/UBSan and strict summary
 32 pushed in the running checkpoint and 15 subsequent local cases. The updated
 2,862-case suite still needs full validation before the next push. Continue from
 fresh hosted coverage when available; PR #13 remains the unmerged parent.
+
+## Batch 9 hosted coverage and second checkpoint
+
+Run 38621381358 passed source, GCC, Clang, coverage and CI diagnosis for harness
+011afe0 against Terje 39a69a2. Fresh artifact coverage is 15,747/17,402 lines
+(90.4896%) and 10,323/13,464 branches (76.6711%). Compared with batch 8 this adds
+106 covered lines and 84 branches. Crossbar reaches 100% lines/91.7% branches;
+sleep reaches 96.8%/83.3%, tool change 92.2%/67.1%, and state machine 88.7%/69.7%.
+These measurements cover the first 32 cases, not the following 15 local cases.
+
+The current 47-case batch checkpoint also passes the full sanitizer suite and
+strict summary: 2,862 total, 2,845 clean, 17 known regressions, no unexpected
+failures/skips (41.90 s; build-asan/batch-9-second-checkpoint-results.xml). Push
+this completed state/motion checkpoint and run hosted validation, then continue
+independent gaps. PR #13 remains open, verified from GitHub; do not merge it or
+publish a duplicate upstream diff. Core remains unchanged.
