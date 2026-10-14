@@ -305,7 +305,7 @@ After `vfs_locate_file("panel.nc")` finds `/panel.nc`, a later
 `vfs_locate_file("/missing.nc")` whose backend stat fails returns `/panel.nc`
 instead of NULL. The absolute-path branch does not clear the reusable relative
 result before the common return at
-[vfs.c:922](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/vfs.c#L922).
+[vfs.c:927](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/vfs.c#L927).
 A caller may act on a different file after the requested path was not found.
 
 **Regression:** [absolute miss after success](cases/vfs/locate_absolute_miss_after_success_does_not_return_previous_result.c).
