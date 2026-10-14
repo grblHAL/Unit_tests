@@ -254,3 +254,20 @@ PR. `coverage-batch-4` starts from upstream `36e248d` after PR #7 merged.
 This overrides the batch 3 pause. Use latest Terje core, verify fixed exceptions,
 add meaningful tests from measured gaps, validate locally and in hosted CI,
 then open the separate batch PR. Keep production core unchanged.
+
+## Sustained coverage instruction (2026-10-14)
+
+The user clarified that batch 4 must continue toward meaningful 100% core
+coverage. PR #8 is a progress checkpoint, not completion or a stopping point.
+Continue substantial test batches on `coverage-batch-4`; green CI, commits,
+module completion and the existing PR do not authorize stopping or pausing.
+Keep correct regressions and verified coverage/configuration evidence. Only
+pause on a later explicit human request or report a concrete blocker. Earlier
+batch-3 pause instructions are historical and superseded by this resumption.
+
+## Batch 5 continuation
+
+PRs #8 and #9 have merged. Continue on `coverage-batch-5`, preserving the
+unmerged storage/filesystem continuation and debug tests from batch 4. The user
+authorized temporary manual-only harness CI triggers in this next coverage PR;
+keep reusable source callers available. Continue toward full meaningful coverage.

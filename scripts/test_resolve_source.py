@@ -5,6 +5,22 @@ SHA = "a" * 40
 SUITE = {"repository": "grblHAL/core", "path": "core", "ref": "master", "coverage_filter": "core/.*"}
 
 class SourceResolutionTests(unittest.TestCase):
+    def test_repository_name_and_github_urls_select_same_source(self):
+        for value in ("terjeio/grblHAL_core", "https://github.com/terjeio/grblHAL_core", " https://github.com/terjeio/grblHAL_core/ ", "https://github.com/terjeio/grblHAL_core.git"):
+            with self.subTest(value=value):
+                calls = []
+                def request(repo, endpoint):
+                    calls.append((repo, endpoint))
+                    return {"sha": SHA}
+                result = resolve(SUITE, repository=value, ref="master", request=request)
+                self.assertEqual(result["repository"], "terjeio/grblHAL_core")
+                self.assertEqual(calls, [("terjeio/grblHAL_core", "commits/master")])
+
+    def test_invalid_repository_urls_are_rejected_before_network(self):
+        for value in ("https://example.com/owner/repo", "https://github.com/owner/repo/tree/master", "https://github.com/owner/repo?x=1", "https://github.com/owner", "https://github.com/owner/repo#readme"):
+            with self.subTest(value=value), self.assertRaisesRegex(ValueError, "source_ref"):
+                resolve(SUITE, repository=value, ref="master", request=lambda *args: self.fail("network requested"))
+
     def test_default_resolves_configured_branch(self):
         def request(repo, endpoint):
             self.assertEqual((repo, endpoint), ("grblHAL/core", "commits/master"))

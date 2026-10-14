@@ -3,6 +3,31 @@
 Last verified: **2026-10-14**. Read this with the root `AGENTS.md` and README.
 This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 
+## Batch 5 continuation
+
+PRs #8 and #9 have merged. `coverage-batch-5` retains the 61 storage,
+filesystem and tool cases that followed the merged batch-4 checkpoint, plus
+new debug feature variants and parser error-path tests. Core remains unmodified.
+
+The 50055a2 checkpoint passed 2,541 Windows sanitizer cases: 2,512 clean,
+29 known regressions, zero unexpected failures/skips. Linux GCC/Clang from run
+38521365384 exposed a failed-realloc directory leak. Its regression now checks
+ownership portably, reclaims a leaked fixture allocation before asserting, and
+has a dated narrow exception. The long-filename wrapper was accepted by both
+hosted sanitizer jobs; unrelated leak diagnostics correctly failed classification.
+
+The user requested temporary manual-only harness CI and support for both
+owner/repo and GitHub repository URLs. Reusable callers remain available.
+All 51 Python helpers and workflow actionlint pass locally.
+
+Latest Terje core has advanced to 39a69a22c72283ab186133b25fb89b8f5be35767.
+Full Windows Clang ASan/UBSan and strict summary pass: 2,555 tests, 2,544
+clean passes, 11 documented known regressions, zero unexpected failures/skips.
+Eighteen verified fixed parser/override exceptions and four resolved bug entries
+were removed; assertions remain. The batch adds 102 cases over merged master.
+Hosted GCC/Clang and coverage validation is pending publication.
+
+
 ## Batch 4 RTCP and wall-plotter extension
 
 The user resumed coverage on a new branch and requested a separate PR.

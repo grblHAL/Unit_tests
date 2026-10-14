@@ -263,3 +263,37 @@ change with the selected core refactor; these totals are not a test-only delta.
 Seventeen focused cases were added, fifteen fixed allowances removed, and
 remaining motion-refactor failures are documented with correct expectations.
 Production source and registry defaults are unchanged.
+
+## Sustained batch 4 storage/filesystem checkpoint
+
+On Terje `50055a2`, local Clang ASan/UBSan and strict summary pass 2,514 cases:
+2,486 clean passes, 28 known regressions, zero unexpected failures/skips.
+All 48 Python helpers pass. This adds 61 cases beyond the first batch-4 checkpoint:
+26 storage, four buffered tools and 31 filesystem/path/resource cases.
+The long-filename static-buffer fault has an exact local ASan reproducer and
+wrapper; its real Linux diagnostic and directory realloc-failure leak behavior
+still require hosted verification. No production source change or exclusion.
+Maintainer compatibility/reporting follow-ups are separately reviewed in PR #9.
+
+## Batch 5 latest-core validation
+
+2026-10-14, Terje core `39a69a22c72283ab186133b25fb89b8f5be35767`, untouched.
+Full Windows Clang ASan/UBSan and strict summary: 2,555 tests, 2,544 clean
+passes, 11 documented known regressions, zero unexpected failures/skips.
+All 51 Python helpers and both workflow actionlint checks pass.
+
+102 new firmware cases cover NVS retries/default diagnostic maps, buffered tools,
+filesystem routing/resource failures, debug UART/external hooks and parser
+axis-command conflicts. Eighteen obsolete exceptions and four resolved bug
+entries were removed after the same-source hosted run 38528865145 and local
+ordinary regressions confirmed the fixes. Correct assertions remain.
+
+Run 38521365384 verified the long-filename diagnostic matcher on Linux GCC and
+Clang, and exposed the failed-directory-realloc leak. Its portable ownership
+regression now reclaims leaked fixture memory before asserting and is narrowly
+classified, preserving visibility of unrelated sanitizer failures.
+
+Harness push/PR triggers are temporarily disabled by user request. Manual runs
+accept owner/repo or a GitHub repository URL; reusable source callers remain.
+Hosted validation for this final batch is pending delivery; no fresh coverage
+percentage is claimed from the local sanitizer checks.

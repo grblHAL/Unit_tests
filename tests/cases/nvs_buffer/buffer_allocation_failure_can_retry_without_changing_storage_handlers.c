@@ -1,0 +1,15 @@
+#include "support/nvs_allocation_host.h"
+
+int main(void)
+{
+    prepare_allocation_nvs();
+    nvs_io_t original = hal.nvs; fail_buffer_allocations = 1;
+    CHECK(!nvs_buffer_alloc());
+    CHECK(hal.nvs.type == original.type && hal.nvs.memcpy_to_nvs == original.memcpy_to_nvs);
+    CHECK(nvs_buffer_get_physical() == &hal.nvs);
+    CHECK(nvs_buffer_alloc() && nvs_buffer_init());
+    CHECK(hal.nvs.type == NVS_Emulated);
+    CHECK(nvs_buffer_get_physical()->memcpy_to_nvs == original.memcpy_to_nvs);
+    nvs_buffer_free();
+    return EXIT_SUCCESS;
+}
