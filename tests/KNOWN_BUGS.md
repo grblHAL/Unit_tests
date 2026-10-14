@@ -393,3 +393,37 @@ Revalidate enable, distance changes, zero/substep values and direction reversals
 **Remove exception when fixed:** remove this case's `WILL_FAIL` block in
 [known_bugs.cmake](known_bugs.cmake), retain its regression and passing controls,
 run the full sanitizer suite and strict summary, then delete this entry.
+
+## Auxiliary pullup disable differs between live and loaded settings
+
+**Marked known:** 2026-10-14 on Terje `39a69a22c72283ab186133b25fb89b8f5be35767`.
+
+With `AUX_SETTINGS_PULLUP=1`, writing pullup-disable mask 2 configures input 1
+with `PullMode_Down`. Loading the same stored mask configures that input with
+`PullMode_None`. The physical input bias therefore depends on whether the setting
+was changed live or loaded. The regression requires both paths to agree; it does
+not decide which disabled-pullup mode the maintainer should choose.
+
+The live mapping is at
+[ioports.c:1335](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/ioports.c#L1335),
+and the loaded mapping is at
+[ioports.c:1594](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/ioports.c#L1594).
+
+**Regression:** [live/load consistency](cases/ioports_pullup/pullup_disable_live_and_loaded_configuration_agree.c).
+The [loaded control](cases/ioports_pullup/loaded_pullup_disable_uses_no_pull_without_changing_debounce.c)
+and other pullup cases verify selected pins, mask readback, clearing, unchanged
+values, inversion and absent driver configuration. Their mode-specific checks
+currently document each path's existing behavior and need review when aligning
+that behavior. No assertion was weakened to classify this inconsistency.
+
+**Suggested fix (not applied):** choose one disabled-pullup mode and use the same
+mapping for live changes and settings load. If disable means no pull, use
+`PullMode_None` in the live setter; otherwise align the load path to the agreed
+pull-down behavior. The number of driver retries and storage-failure TODO are
+unrelated to this pin-configuration issue.
+
+**Remove exception when fixed:** remove the named `WILL_FAIL` block in
+[known_bugs.cmake](known_bugs.cmake), retain the consistency regression, align the
+controls' mode expectations with the agreed behavior, run all pullup tests plus
+the full sanitizer suite/strict summary, and delete this entry. No sanitizer
+suppression or diagnostic wrapper applies.

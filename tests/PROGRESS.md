@@ -749,3 +749,15 @@ Last full working-tree check before reporting expansion: 2,794 cases, 2,777 clea
 sixteen expected regressions and the one ordinary pullup failure. All 219 report
 cases pass after the subsequent 21 additions; a latest full 2,815-case run and
 clean GCC/Clang/coverage delivery remain outstanding. Keep core unchanged.
+
+## Pullup issue classification authorized for PR #13
+
+On 2026-10-14 the user requested documenting the pullup inconsistency as a known
+issue and allowing the PR to merge after validation. Its live/load agreement
+assertion is unchanged. Only that named case receives WILL_FAIL/known_bug; the
+seven controls remain ordinary tests. The dated known-bug entry includes exact
+source anchors, the unresolved mode choice and cleanup of mode-specific controls.
+The full-coverage goal stays paused; this work completes the requested PR fix.
+Full local ASan/UBSan and strict summary passed all 2,815 cases: 2,798 clean,
+seventeen known regressions reproduced, zero unexpected failures/skips.
+Hosted GCC/Clang/coverage validation of this classified checkpoint is pending.

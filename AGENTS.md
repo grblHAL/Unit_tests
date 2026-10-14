@@ -300,3 +300,13 @@ AUX_SETTINGS_PULLUP cases/variant out of delivery until the mode contract is
 clarified. Revalidate the shared host default settings callback under the full
 suite before delivery; it must match normal core startup, not mask real failures.
 Continue meaningful full coverage from measured gaps without modifying core.
+
+## Pullup consistency classification for PR #13
+
+On 2026-10-14 the user explicitly authorized moving the pullup mismatch into
+KNOWN_BUGS.md and adding its narrow expected-failure classification so PR #13
+can become ready after validation. This supersedes the earlier instruction to
+keep those cases out of delivery pending a mode choice. The consistency assertion
+is unchanged; only its named case has an exception. The maintainer still chooses
+no-pull versus pull-down, and mode-specific controls need review when fixed.
+The full-coverage goal remains paused for the user's overnight break.

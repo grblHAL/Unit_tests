@@ -99,3 +99,9 @@ if(TEST backlash.clearing_public_setting_disables_previously_enabled_compensatio
   set_tests_properties(backlash.clearing_public_setting_disables_previously_enabled_compensation
     PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
 endif()
+
+# Live and loaded configuration must agree for the same pullup-disable setting.
+if(TEST ioports_pullup.pullup_disable_live_and_loaded_configuration_agree)
+  set_tests_properties(ioports_pullup.pullup_disable_live_and_loaded_configuration_agree
+    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
+endif()
