@@ -39,6 +39,9 @@ block the same test; remove only allowances whose underlying faults are fixed.
 
 ## Analog output commands truncate fractional values
 
+**Maintainer disposition (2026-10-14):** Deferred to the longer-term TODO list.
+Keep the fractional-value regression and its explicit exception until implemented.
+See [maintainer follow-ups](TODO.md#deferred-confirmed-defects).
 
 **Marked known:** 2026-10-09
 
@@ -100,6 +103,11 @@ and full sanitizer suite, then delete this section.
 
 ## Unexpected file percent marker reports success
 
+**Maintainer disposition (2026-10-14):** Deferred pending review of file-demarcation
+status semantics. Terje currently uses demarcation to bundle mass settings updates
+into one storage commit; avoid changing that event behavior without reviewing the
+sender/update workflow. The status regression remains explicit, with its exception.
+See [maintainer follow-ups](TODO.md#deferred-confirmed-defects).
 
 **Marked known:** 2026-10-12. **Reconfirmed:** 2026-10-13 against Terje's core
 `e65020a8389b19d3c03277e02f34219e25800e6a`.

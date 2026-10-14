@@ -1,7 +1,8 @@
-# Pending core features
+# Pending core features and maintainer follow-ups
 
-These are pending implementation, not confirmed defects. Tests record current
-parser/plugin behavior without `known_bug` or expected-failure labels.
+Pending implementation and design questions are separate from confirmed defects.
+The deferred-defect section links to KNOWN_BUGS.md; their existing regressions
+retain explicit expected-failure labels until fixed.
 
 ## Plain G71 and G72 lathe roughing
 
@@ -43,3 +44,33 @@ validator independently; no expected-failure exception applies.
 
 See [registered validator](cases/asymmetric_ganging/registered_resolution_validator_rejects_large_difference_without_mutating_motor.c)
 and [public valid write](cases/asymmetric_ganging/resolution_setting_accepts_and_reports_small_motor_difference.c).
+
+## Deferred confirmed defects
+
+**Maintainer review:** 2026-10-14.
+
+- [Fractional analog output](KNOWN_BUGS.md#analog-output-commands-truncate-fractional-values):
+  Terje deferred implementation to a longer-term TODO list. Retain the correct
+  fractional-value assertion and its linked exception; deferral is not a fix.
+- [Unexpected file percent marker status](KNOWN_BUGS.md#unexpected-file-percent-marker-reports-success):
+  Terje is wary of changing status semantics and deferred review. File-demarcation
+  events currently bundle mass settings updates into one storage commit. Senders
+  should demarcate bulk updates, especially with flash emulation: unbundled writes
+  can each erase and rewrite the emulated EEPROM. Review status/event semantics
+  together before changing the regression or implementation.
+
+## Lathe diameter-mode conventions for reported offsets
+
+**Maintainer review:** 2026-10-14; design question, not a newly confirmed failure.
+
+Terje requested checking whether coordinate-style output in diameter mode should
+apply special handling to tool offsets and other reported quantities. Define the
+expected convention for each record before changing assertions. The dimensionless
+G51 factor regressions already pass on Terje `50055a2`; their old exceptions and
+known-bug entry were removed after direct verification. Do not reinstate that
+fixed entry or treat the broader offset question as a confirmed defect.
+
+Retain [inch-display factors](cases/report/scaling_parameter_report_keeps_dimensionless_factors_in_inches.c)
+and [lathe factor reporting](cases/lathe_ngc/scaling_parameter_report_does_not_double_diameter_mode_factor.c).
+Add offset-specific tests when the maintainer confirms the intended units/diameter
+convention, and preserve existing coordinate and unit controls.
