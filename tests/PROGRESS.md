@@ -55,9 +55,19 @@ checkpoint remains 2,742 cases; do not call the pending working tree fully green
 Two IRQ callback controls and six scheduler deadline/cancellation/startup controls
 also pass. The current full working-tree run has 2,763 cases: 2,747 clean passes,
 fifteen known regressions and exactly one unresolved pull-mode consistency failure.
-No sanitizer diagnostic was introduced. There are 115 committed cases since batch 6,
+No sanitizer diagnostic was introduced. There are 123 committed cases since batch 6,
 plus the eight uncommitted pullup cases/variant. The fixture preserves the core
 default IRQ callback across mocked driver initialization; all 68 boot tests pass.
+
+Eight further motion cases pass all 65 motion-control tests and strict diagnostic
+summary: clockwise/counterclockwise two-turn circles, a two-turn helix, geometry
+and one-time travel-limit callbacks in all planes, plus disabled-limit bypass.
+The callback fixture enables actual soft limits/homing and a valid envelope;
+otherwise the parser intentionally marks targets prevalidated. Independent
+step pulses and physical endpoints verify execution, not just parser acceptance.
+The current configured suite contains 2,771 cases; a new full run has not yet been
+performed after these eight additions. The unresolved pull-mode failure remains
+ordinary and uncommitted.
 
 ## Batch 6 active work
 
