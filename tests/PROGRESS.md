@@ -1,7 +1,32 @@
 # Coverage progress and continuation handoff
 
-Last verified: **2026-10-13**. Read this with the root `AGENTS.md` and README.
+Last verified: **2026-10-14**. Read this with the root `AGENTS.md` and README.
 This is a snapshot, not proof that future checkouts or CI runs are unchanged.
+
+## Batch 4 RTCP and wall-plotter extension
+
+The user resumed coverage on a new branch and requested a separate PR.
+`coverage-batch-4` starts from upstream `36e248d`, after PR #7 merged.
+Current reviewed core is Terje `50055a283328c3f9726bbc8f22d20a801190c66e`;
+production source is untouched and source-registry defaults remain unchanged.
+
+Seventeen separate new cases cover RTCP command delegation/synchronization,
+unknown-command behavior, settings persistence and corrupt-read recovery,
+segment-length bounds, consecutive rotary endpoints, the thousand-segment cap,
+axis-counter preservation, and wall-plotter width changes, Z interpolation,
+short moves and restart after cancellation. All 36 RTCP/wall-plotter cases pass.
+
+Full local Clang ASan/UBSan and strict summary: **2,453 tests, 2,433 clean passes,
+20 documented known regressions, zero unexpected failures/skips**.
+Fifteen verified fixed regressions lose their exceptions, and the final fatal
+RS485 wrapper and its matcher tests are deleted; it is now an ordinary test.
+Remaining Python helpers pass. Existing G5.1 and G70 parser tests caught fresh
+motion-enum refactor defects; ordinary named-motion values are now scaled twice.
+Correct assertions remain, with dated source/reproduction/cleanup entries.
+
+Hosted GCC/Clang and fresh coverage validation is the next delivery gate.
+The previous batch's measurements below are historical, not new-source coverage.
+After delivery, continue from refreshed line/branch evidence if requested.
 
 ## Batch 3 final stopping point
 
