@@ -862,3 +862,13 @@ now has 22 new cases, local only. PR #13 remains open/ready; its head is a00c3bd
 Terje master is still 39a69a2, freshly verified. Next measured gaps include
 state-machine accessory restore, supported tool-change workflows and crossbar
 port capability mappings. Continue substantial coverage work before another PR.
+
+## Batch 9 crossbar mappings
+
+Six additional cases cover auxiliary limit/home/fault/enable signal mappings,
+grouped enables, remapped UVW identities, rejection of unconfigured ABC functions
+and secondary XYZ motor identity. They use the production public crossbar API in
+existing eight-axis, UVW and base builds. All 50 crossbar/eight-axis/UVW cases pass
+under sanitizers and strict summary (build-asan/batch-9-mapping-results.xml).
+These exercise previously uncovered enabled-feature branches without changing
+core or adding artificial private entry points.
