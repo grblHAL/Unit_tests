@@ -74,3 +74,20 @@ Retain [inch-display factors](cases/report/scaling_parameter_report_keeps_dimens
 and [lathe factor reporting](cases/lathe_ngc/scaling_parameter_report_does_not_double_diameter_mode_factor.c).
 Add offset-specific tests when the maintainer confirms the intended units/diameter
 convention, and preserve existing coordinate and unit controls.
+
+## G70–G72 execution and reporting contract
+
+**Maintainer clarification:** 2026-10-14; design still undecided.
+
+G70–G72 may not be motion modal states that should appear in reports. Their
+implementation will trap motion commands emitted by the Q-word subprogram and
+build a new subprogram for execution. Terje is considering a RAM file executed
+through the parser, rather than direct `mc_line()` calls, because cutter
+compensation is essential. Neither execution strategy is finalized.
+
+Retain parser/plugin-dispatch tests. Do not add assertions that require G70–G72
+to remain reported motion modes. The existing G70 modal-report and G70–G72 named
+motion-parameter cases need review when the reporting contract is confirmed;
+their current encoded values describe the present implementation, not a decision
+about future cycle reporting. Add generated-subprogram execution, cutter-comp
+and actual-motion reporting tests once the implementation and contract land.

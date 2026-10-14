@@ -3,6 +3,23 @@
 Last verified: **2026-10-14**. Read this with the root `AGENTS.md` and README.
 This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 
+## Batch 6 active work
+
+PR #10 merged; new coverage belongs on `coverage-batch-6` based on `5019b8f`.
+Hosted run 38530893125 passed GCC/Clang ASan/UBSan, coverage and diagnosis on
+Terje `39a69a22c72283ab186133b25fb89b8f5be35767`. Fresh GCC coverage:
+87.9% lines (15,289/17,396), 73.7% branches. The core remains untouched.
+
+63 new cases are validated: eight storage initialization, fourteen VFS lookup/
+default-backend, nine drive-format/free-space, twenty-one stream-state/reporting,
+ten executing-motion-mode and one weak-debug-hook case. The absolute-miss stale
+filename regression has a narrow known exception and passing controls.
+
+Full Windows Clang ASan/UBSan and strict summary pass 2,618 cases: 2,606 clean
+passes, twelve known regressions, zero unexpected failures/skips. All 51 Python
+helpers and workflow actionlint pass. Hosted validation of these new cases is
+pending delivery. G70–G72 reporting remains an undecided contract in TODO.
+
 ## Batch 5 continuation
 
 PRs #8 and #9 have merged. `coverage-batch-5` retains the 61 storage,
