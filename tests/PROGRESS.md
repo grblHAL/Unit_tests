@@ -1408,3 +1408,24 @@ summary checks (build-asan/batch-10-json-results.xml). Total now 3,026 cases;
 batch 10 adds 129. Hosted GCC/Clang/coverage must validate the whole checkpoint
 before any ready PR claim. Continue uncovered supported public paths while
 that run executes; questions remain TODO, goal remains active.
+
+## Batch 10 transport state, pendant reports and discoverable settings
+
+Seventeen additional cases cover public Modbus ASCII/TCP availability/busy
+state, reset propagation and RTU silence timing; MPG full/legacy status and
+cycle-start commands; plugin help topic discovery/filtering; third serial
+device registration; and command-driven coprocessor passthrough startup and
+reset line states. Full status respects configured report fields. Complete
+settings help uses a larger local output capture. The passthrough command
+fixture supplies the USB connected callback needed by normal report output.
+All three were fixture assumptions corrected without classifying core bugs.
+
+Full local ASan/UBSan and strict summary: 3,043 total, 3,030 clean passes,
+13 documented expected failures, zero unexpected failures/skips, 43.42 s
+(build-asan/batch-10-discovery-full-results.xml). Batch 10 adds 146 cases.
+No production changes or new exceptions. Also removed an extra trailing blank
+line in the preceding jerk test; staged whitespace must pass before commit.
+Hosted run 38667090574 validates the prior 129-case checkpoint (2dc9b68);
+source/GCC/coverage passed at last check, Clang was running. Do not push and
+cancel it. Continue file-stream callback coverage while it completes, then
+publish this validated group and dispatch the complete checkpoint.

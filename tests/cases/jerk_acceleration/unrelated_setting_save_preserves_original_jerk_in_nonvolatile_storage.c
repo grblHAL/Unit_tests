@@ -16,4 +16,3 @@ int main(void)
     CHECK(change_callbacks == 1);
     return EXIT_SUCCESS;
 }
-
