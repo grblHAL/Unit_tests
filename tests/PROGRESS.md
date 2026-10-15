@@ -1249,3 +1249,29 @@ build-asan/batch-10-arc-home-full-results.xml). Batch 10 adds 51 registered
 cases total. No scripts changed since 43 helper checks passed. Publish this
 arc/startup checkpoint and validate hosted while continuing meaningful gaps.
 The full-coverage goal remains active, with unresolved questions in TODO.
+
+## Batch 10 machine masks and probe configuration
+
+Fifteen further cases validate public step/enable polarity and limit inversion/
+pullup masks with readback, persistent values and driver notifications; energized
+motor masks update HAL immediately, can be cleared, and reject nonexistent axes
+without touching the driver; rotary-excluded hard limits retain the correct
+linear-axis mask through settings reload and clear exclusion when disabled;
+combined probe inversion updates all advertised inputs; disconnection inversion
+notifies the driver on change without redundant toggles or effects from reset
+input inversion. All cases and full sanitizer/strict gate pass.
+
+Full suite: 2,963 total, 2,950 clean, 13 documented expected failures,
+zero unexpected failures/skips (42.38 s; build-asan/batch-10-config-full-results.xml).
+Batch 10 adds 66 registered cases total. Core is unmodified at 683589b.
+The 51-case hosted run 38660620756 has successful source and coverage jobs,
+GCC/Clang still running. Its coverage is 15,997/17,437 lines (91.7417%) and
+10,598/13,506 branches (78.4688%). Do not present pending jobs as passed or
+attribute this measurement to the newer 66-case local checkpoint.
+
+Commit this configuration checkpoint, then continue independent meaningful
+public paths while current CI runs. Publish/dispatch only after that run ends.
+Next useful integration: normal streamed G-code/jog execution through real boot
+on existing CoreXY, polar and ganged variants. Use valid initial motor positions,
+public driver callbacks and bounded foreground service; preserve the core's
+initialization order. The full goal remains active. No new known exceptions.
