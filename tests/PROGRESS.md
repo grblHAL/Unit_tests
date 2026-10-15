@@ -2531,3 +2531,24 @@ batch19-{checkpoint,delivery} logs/results plus plugin-text/tool-stop/mode/homin
 usb-fault focused results. Batch 19 adds 15 cases. Freeze/publish for exact-head
 Linux validation; continue independent work without treating the passing gate as
 goal completion. Hosted batch 18 remains the measured coverage baseline.
+
+## Batch 20 auxiliary-axis arc limits
+
+Batch 19 is frozen/pushed at ca66c4d288c464050c5c238210d3c2f2c6295c52; exact-head
+hosted run 38799824879 remains live against Terje feebef2. PR 19 (batch 14) is
+still open at this check. New work is on coverage-batch-20.
+
+Two eight-axis cases use a valid virtual already-homed A-axis setup with A-only
+soft limits. An XY arc interpolating A completes all requested motor endpoints
+through the actual checker/planner/stepper; XYZ limits are not imposed. A public
+arc-checker case rejects A endpoints beyond either wall and accepts both exact
+boundaries with XYZ checking disabled. No private geometry helper is invoked and
+no core source/filter/exception changes are made. Focused ASan/UBSan and strict
+summary pass (batch20-aux-arc-results.xml). Total 3,314; full enlarged gate pending.
+
+Next useful area: ordinary soft-limit violations through public motion/protocol
+workflows, including controlled stopping during an active move. Read the current
+critical-event/hold fixtures before introducing a host observer; do not force
+private loops or skip alarm/reset behavior to inflate coverage. Latest authoritative
+coverage remains batch 18: 93.99% lines / 81.59% branches. Keep working while the
+specific batch 19 hosted run is live; do not restart it because observation times out.

@@ -2,10 +2,13 @@
 
 ## Objective and delivery
 
-Current new work is coverage-batch-19 from frozen batch 18 7ce6196.
+Current new work is coverage-batch-20 from frozen batch 19 ca66c4d.
 Batch 19 adds 15 cases / 3,312 total. Full ASan/UBSan, strict summary and 44 helper
-checks pass in 58.09 s (batch19-delivery), nine expected failures. Freeze/push for
-exact-head hosted validation before a ready PR; continue new work on a new branch.
+checks pass in 58.09 s (batch19-delivery), nine expected failures. It is pushed;
+exact-head hosted run 38799824879 remains in progress at last check.
+Batch 20 adds two auxiliary-axis arc-limit cases / 3,314 total; focused sanitizer
+and strict checks pass. Full enlarged gate is pending. Continue from the latest
+hosted report; normal soft-limit alarm/stop workflows remain a useful next area.
 Core remains clean latest Terje feebef2. Uncertain driver-failure detail reporting
 is a TODO policy question, not a new known-failure exception.
 
