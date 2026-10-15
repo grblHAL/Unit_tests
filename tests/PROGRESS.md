@@ -2492,3 +2492,42 @@ the deferred report run before the host's synthetic exit. No core defect or
 fixture change resulted from correcting that initial test assumption.
 Focused ASan/UBSan and strict summaries pass (batch19-sender, batch19-plugin
 results/logs). Total 3,303. Full enlarged gate remains pending.
+
+## Batch 18 hosted validation complete
+
+All source/GCC/Clang/coverage/CI-diagnosis jobs passed run 38796868694 for frozen
+7ce619699ba6dcee6b65bfedab0b7a8e5aa077d1 against Terje feebef2. Downloaded artifacts
+verify the exact harness/core source lock and header-inclusive filter. Coverage:
+16,566/17,625 lines (93.99%), 11,135/13,648 branches (81.59%), 3,297 tests with
+zero unexpected failures/skips. This adds 36 lines and 32 branches versus batch
+17 without changing denominators. Artifacts are ../batch18-hosted-coverage-core.zip
+and ../batch18-hosted-source-lock-core.zip. Core remote HEAD still feebef2.
+
+## Batch 19 plugin settings, saved stream cleanup and fault diagnostics
+
+Four registered plugin text-setting cases cover exact maximum length, oversized
+rejection, clearing an optional string and masked password placeholder rejection.
+They check stored/read-back text, owner save-before-change callbacks, and unchanged
+other fields; they test core metadata plumbing, not the separate Plugins project.
+One manual tool-change case uses core stream_rx_suspend/ack to back up pending
+motion bytes, then sends stop. Both visible and restored buffers are discarded,
+handlers return, no steps execute, and the driver cancel marker remains readable.
+
+Public machine-mode changes on a registered laser-capable PWM descriptor select
+lathe diameter programming with G7, then clear it when switching back to laser.
+Normal boot homing also covers equal locate rates/different seek rates splitting
+axes correctly, and an unbounded rotary A axis finding its switch and reference.
+The USB failure case uses public DTR events: no diagnostics for dropped DTR or an
+unrelated UART; matching USB DTR delays the generic self-test message, then emits
+retained startup warnings in order while suppressing ordinary startup tasks.
+The intentionally nonreturning fault loop is observed before the host exits.
+Private incompatible-driver formatter reachability is recorded as a TODO question;
+no forced private call, new defect exception or core patch is added.
+
+Focused sanitizer/strict gates pass for every addition. Full 3,311-case checkpoint
+passed in 63.95 s, then the final 3,312-case gate passed in 58.09 s, both with
+nine expected failures, strict summary and all 44 helper checks. Evidence uses
+batch19-{checkpoint,delivery} logs/results plus plugin-text/tool-stop/mode/homing/
+usb-fault focused results. Batch 19 adds 15 cases. Freeze/publish for exact-head
+Linux validation; continue independent work without treating the passing gate as
+goal completion. Hosted batch 18 remains the measured coverage baseline.

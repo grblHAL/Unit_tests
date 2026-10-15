@@ -3,22 +3,19 @@
 ## Objective and delivery
 
 Current new work is coverage-batch-19 from frozen batch 18 7ce6196.
-Batch 18 is pushed and exact-head run 38796868694 is live; source passed,
-compiler/coverage jobs still running at last check. Six new / 3,303 total local
-cases pass focused sanitizer/strict gates; full enlarged gate remains pending.
-Frozen coverage-batch-16: 21 new / 3,258 total cases. Local and exact-head hosted
-source/GCC/Clang/coverage/diagnosis passed run 38751060993: 93.54% lines and
-81.10% branches. Current batch 17 adds 19 cases / 3,277 total; full sanitizer/strict
-gate and 44 helpers pass (batch17-delivery). Exact-head hosted run 38795069102 is
-fully green: 93.79% lines / 81.35% branches. Current batch 18 has 20 new / 3,297
-total cases; full 3,297-case sanitizer/strict delivery gate and 44 helpers pass
-(62.04 s, nine expected failures). Exact-head hosted validation required. Core remains clean latest
-Terje feebef2. The next useful area is public cutter-compensation parser conflicts
-and program-end cleanup; capture fixture accepts configuration, not geometry.
-Batch 15 at 4bccb2d passed all run 38748405818 jobs; verified header-inclusive
-coverage is 93.36% lines / 80.94% branches, 3,237 cases. PR 19 (batch 14) remains
-ready/open at last live check. Prefer its merge before rebasing/presenting batch
-15's PR, then deliver batch 16 without duplicating parent tests. Never merge PRs
+Batch 19 adds 15 cases / 3,312 total. Full ASan/UBSan, strict summary and 44 helper
+checks pass in 58.09 s (batch19-delivery), nine expected failures. Freeze/push for
+exact-head hosted validation before a ready PR; continue new work on a new branch.
+Core remains clean latest Terje feebef2. Uncertain driver-failure detail reporting
+is a TODO policy question, not a new known-failure exception.
+
+Frozen batches 15-18 all passed exact-head hosted source/GCC/Clang/coverage and
+diagnosis. Latest measured baseline is batch 18 run 38796868694: 16,566/17,625
+lines (93.99%) and 11,135/13,648 branches (81.59%), 3,297 cases. Batch 17 run
+38795069102 measured 93.79% / 81.35%. Source-lock artifacts verify both revisions
+and header-inclusive filters; full history/evidence lives in tests/PROGRESS.md.
+PR 19 (batch 14) remains ready/open at last live check. Prefer its merge before
+rebasing/presenting later batches without duplicate parent tests. Never merge PRs
 automatically or commit/push master/main. Continue toward the full coverage goal.
 
 DO/WHILE CONTINUE remains a maintainer question in TODO.md; its candidate is

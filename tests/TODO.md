@@ -397,3 +397,23 @@ maintainer activation/support confirmation. Registered controls verify that boot
 clears the unavailable stored flag and leaves ordinary parser commands usable;
 these do not claim protection is operational or prove physical interlock behavior.
 No production patch, source exclusion or new known-failure exception is added.
+
+
+## Failed-startup detailed driver diagnostic policy
+
+**Review date:** 2026-10-15, Terje feebef26222111f11c7a3b3b0156d023aa786937.
+This is a maintainer question, not a registered defect or expected failure.
+[grbllib.c:413](https://github.com/terjeio/grblHAL_core/blob/feebef26222111f11c7a3b3b0156d023aa786937/grbllib.c#L413)
+queues report_driver_error, which formats the incompatible-driver detail at
+[lines 140-150](https://github.com/terjeio/grblHAL_core/blob/feebef26222111f11c7a3b3b0156d023aa786937/grbllib.c#L140-L150).
+Failed-startup filtering at
+[lines 837-860](https://github.com/terjeio/grblHAL_core/blob/feebef26222111f11c7a3b3b0156d023aa786937/grbllib.c#L837-L860)
+retains only report_warning tasks, so this differently named diagnostic task is
+discarded along with ordinary plugin work. Confirm whether that detail should
+also survive, or whether the generic self-test message is the intended output.
+Do not call the private formatter directly simply to cover its lines.
+
+The registered [USB failure test](cases/boot/usb_connection_reports_failed_selftest_then_retained_startup_warnings.c)
+checks the existing public connection workflow: matching DTR emits the delayed
+generic failure message and retained warnings in order; unrelated startup tasks
+stay suppressed. No change to the startup policy or core source was made.
