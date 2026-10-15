@@ -2438,3 +2438,33 @@ tool-change validation supplies the required no-ATC callback. Initial missing
 fixture callbacks were corrected, not classified as core faults.
 All 42 cutter cases pass ASan/UBSan and strict summary in 2.04 s
 (batch18-cutter-results.xml). Total 3,285; full enlarged gate remains pending.
+
+## Batch 17 hosted validation complete
+
+All source/GCC/Clang/coverage/CI-diagnosis jobs passed run 38795069102 for frozen
+90b4ce9721e1e998dd453522362c0cd6ef6a808c against Terje feebef2. Downloaded coverage
+and source-lock artifacts confirm the exact harness/core revisions and the
+header-inclusive core filter. Verified result: 16,530/17,625 lines (93.79%) and
+11,103/13,648 branches (81.35%), 3,277 cases. Compared with batch 16 this adds 43
+covered lines and 35 branches; denominators remain unchanged. Local artifacts:
+../batch17-hosted-coverage-core.zip and ../batch17-hosted-source-lock-core.zip.
+PR 19 remains open; do not merge it automatically or duplicate parent tests in
+new PRs. These hosted percentages exclude local batch 18.
+
+## Batch 18 tool geometry, arcs and homing notifications
+
+Five lathe tool-table parser cases exercise G10 L1 orientation/angles, partial
+radius updates retaining other geometry, inch length conversion without angle
+conversion, and invalid fractional/above-nine orientations preserving saved data.
+Three G20 IJK helical arcs in XY/XZ/YZ reach exact physical and logical motor
+endpoints (254 steps in arc axes, 127 in the helical axis). Two rejected IJK arcs
+exercise gross and relative radius mismatch limits while preserving and executing
+the previously queued straight move without extra pulses.
+
+Full 3,295-case ASan/UBSan gate plus strict summary and 44 helper checks passes
+in 54.01 s (batch18-checkpoint logs/results). Two additional normal-startup homing
+cases now pass focused sanitizer/strict checks: an actual realtime status request
+during motor travel is answered before approach ends, and the extension receives
+seek/pulloff/locate/pulloff modes with configured rates. Final X position/pulse
+counts are checked in both. Total 3,297 / 20 new in batch 18. Full final gate
+required before publishing this enlarged checkpoint; no new core exceptions.
