@@ -2222,3 +2222,20 @@ checking capability/compile guards, without changing core or declaring defects.
 Evidence: batch16-metadata-results.xml (four), batch16-legacy-query-results.xml
 (four). Total 3,247; batch 16 adds ten cases. Full current gate is required before
 publishing this batch; no new failures/exceptions or source modifications.
+
+## Batch 16 controller-information sender routes
+
+Three new public command cases pass focused sanitizer/strict checks: normal boot
+$I+ reports configured driver/board information; $SPINDLES/$SPINDLESH report a
+spindle registered during driver initialization; $SED=100 returns only the selected
+axis-setting description. The spindle test reuses the existing startup fixture;
+its optional second-spindle helper is now inline so single-spindle users compile
+without suppressing unused-function diagnostics. All three existing multi-spindle
+startup controls pass too (batch16-information-results.xml, six cases).
+
+Initial assumptions were corrected: the unconfigured boot host has no registered
+physical spindle and its emulated-only storage does not advertise a physical NVS
+medium. The test now installs the real driver callbacks/metadata at startup and
+does not invent storage hardware. No core fault/exception or source change.
+Total 3,250; batch 16 adds thirteen cases. Run the full gate for this shared-fixture
+checkpoint before publishing, and keep the separate batch 15 hosted run intact.

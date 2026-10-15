@@ -37,7 +37,7 @@ static void register_primary_during_init(void)
 {
     register_setup_spindle(0);
 }
-static void register_setup_spindles(settings_t *current)
+static inline void register_setup_spindles(settings_t *current)
 {
     CHECK(current == &settings);
     CHECK(boot_setup_calls == 1 && sys.ioinit_pending);
