@@ -1377,3 +1377,34 @@ with multiple settings-enabled spindles: existing multi-spindle host lacks NGC
 expressions and ordinary snapshot cases do not drive these two-spindle hardware
 restore branches. Verify current fixtures/contracts before adding that variant.
 Full-coverage goal remains active; unresolved questions stay in TODO.
+
+## Batch 10 modal restoration, jerk persistence and JSON strings
+
+Hosted run 38665399234 passed all jobs for af1bcb3 on unchanged Terje
+683589bd10bb1082825bfc7e9bcee6db102b9530. Coverage: 16,047/17,437 lines
+(92.0284%) and 10,669/13,506 branches (78.9945%). Source HEAD was rechecked
+and remains this revision; the ordinary ignored core checkout is clean.
+
+Eleven separate multi-spindle cases use early registered, settings-enabled
+basic spindles and real parser commands. They verify independent directions,
+speeds and override policies through M70/M71/M72 and M73 scope exits,
+nested caller restoration and selective hardware updates. NGC parameters
+are already enabled by default: no extra expressions configuration or new
+host library was necessary. RPM output assertions use a .01 RPM tolerance
+for ordinary float multiplication, consistent with existing override tests.
+
+Three jerk cases verify temporary overrides are restored before settings
+persistence, unrelated saves retain original jerk, and a new permanent jerk
+setting becomes the later restore baseline. Two lathe cases verify G7/G8
+restoration and named parameter reporting. Four JSON cases verify control
+character escaping, Windows paths, adjacent escapes and empty-string comma
+handling. These test existing public contracts; no new expected failures.
+
+Full local ASan/UBSan and strict summary passed the first sixteen additions:
+3,022 total, 3,009 clean, 13 documented expected failures, zero unexpected
+failures/skips, 112.36 s (build-asan/batch-10-restores-full-results.xml).
+The four subsequently added JSON cases passed focused sanitizer and strict
+summary checks (build-asan/batch-10-json-results.xml). Total now 3,026 cases;
+batch 10 adds 129. Hosted GCC/Clang/coverage must validate the whole checkpoint
+before any ready PR claim. Continue uncovered supported public paths while
+that run executes; questions remain TODO, goal remains active.
