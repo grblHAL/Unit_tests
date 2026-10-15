@@ -1475,3 +1475,25 @@ before pushing. Earlier run 38668110778 passed all jobs, covering
 16,107/17,437 lines (92.3725%) and 10,723/13,506 branches (79.3943%).
 Continue remaining supported paths and preserve the full goal. No PR has
 been presented as ready. Source remains Terje 683589b.
+
+## Batch 10 scheduler ordering, secondary motor limits and edited comments
+
+Three scheduler cases exercise immediate follow-up FIFO ordering, independent
+periodic callback deletion and the documented refusal to delete a running
+systick callback from itself. Two secondary motor cases check configured rate
+limits both at initial command and during acceleration. Their valid maximum
+rate needs more than 1000 acceleration/deceleration steps; both bounded fixture
+loops now allow 10000. A redundant zero-speed candidate was removed after
+finding the existing registered case; assertions were not weakened.
+
+Full local ASan/UBSan and strict summary passed 3,071 total, 3,058 clean,
+13 documented expected failures, zero unexpected failures/skips (39.88 s;
+build-asan/batch-10-tasks-motors-full-results.xml). Three subsequent focused
+sanitizer/strict-summary cases edit serial comments with backspace, checking
+preserved parenthesized printable realtime characters, reopening a comment by
+deleting its closing parenthesis, and semicolon trailing-text preservation.
+They complete real serial/planner/pulse execution with exact endpoints/output
+(build-asan/batch-10-edited-comment-results.xml). Total 3,074, batch 10 +177.
+No new exceptions or production changes. Hosted run 38682688236 completed all
+jobs successfully for 764c53c; push this completed local checkpoint and validate
+it while continuing remaining supported workflows. Goal active.

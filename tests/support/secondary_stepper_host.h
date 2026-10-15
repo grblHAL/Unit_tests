@@ -38,11 +38,12 @@ static inline void tick_motor(st2_motor_t *motor)
 }
 static inline void cruise_motor(st2_motor_t *motor)
 {
-    for(unsigned i = 0; i < 1000 && !st2_motor_cruising(motor); i++) tick_motor(motor);
+    // The default maximum rate needs more than 1000 ramp steps at this acceleration.
+    for(unsigned i = 0; i < 10000 && !st2_motor_cruising(motor); i++) tick_motor(motor);
     CHECK(st2_motor_cruising(motor));
 }
 static inline void finish_motor(st2_motor_t *motor)
 {
-    for(unsigned i = 0; i < 1000 && st2_motor_running(motor); i++) tick_motor(motor);
+    for(unsigned i = 0; i < 10000 && st2_motor_running(motor); i++) tick_motor(motor);
     CHECK(!st2_motor_running(motor));
 }
