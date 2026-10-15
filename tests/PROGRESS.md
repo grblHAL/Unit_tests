@@ -2163,3 +2163,19 @@ https://github.com/grblHAL/Unit_tests/pull/19 . It has not been merged by the ag
 Keep batch 15 separate, inspect fresh upstream/PR state before eventual delivery,
 and continue toward the full goal. Next use hosted coverage to measure gains of
 the newly configured executable branches; do not infer gains from test counts.
+
+## Batch 15 sender restore commands
+
+Five normal-boot sender cases pass sanitizer/strict checks: $RST=$ resets a
+previously observed custom setting and its saved record; $RST=# clears a
+previously observed G54 offset in physical storage; $RST=* clears seeded startup
+and custom build-info records and restores global settings. Invalid selectors
+and check-mode restore requests preserve the custom setting and return errors.
+Physical-storage reads after ordinary shutdown verify checksums and contents;
+no read through a freed RAM buffer. The tests do not assume a query queued
+behind a reset-producing command survives input flushing. Initial query/banner
+expectations were fixture sequencing assumptions and were corrected without a
+production patch or defect exception. Evidence: batch15-restore-results.xml.
+Total 3,237; batch 15 adds twenty cases. Prior full 3,232-case ASan/UBSan and
+strict gate passed in 48.23 s, with 44 helper checks; run the enlarged full gate
+before publishing. Core remains clean feebef2.
