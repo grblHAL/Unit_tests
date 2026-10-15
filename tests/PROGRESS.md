@@ -1820,3 +1820,27 @@ These header bodies are outside hosted .c-only percentages; do not claim a .c
 coverage increase from them. Refresh independent header-inclusive measurement
 against current clean feebef2 using a rebuilt build-local-coverage and fresh gcda
 profiles. Keep the tested source/compiled case scope explicit if work continues.
+
+
+## Batch 12 public motion-extension hooks
+
+The 3,164-case full sanitizer/strict-summary checkpoint passed: 3,156 clean,
+eight expected failures, no unexpected failures/skips/diagnostics, 56.16 s
+(build-asan/batch-12-header-full-results.xml). Header-inclusive baseline build
+is active in session 46072, logs ../batch-12-header-coverage-{configure,build,
+tests,report}.log, output ../batch-12-header-coverage.xml. It was configured at
+5172863 for 3,164 cases with clean feebef2; later additions are new independent
+files/fixtures, outside that frozen build's case inventory. Existing compiled
+case/fixture/core sources remain unchanged. Do not rerun the build or clear its
+profiles while the command is active.
+
+Eight additional cases pass focused sanitizer/strict summaries in the existing
+cutter-enabled configuration: pre-execution hook receives normalized inch targets
+before modal commit; rejected/consumed blocks avoid normal planning; implicit
+axis-only motion sets the hook's motion flag. Public line/arc hooks delegate
+validated targets/feed/plane/turn direction to original core planners, and driver
+rejections propagate without parser position or planner updates. No compensated
+geometry is reimplemented or claimed. Evidence: build-asan/batch-12-pre-execute-
+results.xml and batch-12-motion-extension-results.xml. Total 3,172; batch 12 adds
+36 cases. No new confirmed bug or exception. Run the full gate and publish a
+useful module checkpoint while continuing coverage; PR #17 remains separate.
