@@ -1574,3 +1574,24 @@ successful at last check while GCC/Clang were active. Do not push and cancel
 that healthy run. Once terminal, publish/dispatch this complete checkpoint and
 verify all jobs before claiming a PR ready. Continue independent work while it
 runs. Full line/branch coverage is not yet achieved; keep the goal active.
+
+## Batch 10 delivery freeze / batch 11 preparation
+
+Batch 10 is frozen at fdf6483: 205 new cases, 3,102 total, local full
+ASan/UBSan + strict summary and 43 helper checks passed. It was pushed after
+03a4396's hosted run 38684803384 completed successfully. That run measured
+16,173/17,438 C-source lines (92.7457%) and 10,791/13,514 branches (79.8505%).
+A manual hosted run was dispatched for fdf6483. Inspect its exact head and all
+required jobs before opening a ready batch 10 PR; do not merge it.
+
+Further work is isolated on coverage-batch-11 from fdf6483. Do not duplicate
+batch 10's PR diff while it awaits merge. Core is unchanged Terje 683589b.
+A separate local header-inclusive coverage measurement is running in
+build-local-coverage with LLVM Clang, ENABLE_COVERAGE=ON, sanitizers off,
+gcovr 8.4 from ../coverage-python, filter core/.*\.[ch]$. Old gcda files were
+cleared inside that verified build directory before execution. Its output paths
+are ../batch-10-header-coverage-{build,tests,report}.log and
+../batch-10-header-coverage.xml. This is independent evidence, not a CI change.
+The existing .c-only report omits header bodies and un-emitted optional helpers;
+TODO records the follow-up. Keep the full goal active and continue meaningful
+public workflow coverage, using the new header inventory when available.

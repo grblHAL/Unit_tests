@@ -2,8 +2,11 @@
 
 ## Objective and delivery
 
-Current coverage work belongs on `coverage-batch-10`, from upstream master
-`9e2e20f` after PRs #13, #14 and #15 merged. The overnight goal was created
+Current new coverage work belongs on `coverage-batch-11`, based on the completed
+`coverage-batch-10` checkpoint `fdf6483`. Batch 10 adds 205 cases and is frozen
+while hosted validation runs. Create its PR only after every required job passes;
+never merge it. Keep batch 11 delivery separate and avoid a duplicate PR diff
+until its parent batch is merged. Upstream base remains `9e2e20f`. The overnight goal was created
 on 2026-10-15 and is active. Continue autonomously while usage permits.
 Never commit/push master/main or add AI branding. Questions and uncertain
 contracts go in tests/TODO.md; continue independent work without waiting.

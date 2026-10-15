@@ -265,3 +265,21 @@ digital registration, assign the computed input base to `in.pin_base`, keeping
 output and input counts independent, and add driver-facing metadata tests with
 unequal bank sizes. Current routing/claim/IRQ tests pass; no known-failure label,
 production change or source exclusion was added for this observation.
+
+## Coverage inventory: inline/header implementations
+
+**Recorded:** 2026-10-15, test branch coverage-batch-10, core Terje 683589b.
+
+The core suite's coverage_filter in [ci/suites.json](../ci/suites.json) and
+README local gcovr example include only core .c files. Current percentages
+therefore do not account for executable inline/header bodies such as
+stepper2.h profile functions, even when tests exercise them. This is a reporting
+scope limitation, not evidence that those bodies are tested completely.
+
+Keep this separate from the test batch's CI changes. A CI reporting follow-up
+should include instrumented core headers and inventory supported conditional
+code/inline bodies that are not emitted in the chosen builds. Retain the
+source-file inventory and meaningful behavior assertions; do not exclude
+uncovered code or equate 100% of the existing .c report with full core coverage.
+An independent local header-inclusive measurement can guide further test work
+without changing manual triggers or reusable callers.
