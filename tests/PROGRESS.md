@@ -2207,3 +2207,18 @@ that reachability limit; two enabled-feature candidates remain unregistered.
 Do not turn the flag back on after initialization merely to cover private paths.
 Evidence: build-asan/batch16-protection-results.xml. Total 3,239, two new cases;
 no new exception or core patch. Continue other reachable public workflows.
+
+## Batch 16 sender setting-query coverage
+
+Eight new cases pass focused ASan/UBSan and strict summary. Default sender
+commands $$=100 and $+=110 show only the requested axis setting with its units;
+$$/$+ show current configured axis values; malformed/unavailable IDs return
+errors without output. Legacy levels 2 and 10 each verify $$ hides available
+extended planner-block setting $398 until $+ is requested, and $10 writes only
+the legacy low bits while preserving/persisting the remaining report flags.
+The first listing candidates used unavailable E-stop/compile-excluded G92
+settings; they were corrected to the unconditional planner-block setting after
+checking capability/compile guards, without changing core or declaring defects.
+Evidence: batch16-metadata-results.xml (four), batch16-legacy-query-results.xml
+(four). Total 3,247; batch 16 adds ten cases. Full current gate is required before
+publishing this batch; no new failures/exceptions or source modifications.
