@@ -2,7 +2,9 @@
 
 ## Objective and delivery
 
-Current coverage work belongs on `coverage-batch-11`. PR #16 (batch 10) is
+Current new coverage work belongs on `coverage-batch-12`. Batch 11 is frozen
+at `ae0eaa7`, with final hosted validation run `38693498958`; open its PR only
+after all jobs pass. Keep new tests out of that frozen delivery. PR #16 (batch 10) is
 merged; upstream master was refreshed to `3034d4d`. Batch 11 adds 34 cases and
 removes five fixed exceptions against clean Terje core `feebef2`. Its full local
 3,136-case sanitizer/strict-summary gate passed. Finish hosted validation of the

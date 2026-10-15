@@ -1706,3 +1706,33 @@ and removes five fixed exceptions against unmodified Terje feebef2. All 43 helpe
 checks passed earlier in this checkpoint. PR #16 is now merged; upstream master
 3034d4d was freshly fetched. Rebase the batch onto it, publish after the active
 healthy hosted run is terminal, and validate the final head before a ready PR.
+
+
+## Batch 11 frozen final head / batch 12 continuation
+
+Final batch 11 head ae0eaa7 is rebased on upstream 3034d4d; its tree is identical
+to the fully locally validated pre-rebase checkpoint. Source/GCC/Clang/coverage/
+diagnosis all passed earlier checkpoint a65ac73 in run 38692359893. Its GCC
+C-source measurement: 16,197/17,440 lines, 10,838/13,518 branches. Final run
+38693498958 now validates all 34 new cases and the exception cleanup on ae0eaa7.
+Do not claim a ready PR until every final job passes. User explicitly wants this
+batch's PR. Open/attach it when ready; do not merge. New work is isolated on
+coverage-batch-12 based on ae0eaa7, so it cannot delay or cancel batch 11 delivery.
+Core remains clean Terje feebef2. Continue toward meaningful full coverage.
+
+
+## Batch 12 Modbus device responses and driver integration
+
+Six new cases pass focused ASan/UBSan and strict summary against clean feebef2:
+valid device exception frames preserve their code and appear in sender stats;
+settings load applies the driver's advertised serial framing; claimed UART pins
+receive driver diagnostic labels; custom inter-transaction silence delays queued
+transmission, and restoring defaults releases it under the normal scheduler.
+These use public transport/settings/driver workflows, valid CRC-framed responses
+and mock clock service; they do not claim physical UART timing performance.
+
+The RTU fixture accepts an optional driver serial-format callback, default NULL
+for existing cases. All 35 Modbus cases pass after the fixture change. Evidence:
+build-asan/batch-12-transport-results.xml and strict summary log. Total 3,142 cases,
+six beyond frozen batch 11; no new known exception/production change. Questions
+remain TODO; batch 11's PR still awaits final hosted run 38693498958.
