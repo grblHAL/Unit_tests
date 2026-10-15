@@ -1595,3 +1595,30 @@ are ../batch-10-header-coverage-{build,tests,report}.log and
 The existing .c-only report omits header bodies and un-emitted optional helpers;
 TODO records the follow-up. Keep the full goal active and continue meaningful
 public workflow coverage, using the new header inventory when available.
+
+
+## Batch 10 validated delivery / batch 11 first checkpoint
+
+PR #16 delivers frozen batch 10 at fdf6483. Hosted run 38686040614 passed
+source, GCC, Clang, coverage and diagnosis. It measured 16,198/17,438 C-source
+lines (92.89%) and 10,831/13,514 branches (80.15%) against unchanged Terje
+683589bd10bb1082825bfc7e9bcee6db102b9530. Do not merge the PR automatically.
+
+The independent local Clang header-inclusive baseline completed: 17,252/18,708
+lines (92.22%), 10,200/12,810 branches (79.63%), 1,215/1,258 functions.
+This uses a different compiler and scope from hosted GCC; the denominators are
+not directly comparable. Fresh profiles came from all 3,102 batch 10 cases.
+One stale retired target's gcno was removed inside the verified build directory;
+no source was excluded and no reporter errors were ignored. Evidence:
+../batch-10-header-coverage.xml and matching build/tests/report logs.
+
+Batch 11 adds ten passing cases: independent primary/secondary motor bit banks,
+fault-axis lookup and input classification, plus a seven-axis XYZABCU host.
+Seven-axis cases check each/all axis word projections, rejection of unrelated
+arguments, exact linear and arc endpoints, modal inch conversion and persisted
+U work offsets without other motor pulses. Core source is unchanged.
+Full ASan/UBSan plus strict summary passed 3,112 cases: 3,099 clean, thirteen
+expected failures, zero unexpected failures/skips, 39.62 seconds. Evidence:
+build-asan/batch-11-first-full-results.xml. No new exception or bug claim.
+Continue through supported header/configuration gaps; stepper2 ramp transitions
+are next to inspect through public motor APIs. Keep batch 11 separate from #16.

@@ -476,6 +476,11 @@ python scripts/summary.py coverage coverage.xml
 
 For GNU-compatible Clang, select `clang` (or its full Windows path) when configuring
 and add `--gcov-executable "C:/path/to/llvm-mingw/bin/llvm-cov.exe gcov"` to gcovr.
+The default CI filter measures C source files. To include executable header bodies
+in a local report, replace the filter with `core/.*\.[ch]$`. This still only counts
+code emitted by the selected configurations; it is not an inventory of every
+optional driver helper.
+
 Open `coverage.html` to inspect uncovered lines and branches. For a fresh measurement,
 use a new build directory so old execution counts cannot carry over.
 
@@ -483,7 +488,7 @@ The host variants currently exercise the default configuration, legacy protocol
 compatibility level 1, disabled NGC parameters/expressions (including boot and reset), NGC expressions, non-modal lathe U/V/W commands with NGC expressions, cutter-compensation parsing and plugin interfaces, G187 acceleration profiles, jerk acceleration with and without G187 profiles, coordinate rotation with NGC expressions, spindle synchronization with simulated encoder feedback (including normal boot and streamed G95 programs),
 CoreXY, polar, wall-plotter, delta and five-axis RTCP kinematics, backlash
 compensation, four-axis asymmetric ganging with and without auto-squaring,
-the eight-axis maximum, six-axis UVW remapping, and three registered spindles
+seven-axis XYZABCU, the eight-axis maximum, six-axis UVW remapping, and three registered spindles
 with two active spindle slots, a four-slot persistent tool table with and without NGC expressions, optional spindle PWM linearization, and enabled PID logging. All variants run in one
 CTest suite; coverage merges their executed source lines. Compatibility levels
 2 and 10 have ordinary compile checks for their coordinate reports. The `separate` function
