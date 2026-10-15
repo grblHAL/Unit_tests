@@ -7,6 +7,7 @@
 #include "check.h"
 #include <string.h>
 static unsigned boot_reads, boot_read_calls, boot_setup_calls, boot_release_calls;
+static unsigned boot_read_limit = 1000;
 static const char *boot_program = "$G\n";
 static bool boot_setup_success = true, boot_init_success = true;
 static bool boot_force_alarm, boot_homing_required, boot_check_limits, boot_sleep_enabled;
@@ -60,7 +61,7 @@ static bool connected(void) { return true; }
 static bool write_char(uint8_t c) { char s[2] = {(char)c, 0}; hal.stream.write(s); return true; }
 static int32_t read_char(void)
 {
-    CHECK(++boot_read_calls < 1000);
+    CHECK(++boot_read_calls < boot_read_limit);
     if(boot_before_read) boot_before_read();
     if(boot_program[boot_reads]) {
         uint8_t c = (uint8_t)boot_program[boot_reads++];

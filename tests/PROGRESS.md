@@ -1275,3 +1275,37 @@ Next useful integration: normal streamed G-code/jog execution through real boot
 on existing CoreXY, polar and ganged variants. Use valid initial motor positions,
 public driver callbacks and bounded foreground service; preserve the core's
 initialization order. The full goal remains active. No new known exceptions.
+
+## Batch 10 real streamed kinematics motion
+
+Hosted run 38660620756 passed source/GCC/Clang/coverage/CI diagnosis for the
+51-case checkpoint 8876065 on Terje 683589b. Its measured coverage remains
+15,997/17,437 lines (91.7417%) and 10,598/13,506 branches (78.4688%).
+
+Fourteen further cases now execute real grbl_enter, serial input, parser,
+planner, timer ISR and driver pulses for CoreXY, asymmetric ganging, polar and
+wall plotter. They verify Cartesian-to-motor translation for cuts/jogs, reverse
+motor travel, preserved G20/G91 program modes during metric jogs, and valid
+restored radius/cable references. Longer polar/wall cuts and wall jogs observe
+a full planner and pulses before sender acknowledgement, then complete the
+original commanded endpoint. Real startup uses 35 planner blocks, so distances
+exceed that capacity rather than relying on the host's pre-start default.
+Cable rounding allowances are explicit alongside exact motor-counter assertions.
+No hardware contour/timing claims or private production calls.
+
+The stream fixture uses the supported realtime exit only after motion wakes,
+the sender acknowledgement is visible and the core returns idle with an empty
+planner. This corrected an initial fixture exit before parsing the line.
+A per-test read bound retains the old 1,000-read default and permits bounded
+longer motion. All currently registered stream cases use one motion block;
+future multiple-block tests must match all expected acknowledgements before
+exiting, rather than counting an earlier command's acknowledgement.
+
+Full local ASan/UBSan and strict summary pass: 2,977 total, 2,964 clean,
+13 documented expected failures, zero unexpected failures/skips (42.24 s;
+build-asan/batch-10-stream-full-results.xml). Batch 10 adds 80 cases total.
+No scripts changed since 43 helper checks passed. Publish this motion commit
+and the prior validated configuration commit together, then verify hosted while
+continuing remaining public paths. Suggested next work: multi-block sender
+completion and real RTCP/delta startup motion with physical geometry NVS;
+retain realistic initial positions and independent geometric controls. Goal active.
