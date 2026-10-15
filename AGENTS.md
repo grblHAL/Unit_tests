@@ -2,8 +2,10 @@
 
 ## Objective and delivery
 
-Current delivery is coverage-batch-18; continue new work on coverage-batch-19
-after freezing/pushing its final local gate.
+Current new work is coverage-batch-19 from frozen batch 18 7ce6196.
+Batch 18 is pushed and exact-head run 38796868694 is live; source passed,
+compiler/coverage jobs still running at last check. Six new / 3,303 total local
+cases pass focused sanitizer/strict gates; full enlarged gate remains pending.
 Frozen coverage-batch-16: 21 new / 3,258 total cases. Local and exact-head hosted
 source/GCC/Clang/coverage/diagnosis passed run 38751060993: 93.54% lines and
 81.10% branches. Current batch 17 adds 19 cases / 3,277 total; full sanitizer/strict

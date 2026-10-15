@@ -2474,3 +2474,21 @@ failures, strict summary and 44 helper checks (batch18-delivery logs/results).
 Freeze/publish this head for exact-source Linux validation and continue independent
 work on coverage-batch-19. Keep PR sequencing separate: PR 19 is still open at
 the most recent live check; do not merge it or recreate its changes as a new PR.
+
+## Batch 19 sender and extension protocol workflows
+
+Batch 18 frozen/pushed at 7ce619699ba6dcee6b65bfedab0b7a8e5aa077d1; exact-head
+hosted run 38796868694 is live against Terje feebef2. Source selection passed at
+last check; GCC/Clang/coverage continue. New work is on coverage-batch-19.
+
+Six new cases cover realtime parser-mode requests, deferred tool-offset reporting
+with parser reporting enabled by $10, alarm-locked percent-delimited settings
+uploads that still reject G-code, legacy feed hold/cycle-start with exact resumed
+motor endpoint, and plugin bracket commands (case/spacing, returned errors and
+alarm lock). These are real parser/protocol workflows, not flag-only assertions.
+The TLO case uses normal CMD_STATUS_REPORT: full-status takes a separate report
+path that does not schedule parser-change output. A normal query/empty line lets
+the deferred report run before the host's synthetic exit. No core defect or
+fixture change resulted from correcting that initial test assumption.
+Focused ASan/UBSan and strict summaries pass (batch19-sender, batch19-plugin
+results/logs). Total 3,303. Full enlarged gate remains pending.
