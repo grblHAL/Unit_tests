@@ -2,6 +2,7 @@
 
 ## Objective and delivery
 
+Current new work is coverage-batch-17 from frozen batch 16 20f02eb.
 Current delivery is coverage-batch-16: 21 new / 3,258 total cases. Full local
 ASan/UBSan, strict summary and 44 helper checks pass. Publish and verify exact-head
 Linux source/GCC/Clang/coverage/diagnosis before its ready PR. Continue new work

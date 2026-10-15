@@ -2297,3 +2297,21 @@ open at the last check. New work continues separately on coverage-batch-17.
 A reachable next gap is runtime critical motor-fault/E-stop feedback and reset
 blocking while the physical input remains asserted, using the public realtime
 alarm/control interfaces and existing critical-loop fixture, not private calls.
+
+## Batch 17 critical physical-fault reset handling
+
+New local coverage-batch-17 starts from frozen/pushed batch 16 20f02eb.
+Two new cases drive the public realtime alarm interface with asserted motor-fault
+or E-stop input. They request reset while the physical input is still asserted,
+prove the critical loop executes another foreground turn, then clear the driver
+input and verify abort/reset can complete with the correct reported alarm.
+The existing critical-loop fixture now accepts an alarm and physical control state;
+its default hard-limit behavior remains unchanged. All seven critical-loop cases
+pass focused ASan/UBSan and strict summary (batch17-critical-results.xml).
+These are core control-state checks, not claims about physical safety circuitry.
+Total 3,260; batch 17 adds two cases, no new exceptions or source changes.
+
+Batch 16 passed full local sanitizer/strict/44 helper gate and was dispatched for
+exact-head hosted validation against clean feebef2. Check its live run before a
+ready PR. Batch 15 is already hosted-green; PR 19 (batch 14) remains open at last
+check. Preserve these deliveries and continue independent supported workflows.
