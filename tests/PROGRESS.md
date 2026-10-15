@@ -1680,3 +1680,13 @@ secondary without changing disabled feed/primary policy. Total 3,131 cases.
 Evidence: build-asan/batch-11-overrides-results.xml. No new known exception.
 Standalone $-1 override candidates failed at parser validation and were removed;
 do not bypass parser validation just to execute dormant all-spindle branches.
+
+
+## Batch 11 active fixture rotation before cutting
+
+Two cases pass focused sanitizer/strict summary on feebef2: change active G54
+rotation from 90 to 180 degrees at the origin, or clear it before the first cut.
+G10 setting commands emit no motor pulses; the following real cut reaches exact
+physical/system endpoints with unchanged Z. Configuration commands use the parser
+directly; the shared queue helper is for motion blocks only. No core defect or
+exception. Evidence: build-asan/batch-11-rotation-results.xml. Total 3,133 cases.
