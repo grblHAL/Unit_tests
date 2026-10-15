@@ -1526,3 +1526,28 @@ do not push/cancel it. Last fully completed run 38682688236 covers
 16,125/17,437 lines (92.4758%), 10,742/13,506 branches (79.5350%).
 Continue supported configurations/public workflows; full coverage is not yet
 achieved and the goal remains active. No batch 10 PR has been claimed ready.
+
+## Batch 10 normal-boot G95 and interrupt fallback
+
+Five serial G95 cases register the spindle and encoder data handlers during
+driver initialization, set PPR in persisted settings and let real settings/driver
+startup install synchronization support. No private synchronization-config helper
+is called. Cases verify radial/longitudinal motion, inch feed conversion, arcs,
+return to G94, macro-visible mode/report fields and exact motor endpoints.
+G95 uses RPM feedback without angular phase locking; no physical timing claim.
+A sixth case checks unsupported default IRQ claims fail without calling a plugin.
+
+The first complete sanitizer summary caught a diagnostic that CTest's exit code
+alone missed: the boot motion fixture had zero arc tolerance. It now persists
+.002 mm (core's DEFAULT_ARC_TOLERANCE) before reload. With valid configuration,
+the strict full sanitizer summary passes 3,091 total, 3,078 clean,
+13 documented expected failures, zero unexpected failures/skips, 39.35 s
+(build-asan/batch-10-boot-feed-full-results.xml). IRQ fallback then passed focused
+sanitizer/strict summary (build-asan/batch-10-irq-results.xml). There are now
+3,092 cases: batch 10 adds 195. No new known exception or production change.
+
+Hosted run 38683576138 passed all jobs for bb9e036, covering 16,152/17,437 lines
+(92.6306%) and 10,763/13,506 branches (79.6905%). Commit/push the queued complete
+checkpoint and dispatch hosted validation; continue independently while it runs.
+Source HEAD was rechecked clean at Terje 683589b. The full goal remains active;
+questions stay TODO and no batch 10 PR is yet claimed ready.

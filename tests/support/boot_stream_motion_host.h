@@ -37,6 +37,7 @@ static void install_boot_motion_driver(void)
     install_boot_homing_driver();
     if(boot_motion_physical_nvs) hal.nvs.type = NVS_EEPROM;
     settings.homing.flags.enabled = settings.homing.flags.init_lock = false;
+    settings.arc_tolerance = .002f; // Valid standard arc tolerance before settings reload.
     for(unsigned axis = 0; axis < N_AXIS; axis++) settings.axis[axis].max_travel = -200;
     settings_write_global();
     if(boot_restore_position)
