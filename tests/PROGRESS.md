@@ -2270,3 +2270,17 @@ PR 19 remains open at this live check. Batch 15 is validated/frozen; prefer
 rebasing after PR 19 merges before opening its ready PR, avoiding duplicated
 parent tests in the review. Never merge automatically. New coverage continues
 independently on batch 16 with no need to wait. Full coverage is not achieved.
+
+## Batch 16 accessory overrides and serial editing
+
+Five more cases pass focused sanitizers/strict summary. Extra-low rapid override
+uses 5% while retaining a 110% feed override and resets rapid independently.
+Combined flood/mist toggles notify the plugin once with updated modal/driver
+state; a cancelling toggle pair produces no write or notification. Serial Delete
+corrects a build-info string before sender query/persistent save; Backspace after
+a closed comment preserves and executes the following edited axis word, with
+exact 80/240 X/Y pulses. Evidence: batch16-accessory-results.xml (three),
+batch16-edit-results.xml (two). No new core defects or exceptions.
+Total 3,258; batch 16 adds 21 cases. Run full current sanitizer/strict/helper gate
+before publishing this module checkpoint. Batch 15 is independently validated;
+PR 19 remains its parent delivery dependency until merged.
