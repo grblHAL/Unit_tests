@@ -303,3 +303,14 @@ strip-clear bounds. These helpers are explicitly not used by core execution.
 Packing, channel masks and intensity conversions have ordinary passing tests;
 no artificial short buffer, confirmed defect or expected-failure test is added
 for this index question.
+
+
+## Native rigid tapping execution
+
+**Pending implementation:** 2026-10-15, Terje `feebef2`. The default weak
+mc_rigid_tapping implementation in motion_control.c returns
+Status_GcodeUnsupportedCommand and is explicitly marked TBC. Keep parser/
+extension dispatch distinct from native tapping execution. When a real
+implementation is supplied, add execution endpoints and spindle-reversal tests
+through valid driver/encoder setup. Do not implement substitute tapping geometry
+in a test fixture or classify the absent feature as a new confirmed defect.

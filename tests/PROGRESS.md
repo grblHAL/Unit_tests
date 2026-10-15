@@ -1844,3 +1844,21 @@ geometry is reimplemented or claimed. Evidence: build-asan/batch-12-pre-execute-
 results.xml and batch-12-motion-extension-results.xml. Total 3,172; batch 12 adds
 36 cases. No new confirmed bug or exception. Run the full gate and publish a
 useful module checkpoint while continuing coverage; PR #17 remains separate.
+
+
+## Batch 12 nested file calls and modal restoration
+
+Six normal file-stream cases pass focused ASan/UBSan and strict summaries:
+nested calls preserve each caller's local arguments; bounded recursion returns
+cleanly; exceeding the call limit unwinds scopes; M73 restores units/distance/
+plane/feed through actual and nested file returns; M71 disarms restoration.
+Files are read/repositioned through the production stream/parser path, with no
+manual call-stack manipulation. Evidence: build-asan/batch-12-nested-results.xml
+and batch-12-file-modal-results.xml. Total 3,178; batch 12 adds 42 cases.
+
+The preceding full 3,172-case gate passed sanitizer/strict summary: 3,164 clean,
+eight expected failures, zero unexpected failures/skips/diagnostics, 65.67 s
+(build-asan/batch-12-extension-full-results.xml). The independent 3,164-case
+header-inclusive run finished all tests successfully (122.62 s) and its gcovr
+report remains active in session 46072. Do not discard profiles or ignore errors.
+Full current gate and first batch 12 hosted checkpoint are next.
