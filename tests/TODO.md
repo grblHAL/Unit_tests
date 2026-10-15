@@ -360,3 +360,27 @@ solely to cover their lines. Revisit normal sender-driven homing tests when the
 maintainer implements the wall-plotter homing workflow and defines its reference
 contract. This is a pending feature/coverage limitation, not a new confirmed bug;
 no source exclusion or expected-failure exception is added.
+
+## Confirm whether NO_SAFETY_DOOR_SUPPORT remains supported
+
+**Review date:** 2026-10-15, Terje core feebef26222111f11c7a3b3b0156d023aa786937.
+
+A proposed runtime host variant defining NO_SAFETY_DOOR_SUPPORT=1 cannot compile:
+settings.c:1152-1173 removes set_parking_enable and set_restore_overrides, but the
+setting table still references them at lines 2425 and 2444. The first two Clang
+errors identify those undeclared names; the later incomplete-array sizeof error
+is consequential. driver_opts.h:530 still checks this symbol against enabled
+safety-door hardware, and grbllib.c:324 clears the door capability for it.
+
+Confirm whether the option is an intended current configuration or obsolete.
+If supported, align setting-table guards with the setter definitions (review
+parking/restore semantics rather than guessing), then register and run the four
+candidate startup/settings tests in proposals/boot_no_safety_door and
+proposals/no_safety_door with consistent host/test compile definitions. Current
+proposals are unregistered; no production patch, broad compiler allowance or
+expected-failure exception is introduced. Local compiler evidence is in the
+parent workspace batch15-no-door-build.log. Reproduce with:
+
+```sh
+cc -std=gnu11 -fsyntax-only -DNO_SAFETY_DOOR_SUPPORT=1 -Icore core/settings.c
+```

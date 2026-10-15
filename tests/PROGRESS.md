@@ -2095,3 +2095,23 @@ Publish this exact checkpoint for Linux GCC/Clang/header-inclusive coverage.
 Inspect all required jobs and source lock, record measured percentages, and only
 then create/attach a ready PR. Continue independent new work on a fresh branch
 while CI runs; do not cancel healthy validation by pushing more to this branch.
+
+## Batch 15 continuation: extended-axis settings and configuration review
+
+New local coverage-batch-15 starts from pushed batch 14 b286d22. Its exact hosted
+run 38745457196 is live; source passed, GCC/Clang/coverage still running at this
+checkpoint. Do not cancel that run or present batch 14 as PR-ready prematurely.
+
+Four additional eight-axis cases pass focused ASan/UBSan and strict summary:
+U locate/V search homing rates persist independently of X; changing V travel
+invalidates only V's high homed bit and persists the new magnitude; writing the
+same V travel retains all homed bits. Evidence: build-asan/batch15-eight-settings-
+results.xml. Total 3,221; batch 15 adds four registered cases, no exceptions.
+
+NO_SAFETY_DOOR_SUPPORT=1 was explored as a missing configuration. Its settings
+translation unit fails to compile because two excluded setters remain referenced
+in the setting table. Support status needs maintainer confirmation, so TODO
+contains exact revision/diagnostics/reproduction and four candidate tests remain
+unregistered under tests/proposals. The host variant was removed from CMake;
+no source patch or broad compiler exception was added. Do not claim runtime
+coverage for those candidates. Continue independent supported workflows.

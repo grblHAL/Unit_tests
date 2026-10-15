@@ -2,9 +2,10 @@
 
 ## Objective and delivery
 
-Current new work is coverage-batch-14, rebased onto upstream master e6edb45
+Current new work is coverage-batch-15 from batch 14 b286d22.
+Batch 14 is rebased onto upstream master e6edb45
 (merged PR #18). It adds 18 cases, 3,217 total. Full local ASan/UBSan, strict
-summary and 44 helper checks pass; publish/inspect exact-head hosted GCC,
+summary and 44 helper checks pass; hosted run 38745457196 is running. Inspect exact-head GCC,
 Clang, coverage and diagnosis before presenting a ready PR. Core remains clean
 Terje feebef2. PR #18 combined head 9c7099d passed hosted run 38735673645:
 93.17% header-inclusive lines / 80.68% branches, 3,199 cases. New batch 14
