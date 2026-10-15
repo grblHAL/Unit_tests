@@ -9,12 +9,18 @@ static xbar_t analog_pins[2][2] = {
 static unsigned analog_output_calls, analog_read_calls;
 static uint8_t analog_output_port, analog_input_port;
 static float analog_output_value;
+static uint8_t analog_output_port_log[64];
+static float analog_output_value_log[64];
 static wait_mode_t analog_input_mode;
 static bool analog_output(uint8_t port, float value)
 {
     CHECK(port < 2);
     analog_output_port = port;
     analog_output_value = value;
+    if(analog_output_calls < 64) {
+        analog_output_port_log[analog_output_calls] = port;
+        analog_output_value_log[analog_output_calls] = value;
+    }
     analog_output_calls++;
     return true;
 }

@@ -189,3 +189,16 @@ is retained for review, outside the registered case set until intent is settled;
 there is no expected-failure exception or source exclusion for this proposal.
 Its correct resolution requires either implementing the chosen loop semantics
 or documenting the deliberate difference, then reviewing the candidate assertion.
+
+## Disabled auxiliary-output open-drain and timezone registrations
+
+**Coverage inventory:** 2026-10-15, Terje `683589b`.
+
+The auxiliary open-drain setter/getter exists, but its public setting registration
+is commented out at [ioports.c:1449](https://github.com/terjeio/grblHAL_core/blob/683589bd10bb1082825bfc7e9bcee6db102b9530/ioports.c#L1449).
+The ordinary public setting-disabled regression remains. The timezone setting
+registration is likewise commented out at [settings.c:2503](https://github.com/terjeio/grblHAL_core/blob/683589bd10bb1082825bfc7e9bcee6db102b9530/settings.c#L2503).
+These observations are not new core defects. Confirm supported exposure before
+adding executable setting-update cases. Do not call the private setters or
+modify production registrations merely to fill uncovered lines. If enabled
+upstream, add public configuration, readback, persistence and driver-effect tests.

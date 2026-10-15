@@ -20,14 +20,15 @@ static void pair_set_state(spindle_ptrs_t *spindle, spindle_state_t state, float
     spindle_output(spindle, state, rpm);
     pair_update_pwm(spindle, pair_get_pwm(spindle, state.on ? rpm : 0));
 }
-static inline void prepare_paired_pwm_program(void)
+static inline void prepare_paired_pwm_program_mode(machine_mode_t mode)
 {
     engine_prepare();
     sys.cold_start = true;
+    settings.mode = mode;
     settings.spindle.on_delay = settings.spindle.off_delay = 500;
     for(unsigned id = 0; id < 2; id++) {
         pair_settings[id] = (spindle_pwm_settings_t){.rpm_min = 0, .rpm_max = 10000,
-            .pwm_freq = 1000, .pwm_max_value = 100, .flags = {.pwm_ramped = true}};
+            .pwm_freq = 1000, .pwm_max_value = 100, .flags = {.pwm_ramped = true, .laser_mode_disable = (id == 0)}};
         pair_descriptors[id] = (spindle_ptrs_t){.type = SpindleType_PWM,
             .ref_id = (uint8_t)(10 * (id + 1)), .cap = {.direction = true, .rpm_range_locked = true},
             .config = spindle_configure, .get_state = spindle_input, .set_state = pair_set_state,
@@ -40,7 +41,8 @@ static inline void prepare_paired_pwm_program(void)
     CHECK(settings_register(&spindle_slot_details));
     CHECK(spindle_select(0));
     CHECK(spindle_enable(1) == 1);
-    CHECK(spindle_get(0)->param->option.ramp_up && spindle_get(1)->param->option.ramp_up);
+    CHECK(spindle_get(0)->param->option.ramp_up);
+    CHECK(spindle_get(1)->param->option.ramp_up == (mode != Mode_Laser));
     coord_system_data_t coordinates = {0};
     for(unsigned id = 0; id < N_CoordinateSystems; id++)
         settings_write_coord_data((coord_system_id_t)id, &coordinates);
@@ -54,3 +56,6 @@ static inline void prepare_paired_pwm_program(void)
     sys.cold_start = false; sys.driver_started = true;
     pair_calls[0] = pair_calls[1] = 0;
 }
+
+static inline void prepare_paired_pwm_program(void)
+{ prepare_paired_pwm_program_mode(Mode_Standard); }

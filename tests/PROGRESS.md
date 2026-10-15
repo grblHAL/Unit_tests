@@ -1190,3 +1190,30 @@ startup/PWM checkpoint, then hosted validation while continuing measured gaps.
 Questions go to TODO and DO/WHILE remains unregistered. Greatest remaining
 aggregate line gaps include gcode, settings, motion_control, report and ioports;
 inspect the uncovered public paths and existing controls before authoring.
+
+## Batch 10 settings, mixed laser and parser/output follow-up
+
+Hosted run 38658180242 passed every job for d2d1d02 against Terje 683589b.
+Its first 13 new cases measured 15,915/17,437 lines (91.2714%) and
+10,518/13,506 branches (77.8765%). Core remains unmodified and clean.
+
+Twenty-five additional cases now pass: six RGB strip-length configuration,
+capability, persistence and rejected-input cases; four mixed primary ordinary
+PWM/secondary laser parser cases; seven public comment/message normalization
+and execution cases; five rejected-command cases preserving position, units
+and dynamic tool offset; three real motion-synchronized digital/analog output
+lists. Message output is reached via public gc_execute_block, not an undeclared
+internal helper. Mixed laser fixtures use real PWM precomputation and driver
+flags before registration, with the primary laser capability disabled.
+Analog fixture logging observes callbacks without limiting their execution.
+
+Disabled open-drain/timezone public registrations are recorded as coverage
+inventory in TODO, not bugs or manufactured private-call tests. No new core
+exceptions were added in these follow-ups. Batch 10 now adds 38 cases total.
+
+Full local ASan/UBSan and strict summary: 2,935 total, 2,922 clean,
+13 documented expected failures, zero unexpected failures/skips (39.66 s;
+build-asan/batch-10-delivery-results.xml). Earlier 43 script checks remain
+valid: no script changes. Commit/push this checkpoint and dispatch hosted
+validation on the same core SHA, then continue independent measured gaps.
+No PR is ready until hosted gates pass. Full-coverage goal remains active.
