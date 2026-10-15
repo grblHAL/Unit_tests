@@ -2139,3 +2139,27 @@ confirms 3,217 cases, zero failures/skips, 16,413/17,604 lines (93.23%) and
 11,013/13,632 branches (80.79%). GCC/Clang were still running at the last check;
 verify their completion and diagnosis before opening/attaching its ready PR.
 This measurement does not include batch 15. Continue independent coverage work.
+
+## Batch 15 alternate G51 configuration and extended-name boundaries
+
+The supported MACH3_SCALING=0 variant now has six separate cases: scaling about
+a supplied center or the current position, independent I/J/K incremental factors,
+G50 cancellation, rejection of a center-only command without factors, and a real
+planned/stepped XY cut reaching 3/4 mm with exactly 240/320 emitted pulses.
+These exercise the production alternate branch; no scaling implementation is
+copied into the host. README lists the variant. Two additional 80-character-name
+cases cover named assignment/expression lookup and reject an oversized assignment
+without overwriting its valid prefix; normal parsing still works afterward.
+
+All eleven alternate-scaling/extended-name cases pass focused ASan/UBSan and
+strict summary (build-asan/batch15-configurations-results.xml). Total 3,232;
+batch 15 adds fifteen registered cases. The last full gate was 3,224; run a fresh
+full sanitizer/strict/helper checkpoint before pushing this enlarged batch.
+Core remains unmodified feebef2. No new failure exception.
+
+Batch 14 exact head b286d22 passed every hosted job, including source, GCC, Clang,
+coverage and diagnosis, in run 38745457196. Ready PR 19 was created and attached:
+https://github.com/grblHAL/Unit_tests/pull/19 . It has not been merged by the agent.
+Keep batch 15 separate, inspect fresh upstream/PR state before eventual delivery,
+and continue toward the full goal. Next use hosted coverage to measure gains of
+the newly configured executable branches; do not infer gains from test counts.
