@@ -2348,3 +2348,34 @@ batch16-hosted-coverage-core.zip and batch16-hosted-source-lock-core.zip.
 Core remote HEAD is still feebef2. These percentages do not include batch 17.
 Run the current full local gate after critical-loop fixture changes. Preserve
 validated batches 15/16; do not duplicate their parent PR 19 tests in new reviews.
+
+## Batch 17 router homing accessory shutdown and initial status
+
+Two normal-startup cases execute M3S5000, M8 and $HX with a registered spindle,
+valid homing setup and real simulated switch/pulse feedback. An input observer
+proves spindle/coolant were on before homing; pulse callbacks verify both driver
+and modal outputs are off before every emitted step. X completes 110 pulses,
+other axes remain still, and X gets its correct homed reference. With continuous
+homing reports disabled, the initial Home status must arrive before motor pulses.
+The fixture deliberately allows that pre-motion report delay; shutdown is checked
+at the driver pulse boundary rather than every transient HOMING state.
+
+The second case exposed a host timing mistake: boot_homing_foreground called the
+ISR before the mock timer was armed. It now follows public driver wake/go_idle
+callbacks and invokes interrupts only while the timer runs. No core change or
+new defect classification. All thirteen ordinary boot homing controls pass focused
+ASan/UBSan and strict summary (batch17-router-home-results.xml).
+Total 3,266; batch 17 adds eight cases. Full gate required after this timer-fixture
+change. The previous 3,264-case full sanitizer/strict gate passed in 63.28 s, with
+nine expected failures and all 44 helper checks passing (batch17-checkpoint logs).
+
+A third router/homing case now verifies dedicated home inputs separately from a
+limit input that becomes asserted during travel and remains asserted. Homing
+reaches the expected X pulse/reference endpoint, but completion reports failure
+and sender error 45 because the final limit check remains engaged. The input is
+supplied through the driver getter and normal homing callbacks; no private state
+branch is forced. Focused sanitizer/strict summary passes (batch17-home-limit-
+results.xml). Total 3,267; batch 17 adds nine cases. Prior full 3,266-case gate
+passed sanitizer/strict checks in 61.87 s with nine expected failures and all
+44 helpers passing (batch17-homing-checkpoint-results.xml). Revalidate the full
+enlarged batch before eventual push. Core remains clean feebef2.
