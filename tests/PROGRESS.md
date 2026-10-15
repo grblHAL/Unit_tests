@@ -2468,3 +2468,9 @@ during motor travel is answered before approach ends, and the extension receives
 seek/pulloff/locate/pulloff modes with configured rates. Final X position/pulse
 counts are checked in both. Total 3,297 / 20 new in batch 18. Full final gate
 required before publishing this enlarged checkpoint; no new core exceptions.
+
+Batch 18 final local gate passed all 3,297 cases in 62.04 s, nine expected
+failures, strict summary and 44 helper checks (batch18-delivery logs/results).
+Freeze/publish this head for exact-source Linux validation and continue independent
+work on coverage-batch-19. Keep PR sequencing separate: PR 19 is still open at
+the most recent live check; do not merge it or recreate its changes as a new PR.

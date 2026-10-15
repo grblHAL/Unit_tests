@@ -2,14 +2,15 @@
 
 ## Objective and delivery
 
-Current new work is coverage-batch-18 from frozen batch 17 90b4ce9.
+Current delivery is coverage-batch-18; continue new work on coverage-batch-19
+after freezing/pushing its final local gate.
 Frozen coverage-batch-16: 21 new / 3,258 total cases. Local and exact-head hosted
 source/GCC/Clang/coverage/diagnosis passed run 38751060993: 93.54% lines and
 81.10% branches. Current batch 17 adds 19 cases / 3,277 total; full sanitizer/strict
 gate and 44 helpers pass (batch17-delivery). Exact-head hosted run 38795069102 is
 fully green: 93.79% lines / 81.35% branches. Current batch 18 has 20 new / 3,297
-total cases; full 3,295-case sanitizer/strict gate and 44 helpers pass, latest two
-homing notification cases pass focused. Full final gate before delivery. Core remains clean latest
+total cases; full 3,297-case sanitizer/strict delivery gate and 44 helpers pass
+(62.04 s, nine expected failures). Exact-head hosted validation required. Core remains clean latest
 Terje feebef2. The next useful area is public cutter-compensation parser conflicts
 and program-end cleanup; capture fixture accepts configuration, not geometry.
 Batch 15 at 4bccb2d passed all run 38748405818 jobs; verified header-inclusive
