@@ -3,6 +3,14 @@
 #include "tool_change.h"
 #include "report.h"
 static unsigned select_calls, reset_calls, homing_calls;
+static unsigned manual_tool_changed_calls;
+static tool_id_t manual_finished_tool;
+static void manual_tool_changed(tool_data_t *tool)
+{
+    CHECK(tool != NULL);
+    manual_finished_tool = tool->tool_id;
+    manual_tool_changed_calls++;
+}
 static bool selected_next, homing_success;
 static tool_data_t *selected_tool;
 static axes_signals_t homing_axes;
@@ -61,9 +69,9 @@ static void original_control(control_signals_t signals)
 static void tool_coolant_off(coolant_state_t coolant) { CHECK(coolant.value == 0); }
 static coolant_state_t tool_coolant_state(void) { return (coolant_state_t){0}; }
 static bool tool_stream_connected(void) { return true; }
-static inline void start_manual_change(void)
+static inline void install_manual_change_interface(void)
 {
-    static tool_data_t next = {.tool_id = 3};
+    grbl.on_tool_changed = manual_tool_changed;
     hal.coolant.set_state = tool_coolant_off;
     hal.coolant.get_state = tool_coolant_state;
     hal.stream.is_connected = tool_stream_connected;
@@ -74,6 +82,11 @@ static inline void start_manual_change(void)
     report_init();
     sys.driver_started = true;
     sys.homed.mask |= Z_AXIS_BIT;
+}
+static inline void start_manual_change(void)
+{
+    static tool_data_t next = {.tool_id = 3};
+    install_manual_change_interface();
     hal.tool.select(&next, true);
     CHECK(hal.tool.change(&gc_state) == Status_OK);
     CHECK(gc_state.tool_change);

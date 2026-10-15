@@ -34,6 +34,7 @@ static enqueue_realtime_command_ptr set_handler(enqueue_realtime_command_ptr han
     return NULL;
 }
 static void (*rtu_stream_direction)(bool);
+static set_format_ptr rtu_stream_format;
 static const io_stream_t *claim_serial(uint32_t baud)
 {
     static io_stream_t serial = {.type = StreamType_Serial,
@@ -43,6 +44,7 @@ static const io_stream_t *claim_serial(uint32_t baud)
         .set_enqueue_rt_handler = set_handler};
     CHECK(baud == 19200);
     serial.set_direction = rtu_stream_direction;
+    serial.set_format = rtu_stream_format;
     return &serial;
 }
 static void received(modbus_message_t *message) { reply = *message; rx_calls++; }

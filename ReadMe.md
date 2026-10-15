@@ -486,6 +486,10 @@ For authoritative totals, use the hosted Linux coverage job. LLVM on Windows can
 omit profile files at long build paths even when tests pass. If measuring locally,
 verify that executed test objects produce `.gcda` files before trusting totals.
 
+For authoritative totals, use the hosted Linux coverage job. LLVM on Windows can
+omit profile files at long build paths even when tests pass. If measuring locally,
+verify that executed test objects produce `.gcda` files before trusting totals.
+
 Open `coverage.html` to inspect uncovered lines and branches. For a fresh measurement,
 use a new build directory so old execution counts cannot carry over.
 
@@ -496,7 +500,9 @@ compensation, four-axis asymmetric ganging with and without auto-squaring,
 seven-axis XYZABCU, the eight-axis maximum, six-axis UVW remapping, and three registered spindles
 with two active spindle slots, a four-slot persistent tool table with and without NGC expressions, optional spindle PWM linearization, and enabled PID logging. All variants run in one
 CTest suite; coverage merges their executed source lines. Compatibility levels
-2 and 10 have ordinary compile checks for their coordinate reports. The `separate` function
+1, 2 and 10 have runtime reporting tests. Levels 2 and 10 also exercise normal
+boot/reset, coordinate availability and legacy settings; their coordinate-report
+compile checks remain. The `separate` function
 merge mode retains functions compiled at different locations under feature guards. Other feature combinations
 still need tests. A green suite or a covered module does not establish full coverage;
 use the source-by-source coverage table to choose the next behavior to test.
