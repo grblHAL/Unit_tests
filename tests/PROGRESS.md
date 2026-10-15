@@ -2328,3 +2328,23 @@ sanitizer failure was that omitted host callback, corrected without a core patch
 or failure exception. All nine critical-loop cases pass (batch17-status-results.xml).
 Total 3,262; batch 17 adds four cases. Full current gate remains required at the
 next substantial checkpoint before publishing this shared-fixture change.
+
+## Batch 17 reset-task lifecycle and batch 16 hosted evidence
+
+Two normal-boot soft-reset cases pass focused ASan/UBSan and strict summary:
+three registered plugin reset tasks run once in FIFO order across two resets,
+and task_raise_alarm runs after reset and blocks following G91 with the requested
+homing-required alarm. Registration happens after cold boot through task_run_on_reset;
+no private scheduler entry point or fabricated boot state is used. The alarm's
+wire code is 11; an initial guessed code 14 was corrected from alarms.h.
+Evidence: batch17-reset-task-results.xml. Total 3,264; batch 17 adds six cases.
+
+Batch 16 run 38751060993 passed source, GCC, Clang, coverage and diagnosis.
+Downloaded source lock confirms harness 20f02ebfc77ef7123bee2496d65eb5c8405d0f1b,
+core feebef26222111f11c7a3b3b0156d023aa786937 and emitted-header filter. Coverage
+artifact confirms 3,258 cases with zero failures/skips, 16,487/17,625 lines
+(93.54%), 11,068/13,648 branches (81.10%). Parent artifacts are
+batch16-hosted-coverage-core.zip and batch16-hosted-source-lock-core.zip.
+Core remote HEAD is still feebef2. These percentages do not include batch 17.
+Run the current full local gate after critical-loop fixture changes. Preserve
+validated batches 15/16; do not duplicate their parent PR 19 tests in new reviews.
