@@ -2239,3 +2239,18 @@ medium. The test now installs the real driver callbacks/metadata at startup and
 does not invent storage hardware. No core fault/exception or source change.
 Total 3,250; batch 16 adds thirteen cases. Run the full gate for this shared-fixture
 checkpoint before publishing, and keep the separate batch 15 hosted run intact.
+
+## Batch 16 realtime plugin notifications
+
+Three cases pass focused ASan/UBSan and strict summary: explicit and legacy
+cycle-start bytes each deliver one control notification and one plugin start
+notification with execution queued; optional-stop/single-block toggle callbacks
+observe the updated flags on both transitions. Assertions concern delivered
+signals, counts and visible state, not an undocumented relative callback order.
+Evidence: batch16-realtime-results.xml. Total 3,253; batch 16 adds sixteen cases.
+
+The previous 3,250-case full checkpoint passed ASan/UBSan and strict summary
+with nine documented expected failures, no unexpected failures/skips/diagnostics,
+48.70 s; all 44 helper checks passed (batch16-checkpoint-results.xml and logs).
+Run the enlarged full gate before publishing. Keep batch 15 4bccb2d/run
+38748405818 undisturbed; new batch 16 work remains separate.
