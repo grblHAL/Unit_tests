@@ -2284,3 +2284,16 @@ batch16-edit-results.xml (two). No new core defects or exceptions.
 Total 3,258; batch 16 adds 21 cases. Run full current sanitizer/strict/helper gate
 before publishing this module checkpoint. Batch 15 is independently validated;
 PR 19 remains its parent delivery dependency until merged.
+
+## Batch 16 full delivery freeze
+
+All 3,258 cases pass full ASan/UBSan and strict summary (3,249 clean plus nine
+explicit expected failures, no unexpected failures/skips/diagnostics), 51.21 s.
+All 44 helper checks pass. Evidence: build-asan/batch16-delivery-results.xml and
+parent batch16-delivery logs. No new core defects/exceptions or production edits.
+Freeze/push this 21-case delivery and validate exact-head Linux GCC/Clang/coverage/
+diagnosis against feebef2. Keep validated parent deliveries intact; PR 19 remains
+open at the last check. New work continues separately on coverage-batch-17.
+A reachable next gap is runtime critical motor-fault/E-stop feedback and reset
+blocking while the physical input remains asserted, using the public realtime
+alarm/control interfaces and existing critical-loop fixture, not private calls.

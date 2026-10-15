@@ -2,16 +2,15 @@
 
 ## Objective and delivery
 
-Current new work is coverage-batch-16 from frozen batch 15 4bccb2d.
-Current delivery is coverage-batch-15 (20 new / 3,237 total), based on batch 14
-b286d22. Full local ASan/UBSan, strict summary and 44 helper checks pass.
-All exact-head run 38748405818 jobs passed; source lock confirms 4bccb2d/feebef2.
-Header-inclusive coverage: 93.36% lines / 80.94% branches, 3,237 cases.
-Prefer rebasing after PR 19 merges before opening batch 15's ready PR. Batch 14 PR #19 is ready/open, not merged at last live check;
-all run 38745457196 jobs passed, 93.23% lines / 80.79% branches including emitted
-header code. New work belongs on coverage-batch-16 after the batch 15 freeze.
-Core remains clean latest Terje feebef2. Never merge PRs automatically or
-commit/push master/main. Continue autonomously toward the full goal.
+Current delivery is coverage-batch-16: 21 new / 3,258 total cases. Full local
+ASan/UBSan, strict summary and 44 helper checks pass. Publish and verify exact-head
+Linux source/GCC/Clang/coverage/diagnosis before its ready PR. Continue new work
+on coverage-batch-17 after this freeze. Core remains clean latest Terje feebef2.
+Batch 15 at 4bccb2d passed all run 38748405818 jobs; verified header-inclusive
+coverage is 93.36% lines / 80.94% branches, 3,237 cases. PR 19 (batch 14) remains
+ready/open at last live check. Prefer its merge before rebasing/presenting batch
+15's PR, then deliver batch 16 without duplicating parent tests. Never merge PRs
+automatically or commit/push master/main. Continue toward the full coverage goal.
 
 DO/WHILE CONTINUE remains a maintainer question in TODO.md; its candidate is
 unregistered. The separate WHILE false-condition regression is fixed on current
