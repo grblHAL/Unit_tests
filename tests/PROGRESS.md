@@ -2067,3 +2067,16 @@ hosted jobs in run 38735673645. Authoritative header-inclusive coverage there:
 16,401/17,604 lines (93.17%), 10,998/13,632 branches (80.68%), 3,199 cases.
 These percentages do not yet include batch 14. Rebase this branch onto freshly
 fetched upstream master before its eventual PR and preserve this work.
+
+## Batch 14 capability help and mixed-axis report units
+
+Four new public $HELP COMMANDS cases pass sanitizer/strict checks: physical board
+switches suppress software toggle help, RTC help follows capability, encoder
+commands appear only with matching callbacks (without calling them), and reset
+help describes tool data only when a table is configured. Three eight-axis report
+cases verify realtime, probe and home coordinates convert linear XYZUV to inches
+while preserving ABC degrees, independent of G21 input mode. Home reporting also
+preserves the selected homed mask. A shared mixed-axis report fixture avoids
+copying setup across cases. Focus evidence: batch14-help-results.xml (seven
+including existing controls), batch14-mixed-report-results.xml (three).
+Total 3,217; batch 14 adds eighteen cases. No new core changes or exceptions.
