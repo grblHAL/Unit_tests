@@ -1690,3 +1690,19 @@ G10 setting commands emit no motor pulses; the following real cut reaches exact
 physical/system endpoints with unchanged Z. Configuration commands use the parser
 directly; the shared queue helper is for motion blocks only. No core defect or
 exception. Evidence: build-asan/batch-11-rotation-results.xml. Total 3,133 cases.
+
+
+## Batch 11 complete local delivery gate
+
+Three I/O driver-notification cases verify configuration-before-callback ordering,
+unchanged input values avoid reconfiguration while retaining notification, output
+inversion preserves open drain, and settings-load notification follows all port
+configuration. Focused sanitizer/strict summary passed.
+
+The complete 3,136-case suite passed ASan/UBSan and strict summary: 3,128 clean,
+eight documented expected failures, no unexpected failures/skips/diagnostics,
+48.57 seconds (build-asan/batch-11-module-results.xml). This batch adds 34 cases
+and removes five fixed exceptions against unmodified Terje feebef2. All 43 helper
+checks passed earlier in this checkpoint. PR #16 is now merged; upstream master
+3034d4d was freshly fetched. Rebase the batch onto it, publish after the active
+healthy hosted run is terminal, and validate the final head before a ready PR.

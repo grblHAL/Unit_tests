@@ -2,16 +2,16 @@
 
 ## Objective and delivery
 
-Current new coverage work belongs on `coverage-batch-11`, based on the completed
-`coverage-batch-10` checkpoint `fdf6483`. Batch 10 adds 205 cases and is frozen
-while hosted validation runs. Create its PR only after every required job passes;
-never merge it. Keep batch 11 delivery separate and avoid a duplicate PR diff
-until its parent batch is merged. Upstream base remains `9e2e20f`. The overnight goal was created
-on 2026-10-15 and is active. Continue autonomously while usage permits.
+Current coverage work belongs on `coverage-batch-11`. PR #16 (batch 10) is
+merged; upstream master was refreshed to `3034d4d`. Batch 11 adds 34 cases and
+removes five fixed exceptions against clean Terje core `feebef2`. Its full local
+3,136-case sanitizer/strict-summary gate passed. Finish hosted validation of the
+final rebased head before presenting a ready PR; never merge it automatically.
+The overnight goal is active. Continue autonomously while usage permits.
 Never commit/push master/main or add AI branding. Questions and uncertain
 contracts go in tests/TODO.md; continue independent work without waiting.
-Keep CI changes separate. Validate all required gates before presenting a PR
-as ready. Older dated snapshots are historical; latest PROGRESS.md governs.
+Keep CI changes separate. Older snapshots are historical; latest PROGRESS.md
+governs. Do not push and cancel a healthy validation run on the same branch.
 
 DO/WHILE CONTINUE is a maintainer question in TODO.md at the user's request. Its
 candidate in tests/proposals is not registered and must await Terje's chosen
