@@ -1651,3 +1651,21 @@ Suite totals 3,121: 3,113 clean passes, eight retained expected failures, zero
 unexpected failures/skips or sanitizer diagnostics. Full gate and strict summary
 passed in 41.62 seconds. All 43 helper checks pass. Publish this substantial
 checkpoint for hosted GCC/Clang/coverage while continuing independent coverage.
+
+
+## Batch 11 startup option and probe-connection coverage
+
+Seven additional cases pass focused ASan/UBSan and strict summaries on Terje
+feebef2: SD-only, LittleFS-only and combined filesystem option metadata after
+normal boot, plus four probe-connection boot combinations. The driver supplies
+normal probe state/toggle callbacks; real grbl_enter/startup tasks reconcile the
+connection input and avoid redundant toggles. No private core call, source patch,
+new known exception or defect claim. Evidence: build-asan/batch-11-filesystem-
+results.xml and build-asan/batch-11-probe-results.xml. Total 3,128 cases.
+
+Terje confirmed PullMode_Down for the control-input debounce regression; a
+source comment explains that board drivers handle processor/protection limits.
+TODO records his future protected-input setting availability follow-up.
+Hosted run 38692359893 validates a65ac73's 3,121-case checkpoint against feebef2;
+it was still in progress when this local startup group finished. Do not push
+and cancel that healthy run; inspect all jobs before publishing another checkpoint.

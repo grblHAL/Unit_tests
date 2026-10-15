@@ -267,3 +267,13 @@ source-file inventory and meaningful behavior assertions; do not exclude
 uncovered code or equate 100% of the existing .c report with full core coverage.
 An independent local header-inclusive measurement can guide further test work
 without changing manual triggers or reusable callers.
+
+
+## Hide pullup-disable settings for protected board inputs
+
+**Maintainer follow-up:** 2026-10-15. Terje confirmed that the core control-input
+configuration test should expect PullMode_Down. Actual electrical behavior may
+be None depending on the processor; board input protection belongs to the driver/
+hardware contract. Terje plans to remove the disable-pullup option for boards
+with input protection. Do not require physical pull-down behavior from host tests.
+Review setting availability tests when the board capability/API is implemented.

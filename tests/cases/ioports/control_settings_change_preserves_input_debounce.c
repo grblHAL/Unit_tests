@@ -11,6 +11,7 @@ int main(void)
     ioport_setting_changed(Setting_ControlInvertMask);
     CHECK(input_config_calls[0] == 1);
     CHECK(captured_input[0].inverted);
+    /* Core requests pull-down; the board driver handles processor/protection limits. */
     CHECK(captured_input[0].pull_mode == PullMode_Down);
     CHECK(captured_input[0].debounce);
     CHECK((settings.ioport.invert_in.mask & 1) == 1);
