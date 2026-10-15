@@ -2254,3 +2254,19 @@ with nine documented expected failures, no unexpected failures/skips/diagnostics
 48.70 s; all 44 helper checks passed (batch16-checkpoint-results.xml and logs).
 Run the enlarged full gate before publishing. Keep batch 15 4bccb2d/run
 38748405818 undisturbed; new batch 16 work remains separate.
+
+## Batch 15 hosted validation complete
+
+Every run 38748405818 job passed: source, GCC, Clang, coverage and diagnosis.
+Downloaded source lock confirms harness 4bccb2d242d6d2a282e3bd4ed3c815d860f34550,
+clean Terje feebef26222111f11c7a3b3b0156d023aa786937 and header-inclusive
+core/.*\\.[ch]$ filter. Coverage results confirm 3,237 cases, zero failures/skips:
+16,454/17,625 lines (93.36%), 11,047/13,648 branches (80.94%). Added variants
+also increase the emitted-code denominator; do not compare raw missing counts
+without that scope change. Artifacts: parent batch15-hosted-coverage-core.zip and
+batch15-hosted-source-lock-core.zip.
+
+PR 19 remains open at this live check. Batch 15 is validated/frozen; prefer
+rebasing after PR 19 merges before opening its ready PR, avoiding duplicated
+parent tests in the review. Never merge automatically. New coverage continues
+independently on batch 16 with no need to wait. Full coverage is not achieved.
