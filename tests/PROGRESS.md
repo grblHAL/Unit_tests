@@ -1551,3 +1551,26 @@ Hosted run 38683576138 passed all jobs for bb9e036, covering 16,152/17,437 lines
 checkpoint and dispatch hosted validation; continue independently while it runs.
 Source HEAD was rechecked clean at Terje 683589b. The full goal remains active;
 questions stay TODO and no batch 10 PR is yet claimed ready.
+
+## Batch 10 realtime state reports and metadata recovery
+
+Ten report cases verify real feed-hold deceleration/completion, jog-to-idle,
+safety-door parking state, busy-to-idle WCO/override refresh scheduling,
+normalized numbered setting names and alarm/error catalog fallback/retry when
+the sorting allocation fails. States come from actual motion/realtime workflows.
+Report fixtures finish report_init and use the controller's persistent tracking
+state with its broadcast writer; initial incomplete report setup and mismatched
+tracking assumptions were corrected without claiming core defects.
+
+Full local ASan/UBSan and strict summary pass 3,102 total: 3,089 clean,
+13 documented expected failures, zero unexpected failures/skips, 39.60 s
+(build-asan/batch-10-report-final-results.xml). All 43 helper checks pass.
+Batch 10 now adds 205 cases in maintainable separate files. No new exceptions
+or production changes in this report group. Upstream master was freshly fetched
+and remains 9e2e20f, so the branch still has a clean unchanged delivery base.
+
+Run 38684803384 validates 03a4396's 3,092-case checkpoint. Source/coverage were
+successful at last check while GCC/Clang were active. Do not push and cancel
+that healthy run. Once terminal, publish/dispatch this complete checkpoint and
+verify all jobs before claiming a PR ready. Continue independent work while it
+runs. Full line/branch coverage is not yet achieved; keep the goal active.
