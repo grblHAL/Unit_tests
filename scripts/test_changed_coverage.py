@@ -42,5 +42,46 @@ class ChangedCoverageTests(unittest.TestCase):
             self.assertEqual(uncovered['uncovered_lines'],[3])
             self.assertTrue(any(f['kind']=='unmeasured' for f in result))
 
+    def test_real_git_header_diff_reports_uncovered_and_unemitted_bodies(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            core = root / 'core'
+            core.mkdir()
+            def git(*args):
+                return subprocess.check_output(['git', '-C', str(core), *args], text=True).strip()
+            git('init')
+            git('config', 'user.name', 'Test')
+            git('config', 'user.email', 'test@example.invalid')
+            header = core / 'inline.h'
+            header.write_text('static inline int old(void) { return 0; }\n')
+            git('add', '.')
+            git('commit', '-m', 'Baseline')
+            baseline = git('rev-parse', 'HEAD')
+            header.write_text(header.read_text() + '/* documentation */\nstatic inline int added(void) { return 1; }\n')
+            (core / 'new.h').write_text('static inline int unseen(void) { return 2; }\n')
+            git('add', '.')
+            git('commit', '-m', 'Candidate')
+            coverage = root / 'coverage.xml'
+            coverage.write_text('<coverage><class filename="core/inline.h"><lines>'
+                                '<line number="1" hits="0"/><line number="3" hits="0"/>'
+                                '</lines></class></coverage>')
+            lock = dict(path='core', sha=git('rev-parse', 'HEAD'),
+                        coverage_filter=r'core/.*\.[ch]$',
+                        comparison=dict(repository='owner/core', sha=baseline))
+            import os
+            before = os.getcwd()
+            os.chdir(root)
+            try:
+                results = assess(lock, coverage)
+            finally:
+                os.chdir(before)
+            uncovered = next(item for item in results if item['kind'] == 'uncovered')
+            self.assertEqual(uncovered['uncovered_lines'], [3])
+            self.assertEqual(uncovered['file'], 'core/inline.h')
+            self.assertEqual(uncovered['line'], 3)
+            absent = next(item for item in results if item['kind'] == 'unmeasured')
+            self.assertIn('core/new.h', absent['message'])
+            self.assertIn('absence is not proof of missing tests', absent['message'])
+
 if __name__=='__main__':
     unittest.main()

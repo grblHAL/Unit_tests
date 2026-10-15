@@ -1706,3 +1706,21 @@ and removes five fixed exceptions against unmodified Terje feebef2. All 43 helpe
 checks passed earlier in this checkpoint. PR #16 is now merged; upstream master
 3034d4d was freshly fetched. Rebase the batch onto it, publish after the active
 healthy hosted run is terminal, and validate the final head before a ready PR.
+
+
+## Separate CI header-reporting follow-up
+
+ci-header-coverage is based on merged batch 11 / upstream fb9086d. It changes
+only report scope, changed-code assessment, its regression and README instructions.
+Core suite filter includes executable .c/.h bodies; changed-code Git diffs include
+headers. A real-Git regression failed before the assessor fix and now verifies
+uncovered added inline lines and absent changed headers with actionable guidance,
+while ignoring old gaps and comments. All 44 helper checks pass. Manual triggers,
+reusable callers and core source remain unchanged. Hosted validation is required
+before a ready PR. Batch 12 test development is preserved separately at ae1f708
+on origin/coverage-batch-12, with 42 new cases / 3,178 total and full local gate.
+
+This follows the observed Windows LLVM long-path profile omission. Use Linux
+hosted totals for authoritative measurements, and keep scope/configuration limits
+explicit. Header bodies absent from emitted code remain an inventory follow-up;
+this change alone does not establish whole-core coverage.

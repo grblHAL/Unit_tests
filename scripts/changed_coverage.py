@@ -52,7 +52,7 @@ def assess(lock, coverage):
         except subprocess.CalledProcessError:
             git("fetch", "--no-tags", "https://github.com/" + comparison["repository"] + ".git", comparison["sha"])
         base = git("merge-base", "HEAD", comparison["sha"])
-        changed = added_lines(git("diff", "--unified=0", "--no-renames", "--diff-filter=AM", base, "HEAD", "--", "*.c"))
+        changed = added_lines(git("diff", "--unified=0", "--no-renames", "--diff-filter=AM", base, "HEAD", "--", "*.c", "*.h"))
     except subprocess.CalledProcessError:
         return [finding("coverage_unavailable", "Changed-code coverage unavailable", "Could not fetch baseline history or find a merge base. Check baseline repository/SHA and reachability.", severity="warning")]
     measured = coverage_lines(coverage)
