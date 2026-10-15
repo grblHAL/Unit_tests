@@ -1966,3 +1966,25 @@ ready/open for CI header reporting; prefer merging that upstream before final
 batch-12 rebase/PR to avoid overlapping README/PROGRESS edits. Do not merge any
 PR automatically or stop coverage while waiting. New test work continues on
 coverage-batch-13 from this freeze; keep it separate so it cannot delay batch 12.
+
+
+## Batch 13 continuation and legacy input configuration
+
+Batch 12 is frozen/pushed at 4a224d4 (55 new / 3,191 total). Its final hosted
+run is 38701989145 against unchanged feebef2. Verify all required jobs before
+its ready PR, and keep the separate ready reporting PR #18 out of that test
+diff until it merges. Do not cancel healthy validation with another push.
+
+New work is local coverage-batch-13 from that freeze. Five added cases pass
+focused ASan/UBSan and strict summary, using normal legacy boot with XYZ limit
+capabilities and valid persisted homing cycles/rates: hard-limit enable/disable
+dispatches to the driver, inversion reads back correctly, homing applies compile
+defaults, and disabling homing clears previously enabled soft limits. A stream
+observer proves the soft limit was actually enabled before disabling; all
+positive input programs must have no error responses. Two existing reset cases
+now also prove G20/G91 was active before reset, preventing default-state-only
+false confidence. No core change, new defect or exception.
+
+Evidence: build-asan/batch-13-legacy-limits-results.xml (eight cases pass including
+existing controls) and strict summary. Total 3,196; batch 13 adds five cases.
+Continue meaningful public workflow coverage while the frozen delivery validates.
