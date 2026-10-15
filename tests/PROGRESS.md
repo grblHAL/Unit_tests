@@ -1988,3 +1988,15 @@ false confidence. No core change, new defect or exception.
 Evidence: build-asan/batch-13-legacy-limits-results.xml (eight cases pass including
 existing controls) and strict summary. Total 3,196; batch 13 adds five cases.
 Continue meaningful public workflow coverage while the frozen delivery validates.
+
+
+## Batch 13 remapped axis-word projection
+
+Three original-inline helper cases pass focused ASan/UBSan and strict summary:
+each of eight XYZABCUV axis words maps to its exact motor bit, each XYZUVW word
+maps to its remapped bit, and unconfigured ABC/feed arguments are ignored in
+the UVW layout. No parser/private-state bypass is used; this is the public pure
+parameter-word conversion helper. The Linux header report identified its
+non-3/non-7-axis branch as a remaining gap; verify the next hosted measurement
+rather than assuming a percentage gain. Evidence: build-asan/batch-13-axis-words-
+results.xml. Total 3,199; batch 13 adds eight cases, no new exception.
