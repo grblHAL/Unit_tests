@@ -1889,3 +1889,31 @@ PR #17 was independently verified merged as fb9086d. Batch 12 rebased cleanly
 onto that merged parent; its tree was identical to the locally validated
 pre-rebase checkpoint except subsequent handoff documentation. Publish the
 42-case checkpoint now. Never commit/push master or merge PRs automatically.
+
+
+## Batch 12 first hosted checkpoint and continued eight-axis coverage
+
+Published ae1f708 (42 new / 3,178 total) passed every required hosted job in
+run 38698553119: source, GCC, Clang, coverage and diagnosis. Coverage artifact
+confirms 3,178 tests, zero failures/skips, 16,258/17,440 C-source lines (93.22%)
+and 10,909/13,518 branches (80.70%) against feebef2. Core remote HEAD remains
+unchanged. This is a useful checkpoint, not completion of the full goal.
+
+A separate ci-header-coverage branch at 09a15fa is pushed and validating in
+run 38698910578 from merged upstream fb9086d. It includes executable header
+bodies in Linux coverage and adds headers to changed-code Git diffs. Its new
+real-Git regression failed before the assessor fix; all 44 helper checks now
+pass. README explains scope/configuration limits. Keep this CI change out of
+the test batch, inspect all required jobs before opening/attaching a ready PR,
+and do not cancel either healthy hosted run with another push. Then continue
+batch 12 independently; resolve future README/PROGRESS overlaps by retaining
+both the header-reporting instructions and test progress, without duplicate text.
+
+Three additional eight-axis cases pass focused sanitizer/strict summary:
+G30.1 records completed positions for all motors; persisted U/V offsets produce
+exact selected-axis endpoints; G30 returns A/V directly to its saved point while
+unselected XYZ/BC/U motors stay still. The initial mixed case incorrectly assumed
+G28's rotary shortcut applied to G30. Core computes that shortcut only for G28;
+the case now follows G30's direct-coordinate behavior with ordinary bounded
+travel, without raising fixture bounds or classifying a defect. Evidence:
+build-asan/batch-12-eight-return-results.xml. Total 3,181; batch 12 adds 45 cases.
