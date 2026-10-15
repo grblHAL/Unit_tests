@@ -1803,3 +1803,20 @@ selecting the pending tool. Following Z cuts reach exact -240/-160 endpoints.
 No tool table data is reimplemented, no core source is modified, and no new
 exception was added. Evidence: build-asan/batch-12-manual-table-results.xml and
 strict summary. Total 3,155, nineteen new cases in batch 12.
+
+
+## Batch 12 RGB inline driver utilities
+
+Nine header-only cases pass ASan/UBSan and strict summary: GRB byte order,
+full-intensity round trip, independent channel masks, known low/high waveform
+symbols, zero intensity, half-intensity conversion and normal driver capability
+classification. Tests invoke the original inline definitions in rgb.h, with
+adequately sized real encoded buffers. The rgb_clear index convention remains a
+TODO question, without a forced boundary failure. CMake supports this header-only
+module without inventing a production .c file or pulling in host controller code.
+
+Evidence: build-asan/batch-12-rgb-results.xml. Total 3,164; batch 12 adds 28 cases.
+These header bodies are outside hosted .c-only percentages; do not claim a .c
+coverage increase from them. Refresh independent header-inclusive measurement
+against current clean feebef2 using a rebuilt build-local-coverage and fresh gcda
+profiles. Keep the tested source/compiled case scope explicit if work continues.

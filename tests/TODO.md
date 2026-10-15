@@ -291,3 +291,15 @@ needs confirmation. Should callers cancel with G67 and register afresh, or can
 active arguments be updated? The candidate is unregistered in
 [tests/proposals](proposals/g66_1_repeated_registration_updates_arguments_and_cancels_cleanly.c).
 No known-failure exception or confirmed defect is added for this question.
+
+
+## RGB strip clear device-index convention
+
+**Contract question:** 2026-10-15, Terje `feebef2`. rgb.h's rgb_clear helper
+calls the output callback for indices zero through num_devices inclusive, while
+num_devices is described as the number available. Confirm the supported driver
+convention (including whether zero has a broadcast meaning) before asserting
+strip-clear bounds. These helpers are explicitly not used by core execution.
+Packing, channel masks and intensity conversions have ordinary passing tests;
+no artificial short buffer, confirmed defect or expected-failure test is added
+for this index question.
