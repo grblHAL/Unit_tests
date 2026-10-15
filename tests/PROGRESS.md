@@ -1736,3 +1736,9 @@ for existing cases. All 35 Modbus cases pass after the fixture change. Evidence:
 build-asan/batch-12-transport-results.xml and strict summary log. Total 3,142 cases,
 six beyond frozen batch 11; no new known exception/production change. Questions
 remain TODO; batch 11's PR still awaits final hosted run 38693498958.
+
+
+Two further Modbus cases pass focused sanitizer/strict summary: after no reply,
+the sender's $MODBUSSTATS command distinguishes never-connected from previously
+responsive devices and reports one timeout. Evidence: build-asan/batch-12-status-
+results.xml. Batch 12 now adds eight cases, total 3,144; no new exception.
