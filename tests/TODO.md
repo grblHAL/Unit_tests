@@ -277,3 +277,17 @@ be None depending on the processor; board input protection belongs to the driver
 hardware contract. Terje plans to remove the disable-pullup option for boards
 with input protection. Do not require physical pull-down behavior from host tests.
 Review setting availability tests when the board capability/API is implemented.
+
+
+## Updating an active G66.1 registration
+
+**Contract question:** 2026-10-15, Terje `feebef2`. After successful G66.1P100X12
+in the normal macro parser fixture, G66.1X24 returns status 21 (modal group
+violation), with no second macro callback. Repeating P100 is also rejected.
+The callback returns Status_OK and local scope returns to zero; ordinary first
+registration/cancellation and callback-error cleanup pass. The parser contains a
+same-call-level argument-reuse branch, but its intended public command sequence
+needs confirmation. Should callers cancel with G67 and register afresh, or can
+active arguments be updated? The candidate is unregistered in
+[tests/proposals](proposals/g66_1_repeated_registration_updates_arguments_and_cancels_cleanly.c).
+No known-failure exception or confirmed defect is added for this question.

@@ -1755,3 +1755,14 @@ physical pulse-frequency claim, private state access or new exception.
 Evidence: build-asan/batch-12-pair-results.xml. Batch 12 adds eleven cases,
 total 3,147. Core remains clean feebef2. Full local checkpoint is next after the
 next related module; batch 11 PR still awaits final hosted jobs.
+
+
+## Batch 12 modal-macro error cleanup
+
+Two additional cases pass focused sanitizer/strict summary: parser errors clear
+pending G66 registration before later motion; a G66.1 callback error releases
+modal arguments and restores the caller's local parameter scope. The ordinary
+G66/G66.1 controls also pass. Re-registration syntax is uncertain (status 21),
+so that candidate is unregistered under proposals with evidence in TODO, not
+classified as a defect. Total 3,149 cases, thirteen beyond batch 11. Evidence:
+build-asan/batch-12-modal-results.xml. Run the full local gate at this checkpoint.
