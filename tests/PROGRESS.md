@@ -1862,3 +1862,24 @@ eight expected failures, zero unexpected failures/skips/diagnostics, 65.67 s
 header-inclusive run finished all tests successfully (122.62 s) and its gcovr
 report remains active in session 46072. Do not discard profiles or ignore errors.
 Full current gate and first batch 12 hosted checkpoint are next.
+
+
+## Batch 12 publish gate / local coverage collection finding
+
+Full current ASan/UBSan and strict summary passed 3,178 cases: 3,170 clean,
+eight expected failures, zero unexpected failures/skips/diagnostics, 48.57 s
+(build-asan/batch-12-publish-results.xml). All 43 helper checks pass. Core remote
+HEAD was rechecked at clean feebef2. Publish this 42-case useful checkpoint for
+hosted validation while continuing coverage; do not present a ready PR before
+its exact head passes all required jobs or duplicate unmerged parent PR #17.
+
+Header-inclusive session 46072 completed without reporter errors for its frozen
+3,164-case inventory, but its 17,319/18,815 lines (92.05%) and 10,254/12,856
+branches (79.76%) are NOT authoritative: executed long-path test objects have
+missing gcda files. RGB helpers show zero despite all nine cases passing. A
+short GCOV_PREFIX/STRIP=99 rerun of the same byte-mask executable writes a valid
+212-byte profile; original path length is 262. TODO and README document the
+Windows LLVM collection limitation and separate Linux header-reporting follow-up.
+Earlier local header baseline may also be incomplete. Do not equate absent
+profiles with absent tests or use these totals as the goal's completion metric.
+Hosted Linux batch 11 C-source totals remain 93.07%/80.36% pending batch 12 CI.

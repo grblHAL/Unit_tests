@@ -314,3 +314,24 @@ extension dispatch distinct from native tapping execution. When a real
 implementation is supplied, add execution endpoints and spindle-reversal tests
 through valid driver/encoder setup. Do not implement substitute tapping geometry
 in a test fixture or classify the absent feature as a new confirmed defect.
+
+
+## Windows LLVM profile paths and header-inclusive CI reporting
+
+**Verified collection limitation:** 2026-10-15. The local Clang header-inclusive
+report at batch 12 checkpoint 5172863 says 17,319/18,815 lines and 10,254/12,856
+branches, but is incomplete: passing RGB cases have gcno files and no gcda
+profiles. The byte-mask case's original gcda path is 262 characters. Running the
+same executable with GCOV_PREFIX pointing to a short workspace folder and
+GCOV_PREFIX_STRIP=99 produces its 212-byte gcda profile. Core source is unchanged.
+Evidence: ../batch-12-header-coverage.xml/logs and the short-path proof under
+C:/Users/User/Documents/Codex/p12/rgb-mask. This is a host profiler/path issue,
+not nine untested RGB helpers or new core faults. Earlier local header totals
+may have the same limitation and must not be treated as authoritative.
+
+Keep the header-inclusive Linux CI reporting change separate from this test
+batch. Inventory executable header bodies, verify profile collection and emitted
+configuration scope, and use hosted Linux results for authoritative percentages.
+Do not suppress gcovr errors, exclude real code or call 100% of the current
+.c-only report full core coverage. A short source/build path may help local LLVM
+collection, but verify actual profile files before trusting the resulting total.

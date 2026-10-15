@@ -481,6 +481,10 @@ in a local report, replace the filter with `core/.*\.[ch]$`. This still only cou
 code emitted by the selected configurations; it is not an inventory of every
 optional driver helper.
 
+For authoritative totals, use the hosted Linux coverage job. LLVM on Windows can
+omit profile files at long build paths even when tests pass. If measuring locally,
+verify that executed test objects produce `.gcda` files before trusting totals.
+
 Open `coverage.html` to inspect uncovered lines and branches. For a fresh measurement,
 use a new build directory so old execution counts cannot carry over.
 
