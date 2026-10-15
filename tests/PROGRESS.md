@@ -2418,3 +2418,23 @@ Batch 17 adds 19 cases. Latest clean Terje core is still feebef2. Freeze this
 checkpoint for hosted source/GCC/Clang/coverage/diagnosis and continue new work on
 coverage-batch-18; do not treat the local pass as a new coverage percentage or
 present a ready PR before the hosted gate completes.
+
+## Batch 18 cutter parser contracts
+
+Batch 17 frozen/pushed at 90b4ce9721e1e998dd453522362c0cd6ef6a808c; hosted run
+38795069102 validates that exact head against clean Terje feebef2. Source selection
+passed; compiler and coverage jobs are live at last check. New work is on
+coverage-batch-18 and will not cancel that run.
+
+Eight new cases use the existing accepting compensation-extension fixture (it
+captures configuration, does not implement cutter geometry). Active G41/G42 rejects
+G28/G30, canned drilling, probing, tool changes and tool-table geometry writes.
+Assertions check no motion is queued, relevant tool/parser state remains intact,
+and neither probe input sampling nor stream suspension starts on rejected blocks.
+A positive control permits a G10 L2 work-offset write without changing cutter
+radius/side. M2 cancels compensation, notifies the extension and emits program-end
+feedback. Its host explicitly installs the normal report entry points/connection;
+tool-change validation supplies the required no-ATC callback. Initial missing
+fixture callbacks were corrected, not classified as core faults.
+All 42 cutter cases pass ASan/UBSan and strict summary in 2.04 s
+(batch18-cutter-results.xml). Total 3,285; full enlarged gate remains pending.
