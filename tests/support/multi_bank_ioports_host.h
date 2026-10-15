@@ -29,14 +29,14 @@ DIGITAL_BANK(1)
 DIGITAL_BANK(2)
 #undef DIGITAL_BANK
 #define ANALOG_BANK(B) \
-static xbar_t *analog_info_##B(io_port_direction_t d, uint8_t p) { return p < 2 ? &bank_analog_pins[B][d][p] : NULL; } \
-static void analog_descr_##B(io_port_direction_t d, uint8_t p, const char *s) { CHECK(p < 2); bank_analog_pins[B][d][p].description = s; } \
-static bool analog_out_##B(uint8_t p, float value) { CHECK(p < 2); last_bank = B; last_local_port = p; last_bank_type = Port_Analog; bank_output_value = value; bank_output_calls++; return bank_analog_output_ok; } \
-static int32_t analog_wait_##B(uint8_t p, wait_mode_t m, float t) { CHECK(p < 2); last_bank = B; last_local_port = p; bank_wait_mode = m; bank_wait_timeout = t; bank_input_calls++; return (B + 1) * 100 + p; }
+static xbar_t *analog_info_##B(io_port_direction_t d, uint8_t p) { return p < bank_analog_data[B].cfg[d].n_ports ? &bank_analog_pins[B][d][p] : NULL; } \
+static void analog_descr_##B(io_port_direction_t d, uint8_t p, const char *s) { CHECK(p < bank_analog_data[B].cfg[d].n_ports); bank_analog_pins[B][d][p].description = s; } \
+static bool analog_out_##B(uint8_t p, float value) { CHECK(p < bank_analog_data[B].out.n_ports); last_bank = B; last_local_port = p; last_bank_type = Port_Analog; bank_output_value = value; bank_output_calls++; return bank_analog_output_ok; } \
+static int32_t analog_wait_##B(uint8_t p, wait_mode_t m, float t) { CHECK(p < bank_analog_data[B].in.n_ports); last_bank = B; last_local_port = p; bank_wait_mode = m; bank_wait_timeout = t; bank_input_calls++; return (B + 1) * 100 + p; }
 ANALOG_BANK(0)
 ANALOG_BANK(1)
 #undef ANALOG_BANK
-static inline void prepare_multi_bank_ioports(void)
+static inline void prepare_multi_bank_ioports_counts(uint8_t first_in, uint8_t first_out, uint8_t second_in, uint8_t second_out)
 {
     prepare_ioports();
     for(unsigned bank = 1; bank < 3; bank++) {
@@ -58,7 +58,10 @@ static inline void prepare_multi_bank_ioports(void)
     };
     CHECK(ioports_add_digital(&digital[0]) && ioports_add_digital(&digital[1]));
     for(unsigned bank = 0; bank < 2; bank++) {
-        bank_analog_data[bank] = (io_ports_data_t){.external = true, .in.n_ports = 2, .out.n_ports = 2};
+        CHECK(first_in <= 2 && first_out <= 2 && second_in <= 2 && second_out <= 2);
+        bank_analog_data[bank] = (io_ports_data_t){.external = true,
+            .in.n_ports = bank ? second_in : first_in,
+            .out.n_ports = bank ? second_out : first_out};
         for(unsigned d = 0; d < 2; d++) for(unsigned p = 0; p < 2; p++) {
             xbar_t *pin = &bank_analog_pins[bank][d][p];
             pin->id = p;
@@ -76,6 +79,11 @@ static inline void prepare_multi_bank_ioports(void)
     };
     CHECK(ioports_add_analog(&analog[0]) && ioports_add_analog(&analog[1]));
     grbl.on_port_out = bank_event;
+}
+
+static inline void prepare_multi_bank_ioports(void)
+{
+    prepare_multi_bank_ioports_counts(2, 2, 2, 2);
 }
 
 static unsigned bank_received_irq_calls;

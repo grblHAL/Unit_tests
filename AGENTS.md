@@ -2,12 +2,16 @@
 
 ## Objective and delivery
 
+Current new work is coverage-batch-14 from PR #18 head 9c7099d.
 Current delivery is ci-header-coverage / PR #18. On 2026-10-15 the user requested
 combining the remaining batch 12 and batch 13 changes into that PR. This overrides
 the earlier separate-delivery plan. Validate the combined 3,199-case head and
 44 helper checks, push, and verify hosted GCC/Clang/coverage before reporting ready.
 Core remains clean Terje feebef2. Continue the full coverage goal on a new branch
 after this delivery; never merge PRs automatically or commit/push master/main.
+Combined hosted validation is run 38735673645; inspect all required jobs.
+The existing goal currently reports usageLimited despite the user reset; continue
+authorized local work without falsely claiming the tool goal is active.
 
 DO/WHILE CONTINUE is a maintainer question in TODO.md at the user's request. Its
 candidate in tests/proposals is not registered and must await Terje's chosen

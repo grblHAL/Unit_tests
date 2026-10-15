@@ -2028,3 +2028,22 @@ Core is clean feebef26222111f11c7a3b3b0156d023aa786937, verified remote HEAD.
 Frozen batch 12 also passed all hosted gates in run 38701989145.
 Push this combined head and validate hosted GCC/Clang/coverage before calling
 this expanded PR ready. Continue new coverage separately; do not merge PRs.
+
+## Batch 14 asymmetric analog expansion workflows
+
+New work continues on coverage-batch-14 from combined PR 18 head 9c7099d.
+Six new cases exercise input-only/output-only analog expansion boards and unequal
+bank sizes through public driver registration, reads/writes, claiming, remapping,
+pin lookup and descriptions. Direction-specific callback bounds now enforce each
+bank's declared counts; existing symmetric fixtures retain their original defaults.
+All 139 I/O cases pass focused sanitizers and strict summary. Full ASan/UBSan
+and strict summary pass 3,205 cases (nine documented expected failures), 44.61 s:
+build-asan/batch14-checkpoint-results.xml and parent batch14-full logs.
+No production edits, new defect classification or new exception.
+
+PR 18 now includes all prior 63 cases at user request, pushed at 9c7099d.
+Combined hosted run 38735673645 is still validating; verify all gates before
+claiming the expanded PR ready. Do not push this separate batch onto its branch
+and cancel that validation. Next: use its Linux header-inclusive report to guide
+remaining public workflow/configuration gaps. Core remains clean Terje feebef2.
+The goal tool reports usageLimited despite reset; local work remains authorized.
