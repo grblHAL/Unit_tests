@@ -1343,3 +1343,37 @@ build-asan/batch-10-multi-kin-full-results.xml). Batch 10 adds 92 registered
 cases total. Publish and dispatch this checkpoint, then continue remaining
 supported paths from fresh coverage. Questions stay in TODO and proposals
 unregistered. Goal active; no PR claimed ready without its hosted gate.
+
+## Batch 10 expansion-bank routing and claims
+
+Run 38663661728 passed all hosted jobs for 7802c99's 92-case checkpoint on
+Terje 683589b. Coverage is 16,032/17,437 lines (91.9424%) and
+10,628/13,506 branches (78.6910%). Those integration cases improved branches
+but added no new aggregate lines: use the fresh uncovered paths/configurations
+to guide subsequent work rather than repeating already covered integrations.
+
+Seventeen new public I/O cases register native GPIO plus two digital expansion
+banks and two analog banks. They verify bank-local dispatch, independent type
+counts, timeout/mode propagation, remapping, claims and compacted free-port maps,
+logical output events only for successful/unclaimed ports, retained native
+routing, interrupt delivery with claimed/remapped handles, external digital
+metadata and empty-bank rejection preserving existing dispatch. Mock callbacks
+represent driver banks, not a real bus. Returned claim handles are used directly;
+an initial assumption about their numeric positions was corrected before
+classifying behavior. No new defect or known exception was added.
+
+Analog input pin-base metadata differs from digital registration despite correct
+current routing. A runtime inspection confirms the second analog bank's bases
+are input=0/output=2. TODO records a possible bookkeeping improvement pending
+actual supported driver usage; no speculative failing regression was registered.
+
+Full ASan/UBSan and strict summary passed 3,006 cases: 2,993 clean,
+13 documented expected failures, zero unexpected failures/skips (40.34 s;
+build-asan/batch-10-banks-full-results.xml). Batch 10 adds 109 registered cases.
+No scripts changed since 43 helper checks passed. Core remains unmodified.
+Publish/validate this completed I/O module while continuing remaining gaps.
+A likely next feature-combination gap is NGC modal/spindle snapshot restoration
+with multiple settings-enabled spindles: existing multi-spindle host lacks NGC
+expressions and ordinary snapshot cases do not drive these two-spindle hardware
+restore branches. Verify current fixtures/contracts before adding that variant.
+Full-coverage goal remains active; unresolved questions stay in TODO.

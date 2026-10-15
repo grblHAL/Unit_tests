@@ -248,3 +248,20 @@ If direct activation is supported, should the parser coordinate cache be
 resynchronized when the frame changes? The [M-code handler at lines 420-436](https://github.com/terjeio/grblHAL_core/blob/683589bd10bb1082825bfc7e9bcee6db102b9530/kinematics/rtcp_ac.c#L420-L436)
 resynchronizes on M850 but not M851. This remains a workflow/contract question,
 not a confirmed core defect. No production patch or source exclusion was added.
+
+## Analog expansion pin-base bookkeeping
+
+**Possible improvement / usage review:** 2026-10-15, Terje `683589b`.
+
+Two external analog banks with two inputs and outputs each register and route
+ADC/DAC calls correctly. A host inspection after public registration reports
+bank 0 input/output pin bases 0/0, bank 1 bases 0/2. Digital expansion banks
+advance both direction-specific bases consistently. In [ioports.c:1080-1087](https://github.com/terjeio/grblHAL_core/blob/683589bd10bb1082825bfc7e9bcee6db102b9530/ioports.c#L1080-L1087),
+the input branch writes `out.pin_base` rather than `in.pin_base`.
+
+Confirm whether supported analog expansion drivers use this input metadata
+before classifying a user-visible defect. If the intended contract matches the
+digital registration, assign the computed input base to `in.pin_base`, keeping
+output and input counts independent, and add driver-facing metadata tests with
+unequal bank sizes. Current routing/claim/IRQ tests pass; no known-failure label,
+production change or source exclusion was added for this observation.
