@@ -1159,3 +1159,34 @@ cumulative duplicate PR. Once #13 merges, rebase/merge its upstream base and
 open the batch-9 PR with only this batch's changes. Continue the full-coverage
 goal in a separate subsequent branch. The DO/WHILE CONTINUE proposal awaits
 Terje's contract decision.
+
+## Batch 10 overnight restart and first checkpoint (2026-10-15)
+
+The scheduled 02:00 Johannesburg restart created a new active full-coverage
+goal. PRs #13, #14 and #15 have merged. Batch 10 starts on coverage-batch-10
+from upstream 9e2e20f. Terje's latest core is still clean at 683589b. Batch 9's
+final hosted run 38632387393 passed source/GCC/Clang/coverage/CI diagnosis;
+coverage on 683589b was 15,900/17,437 lines (91.1854%) and 10,497/13,506
+branches (77.7210%). Earlier open-parent/pending-run notes are historical.
+
+Thirteen new cases: nine call real grbl_enter for wall, delta, polar, ganging,
+auto-square and RTCP startup; three verify independent Cartesian restoration
+from motor positions. Delta/RTCP advertise physical NVS for stored geometry;
+the initial delta null-hook failure was a fixture configuration error, not a
+core defect. RTCP uses its supported M850 command. Four paired-PWM parser
+cases register both spindles before gc_init, map the secondary through settings,
+and use the original PWM calculator/configured ramp flags. Start routing,
+primary stop without secondary use and secondary stop isolation pass. A primary
+stop after starting the higher-speed secondary reproduces an output increase:
+the secondary lookup shadows the pointer returned from _get_ramp and overwrites
+the primary cached speed. Correct assertions remain with one narrow known
+exception and SHA/line-linked report. No physical speed/frequency claim.
+
+Focused boot/spindle validation and strict summary pass. Full local ASan/UBSan:
+2,910 cases, 2,897 clean, 13 documented expected failures, zero unexpected
+failures/skips (39.20 s; build-asan/batch-10-first-full-results.xml). All 43
+script checks pass. No production source changes. Commit/push this coherent
+startup/PWM checkpoint, then hosted validation while continuing measured gaps.
+Questions go to TODO and DO/WHILE remains unregistered. Greatest remaining
+aggregate line gaps include gcode, settings, motion_control, report and ioports;
+inspect the uncovered public paths and existing controls before authoring.
