@@ -4,8 +4,8 @@
 
 Current new coverage work belongs on `coverage-batch-12`. Batch 11 is frozen
 at `ae0eaa7`, with all final hosted jobs passed in run `38693498958`; ready PR #17 is
-created and attached. Do not merge it. Keep new tests out of that frozen delivery. PR #16 (batch 10) is
-merged; upstream master was refreshed to `3034d4d`. Batch 11 adds 34 cases and
+merged as upstream `fb9086d`. Batch 12 is rebased onto that merged parent. PR #16 (batch 10) is
+merged; upstream master was refreshed to `fb9086d`. Batch 11 adds 34 cases and
 removes five fixed exceptions against clean Terje core `feebef2`. Its full local
 3,136-case sanitizer/strict-summary gate passed. Finish hosted validation of the
 final rebased head before presenting a ready PR; never merge it automatically.

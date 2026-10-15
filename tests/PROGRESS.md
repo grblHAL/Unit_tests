@@ -1883,3 +1883,9 @@ Windows LLVM collection limitation and separate Linux header-reporting follow-up
 Earlier local header baseline may also be incomplete. Do not equate absent
 profiles with absent tests or use these totals as the goal's completion metric.
 Hosted Linux batch 11 C-source totals remain 93.07%/80.36% pending batch 12 CI.
+
+
+PR #17 was independently verified merged as fb9086d. Batch 12 rebased cleanly
+onto that merged parent; its tree was identical to the locally validated
+pre-rebase checkpoint except subsequent handoff documentation. Publish the
+42-case checkpoint now. Never commit/push master or merge PRs automatically.
