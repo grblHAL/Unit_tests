@@ -2315,3 +2315,16 @@ Batch 16 passed full local sanitizer/strict/44 helper gate and was dispatched fo
 exact-head hosted validation against clean feebef2. Check its live run before a
 ready PR. Batch 15 is already hosted-green; PR 19 (batch 14) remains open at last
 check. Preserve these deliveries and continue independent supported workflows.
+
+## Batch 17 status reporting during critical lock
+
+Two more cases pass focused ASan/UBSan and strict summary. A normal realtime
+status request reports the locked position before reset; a full report remains
+available while the E-stop input is asserted. The observer verifies report receipt
+before releasing the input, reset remains blocked until release, and no axis
+pulses occur. The fixture now waits for requested status output before resetting
+and provides the coolant-state callback required by a full report. An initial
+sanitizer failure was that omitted host callback, corrected without a core patch
+or failure exception. All nine critical-loop cases pass (batch17-status-results.xml).
+Total 3,262; batch 17 adds four cases. Full current gate remains required at the
+next substantial checkpoint before publishing this shared-fixture change.
