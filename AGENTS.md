@@ -5,16 +5,18 @@
 Current new work is coverage-batch-20 from frozen batch 19 ca66c4d.
 Batch 19 adds 15 cases / 3,312 total. Full ASan/UBSan, strict summary and 44 helper
 checks pass in 58.09 s (batch19-delivery), nine expected failures. It is pushed;
-exact-head hosted run 38799824879 remains in progress at last check.
-Batch 20 adds two auxiliary-axis arc-limit cases / 3,314 total; focused sanitizer
-and strict checks pass. Full enlarged gate is pending. Continue from the latest
-hosted report; normal soft-limit alarm/stop workflows remain a useful next area.
+exact-head hosted run 38799824879 is fully green: 94.18% lines / 81.85% branches.
+Batch 20 adds seven cases / 3,319 total. Full sanitizer/strict gate and 44 helpers
+pass (54.68 s, nine expected failures). New soft-limit tests exercise idle/active
+alarms, status/reset, interrupted deceleration and coupled CoreXY motors.
+Continue from the latest hosted report; lathe threading unit/diameter conversion
+and remaining supported parser workflows are useful next areas.
 Core remains clean latest Terje feebef2. Uncertain driver-failure detail reporting
 is a TODO policy question, not a new known-failure exception.
 
 Frozen batches 15-18 all passed exact-head hosted source/GCC/Clang/coverage and
-diagnosis. Latest measured baseline is batch 18 run 38796868694: 16,566/17,625
-lines (93.99%) and 11,135/13,648 branches (81.59%), 3,297 cases. Batch 17 run
+diagnosis. Latest measured baseline is batch 19 run 38799824879: 16,600/17,625
+lines (94.18%) and 11,171/13,648 branches (81.85%), 3,312 cases. Batch 17 run
 38795069102 measured 93.79% / 81.35%. Source-lock artifacts verify both revisions
 and header-inclusive filters; full history/evidence lives in tests/PROGRESS.md.
 PR 19 (batch 14) remains ready/open at last live check. Prefer its merge before

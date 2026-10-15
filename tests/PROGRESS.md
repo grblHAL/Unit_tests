@@ -2552,3 +2552,33 @@ critical-event/hold fixtures before introducing a host observer; do not force
 private loops or skip alarm/reset behavior to inflate coverage. Latest authoritative
 coverage remains batch 18: 93.99% lines / 81.59% branches. Keep working while the
 specific batch 19 hosted run is live; do not restart it because observation times out.
+
+## Batch 19 hosted validation complete
+
+All source/GCC/Clang/coverage/CI-diagnosis jobs passed run 38799824879 for frozen
+ca66c4d288c464050c5c238210d3c2f2c6295c52 against Terje feebef2. Coverage and
+source-lock artifacts verify exact revisions and the header-inclusive filter.
+Result: 16,600/17,625 lines (94.18%), 11,171/13,648 branches (81.85%), 3,312 cases,
+zero unexpected failures/skips. Compared with batch 18: +34 lines and +36 branches,
+unchanged denominators. Artifacts: ../batch19-hosted-coverage-core.zip and
+../batch19-hosted-source-lock-core.zip. Local batch 20 is not in these percentages.
+
+## Batch 20 soft-limit alarm and controlled-stop workflows
+
+Five additional cases use the real public motion/protocol/state-machine paths
+on a valid virtual homed machine. An idle violation emits no steps and enters
+soft-limit alarm; an active violation decelerates queued motion before the first
+endpoint without setting position-lost. Both answer a public status request in
+the critical loop, then accept an explicit reset. Driver reset notifications are
+checked separately for automatic alarm shutdown and the sender reset. A reset
+during deceleration retains the motion-abort alarm and position-lost status,
+rather than overwriting them with soft-limit alarm. Two CoreXY variants validate
+Cartesian limits and stopping of both coupled motors without position loss.
+Assertions concern simulated output/state, not physical stopping distances.
+
+The new shared fixture observes alarm entry and supplies normal HAL callbacks;
+it never directly changes private alarm/hold state. Core source remains untouched.
+All focused cases pass sanitizer/strict checks (batch20-soft-limit and
+batch20-corexy-soft results). Full 3,319-case checkpoint passed in 54.68 s, strict
+summary, nine expected failures and all 44 helper tests (batch20-soft-checkpoint
+logs/results). Batch 20 adds seven cases so far; continue before delivery.
