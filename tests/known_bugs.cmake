@@ -28,13 +28,6 @@ endif()
 
 # Deferred storage failure policy: tests/TODO.md#storage-write-failure-policy.
 # Retain current exceptions until the maintainer chooses/implements the contract.
-if(TEST nvs_buffer.startup_slot_0_failed_sync_remains_pending_for_retry)
-  set_tests_properties(nvs_buffer.startup_slot_0_failed_sync_remains_pending_for_retry PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
-if(TEST nvs_buffer.startup_slot_1_failed_sync_remains_pending_for_retry)
-  set_tests_properties(nvs_buffer.startup_slot_1_failed_sync_remains_pending_for_retry PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
 
 if(TEST nvs_buffer.failed_version_only_write_remains_pending_for_retry)
   set_tests_properties(nvs_buffer.failed_version_only_write_remains_pending_for_retry PROPERTIES WILL_FAIL TRUE LABELS known_bug)
@@ -49,40 +42,15 @@ if(TEST vfs.parent_path_crossing_mount_passes_target_local_filename)
   set_tests_properties(vfs.parent_path_crossing_mount_passes_target_local_filename PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
-
-
-
 # Failed cwd growth must release the old heap allocation before root fallback.
 if(TEST vfs.current_directory_reallocation_failure_falls_back_to_root)
   set_tests_properties(vfs.current_directory_reallocation_failure_falls_back_to_root
     PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
 endif()
 
-
-
-
-
-# Clearing an enabled backlash setting must stop emitting compensation pulses.
-if(TEST backlash.clearing_public_setting_disables_previously_enabled_compensation)
-  set_tests_properties(backlash.clearing_public_setting_disables_previously_enabled_compensation
-    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
-endif()
-
 # Live and loaded configuration must agree for the same pullup-disable setting.
 if(TEST ioports_pullup.pullup_disable_live_and_loaded_configuration_agree)
   set_tests_properties(ioports_pullup.pullup_disable_live_and_loaded_configuration_agree
-    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
-endif()
-
-# A false WHILE condition after CONTINUE must skip the body through ENDWHILE.
-if(TEST ngc_flowctrl.while_continue_rechecks_condition_and_skips_remaining_body)
-  set_tests_properties(ngc_flowctrl.while_continue_rechecks_condition_and_skips_remaining_body
-    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
-endif()
-
-# Allocated getcwd(NULL, 0) must return its constructed root path.
-if(TEST vfs.getcwd_allocates_root_path)
-  set_tests_properties(vfs.getcwd_allocates_root_path
     PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
 endif()
 

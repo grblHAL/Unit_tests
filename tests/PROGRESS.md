@@ -1574,3 +1574,135 @@ successful at last check while GCC/Clang were active. Do not push and cancel
 that healthy run. Once terminal, publish/dispatch this complete checkpoint and
 verify all jobs before claiming a PR ready. Continue independent work while it
 runs. Full line/branch coverage is not yet achieved; keep the goal active.
+
+## Batch 10 delivery freeze / batch 11 preparation
+
+Batch 10 is frozen at fdf6483: 205 new cases, 3,102 total, local full
+ASan/UBSan + strict summary and 43 helper checks passed. It was pushed after
+03a4396's hosted run 38684803384 completed successfully. That run measured
+16,173/17,438 C-source lines (92.7457%) and 10,791/13,514 branches (79.8505%).
+A manual hosted run was dispatched for fdf6483. Inspect its exact head and all
+required jobs before opening a ready batch 10 PR; do not merge it.
+
+Further work is isolated on coverage-batch-11 from fdf6483. Do not duplicate
+batch 10's PR diff while it awaits merge. Core is unchanged Terje 683589b.
+A separate local header-inclusive coverage measurement is running in
+build-local-coverage with LLVM Clang, ENABLE_COVERAGE=ON, sanitizers off,
+gcovr 8.4 from ../coverage-python, filter core/.*\.[ch]$. Old gcda files were
+cleared inside that verified build directory before execution. Its output paths
+are ../batch-10-header-coverage-{build,tests,report}.log and
+../batch-10-header-coverage.xml. This is independent evidence, not a CI change.
+The existing .c-only report omits header bodies and un-emitted optional helpers;
+TODO records the follow-up. Keep the full goal active and continue meaningful
+public workflow coverage, using the new header inventory when available.
+
+
+## Batch 10 validated delivery / batch 11 first checkpoint
+
+PR #16 delivers frozen batch 10 at fdf6483. Hosted run 38686040614 passed
+source, GCC, Clang, coverage and diagnosis. It measured 16,198/17,438 C-source
+lines (92.89%) and 10,831/13,514 branches (80.15%) against unchanged Terje
+683589bd10bb1082825bfc7e9bcee6db102b9530. Do not merge the PR automatically.
+
+The independent local Clang header-inclusive baseline completed: 17,252/18,708
+lines (92.22%), 10,200/12,810 branches (79.63%), 1,215/1,258 functions.
+This uses a different compiler and scope from hosted GCC; the denominators are
+not directly comparable. Fresh profiles came from all 3,102 batch 10 cases.
+One stale retired target's gcno was removed inside the verified build directory;
+no source was excluded and no reporter errors were ignored. Evidence:
+../batch-10-header-coverage.xml and matching build/tests/report logs.
+
+Batch 11 adds ten passing cases: independent primary/secondary motor bit banks,
+fault-axis lookup and input classification, plus a seven-axis XYZABCU host.
+Seven-axis cases check each/all axis word projections, rejection of unrelated
+arguments, exact linear and arc endpoints, modal inch conversion and persisted
+U work offsets without other motor pulses. Core source is unchanged.
+Full ASan/UBSan plus strict summary passed 3,112 cases: 3,099 clean, thirteen
+expected failures, zero unexpected failures/skips, 39.62 seconds. Evidence:
+build-asan/batch-11-first-full-results.xml. No new exception or bug claim.
+Continue through supported header/configuration gaps; stepper2 ramp transitions
+are next to inspect through public motor APIs. Keep batch 11 separate from #16.
+
+
+## Batch 11 latest-core compatibility and motor transitions
+
+Terje master advanced to feebef26222111f11c7a3b3b0156d023aa786937 on
+2026-10-15. The ignored ordinary core checkout is clean at that revision.
+The first full rebuild/run of 3,115 cases exposed five fixed expected failures
+and one changed control-input mode expectation. Direct sanitizer execution of
+the unchanged backlash-clear, WHILE/CONTINUE, allocated cwd and both startup-slot
+retry regressions returned zero. Their five WILL_FAIL blocks and resolved bug/
+startup TODO entries were removed. Allocated cwd now uses the original ordinary
+caller-owned pointer test without allocation/linker wrappers.
+
+Core now explicitly selects PullMode_Down for disabled control-input pullups;
+the debounce-preservation control follows this changed public behavior. This
+is separate from the still-reproducing auxiliary live/load pullup inconsistency.
+Version-only failed storage writes remain a deferred-policy expected failure.
+The new double-increment warning counter is recorded as source-review evidence
+in TODO pending reproduction/policy, without a speculative failing test.
+
+Nine new secondary-motor cases cover speed changes during acceleration, stopping
+during speed reduction, repeated speed requests, finite millimeter rounding and
+negative position, early finite stop, two independent motors, zero finite distance
+and reverse restart after completion. Three passed focused ASan/UBSan on 683589b;
+all nine pass the full latest-core gate in build-asan/batch-11-cleanup-results.xml.
+Suite totals 3,121: 3,113 clean passes, eight retained expected failures, zero
+unexpected failures/skips or sanitizer diagnostics. Full gate and strict summary
+passed in 41.62 seconds. All 43 helper checks pass. Publish this substantial
+checkpoint for hosted GCC/Clang/coverage while continuing independent coverage.
+
+
+## Batch 11 startup option and probe-connection coverage
+
+Seven additional cases pass focused ASan/UBSan and strict summaries on Terje
+feebef2: SD-only, LittleFS-only and combined filesystem option metadata after
+normal boot, plus four probe-connection boot combinations. The driver supplies
+normal probe state/toggle callbacks; real grbl_enter/startup tasks reconcile the
+connection input and avoid redundant toggles. No private core call, source patch,
+new known exception or defect claim. Evidence: build-asan/batch-11-filesystem-
+results.xml and build-asan/batch-11-probe-results.xml. Total 3,128 cases.
+
+Terje confirmed PullMode_Down for the control-input debounce regression; a
+source comment explains that board drivers handle processor/protection limits.
+TODO records his future protected-input setting availability follow-up.
+Hosted run 38692359893 validates a65ac73's 3,121-case checkpoint against feebef2;
+it was still in progress when this local startup group finished. Do not push
+and cancel that healthy run; inspect all jobs before publishing another checkpoint.
+
+
+## Batch 11 spindle override command coverage
+
+Three focused sanitizer/strict-summary cases pass: M49 disables feed/primary
+speed override while preserving the secondary policy; M48 reenables primary
+while retaining a separately disabled secondary; M51 with omitted P reenables
+secondary without changing disabled feed/primary policy. Total 3,131 cases.
+Evidence: build-asan/batch-11-overrides-results.xml. No new known exception.
+Standalone $-1 override candidates failed at parser validation and were removed;
+do not bypass parser validation just to execute dormant all-spindle branches.
+
+
+## Batch 11 active fixture rotation before cutting
+
+Two cases pass focused sanitizer/strict summary on feebef2: change active G54
+rotation from 90 to 180 degrees at the origin, or clear it before the first cut.
+G10 setting commands emit no motor pulses; the following real cut reaches exact
+physical/system endpoints with unchanged Z. Configuration commands use the parser
+directly; the shared queue helper is for motion blocks only. No core defect or
+exception. Evidence: build-asan/batch-11-rotation-results.xml. Total 3,133 cases.
+
+
+## Batch 11 complete local delivery gate
+
+Three I/O driver-notification cases verify configuration-before-callback ordering,
+unchanged input values avoid reconfiguration while retaining notification, output
+inversion preserves open drain, and settings-load notification follows all port
+configuration. Focused sanitizer/strict summary passed.
+
+The complete 3,136-case suite passed ASan/UBSan and strict summary: 3,128 clean,
+eight documented expected failures, no unexpected failures/skips/diagnostics,
+48.57 seconds (build-asan/batch-11-module-results.xml). This batch adds 34 cases
+and removes five fixed exceptions against unmodified Terje feebef2. All 43 helper
+checks passed earlier in this checkpoint. PR #16 is now merged; upstream master
+3034d4d was freshly fetched. Rebase the batch onto it, publish after the active
+healthy hosted run is terminal, and validate the final head before a ready PR.

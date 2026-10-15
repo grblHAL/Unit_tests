@@ -2,13 +2,16 @@
 
 ## Objective and delivery
 
-Current coverage work belongs on `coverage-batch-10`, from upstream master
-`9e2e20f` after PRs #13, #14 and #15 merged. The overnight goal was created
-on 2026-10-15 and is active. Continue autonomously while usage permits.
+Current coverage work belongs on `coverage-batch-11`. PR #16 (batch 10) is
+merged; upstream master was refreshed to `3034d4d`. Batch 11 adds 34 cases and
+removes five fixed exceptions against clean Terje core `feebef2`. Its full local
+3,136-case sanitizer/strict-summary gate passed. Finish hosted validation of the
+final rebased head before presenting a ready PR; never merge it automatically.
+The overnight goal is active. Continue autonomously while usage permits.
 Never commit/push master/main or add AI branding. Questions and uncertain
 contracts go in tests/TODO.md; continue independent work without waiting.
-Keep CI changes separate. Validate all required gates before presenting a PR
-as ready. Older dated snapshots are historical; latest PROGRESS.md governs.
+Keep CI changes separate. Older snapshots are historical; latest PROGRESS.md
+governs. Do not push and cancel a healthy validation run on the same branch.
 
 DO/WHILE CONTINUE is a maintainer question in TODO.md at the user's request. Its
 candidate in tests/proposals is not registered and must await Terje's chosen
