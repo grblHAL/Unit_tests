@@ -2190,3 +2190,20 @@ Freeze/push this 20-case delivery and run hosted Linux source/GCC/Clang/coverage
 diagnosis. PR 19 remains ready/open; prefer its merge before rebasing/opening
 batch 15's ready PR, never merge automatically. Continue new work separately on
 coverage-batch-16; normal-boot probe protection is a remaining public workflow gap.
+
+## Batch 16 startup capability controls
+
+New work is local coverage-batch-16 from frozen/pushed batch 15 4bccb2d.
+Batch 15 passed all 3,237 local sanitizer/strict checks and 44 helpers; hosted
+validation was dispatched against unchanged feebef2. Inspect the exact run head,
+source lock and all jobs before presenting its ready PR. PR 19 remains open.
+
+Two startup controls pass focused ASan/UBSan and strict summary: a disabled
+probe-protection setting leaves normal parser commands usable, and normal
+settings initialization clears the currently unavailable saved protection flag.
+Investigating the expected enabled-protection startup alarm showed an explicit
+#if 0 / unconditional Off in settings.c, not an alarm-handling defect. TODO records
+that reachability limit; two enabled-feature candidates remain unregistered.
+Do not turn the flag back on after initialization merely to cover private paths.
+Evidence: build-asan/batch16-protection-results.xml. Total 3,239, two new cases;
+no new exception or core patch. Continue other reachable public workflows.

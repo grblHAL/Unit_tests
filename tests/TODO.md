@@ -384,3 +384,16 @@ parent workspace batch15-no-door-build.log. Reproduce with:
 ```sh
 cc -std=gnu11 -fsyntax-only -DNO_SAFETY_DOOR_SUPPORT=1 -Icore core/settings.c
 ```
+
+## Probe protection startup workflow is currently disabled
+
+**Review date:** 2026-10-15, Terje feebef26222111f11c7a3b3b0156d023aa786937.
+settings.c:3885-3893 uses an inactive #if 0 capability branch and unconditionally
+clears settings.probe.enable_protection. Thus normal boot cannot currently reach
+protocol.c's enabled-protection startup alarm via a saved setting. Do not force
+it back on after settings_init simply to cover that branch. Two candidate enabled
+startup cases remain unregistered in proposals/boot_probe_protection, pending
+maintainer activation/support confirmation. Registered controls verify that boot
+clears the unavailable stored flag and leaves ordinary parser commands usable;
+these do not claim protection is operational or prove physical interlock behavior.
+No production patch, source exclusion or new known-failure exception is added.
