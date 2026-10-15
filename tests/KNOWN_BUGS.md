@@ -244,3 +244,33 @@ Keep allocation-failure behavior explicit. Re-run the paired and ordinary
 single-spindle ramp cases, including overrides, under sanitizers. Once this
 regression passes, remove its narrow exception and delete this entry while
 keeping the output assertions. No core patch has been applied here.
+
+
+## Legacy compatibility mode reports the opposite stepper-enable setting
+
+**Marked known:** 2026-10-15, Terje `feebef26222111f11c7a3b3b0156d023aa786937`.
+
+With COMPATIBILITY_LEVEL=10, boot normally, send `$4=0`, then query `$4`.
+The controller acknowledges the write but reports `$4=1`. This is an ordinary
+sender settings workflow, with no short buffer, invalid argument or late driver
+registration. Level 2's axis-mask write/readback control passes.
+
+The [setter at settings.c:644-648](https://github.com/terjeio/grblHAL_core/blob/feebef26222111f11c7a3b3b0156d023aa786937/settings.c#L644-L648)
+maps zero to the all-axes mask and one to zero in the >2 branch. The
+[getter at settings.c:723-727](https://github.com/terjeio/grblHAL_core/blob/feebef26222111f11c7a3b3b0156d023aa786937/settings.c#L723-L727)
+returns the mask's boolean value rather than reversing that mapping. Settings
+export can therefore disagree with the value the sender just set. This does
+not claim a particular board's electrical enable polarity.
+
+**Regression:** [normal boot and sender query](cases/boot_compat_10/legacy_enable_setting_round_trips_through_sender_query.c).
+The correct `$4=0` readback assertion remains. Only this named case is an expected
+failure; there is no sanitizer exception.
+
+**Suggested fix (not applied):** invert the boolean result in the >2 getter branch
+(for example, `!settings.steppers.enable_invert.mask`) to match its setter. Keep
+the level-2-and-below axis-mask branch unchanged. Verify writes/queries of both
+zero and one, settings reload, and the existing axis-mask control.
+
+**Remove exception when fixed:** delete this case's WILL_FAIL block in
+[known_bugs.cmake](known_bugs.cmake), retain its sender-query assertions, run the
+compatibility cases and full sanitizers/strict summary, then delete this entry.

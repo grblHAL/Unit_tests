@@ -458,7 +458,7 @@ Reusable workflows and upstream caller templates remain available for source PRs
 Restore the `push` and `pull_request` triggers once the fixes reach upstream core.
 GCC and Clang run the tests with address/undefined-behavior sanitizers. A separate
 GCC job publishes HTML and XML coverage as an Actions artifact. Coverage describes
-the instrumented modules in this configuration. The summary lists every core source file, including gaps. No separately managed
+the instrumented modules in this configuration. The summary lists every core C source file and emitted header bodies, including gaps. No separately managed
 credential or external reporting service is required.
 
 ## Measure coverage locally
@@ -470,16 +470,25 @@ Use a separate coverage build without sanitizers. Install the same reporter as C
 cmake -S . -B build-coverage -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=gcc -DENABLE_COVERAGE=ON
 cmake --build build-coverage --parallel
 ctest --test-dir build-coverage --output-on-failure
-gcovr --merge-mode-functions=separate --root . --filter 'core/.*\.c$' --html-details coverage.html --xml coverage.xml --print-summary build-coverage
+gcovr --merge-mode-functions=separate --root . --filter 'core/.*\.[ch]$' --html-details coverage.html --xml coverage.xml --print-summary build-coverage
 python scripts/summary.py coverage coverage.xml
 ```
 
 For GNU-compatible Clang, select `clang` (or its full Windows path) when configuring
 and add `--gcov-executable "C:/path/to/llvm-mingw/bin/llvm-cov.exe gcov"` to gcovr.
-The default CI filter measures C source files. To include executable header bodies
-in a local report, replace the filter with `core/.*\.[ch]$`. This still only counts
-code emitted by the selected configurations; it is not an inventory of every
-optional driver helper.
+Core coverage includes executable C source and header bodies emitted by the
+selected configurations. This does not inventory optional code that no configured
+build emits. Changed-code warnings include added executable header lines and
+identify changed files absent from the report without assuming they lack tests.
+Older C-source-only percentages use a different denominator.
+
+For authoritative totals, use the hosted Linux coverage job. LLVM on Windows can
+omit profile files at long build paths even when tests pass. If measuring locally,
+verify that executed test objects produce `.gcda` files before trusting totals.
+
+For authoritative totals, use the hosted Linux coverage job. LLVM on Windows can
+omit profile files at long build paths even when tests pass. If measuring locally,
+verify that executed test objects produce `.gcda` files before trusting totals.
 
 Open `coverage.html` to inspect uncovered lines and branches. For a fresh measurement,
 use a new build directory so old execution counts cannot carry over.
@@ -491,7 +500,9 @@ compensation, four-axis asymmetric ganging with and without auto-squaring,
 seven-axis XYZABCU, the eight-axis maximum, six-axis UVW remapping, and three registered spindles
 with two active spindle slots, a four-slot persistent tool table with and without NGC expressions, optional spindle PWM linearization, and enabled PID logging. All variants run in one
 CTest suite; coverage merges their executed source lines. Compatibility levels
-2 and 10 have ordinary compile checks for their coordinate reports. The `separate` function
+1, 2 and 10 have runtime reporting tests. Levels 2 and 10 also exercise normal
+boot/reset, coordinate availability and legacy settings; their coordinate-report
+compile checks remain. The `separate` function
 merge mode retains functions compiled at different locations under feature guards. Other feature combinations
 still need tests. A green suite or a covered module does not establish full coverage;
 use the source-by-source coverage table to choose the next behavior to test.

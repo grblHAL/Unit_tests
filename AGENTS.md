@@ -2,16 +2,12 @@
 
 ## Objective and delivery
 
-Current coverage work belongs on `coverage-batch-11`. PR #16 (batch 10) is
-merged; upstream master was refreshed to `3034d4d`. Batch 11 adds 34 cases and
-removes five fixed exceptions against clean Terje core `feebef2`. Its full local
-3,136-case sanitizer/strict-summary gate passed. Finish hosted validation of the
-final rebased head before presenting a ready PR; never merge it automatically.
-The overnight goal is active. Continue autonomously while usage permits.
-Never commit/push master/main or add AI branding. Questions and uncertain
-contracts go in tests/TODO.md; continue independent work without waiting.
-Keep CI changes separate. Older snapshots are historical; latest PROGRESS.md
-governs. Do not push and cancel a healthy validation run on the same branch.
+Current delivery is ci-header-coverage / PR #18. On 2026-10-15 the user requested
+combining the remaining batch 12 and batch 13 changes into that PR. This overrides
+the earlier separate-delivery plan. Validate the combined 3,199-case head and
+44 helper checks, push, and verify hosted GCC/Clang/coverage before reporting ready.
+Core remains clean Terje feebef2. Continue the full coverage goal on a new branch
+after this delivery; never merge PRs automatically or commit/push master/main.
 
 DO/WHILE CONTINUE is a maintainer question in TODO.md at the user's request. Its
 candidate in tests/proposals is not registered and must await Terje's chosen

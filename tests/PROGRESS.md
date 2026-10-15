@@ -119,7 +119,7 @@ helpers and workflow actionlint pass. Hosted run 38533918509 passed GCC/Clang/co
 checkpoint; fresh GCC coverage is 88.1% lines (15,330/17,401), 74.1% branches.
 A further 22 public homing cases pass full local validation: 2,640 tests,
 2,628 clean, twelve known regressions, zero unexpected failures/skips.
-G70–G72 reporting remains an undecided contract in TODO.
+G70ï¿½G72 reporting remains an undecided contract in TODO.
 
 ## Batch 5 continuation
 
@@ -1706,3 +1706,325 @@ and removes five fixed exceptions against unmodified Terje feebef2. All 43 helpe
 checks passed earlier in this checkpoint. PR #16 is now merged; upstream master
 3034d4d was freshly fetched. Rebase the batch onto it, publish after the active
 healthy hosted run is terminal, and validate the final head before a ready PR.
+
+
+## Separate CI header-reporting follow-up
+
+ci-header-coverage is based on merged batch 11 / upstream fb9086d. It changes
+only report scope, changed-code assessment, its regression and README instructions.
+Core suite filter includes executable .c/.h bodies; changed-code Git diffs include
+headers. A real-Git regression failed before the assessor fix and now verifies
+uncovered added inline lines and absent changed headers with actionable guidance,
+while ignoring old gaps and comments. All 44 helper checks pass. Manual triggers,
+reusable callers and core source remain unchanged. Hosted validation is required
+before a ready PR. Batch 12 test development is preserved separately at ae1f708
+on origin/coverage-batch-12, with 42 new cases / 3,178 total and full local gate.
+
+This follows the observed Windows LLVM long-path profile omission. Use Linux
+hosted totals for authoritative measurements, and keep scope/configuration limits
+explicit. Header bodies absent from emitted code remain an inventory follow-up;
+this change alone does not establish whole-core coverage.
+## Batch 11 frozen final head / batch 12 continuation
+
+Final batch 11 head ae0eaa7 is rebased on upstream 3034d4d; its tree is identical
+to the fully locally validated pre-rebase checkpoint. Source/GCC/Clang/coverage/
+diagnosis all passed earlier checkpoint a65ac73 in run 38692359893. Its GCC
+C-source measurement: 16,197/17,440 lines, 10,838/13,518 branches. Final run
+38693498958 now validates all 34 new cases and the exception cleanup on ae0eaa7.
+Do not claim a ready PR until every final job passes. User explicitly wants this
+batch's PR. Open/attach it when ready; do not merge. New work is isolated on
+coverage-batch-12 based on ae0eaa7, so it cannot delay or cancel batch 11 delivery.
+Core remains clean Terje feebef2. Continue toward meaningful full coverage.
+
+
+## Batch 12 Modbus device responses and driver integration
+
+Six new cases pass focused ASan/UBSan and strict summary against clean feebef2:
+valid device exception frames preserve their code and appear in sender stats;
+settings load applies the driver's advertised serial framing; claimed UART pins
+receive driver diagnostic labels; custom inter-transaction silence delays queued
+transmission, and restoring defaults releases it under the normal scheduler.
+These use public transport/settings/driver workflows, valid CRC-framed responses
+and mock clock service; they do not claim physical UART timing performance.
+
+The RTU fixture accepts an optional driver serial-format callback, default NULL
+for existing cases. All 35 Modbus cases pass after the fixture change. Evidence:
+build-asan/batch-12-transport-results.xml and strict summary log. Total 3,142 cases,
+six beyond frozen batch 11; no new known exception/production change. Questions
+remain TODO; batch 11's PR still awaits final hosted run 38693498958.
+
+
+Two further Modbus cases pass focused sanitizer/strict summary: after no reply,
+the sender's $MODBUSSTATS command distinguishes never-connected from previously
+responsive devices and reports one timeout. Evidence: build-asan/batch-12-status-
+results.xml. Batch 12 now adds eight cases, total 3,144; no new exception.
+
+
+## Batch 12 independent secondary motor service
+
+Three cases pass focused sanitizer/strict summary: slow finite feed emits no
+pulse before its deadline and reaches two steps; changing one continuously
+serviced motor's speed preserves the other rate; stopping one motor lets the
+other continue stepping. Both motors are serviced through public APIs with a
+shared simulated clock, and aggregate pulses match independent positions. No
+physical pulse-frequency claim, private state access or new exception.
+Evidence: build-asan/batch-12-pair-results.xml. Batch 12 adds eleven cases,
+total 3,147. Core remains clean feebef2. Full local checkpoint is next after the
+next related module; batch 11 PR still awaits final hosted jobs.
+
+
+## Batch 12 modal-macro error cleanup
+
+Two additional cases pass focused sanitizer/strict summary: parser errors clear
+pending G66 registration before later motion; a G66.1 callback error releases
+modal arguments and restores the caller's local parameter scope. The ordinary
+G66/G66.1 controls also pass. Re-registration syntax is uncertain (status 21),
+so that candidate is unregistered under proposals with evidence in TODO, not
+classified as a defect. Total 3,149 cases, thirteen beyond batch 11. Evidence:
+build-asan/batch-12-modal-results.xml. Run the full local gate at this checkpoint.
+
+
+## Batch 12 full checkpoint and parser-driven manual tool changes
+
+The first full local checkpoint passed ASan/UBSan + strict summary: 3,149 cases,
+3,141 clean, eight expected failures, zero unexpected failures/skips/diagnostics,
+43.53 seconds (build-asan/batch-12-first-full-results.xml). Core remote HEAD was
+rechecked at unchanged feebef2. Batch 11 is now ready PR #17: all final run
+38693498958 jobs passed, exact harness ae0eaa7 and core feebef2 verified from
+source-lock. Final C-source coverage is 16,232/17,440 lines (93.07%) and
+10,863/13,518 branches (80.36%). Do not merge PR #17 automatically.
+
+Three parser-driven manual M6 cases now pass with all 56 tool-change cases:
+require homed tool axis, block new motion while pending, and acknowledge through
+the normal sender/realtime path to apply the tool and release later motion.
+The shared manual interface setup was factored without changing old behavior,
+and supplies the normal non-null tool-completion callback. The first completion
+candidate omitted realtime service/callback setup; the fixture was corrected,
+not classified as a core bug or suppressed. Evidence: build-asan/batch-12-m6-
+results.xml and strict summary. Total 3,152; batch 12 adds sixteen cases.
+
+
+## Batch 12 persisted offsets through manual acknowledgement
+
+The preceding 3,152-case full sanitizer/strict-summary gate passed: 3,144 clean,
+eight expected failures, zero unexpected failures/skips/diagnostics, 45.54 s
+(build-asan/batch-12-m6-full-results.xml). All 43 helper checks pass.
+The acknowledgement test now executes the following X cut to its exact 80-step
+physical/system endpoint with unchanged Y/Z, also passing focused strict checks.
+
+Three further cases combine the existing four-tool host configuration with normal
+settings initialization, persistent tool writes, parser M6 and actual manual
+acknowledgement. They verify deferred G43, explicit alternate H offsets and H0
+selecting the pending tool. Following Z cuts reach exact -240/-160 endpoints.
+No tool table data is reimplemented, no core source is modified, and no new
+exception was added. Evidence: build-asan/batch-12-manual-table-results.xml and
+strict summary. Total 3,155, nineteen new cases in batch 12.
+
+
+## Batch 12 RGB inline driver utilities
+
+Nine header-only cases pass ASan/UBSan and strict summary: GRB byte order,
+full-intensity round trip, independent channel masks, known low/high waveform
+symbols, zero intensity, half-intensity conversion and normal driver capability
+classification. Tests invoke the original inline definitions in rgb.h, with
+adequately sized real encoded buffers. The rgb_clear index convention remains a
+TODO question, without a forced boundary failure. CMake supports this header-only
+module without inventing a production .c file or pulling in host controller code.
+
+Evidence: build-asan/batch-12-rgb-results.xml. Total 3,164; batch 12 adds 28 cases.
+These header bodies are outside hosted .c-only percentages; do not claim a .c
+coverage increase from them. Refresh independent header-inclusive measurement
+against current clean feebef2 using a rebuilt build-local-coverage and fresh gcda
+profiles. Keep the tested source/compiled case scope explicit if work continues.
+
+
+## Batch 12 public motion-extension hooks
+
+The 3,164-case full sanitizer/strict-summary checkpoint passed: 3,156 clean,
+eight expected failures, no unexpected failures/skips/diagnostics, 56.16 s
+(build-asan/batch-12-header-full-results.xml). Header-inclusive baseline build
+is active in session 46072, logs ../batch-12-header-coverage-{configure,build,
+tests,report}.log, output ../batch-12-header-coverage.xml. It was configured at
+5172863 for 3,164 cases with clean feebef2; later additions are new independent
+files/fixtures, outside that frozen build's case inventory. Existing compiled
+case/fixture/core sources remain unchanged. Do not rerun the build or clear its
+profiles while the command is active.
+
+Eight additional cases pass focused sanitizer/strict summaries in the existing
+cutter-enabled configuration: pre-execution hook receives normalized inch targets
+before modal commit; rejected/consumed blocks avoid normal planning; implicit
+axis-only motion sets the hook's motion flag. Public line/arc hooks delegate
+validated targets/feed/plane/turn direction to original core planners, and driver
+rejections propagate without parser position or planner updates. No compensated
+geometry is reimplemented or claimed. Evidence: build-asan/batch-12-pre-execute-
+results.xml and batch-12-motion-extension-results.xml. Total 3,172; batch 12 adds
+36 cases. No new confirmed bug or exception. Run the full gate and publish a
+useful module checkpoint while continuing coverage; PR #17 remains separate.
+
+
+## Batch 12 nested file calls and modal restoration
+
+Six normal file-stream cases pass focused ASan/UBSan and strict summaries:
+nested calls preserve each caller's local arguments; bounded recursion returns
+cleanly; exceeding the call limit unwinds scopes; M73 restores units/distance/
+plane/feed through actual and nested file returns; M71 disarms restoration.
+Files are read/repositioned through the production stream/parser path, with no
+manual call-stack manipulation. Evidence: build-asan/batch-12-nested-results.xml
+and batch-12-file-modal-results.xml. Total 3,178; batch 12 adds 42 cases.
+
+The preceding full 3,172-case gate passed sanitizer/strict summary: 3,164 clean,
+eight expected failures, zero unexpected failures/skips/diagnostics, 65.67 s
+(build-asan/batch-12-extension-full-results.xml). The independent 3,164-case
+header-inclusive run finished all tests successfully (122.62 s) and its gcovr
+report remains active in session 46072. Do not discard profiles or ignore errors.
+Full current gate and first batch 12 hosted checkpoint are next.
+
+
+## Batch 12 publish gate / local coverage collection finding
+
+Full current ASan/UBSan and strict summary passed 3,178 cases: 3,170 clean,
+eight expected failures, zero unexpected failures/skips/diagnostics, 48.57 s
+(build-asan/batch-12-publish-results.xml). All 43 helper checks pass. Core remote
+HEAD was rechecked at clean feebef2. Publish this 42-case useful checkpoint for
+hosted validation while continuing coverage; do not present a ready PR before
+its exact head passes all required jobs or duplicate unmerged parent PR #17.
+
+Header-inclusive session 46072 completed without reporter errors for its frozen
+3,164-case inventory, but its 17,319/18,815 lines (92.05%) and 10,254/12,856
+branches (79.76%) are NOT authoritative: executed long-path test objects have
+missing gcda files. RGB helpers show zero despite all nine cases passing. A
+short GCOV_PREFIX/STRIP=99 rerun of the same byte-mask executable writes a valid
+212-byte profile; original path length is 262. TODO and README document the
+Windows LLVM collection limitation and separate Linux header-reporting follow-up.
+Earlier local header baseline may also be incomplete. Do not equate absent
+profiles with absent tests or use these totals as the goal's completion metric.
+Hosted Linux batch 11 C-source totals remain 93.07%/80.36% pending batch 12 CI.
+
+
+PR #17 was independently verified merged as fb9086d. Batch 12 rebased cleanly
+onto that merged parent; its tree was identical to the locally validated
+pre-rebase checkpoint except subsequent handoff documentation. Publish the
+42-case checkpoint now. Never commit/push master or merge PRs automatically.
+
+
+## Batch 12 first hosted checkpoint and continued eight-axis coverage
+
+Published ae1f708 (42 new / 3,178 total) passed every required hosted job in
+run 38698553119: source, GCC, Clang, coverage and diagnosis. Coverage artifact
+confirms 3,178 tests, zero failures/skips, 16,258/17,440 C-source lines (93.22%)
+and 10,909/13,518 branches (80.70%) against feebef2. Core remote HEAD remains
+unchanged. This is a useful checkpoint, not completion of the full goal.
+
+A separate ci-header-coverage branch at 09a15fa is pushed and validating in
+run 38698910578 from merged upstream fb9086d. It includes executable header
+bodies in Linux coverage and adds headers to changed-code Git diffs. Its new
+real-Git regression failed before the assessor fix; all 44 helper checks now
+pass. README explains scope/configuration limits. Keep this CI change out of
+the test batch, inspect all required jobs before opening/attaching a ready PR,
+and do not cancel either healthy hosted run with another push. Then continue
+batch 12 independently; resolve future README/PROGRESS overlaps by retaining
+both the header-reporting instructions and test progress, without duplicate text.
+
+Three additional eight-axis cases pass focused sanitizer/strict summary:
+G30.1 records completed positions for all motors; persisted U/V offsets produce
+exact selected-axis endpoints; G30 returns A/V directly to its saved point while
+unselected XYZ/BC/U motors stay still. The initial mixed case incorrectly assumed
+G28's rotary shortcut applied to G30. Core computes that shortcut only for G28;
+the case now follows G30's direct-coordinate behavior with ordinary bounded
+travel, without raising fixture bounds or classifying a defect. Evidence:
+build-asan/batch-12-eight-return-results.xml. Total 3,181; batch 12 adds 45 cases.
+
+
+## Batch 12 runtime legacy compatibility configurations
+
+Two host variants now execute COMPATIBILITY_LEVEL=2 and 10 rather than relying
+only on report syntax checks. Ten focused cases pass sanitizer/strict summary:
+nine clean, one narrow documented expected failure. They cover standard versus
+extended coordinates, HOME/report extensions, axis-mask versus boolean setting
+metadata, metric/absolute soft reset, legacy banner and tool reset.
+
+Legacy protocol does not accept the host CMD_EXIT byte. Its boot fixture now
+captures completion at the public stream-read boundary with setjmp/longjmp;
+normal core startup/reset runs, and no unsupported exit command is injected.
+The first read-limit failures were that fixture assumption, not core faults.
+Level 2's coordinate enum explicitly supports six work systems; config.h's
+wording is a TODO documentation clarification, not a missing-feature failure.
+
+A genuine level-10 sender readback defect reproduces after normal boot:
+$4=0 acknowledges successfully, but $4 reports $4=1. Verified setter/getter links,
+correct unchanged query assertion, proposed getter fix and exact exception
+removal instructions are in KNOWN_BUGS.md. Only that named case is WILL_FAIL;
+no sanitizer exception or production patch. Other modes/settings controls pass.
+Evidence: build-asan/batch-12-compat-results.xml and strict summary.
+Total 3,191; batch 12 adds 55 cases, with nine expected failures across the suite.
+Full current sanitizer gate is required before publishing this delivery checkpoint.
+
+Separate CI reporting PR #18 is ready at 09a15fa: all run 38698910578 jobs passed,
+source lock confirms feebef2/header filter, 3,136 cases zero unexpected failures/
+skips, and all 44 helper checks pass. It is independent of batch 12. The report
+contains exercised headers, and its expanded-scope baseline is 16,257/17,473
+lines (93.04%), 10,902/13,560 branches (80.40%). Do not compare that smaller
+3,136-case baseline directly with batch 12's 3,178-case C-only measurement.
+No PR was merged automatically. Keep the full goal active.
+
+
+## Batch 12 final 55-case delivery freeze
+
+Full ASan/UBSan plus strict summary passed 3,191 cases: 3,182 clean, nine
+explicit expected failures, zero unexpected failures/skips/diagnostics, 46.62 s
+(build-asan/batch-12-final-results.xml). All 43 helper checks in this test branch
+pass freshly; the separate reporting branch has its additional 44th check.
+Production core remains clean feebef2, still remote HEAD at this checkpoint.
+
+Freeze the 55 new cases as coverage-batch-12's delivery. Publish and validate
+its exact final head against feebef2 before a ready PR. PR #18 is independently
+ready/open for CI header reporting; prefer merging that upstream before final
+batch-12 rebase/PR to avoid overlapping README/PROGRESS edits. Do not merge any
+PR automatically or stop coverage while waiting. New test work continues on
+coverage-batch-13 from this freeze; keep it separate so it cannot delay batch 12.
+
+
+## Batch 13 continuation and legacy input configuration
+
+Batch 12 is frozen/pushed at 4a224d4 (55 new / 3,191 total). Its final hosted
+run is 38701989145 against unchanged feebef2. Verify all required jobs before
+its ready PR, and keep the separate ready reporting PR #18 out of that test
+diff until it merges. Do not cancel healthy validation with another push.
+
+New work is local coverage-batch-13 from that freeze. Five added cases pass
+focused ASan/UBSan and strict summary, using normal legacy boot with XYZ limit
+capabilities and valid persisted homing cycles/rates: hard-limit enable/disable
+dispatches to the driver, inversion reads back correctly, homing applies compile
+defaults, and disabling homing clears previously enabled soft limits. A stream
+observer proves the soft limit was actually enabled before disabling; all
+positive input programs must have no error responses. Two existing reset cases
+now also prove G20/G91 was active before reset, preventing default-state-only
+false confidence. No core change, new defect or exception.
+
+Evidence: build-asan/batch-13-legacy-limits-results.xml (eight cases pass including
+existing controls) and strict summary. Total 3,196; batch 13 adds five cases.
+Continue meaningful public workflow coverage while the frozen delivery validates.
+
+
+## Batch 13 remapped axis-word projection
+
+Three original-inline helper cases pass focused ASan/UBSan and strict summary:
+each of eight XYZABCUV axis words maps to its exact motor bit, each XYZUVW word
+maps to its remapped bit, and unconfigured ABC/feed arguments are ignored in
+the UVW layout. No parser/private-state bypass is used; this is the public pure
+parameter-word conversion helper. The Linux header report identified its
+non-3/non-7-axis branch as a remaining gap; verify the next hosted measurement
+rather than assuming a percentage gain. Evidence: build-asan/batch-13-axis-words-
+results.xml. Total 3,199; batch 13 adds eight cases, no new exception.
+
+## PR 18 combined delivery, 2026-10-15
+
+At the user's request, PR 18 now includes the frozen 55-case batch 12 and
+8-case batch 13 alongside header coverage reporting. This supersedes the earlier
+separate-delivery plan. Combined local ASan/UBSan and strict summary pass all
+3,199 cases (nine documented expected failures), with all 44 helper checks passing.
+Evidence: build-asan/pr18-combined-results.xml and parent pr18-combined logs.
+Core is clean feebef26222111f11c7a3b3b0156d023aa786937, verified remote HEAD.
+Frozen batch 12 also passed all hosted gates in run 38701989145.
+Push this combined head and validate hosted GCC/Clang/coverage before calling
+this expanded PR ready. Continue new coverage separately; do not merge PRs.

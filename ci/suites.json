@@ -7,7 +7,7 @@
     "cmake_source": ".",
     "cmake_options": [],
     "test_regex": ".*",
-    "coverage_filter": "core/.*\\.c$",
+    "coverage_filter": "core/.*\\.[ch]$",
     "diagnostics_directory": "tests"
   }
 }

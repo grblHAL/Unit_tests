@@ -277,3 +277,72 @@ be None depending on the processor; board input protection belongs to the driver
 hardware contract. Terje plans to remove the disable-pullup option for boards
 with input protection. Do not require physical pull-down behavior from host tests.
 Review setting availability tests when the board capability/API is implemented.
+
+
+## Updating an active G66.1 registration
+
+**Contract question:** 2026-10-15, Terje `feebef2`. After successful G66.1P100X12
+in the normal macro parser fixture, G66.1X24 returns status 21 (modal group
+violation), with no second macro callback. Repeating P100 is also rejected.
+The callback returns Status_OK and local scope returns to zero; ordinary first
+registration/cancellation and callback-error cleanup pass. The parser contains a
+same-call-level argument-reuse branch, but its intended public command sequence
+needs confirmation. Should callers cancel with G67 and register afresh, or can
+active arguments be updated? The candidate is unregistered in
+[tests/proposals](proposals/g66_1_repeated_registration_updates_arguments_and_cancels_cleanly.c).
+No known-failure exception or confirmed defect is added for this question.
+
+
+## RGB strip clear device-index convention
+
+**Contract question:** 2026-10-15, Terje `feebef2`. rgb.h's rgb_clear helper
+calls the output callback for indices zero through num_devices inclusive, while
+num_devices is described as the number available. Confirm the supported driver
+convention (including whether zero has a broadcast meaning) before asserting
+strip-clear bounds. These helpers are explicitly not used by core execution.
+Packing, channel masks and intensity conversions have ordinary passing tests;
+no artificial short buffer, confirmed defect or expected-failure test is added
+for this index question.
+
+
+## Native rigid tapping execution
+
+**Pending implementation:** 2026-10-15, Terje `feebef2`. The default weak
+mc_rigid_tapping implementation in motion_control.c returns
+Status_GcodeUnsupportedCommand and is explicitly marked TBC. Keep parser/
+extension dispatch distinct from native tapping execution. When a real
+implementation is supplied, add execution endpoints and spindle-reversal tests
+through valid driver/encoder setup. Do not implement substitute tapping geometry
+in a test fixture or classify the absent feature as a new confirmed defect.
+
+
+## Windows LLVM profile paths and header-inclusive CI reporting
+
+**Verified collection limitation:** 2026-10-15. The local Clang header-inclusive
+report at batch 12 checkpoint 5172863 says 17,319/18,815 lines and 10,254/12,856
+branches, but is incomplete: passing RGB cases have gcno files and no gcda
+profiles. The byte-mask case's original gcda path is 262 characters. Running the
+same executable with GCOV_PREFIX pointing to a short workspace folder and
+GCOV_PREFIX_STRIP=99 produces its 212-byte gcda profile. Core source is unchanged.
+Evidence: ../batch-12-header-coverage.xml/logs and the short-path proof under
+C:/Users/User/Documents/Codex/p12/rgb-mask. This is a host profiler/path issue,
+not nine untested RGB helpers or new core faults. Earlier local header totals
+may have the same limitation and must not be treated as authoritative.
+
+Keep the header-inclusive Linux CI reporting change separate from this test
+batch. Inventory executable header bodies, verify profile collection and emitted
+configuration scope, and use hosted Linux results for authoritative percentages.
+Do not suppress gcovr errors, exclude real code or call 100% of the current
+.c-only report full core coverage. A short source/build path may help local LLVM
+collection, but verify actual profile files before trusting the resulting total.
+
+
+## Compatibility-level coordinate availability documentation
+
+**Documentation clarification:** 2026-10-15, Terje `feebef2`. config.h describes
+level 10 as disabling G59.1-G59.3, but gcode.h's coordinate enum explicitly makes
+them available only when COMPATIBILITY_LEVEL <= 1. Runtime level-2/10 tests use
+six standard work systems; level 2 retains HOME reporting, while level 10 omits
+that extension. Align the configuration description with intended availability.
+No missing-feature failure or exception is registered for this documentation
+question.
