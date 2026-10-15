@@ -1159,3 +1159,418 @@ cumulative duplicate PR. Once #13 merges, rebase/merge its upstream base and
 open the batch-9 PR with only this batch's changes. Continue the full-coverage
 goal in a separate subsequent branch. The DO/WHILE CONTINUE proposal awaits
 Terje's contract decision.
+
+## Batch 10 overnight restart and first checkpoint (2026-10-15)
+
+The scheduled 02:00 Johannesburg restart created a new active full-coverage
+goal. PRs #13, #14 and #15 have merged. Batch 10 starts on coverage-batch-10
+from upstream 9e2e20f. Terje's latest core is still clean at 683589b. Batch 9's
+final hosted run 38632387393 passed source/GCC/Clang/coverage/CI diagnosis;
+coverage on 683589b was 15,900/17,437 lines (91.1854%) and 10,497/13,506
+branches (77.7210%). Earlier open-parent/pending-run notes are historical.
+
+Thirteen new cases: nine call real grbl_enter for wall, delta, polar, ganging,
+auto-square and RTCP startup; three verify independent Cartesian restoration
+from motor positions. Delta/RTCP advertise physical NVS for stored geometry;
+the initial delta null-hook failure was a fixture configuration error, not a
+core defect. RTCP uses its supported M850 command. Four paired-PWM parser
+cases register both spindles before gc_init, map the secondary through settings,
+and use the original PWM calculator/configured ramp flags. Start routing,
+primary stop without secondary use and secondary stop isolation pass. A primary
+stop after starting the higher-speed secondary reproduces an output increase:
+the secondary lookup shadows the pointer returned from _get_ramp and overwrites
+the primary cached speed. Correct assertions remain with one narrow known
+exception and SHA/line-linked report. No physical speed/frequency claim.
+
+Focused boot/spindle validation and strict summary pass. Full local ASan/UBSan:
+2,910 cases, 2,897 clean, 13 documented expected failures, zero unexpected
+failures/skips (39.20 s; build-asan/batch-10-first-full-results.xml). All 43
+script checks pass. No production source changes. Commit/push this coherent
+startup/PWM checkpoint, then hosted validation while continuing measured gaps.
+Questions go to TODO and DO/WHILE remains unregistered. Greatest remaining
+aggregate line gaps include gcode, settings, motion_control, report and ioports;
+inspect the uncovered public paths and existing controls before authoring.
+
+## Batch 10 settings, mixed laser and parser/output follow-up
+
+Hosted run 38658180242 passed every job for d2d1d02 against Terje 683589b.
+Its first 13 new cases measured 15,915/17,437 lines (91.2714%) and
+10,518/13,506 branches (77.8765%). Core remains unmodified and clean.
+
+Twenty-five additional cases now pass: six RGB strip-length configuration,
+capability, persistence and rejected-input cases; four mixed primary ordinary
+PWM/secondary laser parser cases; seven public comment/message normalization
+and execution cases; five rejected-command cases preserving position, units
+and dynamic tool offset; three real motion-synchronized digital/analog output
+lists. Message output is reached via public gc_execute_block, not an undeclared
+internal helper. Mixed laser fixtures use real PWM precomputation and driver
+flags before registration, with the primary laser capability disabled.
+Analog fixture logging observes callbacks without limiting their execution.
+
+Disabled open-drain/timezone public registrations are recorded as coverage
+inventory in TODO, not bugs or manufactured private-call tests. No new core
+exceptions were added in these follow-ups. Batch 10 now adds 38 cases total.
+
+Full local ASan/UBSan and strict summary: 2,935 total, 2,922 clean,
+13 documented expected failures, zero unexpected failures/skips (39.66 s;
+build-asan/batch-10-delivery-results.xml). Earlier 43 script checks remain
+valid: no script changes. Commit/push this checkpoint and dispatch hosted
+validation on the same core SHA, then continue independent measured gaps.
+No PR is ready until hosted gates pass. Full-coverage goal remains active.
+
+## Batch 10 extended-axis arcs and startup-to-homing integration
+
+Run 38659450581 passed every hosted job for the 38-case checkpoint 3c1a352
+against Terje 683589b. Coverage: 15,948/17,437 lines (91.4607%) and
+10,559/13,506 branches (78.1801%). Source checkout remains clean/unmodified.
+
+Thirteen further registered cases pass: seven original planner/stepper arc
+executions with eight-axis or remapped UVW extra-axis travel; one real boot
+single-primary auto-square homing rejection; five startup-to-homing controls,
+including ordinary and ganged X homing, independent all-axis switches, release
+of stored startup modal code after all axes home, and continued locking after
+only X homes. Extra-axis pulse observation proves interpolation occurs during
+the arc, with signed endpoints and monotonic auxiliary pulse counts checked.
+No physical contour-accuracy claim. The shared boot driver wrapper now preserves
+core's default homing feed callback; stored homing configuration loads before
+settings-dependent cached values initialize. Earlier missing-callback/NaN
+failures and the ganging rejection expectation were fixture/contract errors,
+not core bug entries.
+
+Partial manual Y reference on ganging/auto-square with force-set-origin leaves
+the secondary motor counter unchanged. Both manually built unregistered
+candidates confirm {160, 0, 320, -240}, homed mask 2, zero wakes. It remains a
+contract question in TODO with an unregistered proposal, no exception. The
+ordinary homing fixture has no proposal-specific behavior.
+
+Full local ASan/UBSan plus strict summary passed 2,948 cases: 2,935 clean,
+13 documented expected failures, zero unexpected failures/skips (41.01 s;
+build-asan/batch-10-arc-home-full-results.xml). Batch 10 adds 51 registered
+cases total. No scripts changed since 43 helper checks passed. Publish this
+arc/startup checkpoint and validate hosted while continuing meaningful gaps.
+The full-coverage goal remains active, with unresolved questions in TODO.
+
+## Batch 10 machine masks and probe configuration
+
+Fifteen further cases validate public step/enable polarity and limit inversion/
+pullup masks with readback, persistent values and driver notifications; energized
+motor masks update HAL immediately, can be cleared, and reject nonexistent axes
+without touching the driver; rotary-excluded hard limits retain the correct
+linear-axis mask through settings reload and clear exclusion when disabled;
+combined probe inversion updates all advertised inputs; disconnection inversion
+notifies the driver on change without redundant toggles or effects from reset
+input inversion. All cases and full sanitizer/strict gate pass.
+
+Full suite: 2,963 total, 2,950 clean, 13 documented expected failures,
+zero unexpected failures/skips (42.38 s; build-asan/batch-10-config-full-results.xml).
+Batch 10 adds 66 registered cases total. Core is unmodified at 683589b.
+The 51-case hosted run 38660620756 has successful source and coverage jobs,
+GCC/Clang still running. Its coverage is 15,997/17,437 lines (91.7417%) and
+10,598/13,506 branches (78.4688%). Do not present pending jobs as passed or
+attribute this measurement to the newer 66-case local checkpoint.
+
+Commit this configuration checkpoint, then continue independent meaningful
+public paths while current CI runs. Publish/dispatch only after that run ends.
+Next useful integration: normal streamed G-code/jog execution through real boot
+on existing CoreXY, polar and ganged variants. Use valid initial motor positions,
+public driver callbacks and bounded foreground service; preserve the core's
+initialization order. The full goal remains active. No new known exceptions.
+
+## Batch 10 real streamed kinematics motion
+
+Hosted run 38660620756 passed source/GCC/Clang/coverage/CI diagnosis for the
+51-case checkpoint 8876065 on Terje 683589b. Its measured coverage remains
+15,997/17,437 lines (91.7417%) and 10,598/13,506 branches (78.4688%).
+
+Fourteen further cases now execute real grbl_enter, serial input, parser,
+planner, timer ISR and driver pulses for CoreXY, asymmetric ganging, polar and
+wall plotter. They verify Cartesian-to-motor translation for cuts/jogs, reverse
+motor travel, preserved G20/G91 program modes during metric jogs, and valid
+restored radius/cable references. Longer polar/wall cuts and wall jogs observe
+a full planner and pulses before sender acknowledgement, then complete the
+original commanded endpoint. Real startup uses 35 planner blocks, so distances
+exceed that capacity rather than relying on the host's pre-start default.
+Cable rounding allowances are explicit alongside exact motor-counter assertions.
+No hardware contour/timing claims or private production calls.
+
+The stream fixture uses the supported realtime exit only after motion wakes,
+the sender acknowledgement is visible and the core returns idle with an empty
+planner. This corrected an initial fixture exit before parsing the line.
+A per-test read bound retains the old 1,000-read default and permits bounded
+longer motion. All currently registered stream cases use one motion block;
+future multiple-block tests must match all expected acknowledgements before
+exiting, rather than counting an earlier command's acknowledgement.
+
+Full local ASan/UBSan and strict summary pass: 2,977 total, 2,964 clean,
+13 documented expected failures, zero unexpected failures/skips (42.24 s;
+build-asan/batch-10-stream-full-results.xml). Batch 10 adds 80 cases total.
+No scripts changed since 43 helper checks passed. Publish this motion commit
+and the prior validated configuration commit together, then verify hosted while
+continuing remaining public paths. Suggested next work: multi-block sender
+completion and real RTCP/delta startup motion with physical geometry NVS;
+retain realistic initial positions and independent geometric controls. Goal active.
+
+## Batch 10 complete sender programs, RTCP and delta startup motion
+
+Run 38662265998 passed source/GCC/Clang/coverage/CI diagnosis for the 80-case
+checkpoint 986eabb on Terje 683589b. Measured coverage: 16,032/17,437 lines
+(91.9424%) and 10,621/13,506 branches (78.6391%).
+
+Twelve further registered cases pass: three complete multi-command programs,
+six real streamed RTCP controls and three delta motions. The sender fixture
+counts every standalone successful acknowledgement, accepting CRLF or LF
+preceding plugin output while excluding prefixed startup acknowledgements.
+It exits only after all commands acknowledge and motion drains. This corrected
+a fixture parser that missed the acknowledgement after M852's LF-only diagnostic.
+
+RTCP controls use physical geometry NVS, public setting writes, zero-center and
+fixed 90-degree A/C configurations, disable/resync followed by an incremental
+machine-frame move, and M852 measurement with default nonzero centers. The
+zero-center expectation on unmeasured defaults was not classified as a bug.
+A no-motion unregistered candidate and TODO ask whether direct M851 activation
+must synchronize parser coordinates or requires the M852 sequence first.
+
+Delta controls load symmetric physical/radian motor configuration before
+kinematics initialization and execute vertical cut/jog and a longer segmented
+cut. Independent rod geometry yields 5 equal motor steps for .5 mm and 98 for
+10 mm; counter-derived Cartesian rounding allowance is explicit. The longer
+cut observes a full planner and motion before acknowledgement. Source is
+unmodified. No new known exceptions or regression assertion weakening.
+
+Full local ASan/UBSan and strict summary: 2,989 total, 2,976 clean,
+13 documented expected failures, zero unexpected failures/skips (45.39 s;
+build-asan/batch-10-multi-kin-full-results.xml). Batch 10 adds 92 registered
+cases total. Publish and dispatch this checkpoint, then continue remaining
+supported paths from fresh coverage. Questions stay in TODO and proposals
+unregistered. Goal active; no PR claimed ready without its hosted gate.
+
+## Batch 10 expansion-bank routing and claims
+
+Run 38663661728 passed all hosted jobs for 7802c99's 92-case checkpoint on
+Terje 683589b. Coverage is 16,032/17,437 lines (91.9424%) and
+10,628/13,506 branches (78.6910%). Those integration cases improved branches
+but added no new aggregate lines: use the fresh uncovered paths/configurations
+to guide subsequent work rather than repeating already covered integrations.
+
+Seventeen new public I/O cases register native GPIO plus two digital expansion
+banks and two analog banks. They verify bank-local dispatch, independent type
+counts, timeout/mode propagation, remapping, claims and compacted free-port maps,
+logical output events only for successful/unclaimed ports, retained native
+routing, interrupt delivery with claimed/remapped handles, external digital
+metadata and empty-bank rejection preserving existing dispatch. Mock callbacks
+represent driver banks, not a real bus. Returned claim handles are used directly;
+an initial assumption about their numeric positions was corrected before
+classifying behavior. No new defect or known exception was added.
+
+Analog input pin-base metadata differs from digital registration despite correct
+current routing. A runtime inspection confirms the second analog bank's bases
+are input=0/output=2. TODO records a possible bookkeeping improvement pending
+actual supported driver usage; no speculative failing regression was registered.
+
+Full ASan/UBSan and strict summary passed 3,006 cases: 2,993 clean,
+13 documented expected failures, zero unexpected failures/skips (40.34 s;
+build-asan/batch-10-banks-full-results.xml). Batch 10 adds 109 registered cases.
+No scripts changed since 43 helper checks passed. Core remains unmodified.
+Publish/validate this completed I/O module while continuing remaining gaps.
+A likely next feature-combination gap is NGC modal/spindle snapshot restoration
+with multiple settings-enabled spindles: existing multi-spindle host lacks NGC
+expressions and ordinary snapshot cases do not drive these two-spindle hardware
+restore branches. Verify current fixtures/contracts before adding that variant.
+Full-coverage goal remains active; unresolved questions stay in TODO.
+
+## Batch 10 modal restoration, jerk persistence and JSON strings
+
+Hosted run 38665399234 passed all jobs for af1bcb3 on unchanged Terje
+683589bd10bb1082825bfc7e9bcee6db102b9530. Coverage: 16,047/17,437 lines
+(92.0284%) and 10,669/13,506 branches (78.9945%). Source HEAD was rechecked
+and remains this revision; the ordinary ignored core checkout is clean.
+
+Eleven separate multi-spindle cases use early registered, settings-enabled
+basic spindles and real parser commands. They verify independent directions,
+speeds and override policies through M70/M71/M72 and M73 scope exits,
+nested caller restoration and selective hardware updates. NGC parameters
+are already enabled by default: no extra expressions configuration or new
+host library was necessary. RPM output assertions use a .01 RPM tolerance
+for ordinary float multiplication, consistent with existing override tests.
+
+Three jerk cases verify temporary overrides are restored before settings
+persistence, unrelated saves retain original jerk, and a new permanent jerk
+setting becomes the later restore baseline. Two lathe cases verify G7/G8
+restoration and named parameter reporting. Four JSON cases verify control
+character escaping, Windows paths, adjacent escapes and empty-string comma
+handling. These test existing public contracts; no new expected failures.
+
+Full local ASan/UBSan and strict summary passed the first sixteen additions:
+3,022 total, 3,009 clean, 13 documented expected failures, zero unexpected
+failures/skips, 112.36 s (build-asan/batch-10-restores-full-results.xml).
+The four subsequently added JSON cases passed focused sanitizer and strict
+summary checks (build-asan/batch-10-json-results.xml). Total now 3,026 cases;
+batch 10 adds 129. Hosted GCC/Clang/coverage must validate the whole checkpoint
+before any ready PR claim. Continue uncovered supported public paths while
+that run executes; questions remain TODO, goal remains active.
+
+## Batch 10 transport state, pendant reports and discoverable settings
+
+Seventeen additional cases cover public Modbus ASCII/TCP availability/busy
+state, reset propagation and RTU silence timing; MPG full/legacy status and
+cycle-start commands; plugin help topic discovery/filtering; third serial
+device registration; and command-driven coprocessor passthrough startup and
+reset line states. Full status respects configured report fields. Complete
+settings help uses a larger local output capture. The passthrough command
+fixture supplies the USB connected callback needed by normal report output.
+All three were fixture assumptions corrected without classifying core bugs.
+
+Full local ASan/UBSan and strict summary: 3,043 total, 3,030 clean passes,
+13 documented expected failures, zero unexpected failures/skips, 43.42 s
+(build-asan/batch-10-discovery-full-results.xml). Batch 10 adds 146 cases.
+No production changes or new exceptions. Also removed an extra trailing blank
+line in the preceding jerk test; staged whitespace must pass before commit.
+Hosted run 38667090574 validates the prior 129-case checkpoint (2dc9b68);
+source/GCC/coverage passed at last check, Clang was running. Do not push and
+cancel it. Continue file-stream callback coverage while it completes, then
+publish this validated group and dispatch the complete checkpoint.
+
+## Batch 10 rotary feed timing and file callback contracts
+
+Run 38667090574 completed all jobs successfully for 2dc9b68: 16,073/17,437
+lines (92.1776%) and 10,689/13,506 branches (79.1426%). The following
+79ab9f5 checkpoint also passed all jobs in run 38668110778; its coverage
+artifact is not yet retrieved. Terje HEAD remains clean/unmodified 683589b.
+
+Nine new eight-axis cases configure rotary axes/options through public settings
+then run G-code through planner and pulse callbacks. They check linear-distance
+feed timing for mixed rotary moves, multiple rotary axes, inch feed reversion,
+explicit inverse time, rapid motion, disabled-fix behavior and linear-only
+controls. Assertions verify planned duration/rate and actual final motor counts.
+Five file-stream cases check normal error/status suppression callbacks, ordered
+file-end observers, report-handler reinitialization and offset/line reposition.
+All use public entry points. No new defect classification or exception.
+
+Full ASan/UBSan and strict summary passed: 3,057 total, 3,044 clean,
+13 documented expected failures, zero unexpected failures/skips, 116.25 s
+(build-asan/batch-10-rotary-file-full-results.xml). Batch 10 adds 160 cases.
+Publish this checkpoint once the prior hosted run is terminal; continue
+remaining supported paths, including spindle at-speed feedback timing.
+The goal is active; questions remain TODO and no PR is yet claimed ready.
+
+## Batch 10 spindle-ready feedback and macro-visible coolant
+
+Six spindle-ready cases register a basic variable spindle with at-speed
+feedback before parser initialization. Real M3/M4 commands check delayed ready
+signals, zero configured startup delay, already-ready feedback, readiness at
+the deadline and missing-feedback timeout. Successful notifications follow
+feedback; timeout turns the driver off and raises Alarm_Spindle. The timeout
+observer timestamps alarm entry before the normal 100 ms alarm-report delay;
+an initial wall-clock assumption was corrected, without a new bug claim.
+
+Full ASan/UBSan and strict summary passed 3,063 cases (3,050 clean,
+13 documented expected failures, zero unexpected failures/skips), 101.18 s;
+build-asan/batch-10-ready-full-results.xml. Three subsequent focused sanitizer
+cases check named mist/flood parameters against real coolant driver state
+through M7/M8/M9, and named version against firmware build identity. Their
+strict summary passes (build-asan/batch-10-named-coolant-results.xml).
+Now 3,066 registered cases: batch 10 adds 169. No new exceptions or source
+changes. Hosted checkpoint 764c53c is run 38682688236; inspect terminal state
+before pushing. Earlier run 38668110778 passed all jobs, covering
+16,107/17,437 lines (92.3725%) and 10,723/13,506 branches (79.3943%).
+Continue remaining supported paths and preserve the full goal. No PR has
+been presented as ready. Source remains Terje 683589b.
+
+## Batch 10 scheduler ordering, secondary motor limits and edited comments
+
+Three scheduler cases exercise immediate follow-up FIFO ordering, independent
+periodic callback deletion and the documented refusal to delete a running
+systick callback from itself. Two secondary motor cases check configured rate
+limits both at initial command and during acceleration. Their valid maximum
+rate needs more than 1000 acceleration/deceleration steps; both bounded fixture
+loops now allow 10000. A redundant zero-speed candidate was removed after
+finding the existing registered case; assertions were not weakened.
+
+Full local ASan/UBSan and strict summary passed 3,071 total, 3,058 clean,
+13 documented expected failures, zero unexpected failures/skips (39.88 s;
+build-asan/batch-10-tasks-motors-full-results.xml). Three subsequent focused
+sanitizer/strict-summary cases edit serial comments with backspace, checking
+preserved parenthesized printable realtime characters, reopening a comment by
+deleting its closing parenthesis, and semicolon trailing-text preservation.
+They complete real serial/planner/pulse execution with exact endpoints/output
+(build-asan/batch-10-edited-comment-results.xml). Total 3,074, batch 10 +177.
+No new exceptions or production changes. Hosted run 38682688236 completed all
+jobs successfully for 764c53c; push this completed local checkpoint and validate
+it while continuing remaining supported workflows. Goal active.
+
+## Batch 10 optional parameter configuration and macro/resource contracts
+
+A clean host variant compiles the documented NGC_PARAMETERS_ENABLE=0 and
+NGC_EXPRESSIONS_ENABLE=0 configuration. Four cases exercise real linear motion,
+G92 offsets, persisted G55 offsets and rejection of unavailable M70-M73 without
+state changes. Three normal boot cases exercise driver startup, persisted modal
+initialization and soft reset (including both welcome messages) without parameter
+support. The README configuration inventory now includes this tested variant.
+
+A file containing three subroutines verifies definition skipping, requested call
+order and scope cleanup. Two expression cases verify default float-format reset
+and numeric PRM rejection of registered text settings. Two narrow allocation
+failure cases verify encoder registration/list recovery and JSON start/output
+recovery under shared-heap exhaustion. Public APIs remain production-owned;
+only those two executables wrap their allocator. No new exception or bug claim.
+
+Full ASan/UBSan and strict summary: 3,083 total, 3,070 clean, 13 documented
+expected failures, zero unexpected failures/skips, 39.09 s
+(build-asan/batch-10-optional-params-full-results.xml). The three subsequently
+added boot cases pass focused sanitizer/strict summary checks
+(build-asan/batch-10-no-params-boot-results.xml). All 43 helper tests passed.
+Now 3,086 registered cases: batch 10 adds 189. Terje HEAD was rechecked and
+remains clean/unmodified 683589bd10bb1082825bfc7e9bcee6db102b9530.
+Hosted run 38683576138 is still active for bb9e036's 3,074-case checkpoint;
+do not push/cancel it. Last fully completed run 38682688236 covers
+16,125/17,437 lines (92.4758%), 10,742/13,506 branches (79.5350%).
+Continue supported configurations/public workflows; full coverage is not yet
+achieved and the goal remains active. No batch 10 PR has been claimed ready.
+
+## Batch 10 normal-boot G95 and interrupt fallback
+
+Five serial G95 cases register the spindle and encoder data handlers during
+driver initialization, set PPR in persisted settings and let real settings/driver
+startup install synchronization support. No private synchronization-config helper
+is called. Cases verify radial/longitudinal motion, inch feed conversion, arcs,
+return to G94, macro-visible mode/report fields and exact motor endpoints.
+G95 uses RPM feedback without angular phase locking; no physical timing claim.
+A sixth case checks unsupported default IRQ claims fail without calling a plugin.
+
+The first complete sanitizer summary caught a diagnostic that CTest's exit code
+alone missed: the boot motion fixture had zero arc tolerance. It now persists
+.002 mm (core's DEFAULT_ARC_TOLERANCE) before reload. With valid configuration,
+the strict full sanitizer summary passes 3,091 total, 3,078 clean,
+13 documented expected failures, zero unexpected failures/skips, 39.35 s
+(build-asan/batch-10-boot-feed-full-results.xml). IRQ fallback then passed focused
+sanitizer/strict summary (build-asan/batch-10-irq-results.xml). There are now
+3,092 cases: batch 10 adds 195. No new known exception or production change.
+
+Hosted run 38683576138 passed all jobs for bb9e036, covering 16,152/17,437 lines
+(92.6306%) and 10,763/13,506 branches (79.6905%). Commit/push the queued complete
+checkpoint and dispatch hosted validation; continue independently while it runs.
+Source HEAD was rechecked clean at Terje 683589b. The full goal remains active;
+questions stay TODO and no batch 10 PR is yet claimed ready.
+
+## Batch 10 realtime state reports and metadata recovery
+
+Ten report cases verify real feed-hold deceleration/completion, jog-to-idle,
+safety-door parking state, busy-to-idle WCO/override refresh scheduling,
+normalized numbered setting names and alarm/error catalog fallback/retry when
+the sorting allocation fails. States come from actual motion/realtime workflows.
+Report fixtures finish report_init and use the controller's persistent tracking
+state with its broadcast writer; initial incomplete report setup and mismatched
+tracking assumptions were corrected without claiming core defects.
+
+Full local ASan/UBSan and strict summary pass 3,102 total: 3,089 clean,
+13 documented expected failures, zero unexpected failures/skips, 39.60 s
+(build-asan/batch-10-report-final-results.xml). All 43 helper checks pass.
+Batch 10 now adds 205 cases in maintainable separate files. No new exceptions
+or production changes in this report group. Upstream master was freshly fetched
+and remains 9e2e20f, so the branch still has a clean unchanged delivery base.
+
+Run 38684803384 validates 03a4396's 3,092-case checkpoint. Source/coverage were
+successful at last check while GCC/Clang were active. Do not push and cancel
+that healthy run. Once terminal, publish/dispatch this complete checkpoint and
+verify all jobs before claiming a PR ready. Continue independent work while it
+runs. Full line/branch coverage is not yet achieved; keep the goal active.

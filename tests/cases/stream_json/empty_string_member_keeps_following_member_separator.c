@@ -1,0 +1,11 @@
+#include "support/json_host.h"
+int main(void)
+{
+    json_out_t *json = json_start(json_file(), 4);
+    CHECK(json != NULL);
+    CHECK(json_add_string(json, "empty", ""));
+    CHECK(json_add_string(json, "name", "WorkBee"));
+    CHECK(json_end(json));
+    CHECK(strcmp(json_output, "{\"empty\":\"\",\"name\":\"WorkBee\"}") == 0);
+    return EXIT_SUCCESS;
+}

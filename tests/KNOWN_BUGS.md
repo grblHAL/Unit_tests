@@ -321,3 +321,35 @@ test again. Keep ordinary buffer sizing and caller ownership/free behavior.
 and malloc/free linker wrappers in CMakeLists.txt, and retain its original pointer,
 content and caller-free assertions. Run VFS/full sanitizers and strict summary,
 then delete this entry.
+
+## Primary spindle stop uses the secondary spindle's cached ramp speed
+
+**Marked known:** 2026-10-15
+
+**Regression:** [paired PWM stop test](cases/multi_spindle/primary_pwm_stop_after_secondary_start_never_increases_primary_output.c).
+
+**Remove exception when fixed:** the matching test block in [known_bugs.cmake](known_bugs.cmake).
+
+On Terje `683589bd10bb1082825bfc7e9bcee6db102b9530`, two PWM spindles
+registered before parser initialization and enabled through settings reproduce
+this sequence: `M3S6000$0`, `M3S8000$1`, `M5$0`. Primary stopping emits a PWM
+update above its preceding 6000 RPM output. The secondary remains enabled.
+Both descriptors use real PWM precomputation and configured start/stop ramps.
+Passing controls verify independent start routing, a primary stop before any
+secondary use, and a secondary stop preserving the primary output.
+This is a host-observed output command, not a claim about physical motor speed
+or how frequently users encounter this configuration.
+
+In [_get_ramp(), spindle_control.c:582-605](https://github.com/terjeio/grblHAL_core/blob/683589bd10bb1082825bfc7e9bcee6db102b9530/spindle_control.c#L582-L605),
+the secondary lookup declares a new local `ramp` at line 599. It does not update
+the outer pointer returned at line 604. The first secondary ramp therefore
+reuses the primary record; its completed 8000 RPM becomes the cached start
+speed for the primary stop. A new record is also appended before looking for
+an existing match.
+
+**Suggested fix (proposal):** Search the existing list using the pointer that
+will be returned; allocate a new record only if no matching spindle exists.
+Keep allocation-failure behavior explicit. Re-run the paired and ordinary
+single-spindle ramp cases, including overrides, under sanitizers. Once this
+regression passes, remove its narrow exception and delete this entry while
+keeping the output assertions. No core patch has been applied here.

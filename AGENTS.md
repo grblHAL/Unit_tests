@@ -2,15 +2,13 @@
 
 ## Objective and delivery
 
-Current coverage work belongs on `coverage-batch-9`, testing Terje's latest core.
-The full-coverage goal is active; earlier stopping/overnight pause instructions
-are superseded by the user's resume. Never commit/push master/main. No AI branding.
-Keep CI design changes separate from coverage work.
-
-Batch 8 PR #13 is ready but remains the unmerged parent of batch 9. Preserve it,
-verify its live state at delivery boundaries, and avoid a duplicate upstream diff.
-Older dated batch notes below are historical context; this section and the latest
-PROGRESS.md snapshot govern current branch/pause state.
+Current coverage work belongs on `coverage-batch-10`, from upstream master
+`9e2e20f` after PRs #13, #14 and #15 merged. The overnight goal was created
+on 2026-10-15 and is active. Continue autonomously while usage permits.
+Never commit/push master/main or add AI branding. Questions and uncertain
+contracts go in tests/TODO.md; continue independent work without waiting.
+Keep CI changes separate. Validate all required gates before presenting a PR
+as ready. Older dated snapshots are historical; latest PROGRESS.md governs.
 
 DO/WHILE CONTINUE is a maintainer question in TODO.md at the user's request. Its
 candidate in tests/proposals is not registered and must await Terje's chosen

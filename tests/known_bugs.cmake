@@ -85,3 +85,9 @@ if(TEST vfs.getcwd_allocates_root_path)
   set_tests_properties(vfs.getcwd_allocates_root_path
     PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
 endif()
+
+# Two enabled PWM spindles must retain independent cached ramp speeds.
+if(TEST multi_spindle.primary_pwm_stop_after_secondary_start_never_increases_primary_output)
+  set_tests_properties(multi_spindle.primary_pwm_stop_after_secondary_start_never_increases_primary_output
+    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
+endif()
