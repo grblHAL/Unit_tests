@@ -13,8 +13,9 @@ defects, remove the diagnostic matcher and retain an ordinary successful compile
 check. Recovering sanitizer diagnostics have a separate, narrowly scoped
 [manifest](known_sanitizer_diagnostics.json); remove its linked entries when fixed.
 
-Outstanding exceptions were revalidated on 2026-10-14 against Terje core
-`683589bd10bb1082825bfc7e9bcee6db102b9530` after removing seven fixed entries.
+Outstanding exceptions were revalidated on 2026-10-15 against Terje core
+`4ec1ae44b857a70d2f9298344feac4b43ed0eb6b` after removing the fixed paired-ramp
+and legacy enable-readback exceptions.
 Source links identify the revision used for the described code and reproduction. CI can test
 a newer revision; a fixed regression forces review and cleanup of its exception.
 
@@ -213,64 +214,47 @@ controls' mode expectations with the agreed behavior, run all pullup tests plus
 the full sanitizer suite/strict summary, and delete this entry. No sanitizer
 suppression or diagnostic wrapper applies.
 
-## Primary spindle stop uses the secondary spindle's cached ramp speed
+## G76 inch-mode pitch and end-taper length are used as millimeters
 
-**Marked known:** 2026-10-15
+**Marked known:** 2026-10-15, Terje `4ec1ae44b857a70d2f9298344feac4b43ed0eb6b`.
 
-**Regression:** [paired PWM stop test](cases/multi_spindle/primary_pwm_stop_after_secondary_start_never_increases_primary_output.c).
+With G18 and a feedback-capable spindle running, select G20. The fixture uses
+matching programmed/measured 2000 RPM and a 5000 mm/min Z feed limit.
+`G76Z0.5P0.05I0.1J0.05K0.1` then produces a synchronized cut with
+planner feed **0.05 mm/rev**, rather than **1.27 mm/rev** (0.05 inch/rev).
+Adding `E0.125L2` starts the exit taper at Z12.575 mm, leaving a 0.125 mm taper,
+rather than starting at Z9.525 mm for a 3.175 mm taper. The Z endpoint is
+correctly converted to 12.7 mm. These are ordinary lathe threading commands.
 
-**Remove exception when fixed:** the matching test block in [known_bugs.cmake](known_bugs.cmake).
+The [LinuxCNC G76 reference](https://www.linuxcnc.org/docs/2.8/html/gcode/g-code.html#gcode:g76)
+defines P as pitch in distance per revolution and E as a length along the drive
+line. Its [units reference](https://www.linuxcnc.org/docs/2.8/html/gcode/g-code.html#gcode:g20-g21)
+selects inches with G20; its [inch-mode threading example](https://github.com/LinuxCNC/linuxcnc/blob/master/nc_files/lathe-g76.ngc)
+also uses P0.05. Metric pitch and diameter/radius conversion controls pass, as
+does inch conversion of I/J/K depths and the Z endpoint.
 
-On Terje `683589bd10bb1082825bfc7e9bcee6db102b9530`, two PWM spindles
-registered before parser initialization and enabled through settings reproduce
-this sequence: `M3S6000$0`, `M3S8000$1`, `M5$0`. Primary stopping emits a PWM
-update above its preceding 6000 RPM output. The secondary remains enabled.
-Both descriptors use real PWM precomputation and configured start/stop ramps.
-Passing controls verify independent start routing, a primary stop before any
-secondary use, and a secondary stop preserving the primary output.
-This is a host-observed output command, not a claim about physical motor speed
-or how frequently users encounter this configuration.
+In [gcode.c:3427-3443](https://github.com/terjeio/grblHAL_core/blob/4ec1ae44b857a70d2f9298344feac4b43ed0eb6b/gcode.c#L3427-L3443),
+the parser copies P to thread.pitch, then converts only the radial I/J/K values.
+It copies E directly at
+[gcode.c:3460-3461](https://github.com/terjeio/grblHAL_core/blob/4ec1ae44b857a70d2f9298344feac4b43ed0eb6b/gcode.c#L3460-L3461).
+[init_sync_motion(), lines 1051-1058](https://github.com/terjeio/grblHAL_core/blob/4ec1ae44b857a70d2f9298344feac4b43ed0eb6b/gcode.c#L1051-L1058)
+passes that pitch to the planner feed unchanged. Regressions use the actual
+parser and threading code, capturing parameters at plan_buffer_line; they do
+not claim a physical spindle/motor run.
 
-In [_get_ramp(), spindle_control.c:582-605](https://github.com/terjeio/grblHAL_core/blob/683589bd10bb1082825bfc7e9bcee6db102b9530/spindle_control.c#L582-L605),
-the secondary lookup declares a new local `ramp` at line 599. It does not update
-the outer pointer returned at line 604. The first secondary ramp therefore
-reuses the primary record; its completed 8000 RPM becomes the cached start
-speed for the primary stop. A new record is also appended before looking for
-an existing match.
+**Regressions:** [inch pitch](cases/motion_control/thread_plan_parser_inch_pitch_uses_millimeters_per_revolution.c)
+and [inch exit taper](cases/motion_control/thread_plan_parser_inch_exit_taper_converts_length_to_millimeters.c).
+The correct assertions remain, with only these two named cases marked expected
+failures in [known_bugs.cmake](known_bugs.cmake). There is no sanitizer allowance.
 
-**Suggested fix (proposal):** Search the existing list using the pointer that
-will be returned; allocate a new record only if no matching spindle exists.
-Keep allocation-failure behavior explicit. Re-run the paired and ordinary
-single-spindle ramp cases, including overrides, under sanitizers. Once this
-regression passes, remove its narrow exception and delete this entry while
-keeping the output assertions. No core patch has been applied here.
+**Suggested fix (proposal, not applied):** in the G76-specific parsing branch,
+convert P and an explicitly supplied E from inches to millimeters before storing
+thread.pitch and thread.end_taper_length. Preserve radius/diameter treatment of
+I/J/K, Q angles and the unitless R/H/L fields; do not apply a global P conversion that
+would affect dwell or other commands. Review persistence of omitted modal words
+separately. Verify metric and inch pitch, entry/exit tapers, diameter mode, and
+the existing thread-plan cases.
 
-
-## Legacy compatibility mode reports the opposite stepper-enable setting
-
-**Marked known:** 2026-10-15, Terje `feebef26222111f11c7a3b3b0156d023aa786937`.
-
-With COMPATIBILITY_LEVEL=10, boot normally, send `$4=0`, then query `$4`.
-The controller acknowledges the write but reports `$4=1`. This is an ordinary
-sender settings workflow, with no short buffer, invalid argument or late driver
-registration. Level 2's axis-mask write/readback control passes.
-
-The [setter at settings.c:644-648](https://github.com/terjeio/grblHAL_core/blob/feebef26222111f11c7a3b3b0156d023aa786937/settings.c#L644-L648)
-maps zero to the all-axes mask and one to zero in the >2 branch. The
-[getter at settings.c:723-727](https://github.com/terjeio/grblHAL_core/blob/feebef26222111f11c7a3b3b0156d023aa786937/settings.c#L723-L727)
-returns the mask's boolean value rather than reversing that mapping. Settings
-export can therefore disagree with the value the sender just set. This does
-not claim a particular board's electrical enable polarity.
-
-**Regression:** [normal boot and sender query](cases/boot_compat_10/legacy_enable_setting_round_trips_through_sender_query.c).
-The correct `$4=0` readback assertion remains. Only this named case is an expected
-failure; there is no sanitizer exception.
-
-**Suggested fix (not applied):** invert the boolean result in the >2 getter branch
-(for example, `!settings.steppers.enable_invert.mask`) to match its setter. Keep
-the level-2-and-below axis-mask branch unchanged. Verify writes/queries of both
-zero and one, settings reload, and the existing axis-mask control.
-
-**Remove exception when fixed:** delete this case's WILL_FAIL block in
-[known_bugs.cmake](known_bugs.cmake), retain its sender-query assertions, run the
-compatibility cases and full sanitizers/strict summary, then delete this entry.
+**Remove exceptions when fixed:** remove the two matching WILL_FAIL blocks from
+[known_bugs.cmake](known_bugs.cmake), keep both regression assertions, run related
+and full sanitizer/strict checks, then delete this entry.

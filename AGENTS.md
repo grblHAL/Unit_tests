@@ -2,16 +2,23 @@
 
 ## Objective and delivery
 
-Current new work is coverage-batch-20 from frozen batch 19 ca66c4d.
+Current delivery is coverage-batch-20 from frozen batch 19 ca66c4d; after pushing
+its validated checkpoint, continue independent work on coverage-batch-21.
 Batch 19 adds 15 cases / 3,312 total. Full ASan/UBSan, strict summary and 44 helper
 checks pass in 58.09 s (batch19-delivery), nine expected failures. It is pushed;
 exact-head hosted run 38799824879 is fully green: 94.18% lines / 81.85% branches.
-Batch 20 adds seven cases / 3,319 total. Full sanitizer/strict gate and 44 helpers
-pass (54.68 s, nine expected failures). New soft-limit tests exercise idle/active
+Batch 20 now adds 15 cases / 3,327 total. Full sanitizer/strict gate and 44 helpers
+passed the earlier 3,319-case checkpoint (54.68 s). New soft-limit tests exercise idle/active
 alarms, status/reset, interrupted deceleration and coupled CoreXY motors.
 Continue from the latest hosted report; lathe threading unit/diameter conversion
 and remaining supported parser workflows are useful next areas.
-Core remains clean latest Terje feebef2. Uncertain driver-failure detail reporting
+Core is clean latest Terje 4ec1ae4 after its forced remote update. Two fixed
+exceptions/entries (paired ramp cache and legacy $4 readback) are removed; their
+unchanged regressions pass. New G76 inch P/E conversion regressions are narrowly
+documented expected failures; metric/depth/diameter controls pass. Full 3,327-case
+latest-source gate passed in 113.54 s with nine expected failures, strict summary
+and 44 helper tests (batch20-latest-delivery). Exact-head hosted validation is
+required before a ready PR. Uncertain driver-failure detail reporting
 is a TODO policy question, not a new known-failure exception.
 
 Frozen batches 15-18 all passed exact-head hosted source/GCC/Clang/coverage and

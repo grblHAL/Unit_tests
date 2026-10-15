@@ -54,14 +54,14 @@ if(TEST ioports_pullup.pullup_disable_live_and_loaded_configuration_agree)
     PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
 endif()
 
-# Two enabled PWM spindles must retain independent cached ramp speeds.
-if(TEST multi_spindle.primary_pwm_stop_after_secondary_start_never_increases_primary_output)
-  set_tests_properties(multi_spindle.primary_pwm_stop_after_secondary_start_never_increases_primary_output
+# G20 G76 P pitch and E taper length must reach the planner in millimeters.
+# Confirmed against Terje 4ec1ae4 on 2026-10-15; see KNOWN_BUGS.md.
+if(TEST motion_control.thread_plan_parser_inch_pitch_uses_millimeters_per_revolution)
+  set_tests_properties(motion_control.thread_plan_parser_inch_pitch_uses_millimeters_per_revolution
     PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
 endif()
 
-# Legacy boolean enable setting must read back the value accepted from the sender.
-if(TEST boot_compat_10.legacy_enable_setting_round_trips_through_sender_query)
-  set_tests_properties(boot_compat_10.legacy_enable_setting_round_trips_through_sender_query
+if(TEST motion_control.thread_plan_parser_inch_exit_taper_converts_length_to_millimeters)
+  set_tests_properties(motion_control.thread_plan_parser_inch_exit_taper_converts_length_to_millimeters
     PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
 endif()

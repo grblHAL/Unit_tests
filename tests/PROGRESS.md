@@ -2582,3 +2582,51 @@ All focused cases pass sanitizer/strict checks (batch20-soft-limit and
 batch20-corexy-soft results). Full 3,319-case checkpoint passed in 54.68 s, strict
 summary, nine expected failures and all 44 helper tests (batch20-soft-checkpoint
 logs/results). Batch 20 adds seven cases so far; continue before delivery.
+
+## Batch 20 G76 unit conversions and latest-core refresh
+
+Five new parser-to-thread-plan captures check metric pitch, diameter/radius depths,
+inch radial depths/Z endpoint, inch pitch and inch exit-taper length. Matched
+programmed/measured spindle RPM is 2000 with Z max feed 5000 mm/min, so both correct
+and current pitch values fit the configured feed capability. Inch pass counts may
+include a float-rounding finishing pass; geometry checks assert cut depths and
+endpoints rather than an incidental exact pass count.
+
+Two assertions reproduce real G20 unit errors: P0.05 reaches the planner as 0.05
+instead of 1.27 mm/rev; E0.125 leaves 0.125 rather than 3.175 mm of exit taper.
+LinuxCNC's G76 length-unit reference and inch threading sample confirm the contract.
+Correct assertions are retained in two separate, narrow expected-failure cases,
+linked with cleanup instructions and proposed fixes in KNOWN_BUGS.md. No sanitizer
+allowance or core patch. Metric/diameter/inch-depth controls pass.
+
+Full 3,324-case gate on prior feebef2 passed in 62.92 s, strict summary/44 helpers,
+11 expected failures (the previous nine plus these two). Before delivery, live
+source refresh found Terje force-updated master to
+4ec1ae44b857a70d2f9298344feac4b43ed0eb6b (62f25d4 plus type-mismatch fix).
+After the old run completed, the clean ignored core checkout was updated; no
+tracked source pin/submodule or production edits were introduced.
+
+The unchanged paired-primary-stop and compatibility-10 $4 sender regressions now
+exit successfully. Their obsolete WILL_FAIL blocks and bug entries are deleted.
+G76 failures remain reproduced on 4ec1ae4 with updated exact-source links.
+Three paired PWM cases further check concurrent up/down override ramps, retargeting
+the primary without disturbing secondary progress, and stopping one while the other
+reaches its target. RPM targets are independently checked within 0.01 RPM, then PWM
+is checked at that accepted floating-point target to respect hardware quantization.
+All 19 related focused cases pass sanitizer/strict checks with two G76 expected
+failures (batch20-latest-focused-results.xml).
+
+Total 3,327 / 15 new in batch 20; nine expected failures remain after removing two
+fixed exceptions and adding two new regressions. Full latest-source gate is live
+as batch20-latest-delivery. Do not present a ready delivery before it completes
+and the frozen head passes hosted source/GCC/Clang/coverage/diagnosis.
+
+Batch 20 latest-source full gate now passes all 3,327 cases in 113.54 s, strict
+summary, nine expected failures and all 44 helper checks (batch20-latest-delivery
+logs/results). Core 4ec1ae4 is clean. The paired-ramp and legacy enable-readback
+regressions are ordinary passes; G76 P/E failures remain narrowly documented.
+Freeze/push this 15-case checkpoint, validate its exact head against 4ec1ae4 on
+hosted GCC/Clang/coverage, and continue new work on coverage-batch-21 while it runs.
+The latest measured percentages (94.18% lines / 81.85% branches) still describe
+batch 19 on prior feebef2; compare raw denominators when the updated-core report
+arrives. Do not count source changes as test-only coverage improvement.
