@@ -2,21 +2,20 @@
 
 ## Objective and delivery
 
-Current new work is coverage-batch-15 from batch 14 b286d22.
-Batch 14 is rebased onto upstream master e6edb45
-(merged PR #18). It adds 18 cases, 3,217 total. Full local ASan/UBSan, strict
-summary and 44 helper checks pass; hosted run 38745457196 is running. Inspect exact-head GCC,
-Clang, coverage and diagnosis before presenting a ready PR. Core remains clean
-Terje feebef2. PR #18 combined head 9c7099d passed hosted run 38735673645:
-93.17% header-inclusive lines / 80.68% branches, 3,199 cases. New batch 14
-coverage is not measured until hosted validation completes. Continue the full
-goal autonomously; never merge PRs automatically or commit/push master/main.
-Questions and unimplemented public workflows belong in tests/TODO.md.
+Current delivery is coverage-batch-15 (20 new / 3,237 total), based on batch 14
+b286d22. Full local ASan/UBSan, strict summary and 44 helper checks pass.
+Publish and verify exact-head Linux source/GCC/Clang/coverage/diagnosis before
+its ready PR. Batch 14 PR #19 is ready/open, not merged at last live check;
+all run 38745457196 jobs passed, 93.23% lines / 80.79% branches including emitted
+header code. New work belongs on coverage-batch-16 after the batch 15 freeze.
+Core remains clean latest Terje feebef2. Never merge PRs automatically or
+commit/push master/main. Continue autonomously toward the full goal.
 
-DO/WHILE CONTINUE is a maintainer question in TODO.md at the user's request. Its
-candidate in tests/proposals is not registered and must await Terje's chosen
-contract. The separate WHILE false-condition regression remains documented with
-one narrow expected-failure exception and unchanged assertions.
+DO/WHILE CONTINUE remains a maintainer question in TODO.md; its candidate is
+unregistered. The separate WHILE false-condition regression is fixed on current
+core and retained as an ordinary passing test. NO_SAFETY_DOOR_SUPPORT build
+support is also a TODO question; keep its four candidates unregistered until
+support status and missing setter/table guards are resolved.
 
 Continue toward meaningful full grblHAL core coverage: every core module and
 supported feature configuration, with line and branch coverage guiding the work.

@@ -2179,3 +2179,14 @@ production patch or defect exception. Evidence: batch15-restore-results.xml.
 Total 3,237; batch 15 adds twenty cases. Prior full 3,232-case ASan/UBSan and
 strict gate passed in 48.23 s, with 44 helper checks; run the enlarged full gate
 before publishing. Core remains clean feebef2.
+
+## Batch 15 full delivery freeze
+
+Full ASan/UBSan and strict summary pass 3,237 cases: 3,228 clean plus nine
+documented expected failures, zero unexpected failures/skips/diagnostics,
+48.96 s. All 44 helper checks pass. Evidence: build-asan/batch15-delivery-results.xml
+and parent batch15-delivery logs. Core remains clean latest feebef2.
+Freeze/push this 20-case delivery and run hosted Linux source/GCC/Clang/coverage/
+diagnosis. PR 19 remains ready/open; prefer its merge before rebasing/opening
+batch 15's ready PR, never merge automatically. Continue new work separately on
+coverage-batch-16; normal-boot probe protection is a remaining public workflow gap.
