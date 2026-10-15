@@ -2400,3 +2400,21 @@ Core remote HEAD still feebef2 and PR 19 remains open at this check. Hosted batc
 16 remains the measured baseline: 93.54% lines and 81.10% branches; no claim of
 coverage increase is made for the unmeasured local additions. Persistent full
 coverage goal was absent and has been recreated as active with the same guardrails.
+
+## Batch 17 feature settings/report delivery checkpoint
+
+Six further cases exercise eight-axis settings file completion: linear rates above
+the driver's frequency limit are clamped while a configured rotary axis retains
+its angular rate; linear rates exactly at or below the limit remain unchanged.
+Backlash readback checks independent X/Y compensation through the public settings
+API. Build reports advertise selected variable-speed spindle, enabled homing and
+the cutter-compensation/lathe-UVW feature build. These check host configuration and
+parser/report contracts, not physical driver performance or cutter geometry.
+
+Focused six-case sanitizer/strict checks pass (batch17-feature-report-results.xml).
+Full delivery gate now passes all 3,277 cases in 52.86 s, nine labelled expected
+failures, strict summary and 44 helper tests (batch17-delivery logs/results).
+Batch 17 adds 19 cases. Latest clean Terje core is still feebef2. Freeze this
+checkpoint for hosted source/GCC/Clang/coverage/diagnosis and continue new work on
+coverage-batch-18; do not treat the local pass as a new coverage percentage or
+present a ready PR before the hosted gate completes.
