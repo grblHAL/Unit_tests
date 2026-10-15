@@ -2115,3 +2115,27 @@ contains exact revision/diagnostics/reproduction and four candidate tests remain
 unregistered under tests/proposals. The host variant was removed from CMake;
 no source patch or broad compiler exception was added. Do not claim runtime
 coverage for those candidates. Continue independent supported workflows.
+
+## Batch 15 configurable long macro labels
+
+Added an NGC host variant with the supported NGC_MAX_PARAM_LENGTH=80 override
+and expressions enabled consistently for core and tests. Three parser-driven
+cases exercise long filenames requiring allocated lookup paths, the configured
+80-character boundary, successful return/EOF cleanup, missing-file error handling
+and caller-argument restoration. The shared static-macro backend now accepts a
+configured name, retaining fixture as its default. Ten named-macro controls pass
+focused sanitizer/strict checks, including the seven existing short-name cases.
+The first candidate on the default build correctly rejected its over-30-character
+label; this was a test configuration error, not a core bug. The explicit variant
+now tests the valid extended configuration. README lists the added variant.
+
+Full current ASan/UBSan and strict summary pass 3,224 cases (nine documented
+expected failures), 53.24 s; all 44 helper checks pass. Evidence:
+build-asan/batch15-checkpoint-results.xml and parent batch15-checkpoint logs.
+Batch 15 adds seven registered cases; no new exceptions or production edits.
+
+Batch 14 run 38745457196 coverage job succeeded. Its downloaded coverage artifact
+confirms 3,217 cases, zero failures/skips, 16,413/17,604 lines (93.23%) and
+11,013/13,632 branches (80.79%). GCC/Clang were still running at the last check;
+verify their completion and diagnosis before opening/attaching its ready PR.
+This measurement does not include batch 15. Continue independent coverage work.
