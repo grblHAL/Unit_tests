@@ -1309,3 +1309,37 @@ and the prior validated configuration commit together, then verify hosted while
 continuing remaining public paths. Suggested next work: multi-block sender
 completion and real RTCP/delta startup motion with physical geometry NVS;
 retain realistic initial positions and independent geometric controls. Goal active.
+
+## Batch 10 complete sender programs, RTCP and delta startup motion
+
+Run 38662265998 passed source/GCC/Clang/coverage/CI diagnosis for the 80-case
+checkpoint 986eabb on Terje 683589b. Measured coverage: 16,032/17,437 lines
+(91.9424%) and 10,621/13,506 branches (78.6391%).
+
+Twelve further registered cases pass: three complete multi-command programs,
+six real streamed RTCP controls and three delta motions. The sender fixture
+counts every standalone successful acknowledgement, accepting CRLF or LF
+preceding plugin output while excluding prefixed startup acknowledgements.
+It exits only after all commands acknowledge and motion drains. This corrected
+a fixture parser that missed the acknowledgement after M852's LF-only diagnostic.
+
+RTCP controls use physical geometry NVS, public setting writes, zero-center and
+fixed 90-degree A/C configurations, disable/resync followed by an incremental
+machine-frame move, and M852 measurement with default nonzero centers. The
+zero-center expectation on unmeasured defaults was not classified as a bug.
+A no-motion unregistered candidate and TODO ask whether direct M851 activation
+must synchronize parser coordinates or requires the M852 sequence first.
+
+Delta controls load symmetric physical/radian motor configuration before
+kinematics initialization and execute vertical cut/jog and a longer segmented
+cut. Independent rod geometry yields 5 equal motor steps for .5 mm and 98 for
+10 mm; counter-derived Cartesian rounding allowance is explicit. The longer
+cut observes a full planner and motion before acknowledgement. Source is
+unmodified. No new known exceptions or regression assertion weakening.
+
+Full local ASan/UBSan and strict summary: 2,989 total, 2,976 clean,
+13 documented expected failures, zero unexpected failures/skips (45.39 s;
+build-asan/batch-10-multi-kin-full-results.xml). Batch 10 adds 92 registered
+cases total. Publish and dispatch this checkpoint, then continue remaining
+supported paths from fresh coverage. Questions stay in TODO and proposals
+unregistered. Goal active; no PR claimed ready without its hosted gate.

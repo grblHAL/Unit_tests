@@ -225,3 +225,26 @@ The [candidate test](proposals/manual_ganged_y_reference_resets_both_motor_coord
 is unregistered pending that decision. Its fixture expects N_AXIS=4 and a ganging
 or auto-square boot variant. No exception, source exclusion or production patch
 was added. The ordinary startup homing tests remain registered.
+
+## RTCP activation and measurement sequence
+
+**Contract question recorded:** 2026-10-15, Terje `683589b`.
+
+With default nonzero A/C center offsets and zero motor counters, public M851
+changes the current RTCP coordinates to approximately (-113.660, -158.700,
+186.540), while the parser's cached XYZ remains (0, 0, 0). A no-motion
+[candidate frame check](proposals/rtcp_activation_updates_parser_frame_before_following_commands.c)
+observes this after the sender acknowledgements, before another command or
+motor pulse. It is unregistered, with no expected-failure allowance.
+
+The [normal measured-frame control](cases/boot_rtcp/streamed_calibrated_default_geometry_keeps_incremental_move_local.c)
+passes: M852 then M851 followed by a small incremental cut produces the intended
+20/40/10 motor counters using those same default centers. Zero-centered and
+fixed-angle streamed RTCP controls also pass.
+
+Is M852 mandatory before enabling RTCP with nonzero center offsets? If so,
+confirm/document that sequence and consider guidance for omitted measurement.
+If direct activation is supported, should the parser coordinate cache be
+resynchronized when the frame changes? The [M-code handler at lines 420-436](https://github.com/terjeio/grblHAL_core/blob/683589bd10bb1082825bfc7e9bcee6db102b9530/kinematics/rtcp_ac.c#L420-L436)
+resynchronizes on M850 but not M851. This remains a workflow/contract question,
+not a confirmed core defect. No production patch or source exclusion was added.
