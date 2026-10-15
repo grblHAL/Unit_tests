@@ -1742,3 +1742,16 @@ Two further Modbus cases pass focused sanitizer/strict summary: after no reply,
 the sender's $MODBUSSTATS command distinguishes never-connected from previously
 responsive devices and reports one timeout. Evidence: build-asan/batch-12-status-
 results.xml. Batch 12 now adds eight cases, total 3,144; no new exception.
+
+
+## Batch 12 independent secondary motor service
+
+Three cases pass focused sanitizer/strict summary: slow finite feed emits no
+pulse before its deadline and reaches two steps; changing one continuously
+serviced motor's speed preserves the other rate; stopping one motor lets the
+other continue stepping. Both motors are serviced through public APIs with a
+shared simulated clock, and aggregate pulses match independent positions. No
+physical pulse-frequency claim, private state access or new exception.
+Evidence: build-asan/batch-12-pair-results.xml. Batch 12 adds eleven cases,
+total 3,147. Core remains clean feebef2. Full local checkpoint is next after the
+next related module; batch 11 PR still awaits final hosted jobs.
