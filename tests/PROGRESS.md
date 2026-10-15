@@ -1452,3 +1452,26 @@ Full ASan/UBSan and strict summary passed: 3,057 total, 3,044 clean,
 Publish this checkpoint once the prior hosted run is terminal; continue
 remaining supported paths, including spindle at-speed feedback timing.
 The goal is active; questions remain TODO and no PR is yet claimed ready.
+
+## Batch 10 spindle-ready feedback and macro-visible coolant
+
+Six spindle-ready cases register a basic variable spindle with at-speed
+feedback before parser initialization. Real M3/M4 commands check delayed ready
+signals, zero configured startup delay, already-ready feedback, readiness at
+the deadline and missing-feedback timeout. Successful notifications follow
+feedback; timeout turns the driver off and raises Alarm_Spindle. The timeout
+observer timestamps alarm entry before the normal 100 ms alarm-report delay;
+an initial wall-clock assumption was corrected, without a new bug claim.
+
+Full ASan/UBSan and strict summary passed 3,063 cases (3,050 clean,
+13 documented expected failures, zero unexpected failures/skips), 101.18 s;
+build-asan/batch-10-ready-full-results.xml. Three subsequent focused sanitizer
+cases check named mist/flood parameters against real coolant driver state
+through M7/M8/M9, and named version against firmware build identity. Their
+strict summary passes (build-asan/batch-10-named-coolant-results.xml).
+Now 3,066 registered cases: batch 10 adds 169. No new exceptions or source
+changes. Hosted checkpoint 764c53c is run 38682688236; inspect terminal state
+before pushing. Earlier run 38668110778 passed all jobs, covering
+16,107/17,437 lines (92.3725%) and 10,723/13,506 branches (79.3943%).
+Continue remaining supported paths and preserve the full goal. No PR has
+been presented as ready. Source remains Terje 683589b.
