@@ -2,18 +2,18 @@
 
 ## Objective and delivery
 
-Current new coverage work belongs on `coverage-batch-12`. Batch 11 is frozen
-at `ae0eaa7`, with all final hosted jobs passed in run `38693498958`; ready PR #17 is
-merged as upstream `fb9086d`. Batch 12 is rebased onto that merged parent. PR #16 (batch 10) is
-merged; upstream master was refreshed to `fb9086d`. Batch 11 adds 34 cases and
-removes five fixed exceptions against clean Terje core `feebef2`. Its full local
-3,136-case sanitizer/strict-summary gate passed. Finish hosted validation of the
-final rebased head before presenting a ready PR; never merge it automatically.
-The overnight goal is active. Continue autonomously while usage permits.
-Never commit/push master/main or add AI branding. Questions and uncertain
-contracts go in tests/TODO.md; continue independent work without waiting.
-Keep CI changes separate. Older snapshots are historical; latest PROGRESS.md
-governs. Do not push and cancel a healthy validation run on the same branch.
+Current new coverage work belongs on `coverage-batch-13`, based on the frozen
+55-case `coverage-batch-12` delivery (3,191 total, full local ASan/UBSan + strict
+summary and 43 helper checks passed). PR #17 is merged as upstream fb9086d.
+Separate header-reporting PR #18 is ready/open at 09a15fa; all hosted jobs and
+44 helper checks passed. Never merge PRs automatically. Final batch 12 needs
+its exact hosted validation before a ready PR; keep new tests separate and
+prefer rebasing after #18 merges to retain the expanded reporting scope.
+Core under test is clean Terje feebef2. The full coverage goal remains active.
+Continue autonomously while usage permits. Never commit/push master/main or
+add AI branding. Questions/uncertain contracts go in tests/TODO.md. Keep CI
+changes separate. Latest PROGRESS.md and live Git/CI state govern over older
+snapshots. Do not push and cancel a healthy validation run on the same branch.
 
 DO/WHILE CONTINUE is a maintainer question in TODO.md at the user's request. Its
 candidate in tests/proposals is not registered and must await Terje's chosen

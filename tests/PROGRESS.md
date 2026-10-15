@@ -1950,3 +1950,19 @@ contains exercised headers, and its expanded-scope baseline is 16,257/17,473
 lines (93.04%), 10,902/13,560 branches (80.40%). Do not compare that smaller
 3,136-case baseline directly with batch 12's 3,178-case C-only measurement.
 No PR was merged automatically. Keep the full goal active.
+
+
+## Batch 12 final 55-case delivery freeze
+
+Full ASan/UBSan plus strict summary passed 3,191 cases: 3,182 clean, nine
+explicit expected failures, zero unexpected failures/skips/diagnostics, 46.62 s
+(build-asan/batch-12-final-results.xml). All 43 helper checks in this test branch
+pass freshly; the separate reporting branch has its additional 44th check.
+Production core remains clean feebef2, still remote HEAD at this checkpoint.
+
+Freeze the 55 new cases as coverage-batch-12's delivery. Publish and validate
+its exact final head against feebef2 before a ready PR. PR #18 is independently
+ready/open for CI header reporting; prefer merging that upstream before final
+batch-12 rebase/PR to avoid overlapping README/PROGRESS edits. Do not merge any
+PR automatically or stop coverage while waiting. New test work continues on
+coverage-batch-13 from this freeze; keep it separate so it cannot delay batch 12.
