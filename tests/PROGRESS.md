@@ -1766,3 +1766,23 @@ G66/G66.1 controls also pass. Re-registration syntax is uncertain (status 21),
 so that candidate is unregistered under proposals with evidence in TODO, not
 classified as a defect. Total 3,149 cases, thirteen beyond batch 11. Evidence:
 build-asan/batch-12-modal-results.xml. Run the full local gate at this checkpoint.
+
+
+## Batch 12 full checkpoint and parser-driven manual tool changes
+
+The first full local checkpoint passed ASan/UBSan + strict summary: 3,149 cases,
+3,141 clean, eight expected failures, zero unexpected failures/skips/diagnostics,
+43.53 seconds (build-asan/batch-12-first-full-results.xml). Core remote HEAD was
+rechecked at unchanged feebef2. Batch 11 is now ready PR #17: all final run
+38693498958 jobs passed, exact harness ae0eaa7 and core feebef2 verified from
+source-lock. Final C-source coverage is 16,232/17,440 lines (93.07%) and
+10,863/13,518 branches (80.36%). Do not merge PR #17 automatically.
+
+Three parser-driven manual M6 cases now pass with all 56 tool-change cases:
+require homed tool axis, block new motion while pending, and acknowledge through
+the normal sender/realtime path to apply the tool and release later motion.
+The shared manual interface setup was factored without changing old behavior,
+and supplies the normal non-null tool-completion callback. The first completion
+candidate omitted realtime service/callback setup; the fixture was corrected,
+not classified as a core bug or suppressed. Evidence: build-asan/batch-12-m6-
+results.xml and strict summary. Total 3,152; batch 12 adds sixteen cases.
