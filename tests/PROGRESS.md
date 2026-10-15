@@ -2047,3 +2047,23 @@ claiming the expanded PR ready. Do not push this separate batch onto its branch
 and cancel that validation. Next: use its Linux header-inclusive report to guide
 remaining public workflow/configuration gaps. Core remains clean Terje feebef2.
 The goal tool reports usageLimited despite reset; local work remains authorized.
+
+## Batch 14 sender-driven metadata storage
+
+Five more normal-boot sender cases pass ASan/UBSan and strict summary:
+$DWNGRD sets and persists the downgrade flag/build marker, a second command
+restores the current build (observer proves the first transition occurred),
+and an argument is rejected without changing saved version data. $I writes
+and reads custom build information; oversized input reports error 3 and retains
+the previous value. Assertions inspect the physical NVS adapter after ordinary
+shutdown/flush, with checksums, rather than the freed RAM buffer. Initial failures
+were a test lifecycle mistake reading that freed buffer, corrected without any
+production changes or exception. Evidence: build-asan/batch14-sender-results.xml.
+Total 3,210 cases; batch 14 adds eleven cases. A fresh full gate is required
+before publishing this enlarged batch.
+
+PR 18 is merged upstream at e6edb45; its exact premerge head 9c7099d passed all
+hosted jobs in run 38735673645. Authoritative header-inclusive coverage there:
+16,401/17,604 lines (93.17%), 10,998/13,632 branches (80.68%), 3,199 cases.
+These percentages do not yet include batch 14. Rebase this branch onto freshly
+fetched upstream master before its eventual PR and preserve this work.
