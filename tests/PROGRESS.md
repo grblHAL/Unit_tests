@@ -1786,3 +1786,20 @@ and supplies the normal non-null tool-completion callback. The first completion
 candidate omitted realtime service/callback setup; the fixture was corrected,
 not classified as a core bug or suppressed. Evidence: build-asan/batch-12-m6-
 results.xml and strict summary. Total 3,152; batch 12 adds sixteen cases.
+
+
+## Batch 12 persisted offsets through manual acknowledgement
+
+The preceding 3,152-case full sanitizer/strict-summary gate passed: 3,144 clean,
+eight expected failures, zero unexpected failures/skips/diagnostics, 45.54 s
+(build-asan/batch-12-m6-full-results.xml). All 43 helper checks pass.
+The acknowledgement test now executes the following X cut to its exact 80-step
+physical/system endpoint with unchanged Y/Z, also passing focused strict checks.
+
+Three further cases combine the existing four-tool host configuration with normal
+settings initialization, persistent tool writes, parser M6 and actual manual
+acknowledgement. They verify deferred G43, explicit alternate H offsets and H0
+selecting the pending tool. Following Z cuts reach exact -240/-160 endpoints.
+No tool table data is reimplemented, no core source is modified, and no new
+exception was added. Evidence: build-asan/batch-12-manual-table-results.xml and
+strict summary. Total 3,155, nineteen new cases in batch 12.

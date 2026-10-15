@@ -15,5 +15,9 @@ int main(void)
     char move[] = "G1X1F100";
     CHECK(gc_execute_block(move) == Status_OK);
     CHECK(plan_get_current_block() != NULL);
+    execute_motion_program();
+    CHECK(physical_position[X_AXIS] == 80 && sys.position[X_AXIS] == 80);
+    CHECK(axis_pulses[X_AXIS] == 80);
+    CHECK(axis_pulses[Y_AXIS] == 0 && axis_pulses[Z_AXIS] == 0);
     return EXIT_SUCCESS;
 }
