@@ -89,6 +89,7 @@ bool __wrap_driver_init(void)
     hal.irq_claim = core_hal.irq_claim;
     hal.nvs.size = core_hal.nvs.size; hal.step_us_min = core_hal.step_us_min;
     hal.tool.atc_get_state = core_hal.tool.atc_get_state;
+    hal.homing.get_feedrate = core_hal.homing.get_feedrate;
     hal.control.interrupt_callback = core_hal.control.interrupt_callback;
     hal.limits.interrupt_callback = core_hal.limits.interrupt_callback;
     hal.stepper.interrupt_callback = core_hal.stepper.interrupt_callback;

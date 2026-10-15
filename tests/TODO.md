@@ -202,3 +202,26 @@ These observations are not new core defects. Confirm supported exposure before
 adding executable setting-update cases. Do not call the private setters or
 modify production registrations merely to fill uncovered lines. If enabled
 upstream, add public configuration, readback, persistence and driver-effect tests.
+
+## Partial manual reference for ganged motors
+
+**Contract question recorded:** 2026-10-15, Terje `683589b`; leave for maintainer review.
+
+With persisted manual-homing mode, no homing phases and force-set-origin enabled,
+real startup restoring XYZ/A motor counters {160, -240, 320, -240}, then `$HY`,
+sets Y to zero but retains the secondary A counter at -240. X/Z are retained,
+Y is marked referenced and no driver pulses occur. Both asymmetric ganging and
+auto-square reproduce this result. Normal full startup homing and single-X
+controls pass.
+
+Should partial manual referencing of logical Y also zero its ganged secondary
+counter, or should these configurations require referencing all axes? The
+[kinematics position hook, lines 200-205](https://github.com/terjeio/grblHAL_core/blob/683589bd10bb1082825bfc7e9bcee6db102b9530/kinematics/asymmetric_ganging.c#L200-L205)
+updates the secondary counter only when force-set-origin is disabled. The manual
+homing path forwards the requested Y mask without the secondary bit. Confirm
+supported use and intended semantics before calling this a defect.
+
+The [candidate test](proposals/manual_ganged_y_reference_resets_both_motor_coordinates.c)
+is unregistered pending that decision. Its fixture expects N_AXIS=4 and a ganging
+or auto-square boot variant. No exception, source exclusion or production patch
+was added. The ordinary startup homing tests remain registered.

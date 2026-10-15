@@ -1217,3 +1217,35 @@ build-asan/batch-10-delivery-results.xml). Earlier 43 script checks remain
 valid: no script changes. Commit/push this checkpoint and dispatch hosted
 validation on the same core SHA, then continue independent measured gaps.
 No PR is ready until hosted gates pass. Full-coverage goal remains active.
+
+## Batch 10 extended-axis arcs and startup-to-homing integration
+
+Run 38659450581 passed every hosted job for the 38-case checkpoint 3c1a352
+against Terje 683589b. Coverage: 15,948/17,437 lines (91.4607%) and
+10,559/13,506 branches (78.1801%). Source checkout remains clean/unmodified.
+
+Thirteen further registered cases pass: seven original planner/stepper arc
+executions with eight-axis or remapped UVW extra-axis travel; one real boot
+single-primary auto-square homing rejection; five startup-to-homing controls,
+including ordinary and ganged X homing, independent all-axis switches, release
+of stored startup modal code after all axes home, and continued locking after
+only X homes. Extra-axis pulse observation proves interpolation occurs during
+the arc, with signed endpoints and monotonic auxiliary pulse counts checked.
+No physical contour-accuracy claim. The shared boot driver wrapper now preserves
+core's default homing feed callback; stored homing configuration loads before
+settings-dependent cached values initialize. Earlier missing-callback/NaN
+failures and the ganging rejection expectation were fixture/contract errors,
+not core bug entries.
+
+Partial manual Y reference on ganging/auto-square with force-set-origin leaves
+the secondary motor counter unchanged. Both manually built unregistered
+candidates confirm {160, 0, 320, -240}, homed mask 2, zero wakes. It remains a
+contract question in TODO with an unregistered proposal, no exception. The
+ordinary homing fixture has no proposal-specific behavior.
+
+Full local ASan/UBSan plus strict summary passed 2,948 cases: 2,935 clean,
+13 documented expected failures, zero unexpected failures/skips (41.01 s;
+build-asan/batch-10-arc-home-full-results.xml). Batch 10 adds 51 registered
+cases total. No scripts changed since 43 helper checks passed. Publish this
+arc/startup checkpoint and validate hosted while continuing meaningful gaps.
+The full-coverage goal remains active, with unresolved questions in TODO.
