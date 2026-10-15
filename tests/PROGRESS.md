@@ -1917,3 +1917,36 @@ G28's rotary shortcut applied to G30. Core computes that shortcut only for G28;
 the case now follows G30's direct-coordinate behavior with ordinary bounded
 travel, without raising fixture bounds or classifying a defect. Evidence:
 build-asan/batch-12-eight-return-results.xml. Total 3,181; batch 12 adds 45 cases.
+
+
+## Batch 12 runtime legacy compatibility configurations
+
+Two host variants now execute COMPATIBILITY_LEVEL=2 and 10 rather than relying
+only on report syntax checks. Ten focused cases pass sanitizer/strict summary:
+nine clean, one narrow documented expected failure. They cover standard versus
+extended coordinates, HOME/report extensions, axis-mask versus boolean setting
+metadata, metric/absolute soft reset, legacy banner and tool reset.
+
+Legacy protocol does not accept the host CMD_EXIT byte. Its boot fixture now
+captures completion at the public stream-read boundary with setjmp/longjmp;
+normal core startup/reset runs, and no unsupported exit command is injected.
+The first read-limit failures were that fixture assumption, not core faults.
+Level 2's coordinate enum explicitly supports six work systems; config.h's
+wording is a TODO documentation clarification, not a missing-feature failure.
+
+A genuine level-10 sender readback defect reproduces after normal boot:
+$4=0 acknowledges successfully, but $4 reports $4=1. Verified setter/getter links,
+correct unchanged query assertion, proposed getter fix and exact exception
+removal instructions are in KNOWN_BUGS.md. Only that named case is WILL_FAIL;
+no sanitizer exception or production patch. Other modes/settings controls pass.
+Evidence: build-asan/batch-12-compat-results.xml and strict summary.
+Total 3,191; batch 12 adds 55 cases, with nine expected failures across the suite.
+Full current sanitizer gate is required before publishing this delivery checkpoint.
+
+Separate CI reporting PR #18 is ready at 09a15fa: all run 38698910578 jobs passed,
+source lock confirms feebef2/header filter, 3,136 cases zero unexpected failures/
+skips, and all 44 helper checks pass. It is independent of batch 12. The report
+contains exercised headers, and its expanded-scope baseline is 16,257/17,473
+lines (93.04%), 10,902/13,560 branches (80.40%). Do not compare that smaller
+3,136-case baseline directly with batch 12's 3,178-case C-only measurement.
+No PR was merged automatically. Keep the full goal active.

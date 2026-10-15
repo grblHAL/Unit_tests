@@ -59,3 +59,9 @@ if(TEST multi_spindle.primary_pwm_stop_after_secondary_start_never_increases_pri
   set_tests_properties(multi_spindle.primary_pwm_stop_after_secondary_start_never_increases_primary_output
     PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
 endif()
+
+# Legacy boolean enable setting must read back the value accepted from the sender.
+if(TEST boot_compat_10.legacy_enable_setting_round_trips_through_sender_query)
+  set_tests_properties(boot_compat_10.legacy_enable_setting_round_trips_through_sender_query
+    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
+endif()

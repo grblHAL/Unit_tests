@@ -335,3 +335,14 @@ configuration scope, and use hosted Linux results for authoritative percentages.
 Do not suppress gcovr errors, exclude real code or call 100% of the current
 .c-only report full core coverage. A short source/build path may help local LLVM
 collection, but verify actual profile files before trusting the resulting total.
+
+
+## Compatibility-level coordinate availability documentation
+
+**Documentation clarification:** 2026-10-15, Terje `feebef2`. config.h describes
+level 10 as disabling G59.1-G59.3, but gcode.h's coordinate enum explicitly makes
+them available only when COMPATIBILITY_LEVEL <= 1. Runtime level-2/10 tests use
+six standard work systems; level 2 retains HOME reporting, while level 10 omits
+that extension. Align the configuration description with intended availability.
+No missing-feature failure or exception is registered for this documentation
+question.
