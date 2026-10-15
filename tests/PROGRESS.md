@@ -1429,3 +1429,26 @@ Hosted run 38667090574 validates the prior 129-case checkpoint (2dc9b68);
 source/GCC/coverage passed at last check, Clang was running. Do not push and
 cancel it. Continue file-stream callback coverage while it completes, then
 publish this validated group and dispatch the complete checkpoint.
+
+## Batch 10 rotary feed timing and file callback contracts
+
+Run 38667090574 completed all jobs successfully for 2dc9b68: 16,073/17,437
+lines (92.1776%) and 10,689/13,506 branches (79.1426%). The following
+79ab9f5 checkpoint also passed all jobs in run 38668110778; its coverage
+artifact is not yet retrieved. Terje HEAD remains clean/unmodified 683589b.
+
+Nine new eight-axis cases configure rotary axes/options through public settings
+then run G-code through planner and pulse callbacks. They check linear-distance
+feed timing for mixed rotary moves, multiple rotary axes, inch feed reversion,
+explicit inverse time, rapid motion, disabled-fix behavior and linear-only
+controls. Assertions verify planned duration/rate and actual final motor counts.
+Five file-stream cases check normal error/status suppression callbacks, ordered
+file-end observers, report-handler reinitialization and offset/line reposition.
+All use public entry points. No new defect classification or exception.
+
+Full ASan/UBSan and strict summary passed: 3,057 total, 3,044 clean,
+13 documented expected failures, zero unexpected failures/skips, 116.25 s
+(build-asan/batch-10-rotary-file-full-results.xml). Batch 10 adds 160 cases.
+Publish this checkpoint once the prior hosted run is terminal; continue
+remaining supported paths, including spindle at-speed feedback timing.
+The goal is active; questions remain TODO and no PR is yet claimed ready.
