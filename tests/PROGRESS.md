@@ -2080,3 +2080,18 @@ preserves the selected homed mask. A shared mixed-axis report fixture avoids
 copying setup across cases. Focus evidence: batch14-help-results.xml (seven
 including existing controls), batch14-mixed-report-results.xml (three).
 Total 3,217; batch 14 adds eighteen cases. No new core changes or exceptions.
+
+## Batch 14 full publish checkpoint
+
+Rebased onto merged upstream e6edb45. Full ASan/UBSan and strict summary pass
+3,217 cases (3,208 clean, nine documented expected failures, no unexpected
+failures/skips/diagnostics), 53.75 s. All 44 Python helper checks pass. Evidence:
+build-asan/batch14-delivery-results.xml and parent batch14-delivery logs.
+Core checkout remains clean feebef2 and remote HEAD is unchanged. TODO records
+unsupported public wall-plotter homing as a coverage limitation, with no artificial
+private-path tests, source exclusion or defect classification.
+
+Publish this exact checkpoint for Linux GCC/Clang/header-inclusive coverage.
+Inspect all required jobs and source lock, record measured percentages, and only
+then create/attach a ready PR. Continue independent new work on a fresh branch
+while CI runs; do not cancel healthy validation by pushing more to this branch.
