@@ -480,7 +480,7 @@ Open `coverage.html` to inspect uncovered lines and branches. For a fresh measur
 use a new build directory so old execution counts cannot carry over.
 
 The host variants currently exercise the default configuration, legacy protocol
-compatibility level 1, NGC expressions, non-modal lathe U/V/W commands with NGC expressions, cutter-compensation parsing and plugin interfaces, G187 acceleration profiles, jerk acceleration with and without G187 profiles, coordinate rotation with NGC expressions, spindle synchronization with simulated encoder feedback,
+compatibility level 1, disabled NGC parameters/expressions (including boot and reset), NGC expressions, non-modal lathe U/V/W commands with NGC expressions, cutter-compensation parsing and plugin interfaces, G187 acceleration profiles, jerk acceleration with and without G187 profiles, coordinate rotation with NGC expressions, spindle synchronization with simulated encoder feedback,
 CoreXY, polar, wall-plotter, delta and five-axis RTCP kinematics, backlash
 compensation, four-axis asymmetric ganging with and without auto-squaring,
 the eight-axis maximum, six-axis UVW remapping, and three registered spindles

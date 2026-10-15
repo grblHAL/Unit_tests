@@ -1497,3 +1497,32 @@ They complete real serial/planner/pulse execution with exact endpoints/output
 No new exceptions or production changes. Hosted run 38682688236 completed all
 jobs successfully for 764c53c; push this completed local checkpoint and validate
 it while continuing remaining supported workflows. Goal active.
+
+## Batch 10 optional parameter configuration and macro/resource contracts
+
+A clean host variant compiles the documented NGC_PARAMETERS_ENABLE=0 and
+NGC_EXPRESSIONS_ENABLE=0 configuration. Four cases exercise real linear motion,
+G92 offsets, persisted G55 offsets and rejection of unavailable M70-M73 without
+state changes. Three normal boot cases exercise driver startup, persisted modal
+initialization and soft reset (including both welcome messages) without parameter
+support. The README configuration inventory now includes this tested variant.
+
+A file containing three subroutines verifies definition skipping, requested call
+order and scope cleanup. Two expression cases verify default float-format reset
+and numeric PRM rejection of registered text settings. Two narrow allocation
+failure cases verify encoder registration/list recovery and JSON start/output
+recovery under shared-heap exhaustion. Public APIs remain production-owned;
+only those two executables wrap their allocator. No new exception or bug claim.
+
+Full ASan/UBSan and strict summary: 3,083 total, 3,070 clean, 13 documented
+expected failures, zero unexpected failures/skips, 39.09 s
+(build-asan/batch-10-optional-params-full-results.xml). The three subsequently
+added boot cases pass focused sanitizer/strict summary checks
+(build-asan/batch-10-no-params-boot-results.xml). All 43 helper tests passed.
+Now 3,086 registered cases: batch 10 adds 189. Terje HEAD was rechecked and
+remains clean/unmodified 683589bd10bb1082825bfc7e9bcee6db102b9530.
+Hosted run 38683576138 is still active for bb9e036's 3,074-case checkpoint;
+do not push/cancel it. Last fully completed run 38682688236 covers
+16,125/17,437 lines (92.4758%), 10,742/13,506 branches (79.5350%).
+Continue supported configurations/public workflows; full coverage is not yet
+achieved and the goal remains active. No batch 10 PR has been claimed ready.
