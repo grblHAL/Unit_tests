@@ -1622,3 +1622,32 @@ expected failures, zero unexpected failures/skips, 39.62 seconds. Evidence:
 build-asan/batch-11-first-full-results.xml. No new exception or bug claim.
 Continue through supported header/configuration gaps; stepper2 ramp transitions
 are next to inspect through public motor APIs. Keep batch 11 separate from #16.
+
+
+## Batch 11 latest-core compatibility and motor transitions
+
+Terje master advanced to feebef26222111f11c7a3b3b0156d023aa786937 on
+2026-10-15. The ignored ordinary core checkout is clean at that revision.
+The first full rebuild/run of 3,115 cases exposed five fixed expected failures
+and one changed control-input mode expectation. Direct sanitizer execution of
+the unchanged backlash-clear, WHILE/CONTINUE, allocated cwd and both startup-slot
+retry regressions returned zero. Their five WILL_FAIL blocks and resolved bug/
+startup TODO entries were removed. Allocated cwd now uses the original ordinary
+caller-owned pointer test without allocation/linker wrappers.
+
+Core now explicitly selects PullMode_Down for disabled control-input pullups;
+the debounce-preservation control follows this changed public behavior. This
+is separate from the still-reproducing auxiliary live/load pullup inconsistency.
+Version-only failed storage writes remain a deferred-policy expected failure.
+The new double-increment warning counter is recorded as source-review evidence
+in TODO pending reproduction/policy, without a speculative failing test.
+
+Nine new secondary-motor cases cover speed changes during acceleration, stopping
+during speed reduction, repeated speed requests, finite millimeter rounding and
+negative position, early finite stop, two independent motors, zero finite distance
+and reverse restart after completion. Three passed focused ASan/UBSan on 683589b;
+all nine pass the full latest-core gate in build-asan/batch-11-cleanup-results.xml.
+Suite totals 3,121: 3,113 clean passes, eight retained expected failures, zero
+unexpected failures/skips or sanitizer diagnostics. Full gate and strict summary
+passed in 41.62 seconds. All 43 helper checks pass. Publish this substantial
+checkpoint for hosted GCC/Clang/coverage while continuing independent coverage.

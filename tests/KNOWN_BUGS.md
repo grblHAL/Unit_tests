@@ -179,37 +179,6 @@ Alternatively retain the original directory and return failure consistently.
 [known_bugs.cmake](known_bugs.cmake), retain the ownership assertion, run GCC/Clang
 sanitizers and strict summaries, and delete this entry.
 
-## Setting backlash to zero leaves prior compensation enabled
-
-**Marked known:** 2026-10-14 on Terje `39a69a22c72283ab186133b25fb89b8f5be35767`.
-
-With `ENABLE_BACKLASH_COMPENSATION=1`, configure X backlash to 0.1 mm at
-80 steps/mm, then store zero through the public axis-backlash setting API.
-The setting reads zero, but a 1 mm X move still emits 88 pulses rather than 80.
-The logical position reports 1 mm, so the extra physical compensation remains
-hidden from that coordinate. Controls verify fresh-zero operation, normal enable
-and a nonzero distance update.
-
-The live [setting handler](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/settings.c#L1563)
-reinitializes the axis after changing its value. In
-[mc_backlash_init](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/motion_control.c#L48),
-nonzero rounded compensation sets the enable bit, but zero never clears an
-existing bit or compensation distance.
-
-**Regression:** [clear previously enabled compensation](cases/backlash/clearing_public_setting_disables_previously_enabled_compensation.c).
-The test retains the correct 80-pulse expectation. The host supplies the normal
-core default settings callback before parser initialization; the failure is a
-pulse-count assertion, not a callback crash or incomplete startup.
-
-**Suggested fix (not applied):** for each reinitialized axis whose rounded
-compensation is zero, clear its backlash-enable bit and stored compensation.
-Leave other axes' configuration unchanged and retain position synchronization.
-Revalidate enable, distance changes, zero/substep values and direction reversals.
-
-**Remove exception when fixed:** remove this case's `WILL_FAIL` block in
-[known_bugs.cmake](known_bugs.cmake), retain its regression and passing controls,
-run the full sanitizer suite and strict summary, then delete this entry.
-
 ## Auxiliary pullup disable differs between live and loaded settings
 
 **Marked known:** 2026-10-14 on Terje `39a69a22c72283ab186133b25fb89b8f5be35767`.
@@ -243,84 +212,6 @@ unrelated to this pin-configuration issue.
 controls' mode expectations with the agreed behavior, run all pullup tests plus
 the full sanitizer suite/strict summary, and delete this entry. No sanitizer
 suppression or diagnostic wrapper applies.
-
-## WHILE CONTINUE executes the remainder when its condition becomes false
-
-**Marked known:** 2026-10-14 on Terje `39a69a22c72283ab186133b25fb89b8f5be35767`.
-
-A normal filesystem macro increments a counter and uses `CONTINUE` to skip the
-remaining body. Once its WHILE condition becomes false, the core removes the
-loop frame immediately. It then executes the body that CONTINUE should skip and
-reports `Status_FlowControlSyntaxError` (81) at the matching ENDWHILE.
-
-```gcode
-#100=0
-#101=0
-O10 WHILE [#100 LT 3]
-  #100=[#100+1]
-  O10 CONTINUE
-  #101=99
-O10 ENDWHILE
-#102=7
-```
-
-Expected: counter `#100=3`, skipped body `#101=0`, following assignment `#102=7`,
-and successful completion. Observed: `#101=99`, error 81 and no following
-assignment. This is reproduced with real file-stream bytes/rewinds and the
-production parser, without motion, private entry points or fault injection.
-Ordinary WHILE/DO loops and a true-condition CONTINUE followed by BREAK pass.
-The expected skip behavior follows the
-[O-code CONTINUE contract](https://www.linuxcnc.org/docs/html/gcode/o-code.html).
-
-The false-condition path frees the expression and
-[pops the loop at ngc_flowctrl.c:622-627](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/ngc_flowctrl.c#L622)
-instead of retaining a skipped frame until ENDWHILE.
-
-**Regression:** [WHILE CONTINUE program](cases/ngc_flowctrl/while_continue_rechecks_condition_and_skips_remaining_body.c).
-Only this named test is an expected failure. The host's read bound prevents
-nonterminating macros from hanging tests, and closes/frees stream/control state
-before failing. No sanitizer suppression is involved.
-
-**Suggested fix (not applied):** retain the exhausted WHILE frame with its skip
-flag set until the matching ENDWHILE consumes it. Preserve outer nested control
-frames and the existing true-condition rewind behavior; test both paths with
-commands remaining after CONTINUE and after the loop.
-
-**Remove exception when fixed:** remove the named WILL_FAIL block in
-[known_bugs.cmake](known_bugs.cmake), retain the regression and passing controls,
-run sanitizers and strict summary, then delete this entry.
-
-## Allocating the current directory with zero size returns NULL
-
-**Marked known:** 2026-10-14 on Terje `683589bd10bb1082825bfc7e9bcee6db102b9530`.
-
-The existing ordinary regression calls `vfs_getcwd(NULL, 0)` to request an
-allocated root path. It passed on `39a69a2` and now fails: the function allocates
-and constructs `/`, but returns NULL with no error set. The allocated buffer is
-also lost. Ordinary caller-buffer controls, including the formerly failing
-exact two-byte root buffer, now pass.
-
-The allocation branch explicitly accepts zero size at
-[vfs.c:615](https://github.com/terjeio/grblHAL_core/blob/683589bd10bb1082825bfc7e9bcee6db102b9530/vfs.c#L615),
-but [the final return at line 626](https://github.com/terjeio/grblHAL_core/blob/683589bd10bb1082825bfc7e9bcee6db102b9530/vfs.c#L626)
-still requires `cwdlen < len`. For `/`, that is `1 < 0`, which is false.
-
-**Regression:** [allocated root directory](cases/vfs/getcwd_allocates_root_path.c).
-The correct non-NULL `/` assertions are unchanged. A test-only allocation observer
-reclaims just the buffer lost by this call before asserting failure, making the
-return-value regression portable under leak sanitizers. No sanitizer suppression
-or general diagnostic exception applies.
-
-**Suggested fix (not applied):** return the constructed buffer when allocation
-succeeded with `len == 0`; return NULL for ENOMEM/ERANGE. For example, base the
-final return on the error result rather than applying the caller-buffer length
-test again. Keep ordinary buffer sizing and caller ownership/free behavior.
-
-**Remove exception when fixed:** remove the named WILL_FAIL block in
-[known_bugs.cmake](known_bugs.cmake), remove this case's allocation-observer cleanup
-and malloc/free linker wrappers in CMakeLists.txt, and retain its original pointer,
-content and caller-free assertions. Run VFS/full sanitizers and strict summary,
-then delete this entry.
 
 ## Primary spindle stop uses the secondary spindle's cached ramp speed
 

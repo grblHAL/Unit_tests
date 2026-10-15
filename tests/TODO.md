@@ -26,31 +26,15 @@ until the maintainer chooses and implements the contract. Their `known_bug`
 CTest label tracks the current exception; it does not assign priority. Revisit
 pending-state and retry assertions against that chosen contract before cleanup.
 
-### Startup-line pending state after a failed write
+### Review the new EEPROM warning counter
 
-**Observation recorded:** 2026-10-14, Terje `50055a283328c3f9726bbc8f22d20a801190c66e`.
-
-Write startup slot 0 or 1 through `settings_write_startup_line()`, then have the
-physical EEPROM handler reject its first write. RAM accepted the new command,
-but `nvs_buffer_sync_physical()` clears the slot's pending bit
-[before attempting the physical write at nvs_buffer.c:345](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/nvs_buffer.c#L345).
-The pending mask and aggregate dirty flag both become zero. Subsequent syncs
-therefore never retry the command, and physical storage retains the old text.
-Coordinate, global, build-info and driver writes retain their dirty flag on
-failure and have passing retry controls.
-
-**Regressions:** [slot 0](cases/nvs_buffer/startup_slot_0_failed_sync_remains_pending_for_retry.c)
-and [slot 1](cases/nvs_buffer/startup_slot_1_failed_sync_remains_pending_for_retry.c).
-Separate `startup_slot_*_sync_preserves_text_and_checksum` cases verify successful
-persistence and CRCs without an injected failure.
-
-**Earlier implementation option (not applied; subject to the chosen policy):** Remove the unconditional
-pre-write clear; clear that slot only after the physical handler reports success.
-Leave failed slots dirty so another idle sync can retry them.
-
-**After implementing the agreed contract:** remove the two startup retry blocks in
-[known_bugs.cmake](known_bugs.cmake), keep all assertions, run storage/startup
-cases and full sanitizers, then delete this TODO observation. No sanitizer allowance applies.
+**Recorded:** 2026-10-15, Terje `feebef26222111f11c7a3b3b0156d023aa786937`.
+The new EEPROM failure branch increments `retries` twice per failed sync
+(`retries++` followed by `if(++retries == 5)`). Starting at zero, the counter
+visits even values, so it does not reach the warning threshold of five before
+integer wraparound. This is source-review evidence, pending a focused public
+storage workflow reproduction and the maintainer's warning/retry policy.
+Do not turn an assumed five-attempt policy into a registered failing test.
 
 ### Version-only pending state after a failed write
 
