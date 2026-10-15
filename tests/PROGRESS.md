@@ -1669,3 +1669,14 @@ TODO records his future protected-input setting availability follow-up.
 Hosted run 38692359893 validates a65ac73's 3,121-case checkpoint against feebef2;
 it was still in progress when this local startup group finished. Do not push
 and cancel that healthy run; inspect all jobs before publishing another checkpoint.
+
+
+## Batch 11 spindle override command coverage
+
+Three focused sanitizer/strict-summary cases pass: M49 disables feed/primary
+speed override while preserving the secondary policy; M48 reenables primary
+while retaining a separately disabled secondary; M51 with omitted P reenables
+secondary without changing disabled feed/primary policy. Total 3,131 cases.
+Evidence: build-asan/batch-11-overrides-results.xml. No new known exception.
+Standalone $-1 override candidates failed at parser validation and were removed;
+do not bypass parser validation just to execute dormant all-spindle branches.
