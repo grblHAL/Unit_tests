@@ -2379,3 +2379,24 @@ results.xml). Total 3,267; batch 17 adds nine cases. Prior full 3,266-case gate
 passed sanitizer/strict checks in 61.87 s with nine expected failures and all
 44 helpers passing (batch17-homing-checkpoint-results.xml). Revalidate the full
 enlarged batch before eventual push. Core remains clean feebef2.
+
+## Batch 17 reset offset and parking policies
+
+Four normal-startup sender workflows cover reset retention. Two select G55,
+set G92, and switch to incremental mode before reset; one also applies G43.1.
+The $676 policy selects whether G55/tool mode is retained or G54 is restored,
+while G92 remains and distance mode returns to absolute. Pre-reset observers
+prove the requested offsets were active before the reset was consumed.
+Two further cases configure parking's initial enabled/disabled policy, reverse
+it with M56, and verify both parser and system overrides return to that initial
+policy after soft reset. No simulated door motion or hardware claim is involved.
+
+All four pass focused ASan/UBSan and strict summaries (batch17-offset-results.xml
+and batch17-parking-results.xml). Full 3,269-case gate before the last two parking
+cases passed in 131.32 s, with nine expected failures, strict summary and all 44
+helper checks passing (batch17-reset-checkpoint logs/results). Total now 3,271,
+13 new cases in batch 17. Run the enlarged full gate at the delivery boundary.
+Core remote HEAD still feebef2 and PR 19 remains open at this check. Hosted batch
+16 remains the measured baseline: 93.54% lines and 81.10% branches; no claim of
+coverage increase is made for the unmeasured local additions. Persistent full
+coverage goal was absent and has been recreated as active with the same guardrails.
