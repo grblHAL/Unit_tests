@@ -2679,3 +2679,23 @@ strict summary and all 44 helpers pass. Earlier 3,338 gate passed in 104.12 s.
 Freeze/push this checkpoint, verify exact-head hosted GCC/Clang/coverage against
 4ec1ae4, and continue work on coverage-batch-22. PR 19 remains open; do not merge.
 Latest measured coverage is still batch 20 (94.30% lines / 81.97% branches).
+
+## Batch 22 sender descriptions and tool/lathe reports
+
+Branch coverage-batch-22 starts from pushed/frozen d4dc212195c0789f210f211986580fc72e18b86b.
+Batch 21 run 38866070072 is validating that exact head against clean core 4ec1ae4;
+source passed, compiler/coverage jobs are still running at last check.
+Seven new cases / 3,347 total pass focused sanitizers and strict summaries:
+- $SED=1001 includes a reboot note after a registered plugin description,
+  starts the note without escaped blank lines when no description exists,
+  and emits nothing for hidden settings.
+- Named tool coordinate rows preserve names and optional pockets, with each
+  5 ms driver pacing call following its completed row.
+- Compatibility 2 keeps the documented fixture placeholder in TLR@ output.
+- Actual mode-setting changes enable/clear the LATHE build capability token.
+- G7 coordinate reports double X once; serial inches convert once and preserve
+  G21 parser mode and the stored millimeter fixture coordinates.
+Evidence: batch22-setting-description-results.xml (0.36 s),
+batch22-tool-report-results.xml (0.27 s), batch22-lathe-report-results.xml (0.36 s),
+matching strict summary logs. Core unmodified, no new exceptions or TODOs.
+Continue independent source/configuration gaps before the next full delivery gate.
