@@ -2788,3 +2788,25 @@ with the narrowly classified recovering callback-type warning. Core remains clea
 Batch 23 is local; continue more supported motion/configuration gaps before its
 next substantial push/hosted boundary. First verify batch 22 hosted compiler
 completion; do not confuse its passed coverage job with a green overall run.
+
+Batch 22 run 38867880603 is now fully green: source, GCC, Clang, coverage and CI
+diagnosis. The ordinary stop-message case passes Linux leak checks; the isolated
+portable ownership regression reproduces the documented failure as intended.
+Terje master refreshed on 2026-10-16 remains 4ec1ae4; local core is unmodified.
+
+Four new G33 parser-to-stepper cases bring batch 23 to ten new / 3,361 total.
+The encoder model turns independently of tool travel, acquiring indices before
+the simulated driver wakes. Timer interrupts run only between its wake/idle HAL
+callbacks, including repeated synchronized moves. Cases check metric Z1/K1,
+G20 Z0.1/K0.05 (2.54 mm endpoint rounds to 203 steps, pitch 1.27 mm/rev), negative
+Z travel with positive pitch, and a following G33 reusing its prior K value.
+Metric restores prior override policy; all cases check physical step outcomes.
+Focused sanitizer/strict checks pass (batch23-sync-results.xml, 0.39 s). No new
+exceptions. Full batch23-delivery is running; freeze/push only after completion.
+
+Batch23-delivery completed: 3,361 cases pass in 59.47 s, strict summary and all
+44 helpers pass. Ten expected failures and two narrowly classified recovering
+callback-type warnings; no unexpected diagnostics. Freeze/push this ten-case
+checkpoint, dispatch exact-head hosted validation against 4ec1ae4, then continue
+on coverage-batch-24. Parser-driven G95 with measured encoder RPM (including
+changes during motion) is a useful next gap beyond direct planner-only coverage.

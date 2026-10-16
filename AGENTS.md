@@ -3,14 +3,19 @@
 ## Objective and delivery
 
 Current work is coverage-batch-23 from frozen/pushed batch 22 b59409f.
-Six new motion/message cases bring the local suite to 3,357. Full batch23-final
+Ten new motion/message/synchronization cases bring the local suite to 3,361.
+Four G33 parser-to-stepper cases pass: metric, inch pitch/endpoint, reverse
+travel and reuse of modal pitch. Index feedback advances independently; timer
+interrupts run only after each driver's wakeup. Full batch23-delivery passes in
+59.47 s, strict summary and all 44 helpers pass. Freeze/push and continue on batch 24.
+The earlier 3,357-case batch23-final
 passes in 49.13 s, strict summary and all 44 helpers. Ten expected failures remain.
 Two message cases pass behavior assertions
 with one narrowly documented recovering callback-type diagnostic (manifest).
 Four G92 cases check executing offsets and actual sender status across queued
 changes/suspension, away from the ambiguous shared endpoint tick.
-Batch 22 run 38867880603 passed coverage at 94.52% lines / 82.34% branches;
-GCC/Clang are still running at last check. Its purpose includes verifying the
+Batch 22 run 38867880603 is fully green: source, GCC, Clang, coverage and diagnosis.
+Coverage is 94.52% lines / 82.34% branches. It verifies the
 ordinary stop test is Linux leak-clean and the portable ownership bug is isolated.
 Continue independent gaps on batch 23; do not call it a ready PR yet.
 
