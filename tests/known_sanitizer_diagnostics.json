@@ -1,1 +1,9 @@
-[]
+[
+  {
+    "source": "core/grbllib.c",
+    "lines": [118],
+    "message_pattern": "call to function gc_output_message through pointer to incorrect function type 'void \\(\\*\\)\\(void \\*\\)'",
+    "known_bug": "KNOWN_BUGS.md#queued-motion-message-callback-has-a-different-function-type",
+    "known_since": "2026-10-16"
+  }
+]

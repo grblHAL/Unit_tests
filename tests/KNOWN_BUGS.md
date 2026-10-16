@@ -298,3 +298,41 @@ macro calls and tool changes; avoid double frees of planner-owned messages.
 assertion, remove this test's WILL_FAIL block, rerun focused and full sanitizer
 checks on Linux as well as local checks, then delete this entry. Keep the malloc/
 free linker instrumentation; it is part of the regression, not a workaround.
+
+
+## Queued motion-message callback has a different function type
+
+**Known since:** 2026-10-16. **Reproduced on:** Terje core
+`4ec1ae44b857a70d2f9298344feac4b43ed0eb6b`.
+
+**Scope:** callback-type portability, not a demonstrated controller crash.
+The functional assertions pass: messages are deferred until their own moves
+execute, remain in order and are delivered once. Clang's function-type sanitizer
+reports that `gc_output_message(char *)` is invoked as `void (*)(void *)`.
+
+[stepper.c:532-533](https://github.com/terjeio/grblHAL_core/blob/4ec1ae44b857a70d2f9298344feac4b43ed0eb6b/stepper.c#L532-L533)
+casts the callback when enqueuing it. The scheduler invokes it at
+[grbllib.c:118](https://github.com/terjeio/grblHAL_core/blob/4ec1ae44b857a70d2f9298344feac4b43ed0eb6b/grbllib.c#L118),
+whose [task callback type](https://github.com/terjeio/grblHAL_core/blob/4ec1ae44b857a70d2f9298344feac4b43ed0eb6b/task.h#L25)
+uses a void-pointer parameter. The original function's parameter is char-pointer
+at [gcode.c:1079](https://github.com/terjeio/grblHAL_core/blob/4ec1ae44b857a70d2f9298344feac4b43ed0eb6b/gcode.c#L1079).
+
+**Passing behavior cases:** [one deferred message](cases/motion_control/plugin_motion_message_is_deferred_until_its_move_executes.c)
+and [two ordered move messages](cases/motion_control/queued_plugin_messages_follow_their_own_move_boundaries.c).
+These use plugin-supplied messages through public mc_line, independently of the
+separate parser comment leak. Only the exact function-type diagnostic for
+`gc_output_message` at the scheduler invocation is classified in
+[known_sanitizer_diagnostics.json](known_sanitizer_diagnostics.json). Other
+function mismatches, sanitizer errors and behavioral assertion failures remain
+unexpected failures. There is no WILL_FAIL exception for these cases.
+
+**Suggested fix (proposal, not applied):** enqueue a correctly typed adapter,
+e.g. `static void report_motion_message(void *data) { gc_output_message(data); }`,
+instead of casting gc_output_message to foreground_task_ptr. Preserve ownership
+and foreground timing. Alternatively change the callback signature consistently
+where appropriate; do not globally disable function-type sanitization.
+
+**Cleanup:** retain both behavioral cases, remove the matching manifest object
+when the diagnostic no longer occurs, verify Clang sanitizer/strict checks and
+Linux GCC/Clang, then delete this entry. The source-line match deliberately forces
+review if upstream moves the scheduler call while leaving the mismatch present.
