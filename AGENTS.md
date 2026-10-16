@@ -2,8 +2,12 @@
 
 ## Objective and delivery
 
-Current delivery is coverage-batch-20 from frozen batch 19 ca66c4d; after pushing
-its validated checkpoint, continue independent work on coverage-batch-21.
+Current work is coverage-batch-21 from frozen batch 20 3be1df6.
+Six new cases cover boot spindle hooks, selection veto, sleep/status/reset and
+sender message clearing. Full 3,333-case sanitizer/strict checkpoint passes in
+50.46 s with nine expected failures and all 44 helpers (batch21-checkpoint).
+Batch 20 exact-head hosted run 38804109761 against core 4ec1ae4 passed all jobs:
+16,619/17,624 lines (94.30%), 11,187/13,648 branches (81.97%). PR 19 remains open.
 Batch 19 adds 15 cases / 3,312 total. Full ASan/UBSan, strict summary and 44 helper
 checks pass in 58.09 s (batch19-delivery), nine expected failures. It is pushed;
 exact-head hosted run 38799824879 is fully green: 94.18% lines / 81.85% branches.

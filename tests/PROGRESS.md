@@ -1,6 +1,6 @@
 # Coverage progress and continuation handoff
 
-Last verified: **2026-10-14**. Read this with the root `AGENTS.md` and README.
+Last verified: **2026-10-15**. Read this with the root `AGENTS.md` and README.
 This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 
 ## Batch 8 local continuation
@@ -2630,3 +2630,36 @@ hosted GCC/Clang/coverage, and continue new work on coverage-batch-21 while it r
 The latest measured percentages (94.18% lines / 81.85% branches) still describe
 batch 19 on prior feebef2; compare raw denominators when the updated-core report
 arrives. Do not count source changes as test-only coverage improvement.
+
+## Batch 21 startup spindle hooks, sleep recovery and sender message clearing
+
+Branch coverage-batch-21 starts at frozen/pushed batch 20 3be1df6. Core remains
+clean detached Terje 4ec1ae44b857a70d2f9298344feac4b43ed0eb6b. Batch 20 exact-head
+hosted run 38804109761 has passed source selection; GCC/Clang/coverage are still
+running at this check. Latest completed coverage remains batch 19, not batch 21.
+
+Six new separate cases bring the local suite to 3,333. Spindles are registered
+in driver initialization, before setup finishes. Tests check mutable selection
+capabilities before the selected notification, vetoed selection retaining the
+self-test fault loop, programmed callbacks preceding start/stop driver commands,
+and repeated M3 with a new speed notifying without a direction change.
+Sleep recovery uses actual $SLP, status and reset commands, then verifies the
+warm parser defaults and retained unlock alarm. The simulated sender must stay
+connected while reset is pending; suppressing its synthetic EOF exit fixes the
+initial host-only failure. No production workaround was needed.
+A reporting API case checks that Message_None clears a sender's G-code message,
+program-end feedback does not, and clearing remains valid without a hook.
+The startup five pass focused ASan/UBSan and strict summary (0.35 s). The complete
+3,333-case sanitizer/strict/helper checkpoint is batch21-checkpoint, currently
+running. Continue independent gaps after recording its result; do not present
+this small checkpoint as completion of the full coverage objective.
+
+Batch 21 checkpoint completed: all 3,333 cases pass (nine documented expected
+failures), 50.46 s, strict summary and all 44 helper tests pass. Batch 20 hosted
+run 38804109761 is now fully green (source, GCC, Clang, coverage, CI diagnosis).
+Artifacts verify harness 3be1df626d0c1d1b8834f549b8c3de84ae5a2d90, core
+4ec1ae44b857a70d2f9298344feac4b43ed0eb6b, core C/header filter. Measured coverage:
+16,619/17,624 lines (94.30%) and 11,187/13,648 branches (81.97%). The denominator
+changed with the core refresh; this is not solely a test gain from batch 19.
+On 2026-10-16 live refresh, Terje master remains 4ec1ae4; PR 19 remains open.
+Continue report/parser and supported feature gaps on batch 21; no ready PR yet.
