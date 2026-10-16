@@ -2750,3 +2750,41 @@ Batch22-final completed: 3,351 cases pass, ten documented expected failures,
 Freeze/push this checkpoint, dispatch exact-source hosted validation, then work
 on coverage-batch-23 while it runs. The lifetime regression is an expected
 failure; the ordinary sender-stop case must pass under Linux LeakSanitizer.
+
+## Batch 23 motion-message execution and realtime coordinate offsets
+
+Branch coverage-batch-23 starts from pushed b59409f1b666e3a89b2a7d9b177261a3f7692fd3.
+Core remains clean Terje 4ec1ae4. Batch 22 run 38867880603 source/coverage passed;
+GCC/Clang remain running at last check. Its exact-head artifacts verify harness,
+core and C/header filter. Coverage: 16,659/17,624 lines (94.52%), 11,238/13,648
+branches (82.34%). This does not include local batch 23.
+
+Six new separate motion cases / 3,357 total:
+- A plugin-supplied message stays queued until its own move executes, is delivered
+  once, and is consumed by its plugin UI handler. Two queued messages preserve
+  move order and physical move boundaries.
+- Clang detects the core's explicit char-pointer-to-void-pointer callback cast
+  when those foreground messages run. Behavior assertions pass. A dated known
+  portability entry links the exact scheduler invocation and callback definition,
+  gives a typed-adapter proposal, and documents the single exact manifest match.
+  Do not describe this as a demonstrated controller crash. No WILL_FAIL is added.
+- Queued G92 changes and G92.2 suspension keep the executing block's offset until
+  the next block starts. Actual status samples at physical X0.5/X1.5 verify WPos
+  and WCO together, and the block transition requests one forced WCO report.
+  The shared endpoint is deliberately not assigned to either block prematurely:
+  its last step can occur before the next segment loads. Initial boundary-only
+  assertion failures were corrected as test timing assumptions, not core bugs.
+
+Focused evidence: batch23-message-results.xml (0.35 s, two precisely classified
+recovering diagnostics), batch23-wco-results.xml (0.27 s), batch23-status-results.xml
+(0.44 s). Earlier full 3,353-case gate passed in 45.12 s, strict summary and all 44
+helpers, ten expected failures and two known recovering diagnostics. Full expanded
+3,357-case batch23-final is running. No core edits; continue meaningful supported
+workflows, not private-state forcing or arbitrary tiny-buffer exercises.
+
+Batch23-final completed: all 3,357 cases pass in 49.13 s, strict summary and all
+44 helpers pass. Ten expected failures plus two ordinary assertion-passing cases
+with the narrowly classified recovering callback-type warning. Core remains clean.
+Batch 23 is local; continue more supported motion/configuration gaps before its
+next substantial push/hosted boundary. First verify batch 22 hosted compiler
+completion; do not confuse its passed coverage job with a green overall run.

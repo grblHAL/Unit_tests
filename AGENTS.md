@@ -2,7 +2,19 @@
 
 ## Objective and delivery
 
-Current work is coverage-batch-22 from frozen/pushed batch 21 d4dc212.
+Current work is coverage-batch-23 from frozen/pushed batch 22 b59409f.
+Six new motion/message cases bring the local suite to 3,357. Full batch23-final
+passes in 49.13 s, strict summary and all 44 helpers. Ten expected failures remain.
+Two message cases pass behavior assertions
+with one narrowly documented recovering callback-type diagnostic (manifest).
+Four G92 cases check executing offsets and actual sender status across queued
+changes/suspension, away from the ambiguous shared endpoint tick.
+Batch 22 run 38867880603 passed coverage at 94.52% lines / 82.34% branches;
+GCC/Clang are still running at last check. Its purpose includes verifying the
+ordinary stop test is Linux leak-clean and the portable ownership bug is isolated.
+Continue independent gaps on batch 23; do not call it a ready PR yet.
+
+Frozen batch 22 starts from batch 21 d4dc212.
 Eleven new cases bring the suite to 3,351. The earlier nine-case checkpoint
 passed full sanitizers/strict checks (3,349 total, 45.15 s and all 44 helpers).
 They cover sender $SED reboot notices/hidden settings, named tool pacing,
