@@ -2699,3 +2699,18 @@ Evidence: batch22-setting-description-results.xml (0.36 s),
 batch22-tool-report-results.xml (0.27 s), batch22-lathe-report-results.xml (0.36 s),
 matching strict summary logs. Core unmodified, no new exceptions or TODOs.
 Continue independent source/configuration gaps before the next full delivery gate.
+
+Batch 22 now adds nine cases / 3,349 total. A compact table-driven parser case
+rejects incomplete/misspelled O-code keywords, preserving parameters, alarm and
+planner state, and proves a valid IF block still works afterward. A paired PWM
+case uses M73 inside a public macro call scope, stops both spindles, then checks
+that return restores each saved direction/RPM with independent monotonic hardware
+ramps capped at its own target. Focused sanitizer/strict checks pass for both.
+The full batch22-checkpoint passes all 3,349 cases in 45.15 s with nine known
+expected failures, strict summary and all 44 helper tests. No core changes.
+
+Batch 21 hosted run 38866070072 coverage passed: 16,645/17,624 lines (94.45%) and
+11,216/13,648 branches (82.18%). Artifacts verify d4dc212195c0789f210f211986580fc72e18b86b,
+core 4ec1ae44b857a70d2f9298344feac4b43ed0eb6b and the core C/header filter. Hosted
+coverage JUnit has 3,340 cases, zero failures/skips. Source also passed; GCC/Clang
+remain in progress at last check. Verify their completion before any ready PR.

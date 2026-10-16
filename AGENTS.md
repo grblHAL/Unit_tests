@@ -3,11 +3,14 @@
 ## Objective and delivery
 
 Current work is coverage-batch-22 from frozen/pushed batch 21 d4dc212.
-Seven new report cases pass focused sanitizer/strict checks (3,347 total).
+Nine new cases pass full sanitizer/strict checks (3,349 total, 45.15 s,
+nine expected failures and all 44 helpers; batch22-checkpoint).
 They cover sender $SED reboot notices/hidden settings, named tool pacing,
 compatibility-2 tool-reference format, and lathe mode/unit reporting.
-Batch 21 exact-head hosted run 38866070072 is still running at last check.
-Continue independent gaps; this seven-case checkpoint is not a ready PR.
+Macro typo recovery and independent paired PWM M73 restoration also pass.
+Batch 21 exact-head hosted run 38866070072 passed coverage at 94.45% lines /
+82.18% branches; GCC/Clang are still running at last check.
+Continue independent gaps; this local checkpoint is not a ready PR.
 
 Frozen batch 21 starts from batch 20 3be1df6.
 Thirteen new cases cover boot spindle hooks, selection veto, sleep/status/reset,
