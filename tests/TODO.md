@@ -417,3 +417,34 @@ The registered [USB failure test](cases/boot/usb_connection_reports_failed_selft
 checks the existing public connection workflow: matching DTR emits the delayed
 generic failure message and retained warnings in order; unrelated startup tasks
 stay suppressed. No change to the startup policy or core source was made.
+
+
+## Planner exhaustion during controller startup
+
+**Recorded:** 2026-10-16, core `4ec1ae44b857a70d2f9298344feac4b43ed0eb6b`.
+The new public planner tests verify reduced usable capacity and a successful
+retry after an allocation failure. A normal boot test verifies fallback warning
+output and a successful sender query. Complete startup exhaustion is a separate
+policy/defensive-handling question, not a registered failure.
+[plan_reset](https://github.com/terjeio/grblHAL_core/blob/4ec1ae44b857a70d2f9298344feac4b43ed0eb6b/planner.c#L225-L247)
+returns false if it cannot allocate even its minimum attempted buffer;
+[grbllib.c:489](https://github.com/terjeio/grblHAL_core/blob/4ec1ae44b857a70d2f9298344feac4b43ed0eb6b/grbllib.c#L489)
+does not check that return. Confirm how startup should report this condition and
+restrict operation. No boot-exhaustion regression/alarm expectation has been
+registered, and no controller crash or physical outcome is claimed here.
+
+## Possible improvement: simultaneous override-change notifications
+
+**Recorded:** 2026-10-16, core `4ec1ae44b857a70d2f9298344feac4b43ed0eb6b`.
+Individual feed and rapid changes notify the matching observer exactly once;
+repeated unchanged requests do not. The new ordinary control tests verify those
+contracts and their resulting nominal rates.
+In [planner.c:753-765](https://github.com/terjeio/grblHAL_core/blob/4ec1ae44b857a70d2f9298344feac4b43ed0eb6b/planner.c#L753-L765),
+the logical OR short-circuits assignment of rapidrate_changed when feed changes.
+Both percentages are still stored/applied, but the rapid-specific callback is
+then omitted. Confirm whether a combined update should notify both groups or
+whether one callback is intended to prompt an observer to refresh all values.
+This is source-review evidence and an undecided observer policy, not a confirmed
+motion defect. Do not register a two-callback expected failure before review.
+If both events are desired, compute the two change booleans independently before
+testing their OR, then add a combined-update regression.

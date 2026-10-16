@@ -1,6 +1,6 @@
 # Coverage progress and continuation handoff
 
-Last verified: **2026-10-15**. Read this with the root `AGENTS.md` and README.
+Last verified: **2026-10-16**. Read this with the root `AGENTS.md` and README.
 This is a snapshot, not proof that future checkouts or CI runs are unchanged.
 
 ## Batch 8 local continuation
@@ -2857,3 +2857,37 @@ Freeze/push batch 24 and validate its exact head; continue on batch 25 with publ
 planner allocation fallback and retry under plausible constrained MCU heap
 budgets. Verify usable capacity/motion and clean retry, rather than asserting
 one particular internal decrement sequence or forcing private static state.
+
+## Batch 25 planner heap fallback and override observers
+
+Branch coverage-batch-25 starts from pushed ea7cdd675648041e6c29c6d94289435383d1bf50.
+Exact-head batch 24 hosted run 38871019194 is in progress against 4ec1ae4. Batch 23
+run 38869601270 is now fully green (source/GCC/Clang/coverage/diagnosis), with
+16,664/17,624 lines (94.55%) and 11,244/13,648 branches (82.39%). PR 19 remains
+open at this live check; continue independent work and do not merge it.
+
+Six new cases / 3,376 total:
+- Request 256 or 64 planner blocks with allocator ceilings corresponding to 128
+  or 48 usable blocks. These model the largest contiguous allocation available,
+  not total MCU RAM. Assert reduced capacity fits the ceiling, fill every usable
+  slot with real planner lines, verify full detection, then clear/reuse capacity.
+  Do not assert one particular fallback decrement sequence.
+- At the valid normal 35-block setting, an allocation failure returns false;
+  restoring allocator availability permits a clean successful public retry.
+- Normal controller boot under the larger ceiling reports the reduced-capacity
+  warning, keeps the configured request, and responds to the sender's $G query.
+- Individual feed and rapid override changes notify the matching observer once,
+  apply the expected nominal rate, and do not re-notify on unchanged repeats.
+Focused sanitizer/strict evidence: batch25-boot-results.xml (four, 0.35 s) and
+batch25-override-results.xml (two, 0.30 s). No core edits or new allowances.
+Two source-review questions are in TODO.md: complete planner exhaustion handling
+at startup, and whether combined feed/rapid changes need two observer events.
+Neither is registered as a confirmed failure or an enforced new policy.
+Full batch25-checkpoint is running. Continue remaining supported planner/motion
+paths before another substantial push boundary; keep the current goal active.
+
+Batch25-checkpoint completed: all 3,376 cases pass in 53.02 s, strict summary
+and all 44 helpers pass. Ten expected regressions and two previously documented
+recovering callback warnings; zero unexpected diagnostics. This six-case planner
+checkpoint is local-only; continue on batch 25 before its next delivery boundary.
+Core 4ec1ae4 remains clean; no live local build/test process remains.

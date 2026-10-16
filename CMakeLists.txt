@@ -270,6 +270,9 @@ function(add_core_test name module source)
   if(name STREQUAL "gcode.motion_comment_releases_all_message_allocations_after_planner_reset")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc -Wl,--wrap=free)
   endif()
+  if(name MATCHES "^planner\\.allocation_" OR name MATCHES "^boot\\.planner_allocation_")
+    target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc)
+  endif()
   if(name STREQUAL "encoders.registration_allocation_failure_preserves_count_and_allows_retry"
     OR name STREQUAL "report.pins_report_survives_sort_allocation_failure"
     OR name STREQUAL "report.uart_report_survives_sort_allocation_failure"

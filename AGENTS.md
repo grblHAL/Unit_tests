@@ -2,7 +2,18 @@
 
 ## Objective and delivery
 
-Current work is coverage-batch-24 from frozen/pushed batch 23 7398414.
+Current work is coverage-batch-25 from frozen/pushed batch 24 ea7cdd6.
+Six new planner/boot cases bring the suite to 3,376. Focused sanitizer/strict
+checks pass. Full batch25-checkpoint passes in 53.02 s with all 44 helpers,
+ten expected failures and two documented recovering warnings. Allocation tests model the
+largest contiguous allocation, verify usable reduced capacity and public retry;
+boot verifies warning output and a sender query. Override observer controls pass.
+Two undecided policies are in TODO.md, not registered failures.
+Batch 24 exact-head run 38871019194 is in progress; batch 23 run 38869601270 is
+fully green at 94.55% lines / 82.39% branches. PR 19 is still open at live check.
+Continue independent gaps on batch 25 before its next substantial hosted boundary.
+
+Frozen batch 24 starts from batch 23 7398414.
 Nine new G95 cases pass full sanitizer/strict checks (3,370 total, 54.66 s),
 all 44 helpers, ten expected failures and two documented recovering warnings.
 Physical timer/step measurements verify RPM up/down changes, feed override,
