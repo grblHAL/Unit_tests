@@ -2810,3 +2810,50 @@ callback-type warnings; no unexpected diagnostics. Freeze/push this ten-case
 checkpoint, dispatch exact-head hosted validation against 4ec1ae4, then continue
 on coverage-batch-24. Parser-driven G95 with measured encoder RPM (including
 changes during motion) is a useful next gap beyond direct planner-only coverage.
+
+## Batch 24 G95 parser motion continuation
+
+Current branch coverage-batch-24 starts at pushed/frozen batch 23
+7398414136b859ba15c00a9f48e85d211e1e1e04. Hosted run 38869601270 is validating
+that exact head against 4ec1ae4; still in progress. Latest fully green baseline
+remains batch 22 run 38867880603 (94.52% lines / 82.34% branches).
+One new uncommitted case brings the local suite to 3,362:
+spindle_sync.parser_g95_executes_feed_per_revolution_without_index_wait.
+Its real G95/G1 parser block executes 80 Z steps using measured RPM, retains the
+normal pulse handler, and never requests angular/index feedback. Focused ASan/
+UBSan and strict summary pass (batch24-g95-results.xml, 0.22 s).
+Continue the module before a commit/push/full-gate boundary. Useful next work is
+G95 response to changing measured RPM during motion. Advance engine_ticks from
+actual HAL timer periods, not arbitrary ISR counts, and use realistic acceleration
+so the selected feed can be reached before sampling. Keep feedback independent
+of requested axis travel. Do not force private planner/stepper state to reach a
+coverage branch. No live local build/test process remains at this checkpoint.
+
+Batch 24 G95 module completed: nine new / 3,370 total. The virtual clock derives
+elapsed milliseconds from real HAL timer periods (1 MHz driver timer), not an
+arbitrary number of ISR calls. Encoder angular feedback advances independently
+of axis displacement. External RPM changes are injected at elapsed-time events.
+The public Z acceleration setting is 100 mm/s^2 so cruise sampling is meaningful.
+Measured physical step/time windows (2 mm each) show:
+- 100 -> 200 RPM: 100.053 -> 200.321 mm/min at F1 mm/rev.
+- 200 -> 100 RPM: 200.321 -> 100.053 mm/min.
+- 50% feed override: 50 -> 100.053 mm/min across the same RPM increase.
+- Queued G95/G94: 100.053 -> 150 mm/min; G94 ignores a later zero-RPM reading.
+All preserve exact 800-step Z endpoints. Separate cases check constant feed,
+inch F/endpoint conversion (203 steps for 2.54 mm), lathe radial feed without
+index acquisition, G0 with zero RPM, and G95 zero-RPM alarm without driver wake.
+All focused sanitizer/strict checks pass. No new exceptions or core edits.
+
+Full batch24-final: 3,370 cases pass in 54.66 s, strict summary and 44 helpers
+pass; 3,358 clean, ten expected regressions and two previously documented
+recovering callback-type warnings. Earlier eight-case gate passed in 52.08 s.
+Batch 23 coverage artifact validates 7398414136b859ba15c00a9f48e85d211e1e1e04,
+core 4ec1ae4 and core C/header filter: 16,664/17,624 lines (94.55%),
+11,244/13,648 branches (82.39%). Hosted GCC/Clang are still running at last check;
+coverage is passed, but do not call the overall run green yet.
+Terje master was freshly fetched and remains 4ec1ae4.
+
+Freeze/push batch 24 and validate its exact head; continue on batch 25 with public
+planner allocation fallback and retry under plausible constrained MCU heap
+budgets. Verify usable capacity/motion and clean retry, rather than asserting
+one particular internal decrement sequence or forcing private static state.

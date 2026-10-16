@@ -2,7 +2,17 @@
 
 ## Objective and delivery
 
-Current work is coverage-batch-23 from frozen/pushed batch 22 b59409f.
+Current work is coverage-batch-24 from frozen/pushed batch 23 7398414.
+Nine new G95 cases pass full sanitizer/strict checks (3,370 total, 54.66 s),
+all 44 helpers, ten expected failures and two documented recovering warnings.
+Physical timer/step measurements verify RPM up/down changes, feed override,
+G94 transition, inch units, lathe radial feed, rapid and zero-RPM guards.
+Freeze/push this module and continue on coverage-batch-25. Useful next gap:
+public planner allocation fallback/retry with realistic constrained heap budgets.
+Batch 23 hosted run 38869601270 is validating exact head 7398414 against 4ec1ae4.
+Latest fully green hosted baseline remains batch 22 (94.52% lines / 82.34% branches).
+
+Frozen batch 23 starts from batch 22 b59409f.
 Ten new motion/message/synchronization cases bring the local suite to 3,361.
 Four G33 parser-to-stepper cases pass: metric, inch pitch/endpoint, reverse
 travel and reuse of modal pitch. Index feedback advances independently; timer
