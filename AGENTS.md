@@ -3,14 +3,20 @@
 ## Objective and delivery
 
 Current work is coverage-batch-22 from frozen/pushed batch 21 d4dc212.
-Nine new cases pass full sanitizer/strict checks (3,349 total, 45.15 s,
-nine expected failures and all 44 helpers; batch22-checkpoint).
+Eleven new cases bring the suite to 3,351. The earlier nine-case checkpoint
+passed full sanitizers/strict checks (3,349 total, 45.15 s and all 44 helpers).
 They cover sender $SED reboot notices/hidden settings, named tool pacing,
 compatibility-2 tool-reference format, and lathe mode/unit reporting.
 Macro typo recovery and independent paired PWM M73 restoration also pass.
-Batch 21 exact-head hosted run 38866070072 passed coverage at 94.45% lines /
-82.18% branches; GCC/Clang are still running at last check.
-Continue independent gaps; this local checkpoint is not a ready PR.
+Batch 21 run 38866070072 passed coverage at 94.45% lines / 82.18% branches,
+but GCC and Clang found a 12-byte parser comment leak. Batch 22 isolates it
+with a portable malloc/free lifetime regression and one linked known-bug
+exception. The stop-message test now supplies its message via public mc_line,
+independently checking planner cancellation without triggering the parser leak.
+The valid Modbus no-callback/next-transaction workflow also passes.
+Full 3,351-case batch22-final passes in 44.52 s, strict summary and all 44
+helpers pass; ten expected failures. Freeze/push and continue on batch 23.
+Require fresh hosted validation of these changes before presenting a ready PR.
 
 Frozen batch 21 starts from batch 20 3be1df6.
 Thirteen new cases cover boot spindle hooks, selection veto, sleep/status/reset,

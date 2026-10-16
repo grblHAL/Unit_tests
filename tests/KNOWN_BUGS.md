@@ -258,3 +258,43 @@ the existing thread-plan cases.
 **Remove exceptions when fixed:** remove the two matching WILL_FAIL blocks from
 [known_bugs.cmake](known_bugs.cmake), keep both regression assertions, run related
 and full sanitizer/strict checks, then delete this entry.
+
+
+## Motion comment leaves its original message allocation unreleased
+
+**Known since:** 2026-10-16. **Reproduced on:** Terje core
+`4ec1ae44b857a70d2f9298344feac4b43ed0eb6b`.
+
+An ordinary `G1X10F100(MSG,Future move)` allocates the normalized comment,
+then creates a second copy for the planner. Resetting the queued planner frees
+the planner copy but leaves the original 12-byte message allocated. Repeated
+message-bearing moves can consume controller heap. This finding concerns memory
+ownership; the independent sender-stop tests still require future messages and
+synchronized outputs to be discarded without execution.
+
+Both hosted Linux GCC and Clang LeakSanitizer runs identified the original
+allocation at [gcode.c:1146](https://github.com/terjeio/grblHAL_core/blob/4ec1ae44b857a70d2f9298344feac4b43ed0eb6b/gcode.c#L1146).
+The parser copies it at [gcode.c:4104-4105](https://github.com/terjeio/grblHAL_core/blob/4ec1ae44b857a70d2f9298344feac4b43ed0eb6b/gcode.c#L4104-L4105).
+[Planner cleanup](https://github.com/terjeio/grblHAL_core/blob/4ec1ae44b857a70d2f9298344feac4b43ed0eb6b/planner.c#L189-L197)
+frees only the attached copy. Windows ASan does not supply this Linux leak check;
+a portable allocation/free observer now verifies the lifetime on both platforms.
+It requires all message-path allocations to be released, allowing a future fix
+to use either one allocation or multiple allocations.
+
+**Regression:** [motion comment ownership](cases/gcode/motion_comment_releases_all_message_allocations_after_planner_reset.c).
+The correct zero-outstanding-bytes assertion fails with 12 bytes outstanding.
+Only this named case has a WILL_FAIL exception in [known_bugs.cmake](known_bugs.cmake).
+There is no sanitizer diagnostic allowance. The ordinary stop test queues its
+plugin-supplied message through public `mc_line()` so it can check cancellation
+independently of parser-comment ownership.
+
+**Suggested fix (proposal, not applied):** give the normalized comment explicit
+ownership on every parser exit. Either transfer it to `plan_data.message` and
+clear the local owner, or keep the planner copy and free the original. Review
+validation/abort/error exits as well as accepted motion, immediate messages,
+macro calls and tool changes; avoid double frees of planner-owned messages.
+
+**Remove exception when fixed:** retain the allocation observer and zero-byte
+assertion, remove this test's WILL_FAIL block, rerun focused and full sanitizer
+checks on Linux as well as local checks, then delete this entry. Keep the malloc/
+free linker instrumentation; it is part of the regression, not a workaround.

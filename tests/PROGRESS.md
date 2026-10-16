@@ -2714,3 +2714,39 @@ Batch 21 hosted run 38866070072 coverage passed: 16,645/17,624 lines (94.45%) an
 core 4ec1ae44b857a70d2f9298344feac4b43ed0eb6b and the core C/header filter. Hosted
 coverage JUnit has 3,340 cases, zero failures/skips. Source also passed; GCC/Clang
 remain in progress at last check. Verify their completion before any ready PR.
+
+## Batch 21 hosted leak diagnosis and batch 22 isolated regression
+
+Hosted run 38866070072 finished: source/coverage pass, GCC/Clang/diagnosis fail.
+Both compiler artifacts report the same direct 12-byte LeakSanitizer allocation
+from gc_normalize_block (gcode.c:1146), reached by the new sender-stop message
+case. The parser duplicates that comment into plan_data.message (4104-4105)
+but does not release its original local message. Planner reset frees the copy.
+Windows ASan lacks this Linux leak detection; local clean results did not prove
+leak freedom. Hosted coverage percentages remain valid but the run is not green.
+
+A new portable ownership case observes real malloc/free calls only during a
+normal message-bearing parser move and subsequent public planner reset. It
+requires zero outstanding bytes regardless of the number of allocations. Raw
+local reproduction leaves 12 bytes and fails its correct assertion. A single
+WILL_FAIL entry and dated KNOWN_BUGS.md entry record the defect, source links,
+proposed ownership cleanup and removal instructions. No sanitizer allowance.
+The observer's linker options remain part of the permanent regression.
+The existing sender-stop test now queues a plugin-supplied heap message through
+public mc_line and verifies accepted planner ownership before the same sender
+stop path. This keeps cancellation assertions ordinary and independent of the
+parser allocation defect. Both old Linux failure artifacts are saved in parent
+batch21-hosted-results-core-{gcc,clang}.zip.
+
+One more Modbus case confirms a valid async request with NULL callbacks accepts
+its reply and releases the bus for the next callback-bearing transaction.
+Batch 22 now adds 11 / 3,351 total, ten expected failures. Focused checks pass;
+full batch22-final is running. Keep core 4ec1ae4 unmodified. Push a validated
+checkpoint and verify Linux GCC/Clang/coverage before a ready PR; do not rerun
+unchanged batch 21 and expect its leak failure to disappear.
+
+Batch22-final completed: 3,351 cases pass, ten documented expected failures,
+44.52 s, strict summary and all 44 helpers pass. Core remains clean 4ec1ae4.
+Freeze/push this checkpoint, dispatch exact-source hosted validation, then work
+on coverage-batch-23 while it runs. The lifetime regression is an expected
+failure; the ordinary sender-stop case must pass under Linux LeakSanitizer.

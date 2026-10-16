@@ -1,6 +1,11 @@
 # Confirmed defects: keep each regression and remove its block when fixed.
 # Dates, reproductions, and removal instructions: KNOWN_BUGS.md
 
+if(TEST gcode.motion_comment_releases_all_message_allocations_after_planner_reset)
+  set_tests_properties(gcode.motion_comment_releases_all_message_allocations_after_planner_reset
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
 if(TEST gcode.m68_preserves_fractional_output)
   set_tests_properties(gcode.m68_preserves_fractional_output PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
