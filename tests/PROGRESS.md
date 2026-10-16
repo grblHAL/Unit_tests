@@ -2663,3 +2663,19 @@ Artifacts verify harness 3be1df626d0c1d1b8834f549b8c3de84ae5a2d90, core
 changed with the core refresh; this is not solely a test gain from batch 19.
 On 2026-10-16 live refresh, Terje master remains 4ec1ae4; PR 19 remains open.
 Continue report/parser and supported feature gaps on batch 21; no ready PR yet.
+
+Batch 21 now adds 13 cases / 3,340 total. Seven further cases check deferred
+G66/G67 reporting without executing the macro, dynamic cutter-compensation
+reporting and completed G40 cancel, CAN advertisement only after successful
+driver startup, G96/G97 surface-speed/RPM reporting, M70 replacement/M71 hook
+lifecycle, and sender stop discarding future motion messages and synchronized
+outputs. All focused checks pass; no core edits or new exceptions.
+The CSS reporting test initially omitted report_init (formatter setup), and the
+modal feed test used an unnecessarily rounded imperial decimal. Proper report
+initialization and exactly representable F10 inches/min (254 mm/min) fixed these
+host/assertion issues before delivery. Do not classify them as core failures.
+Full batch21-final passes 3,340 cases in 54.71 s with nine expected failures;
+strict summary and all 44 helpers pass. Earlier 3,338 gate passed in 104.12 s.
+Freeze/push this checkpoint, verify exact-head hosted GCC/Clang/coverage against
+4ec1ae4, and continue work on coverage-batch-22. PR 19 remains open; do not merge.
+Latest measured coverage is still batch 20 (94.30% lines / 81.97% branches).
