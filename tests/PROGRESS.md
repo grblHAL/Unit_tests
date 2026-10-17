@@ -3461,3 +3461,26 @@ full hosted run, reducing repeated CI/push overhead. Keep focused checks while
 authoring and full sanitizer/helpers at the larger delivery checkpoint.
 Hosted42 verified5d336fc/ad57c78:16,851/17,634 lines95.56%,11,451/13,648
 branches83.90%. PR20 remains frozen and ready at40.
+
+
+Batch45 numeric settings extension:16 additional cases,3,570 total (20 since44).
+Registered plugin types cover decimal, axis masks,8/16/32-bit integers and bool,
+full-width accepted values, overflow/invalid-mask rejection, no save/notify on
+failure, saved-before-notification order, and selective core/driver restore.
+Two correct regressions expose read_uint incorrectly rejecting valid ten-digit
+values ending6-9: publicplugin2000000009 and minimaldirect1000000006/4294967289.
+2000000005 andUINT32_MAX controls pass;UINT32_MAX+1 rejects properly.
+One dated KNOWN_BUGS entry with exactsourceanchor and pre-multiplication overflow
+proposal; two named WILL_FAIL blocks,15 total labelled failures. No source
+modification or sanitizer allowance. Owner restore saves its own defaults before
+on_changed, matching the registered contract. All15 numeric focused cases pass
+expected classifications0.92s; direct uint group also verified. Combined full
+checkpoint next before one push/hosted run for the20 new cases.
+
+Batch45 combined delivery:3,570 sanitizer/strict pass52.65s,44 helpers pass3.348s;
+15 labelled known failures. Fresh core fetch confirms cleanad57c78 latest.
+Hosted43 exact65856dc/ad57c78 run39042209299 fullygreen, artifactlock/filter
+verified16,854/17,634 lines95.58%,11,454/13,648 branches83.92%. Hosted44
+run39042584724 now reports queued at latest snapshot (samehandle, not terminal).
+Push combined20case checkpoint, continue next branch with parser comment and
+optional-block workflows; do not force private/unreachable paths.

@@ -89,3 +89,13 @@ if(TEST boot_delta.sender_jog_cancel_stops_segment_refill_and_syncs_cartesian_po
   set_tests_properties(boot_delta.sender_jog_cancel_stops_segment_refill_and_syncs_cartesian_position
     PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Valid uint32 values must not be rejected based solely on their last digit.
+if(TEST settings.registered_plugin_counter_accepts_valid_ten_digit_value_ending_in_nine)
+  set_tests_properties(settings.registered_plugin_counter_accepts_valid_ten_digit_value_ending_in_nine
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+if(TEST nuts_bolts.read_uint_valid_ten_digit_values_ending_above_five)
+  set_tests_properties(nuts_bolts.read_uint_valid_ten_digit_values_ending_above_five
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

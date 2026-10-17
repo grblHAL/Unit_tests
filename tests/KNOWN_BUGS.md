@@ -420,3 +420,43 @@ as its ordinary endpoint may still be queued for execution.
 **Cleanup:** remove the named WILL_FAIL block once the full regression passes,
 retain both tests and their correct assertions, run the full sanitizer suite,
 and delete this entry.
+
+
+## Valid ten-digit unsigned numbers ending in 6-9 are rejected
+
+**Known since:** 2026-10-17. **Reproduced core:**
+`ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216`.
+
+A registered plugin's ordinary uint32 setting accepts `2000000005` and
+`4294967295`, but rejects `2000000009` with SettingValueOutOfRange. The latter
+is inside uint32 range and below the registered maximum. This affects the core
+numeric parser, independently of board hardware; no particular production plugin
+or physical failure is claimed. A direct parser regression also checks valid
+`1000000006` and `4294967289`.
+
+[read_uint() overflow check](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/nuts_bolts.c#L218-L223)
+requires the tenth digit to be at most5 regardless of the preceding value.
+That restriction is needed only when the preceding value equals429496729.
+The ordinary controls verify UINT32_MAX is accepted and UINT32_MAX+1 rejected;
+plugin save/notification and independent typed storage are also checked.
+
+**Regressions:** [public plugin counter store](cases/settings/registered_plugin_counter_accepts_valid_ten_digit_value_ending_in_nine.c)
+and [minimal unsigned parser](cases/nuts_bolts/read_uint_valid_ten_digit_values_ending_above_five.c).
+Two named WILL_FAIL blocks in [known_bugs.cmake](known_bugs.cmake); no sanitizer allowance.
+
+**Suggested fix (proposal, not applied):** validate the accumulated value before
+multiplication using the actual uint32 limit, rather than digit count:
+
+```c
+if(intval > (UINT32_MAX - c) / 10u)
+    return Status_SettingValueOutOfRange;
+intval = intval * 10u + c;
+```
+
+Remove the now-unused digit counter from this function. Preserve the existing
+leading-zero, optional-plus, negative-value, zero-decimal and fractional-rejection
+contracts. Retest valid ten-digit endings6-9 and actual overflow.
+
+**Cleanup:** remove both named WILL_FAIL blocks once both complete regressions
+pass, keep their correct assertions and ordinary maximum/overflow controls,
+run the full sanitizer suite, and delete this entry.

@@ -1,3 +1,12 @@
+# Current batch45 combined delivery checkpoint
+
+Branch coverage-batch-45 has committed MPG group352a94a plus16 numeric/parser
+cases ready for full gate (3,570 total,20 added since44). One new documented
+unsigned-parser defect has2 named correct regressions;15 known failures total.
+No core edits/allowances. See newest PROGRESS. Run full sanitizer/strict/helpers
+passed52.65s with44 helpers; commit/push one combined checkpoint. PR20 remains ready/frozen at40.
+Core cleanad57c78; verify hosted43/44 and latestcore while full gate runs.
+
 # Continue batch45 as a substantial combined delivery
 
 Four MPG/report cases pass full3,554 sanitizer/strict51.98s. Commit module group
