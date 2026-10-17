@@ -3395,3 +3395,28 @@ Hosted40 run39040996935 and41 run39041409247 are still live.
 Batch42 delivery: full3,539 sanitizer/strict pass52.02s;44 helper tests pass.
 13 unchanged known failures. Push/dispatch42 and continue43. Hosted40 has source,
 GCC and coverage successful; Clang test still in progress at latest check.
+
+
+## Batch43 Z backlash and probe-following motion - 2026-10-17
+
+Six new cases total3,545. Public per-axis settings configure compensation. Z
+reversal/continuation and negative-first travel check both motor pulses and
+logical endpoints; XYZ diagonal uses independent8/4/10-pulse take-up. Two real
+G38.2 probe/contact cases verify short forward follow-up adds no false reversal
+and reverse follow-up adds exactly8 take-up pulses. This exercises backlash
+position synchronization after probe abort removes its remaining queued target.
+All six focused pass0.57s. No new defects, exceptions or core changes.
+Full43 gate pending. Initial generated double constants corrected to float under
+strict Clang warnings.
+
+Hosted40 exactd795985/ad57c78 run39040996935 fully passed all jobs. Artifact
+verification:16,841/17,634 lines95.50%;11,439/13,648 branches83.81%, core filter.
+PR20 opened only after that full hosted gate: https://github.com/grblHAL/Unit_tests/pull/20
+It contains315 new cases since upstream master/merged19. Frozen at40;41/42 and
+current43 remain separate continuing work. Do not merge PR20. Hosted41
+run39041409247 remains in progress at last check.
+
+Batch43 delivery: full3,545 sanitizer/strict pass53.39s;44 helpers pass.
+13 existing known failures. Hosted41 exactc0d76b8/ad57c78 run39041409247 is fully
+green; downloaded lock/filter/coverage verify16,846/17,634 lines95.53% and
+11,444/13,648 branches83.85%. PR20 remains frozen at40. Push43 and continue44.

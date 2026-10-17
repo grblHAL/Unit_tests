@@ -1,3 +1,11 @@
+# Current batch43 handoff
+
+Branch coverage-batch-43 begins at pushed42 5d336fc. Six backlash/probe cases
+pass full3,545 sanitizer/strict and44 helpers. PR20 now open at fully green40 d795985.
+Do not merge;41/42/43 remain separate later work. Hosted41 run39041409247 live
+at latest check;42 dispatched, obtain run ID. Verified40 coverage95.50/83.81.
+Core clean ad57c78. See newest PROGRESS and preserve correct assertions.
+
 # Current batch42 handoff
 
 Branch coverage-batch-42 begins at pushed41 c0d76b8. Three CoreXY real-boot
