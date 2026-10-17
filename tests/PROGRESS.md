@@ -2028,3 +2028,70 @@ Core is clean feebef26222111f11c7a3b3b0156d023aa786937, verified remote HEAD.
 Frozen batch 12 also passed all hosted gates in run 38701989145.
 Push this combined head and validate hosted GCC/Clang/coverage before calling
 this expanded PR ready. Continue new coverage separately; do not merge PRs.
+
+## Batch 14 asymmetric analog expansion workflows
+
+New work continues on coverage-batch-14 from combined PR 18 head 9c7099d.
+Six new cases exercise input-only/output-only analog expansion boards and unequal
+bank sizes through public driver registration, reads/writes, claiming, remapping,
+pin lookup and descriptions. Direction-specific callback bounds now enforce each
+bank's declared counts; existing symmetric fixtures retain their original defaults.
+All 139 I/O cases pass focused sanitizers and strict summary. Full ASan/UBSan
+and strict summary pass 3,205 cases (nine documented expected failures), 44.61 s:
+build-asan/batch14-checkpoint-results.xml and parent batch14-full logs.
+No production edits, new defect classification or new exception.
+
+PR 18 now includes all prior 63 cases at user request, pushed at 9c7099d.
+Combined hosted run 38735673645 is still validating; verify all gates before
+claiming the expanded PR ready. Do not push this separate batch onto its branch
+and cancel that validation. Next: use its Linux header-inclusive report to guide
+remaining public workflow/configuration gaps. Core remains clean Terje feebef2.
+The goal tool reports usageLimited despite reset; local work remains authorized.
+
+## Batch 14 sender-driven metadata storage
+
+Five more normal-boot sender cases pass ASan/UBSan and strict summary:
+$DWNGRD sets and persists the downgrade flag/build marker, a second command
+restores the current build (observer proves the first transition occurred),
+and an argument is rejected without changing saved version data. $I writes
+and reads custom build information; oversized input reports error 3 and retains
+the previous value. Assertions inspect the physical NVS adapter after ordinary
+shutdown/flush, with checksums, rather than the freed RAM buffer. Initial failures
+were a test lifecycle mistake reading that freed buffer, corrected without any
+production changes or exception. Evidence: build-asan/batch14-sender-results.xml.
+Total 3,210 cases; batch 14 adds eleven cases. A fresh full gate is required
+before publishing this enlarged batch.
+
+PR 18 is merged upstream at e6edb45; its exact premerge head 9c7099d passed all
+hosted jobs in run 38735673645. Authoritative header-inclusive coverage there:
+16,401/17,604 lines (93.17%), 10,998/13,632 branches (80.68%), 3,199 cases.
+These percentages do not yet include batch 14. Rebase this branch onto freshly
+fetched upstream master before its eventual PR and preserve this work.
+
+## Batch 14 capability help and mixed-axis report units
+
+Four new public $HELP COMMANDS cases pass sanitizer/strict checks: physical board
+switches suppress software toggle help, RTC help follows capability, encoder
+commands appear only with matching callbacks (without calling them), and reset
+help describes tool data only when a table is configured. Three eight-axis report
+cases verify realtime, probe and home coordinates convert linear XYZUV to inches
+while preserving ABC degrees, independent of G21 input mode. Home reporting also
+preserves the selected homed mask. A shared mixed-axis report fixture avoids
+copying setup across cases. Focus evidence: batch14-help-results.xml (seven
+including existing controls), batch14-mixed-report-results.xml (three).
+Total 3,217; batch 14 adds eighteen cases. No new core changes or exceptions.
+
+## Batch 14 full publish checkpoint
+
+Rebased onto merged upstream e6edb45. Full ASan/UBSan and strict summary pass
+3,217 cases (3,208 clean, nine documented expected failures, no unexpected
+failures/skips/diagnostics), 53.75 s. All 44 Python helper checks pass. Evidence:
+build-asan/batch14-delivery-results.xml and parent batch14-delivery logs.
+Core checkout remains clean feebef2 and remote HEAD is unchanged. TODO records
+unsupported public wall-plotter homing as a coverage limitation, with no artificial
+private-path tests, source exclusion or defect classification.
+
+Publish this exact checkpoint for Linux GCC/Clang/header-inclusive coverage.
+Inspect all required jobs and source lock, record measured percentages, and only
+then create/attach a ready PR. Continue independent new work on a fresh branch
+while CI runs; do not cancel healthy validation by pushing more to this branch.

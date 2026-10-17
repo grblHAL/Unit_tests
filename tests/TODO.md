@@ -346,3 +346,17 @@ six standard work systems; level 2 retains HOME reporting, while level 10 omits
 that extension. Align the configuration description with intended availability.
 No missing-feature failure or exception is registered for this documentation
 question.
+
+## Wall-plotter homing coverage requires an implemented public workflow
+
+**Review date:** 2026-10-15, Terje core feebef26222111f11c7a3b3b0156d023aa786937.
+
+The hosted report still lists the wall-plotter target/reference homing helpers
+as uncovered. Although initialization installs the kinematics limit callbacks,
+its public home_machine handler explicitly reports "Homing is not implemented!"
+and returns false. The existing unsupported_homing_reports_warning case verifies
+that response. Do not directly invoke the private helpers or bypass that handler
+solely to cover their lines. Revisit normal sender-driven homing tests when the
+maintainer implements the wall-plotter homing workflow and defines its reference
+contract. This is a pending feature/coverage limitation, not a new confirmed bug;
+no source exclusion or expected-failure exception is added.
