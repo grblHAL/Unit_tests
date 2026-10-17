@@ -3439,3 +3439,25 @@ Batch44 delivery: full3,550 sanitizer/strict pass52.42s and44 helpers pass.
 independent primary/MPG report consumption using public reporting APIs.
 Report_ClearAll returns early for primary only; do not force the unreachable
 zero-value MPG observer path just for coverage or call it a defect.
+
+
+## Batch45 independent primary and MPG report consumption - 2026-10-17
+
+Four new cases total3,554. Normal realtime requests consume primary and directed
+pendant reports in both orders after public feed override110% or G10 offsetX12.
+Both receive the new value even when the other report was already consumed.
+Primary replies broadcast to connected streams; pendant requests stay local and
+do not take primary input control. Initial fixture incorrectly expected primary
+replies to bypass pendant; corrected to documented broadcast behavior, not a bug.
+All four focused pass0.38s. No new defects, exceptions or core edits.
+The internal MPG zero-flags branch is unreachable from Report_ClearAll's early
+return; do not force it just to improve counts. Full45 validation pending.
+Hosted42 run39041825459 fully successful, downloaded artifacts pending extraction.
+Hosted43 run39042209299 and44 run39042584724 still in progress at last check.
+
+Batch45 reporting checkpoint:3,554 sanitizer/strict pass51.98s. Commit locally
+then extend the same feature branch with more module groups before another
+full hosted run, reducing repeated CI/push overhead. Keep focused checks while
+authoring and full sanitizer/helpers at the larger delivery checkpoint.
+Hosted42 verified5d336fc/ad57c78:16,851/17,634 lines95.56%,11,451/13,648
+branches83.90%. PR20 remains frozen and ready at40.

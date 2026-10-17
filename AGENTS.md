@@ -1,3 +1,19 @@
+# Continue batch45 as a substantial combined delivery
+
+Four MPG/report cases pass full3,554 sanitizer/strict51.98s. Commit module group
+locally, keep extending branch coverage-batch-45 before push/hosted gate rather
+than CI for every few cases. Next registered numeric plugin setting writes.
+Focused checks while authoring; full sanitizer/helpers at substantial checkpoint.
+PR20 open/frozen verified40. Hosted42 green95.56/83.90;43/44 still to verify.
+
+# Current batch45 handoff
+
+Branch coverage-batch-45 starts at pushed44 fda9a93. Four independent primary/MPG
+report-consumption cases pass focused; full gate pending. Preserve intentional
+primary broadcast and pendant-directed output behavior. See newest PROGRESS.
+PR20 open/frozen40;42 hosted green,43 run39042209299 and44 run39042584724 live.
+Core clean ad57c78. Next useful gap: registered numeric plugin setting writes.
+
 # Current batch44 handoff
 
 Branch coverage-batch-44 begins at pushed43 65856dc. Five registered PWM
