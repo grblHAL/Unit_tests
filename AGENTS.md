@@ -1,3 +1,10 @@
+# Current batch41 handoff
+
+Branch coverage-batch-41 starts at pushed40 d795985. Four configured geometry
+real homing cases pass full3,536 sanitizer/strict and44 helpers. Hosted40 run39040996935
+is live. PR19 merged; cumulative ready PR awaits exact40 hosted gate.
+See latest PROGRESS for evidence. Core remains clean ad57c78.
+
 # Current handoff
 
 Branch coverage-batch-40 retains all cumulative work through39. PR19 merged.

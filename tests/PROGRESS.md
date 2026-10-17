@@ -3360,3 +3360,19 @@ Batch40 delivery:3,532 full sanitizer cases pass53.06s, strict summary passes;
 13 labelled known failures. All44 helper tests pass3.254s outside sandbox after
 temporary-directory permission failures there. No core edits. Push/hosted gate
 next, then ready cumulative PR after exact-head GCC/Clang/coverage/diagnosis.
+
+
+## Batch41 configured delta geometry during real homing - 2026-10-17
+
+Four new cases total3,536. Settings are applied through settings_store_setting
+during normal driver setup: home angle30 degrees, motor travel30 degrees,
+base-to-floor350mm and forearm330mm. Real homing completes with all three
+switches. Analytic symmetric rod geometry independently checks home coordinates;
+travel/floor options shrink the finite ordered workspace without changing home.
+All four focused cases pass0.42s. No new bug, exception or core change.
+Batch40 d795985 pushed, exact-core hosted39040996935 confirmed in progress.
+Full41 validation pending; do not present it as ready.
+
+Batch41 delivery: full3,536 sanitizer/strict pass113.71s,44 helpers pass.
+13 existing known failures; no new defects or allowances. Push41 and continue42.
+Hosted40 exactd795985 run39040996935 remains live at last check.
