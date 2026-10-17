@@ -2,6 +2,24 @@
 
 ## Objective and delivery
 
+Current branch coverage-batch-38 starts at pushed batch37 77d91aa.
+Fourteen new cases total3,518. Ten public parser rejections verify unavailable
+I/O/mist, mill-versus-lathe modes, disabled parking override and invalid fractions/
+axis-command conflicts preserve modal state and an existing80-pulse move.
+Two registered driver-capability cases cover torch start/stop bypass and400 ms
+startup delay without feedback polling. Capabilities assigned before registration,
+never by modifying spindle_get pointers. Existing feedback helper retains defaults.
+Two G65 M-word cases prove M3/M8 preceding G65 become local argument13 without
+spindle/coolant activation; callback failure restores parent99 and scope.
+No new core defects, exceptions or source changes. Earlier3,516 full checkpoint
+passed46.96 s/strict/44 helpers. Full batch38-delivery-results.xml passes3,518 in46.97 s, strict summary and44
+helpers pass. Session60112 completed. Freeze/push/dispatch38 and continue39.
+Useful next area: ports advertised by driver but unavailable after plugin claims;
+use real registration/claim APIs and preserve normal I/O positive controls.
+Batch37 exact77d91aa run39020604172 is in progress at last check. Latest fully
+green batch36 is95.33% lines/83.57% branches. Latest fetched core remains clean
+ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216. Continue substantial coverage work.
+
 Current branch coverage-batch-37 starts at pushed batch36 4dab01a.
 Five full-boot cases total3,504. Ordinary reset retains tool0; resetting during
 M6/G30 retract preserves stopped position but selects uncompleted tool3 after

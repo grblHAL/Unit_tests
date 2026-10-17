@@ -3289,3 +3289,28 @@ No core edits or sanitizer allowances. Added repository lesson for ACK routing.
 Batch37 delivery: full3,504 pass46.58 s, strict summary and44 helpers pass,
 12 documented expected failures. Session50785 completed. Latest core fetch
 confirms clean ad57c78 remains latest. Freeze/push/dispatch37 and continue38.
+
+
+## Batch38 parser rejection, driver waits and macro M arguments -2026-10-17
+
+Fourteen new cases total3,518. Ten rejected programming commands preserve
+prior modal state, planner buffer and execution of the queued80X-pulse move:
+milling G7/G96, unavailable M7/M62/M66/M67, disabled M56, G28.2/G33.2 fractions
+and conflicting G10/G33 axis commands. All ten focused pass0.64 s.
+
+Registered torch capability bypasses start/stop spindle delay and feedback waits;
+a driver lacking feedback instead waits its configured400 ms without polling.
+Driver capabilities are set before registration; existing feedback controls keep
+their default fixture behavior. Two focused pass0.29 s. Twelve-case checkpoint
+passes full3,516/46.96 s, strict summary and44 helpers.
+
+M3/M8 before G65 become local macro argument13 without enabling spindle/coolant;
+callback-error cleanup restores parent argument99 and call scope. Both focused
+pass0.29 s. No new defects/allowances/core changes. Final3,518 gate runs as
+session60112, batch38-delivery-results.xml and parentlogs. Hosted37 exact77d91aa
+run39020604172 is still in progress. Continue beyond the validation checkpoint.
+
+Batch38 delivery:3,518 full sanitizer/strict pass46.97 s,44 helpers pass,
+12 unchanged expected failures. Session60112 completed. Freeze/push/dispatch38
+and continue39. Next inspect registered ports made unavailable by normal plugin
+claims, rather than force private states or unsupported laser-only configurations.
