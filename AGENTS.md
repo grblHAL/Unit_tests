@@ -2,24 +2,24 @@
 
 ## Objective and delivery
 
-Current work is coverage-batch-29, 22 new cases, 3,423 total. Full
-batch29-delivery-results.xml passes in 44.87 s; strict summary and all 44 helpers
-pass, eight expected failures, no sanitizer allowances. Terje source is still
-clean/latest ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216 at the second live fetch.
-Eight VFD cases, four G10 L0 reload cases, seven queued arc/G93 rejection/control
-cases, one G93/G33 encoder case and two actual VFD-default boot cases are included.
-Boot registers PWM during driver_init and VFD during driver_setup; it proves the
-unused PWM is initialized off before VFD configuration, with saved/locked ranges.
-No new core defects or allowances in batch29. Commit/push/dispatch this checkpoint
-and continue coverage-batch-30 while hosted CI runs.
-Batch27 run38986131807 and batch28 run38986684127 are fully green. Exact batch28
-coverage: 16,714/17,630 lines (94.80%), 11,297/13,648 branches (82.77%),
-harness eb44ea97c96493fe1acfd11a57987fd6bc367402/source ad57c78/core filter.
-PR19 remains open at last check. No later PR has been claimed ready.
-Potential next public gap: closing a claimed auxiliary UART with an associated
-VFS file; success must close the file, failed release must retain ownership.
-Do not force unavailable OpenDrain settings or the already documented unreachable
-EEPROM warning counter; those are not coverage targets via private calls.
+Current work is coverage-batch-30 from pushed batch29 1aa39e0.
+Twenty new cases bring the suite to 3,443. Full batch30-delivery-results.xml
+passes in 45.15 s; strict summary and all 44 helpers pass, eight expected failures,
+no sanitizer allowances. Source remains clean ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216.
+Cases cover UART-owned file close/release retry, MPG realtime/handler handover,
+real file EOF through protocol_main_loop, plugin alarm-lock/unlock queue recovery,
+and eight encoder-driven G76 workflows (external/internal, reverse Z, spring,
+units, diameter, tapers, stop/restart). Thread driver registers before gc_init;
+initial tool position uses G0 and encoder rotation advances independently of axes.
+Stop fixture now accepts a driver-service hook; all earlier arc/drill controls
+were revalidated. No new faults or exceptions. Commit/push/dispatch this checkpoint
+and continue on coverage-batch-31 while hosted CI runs.
+Batch29 run38987951245 is fully green (all jobs). Exact artifacts verify
+1aa39e0dd924915c96f33d3b448f916deab3c006/ad57c78 and unchanged core filter:
+16,747/17,630 lines (94.99%), 11,327/13,648 branches (82.99%). PR19 is still open
+at last check; no later ready PR claimed. Next useful public gap: normal cold
+boot coordinate-record read failure/recovery and persisted G92/WCO notification,
+with real NVS callbacks and valid persisted records, not private parser flags.
 
 Frozen batch 24 starts from batch 23 7398414.
 Nine new G95 cases pass full sanitizer/strict checks (3,370 total, 54.66 s),

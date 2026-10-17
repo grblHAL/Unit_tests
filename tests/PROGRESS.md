@@ -3011,3 +3011,30 @@ eb44ea97c96493fe1acfd11a57987fd6bc367402 respectively, source ad57c78 and the
 core/.*\.[ch]$ filter. Push/dispatch29; continue30 with public stream/VFS ownership
 while CI runs. The EEPROM double-increment warning question already exists in
 TODO; do not duplicate it or force its unreachable warning via private state.
+
+Batch30: twenty new cases, 3,443 total. UART close verifies file closure after
+successful release and ownership retention across a failed release/retry. Five
+MPG cases cover active/inactive realtime toggle, handler registration, no previous
+handler on disable and protected registered-stream disconnect. Inactive top-bit
+commands are consumed without taking control; an initial false-drop expectation
+was corrected against the public dispatcher contract, not classified as a defect.
+Four real protocol file cases cover CRLF, missing final LF, empty file and parser
+error/EOF status with restored sender queries. A boot integration queues plugin
+commands through alarm rejection, $G, $X and successful G20/G91 recovery.
+
+Eight G76 cases use a driver registered before parser initialization, public M3
+and G0 positioning and independent encoder rotation. They count emitted radial/
+axial pulses and clearance for external/internal cuts, reverse Z, two spring
+passes, inch pitch/depth, diameter mode and entry/exit tapers. Sender stop during
+the first cut discards later/spring passes and preserves an X-only relative
+restart. No physical cutting or hardware timing claim. The shared stop fixture
+accepts a service hook for encoder-index acquisition; all prior stop controls pass.
+Focused thread suite eight passes, 0.58 s. Full batch30-delivery-results.xml:
+3,443 pass, 45.15 s; strict summary and 44 helpers pass, eight expected failures
+and zero unexpected diagnostics. No core changes or new allowances.
+
+Hosted batch29 run38987951245 is fully green: source/GCC/Clang/coverage/diagnosis.
+Artifacts verify harness 1aa39e0dd924915c96f33d3b448f916deab3c006, clean source
+ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216 and core/.*\.[ch]$ filter. Coverage:
+16,747/17,630 lines (94.99%), 11,327/13,648 branches (82.99%). Push/dispatch30 and
+continue31 with supported cold-boot coordinate recovery while CI runs.

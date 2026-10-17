@@ -9,6 +9,7 @@ static bool program_can_pending, program_stop_sent, program_stopped, program_fin
 static bool program_resume_started;
 static bool program_full_seen;
 static bool program_stop_in_drill;
+static void (*program_step_service)(sys_state_t state);
 static int32_t program_stop_position[N_AXIS];
 static float program_stop_parser[N_AXIS];
 static void program_cancel_input(void)
@@ -34,10 +35,13 @@ static void program_driver_reset(void) { }
 static void program_service(sys_state_t state)
 {
     CHECK(++program_service_calls < 200000);
+    if(program_step_service) program_step_service(state);
     if(state == STATE_CYCLE) {
         if(!program_stop_sent && plan_check_full_buffer()) program_full_seen = true;
-        st_prep_buffer();
-        stepper_driver_interrupt_handler();
+        if(!program_step_service) {
+            st_prep_buffer();
+            stepper_driver_interrupt_handler();
+        }
         bool stop_point = program_stop_in_drill ? physical_position[Z_AXIS] <= -20 : axis_pulses[X_AXIS] >= 40;
         if(!program_stop_sent && stop_point) {
             CHECK(program_line_reads == 1);
@@ -62,9 +66,8 @@ static void program_service(sys_state_t state)
         }
     }
 }
-static void run_stopped_program(const char *program)
+static inline void configure_stopped_program_stream(const char *program)
 {
-    prepare_jog_motion();
     settings.arc_tolerance = .002f;
     sys.cold_start = false;
     sys.driver_started = true;
@@ -76,6 +79,9 @@ static void run_stopped_program(const char *program)
     hal.coolant.set_state = program_coolant;
     hal.driver_reset = program_driver_reset;
     grbl.on_execute_realtime = program_service;
+}
+static inline void finish_stopped_program(void)
+{
     CHECK(!protocol_main_loop());
     CHECK(program_finished && program_stopped && program_cancel_calls == 1);
     CHECK(axis_pulses[X_AXIS] >= 40);
@@ -87,4 +93,10 @@ static void run_stopped_program(const char *program)
         CHECK(physical_position[axis] == program_stop_position[axis] + (axis == X_AXIS ? 80 : 0));
     }
     CHECK(!sys.position_lost);
+}
+static inline void run_stopped_program(const char *program)
+{
+    prepare_jog_motion();
+    configure_stopped_program_stream(program);
+    finish_stopped_program();
 }
