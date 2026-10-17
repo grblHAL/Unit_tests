@@ -1,11 +1,12 @@
 #pragma once
 #include "support/fast_motion_host.h"
 static uint64_t override_window_start, override_window_end;
+static unsigned override_sample_start_step = 20800, override_sample_end_step = 22400;
 static void fast_override_pulse(stepper_t *stepper)
 {
     fast_pulse(stepper);
-    if(axis_pulses[X_AXIS] == 20800 && !override_window_start) override_window_start = fast_elapsed_cycles;
-    if(axis_pulses[X_AXIS] == 22400 && !override_window_end) override_window_end = fast_elapsed_cycles;
+    if(axis_pulses[X_AXIS] == override_sample_start_step && !override_window_start) override_window_start = fast_elapsed_cycles;
+    if(axis_pulses[X_AXIS] == override_sample_end_step && !override_window_end) override_window_end = fast_elapsed_cycles;
 }
 static inline void queue_short_fast_segments(void)
 {
@@ -47,7 +48,8 @@ static inline void run_fast_override(bool restore)
     }
     CHECK(reduced && restored == restore && (sys.rt_exec_state & EXEC_CYCLE_COMPLETE));
     CHECK(override_window_end > override_window_start);
-    float feed = 20.0f * 60.0f * hal.f_step_timer / (float)(override_window_end - override_window_start);
+    float span = (float)(override_sample_end_step - override_sample_start_step) / settings.axis[X_AXIS].steps_per_mm;
+    float feed = span * 60.0f * hal.f_step_timer / (float)(override_window_end - override_window_start);
     fprintf(stderr, "Reduced cruise feed: %.3f mm/min\n", feed);
     CHECK(fabsf(feed - 1200) < 24);
     CHECK(axis_pulses[X_AXIS] == 24000 && physical_position[X_AXIS] == 24000);

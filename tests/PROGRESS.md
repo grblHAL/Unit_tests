@@ -3038,3 +3038,48 @@ Artifacts verify harness 1aa39e0dd924915c96f33d3b448f916deab3c006, clean source
 ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216 and core/.*\.[ch]$ filter. Coverage:
 16,747/17,630 lines (94.99%), 11,327/13,648 branches (82.99%). Push/dispatch30 and
 continue31 with supported cold-boot coordinate recovery while CI runs.
+
+Batch31 in progress: seven boot record cases bring the suite to 3,450. Full
+batch31-checkpoint-results.xml passes in 47.41 s, strict summary and all 44 helpers
+pass (eight expected failures). Four additional loaded input-configuration cases
+pass focused sanitizer/strict checks, bringing the current total to 3,454.
+
+Cold boot cases inject one driver read failure for G54, persisted G92 or either
+startup script record. They verify an error, zero/empty recovery of just the bad
+record and preservation/execution of healthy neighbors. Valid G54/G92 controls
+observe loaded WCO callbacks; volatile G92 ignores but does not delete saved data.
+Fixture corrections were lifecycle/timing: grbl_enter frees NVS on return, so
+records are captured before the sender query; startup execution is deferred, so
+the observer waits for the actual read failure rather than consuming it itself.
+These sanitizer failures were fixture mistakes, not core defects.
+
+Four loaded input tests observe FeedHold inversion/debounce priority, Probe and
+MotorFault inversion/debounce, and MPG select pull-up request. No assertion about
+processor/protection electrical behavior or disabled-pullup contract is added.
+Focused batch31-input-config-results.xml: four pass, 0.42 s. Full expanded gate
+and commit still pending. Current work is uncommitted on batch31; source unchanged.
+Batch30 exact4047920 run38989130871 is validating while local work continues.
+
+Batch31 delivery: nineteen new cases, 3,462 total. Seven boot-record and four
+loaded input cases are joined by five fast jerk cases (linear/coordinated/return,
+override and hold) and three jerk/profile combinations (linear/coordinated/return
+with profile change). Public settings configure jerk at 1,000 mm/s^3 and 400 mm
+axis travel. P5 is 20%, P1 restores 100%; reduced-profile moves use 5,000 mm/min
+so the timer window is at cruise. An initial P10 command was an invalid fixture
+assumption and was corrected to supported P1. Jerk deceleration needs more travel
+than the ordinary control; its reduced-feed sample now spans X280..290 rather
+than the still-decelerating X260..280. Both require 1,200 mm/min within 2%, and all
+original endpoint/pulse assertions remain. Shared hold checks were factored into
+fast_short_hold_host.h; all ordinary and jerk controls are revalidated.
+
+Full batch31-delivery-results.xml: 3,462 pass in 46.22 s, strict summary and all
+44 helpers pass. Eight expected failures, zero unexpected diagnostics, no new
+core bugs/allowances or core edits. Freeze/push31 and continue32 while CI runs.
+
+Batch30 run38989130871 source/GCC/Clang/coverage pass, diagnosis pending. Coverage
+artifacts verify exact4047920c8a5acaec84c322c3e9b7bd27f3757079 and source
+ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216 with core/.*\.[ch]$ filter:
+16,761/17,630 lines (95.07%), 11,344/13,648 branches (83.12%). Last fully green
+run remains batch29 until that final diagnosis is verified. Next supported gaps:
+build-report capability advertisement, actual M60 pause reporting and allocator
+fallback for a complete settings listing. Leave unreachable/private paths alone.

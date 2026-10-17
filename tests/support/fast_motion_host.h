@@ -5,6 +5,8 @@
    This checks timer/pulse output, not mechanical acceleration or missed steps. */
 static uint32_t fast_timer_period;
 static uint64_t fast_elapsed_cycles, fast_sample_start, fast_sample_end;
+static float fast_expected_feed = 12000;
+static void (*fast_configuration_hook)(void);
 static void fast_timer(uint32_t cycles)
 {
     CHECK(cycles > 0);
@@ -20,10 +22,12 @@ static void prepare_fast_motion(void)
 {
     prepare_motion_program();
     for(unsigned axis = 0; axis < N_AXIS; axis++) {
-        char maximum[] = "15000", acceleration[] = "200";
+        char maximum[] = "15000", acceleration[] = "200", travel[] = "400";
         CHECK(settings_store_setting(Setting_AxisMaxRate + axis, maximum) == Status_OK);
         CHECK(settings_store_setting(Setting_AxisAcceleration + axis, acceleration) == Status_OK);
+        CHECK(settings_store_setting(Setting_AxisMaxTravel + axis, travel) == Status_OK);
     }
+    if(fast_configuration_hook) fast_configuration_hook();
     hal.stepper.cycles_per_tick = fast_timer;
     hal.stepper.pulse_start = fast_pulse;
 }
@@ -41,7 +45,7 @@ static inline void finish_fast_motion(float y, float z, bool return_to_origin)
     float length = sqrtf(300 * 300 + y * y + z * z);
     float measured_feed = (60.0f * length / 300.0f) * 60.0f * hal.f_step_timer / (float)(fast_sample_end - fast_sample_start);
     fprintf(stderr, "Cruise feed from 60 mm X pulse window: %.3f mm/min\n", measured_feed);
-    CHECK(fabsf(measured_feed - 12000) < 120); /* One percent timer quantization allowance. */
+    CHECK(fabsf(measured_feed - fast_expected_feed) < .01f * fast_expected_feed);
     float endpoint[N_AXIS] = {300, y, z};
     for(unsigned axis = 0; axis < N_AXIS; axis++) {
         unsigned steps = (unsigned)lroundf(endpoint[axis] * settings.axis[axis].steps_per_mm);
