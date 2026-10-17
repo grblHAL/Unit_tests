@@ -2,23 +2,23 @@
 
 ## Objective and delivery
 
-Current work is coverage-batch-26 from pushed batch 25 a1eaed8.
-Eleven new sender curve stop/hold cases bring the suite to 3,390. Full
-batch26-checkpoint-results.xml passes in 45.12 s, strict summary and all 44
-helpers pass, seven expected failures, no sanitizer allowances. Core remains
-clean ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216. Public protocol streaming and
-real simulated step interrupts prove full-planner refill cancellation, paused
-motion, resumed endpoints and following relative travel. Both arc directions,
-helical/multiturn arcs, cubic/quadratic splines and inch-mode hold are covered.
-No new defects or exceptions. Hold fixture initially lacked a coolant shutdown
-callback for CMD_EXIT; fixing that driver setup resolved its sanitizer failure.
-Batch 25 hosted run 38985300867 is still in progress; exact head a1eaed8.
-Batch 24 run 38871019194 is fully green at 94.66% lines / 82.44% branches.
-PR 19 remains open at the 2026-10-17 refresh; upstream master e6edb45.
-Freeze/push this module and continue on coverage-batch-27. Useful next area:
-actual canned drilling cancellation/hold during planner refill, with valid public
-sender setup and physical/parser position checks. Do not register speculative
-failures or infer mechanical behavior from simulated pulses.
+Current work is coverage-batch-27 from frozen/pushed batch 26 011a464.
+Five new drilling cases bring the suite to 3,395. Full batch27-checkpoint-results.xml
+passes in 46.83 s, strict summary and all 44 helpers pass. Eight expected failures,
+no sanitizer allowances. Source ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216 stays clean.
+New documented G83 stop defect: stopping below Z0 leaves parser Z at retract R;
+an X-only relative restart unexpectedly changes Z. Correct assertions remain,
+one narrow WILL_FAIL entry. G73 stop, repeated G81 stop/hold and G83 hold/resume
+are passing controls. Support fixtures were renamed segmented_*_stream_host.h
+and generalized for synchronization gaps without requiring queued blocks during
+an empty-buffer peck dwell. All eleven previous curve controls still pass.
+Batch25 run 38985300867 source/GCC/coverage pass, Clang pending; verified coverage
+16,697/17,630 lines (94.71%), 11,270/13,648 branches (82.58%), exact a1eaed8/ad57c78.
+Batch26 run 38985624501 source/coverage pass, compilers pending at live check.
+PR19 remains open. Freeze/push this module and continue coverage-batch-28 while
+hosted CI runs; never present a PR ready before every required job finishes.
+Next inspect supported dwell/reset/realtime and storage/driver workflows from
+fresh coverage; leave uncertain contracts in TODO and keep working independently.
 
 Frozen batch 24 starts from batch 23 7398414.
 Nine new G95 cases pass full sanitizer/strict checks (3,370 total, 54.66 s),

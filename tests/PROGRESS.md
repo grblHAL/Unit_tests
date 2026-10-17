@@ -2926,3 +2926,29 @@ The initial hold-fixture CMD_EXIT crash was a missing coolant shutdown callback,
 corrected in the fixture; it was not a core defect. Clean source ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216.
 Batch25 exact-head hosted run 38985300867 is validating a1eaed8; do not call green
 until all jobs complete. Freeze/push batch26 and continue batch27 while CI runs.
+
+Batch27: five new drilling cases, 3,395 total. Actual sender stop/hold through
+protocol_main_loop covers G81 repeated holes, G73 chip break and G83 peck drilling.
+Fixtures now use segmented_* names because the same public streaming machinery
+covers curves and drilling. All eleven previous curve controls are revalidated.
+G83 hold/resume completes all holes and the following relative move. During
+peck dwell the planner may legitimately be empty; the fixture now waits for the
+follow-up motion to start and finish rather than treating a synchronization gap
+as program completion. Long peck programs have a larger bounded service budget.
+
+New known defect, dated 2026-10-17: G83 stop restores actual Z=-0.25 mm, then the
+cycle changes parser Z to R=1 mm after cancellation. Following G91G1X1F100
+unexpectedly moves Z to +1 mm. Source-linked reproduction/proposal and single
+exception cleanup are in KNOWN_BUGS.md. Correct parser/physical assertions remain;
+no core edits or sanitizer allowances. G73/G81 stop and G83 hold are controls.
+Focused batch27-segmented-results.xml: 16 cases, 0.92 s. Full
+batch27-checkpoint-results.xml: 3,395 pass, 46.83 s; strict summary and 44 helpers
+pass, eight expected failures, zero unexpected diagnostics.
+
+Hosted batch25 run 38985300867 source/GCC/coverage pass, Clang pending. Coverage
+artifact verified harness a1eaed84aa9c9d9c9eaf5ee97102fa1d0aeec4e9 and source
+ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216, core/.*\.[ch]$ filter:
+16,697/17,630 lines (94.71%), 11,270/13,648 branches (82.58%). Source changed the
+denominator from batch24. Batch26 run 38985624501 source/coverage pass, compilers
+pending. Freeze/push27, continue28 while checking hosted completion at useful
+intervals. PR19 still open; no new ready PR has been claimed.

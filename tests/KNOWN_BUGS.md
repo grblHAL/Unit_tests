@@ -213,3 +213,45 @@ unrelated to this pin-configuration issue.
 controls' mode expectations with the agreed behavior, run all pullup tests plus
 the full sanitizer suite/strict summary, and delete this entry. No sanitizer
 suppression or diagnostic wrapper applies.
+
+
+## Stopping G83 during synchronized drilling leaves parser Z at the retract plane
+
+**Known since:** 2026-10-17. **Reproduced on:** Terje core
+`ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216`.
+
+**Scope:** ordinary sender workflow, verified with simulated step interrupts;
+not reproduced on physical hardware. Stream `G91G83X1Z-5R1Q0.25L20F100`.
+Send the realtime stop command while drilling below Z0. In the host reproduction
+the machine stops at X1, Z-0.25 mm, but the parser subsequently reports Z1 mm.
+Sending `G91G1X1F100` then moves X by 1 mm **and moves Z from -0.25 to +1 mm**,
+although the command supplies no Z word. The queued remaining holes are discarded.
+
+The stop handler synchronizes parser and machine position, but the canned cycle
+continues after its synchronized dwell and changes its `position` argument
+(which aliases parser position) to the retract plane before the next motion
+call notices cancellation. See [motion_control.c:596-618](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/motion_control.c#L596-L618).
+The parser passes `gc_state.position` to that routine at
+[gcode.c:4937](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/gcode.c#L4937),
+and its cancellation guard at
+[gcode.c:4972-4982](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/gcode.c#L4972-L4982)
+prevents the normal final position update but does not restore that mutation.
+
+**Regression:** [G83 stop and relative restart](cases/motion_control/sender_stop_during_peck_drill_synchronization_preserves_restart_position.c).
+It uses protocol_main_loop, driver stream cancellation and emitted pulses, with
+no private motion-state changes. The same fixture passes for G73 chip-break
+drilling, repeated G81 holes and all six arc/spline stop controls. Ordinary G83
+completion is covered by [full-retract peck drilling](cases/gcode/g83_pecks_with_full_retraction.c).
+Only the named G83 stop case is expected to fail in [known_bugs.cmake](known_bugs.cmake).
+There is no sanitizer allowance.
+
+**Suggested fix (proposal, not applied):** return from the canned cycle as soon
+as a synchronized dwell or spindle operation observes cancellation, before
+modifying the parser-backed position again. Alternatively keep cycle working
+coordinates separate and explicitly resynchronize parser position on cancellation.
+Review all canned-cycle synchronization exits, not just G83, while preserving
+normal retract behavior. Verify stop, hold/resume and subsequent X-only motion.
+
+**Cleanup:** remove this single WILL_FAIL block when fixed, retain the parser and
+physical-position assertions, run focused and full sanitizer checks, then delete
+this entry.
