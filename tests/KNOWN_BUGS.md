@@ -255,3 +255,46 @@ normal retract behavior. Verify stop, hold/resume and subsequent X-only motion.
 **Cleanup:** remove this single WILL_FAIL block when fixed, retain the parser and
 physical-position assertions, run focused and full sanitizer checks, then delete
 this entry.
+
+
+## Low-memory settings lists ignore visibility and legacy-only selection
+
+**Known since:** 2026-10-17. **Reproduced on:** Terje core
+`ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216`.
+
+**Scope:** reporting consistency under heap pressure, reproduced at the public
+reporting API with one injected sort-buffer allocation failure.
+Register normal plugin descriptors: two visible settings, one hidden setting and
+one whose availability callback returns false. `report_grbl_settings(true, ...)`
+normally passes only the two visible descriptors to the reporting callback.
+When its pointer-array calloc fails, the callback also receives both hidden and
+unavailable descriptors. `report_grbl_settings(false, ...)` normally selects
+legacy core settings, but its allocation fallback also passes extended plugin
+settings. Visible settings are still present; the selected scope changes.
+
+The ordinary path applies its filters at
+[report.c:501-521](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/report.c#L501-L521).
+The [fallback, lines 530-533](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/report.c#L530-L533)
+iterates every settings list without those filters. The public iterator does
+not filter ordinary non-axis descriptors at
+[settings.c:3215-3242](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/settings.c#L3215-L3242).
+The [system command handlers](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/system.c#L300-L348)
+choose full versus legacy output according to command and compatibility level.
+
+**Regressions:** [visibility](cases/report/all_settings_sort_allocation_failure_preserves_hidden_and_unavailable_filter.c)
+and [legacy-only scope](cases/report/all_settings_sort_allocation_failure_preserves_legacy_only_selection.c).
+Each first verifies the ordinary successful-allocation control, then fails only
+the reporting allocation and retains the same selection expectation. They observe
+the public reporting callback rather than assuming a controller heap size or
+allocation failure frequency. The two named exceptions are in
+[known_bugs.cmake](known_bugs.cmake); there is no sanitizer allowance.
+
+**Suggested fix (proposal, not applied):** apply the same hidden, availability,
+core/plugin and `all` filters while traversing the unsorted fallback. Keep the
+fallback allocation-free and allow native registration order; it need not sort.
+Preserve axis/channel iterator handling and still emit every eligible setting.
+
+**Cleanup:** remove these two WILL_FAIL blocks when fixed, keep the correct
+assertions and calloc linker instrumentation, rerun focused/full sanitizer checks,
+then delete this entry. The allocation observer is test instrumentation, not an
+exception to remove.

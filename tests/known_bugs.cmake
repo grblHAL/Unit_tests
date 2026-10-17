@@ -61,3 +61,13 @@ if(TEST motion_control.sender_stop_during_peck_drill_synchronization_preserves_r
   set_tests_properties(motion_control.sender_stop_during_peck_drill_synchronization_preserves_restart_position
     PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Settings-list allocator fallback must preserve visibility and requested scope.
+if(TEST report.all_settings_sort_allocation_failure_preserves_hidden_and_unavailable_filter)
+  set_tests_properties(report.all_settings_sort_allocation_failure_preserves_hidden_and_unavailable_filter
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+if(TEST report.all_settings_sort_allocation_failure_preserves_legacy_only_selection)
+  set_tests_properties(report.all_settings_sort_allocation_failure_preserves_legacy_only_selection
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

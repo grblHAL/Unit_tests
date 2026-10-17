@@ -2,25 +2,19 @@
 
 ## Objective and delivery
 
-Current work is coverage-batch-31 from pushed batch30 4047920.
-Nineteen new cases total 3,462. Full batch31-delivery-results.xml passes in
-46.22 s; strict summary and all 44 helpers pass, eight expected failures, no
-sanitizer allowances. Source remains clean ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216.
-Seven boot record cases, four loaded input cases, five fast jerk cases and three
-jerk/profile combinations are included. Public settings configure jerk limits;
-rate sampling occurs after jerk-limited deceleration settles (X280..290), with
-unchanged pulse/endpoint assertions. G187 profiles are P1..P5, P1 restores 100%;
-reduced P5 cases use 5,000 mm/min so the sample is at cruise. Shared fast hold
-assertions were factored without removing checks; fast fixtures configure 400 mm
-travel for 300 mm moves. No new defects or exceptions. Commit/push/dispatch31,
-continue coverage-batch-32. Next inspect supported build-report capabilities,
-M60 report from its actual pause callback, and low-memory all-settings reporting.
-Do not force unreachable probe-protection paths or undocumented private states.
-Batch30 run38989130871 source/GCC/Clang/coverage pass, diagnosis pending at live
-check. Verified artifacts: 4047920c8a5acaec84c322c3e9b7bd27f3757079/ad57c78,
-core filter, 16,761/17,630 lines (95.07%), 11,344/13,648 branches (83.12%).
-Last fully green batch29 run38987951245 was 94.99%/82.99%. PR19 still open at last
-check; do not call later PRs ready until required hosted validation completes.
+Current work is coverage-batch-32 from pushed batch31 46c984e.
+Seven new reporting cases total 3,469. Full batch32-delivery-results.xml passes
+in 46.49 s; strict summary and all 44 helpers pass. Ten documented expected
+failures, no sanitizer allowances. Core is clean ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216.
+Build capabilities, actual M60 pause reporting and multi-plugin help are ordinary
+passes. Two narrow allocation-fallback regressions retain correct visibility and
+legacy-only selection assertions; evidence/proposal/cleanup are in KNOWN_BUGS.md.
+No core modifications. Freeze/push/dispatch32, continue independent coverage gaps.
+Batch31 run38990060016 is fully green, artifacts verify exact46c984e4283b777ad8ed29c5d44c0d9667a389e5
+and ad57c78 with header-inclusive core filter: 16,772/17,630 lines (95.13%),
+11,362/13,648 branches (83.25%). Batch30 diagnosis also passed.
+PR19 remains open on the latest live check; do not call later PRs ready before
+required hosted validation or merge PRs yourself.
 
 Frozen batch 24 starts from batch 23 7398414.
 Nine new G95 cases pass full sanitizer/strict checks (3,370 total, 54.66 s),

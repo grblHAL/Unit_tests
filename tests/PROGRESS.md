@@ -3083,3 +3083,25 @@ ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216 with core/.*\.[ch]$ filter:
 run remains batch29 until that final diagnosis is verified. Next supported gaps:
 build-report capability advertisement, actual M60 pause reporting and allocator
 fallback for a complete settings listing. Leave unreachable/private paths alone.
+
+
+## Batch 32 reporting checkpoint - 2026-10-17
+
+Seven new cases total 3,469. Public build reports advertise REBOOT only with
+a driver handler and PPI only with its driver capability; reporting never invokes
+the reboot handler. M60 is observed during the actual parser pause callback.
+Two plugin registries verify later-group lookup and unknown-topic exhaustion.
+Two correct settings-list selection regressions reproduce the allocation fallback
+omitting normal visibility/availability and legacy-only filters. Ordinary
+allocation controls pass. Narrow WILL_FAIL entries and dated source evidence,
+proposal and cleanup are in KNOWN_BUGS.md; no sanitizer allowances or core edits.
+
+Full batch32-delivery-results.xml: 3,469 pass in 46.49 s, ten expected failures,
+strict summary and all 44 helpers pass. Source remains clean Terje
+ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216. Freeze/push and dispatch exact-source CI.
+
+Batch31 run38990060016 passed every job. Downloaded source lock and coverage
+verify harness46c984e4283b777ad8ed29c5d44c0d9667a389e5 / ad57c78 and
+core/.*\.[ch]$ filter: 16,772/17,630 lines (95.13%),
+11,362/13,648 branches (83.25%). Batch30 run38989130871 diagnosis also succeeded.
+PR19 remains open on live check; subsequent batches remain cumulative branches.
