@@ -77,3 +77,9 @@ if(TEST tool_change.open_door_at_manual_completion_queues_safety_door_before_mot
   set_tests_properties(tool_change.open_door_at_manual_completion_queues_safety_door_before_motion
     PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Reset during manual tool-positioning must not select the uncompleted tool.
+if(TEST boot.sender_reset_during_tool_positioning_restarts_without_selecting_unfitted_tool)
+  set_tests_properties(boot.sender_reset_during_tool_positioning_restarts_without_selecting_unfitted_tool
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

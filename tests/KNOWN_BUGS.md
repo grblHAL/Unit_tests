@@ -337,3 +337,47 @@ a cancelled/failed change just because the generic cleanup/reset handler ran.
 **Cleanup:** remove this named WILL_FAIL block when the full regression passes,
 keep both regression and ordinary control assertions, run full sanitizer checks,
 and delete this entry.
+
+
+## Reset during manual tool-change travel selects the uncompleted tool
+
+**Known since:** 2026-10-17. **Reproduced core:**
+`ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216`.
+
+Enable manual tool change and changing at G30. In a full driver/startup run, home
+XYZ, move to X-2 Y-3 Z-1 and request `T3M6`, with G30 saved at X-4 Y-5 Z-0.5.
+Send the ordinary realtime reset halfway through the initial Z retract. The
+machine stops before reaching the tool-change location. After normal warm
+initialization, the parser and `$G` nevertheless identify tool 3, although no
+manual tool-change acknowledgement or touch-off occurred. The correct result
+is to retain the previous tool 0. No physical cutting consequence is claimed.
+
+The control sends the same reset during an ordinary positioning move and retains
+tool 0. Both fixtures perform real homing, calibrate raw motor counters to homed
+machine coordinates, verify reset delivery after the second startup greeting,
+and compare final software positions with emitted motor steps. They do not treat
+transient parser state before restart as the result. The host exit command's
+additional cleanup is excluded from reset-delivery counts.
+
+[tool_change()](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/tool_change.c#L539-L547)
+does not check the final synchronization result before entering the tool-change
+wait and returning success. The parser's
+[completion check](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/gcode.c#L4291-L4292)
+can then finalize the pending tool because the reset has left the normal
+tool-change state. Warm parser initialization retains the current tool.
+
+**Regression:** [full-boot reset during M6 positioning](cases/boot/sender_reset_during_tool_positioning_restarts_without_selecting_unfitted_tool.c).
+**Control:** [ordinary positioning reset](cases/boot/sender_reset_during_ordinary_positioning_retains_current_tool_after_restart.c).
+A [completed streamed G30 change](cases/boot/streamed_g30_manual_change_returns_before_touch_off_and_selects_fitted_tool.c)
+selects tool 3 and restores the original position after proper acknowledgement.
+One named WILL_FAIL block is in [known_bugs.cmake](known_bugs.cmake); no sanitizer
+allowance.
+
+**Suggested fix (proposal, not applied):** propagate failed/cancelled tool-change
+synchronization before setting the pending wait or returning success. Guard
+parser tool finalization after an aborted change, while retaining successful
+manual/ATC completion and warm-reset preservation of an already fitted tool.
+
+**Cleanup:** remove this named WILL_FAIL block once the complete restart
+regression passes, retain its correct assertions and ordinary control, run full
+sanitizer checks, and delete this entry.

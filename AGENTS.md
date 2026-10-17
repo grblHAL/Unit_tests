@@ -2,6 +2,26 @@
 
 ## Objective and delivery
 
+Current branch coverage-batch-37 starts at pushed batch36 4dab01a.
+Five full-boot cases total3,504. Ordinary reset retains tool0; resetting during
+M6/G30 retract preserves stopped position but selects uncompleted tool3 after
+warm init. One narrow dated known-bug entry/exception preserves correct tool0.
+Normal streamed manual, no-return and G30 return/touch-off controls all pass,
+with tool3, actual return positions, original handler and RX suspension released.
+The earlier unresolved restoration candidate is now an ordinary test: its mock
+needed real stream_rx_suspend and independently delivered tool ACK while read
+is paused. TODO removed; no exception for that fixture mistake. Sender waits
+for the actual tool pause and for G30 return before sending reference settings.
+Real homing calibrates raw motor counters; restart observation requires second
+startup greeting. Exclude host CMD_EXIT cleanup from reset counts. Never classify
+intermediate pre-init parser state as a restart result.
+Full earlier3,501 gate passed49.44 s/strict/44 helpers. Full batch37-delivery-results.xml passes3,504 in46.58 s; strict summary and44
+helpers pass. Freeze/push/dispatch37 and continue38. Source unmodified, no
+sanitizer allowances;12 known failures. Session50785 completed.
+Batch36 run39019490072 fully green verifies4dab01a510964c9563f2ff346b96544553970c08/ad57c78,
+16,810/17,634 lines95.33%,11,405/13,648 branches83.57%. PR19 remains open.
+Latest fetched core ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216 is clean.
+
 Current branch coverage-batch-36 starts at pushed batch35 63aa882.
 Twelve new cases total3,499. Six fixed XYZ tool-offset cases exercise three
 new documented TOOL_LENGTH_OFFSET_AXIS variants: correct G43.1 axis, wrong-axis
@@ -299,6 +319,10 @@ GitHub submodule. Check remaining anchors after deleting exception blocks.
   Switching fixture mode after registration can retain stale capabilities.
 - With LATHE_UVW_OPTION, U is always an incremental diameter (half its value
   changes X radius); V/W increment Y/Z. These differ from six-axis UVW remapping.
+- A streamed manual M6 ACK must pass through real stream_rx_suspend/its
+  receive handler. A no-op suspend callback silently drops ACK and can make
+  cycle start skip tool-return motion. Deliver ACK independently while read is
+  suspended, as a UART ISR would, and pace sender commands to the tool pause.
 - Constant RPM output does not require redundant PWM writes. Verify retained
   output state as well as update callbacks.
 - Encoder feedback must remain measured input: output mocks must not overwrite

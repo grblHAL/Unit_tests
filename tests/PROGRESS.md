@@ -3230,3 +3230,62 @@ Batch36 delivery: full3,499 pass46.23 s, strict summary and all44 helpers pass,
 11 existing expected failures. Session24395 completed successfully. Freeze/push
 and dispatch exact-source CI; continue37 with sender interruption during real
 G30/toolsetter positioning. Preserve stopped coordinates and callback ownership.
+
+
+## Batch37 real boot/reset tool-positioning continuation -2026-10-17
+
+Two registered cases total3,501. Full real homing establishes a raw physical
+counter-to-machine-coordinate mapping before G0 X-2 Y-3 Z-1. Reset during an
+ordinary move retains tool0 after restart. Reset during initial M6/G30 retract,
+before XY travel to the fixture, leaves tool3 selected after normal warm init.
+Correct tool0 expectation retained with dated KNOWN_BUGS evidence/control/
+proposal/cleanup and one WILL_FAIL; no core edits or sanitizer allowances.
+
+The initial direct-parser fixture observed intermediate state and was superseded
+by full boot. Initial boot reset fired too early until the homed coordinate frame
+was calibrated; those early results are not the reproduction. Restart observation
+requires the second startup greeting; host CMD_EXIT cleanup is excluded from
+reset counts. Full registered3,501 checkpoint passed46.04 s and strict summary.
+
+Mock boot receive now routes through a selected driver realtime handler, default
+unchanged, allowing actual manual ACK/cycle-start trapping. A separate streamed
+manual completion candidate selects tool3 and restores handlers but fails its
+correct prior-Z return assertion (entry-1, final-0.125). It is unregistered in
+candidates and TODO pending sender/suspension/task review. No exception assigned
+to that unresolved behavior. Final3,501 full gate after mock routing extension
+is live session99866, batch37-final-results.xml and parentlogs. Uncommitted work.
+
+Hosted35 run39018951320 fully green verifies63aa882329a04b3397a744cf94644108dbe1a16f
+and ad57c78 with core/.*\.[ch]$:16,794/17,630 lines95.26%,
+11,392/13,648 branches83.47%. Hosted36 run39019490072 is still running.
+PR19 remains open; latest core fetch unchanged/clean. Continue coverage work.
+
+Batch37 registered gate completed:3,501 pass49.44 s, strict summary and all44
+helpers pass,12 documented expected failures. Session99866 completed. Work
+remains local/uncommitted while investigating the streamed restoration candidate.
+
+Batch36 run39019490072 fully green: exact4dab01a510964c9563f2ff346b96544553970c08
+and ad57c78 source lock, core/.*\.[ch]$ filter. Coverage16,810/17,634 lines
+95.33%,11,405/13,648 branches83.57%; fixed-axis configurations add4 denominator
+lines. Continue reviewing the candidate without weakening its position assertion.
+
+
+Batch37 fixture investigation resolved: streamed tool ACK is handled by core
+stream_rx_suspend/await_toolchange_ack, not default protocol dispatch. A no-op
+suspend callback dropped ACK, so direct cycle start bypassed return motion.
+The fixture now uses the real RX suspension interface and delivers ACK via the
+selected receive handler independently while hal.stream.read is paused. Sender
+commands are paced to tool pause; G30 reference settings wait for return.
+
+Original prior-Z assertion passes unchanged. Candidate is restored as ordinary
+case and its temporary TODO removed. Three normal completion controls pass0.36 s:
+manual return, intentional no-return and G30 return/touch-off, each checking tool3,
+physical positions, restored handler/RX state. Five registered new cases total
+3,504. Separate reset-during-M6 regression remains one documented expected
+failure, with ordinary reset and completed G30 controls linked in KNOWN_BUGS.
+Final full gate runs session50785, batch37-delivery-results.xml and parentlogs.
+No core edits or sanitizer allowances. Added repository lesson for ACK routing.
+
+Batch37 delivery: full3,504 pass46.58 s, strict summary and44 helpers pass,
+12 documented expected failures. Session50785 completed. Latest core fetch
+confirms clean ad57c78 remains latest. Freeze/push/dispatch37 and continue38.
