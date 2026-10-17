@@ -2903,3 +2903,12 @@ coverage is 16,682/17,624 lines (94.66%) and 11,252/13,648 branches (82.44%).
 Terje master advanced to ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216. Full rebuild
 and verification of message ownership/callback and G76 exception cleanup are
 in progress; the old-source pass does not establish latest-source readiness.
+
+Latest-core verification complete: all 3,379 cases passed in 105.00 s, strict
+summary and all 44 helpers passed. Source ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216
+remains clean. Removed three fixed WILL_FAIL exceptions (G76 inch pitch, G76
+inch taper, parser-message ownership), the one callback sanitizer manifest entry,
+and their three bug sections. All original correct assertions and allocation
+instrumentation remain. Seven expected failures remain; no diagnostic allowances.
+Freeze/push batch 25 and continue independent work on batch 26 during hosted CI.
+The untracked curve-stop fixture is a proposal, not part of this verified total.

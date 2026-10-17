@@ -2,20 +2,18 @@
 
 ## Objective and delivery
 
-Current work is coverage-batch-25 from frozen/pushed batch 24 ea7cdd6.
-Nine new planner/boot/motion-metadata cases bring the suite to 3,379. Focused
-checks pass. Full batch25-delivery passes in 59.72 s with all 44 helpers,
-ten expected failures and two documented recovering warnings. Allocation tests model the
-largest contiguous allocation, verify usable reduced capacity and public retry;
-boot verifies warning output and a sender query. Override observer controls pass.
-Two undecided policies are in TODO.md, not registered failures.
-Batch 24 exact-head run 38871019194 is in progress; batch 23 run 38869601270 is
-fully green at 94.55% lines / 82.39% branches. PR 19 is still open at live check.
-Continue independent gaps on batch 25 before its next substantial hosted boundary.
-Freeze/push this checkpoint and continue on coverage-batch-26. Useful next gap:
-sender stop/reset while arc or spline generation refills a full planner buffer,
-using protocol_main_loop and real simulated step interrupts rather than forcing
-private motion state. Recheck parser/physical position after cancellation.
+Current checkpoint is coverage-batch-25, 3,379 cases. All pass against clean
+Terje ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216 in batch25-latest-results.xml
+(105.00 s), with strict summary and all 44 helper tests passing. Seven expected
+failures remain, with no sanitizer diagnostic allowances. Fixed G76 inch pitch/
+taper and message ownership/callback entries were deleted; regressions remain.
+Batch 24 hosted run 38871019194 is fully green at 94.66% lines / 82.44% branches.
+PR 19 remains open at the 2026-10-17 refresh; upstream master is e6edb45.
+Push/dispatch this validated checkpoint and continue on coverage-batch-26.
+An untracked curve_stop_stream_host.h is a new fixture proposal: verify sender
+stop during full-planner arc/spline generation, parser/physical alignment and
+subsequent relative travel. It is not yet validated or included in the total.
+Two planner policy questions remain in TODO, not registered failures.
 
 Frozen batch 24 starts from batch 23 7398414.
 Nine new G95 cases pass full sanitizer/strict checks (3,370 total, 54.66 s),

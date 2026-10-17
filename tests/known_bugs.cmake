@@ -55,7 +55,3 @@ if(TEST ioports_pullup.pullup_disable_live_and_loaded_configuration_agree)
   set_tests_properties(ioports_pullup.pullup_disable_live_and_loaded_configuration_agree
     PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
 endif()
-
-
-
-

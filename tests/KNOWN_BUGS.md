@@ -13,9 +13,9 @@ defects, remove the diagnostic matcher and retain an ordinary successful compile
 check. Recovering sanitizer diagnostics have a separate, narrowly scoped
 [manifest](known_sanitizer_diagnostics.json); remove its linked entries when fixed.
 
-Outstanding exceptions were revalidated on 2026-10-15 against Terje core
-`4ec1ae44b857a70d2f9298344feac4b43ed0eb6b` after removing the fixed paired-ramp
-and legacy enable-readback exceptions.
+Outstanding exceptions were revalidated on 2026-10-17 against Terje core
+`ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216` after removing fixed G76 inch-unit,
+motion-comment ownership and queued-message callback exceptions.
 Source links identify the revision used for the described code and reproduction. CI can test
 a newer revision; a fixed regression forces review and cleanup of its exception.
 
