@@ -2,6 +2,23 @@
 
 ## Objective and delivery
 
+Batch34 is validated from pushed batch33 8282b95. Seven laser cases total3,482.
+Full batch34-final-results.xml passes46.13 s; strict summary and all44 helpers
+pass, ten existing expected failures, no sanitizer allowances/core modifications.
+Public hold actions cover M3/M4 disabled/on, stationary zero power, resumed pulses
+and50% sender override while held. Door cases use explicit HoldActions3, declared
+door capability and valid homed Z/parking setup; laser suppresses Z parking,
+blocks open-door start, requires explicit start after closing and resumes power.
+Initial implicit-zero fixture flags caused missing restoration; explicit valid
+configuration fixes that fixture. No core defect or exception was registered.
+Drivers registered before gc_init. Shared ordinary parking setup remains fully
+tested. Freeze/push/dispatch34, continue35 with supported tool-change workflows.
+Next useful gap: preserve a plugin WCO-saved observer through tc_init and real
+G10 during manual tool change; install observer before tc_init, not afterwards.
+Batch32 run39017513432 fully green verifies8c0f688/ad57c78,16,781/17,630 lines
+95.18%,11,373/13,648 branches83.33%. Batch33 exact8282b95 run39017951972 is
+still in progress at last live check. Never call hosted validation green early.
+
 Batch33 is validated from pushed batch32 8c0f688. Six new cases total3,475.
 Full batch33-delivery-results.xml passes in46.56 s, strict summary and all44
 helpers pass; ten existing expected failures and no sanitizer allowances.

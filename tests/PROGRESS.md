@@ -3133,3 +3133,43 @@ Full batch33-delivery-results.xml passes46.56 s; strict summary and all44 helper
 pass, ten existing expected failures, no new exceptions/diagnostics/core edits.
 Freeze/push/dispatch33 and continue34 with normal laser hold/resume workflows,
 using registered driver and public realtime commands. Hosted32 remains running.
+
+
+## Batch34 laser hold and safety-door workflows -2026-10-17
+
+Seven separate cases total3,482. Registered PWM laser drivers use real parser,
+stepper and realtime commands. M3/M4 hold-disable options verify output off while
+stationary and restored powered completion; disabling that option intentionally
+retains M3 constant power while M4 reaches zero PWM when motion stops. A50%
+spindle override while held leaves output off and limits resumed PWM to250.
+All20 mm cuts finish exactly1,600X pulses with no position loss.
+
+Safety-door tests configure valid homed Z=-10 mm and parking enabled; both M3
+and M4 disable laser output without any Z parking pulses. An open door blocks
+cycle start; closing alone remains suspended; explicit start finishes the powered
+cut. Shared ordinary parking setup was factored, preserving its existing behavior.
+The five-case3,480 gate passed46.40 s and strict summary;44 helpers passed the
+four-case checkpoint. Final3,482 sanitizer/strict/helper gate runs as session99799,
+batch34-final-results.xml and parentlogs. No new exceptions or core modifications.
+
+Hosted32 run39017513432 fully passes source/GCC/Clang/coverage/diagnosis. Artifacts
+verify8c0f688de5ff612a4a12e639113fd55893bf3c4a/ad57c78 and core/.*\.[ch]$:
+16,781/17,630 lines95.18%,11,373/13,648 branches83.33%. Hosted33 exact8282b95
+run39017951972 remains in progress. Continue beyond these module checkpoints.
+
+Final gate initially found the stronger constant-laser powered-resume check
+failing with implicit fixture hold flags. Door fixtures now explicitly configure
+Setting_HoldActions=3 and declare the door capability before execution. Both
+focused cases pass with actual restored PWM and enabled driver state. No assertion
+was removed: initial power, stationary off, powered resume, exact pulses/no Z
+parking remain required. No core defect was registered. The earlier verbose
+check without LLVM runtime PATH failed to launch; rerun with PATH passed. Final
+full gate restarted after fixture changes as session88025; poll that live handle.
+
+Batch34 final:3,482 pass in46.13 s (batch34-final-results.xml), strict summary
+and all44 helpers pass. Ten existing expected failures; no allowances/core edits.
+All seven laser cases and existing ordinary parking cases pass after shared
+configuration extraction. The session88025 process completed successfully.
+Freeze/push/dispatch34 and continue35. Useful next supported workflow: a plugin
+WCO-saved observer installed before tc_init, actual G10 while manually changing
+a tool, then public completion/resume. Avoid overwriting captured hooks.
