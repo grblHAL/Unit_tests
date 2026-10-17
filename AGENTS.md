@@ -1,3 +1,10 @@
+# Current batch44 handoff
+
+Branch coverage-batch-44 begins at pushed43 65856dc. Five registered PWM
+spindle hold/plugin-order cases pass full3,550 sanitizer/strict and44 helpers. See newest
+PROGRESS. PR20 frozen at verified40; later work separate. Hosted41 fully green
+95.53/83.85;42 run39041825459 and43 dispatched remain to verify. Core cleanad57c78.
+
 # Current batch43 handoff
 
 Branch coverage-batch-43 begins at pushed42 5d336fc. Six backlash/probe cases

@@ -3420,3 +3420,22 @@ Batch43 delivery: full3,545 sanitizer/strict pass53.39s;44 helpers pass.
 13 existing known failures. Hosted41 exactc0d76b8/ad57c78 run39041409247 is fully
 green; downloaded lock/filter/coverage verify16,846/17,634 lines95.53% and
 11,444/13,648 branches83.85%. PR20 remains frozen at40. Push43 and continue44.
+
+
+## Batch44 held spindle plugin notification ordering - 2026-10-17
+
+Five new cases total3,550. PWM spindle registered before parser initialization
+and used in standard machine mode; no registered spindle pointer mutation.
+A real20mm move is held, stopped/restored via ordinary realtime overrides.
+Plugin programmed callbacks precede hardware changes, override callbacks see
+completed hardware state, and resume notification precedes any resumed steps.
+Two queued toggles produce neither false notifications nor hardware writes;
+stop during deceleration notifies only after completed hold. Exact1600-pulse
+endpoint is retained on resume. All five focused pass0.51s. No new defects,
+exceptions, allowances or source changes. Full44 gate pending.
+
+Batch44 delivery: full3,550 sanitizer/strict pass52.42s and44 helpers pass.
+13 unchanged known failures, no core edits. Push/dispatch44; continue45 with
+independent primary/MPG report consumption using public reporting APIs.
+Report_ClearAll returns early for primary only; do not force the unreachable
+zero-value MPG observer path just for coverage or call it a defect.
