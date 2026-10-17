@@ -2912,3 +2912,17 @@ and their three bug sections. All original correct assertions and allocation
 instrumentation remain. Seven expected failures remain; no diagnostic allowances.
 Freeze/push batch 25 and continue independent work on batch 26 during hosted CI.
 The untracked curve-stop fixture is a proposal, not part of this verified total.
+
+Batch 26: eleven sender stop/hold cases, 3,390 total. Six stop cases cover CW/CCW,
+helical and multiturn arcs, cubic and quadratic splines. Five hold cases cover
+arc, helical arc, inch arc and both spline forms. They prove planner-full and
+first-line generation at injection, exercise protocol_main_loop and actual step
+interrupts, verify parser/physical alignment after stop, unchanged position during
+32 paused foreground iterations, resumed endpoint and subsequent relative move.
+Focused batch26-curve-results.xml: eleven passing, 0.68 s. Full
+batch26-checkpoint-results.xml: all 3,390 pass, 45.12 s; strict summary and all
+44 helpers pass. Seven expected failures, zero unexpected sanitizer diagnostics.
+The initial hold-fixture CMD_EXIT crash was a missing coolant shutdown callback,
+corrected in the fixture; it was not a core defect. Clean source ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216.
+Batch25 exact-head hosted run 38985300867 is validating a1eaed8; do not call green
+until all jobs complete. Freeze/push batch26 and continue batch27 while CI runs.

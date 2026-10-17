@@ -2,18 +2,23 @@
 
 ## Objective and delivery
 
-Current checkpoint is coverage-batch-25, 3,379 cases. All pass against clean
-Terje ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216 in batch25-latest-results.xml
-(105.00 s), with strict summary and all 44 helper tests passing. Seven expected
-failures remain, with no sanitizer diagnostic allowances. Fixed G76 inch pitch/
-taper and message ownership/callback entries were deleted; regressions remain.
-Batch 24 hosted run 38871019194 is fully green at 94.66% lines / 82.44% branches.
-PR 19 remains open at the 2026-10-17 refresh; upstream master is e6edb45.
-Push/dispatch this validated checkpoint and continue on coverage-batch-26.
-An untracked curve_stop_stream_host.h is a new fixture proposal: verify sender
-stop during full-planner arc/spline generation, parser/physical alignment and
-subsequent relative travel. It is not yet validated or included in the total.
-Two planner policy questions remain in TODO, not registered failures.
+Current work is coverage-batch-26 from pushed batch 25 a1eaed8.
+Eleven new sender curve stop/hold cases bring the suite to 3,390. Full
+batch26-checkpoint-results.xml passes in 45.12 s, strict summary and all 44
+helpers pass, seven expected failures, no sanitizer allowances. Core remains
+clean ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216. Public protocol streaming and
+real simulated step interrupts prove full-planner refill cancellation, paused
+motion, resumed endpoints and following relative travel. Both arc directions,
+helical/multiturn arcs, cubic/quadratic splines and inch-mode hold are covered.
+No new defects or exceptions. Hold fixture initially lacked a coolant shutdown
+callback for CMD_EXIT; fixing that driver setup resolved its sanitizer failure.
+Batch 25 hosted run 38985300867 is still in progress; exact head a1eaed8.
+Batch 24 run 38871019194 is fully green at 94.66% lines / 82.44% branches.
+PR 19 remains open at the 2026-10-17 refresh; upstream master e6edb45.
+Freeze/push this module and continue on coverage-batch-27. Useful next area:
+actual canned drilling cancellation/hold during planner refill, with valid public
+sender setup and physical/parser position checks. Do not register speculative
+failures or infer mechanical behavior from simulated pulses.
 
 Frozen batch 24 starts from batch 23 7398414.
 Nine new G95 cases pass full sanitizer/strict checks (3,370 total, 54.66 s),
