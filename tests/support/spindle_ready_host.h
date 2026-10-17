@@ -25,13 +25,14 @@ static void ready_notified(spindle_ptrs_t *spindle, spindle_state_t state)
 { CHECK(spindle == spindle_get(0)); CHECK(state.on); CHECK(engine_ticks >= ready_after_ms); ready_notifications++; }
 static void ready_idle(bool clear) { (void)clear; }
 static void ready_enable(axes_signals_t axes, bool hold) { (void)axes; (void)hold; }
-static inline void prepare_spindle_ready(uint32_t feedback_delay, uint32_t timeout)
+static inline void prepare_spindle_ready_capabilities(uint32_t feedback_delay, uint32_t timeout, spindle_cap_t capabilities)
 {
     engine_prepare(); sys.cold_start = true;
     static spindle_ptrs_t driver = {.type = SpindleType_Basic, .ref_id = 1,
         .rpm_min = 1000, .rpm_max = 12000, .at_speed_tolerance = 1,
         .cap = {.direction = true, .variable = true, .rpm_range_locked = true, .at_speed = true},
         .set_state = ready_output, .get_state = ready_input};
+    driver.cap = capabilities;
     CHECK(spindle_register(&driver, "Ready feedback") == 0);
     settings.spindle.at_speed_tolerance = 1; settings.spindle.on_delay = timeout;
     CHECK(spindle_select(0));
@@ -46,6 +47,11 @@ static inline void prepare_spindle_ready(uint32_t feedback_delay, uint32_t timeo
     report_init_fns(); report_init(); state_set(STATE_IDLE);
     sys.cold_start = false; sys.driver_started = true;
     ready_after_ms = feedback_delay; engine_ticks = ready_queries = 0;
+}
+static inline void prepare_spindle_ready(uint32_t feedback_delay, uint32_t timeout)
+{
+    prepare_spindle_ready_capabilities(feedback_delay, timeout,
+        (spindle_cap_t){.direction = true, .variable = true, .rpm_range_locked = true, .at_speed = true});
 }
 static inline status_code_t ready_block(const char *text)
 { char block[64]; CHECK(strlen(text) < sizeof(block)); strcpy(block, text); return gc_execute_block(block); }

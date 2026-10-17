@@ -13,8 +13,9 @@ defects, remove the diagnostic matcher and retain an ordinary successful compile
 check. Recovering sanitizer diagnostics have a separate, narrowly scoped
 [manifest](known_sanitizer_diagnostics.json); remove its linked entries when fixed.
 
-Outstanding exceptions were revalidated on 2026-10-14 against Terje core
-`683589bd10bb1082825bfc7e9bcee6db102b9530` after removing seven fixed entries.
+Outstanding exceptions were revalidated on 2026-10-17 against Terje core
+`ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216` after removing fixed G76 inch-unit,
+motion-comment ownership and queued-message callback exceptions.
 Source links identify the revision used for the described code and reproduction. CI can test
 a newer revision; a fixed regression forces review and cleanup of its exception.
 
@@ -213,64 +214,209 @@ controls' mode expectations with the agreed behavior, run all pullup tests plus
 the full sanitizer suite/strict summary, and delete this entry. No sanitizer
 suppression or diagnostic wrapper applies.
 
-## Primary spindle stop uses the secondary spindle's cached ramp speed
 
-**Marked known:** 2026-10-15
+## Stopping G83 during synchronized drilling leaves parser Z at the retract plane
 
-**Regression:** [paired PWM stop test](cases/multi_spindle/primary_pwm_stop_after_secondary_start_never_increases_primary_output.c).
+**Known since:** 2026-10-17. **Reproduced on:** Terje core
+`ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216`.
 
-**Remove exception when fixed:** the matching test block in [known_bugs.cmake](known_bugs.cmake).
+**Scope:** ordinary sender workflow, verified with simulated step interrupts;
+not reproduced on physical hardware. Stream `G91G83X1Z-5R1Q0.25L20F100`.
+Send the realtime stop command while drilling below Z0. In the host reproduction
+the machine stops at X1, Z-0.25 mm, but the parser subsequently reports Z1 mm.
+Sending `G91G1X1F100` then moves X by 1 mm **and moves Z from -0.25 to +1 mm**,
+although the command supplies no Z word. The queued remaining holes are discarded.
 
-On Terje `683589bd10bb1082825bfc7e9bcee6db102b9530`, two PWM spindles
-registered before parser initialization and enabled through settings reproduce
-this sequence: `M3S6000$0`, `M3S8000$1`, `M5$0`. Primary stopping emits a PWM
-update above its preceding 6000 RPM output. The secondary remains enabled.
-Both descriptors use real PWM precomputation and configured start/stop ramps.
-Passing controls verify independent start routing, a primary stop before any
-secondary use, and a secondary stop preserving the primary output.
-This is a host-observed output command, not a claim about physical motor speed
-or how frequently users encounter this configuration.
+The stop handler synchronizes parser and machine position, but the canned cycle
+continues after its synchronized dwell and changes its `position` argument
+(which aliases parser position) to the retract plane before the next motion
+call notices cancellation. See [motion_control.c:596-618](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/motion_control.c#L596-L618).
+The parser passes `gc_state.position` to that routine at
+[gcode.c:4937](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/gcode.c#L4937),
+and its cancellation guard at
+[gcode.c:4972-4982](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/gcode.c#L4972-L4982)
+prevents the normal final position update but does not restore that mutation.
 
-In [_get_ramp(), spindle_control.c:582-605](https://github.com/terjeio/grblHAL_core/blob/683589bd10bb1082825bfc7e9bcee6db102b9530/spindle_control.c#L582-L605),
-the secondary lookup declares a new local `ramp` at line 599. It does not update
-the outer pointer returned at line 604. The first secondary ramp therefore
-reuses the primary record; its completed 8000 RPM becomes the cached start
-speed for the primary stop. A new record is also appended before looking for
-an existing match.
+**Regression:** [G83 stop and relative restart](cases/motion_control/sender_stop_during_peck_drill_synchronization_preserves_restart_position.c).
+It uses protocol_main_loop, driver stream cancellation and emitted pulses, with
+no private motion-state changes. The same fixture passes for G73 chip-break
+drilling, repeated G81 holes and all six arc/spline stop controls. Ordinary G83
+completion is covered by [full-retract peck drilling](cases/gcode/g83_pecks_with_full_retraction.c).
+Only the named G83 stop case is expected to fail in [known_bugs.cmake](known_bugs.cmake).
+There is no sanitizer allowance.
 
-**Suggested fix (proposal):** Search the existing list using the pointer that
-will be returned; allocate a new record only if no matching spindle exists.
-Keep allocation-failure behavior explicit. Re-run the paired and ordinary
-single-spindle ramp cases, including overrides, under sanitizers. Once this
-regression passes, remove its narrow exception and delete this entry while
-keeping the output assertions. No core patch has been applied here.
+**Suggested fix (proposal, not applied):** return from the canned cycle as soon
+as a synchronized dwell or spindle operation observes cancellation, before
+modifying the parser-backed position again. Alternatively keep cycle working
+coordinates separate and explicitly resynchronize parser position on cancellation.
+Review all canned-cycle synchronization exits, not just G83, while preserving
+normal retract behavior. Verify stop, hold/resume and subsequent X-only motion.
+
+**Cleanup:** remove this single WILL_FAIL block when fixed, retain the parser and
+physical-position assertions, run focused and full sanitizer checks, then delete
+this entry.
 
 
-## Legacy compatibility mode reports the opposite stepper-enable setting
+## Low-memory settings lists ignore visibility and legacy-only selection
 
-**Marked known:** 2026-10-15, Terje `feebef26222111f11c7a3b3b0156d023aa786937`.
+**Known since:** 2026-10-17. **Reproduced on:** Terje core
+`ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216`.
 
-With COMPATIBILITY_LEVEL=10, boot normally, send `$4=0`, then query `$4`.
-The controller acknowledges the write but reports `$4=1`. This is an ordinary
-sender settings workflow, with no short buffer, invalid argument or late driver
-registration. Level 2's axis-mask write/readback control passes.
+**Scope:** reporting consistency under heap pressure, reproduced at the public
+reporting API with one injected sort-buffer allocation failure.
+Register normal plugin descriptors: two visible settings, one hidden setting and
+one whose availability callback returns false. `report_grbl_settings(true, ...)`
+normally passes only the two visible descriptors to the reporting callback.
+When its pointer-array calloc fails, the callback also receives both hidden and
+unavailable descriptors. `report_grbl_settings(false, ...)` normally selects
+legacy core settings, but its allocation fallback also passes extended plugin
+settings. Visible settings are still present; the selected scope changes.
 
-The [setter at settings.c:644-648](https://github.com/terjeio/grblHAL_core/blob/feebef26222111f11c7a3b3b0156d023aa786937/settings.c#L644-L648)
-maps zero to the all-axes mask and one to zero in the >2 branch. The
-[getter at settings.c:723-727](https://github.com/terjeio/grblHAL_core/blob/feebef26222111f11c7a3b3b0156d023aa786937/settings.c#L723-L727)
-returns the mask's boolean value rather than reversing that mapping. Settings
-export can therefore disagree with the value the sender just set. This does
-not claim a particular board's electrical enable polarity.
+The ordinary path applies its filters at
+[report.c:501-521](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/report.c#L501-L521).
+The [fallback, lines 530-533](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/report.c#L530-L533)
+iterates every settings list without those filters. The public iterator does
+not filter ordinary non-axis descriptors at
+[settings.c:3215-3242](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/settings.c#L3215-L3242).
+The [system command handlers](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/system.c#L300-L348)
+choose full versus legacy output according to command and compatibility level.
 
-**Regression:** [normal boot and sender query](cases/boot_compat_10/legacy_enable_setting_round_trips_through_sender_query.c).
-The correct `$4=0` readback assertion remains. Only this named case is an expected
-failure; there is no sanitizer exception.
+**Regressions:** [visibility](cases/report/all_settings_sort_allocation_failure_preserves_hidden_and_unavailable_filter.c)
+and [legacy-only scope](cases/report/all_settings_sort_allocation_failure_preserves_legacy_only_selection.c).
+Each first verifies the ordinary successful-allocation control, then fails only
+the reporting allocation and retains the same selection expectation. They observe
+the public reporting callback rather than assuming a controller heap size or
+allocation failure frequency. The two named exceptions are in
+[known_bugs.cmake](known_bugs.cmake); there is no sanitizer allowance.
 
-**Suggested fix (not applied):** invert the boolean result in the >2 getter branch
-(for example, `!settings.steppers.enable_invert.mask`) to match its setter. Keep
-the level-2-and-below axis-mask branch unchanged. Verify writes/queries of both
-zero and one, settings reload, and the existing axis-mask control.
+**Suggested fix (proposal, not applied):** apply the same hidden, availability,
+core/plugin and `all` filters while traversing the unsorted fallback. Keep the
+fallback allocation-free and allow native registration order; it need not sort.
+Preserve axis/channel iterator handling and still emit every eligible setting.
 
-**Remove exception when fixed:** delete this case's WILL_FAIL block in
-[known_bugs.cmake](known_bugs.cmake), retain its sender-query assertions, run the
-compatibility cases and full sanitizers/strict summary, then delete this entry.
+**Cleanup:** remove these two WILL_FAIL blocks when fixed, keep the correct
+assertions and calloc linker instrumentation, rerun focused/full sanitizer checks,
+then delete this entry. The allocation observer is test instrumentation, not an
+exception to remove.
+
+
+## Completing a manual tool change with the door open leaves the old tool selected
+
+**Known since:** 2026-10-17. **Reproduced core:**
+`ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216`.
+
+With a registered manual tool-change interface and safety-door input, execute
+`T3M6`, save the current work offset with `G10L2P1Z0`, open the door, acknowledge
+the change and send cycle start. The completion handler correctly restores input
+handlers and queues the safety-door event. Close the door and explicitly resume.
+The machine reaches Idle without moving, but the parser still reports tool 0
+and the tool-changed callback has not fired. The ordinary closed-door control
+selects tool 3 and fires that callback once. This is a parser/tool bookkeeping
+reproduction; no physical cutting consequence or frequency is claimed.
+
+[change_completed()](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/tool_change.c#L89-L115)
+clears the pending tool-change flag and queues the door event. The normal
+[state_await_toolchanged()](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/state_machine.c#L467-L483)
+finalizes the parser tool on cycle start. The safety-door restore route instead
+[returns to Idle/Cycle](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/state_machine.c#L869-L884)
+without calling that finalization.
+[gc_tool_changed()](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/gcode.c#L1002-L1013)
+applies the pending tool and notifies its observer.
+
+**Regression:** [door open at manual completion](cases/tool_change/open_door_at_manual_completion_queues_safety_door_before_motion.c).
+**Control:** [closed-door G10 completion](cases/tool_change/g10_touch_off_notifies_plugin_and_allows_manual_change_completion.c).
+One named WILL_FAIL exception is in [known_bugs.cmake](known_bugs.cmake); no
+sanitizer allowance. Assertions require the selected tool and notification after
+explicit door-close/resume, plus no unexpected motor pulses.
+
+**Suggested fix (proposal, not applied):** retain a successful M6 completion
+handshake across safety-door handling, and finalize the parser tool exactly once
+before normal execution resumes. Preserve door motion gating. Do not finalize
+a cancelled/failed change just because the generic cleanup/reset handler ran.
+
+**Cleanup:** remove this named WILL_FAIL block when the full regression passes,
+keep both regression and ordinary control assertions, run full sanitizer checks,
+and delete this entry.
+
+
+## Reset during manual tool-change travel selects the uncompleted tool
+
+**Known since:** 2026-10-17. **Reproduced core:**
+`ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216`.
+
+Enable manual tool change and changing at G30. In a full driver/startup run, home
+XYZ, move to X-2 Y-3 Z-1 and request `T3M6`, with G30 saved at X-4 Y-5 Z-0.5.
+Send the ordinary realtime reset halfway through the initial Z retract. The
+machine stops before reaching the tool-change location. After normal warm
+initialization, the parser and `$G` nevertheless identify tool 3, although no
+manual tool-change acknowledgement or touch-off occurred. The correct result
+is to retain the previous tool 0. No physical cutting consequence is claimed.
+
+The control sends the same reset during an ordinary positioning move and retains
+tool 0. Both fixtures perform real homing, calibrate raw motor counters to homed
+machine coordinates, verify reset delivery after the second startup greeting,
+and compare final software positions with emitted motor steps. They do not treat
+transient parser state before restart as the result. The host exit command's
+additional cleanup is excluded from reset-delivery counts.
+
+[tool_change()](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/tool_change.c#L539-L547)
+does not check the final synchronization result before entering the tool-change
+wait and returning success. The parser's
+[completion check](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/gcode.c#L4291-L4292)
+can then finalize the pending tool because the reset has left the normal
+tool-change state. Warm parser initialization retains the current tool.
+
+**Regression:** [full-boot reset during M6 positioning](cases/boot/sender_reset_during_tool_positioning_restarts_without_selecting_unfitted_tool.c).
+**Control:** [ordinary positioning reset](cases/boot/sender_reset_during_ordinary_positioning_retains_current_tool_after_restart.c).
+A [completed streamed G30 change](cases/boot/streamed_g30_manual_change_returns_before_touch_off_and_selects_fitted_tool.c)
+selects tool 3 and restores the original position after proper acknowledgement.
+One named WILL_FAIL block is in [known_bugs.cmake](known_bugs.cmake); no sanitizer
+allowance.
+
+**Suggested fix (proposal, not applied):** propagate failed/cancelled tool-change
+synchronization before setting the pending wait or returning success. Guard
+parser tool finalization after an aborted change, while retaining successful
+manual/ATC completion and warm-reset preservation of an already fitted tool.
+
+**Cleanup:** remove this named WILL_FAIL block once the complete restart
+regression passes, retain its correct assertions and ordinary control, run full
+sanitizer checks, and delete this entry.
+
+
+## Cancelling a segmented delta jog retains its unreached parser target
+
+**Known since:** 2026-10-17. **Reproduced core:**
+`ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216`.
+
+From normal delta startup, send `$J=G91Z-50F100` and ordinary realtime jog cancel
+while the planner is full, before the command's acknowledgement, after 20 motor
+pulses. Motion stops at 98 pulses per joint (about 10 mm of Cartesian travel),
+but the parser retains the requested 50 mm endpoint. Software joint counters
+agree with emitted physical steps; the mismatch is the parser Cartesian position.
+This can affect the starting position for a subsequent relative command. This
+host reproduction does not establish a physical incident on a particular board.
+
+The same cancellation after the jog acknowledgement synchronizes the parser to
+the stopped Cartesian position and passes. Both cases use normal boot, actual
+planner/stepper execution and the public realtime command; neither forces private
+kinematics state or requires an instantaneous stop.
+
+[Parser jog completion](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/gcode.c#L4045-L4046)
+copies the original target after `mc_jog_execute()` returns OK. Cancellation can
+already have stopped motion and synchronized position during segmented refill.
+[Jog execution](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/motion_control.c#L796-L827)
+unconditionally returns OK after the segmented move.
+
+**Regression:** [cancel during refill](cases/boot_delta/sender_jog_cancel_stops_segment_refill_and_syncs_cartesian_position.c).
+**Control:** [cancel after acknowledgement](cases/boot_delta/sender_jog_cancel_after_ack_syncs_stopped_cartesian_position.c).
+One named WILL_FAIL block in [known_bugs.cmake](known_bugs.cmake); no sanitizer allowance.
+
+**Suggested fix (proposal, not applied):** carry segmented jog cancellation back
+to parser completion so it does not overwrite the synchronized stopped position
+with the original target. Preserve normal accepted jogs and cancellation during
+motion after acknowledgement. Do not resynchronize every accepted jog immediately,
+as its ordinary endpoint may still be queued for execution.
+
+**Cleanup:** remove the named WILL_FAIL block once the full regression passes,
+retain both tests and their correct assertions, run the full sanitizer suite,
+and delete this entry.

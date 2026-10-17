@@ -3,7 +3,9 @@
 #include "stepper.h"
 static int32_t boot_motor_position[N_AXIS];
 static unsigned boot_motor_pulses[N_AXIS], boot_wake_calls, boot_homing_service_calls;
-static void boot_homing_wake(void) { boot_wake_calls++; }
+static bool boot_homing_timer_running;
+static void boot_homing_wake(void) { boot_homing_timer_running = true; boot_wake_calls++; }
+static void boot_homing_idle(bool clear) { boot_homing_timer_running = false; idle(clear); }
 static void boot_homing_pulse(stepper_t *stepper)
 {
     for(unsigned axis = 0; axis < N_AXIS; axis++)
@@ -24,7 +26,7 @@ static void boot_homing_foreground(sys_state_t state)
 {
     CHECK(++boot_homing_service_calls < 200000);
     engine_ticks++;
-    if(state == STATE_HOMING || state == STATE_CYCLE)
+    if(boot_homing_timer_running && (state == STATE_HOMING || state == STATE_CYCLE))
         stepper_driver_interrupt_handler();
 }
 static void configure_boot_homing(settings_t *current);
@@ -33,6 +35,7 @@ static void install_boot_homing_driver(void)
     configure_boot_homing(&settings);
     settings_write_global();
     hal.stepper.wake_up = boot_homing_wake;
+    hal.stepper.go_idle = boot_homing_idle;
     hal.stepper.pulse_start = boot_homing_pulse;
     hal.homing.get_state = boot_homing_switches;
     hal.home_cap.a.mask = AXES_BITMASK;

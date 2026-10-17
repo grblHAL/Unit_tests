@@ -1,6 +1,8 @@
 # Confirmed defects: keep each regression and remove its block when fixed.
 # Dates, reproductions, and removal instructions: KNOWN_BUGS.md
 
+
+
 if(TEST gcode.m68_preserves_fractional_output)
   set_tests_properties(gcode.m68_preserves_fractional_output PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
@@ -54,14 +56,36 @@ if(TEST ioports_pullup.pullup_disable_live_and_loaded_configuration_agree)
     PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
 endif()
 
-# Two enabled PWM spindles must retain independent cached ramp speeds.
-if(TEST multi_spindle.primary_pwm_stop_after_secondary_start_never_increases_primary_output)
-  set_tests_properties(multi_spindle.primary_pwm_stop_after_secondary_start_never_increases_primary_output
-    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
+# G83 cancellation during synchronized drilling must preserve actual stopped Z.
+if(TEST motion_control.sender_stop_during_peck_drill_synchronization_preserves_restart_position)
+  set_tests_properties(motion_control.sender_stop_during_peck_drill_synchronization_preserves_restart_position
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
-# Legacy boolean enable setting must read back the value accepted from the sender.
-if(TEST boot_compat_10.legacy_enable_setting_round_trips_through_sender_query)
-  set_tests_properties(boot_compat_10.legacy_enable_setting_round_trips_through_sender_query
-    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
+# Settings-list allocator fallback must preserve visibility and requested scope.
+if(TEST report.all_settings_sort_allocation_failure_preserves_hidden_and_unavailable_filter)
+  set_tests_properties(report.all_settings_sort_allocation_failure_preserves_hidden_and_unavailable_filter
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+if(TEST report.all_settings_sort_allocation_failure_preserves_legacy_only_selection)
+  set_tests_properties(report.all_settings_sort_allocation_failure_preserves_legacy_only_selection
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+# Door interruption after manual completion must not lose the pending parser tool.
+if(TEST tool_change.open_door_at_manual_completion_queues_safety_door_before_motion)
+  set_tests_properties(tool_change.open_door_at_manual_completion_queues_safety_door_before_motion
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+# Reset during manual tool-positioning must not select the uncompleted tool.
+if(TEST boot.sender_reset_during_tool_positioning_restarts_without_selecting_unfitted_tool)
+  set_tests_properties(boot.sender_reset_during_tool_positioning_restarts_without_selecting_unfitted_tool
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+# Segmented jog cancellation must retain the actual stopped parser position.
+if(TEST boot_delta.sender_jog_cancel_stops_segment_refill_and_syncs_cartesian_position)
+  set_tests_properties(boot_delta.sender_jog_cancel_stops_segment_refill_and_syncs_cartesian_position
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
