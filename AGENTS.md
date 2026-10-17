@@ -1,3 +1,10 @@
+# Current batch42 handoff
+
+Branch coverage-batch-42 begins at pushed41 c0d76b8. Three CoreXY real-boot
+homing cases pass full3,539 sanitizer/strict and44 helpers. See latest PROGRESS. Both40
+run39040996935 and41 run39041409247 live; await completed exact-head hosted
+checks before ready PR. Core clean ad57c78. No new defects/allowances in42.
+
 # Current batch41 handoff
 
 Branch coverage-batch-41 starts at pushed40 d795985. Four configured geometry

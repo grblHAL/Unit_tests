@@ -3376,3 +3376,22 @@ Full41 validation pending; do not present it as ready.
 Batch41 delivery: full3,536 sanitizer/strict pass113.71s,44 helpers pass.
 13 existing known failures; no new defects or allowances. Push41 and continue42.
 Hosted40 exactd795985 run39040996935 remains live at last check.
+
+
+## Batch42 CoreXY startup homing policy and switch feedback - 2026-10-17
+
+Three new full-boot cases total3,539. Configured combinedXY cycle rejects $H
+with HomingFail before wake/pulses. Supported separate Z/X/Y cycles home all
+axes with actual ISR pulses and carriage switches from (A+B)/2,(A-B)/2.
+A single $HX uses both coupled motors, leavesZ stationary and retains the
+homing-required lock for remaining axes. Parser position is independently
+checked against joint sums/differences. Initial homing-required alarm is normal,
+not an erroneous no-alarms assumption. All three focused pass0.34s.
+Discarded $HXY candidate because that sender command is unsupported; no bug
+registered for it and no attempt to force the private combined-mask branch.
+No source changes, new exceptions or defects. Full validation pending.
+Hosted40 run39040996935 and41 run39041409247 are still live.
+
+Batch42 delivery: full3,539 sanitizer/strict pass52.02s;44 helper tests pass.
+13 unchanged known failures. Push/dispatch42 and continue43. Hosted40 has source,
+GCC and coverage successful; Clang test still in progress at latest check.
