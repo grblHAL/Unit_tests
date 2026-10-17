@@ -498,7 +498,7 @@ compatibility level 1, disabled NGC parameters/expressions (including boot and r
 CoreXY, polar, wall-plotter, delta and five-axis RTCP kinematics, backlash
 compensation, four-axis asymmetric ganging with and without auto-squaring,
 seven-axis XYZABCU, the eight-axis maximum, six-axis UVW remapping, and three registered spindles
-with two active spindle slots, a four-slot persistent tool table with and without NGC expressions, optional spindle PWM linearization, and enabled PID logging. All variants run in one
+with two active spindle slots, a four-slot persistent tool table with and without NGC expressions, fixed X/Y/Z tool-offset axes (`TOOL_LENGTH_OFFSET_AXIS`), optional spindle PWM linearization, and enabled PID logging. All variants run in one
 CTest suite; coverage merges their executed source lines. Compatibility levels
 1, 2 and 10 have runtime reporting tests. Levels 2 and 10 also exercise normal
 boot/reset, coordinate availability and legacy settings; their coordinate-report

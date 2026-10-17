@@ -3199,3 +3199,34 @@ remains in progress at last check. Continue substantive coverage after this gate
 Batch35 delivery: full3,487 pass in46.89 s, strict summary and44 helpers pass.
 Eleven documented expected failures, no sanitizer allowances. Session77678
 completed successfully. Freeze/push/dispatch35 and continue independent work.
+
+
+## Batch36 supported parser/tool-axis configurations -2026-10-17
+
+Twelve new cases total3,499. Compatibility2 rejects fixture-only manual/automatic
+modes while retaining manual handlers, then accepts Ignore/Manual transitions.
+Parameter-disabled O-word overflow/fraction/negative errors preserve modal state
+and an already queued move, verified by actual80X pulses. Two G66.1 following
+block cases update existing X, retain omitted Y, avoid axis motion and clean
+arguments/local scope after callback error. Reissuing an already active G66.1
+was an invalid modal-group fixture; the intended plain X20 following block works.
+Six-case checkpoint:3,493 full sanitizer/strict pass46.02 s,44 helpers pass.
+
+Three documented TOOL_LENGTH_OFFSET_AXIS host variants (X/Y/Z) add six cases:
+correct-axis G43.1 and wrong-axis rejection, offset-to-physical240-pulse move,
+and manual tool retract/return despite G18 plane selection. All six pass focused
+0.45 s. Both test and core receive consistent feature definitions; README lists
+the configurations. Final3,499 sanitizer/strict/helper gate is live session24395,
+batch36-final-results.xml and parentlogs. No new core edits/exceptions/allowances.
+Latest fetch confirms clean ad57c78 remains latest.
+
+Hosted34 run39018542932 passes all jobs; artifacts verify
+caa7509c776e2948c3620329592b6934a72a6c85/ad57c78 and core/.*\.[ch]$:
+16,792/17,630 lines95.25%,11,386/13,648 branches83.43%. Hosted35
+run39018951320 remains in progress. New fixed-axis code can increase the
+coverage denominator; do not compare percentages without recording counts.
+
+Batch36 delivery: full3,499 pass46.23 s, strict summary and all44 helpers pass,
+11 existing expected failures. Session24395 completed successfully. Freeze/push
+and dispatch exact-source CI; continue37 with sender interruption during real
+G30/toolsetter positioning. Preserve stopped coordinates and callback ownership.

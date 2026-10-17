@@ -2,6 +2,26 @@
 
 ## Objective and delivery
 
+Current branch coverage-batch-36 starts at pushed batch35 63aa882.
+Twelve new cases total3,499. Six fixed XYZ tool-offset cases exercise three
+new documented TOOL_LENGTH_OFFSET_AXIS variants: correct G43.1 axis, wrong-axis
+rejection, actual offset motion, and manual retract/return under G18. CMake
+links matching host/test definitions. README configuration list is updated.
+Other cases cover compatibility2 rejected fixture modes with handlers preserved,
+three parameter-disabled O-number rejection paths preserving queued motor motion,
+and G66.1 following-block argument update/error cleanup. Repeating G66.1 was an
+invalid modal-group fixture; plain X20 is the intended implicit following block.
+No core edits, exceptions or allowances added. Six-case earlier full checkpoint
+passed3,493/46.02 s with strict summary and44 helpers; six fixed-axis cases pass
+focused0.45 s. Final batch36-final-results.xml passes3,499 in46.23 s; strict summary and
+all44 helpers pass. Freeze/push/dispatch36 and continue37. Useful next workflow:
+public sender reset/stop during actual G30/toolsetter positioning; verify stopped
+position and restored driver/stream handlers, not a forced private abort flag. Latest fetch confirms clean
+ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216 remains latest.
+Batch34 run39018542932 fully green verifiescaa7509c776e2948c3620329592b6934a72a6c85/ad57c78,
+16,792/17,630 lines95.25%,11,386/13,648 branches83.43%. Batch35
+run39018951320 remains in progress at last check. Continue independent coverage.
+
 Current branch coverage-batch-35 starts at pushed batch34 caa7509.
 Five new tool-change cases total3,487. Observer is installed before tc_init;
 real G10 saves notify once, unrelated G55 does not release touch-off wait,
