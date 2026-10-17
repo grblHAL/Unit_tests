@@ -3105,3 +3105,31 @@ verify harness46c984e4283b777ad8ed29c5d44c0d9667a389e5 / ad57c78 and
 core/.*\.[ch]$ filter: 16,772/17,630 lines (95.13%),
 11,362/13,648 branches (83.25%). Batch30 run38989130871 diagnosis also succeeded.
 PR19 remains open on live check; subsequent batches remain cumulative branches.
+
+
+Batch33 local continuation from pushed8c0f688: two real parser spindle-start
+wait cases pass focused sanitizers (0.25 s, batch33-spindle-results.xml).
+A sender reset at100 ms aborts before1000 ms feedback, turns the spindle off,
+notifies driver reset/coolant stop and emits no at-speed event or timeout alarm.
+A sender status request during the wait is answered before600 ms readiness,
+then startup finishes normally. Required reset HAL callbacks were supplied after
+an initial fixture-only null callback; no core issue or exception was registered.
+Cases remain uncommitted pending a larger module checkpoint/full checks.
+
+Batch33 spindle checkpoint: full3,471-case ASan/UBSan suite and strict summary
+pass in46.00 s (batch33-checkpoint-results.xml). Two further computed O-label
+cases pass normal file parsing: IF/ELSE label expression matching and WHILE
+rewind using a parameter label with a literal matching ENDWHILE. Focused
+batch33-computed-label-results.xml passes0.25 s. Current total3,473; final full
+gate and larger batch checkpoint remain pending. Hosted batch32 exact8c0f688
+run39017513432 is still in progress at last live check. Core fetch confirms
+ad57c78 remains latest and clean. No additional exceptions or core modifications.
+
+
+Batch33 delivery: six new cases,3,475 total. Common mill header resets a prior
+G20/G91/G18/G93/G99 state before a metric linear move; no header pulses, then
+exact800X/400Y pulses. G91.1 arc with absolute endpoints produces80X/80Y pulses.
+Full batch33-delivery-results.xml passes46.56 s; strict summary and all44 helpers
+pass, ten existing expected failures, no new exceptions/diagnostics/core edits.
+Freeze/push/dispatch33 and continue34 with normal laser hold/resume workflows,
+using registered driver and public realtime commands. Hosted32 remains running.

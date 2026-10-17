@@ -2,6 +2,17 @@
 
 ## Objective and delivery
 
+Batch33 is validated from pushed batch32 8c0f688. Six new cases total3,475.
+Full batch33-delivery-results.xml passes in46.56 s, strict summary and all44
+helpers pass; ten existing expected failures and no sanitizer allowances.
+Cases cover sender reset/status during spindle feedback wait, computed O-label
+branch/loop execution, common mill header reset and G91.1 arc motor pulses.
+No new core defects/exceptions. Core clean latest ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216.
+Freeze/push/dispatch33, then continue34 with supported laser hold/resume workflows.
+Use registered driver fixture laser_stepper_host.h and public realtime commands;
+do not modify spindle_get pointers or force private restoration flags.
+Batch32 run39017513432 is still in progress at last live check, source passed.
+
 Current work is coverage-batch-32 from pushed batch31 46c984e.
 Seven new reporting cases total 3,469. Full batch32-delivery-results.xml passes
 in 46.49 s; strict summary and all 44 helpers pass. Ten documented expected
