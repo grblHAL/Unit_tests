@@ -2,23 +2,24 @@
 
 ## Objective and delivery
 
-Current work is coverage-batch-29 from pushed batch28 eb44ea9.
-Eight new VFD cases bring the local suite to 3,409. Full
-batch29-checkpoint-results.xml passes in 44.90 s; strict summary and all 44
-helpers pass, eight expected failures, no sanitizer allowances. Source remains
-clean ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216. VFD driver is registered before
-gc_init; initial radius is established with actual G0 motion. Tests cover CSS
-in/out, maximum RPM, diameter mode, axial constant speed, G97 and sender override/
-M5. They observe both set_state and update_rpm; harmless zero-RPM re-sends are
-allowed. Startup cold flag/coordinate records and bounded log/feed were corrected
-in fixture development; no new core defects or allowances.
-Keep working on this branch across further related checkpoints before pushing.
-Potential next public gap: G10 L0 tool-table reload callback success/failure,
-missing backend and rejection while a tool is loaded. Use supported parser/tool
-selection, preserve failed-command state, avoid inventing backend policy.
-Batch25 run38985300867 and batch26 run38985624501 are fully green. Last verified
-coverage remains 94.75% lines /82.67% branches (batch26). Batch27 run38986131807
-and batch28 dispatch still need completion/artifact review. PR19 is open.
+Current work is coverage-batch-29, 22 new cases, 3,423 total. Full
+batch29-delivery-results.xml passes in 44.87 s; strict summary and all 44 helpers
+pass, eight expected failures, no sanitizer allowances. Terje source is still
+clean/latest ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216 at the second live fetch.
+Eight VFD cases, four G10 L0 reload cases, seven queued arc/G93 rejection/control
+cases, one G93/G33 encoder case and two actual VFD-default boot cases are included.
+Boot registers PWM during driver_init and VFD during driver_setup; it proves the
+unused PWM is initialized off before VFD configuration, with saved/locked ranges.
+No new core defects or allowances in batch29. Commit/push/dispatch this checkpoint
+and continue coverage-batch-30 while hosted CI runs.
+Batch27 run38986131807 and batch28 run38986684127 are fully green. Exact batch28
+coverage: 16,714/17,630 lines (94.80%), 11,297/13,648 branches (82.77%),
+harness eb44ea97c96493fe1acfd11a57987fd6bc367402/source ad57c78/core filter.
+PR19 remains open at last check. No later PR has been claimed ready.
+Potential next public gap: closing a claimed auxiliary UART with an associated
+VFS file; success must close the file, failed release must retain ownership.
+Do not force unavailable OpenDrain settings or the already documented unreachable
+EEPROM warning counter; those are not coverage targets via private calls.
 
 Frozen batch 24 starts from batch 23 7398414.
 Nine new G95 cases pass full sanitizer/strict checks (3,370 total, 54.66 s),

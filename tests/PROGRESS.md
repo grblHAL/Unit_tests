@@ -2987,3 +2987,27 @@ observe live RPM during pulses rather than demanding a particular callback count
 A disabled VFD may harmlessly receive zero RPM again. No new defects/allowances.
 Keep batch29 local while extending another public parser/driver workflow before
 the next push. Candidate: G10 L0 tool-table reload and transactional rejection.
+
+Batch29 expanded delivery: 22 new cases, 3,423 total. Four G10 L0 cases verify
+backend success/offset refresh, error preservation and later retry, missing
+backend and rejection before callback with a tool loaded through M61. Seven
+arc/G93 cases preserve and execute an earlier queued move after bad radius/plane/
+turn-count or missing inverse-time feed; a rapid control needs no F under G93.
+G93/G33 uses encoder pitch, restores overrides and leaves a later G1 requiring F.
+Two real boot cases register PWM during init and VFD during setup, initialize
+the unused PWM off before VFD configuration and preserve saved/locked RPM ranges.
+These supplement the eight previously verified VFD motion/override cases.
+
+Full batch29-delivery-results.xml: 3,423 pass, 44.87 s; strict summary and all
+44 helpers pass, eight expected failures and no sanitizer allowances. Source
+ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216 is clean and still latest at a second
+live fetch. No new faults or exceptions.
+
+Batch27 run38986131807 and batch28 run38986684127 are fully green, all five jobs.
+Batch27 coverage: 16,709/17,630 lines (94.78%), 11,290/13,648 branches (82.72%).
+Batch28 coverage: 16,714/17,630 lines (94.80%), 11,297/13,648 branches (82.77%).
+Artifacts verify exact 7ee98e1d55afd45161ebf6bd8bd5dc78b73042ec /
+eb44ea97c96493fe1acfd11a57987fd6bc367402 respectively, source ad57c78 and the
+core/.*\.[ch]$ filter. Push/dispatch29; continue30 with public stream/VFS ownership
+while CI runs. The EEPROM double-increment warning question already exists in
+TODO; do not duplicate it or force its unreachable warning via private state.
