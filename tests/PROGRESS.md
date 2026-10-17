@@ -2952,3 +2952,23 @@ ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216, core/.*\.[ch]$ filter:
 denominator from batch24. Batch26 run 38985624501 source/coverage pass, compilers
 pending. Freeze/push27, continue28 while checking hosted completion at useful
 intervals. PR19 still open; no new ready PR has been claimed.
+
+Batch28: six fast-motion cases, 3,401 total. Public axis settings configure
+15,000 mm/min maxima and 200 mm/s^2 acceleration; programmed 12,000 mm/min moves
+reach cruise. Timer periods over a 60 mm X pulse window verify feed (1% allowance)
+for linear/coordinated motion; round-trip pulse totals and origin are exact.
+Two sender override cases drop to 10% at X147 across ten short collinear CAM
+segments, measure 1,200 mm/min over X260..280 (2% allowance), and optionally
+restore 100%. A fast hold case spans short blocks and resumes to the exact endpoint.
+No motor physics or physical missed-step claim is made. The initial prequeue
+timeout was fixture capacity misuse; twelve blocks now fit the checked planner.
+Focused batch28-fast-results.xml: six pass, 0.44 s. Full
+batch28-checkpoint-results.xml: 3,401 pass in 45.25 s; strict summary and all
+44 helpers pass, eight expected failures, no unexpected diagnostics.
+
+Hosted batch25 run38985300867 and batch26 run38985624501 are fully green,
+including source/GCC/Clang/coverage/diagnosis. Batch26 artifacts verify exact
+011a464df07c7532ea643400bf8c2a2950210ea6/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216
+and core/.*\.[ch]$ filter: 16,705/17,630 lines (94.75%), 11,283/13,648 branches
+(82.67%). Batch27 run38986131807 is still pending. Push28/dispatch, continue29
+with supported VFD CSS callbacks while CI runs. No new PR claimed ready.
