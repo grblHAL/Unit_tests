@@ -1,10 +1,7 @@
 # Confirmed defects: keep each regression and remove its block when fixed.
 # Dates, reproductions, and removal instructions: KNOWN_BUGS.md
 
-if(TEST gcode.motion_comment_releases_all_message_allocations_after_planner_reset)
-  set_tests_properties(gcode.motion_comment_releases_all_message_allocations_after_planner_reset
-    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
+
 
 if(TEST gcode.m68_preserves_fractional_output)
   set_tests_properties(gcode.m68_preserves_fractional_output PROPERTIES WILL_FAIL TRUE LABELS known_bug)
@@ -59,14 +56,6 @@ if(TEST ioports_pullup.pullup_disable_live_and_loaded_configuration_agree)
     PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
 endif()
 
-# G20 G76 P pitch and E taper length must reach the planner in millimeters.
-# Confirmed against Terje 4ec1ae4 on 2026-10-15; see KNOWN_BUGS.md.
-if(TEST motion_control.thread_plan_parser_inch_pitch_uses_millimeters_per_revolution)
-  set_tests_properties(motion_control.thread_plan_parser_inch_pitch_uses_millimeters_per_revolution
-    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
-endif()
 
-if(TEST motion_control.thread_plan_parser_inch_exit_taper_converts_length_to_millimeters)
-  set_tests_properties(motion_control.thread_plan_parser_inch_exit_taper_converts_length_to_millimeters
-    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
-endif()
+
+
