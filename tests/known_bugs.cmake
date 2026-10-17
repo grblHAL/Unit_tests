@@ -83,3 +83,9 @@ if(TEST boot.sender_reset_during_tool_positioning_restarts_without_selecting_unf
   set_tests_properties(boot.sender_reset_during_tool_positioning_restarts_without_selecting_unfitted_tool
     PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Segmented jog cancellation must retain the actual stopped parser position.
+if(TEST boot_delta.sender_jog_cancel_stops_segment_refill_and_syncs_cartesian_position)
+  set_tests_properties(boot_delta.sender_jog_cancel_stops_segment_refill_and_syncs_cartesian_position
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

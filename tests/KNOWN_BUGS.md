@@ -381,3 +381,42 @@ manual/ATC completion and warm-reset preservation of an already fitted tool.
 **Cleanup:** remove this named WILL_FAIL block once the complete restart
 regression passes, retain its correct assertions and ordinary control, run full
 sanitizer checks, and delete this entry.
+
+
+## Cancelling a segmented delta jog retains its unreached parser target
+
+**Known since:** 2026-10-17. **Reproduced core:**
+`ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216`.
+
+From normal delta startup, send `$J=G91Z-50F100` and ordinary realtime jog cancel
+while the planner is full, before the command's acknowledgement, after 20 motor
+pulses. Motion stops at 98 pulses per joint (about 10 mm of Cartesian travel),
+but the parser retains the requested 50 mm endpoint. Software joint counters
+agree with emitted physical steps; the mismatch is the parser Cartesian position.
+This can affect the starting position for a subsequent relative command. This
+host reproduction does not establish a physical incident on a particular board.
+
+The same cancellation after the jog acknowledgement synchronizes the parser to
+the stopped Cartesian position and passes. Both cases use normal boot, actual
+planner/stepper execution and the public realtime command; neither forces private
+kinematics state or requires an instantaneous stop.
+
+[Parser jog completion](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/gcode.c#L4045-L4046)
+copies the original target after `mc_jog_execute()` returns OK. Cancellation can
+already have stopped motion and synchronized position during segmented refill.
+[Jog execution](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/motion_control.c#L796-L827)
+unconditionally returns OK after the segmented move.
+
+**Regression:** [cancel during refill](cases/boot_delta/sender_jog_cancel_stops_segment_refill_and_syncs_cartesian_position.c).
+**Control:** [cancel after acknowledgement](cases/boot_delta/sender_jog_cancel_after_ack_syncs_stopped_cartesian_position.c).
+One named WILL_FAIL block in [known_bugs.cmake](known_bugs.cmake); no sanitizer allowance.
+
+**Suggested fix (proposal, not applied):** carry segmented jog cancellation back
+to parser completion so it does not overwrite the synchronized stopped position
+with the original target. Preserve normal accepted jogs and cancellation during
+motion after acknowledgement. Do not resynchronize every accepted jog immediately,
+as its ordinary endpoint may still be queued for execution.
+
+**Cleanup:** remove the named WILL_FAIL block once the full regression passes,
+retain both tests and their correct assertions, run the full sanitizer suite,
+and delete this entry.

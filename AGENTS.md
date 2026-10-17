@@ -1,3 +1,11 @@
+# Current handoff
+
+Branch coverage-batch-40 retains all cumulative work through39. PR19 merged.
+Four delta real-boot cases added; full3,532 sanitizer/strict and44 helpers pass. See newest PROGRESS
+entry and named known-bug entry for refill-time jog parser-position mismatch.
+README snapshot badges now verified from successful hosted39 (95.45/83.79).
+Do not report PR ready until full local/hosted validation. Continue goal.
+
 # Repository working instructions
 
 ## Objective and delivery

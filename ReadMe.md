@@ -1,6 +1,14 @@
 # Unit tests for the grblHAL core
 
 [![Core tests](https://github.com/grblHAL/Unit_tests/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/grblHAL/Unit_tests/actions/workflows/tests.yml)
+[![Core line coverage: 95.45%](https://img.shields.io/badge/core_lines-95.45%25-brightgreen)](https://github.com/petervanderwalt/Unit_tests/actions/runs/39021372475)
+[![Core branch coverage: 83.79%](https://img.shields.io/badge/core_branches-83.79%25-green)](https://github.com/petervanderwalt/Unit_tests/actions/runs/39021372475)
+
+Coverage badges show a verified successful report, not a live measurement of
+every source revision. Click either percentage for its run and coverage artifact.
+They cover the core across the tested configurations; they do not include board
+drivers or plugins. When updating the badges, use the line and branch totals in
+`coverage.xml` from a fully successful run, and update both run links together.
 
 Host tests compile actual source from an ordinary `core` checkout. No CNC
 controller is needed. Each new behavior lives in `tests/cases/<module>/<case>.c`

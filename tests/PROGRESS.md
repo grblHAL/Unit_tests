@@ -3339,3 +3339,24 @@ run39020604172 and38 run39020997626 remain in progress at latest check.
 Batch39 delivery: full3,528 pass47.53 s, strict summary and44 helpers pass;
 12 existing known failures. Session85317 completed. Latest fetch confirms clean
 ad57c78 remains latest. Freeze/push/dispatch39 and continue40 from fresh gaps.
+
+
+## Batch40 delta real homing and sender cancellation - 2026-10-17
+
+PR19 merged upstream df09798. Hosted39 run39021372475 is fully successful at
+a8b573a/ad57c78; downloaded source lock and coverage verify 16,832/17,634 lines
+(95.45%) and11,435/13,648 branches (83.79%). README badges link to that report
+and clearly describe manually refreshed snapshots. Latest fetched Terje remains
+clean ad57c78. Four new cases exercise real delta homing switch cycles, deferred
+cuboid-top reposition, and ordinary sender jog cancellation before/after ACK.
+Refill-time cancellation stops at98 pulses (~10mm), but parser retains50mm
+target; after-ACK control synchronizes correctly. One narrow documented known
+regression, correct assertion retained, no core modification or sanitizer allowance.
+Initial10mm request could finish within buffered deceleration; use50mm and actual
+forward-transformed joint counters, not an immediate-stop assumption. Both normal
+realtime and delay callbacks advance driver IRQs. Full gate pending.
+
+Batch40 delivery:3,532 full sanitizer cases pass53.06s, strict summary passes;
+13 labelled known failures. All44 helper tests pass3.254s outside sandbox after
+temporary-directory permission failures there. No core edits. Push/hosted gate
+next, then ready cumulative PR after exact-head GCC/Clang/coverage/diagnosis.
