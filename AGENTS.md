@@ -2,6 +2,22 @@
 
 ## Objective and delivery
 
+Current branch coverage-batch-35 starts at pushed batch34 caa7509.
+Five new tool-change cases total3,487. Observer is installed before tc_init;
+real G10 saves notify once, unrelated G55 does not release touch-off wait,
+current G54 does, and repeated init does not wrap again. Actual negative-Z
+return motion is serviced by the public realtime hook; initial timeout was an
+unserviced fixture move, not core failure. Safety-door completion reproduces
+lost pending tool: T3M6/current-G10/open door/ack/start/close/start reaches Idle
+with parser tool0 and no changed callback, versus tool3/one callback closed-door.
+Correct regression remains, one dated known-bug exception/proposal/cleanup added.
+No core changes or sanitizer allowance. Full batch35-delivery-results.xml passes46.89 s; strict summary and all44
+helpers pass,11 documented expected failures. Freeze/push/dispatch35, continue36.
+Latest fetch confirms clean ad57c78 remains latest. Batch33 run39017951972 fully
+passes all jobs; artifacts verify8282b95a6b5422aa092b481a6ca75706ed269b72/ad57c78
+and header-inclusive filter:16,789/17,630 lines95.23%,11,378/13,648 branches83.37%.
+Batch34 run39018542932 was in progress at last check. Continue beyond checkpoint.
+
 Batch34 is validated from pushed batch33 8282b95. Seven laser cases total3,482.
 Full batch34-final-results.xml passes46.13 s; strict summary and all44 helpers
 pass, ten existing expected failures, no sanitizer allowances/core modifications.

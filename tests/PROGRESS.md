@@ -3173,3 +3173,29 @@ configuration extraction. The session88025 process completed successfully.
 Freeze/push/dispatch34 and continue35. Useful next supported workflow: a plugin
 WCO-saved observer installed before tc_init, actual G10 while manually changing
 a tool, then public completion/resume. Avoid overwriting captured hooks.
+
+
+## Batch35 WCO observer and manual tool completion -2026-10-17
+
+Five new cases total3,487. Public WCO observer is installed before tc_init; real
+G10 updates notify it, repeated init keeps one notification, saving G55 leaves
+a current-G54 touch-off wait blocked, and saving G54 releases it. A changed Z
+work offset causes an actual160-pulse return to Z=-2 mm; the initial timeout
+was a missing fixture realtime step service, fixed before interpreting results.
+
+A full open-door manual-completion sequence reaches Idle with old parser tool0
+and zero tool-changed notifications after explicit close/resume, while closed-door
+T3M6/control selects3 and notifies once. No motion occurs in the door case.
+Correct assertions retained; one dated KNOWN_BUGS entry, exact verified source
+links, proposal and narrow WILL_FAIL block added. No core edits or sanitizer
+allowances. Final full gate session77678 is running, batch35-delivery-results.xml
+and parentlogs. Latest core fetch confirms clean ad57c78 remains latest.
+
+Batch33 run39017951972 passes all hosted jobs; artifacts verify
+8282b95a6b5422aa092b481a6ca75706ed269b72/ad57c78 and core/.*\.[ch]$ filter:
+16,789/17,630 lines95.23%,11,378/13,648 branches83.37%. Batch34 run39018542932
+remains in progress at last check. Continue substantive coverage after this gate.
+
+Batch35 delivery: full3,487 pass in46.89 s, strict summary and44 helpers pass.
+Eleven documented expected failures, no sanitizer allowances. Session77678
+completed successfully. Freeze/push/dispatch35 and continue independent work.

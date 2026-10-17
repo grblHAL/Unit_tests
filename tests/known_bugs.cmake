@@ -71,3 +71,9 @@ if(TEST report.all_settings_sort_allocation_failure_preserves_legacy_only_select
   set_tests_properties(report.all_settings_sort_allocation_failure_preserves_legacy_only_selection
     PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Door interruption after manual completion must not lose the pending parser tool.
+if(TEST tool_change.open_door_at_manual_completion_queues_safety_door_before_motion)
+  set_tests_properties(tool_change.open_door_at_manual_completion_queues_safety_door_before_motion
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

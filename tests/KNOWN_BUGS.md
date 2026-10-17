@@ -298,3 +298,42 @@ Preserve axis/channel iterator handling and still emit every eligible setting.
 assertions and calloc linker instrumentation, rerun focused/full sanitizer checks,
 then delete this entry. The allocation observer is test instrumentation, not an
 exception to remove.
+
+
+## Completing a manual tool change with the door open leaves the old tool selected
+
+**Known since:** 2026-10-17. **Reproduced core:**
+`ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216`.
+
+With a registered manual tool-change interface and safety-door input, execute
+`T3M6`, save the current work offset with `G10L2P1Z0`, open the door, acknowledge
+the change and send cycle start. The completion handler correctly restores input
+handlers and queues the safety-door event. Close the door and explicitly resume.
+The machine reaches Idle without moving, but the parser still reports tool 0
+and the tool-changed callback has not fired. The ordinary closed-door control
+selects tool 3 and fires that callback once. This is a parser/tool bookkeeping
+reproduction; no physical cutting consequence or frequency is claimed.
+
+[change_completed()](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/tool_change.c#L89-L115)
+clears the pending tool-change flag and queues the door event. The normal
+[state_await_toolchanged()](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/state_machine.c#L467-L483)
+finalizes the parser tool on cycle start. The safety-door restore route instead
+[returns to Idle/Cycle](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/state_machine.c#L869-L884)
+without calling that finalization.
+[gc_tool_changed()](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/gcode.c#L1002-L1013)
+applies the pending tool and notifies its observer.
+
+**Regression:** [door open at manual completion](cases/tool_change/open_door_at_manual_completion_queues_safety_door_before_motion.c).
+**Control:** [closed-door G10 completion](cases/tool_change/g10_touch_off_notifies_plugin_and_allows_manual_change_completion.c).
+One named WILL_FAIL exception is in [known_bugs.cmake](known_bugs.cmake); no
+sanitizer allowance. Assertions require the selected tool and notification after
+explicit door-close/resume, plus no unexpected motor pulses.
+
+**Suggested fix (proposal, not applied):** retain a successful M6 completion
+handshake across safety-door handling, and finalize the parser tool exactly once
+before normal execution resumes. Preserve door motion gating. Do not finalize
+a cancelled/failed change just because the generic cleanup/reset handler ran.
+
+**Cleanup:** remove this named WILL_FAIL block when the full regression passes,
+keep both regression and ordinary control assertions, run full sanitizer checks,
+and delete this entry.
