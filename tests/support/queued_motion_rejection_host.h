@@ -1,9 +1,7 @@
 #pragma once
 #include "support/motion_program_host.h"
-static void reject_without_losing_queued_motion(const char *text, status_code_t expected)
+static inline void check_rejected_block_preserves_queued_motion(const char *text, status_code_t expected)
 {
-    prepare_motion_program();
-    queue_motion_program("G1X1F100");
     plan_block_t *first = plan_get_current_block();
     unsigned available = plan_get_block_buffer_available();
     char command[96];
@@ -21,4 +19,11 @@ static void reject_without_losing_queued_motion(const char *text, status_code_t 
     execute_motion_program();
     CHECK(physical_position[X_AXIS] == 80 && sys.position[X_AXIS] == 80);
     CHECK(axis_pulses[X_AXIS] == 80 && axis_pulses[Y_AXIS] == 0 && axis_pulses[Z_AXIS] == 0);
+}
+
+static inline void reject_without_losing_queued_motion(const char *text, status_code_t expected)
+{
+    prepare_motion_program();
+    queue_motion_program("G1X1F100");
+    check_rejected_block_preserves_queued_motion(text, expected);
 }

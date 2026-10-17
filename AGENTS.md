@@ -2,6 +2,24 @@
 
 ## Objective and delivery
 
+Current branch coverage-batch-39 starts at pushed batch38 f88713e.
+Ten new I/O ownership cases total3,528. Driver ports are registered and claimed
+through public APIs before commands. All-claimed banks reject G-code without
+losing queued80-pulse motion; plugin operations still reach original pins.
+Partial claims remap G-code to remaining physical port1 while plugin retains0;
+reserved indexes reject without output. Analog rejection checks error/non-output,
+not the current incidental RPM-specific status label. Input bank isolation and
+mixed synchronized output timing also pass. Integer analog values avoid the
+separate documented fractional-value defect; its assertions remain unchanged.
+Initial fixture retried aux0 twice; fixed to claim aux0 and aux1. API consumes
+an auxiliary number and returns the mapped number to use afterwards.
+Shared queued rejection helper factors existing assertions without removal.
+All ten focused pass0.57 s. Full batch39-delivery-results.xml passes3,528 in47.53 s; strict summary and44
+helpers pass. Session85317 completed. Freeze/push/dispatch39 and continue40.
+No core changes, new defects, exceptions or allowances. Hosted37 run39020604172
+and38 run39020997626 remain in progress at latest check; latest fully green
+batch36 is95.33%/83.57%. Continue independent work while hosted CI runs.
+
 Current branch coverage-batch-38 starts at pushed batch37 77d91aa.
 Fourteen new cases total3,518. Ten public parser rejections verify unavailable
 I/O/mist, mill-versus-lathe modes, disabled parking override and invalid fractions/

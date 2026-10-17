@@ -3314,3 +3314,28 @@ Batch38 delivery:3,518 full sanitizer/strict pass46.97 s,44 helpers pass,
 12 unchanged expected failures. Session60112 completed. Freeze/push/dispatch38
 and continue39. Next inspect registered ports made unavailable by normal plugin
 claims, rather than force private states or unsupported laser-only configurations.
+
+
+## Batch39 public I/O ownership and parser availability -2026-10-17
+
+Ten new cases total3,528. Real driver registration plus public plugin claims
+reserve digital/analog inputs/outputs. With no unclaimed ports G-code rejects
+without disturbing an already queued80X-pulse move; plugin operations still reach
+the original pins. With one claim, G-code index0 maps to physical1 and plugin
+access remains physical0; reserved indexes reject with no output callbacks.
+Analog invalid-port status is currently RPM-specific; this ownership test checks
+rejection and no driver write rather than fixing that incidental diagnostic.
+Integer values avoid the existing fractional-output defect and keep its regression.
+
+Separate input banks remain independently usable for M66, and synchronized digital
+plus analog outputs wait until motion before reaching the remaining ports.
+All ten focused cases pass0.57 s. Initial claims mistakenly retried aux0; the
+fixture now supplies auxiliary IDs0/1 and uses returned mapped handles. Shared
+queued-motion rejection checks were factored without removing any assertions.
+No new core defects, exceptions, allowances or source edits. Full gate live
+session85317, batch39-delivery-results.xml and parentlogs. Hosted37
+run39020604172 and38 run39020997626 remain in progress at latest check.
+
+Batch39 delivery: full3,528 pass47.53 s, strict summary and44 helpers pass;
+12 existing known failures. Session85317 completed. Latest fetch confirms clean
+ad57c78 remains latest. Freeze/push/dispatch39 and continue40 from fresh gaps.
