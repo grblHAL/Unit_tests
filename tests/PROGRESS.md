@@ -3484,3 +3484,30 @@ verified16,854/17,634 lines95.58%,11,454/13,648 branches83.92%. Hosted44
 run39042584724 now reports queued at latest snapshot (samehandle, not terminal).
 Push combined20case checkpoint, continue next branch with parser comment and
 optional-block workflows; do not force private/unreachable paths.
+
+
+## Batch46 parser normalization and modal restoration - 2026-10-17
+
+17 new cases total3,587. Public plugin G-code executes/skips optional blocks via
+normal$B setting, preserves semicolons inside comments and queued motion after
+plugin comment rejection. Three distinct M98 subroutine positions survive repeat
+registration. G65 passes positive/negative/inch-mode U/V/W as raw local macro
+arguments, restores caller values and queues no motion. Registered PWM lathe
+controls restore G96/G97, G7/G8 reporting, stopped or CCW spindle state and RPM;
+repeated unchanged diameter restore adds no false status flag. Cutter snapshot
+restores a changed radius with same compensation side after ordinaryG40/re-enable.
+M6 message comments precede driverchange and remain visible for an already fitted
+tool without repeating the change. All17 focused pass, no new core defect or
+exception. The $B fixture initially missed mandatory is_connected callback; fixed
+fixture, not a bug. Source-only CSS S/D saved-state scope question is in TODO,
+unregistered pending Terje; mode controls pass without claiming that contract.
+No core edits or sanitizer allowances. Full46 gate pending; preserve PR20 frozen40.
+Latest fully verified hosted43 is95.58% lines83.92% branches.
+
+Batch46 delivery:3,587 sanitizer/strict pass53.37s;44 helpers pass3.764s.
+15 unchanged known failures, no new exceptions. Also corrected a stale comment
+in backend_close.h: currentvfs_close caches metadata before backend close and
+no longer has the oldUAF; KNOWN_BUGS correctly has no such entry. Helper remains
+for isolated backend testing, not as a required workaround. Comment-only edit
+does not change compiled behavior. Next exercise nested realRAM file streams
+through ordinaryvfs_close, rather than inherit that stale assumption.

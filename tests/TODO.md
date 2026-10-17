@@ -448,3 +448,19 @@ This is source-review evidence and an undecided observer policy, not a confirmed
 motion defect. Do not register a two-callback expected failure before review.
 If both events are desired, compute the two change booleans independently before
 testing their OR, then add a combined-update regression.
+
+
+## Confirm modal-save scope for CSS surface speed and RPM cap
+
+**Recorded:** 2026-10-17, core `ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216`.
+Normal runtime G96/G97 and G7/G8 snapshot restoration now has registered-spindle
+controls. Before asserting a stronger contract, confirm whether M70/M72 must
+also preserve G96's surface-speed S value and D RPM cap after another G96 changes
+them. This is an undecided scope question, not a registered expected failure.
+Source review: [snapshot save](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/ngc_params.c#L1044-L1063)
+copies gc_modal_t, whose spindle CSS field is a pointer into the active spindle
+parameters. [CSS updates](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/gcode.c#L2510-L2534)
+update that shared parameter storage. Reproduce two different G96 S/D commands
+around M70/M72 and check subsequent planned RPM at a known tool radius after
+Terje confirms the intended saved-state scope. Do not infer a physical failure
+or register a new exception from pointer ownership alone.

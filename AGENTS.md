@@ -1,3 +1,13 @@
+# Current batch46 delivery handoff
+
+Branch coverage-batch-46 starts at pushed45 b60ded4 (plus352a94a reportinggroup).
+17 new parser/modal cases pass full3,587 sanitizer/strict53.37s and44 helpers.
+15 existing known failures; no new defects/allowances. CSS S/D snapshot scope
+question source-only in TODO, do not register without maintainer contract.
+Latest hosted43 verified95.58/83.92;44 run39042584724 queued lastseen and45
+dispatched, obtain ID/status. PR20 frozen fullygreen40; no merge authorized.
+Core cleanad57c78 remains latest. See newest PROGRESS and finish validation.
+
 # Current batch45 combined delivery checkpoint
 
 Branch coverage-batch-45 has committed MPG group352a94a plus16 numeric/parser
