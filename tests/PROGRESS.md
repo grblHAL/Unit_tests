@@ -2891,3 +2891,15 @@ and all 44 helpers pass. Ten expected regressions and two previously documented
 recovering callback warnings; zero unexpected diagnostics. This six-case planner
 checkpoint is local-only; continue on batch 25 before its next delivery boundary.
 Core 4ec1ae4 remains clean; no live local build/test process remains.
+
+Batch 25 adds three further public-workflow controls: partial planner-ring reuse
+with FIFO order, plugin feed metadata normalization, and CSS RPM clamping at a
+small positive radius. The nine-case batch totals 3,379 cases. Full
+batch25-delivery-results.xml passed in 59.72 s against clean 4ec1ae4, with strict
+summary and all 44 helpers passing (ten expected failures, two known warnings).
+
+2026-10-17 refresh: batch 24 run 38871019194 completed successfully. Its exact
+coverage is 16,682/17,624 lines (94.66%) and 11,252/13,648 branches (82.44%).
+Terje master advanced to ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216. Full rebuild
+and verification of message ownership/callback and G76 exception cleanup are
+in progress; the old-source pass does not establish latest-source readiness.

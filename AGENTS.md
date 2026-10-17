@@ -3,8 +3,8 @@
 ## Objective and delivery
 
 Current work is coverage-batch-25 from frozen/pushed batch 24 ea7cdd6.
-Six new planner/boot cases bring the suite to 3,376. Focused sanitizer/strict
-checks pass. Full batch25-checkpoint passes in 53.02 s with all 44 helpers,
+Nine new planner/boot/motion-metadata cases bring the suite to 3,379. Focused
+checks pass. Full batch25-delivery passes in 59.72 s with all 44 helpers,
 ten expected failures and two documented recovering warnings. Allocation tests model the
 largest contiguous allocation, verify usable reduced capacity and public retry;
 boot verifies warning output and a sender query. Override observer controls pass.
@@ -12,6 +12,10 @@ Two undecided policies are in TODO.md, not registered failures.
 Batch 24 exact-head run 38871019194 is in progress; batch 23 run 38869601270 is
 fully green at 94.55% lines / 82.39% branches. PR 19 is still open at live check.
 Continue independent gaps on batch 25 before its next substantial hosted boundary.
+Freeze/push this checkpoint and continue on coverage-batch-26. Useful next gap:
+sender stop/reset while arc or spline generation refills a full planner buffer,
+using protocol_main_loop and real simulated step interrupts rather than forcing
+private motion state. Recheck parser/physical position after cancellation.
 
 Frozen batch 24 starts from batch 23 7398414.
 Nine new G95 cases pass full sanitizer/strict checks (3,370 total, 54.66 s),
