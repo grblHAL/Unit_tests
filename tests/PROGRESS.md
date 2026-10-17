@@ -2972,3 +2972,18 @@ including source/GCC/Clang/coverage/diagnosis. Batch26 artifacts verify exact
 and core/.*\.[ch]$ filter: 16,705/17,630 lines (94.75%), 11,283/13,648 branches
 (82.67%). Batch27 run38986131807 is still pending. Push28/dispatch, continue29
 with supported VFD CSS callbacks while CI runs. No new PR claimed ready.
+
+Batch29 local VFD checkpoint: eight cases, 3,409 total, full
+batch29-checkpoint-results.xml passes in 44.90 s, strict summary and all 44 helpers
+pass. Eight expected failures, no sanitizer allowances. VFD drivers register
+before gc_init and use real G0 positioning for initial radius. CSS inward/outward,
+RPM clamp, diameter interpretation, axial constant speed and G97 are observed
+through both RPM/state callbacks and actual pulses. Sender override/reset and
+M5 preserve correct RPM/off behavior without PWM. No physical VFD/bus test claim.
+
+Fixture corrections: normal cold-start tool initialization and coordinate records
+are required; public acceleration/feed keep logs bounded. Fixed-speed assertions
+observe live RPM during pulses rather than demanding a particular callback count.
+A disabled VFD may harmlessly receive zero RPM again. No new defects/allowances.
+Keep batch29 local while extending another public parser/driver workflow before
+the next push. Candidate: G10 L0 tool-table reload and transactional rejection.

@@ -2,24 +2,23 @@
 
 ## Objective and delivery
 
-Current work is coverage-batch-28 from pushed batch27 7ee98e1.
-Six fast-motion cases bring the suite to 3,401. Full batch28-checkpoint-results.xml
-passes in 45.25 s, strict summary and all 44 helpers pass. Eight expected failures,
-no sanitizer allowances. Source ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216 is clean.
-Configured 12,000 mm/min motion crosses smoothing transitions; tests measure
-cruise from actual driver timer periods and count single/coordinated/round-trip
-pulses. Sender override drops to 10% across short CAM segments, reaches measured
-1,200 mm/min, optionally restores 100%, and preserves endpoint. Fast hold across
-the same short segments stops, waits and resumes to the original endpoint.
-Initial override fixture overfilled an unserviced planner while prequeueing;
-its bounded twelve-block program now fits available capacity. No core defect.
-Batch25 run38985300867 and batch26 run38985624501 are fully green (all jobs).
-Latest verified coverage: batch26 exact011a464/ad57c78, 16,705/17,630 lines
-(94.75%), 11,283/13,648 branches (82.67%). Batch27 run38986131807 is pending.
-PR19 is open. Freeze/push28 and continue29. Useful next supported gap:
-CSS segment-time spindle updates through a VFD update_rpm callback, independent
-of existing PWM cases. Register/configure before gc_init; use normal motion to
-establish initial tool position and compare callbacks and emitted pulses.
+Current work is coverage-batch-29 from pushed batch28 eb44ea9.
+Eight new VFD cases bring the local suite to 3,409. Full
+batch29-checkpoint-results.xml passes in 44.90 s; strict summary and all 44
+helpers pass, eight expected failures, no sanitizer allowances. Source remains
+clean ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216. VFD driver is registered before
+gc_init; initial radius is established with actual G0 motion. Tests cover CSS
+in/out, maximum RPM, diameter mode, axial constant speed, G97 and sender override/
+M5. They observe both set_state and update_rpm; harmless zero-RPM re-sends are
+allowed. Startup cold flag/coordinate records and bounded log/feed were corrected
+in fixture development; no new core defects or allowances.
+Keep working on this branch across further related checkpoints before pushing.
+Potential next public gap: G10 L0 tool-table reload callback success/failure,
+missing backend and rejection while a tool is loaded. Use supported parser/tool
+selection, preserve failed-command state, avoid inventing backend policy.
+Batch25 run38985300867 and batch26 run38985624501 are fully green. Last verified
+coverage remains 94.75% lines /82.67% branches (batch26). Batch27 run38986131807
+and batch28 dispatch still need completion/artifact review. PR19 is open.
 
 Frozen batch 24 starts from batch 23 7398414.
 Nine new G95 cases pass full sanitizer/strict checks (3,370 total, 54.66 s),
