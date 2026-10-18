@@ -3711,3 +3711,27 @@ Latest fully verified hosted49 remains95.74% lines84.24% branches.
 Batch53 delivery gate:3,656 ASan/UBSan cases and strict summary pass117.74s;
 51 helpers pass4.186s with inherited Actions variables injected.17 expected
 failures plusone scoped known UBSan diagnostic; zero unexpected failures/skips.
+
+
+## Batch54 sender and pendant status independence - 2026-10-19
+
+Twelve new cases total3,668 verify pending G55/G54 coordinate-system selection,
+inch-display WCO, M8 flood/M7 mist/M9 off state reach both independently tracked
+streams regardless of which requests first. Public G-code/settings commands and
+registered MPG transport are used with complete driver coolant callbacks. Inch
+status formatting correctly follows$13; no NGC parameter unit contract is changed.
+Expected fields are checked to delimiter boundaries, including empty accessory
+field when coolant is off. Primary replies broadcast as designed; directed MPG
+replies remain quiet on primary, and control stays with the primary stream.
+No motion/private state forcing and no new defects/exceptions.
+
+Focused12/12 pass0.80s,51 helpers pass4.652s. Full3,668 sanitizer/strict gate
+running in batch54-tests.log (handle35509).17 existing expected failures andone
+recovering known UBSan remain. Hosted repair53 run39176095263 sourcejob passed;
+GCC/Clang/coverage running.53 headf3fe1d1c9c5726a743953a4400cf4537335ded1d.
+Corecleanad57c78, PR20 open/frozen40, latestverifiedcoverage49 95.74/84.24.
+Next useful area: real embedded named-macro recursion and repeated-return lifetime
+through core file handles, using ordinary bounded programs and existing helpers.
+
+Batch54 delivery gate:3,668 ASan/UBSan cases and strict summary pass54.37s;
+51 helpers pass4.652s.17 expected failures plusone known UBSan, zero unexpected.

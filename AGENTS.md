@@ -1,3 +1,13 @@
+# Current batch54 status-report checkpoint - 2026-10-19
+
+Branch coverage-batch-54 starts at pushed53 f3fe1d1. Twelve new sender/pendant cases
+total3,668 pass focused0.80s;51 helpers pass4.652s. Full3,668 sanitizer/strict passes54.37s;51 helpers pass4.652s.
+G55/G54, inch WCO via$13, M8/M7/M9 use supported public commands and driver states;
+primary broadcast and directed pendant semantics preserved, exact fields checked.
+No new core defect/exception.17 expected failures plusone known UBSan unchanged.
+Hosted53 run39176095263 sourcepassed, GCC/Clang/coverage inprogress. PR20 open40.
+Latest fully verified hosted49 remains95.74/84.24. Do not call50-52 hostedgreen.
+
 # Current batch53 hosted compatibility repair - 2026-10-19
 
 Branch coverage-batch-53 starts at pushed52 3b62d3c. No new C cases yet.
