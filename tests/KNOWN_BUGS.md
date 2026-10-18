@@ -562,3 +562,40 @@ char *v = uitoa(magnitude);
 label block and scoped manifest entry together after the corrected implementation
 passes without diagnostics. Run the full suite and both report classifiers, then
 delete this entry.
+
+
+## Subroutine return expressions use restored caller arguments
+
+**Known since:** 2026-10-19. **Reproduced core:**
+`ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216`.
+
+A named subroutine called with local #1=3 returns [#1+10]. Its caller has #1=99.
+The observed result is109 rather than13 because the core restores the caller's
+arguments before evaluating the expression. Both RETURN and ENDSUB are affected.
+The regressions execute bounded recursive .macro programs through real embedded
+file handles and a RAM caller. All four invocations, caller argument restoration,
+normal sender recovery and return-present flags (where asserted) succeed before
+the correct return-value assertion fails. Constant return-value controls pass.
+This can affect macros that calculate a result from their local arguments; no
+specific deployed probing/machining failure is claimed.
+
+[LinuxCNC subroutine scope and return values](https://linuxcnc.org/docs/html/gcode/o-code.html#_subroutine_return_values)
+document local call arguments and optional return expressions, including a local
+parameter expression. The core supports those expressions but its
+[ENDSUB path](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/ngc_flowctrl.c#L661-L672)
+and [RETURN path](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/ngc_flowctrl.c#L767-L785)
+unwind the subroutine before ngc_eval_expression().
+
+**Regressions:** [RETURN expression](cases/ngc_flowctrl/embedded_named_recursive_return_preserves_outer_return_value.c)
+and [ENDSUB expression](cases/ngc_flowctrl/embedded_named_recursive_endsub_closes_each_real_file_handle.c).
+Two named WILL_FAIL blocks in [known_bugs.cmake](known_bugs.cmake); no sanitizer allowance.
+
+**Suggested fix (proposal, not applied):** evaluate the optional expression while
+the callee's local/modal scope still exists, save its result and presence flag,
+then unwind and publish the saved return value to the caller. Preserve normal
+no-expression behavior, M73 restoration, named-file callback lifetime and G65
+return-handler ownership. Retest nested named and numeric callers.
+
+**Cleanup:** remove both named WILL_FAIL blocks once both complete regressions
+pass, keep correct return-value and scope assertions, run the full sanitizer
+suite and classifiers, and delete this entry.
