@@ -489,3 +489,36 @@ when closing its child. Preserve ordinary EOF and synthetic final-newline behavi
 **Cleanup:** remove the named WILL_FAIL block once the full regression passes,
 keep its correct physical-line assertions and the LF/CR/mixed controls, run the
 full sanitizer suite, and delete this entry.
+
+
+## Embedded file lookup skips entries in later registered lists
+
+**Known since:** 2026-10-18. **Reproduced core:**
+`ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216`.
+
+Registering two embedded file lists is supported by fs_embedded_mount(). With
+two files in the first list and three in the second, opening the first file in
+the second list returns NULL even though directory enumeration exposes it.
+The lookup carries index2 from the exhausted first list into the second list,
+skipping that list's first two entries. This can affect separately registered
+plugin assets; no particular plugin deployment failure is claimed.
+
+With a one-file second list, the same ordinary open additionally reproduces
+AddressSanitizer global-buffer-overflow at fs_embedded.c:58. The committed test
+uses a longer second list so its correct open/read assertions fail deterministically
+without an invalid read, including in the non-sanitized coverage configuration.
+It does not pad or alter a production list and no source fix is applied.
+
+[find_file()](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/fs_embedded.c#L46-L64)
+initializes idx only before searching the first list.
+
+**Regression:** [open appended-list file](cases/fs_embedded/later_registered_file_can_be_opened_after_searching_first_list.c).
+One named WILL_FAIL block in [known_bugs.cmake](known_bugs.cmake); no sanitizer allowance.
+
+**Suggested fix (proposal, not applied):** reset idx to zero for every registered
+list before its search. Preserve first-match ordering and hidden-file direct reads.
+Retest differently sized lists, missing names, stat and directory enumeration.
+
+**Cleanup:** remove the named WILL_FAIL block when the complete regression passes,
+keep its correct open/read assertions, recheck the shorter-list ASan reproduction,
+run the full sanitizer suite, and delete this entry.

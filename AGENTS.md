@@ -1,3 +1,13 @@
+# Current batch48 checkpoint
+
+Branch coverage-batch-48 starts at pushed47 bdd8da0. Twelve new cases total3,611:
+eight Modbus transaction recovery/frame boundaries, four embedded file integration.
+Focused46/46 pass1.98s, helpers44 pass3.695s. Full3,611 sanitizer/strict passes52.48s.17 labelled known failures now.
+Appended embedded lookup carries index across lists, skips valid assets; shorter
+list also ASan-overreads. Correct regression uses legitimate longer second list
+for deterministic no-UB failure; one named WILL_FAIL, no sanitizer allowance.
+Core cleanlatestad57c78. Hosted47 run39081516464 in_progresslast. PR20 stillopen40.
+
 # Current batch47 checkpoint
 
 Branch coverage-batch-47 starts at pushed46 c3755d9. Twelve nested real-RAM

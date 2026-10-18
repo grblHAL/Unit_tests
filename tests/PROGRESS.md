@@ -3550,3 +3550,30 @@ Artifacts saved beside checkout asrun-39044600759-{coverage-core,source-lock-cor
 
 Batch47 delivery gate: all3,599 ASan/UBSan cases and strict diagnosis pass112.60s;
 44 Python helpers pass3.473s.16 labelled known failures, zero unexpected failures.
+
+
+## Batch48 Modbus recovery and embedded asset integration - 2026-10-18
+
+Twelve new cases total3,611: eight public modbus_message workflows cover timeout
+and exception recovery, stale-response clearing, optional callback, rejected
+transport recovery, packed-bit order across words, maximum register read, and
+write frame-size rejection followed by valid full-frame write. Four embedded VFS
+cases cover mount-root stat, independent readers/peer close/reopen, appending a
+list without disrupting an open reader/directory order, and opening a valid asset
+in an appended list. Ordinary vfs_close throughout, no backend wrappers.
+
+Confirmed appended-list lookup bug: find_file retains exhausted first-list index
+when moving to next list. With firstlist2 entries, secondlist3, opening its first
+entry returnsNULL. Original secondlist1 reproduces ASan global-buffer-overflow
+at fs_embedded.c:58 (batch48-embedded-focused.log). Committed legitimate longer
+list retains correct assertions without relying on UB, so non-ASan coverage is
+deterministic too. Dated known entry, reset-index proposal, one named WILL_FAIL;
+17 total expected failures, no sanitizer allowances or production core edits.
+
+Focused46/46 pass1.98s;44 helpers pass3.695s. Full sanitizer/strict gate running,
+see batch48-tests.log. Latestcore unchangedad57c78, PR20 remains open/frozen40.
+Batch47 pushedbdd8da0dc004706895d06a3878615352690517cd; hosted39081516464 running.
+Latest fully verified46 coverage95.67% lines84.05% branches.
+
+Batch48 delivery:3,611 ASan/UBSan cases and strict summary pass52.48s;
+44 helpers pass3.695s.17 labelled known failures, zero unexpected failures.

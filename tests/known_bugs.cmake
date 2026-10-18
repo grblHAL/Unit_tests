@@ -105,3 +105,9 @@ if(TEST ngc_params.nested_crlf_ram_g65_files_preserve_physical_line_numbers)
   set_tests_properties(ngc_params.nested_crlf_ram_g65_files_preserve_physical_line_numbers
     PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Each appended embedded-file list must be searched from its first entry.
+if(TEST fs_embedded.later_registered_file_can_be_opened_after_searching_first_list)
+  set_tests_properties(fs_embedded.later_registered_file_can_be_opened_after_searching_first_list
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

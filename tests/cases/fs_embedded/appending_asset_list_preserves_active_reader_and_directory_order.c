@@ -1,0 +1,28 @@
+#include "fs_embedded.h"
+#include "check.h"
+#include <string.h>
+static const embedded_file_t first = {.name = "first", .size = 5, .data = {'a','b','c','d','e'}};
+static const embedded_file_t *files[] = {&first, NULL};
+static const embedded_file_t later = {.name = "later", .size = 1, .data = {'z'}};
+static const embedded_file_t *more[] = {&later, NULL};
+int main(void)
+{
+    fs_embedded_mount(files);
+    vfs_file_t *file = vfs_open("/embedded/first", "r");
+    CHECK(file != NULL);
+    char data[6] = {0};
+    CHECK(vfs_read(data, 1, 2, file) == 2 && memcmp(data, "ab", 2) == 0);
+    fs_embedded_mount(more);
+    vfs_dir_t *dir = vfs_opendir("/embedded");
+    CHECK(dir != NULL);
+    vfs_dirent_t *entry = vfs_readdir(dir);
+    CHECK(entry != NULL && strcmp(entry->name, "first") == 0);
+    entry = vfs_readdir(dir);
+    CHECK(entry != NULL && strcmp(entry->name, "later") == 0);
+    CHECK(vfs_readdir(dir) == NULL);
+    vfs_closedir(dir);
+    CHECK(vfs_tell(file) == 2);
+    CHECK(vfs_read(data, 1, 3, file) == 3 && memcmp(data, "cde", 3) == 0);
+    vfs_close(file);
+    return EXIT_SUCCESS;
+}
