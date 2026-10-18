@@ -1,4 +1,6 @@
 #include "support/embedded_allocation_host.h"
+static const embedded_file_t heap_second = {.name = "second", .size = 1, .data = {'b'}};
+static const embedded_file_t *heap_more[] = {&heap_second, NULL};
 int main(void)
 {
     fs_embedded_mount(heap_files);

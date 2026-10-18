@@ -1,9 +1,11 @@
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 import xml.etree.ElementTree as ET
 from ci_report import test_findings
 
@@ -26,7 +28,10 @@ class SanitizerExpectationTests(unittest.TestCase):
             results = root / "results.xml"
             ET.ElementTree(suite).write(results)
             findings, counts = test_findings(results, root)
-            summary = subprocess.run([sys.executable, str(SCRIPTS / "summary.py"), "tests", str(results), "--diagnostics-directory", str(root)], cwd=root, capture_output=True, text=True)
+            env = os.environ.copy()
+            env.pop("GITHUB_STEP_SUMMARY", None)
+            env.pop("GITHUB_ACTIONS", None)
+            summary = subprocess.run([sys.executable, str(SCRIPTS / "summary.py"), "tests", str(results), "--diagnostics-directory", str(root)], cwd=root, env=env, capture_output=True, text=True)
             return findings, counts, summary
 
     def test_matching_scoped_diagnostic_is_known(self):
@@ -35,6 +40,16 @@ class SanitizerExpectationTests(unittest.TestCase):
         self.assertEqual(counts["known"], 1)
         self.assertEqual(summary.returncode, 0, summary.stderr)
         self.assertIn("1 passed with known sanitizer diagnostics", summary.stdout)
+
+    def test_parent_actions_environment_does_not_redirect_fixture_summary(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory) / "parent-summary.md"
+            with patch.dict(os.environ, {"GITHUB_STEP_SUMMARY": str(target), "GITHUB_ACTIONS": "true"}):
+                findings, counts, summary = self.reports("/repo/core/code.c:7:1: runtime error: negation of minimum")
+            self.assertEqual(findings, [])
+            self.assertEqual(summary.returncode, 0, summary.stderr)
+            self.assertIn("1 passed with known sanitizer diagnostics", summary.stdout)
+            self.assertFalse(target.exists())
 
     def test_fixed_diagnostic_requires_exception_cleanup(self):
         findings, counts, summary = self.reports()

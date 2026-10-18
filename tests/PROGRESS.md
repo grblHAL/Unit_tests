@@ -3685,3 +3685,29 @@ locks verified.48:16,883/17,634 lines95.74%,11,495/13,648 branches84.22%.
 49:16,883/17,634 lines95.74%,11,497/13,648 branches84.24%.
 README snapshot badges refreshed to fullygreen49, both links changed together.
 Hosted50 run39082275393 and51 run39082526178 still running at latest check.
+
+
+## Batch53 hosted compatibility repair - 2026-10-19
+
+Fresh live state: clean branchcoverage-batch-53 starts at pushed52 3b62d3c;
+core fetched lateststillad57c788e15fb4e5d8ef9c20ed50755ffa3d9216, PR20 open.
+Previous goal turn made concrete progress through52; continue full objective.
+
+Hosted50 run39082275393 and51 run39082526178 failed GCC+coverage compilation:
+heap_more in embedded_allocation_host.h is unused in cases that do not append.
+Their Clang jobs passed and source jobs passed. Moved heap_second/heap_more
+into only the append test; no assertion or production-source change.
+Hosted52 run39082907285 failed source helpers: new sanitizer-expectation fixture
+inherited GITHUB_STEP_SUMMARY, so it wrote to parent Actions summary instead of
+captured stdout. Now remove that variable and GITHUB_ACTIONS only in the fixture
+subprocess environment, matching existing reporting-test isolation. Added a
+regression that injects those parent variables and verifies no parent file write.
+All51 helpers pass4.186s under simulated Actions variables. These are harness
+compatibility defects, not core regressions; three failed runs remain failed.
+Full3,656 local sanitizer/strict gate running in batch53-tests.log (handle84410).
+Downloaded report-core artifacts beside checkout contain exact failure evidence.
+Latest fully verified hosted49 remains95.74% lines84.24% branches.
+
+Batch53 delivery gate:3,656 ASan/UBSan cases and strict summary pass117.74s;
+51 helpers pass4.186s with inherited Actions variables injected.17 expected
+failures plusone scoped known UBSan diagnostic; zero unexpected failures/skips.

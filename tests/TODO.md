@@ -477,3 +477,17 @@ should roll back that diagnostic size accounting. No runtime size regression is
 asserted yet. Decide whether this rare exhausted-heap reporting detail warrants
 work before adding an assertion; retain the ordinary directory/retry controls.
 Source: [registration](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/fs_embedded.c#L241-L267).
+
+
+## Clarify reachability of the MPG zero-report-flag callback arm
+
+2026-10-19, Terje ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216. Source-only coverage
+note, no registered failure. report_add_realtime(Report_ClearAll) clears the
+active stream flags and returns before firing on_rt_reports_added. The MPG
+observer has a zero-flags arm, which this supported publisher does not reach.
+Do not directly invoke a private handler just to color that branch. Ask whether
+clear is intentionally per active stream, or whether an external publisher uses
+that callback contract. Keep the gap visible until clarified; no change to
+independent primary/pendant pending-report semantics is proposed.
+Sources: [publisher](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/report.c#L3006-L3042),
+[MPG observer](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/stream.c#L608-L617).

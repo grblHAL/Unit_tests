@@ -3,9 +3,7 @@
 #include "support/tracked_malloc_host.h"
 #include <string.h>
 static const embedded_file_t heap_first = {.name = "first", .size = 1, .data = {'a'}};
-static const embedded_file_t heap_second = {.name = "second", .size = 1, .data = {'b'}};
 static const embedded_file_t *heap_files[] = {&heap_first, NULL};
-static const embedded_file_t *heap_more[] = {&heap_second, NULL};
 static inline void begin_embedded_heap_failure(unsigned allocation)
 {
     allocation_heap_reject = allocation;

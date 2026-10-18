@@ -1,3 +1,14 @@
+# Current batch53 hosted compatibility repair - 2026-10-19
+
+Branch coverage-batch-53 starts at pushed52 3b62d3c. No new C cases yet.
+Actual hosted50/51 GCC+coverage builds failed on unused shared heap_more (Clang
+passed); moved append-only declarations into that case. Hosted52 source helpers
+failed because new reporting tests inherited GITHUB_STEP_SUMMARY; isolated fixture
+environment and added explicit parent-Actions regression.51 helpers pass4.186s
+with simulated GitHub environment. Full3,656 sanitizer/strict passes117.74s;51 helpers pass simulatedCI4.186s. No assertions weakened.
+Core freshfetchstillcleanad57c78; PR20 open/frozen40. Latest green49 is95.74/84.24.
+Do not call50/51/52 hostedgreen; allthree are terminalfailure as described.
+
 # Current batch52 checkpoint
 
 Branch coverage-batch-52 starts at pushed51 a13c4be. Ten JSON helper cases total3,656;
