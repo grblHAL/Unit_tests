@@ -1,3 +1,13 @@
+# Current batch49 checkpoint
+
+Branch coverage-batch-49 starts at pushed48 8792adb (Modbus module d295c8e).
+Eleven real-RAM O-code protocol cases total3,622; focused18/18 pass0.86s.
+44 helpers pass3.623s. Full3,622 sanitizer/strict passes52.40s.17 known failures unchanged. Do not test/resolve
+DO-WHILE CONTINUE contract pending Terje. Common RAM fixture setup extracted,
+existing seven G65 cases included focused and full gates. No core changes.
+Hosted47 run39081516464 and48 run39081807991 in_progress lastseen; verify later.
+PR20 remains open/frozen40. Latest verified46 coverage95.67/84.05.
+
 # Current batch48 checkpoint
 
 Branch coverage-batch-48 starts at pushed47 bdd8da0. Twelve new cases total3,611:

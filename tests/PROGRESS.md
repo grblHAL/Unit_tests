@@ -3577,3 +3577,25 @@ Latest fully verified46 coverage95.67% lines84.05% branches.
 
 Batch48 delivery:3,611 ASan/UBSan cases and strict summary pass52.48s;
 44 helpers pass3.695s.17 labelled known failures, zero unexpected failures.
+
+
+## Batch49 O-code through real RAM protocol - 2026-10-18
+
+Eleven new cases total3,622 run actualprotocol_main_loop over real RAM files:
+nested repeats, WHILE/REPEAT CONTINUE, ordinary DO/WHILE, conditional BREAK,
+nested loop BREAK, false WHILE/zero REPEAT skip G65 loaders, IF/ELSEIF selection,
+nested subroutine local arguments, early RETURN/value flags and M73 restoration.
+They validate final parameters and normalEOF/serial$G recovery with no motion.
+DO/WHILE CONTINUE remains undecided TODO and unregistered as requested.
+
+Extracted shared protocol initialization in ram_macro_protocol_host.h rather than
+duplicate the driver/file setup. Bounded control polling detects runaway file loops.
+Existing seven nested G65 protocol cases still pass with the refactor. Focused18/18
+pass0.86s, including the one already labelled CRLF diagnostic regression.
+44 reporting helpers pass3.623s. Full3,622 sanitizer/strict gate running;17 existing
+known failures, no new exceptions or production-source modifications.
+Batch48 pushed8792adb5c451042ed58ca9e5a3bf2ba9207e30bf, hosted39081807991 running.
+Batch47 run39081516464 also running at latest check. PR20 remains open/frozen40.
+
+Batch49 delivery gate:3,622 ASan/UBSan cases and strict summary pass52.40s;
+44 helpers pass3.623s.17 unchanged labelled known failures, no unexpected failures.

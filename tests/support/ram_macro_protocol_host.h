@@ -1,9 +1,10 @@
 #pragma once
 #include "support/nested_ram_stream_host.h"
 #include "ngc_params.h"
+#include "ngc_flowctrl.h"
 static vfs_file_t *ram_macro_files[3];
 static unsigned ram_macro_eofs[3], ram_macro_errors[3], ram_macro_calls;
-static unsigned ram_sender_index, ram_sender_reads;
+static unsigned ram_sender_index, ram_sender_reads, ram_control_polls;
 static float ram_arguments[2], ram_return_arguments[3], ram_return_named[3];
 static bool ram_capture_named;
 static uint_fast8_t ram_return_scopes[3];
@@ -16,7 +17,7 @@ static unsigned ram_owner(vfs_file_t *file)
     CHECK(false);
     return 0;
 }
-static control_signals_t ram_protocol_controls(void) { return (control_signals_t){0}; }
+static control_signals_t ram_protocol_controls(void) { CHECK(++ram_control_polls < 100000); return (control_signals_t){0}; }
 static coolant_state_t ram_protocol_coolant(void) { return (coolant_state_t){0}; }
 static void ram_protocol_set_coolant(coolant_state_t state) { CHECK(state.mask == 0); }
 static int32_t ram_sender_read(void)
@@ -61,7 +62,7 @@ static status_code_t ram_execute_macro(macro_id_t id, line_number_t line, parame
     CHECK(ram_macro_files[owner] != NULL);
     return Status_Handled;
 }
-static inline void run_ram_macro_protocol(const char *main_program, const char *sub_program, const char *leaf_program)
+static inline void prepare_ram_protocol(void)
 {
     prepare_ram_stream_environment();
     sys.cold_start = false;
@@ -76,6 +77,10 @@ static inline void run_ram_macro_protocol(const char *main_program, const char *
     grbl.on_execute_realtime = protocol_execute_noop;
     grbl.on_file_end = NULL;
     grbl.on_macro_execute = ram_execute_macro;
+}
+static inline void run_ram_macro_protocol(const char *main_program, const char *sub_program, const char *leaf_program)
+{
+    prepare_ram_protocol();
     nested_create_file("/ram/main", main_program);
     nested_create_file("/ram/sub", sub_program);
     nested_create_file("/ram/leaf", leaf_program);
@@ -91,4 +96,27 @@ static inline void run_ram_macro_protocol(const char *main_program, const char *
     CHECK(ram_sender_index == strlen(ram_sender_query));
     CHECK(strstr(engine_output, "[GC:") != NULL);
     NEAR(ram_arguments[0], 5); NEAR(ram_arguments[1], 7);
+}
+
+static inline void run_ram_root_protocol(const char *program)
+{
+    prepare_ram_protocol();
+    ngc_flowctrl_init();
+    CHECK(ngc_param_set(1, 0));
+    nested_create_file("/ram/main", program);
+    ram_macro_files[0] = stream_redirect_read("/ram/main", ram_protocol_error, ram_protocol_eof);
+    CHECK(ram_macro_files[0] != NULL);
+    CHECK(!protocol_main_loop());
+    CHECK(ram_macro_eofs[0] == 1 && ram_macro_errors[0] == 0);
+    CHECK(ram_return_status[0] == Status_OK && ram_return_scopes[0] == 0);
+    CHECK(ram_macro_calls == 0 && ngc_call_level() == 0);
+    CHECK(!stream_is_file() && hal.stream.read == ram_sender_read);
+    CHECK(ram_sender_index == strlen(ram_sender_query));
+    CHECK(strstr(engine_output, "[GC:") != NULL);
+}
+static inline float ram_flow_parameter(ngc_param_id_t id)
+{
+    float value;
+    CHECK(ngc_param_get(id, &value));
+    return value;
 }
