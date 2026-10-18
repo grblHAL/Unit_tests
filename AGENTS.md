@@ -1,3 +1,13 @@
+# Current batch51 checkpoint
+
+Branch coverage-batch-51 starts at pushed50 427a0a5. Twelve real embedded named
+macro/protocol cases total3,646; focused31/31 pass1.78s,44 helpers pass3.637s.
+Full3,646 sanitizer/strict passes53.00s.
+Named error propagation can revisit root observer; require correct error/status
+and state restoration, not an invented exactly-once callback rule.17 known failures
+unchanged, no new core defects/exceptions. Core cleanlatestad57c78.
+Hosted47 verifiedgreen95.72/84.18;48/49/50 need terminal checks. PR20 open/frozen40.
+
 # Current batch50 checkpoint
 
 Branch coverage-batch-50 starts at pushed49 746d5b4. Twelve new file resource/lifecycle

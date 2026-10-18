@@ -3626,3 +3626,28 @@ Batch50 delivery gate:3,634 ASan/UBSan cases and strict summary pass53.03s;
 Hosted47 run39081516464 fullygreen, lock matchesbdd8da0/ad57 and corefilter.
 Coverage16,879/17,634 lines95.72%;11,489/13,648 branches84.18%.
 Downloaded coverage/source-lock artifacts beside checkout.48/49 still live.
+
+
+## Batch51 named embedded macros through real file protocol - 2026-10-18
+
+Twelve new cases total3,646. Real read-only embedded .macro assets are located
+by the core and called from a real RAM root file throughprotocol_main_loop.
+Cases cover EOF and empty files, early RETURN/ENDSUB values and tail skipping,
+repeat independent opens, M73 restoration, M71 disarm, nested local/modal scopes,
+message output, and one/two named-file parser-error unwinds suppressing caller
+commands and restoring the serial sender. Ordinary vfs_close and core named-file
+handlers are exercised, replacing neither backend operations nor lifetime logic.
+
+Shared RAM root fixture supports an optional asset registration callback and
+expected root error status. Initial fixture required exactlyone root error callback;
+actual named-error propagation legitimately revisits that observer (observedtwo).
+Corrected the new fixture to require observed correct error, EOF status, restored
+scope and correct final parameters. No core bug was inferred from that callback
+count. Existing G65 and RAM-loop controls also pass after helper changes.
+Focused31/31 pass1.78s,44 helpers pass3.637s. Full3,646 sanitizer/strict running.
+17 existing known failures unchanged, no production edits or new allowances.
+Batch50 pushed427a0a5; hosteddispatch done, obtainrun ID.47 fullyverifiedgreen,
+48/49 still live at previous check. Latest verifiedcoverage95.72/84.18.
+
+Batch51 delivery gate:3,646 ASan/UBSan cases and strict summary pass53.00s;
+44 helpers pass3.637s.17 unchanged known failures, no unexpected failures.

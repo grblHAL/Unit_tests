@@ -7,9 +7,10 @@ static unsigned ram_macro_eofs[3], ram_macro_errors[3], ram_macro_calls;
 static unsigned ram_sender_index, ram_sender_reads, ram_control_polls;
 static float ram_arguments[2], ram_return_arguments[3], ram_return_named[3];
 static bool ram_capture_named;
+static void (*ram_prepare_assets)(void);
 static uint_fast8_t ram_return_scopes[3];
 static line_number_t ram_return_lines[3];
-static status_code_t ram_return_status[3];
+static status_code_t ram_return_status[3], ram_error_status[3], ram_expected_root_status = Status_OK;
 static const char *ram_sender_query = "$G\n";
 static unsigned ram_owner(vfs_file_t *file)
 {
@@ -30,7 +31,9 @@ static int32_t ram_sender_read(void)
 static status_code_t ram_protocol_error(status_code_t status)
 {
     CHECK(status != Status_OK);
-    ram_macro_errors[ram_owner(hal.stream.file)]++;
+    unsigned owner = ram_owner(hal.stream.file);
+    ram_macro_errors[owner]++;
+    ram_error_status[owner] = status;
     return status;
 }
 static status_code_t ram_protocol_eof(vfs_file_t *file, status_code_t status)
@@ -102,13 +105,17 @@ static inline void run_ram_root_protocol(const char *program)
 {
     prepare_ram_protocol();
     ngc_flowctrl_init();
+    if(ram_prepare_assets) ram_prepare_assets();
     CHECK(ngc_param_set(1, 0));
     nested_create_file("/ram/main", program);
     ram_macro_files[0] = stream_redirect_read("/ram/main", ram_protocol_error, ram_protocol_eof);
     CHECK(ram_macro_files[0] != NULL);
     CHECK(!protocol_main_loop());
-    CHECK(ram_macro_eofs[0] == 1 && ram_macro_errors[0] == 0);
-    CHECK(ram_return_status[0] == Status_OK && ram_return_scopes[0] == 0);
+    CHECK(ram_macro_eofs[0] == 1);
+    /* Named-sub error propagation may revisit the root status observer. */
+    if(ram_expected_root_status == Status_OK) CHECK(ram_macro_errors[0] == 0);
+    else CHECK(ram_macro_errors[0] >= 1 && ram_error_status[0] == ram_expected_root_status);
+    CHECK(ram_return_status[0] == ram_expected_root_status && ram_return_scopes[0] == 0);
     CHECK(ram_macro_calls == 0 && ngc_call_level() == 0);
     CHECK(!stream_is_file() && hal.stream.read == ram_sender_read);
     CHECK(ram_sender_index == strlen(ram_sender_query));

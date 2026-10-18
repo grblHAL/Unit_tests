@@ -464,3 +464,16 @@ update that shared parameter storage. Reproduce two different G96 S/D commands
 around M70/M72 and check subsequent planned RPM at a known tool radius after
 Terje confirms the intended saved-state scope. Do not infer a physical failure
 or register a new exception from pointer ownership alone.
+
+
+## Review embedded asset size accounting after allocation failure
+
+2026-10-18, Terje ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216. Low-priority
+source-review note, not a registered failure or a claimed production incident.
+The new public allocation-failure tests confirm an appended list can be retried
+without losing existing assets. fs_embedded_mount() increments fs_size before
+allocating the appended-list node; review whether a failed registration and retry
+should roll back that diagnostic size accounting. No runtime size regression is
+asserted yet. Decide whether this rare exhausted-heap reporting detail warrants
+work before adding an assertion; retain the ordinary directory/retry controls.
+Source: [registration](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/fs_embedded.c#L241-L267).
