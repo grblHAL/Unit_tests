@@ -3599,3 +3599,30 @@ Batch47 run39081516464 also running at latest check. PR20 remains open/frozen40.
 
 Batch49 delivery gate:3,622 ASan/UBSan cases and strict summary pass52.40s;
 44 helpers pass3.623s.17 unchanged labelled known failures, no unexpected failures.
+
+
+## Batch50 file-resource failure and lifecycle integration - 2026-10-18
+
+Twelve new cases total3,634. Four file redirects reject backend-handle or redirect-
+context allocation at root/nested depth, assert all partial allocations freed,
+original serial/parent reader preserved with parent line/position, then retry and
+read successfully. Four embedded asset resource cases cover failed file open,
+either directory allocation and failed appended-list allocation followed by retry;
+existing directory remains available. A reusable tracked malloc/free probe avoids
+duplicated instrumentation, is enabled only around public operations, and disabled
+before shutdown/gcov allocations. Link wrapping is scoped to the allocation cases.
+
+Four lifecycle cases cover repeated report-handler initialization through nested
+owners, closing all then opening a fresh RAM session, EOF forwarding without a
+local handler, and empty asynchronous G65 leaf scope return/caller continuation.
+Ordinary VFS/stream APIs used throughout, no production source edits.17 existing
+known failures unchanged. Focused30/30 pass1.57s,44 helpers pass3.723s.
+Full3,634 sanitizer/strict gate running in batch50-tests.log.
+Batch49 pushed746d5b46219ec3d990a6ed24c0a38b4ee9e57fd6; hosted39081992616 running.
+Earlier47 run39081516464 and48 run39081807991 still running at prior check.
+
+Batch50 delivery gate:3,634 ASan/UBSan cases and strict summary pass53.03s;
+44 helpers pass3.723s.17 unchanged known failures, no unexpected failures.
+Hosted47 run39081516464 fullygreen, lock matchesbdd8da0/ad57 and corefilter.
+Coverage16,879/17,634 lines95.72%;11,489/13,648 branches84.18%.
+Downloaded coverage/source-lock artifacts beside checkout.48/49 still live.

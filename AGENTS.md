@@ -1,3 +1,11 @@
+# Current batch50 checkpoint
+
+Branch coverage-batch-50 starts at pushed49 746d5b4. Twelve new file resource/lifecycle
+cases total3,634; focused30/30 pass1.57s,44 helpers pass3.723s. Full3,634 sanitizer/strict passes53.03s. No new known exceptions.
+Tracked malloc/free probe is enabled only around supported public operations;
+never inject into coverage shutdown. Actual embedded backend used for open retry.
+Core cleanlatestad57c78; PR20 open/frozen40. Hosted47 verifiedgreen95.72/84.18;48/49 still need terminal checks.
+
 # Current batch49 checkpoint
 
 Branch coverage-batch-49 starts at pushed48 8792adb (Modbus module d295c8e).
