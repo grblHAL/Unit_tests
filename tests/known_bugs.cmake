@@ -99,3 +99,9 @@ if(TEST nuts_bolts.read_uint_valid_ten_digit_values_ending_above_five)
   set_tests_properties(nuts_bolts.read_uint_valid_ten_digit_values_ending_above_five
     PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Nested CRLF callers must retain physical line numbers after asynchronous G65 return.
+if(TEST ngc_params.nested_crlf_ram_g65_files_preserve_physical_line_numbers)
+  set_tests_properties(ngc_params.nested_crlf_ram_g65_files_preserve_physical_line_numbers
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

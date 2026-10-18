@@ -460,3 +460,32 @@ contracts. Retest valid ten-digit endings6-9 and actual overflow.
 **Cleanup:** remove both named WILL_FAIL blocks once both complete regressions
 pass, keep their correct assertions and ordinary maximum/overflow controls,
 run the full sanitizer suite, and delete this entry.
+
+
+## Nested CRLF macro returns overcount caller file lines
+
+**Known since:** 2026-10-18. **Reproduced core:**
+`ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216`.
+
+An asynchronous G65 file provider opens a child RAM file while its caller's
+CRLF command still has the LF pending. On return, that LF is counted again.
+A three-line main file calling a three-line child, which calls a two-line leaf,
+finishes with reported line numbers 4, 4, 2 instead of 3, 3, 2. These are real
+VFS files executed through protocol_main_loop, not manually forced parser state.
+This affects file line diagnostics; the tested commands and modal results succeed.
+LF-only callers, CR-only callers, and a CRLF leaf with LF callers pass.
+
+[Shared end-of-line state](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/stream_file.c#L24-L79)
+is a static variable in stream_read_file(). Nested contexts save the position and
+line number but not that state; the child's EOF clears it before the caller's LF.
+
+**Regression:** [nested CRLF files](cases/ngc_params/nested_crlf_ram_g65_files_preserve_physical_line_numbers.c).
+One named WILL_FAIL block in [known_bugs.cmake](known_bugs.cmake); no sanitizer allowance.
+
+**Suggested fix (proposal, not applied):** keep end-of-line state per active file
+context. Initialize it for a new file and restore the caller's pending CRLF state
+when closing its child. Preserve ordinary EOF and synthetic final-newline behavior.
+
+**Cleanup:** remove the named WILL_FAIL block once the full regression passes,
+keep its correct physical-line assertions and the LF/CR/mixed controls, run the
+full sanitizer suite, and delete this entry.

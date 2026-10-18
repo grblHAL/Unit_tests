@@ -1,3 +1,13 @@
+# Current batch47 checkpoint
+
+Branch coverage-batch-47 starts at pushed46 c3755d9. Twelve nested real-RAM
+stream/protocol cases total3,599; focused14/14 pass including two older controls.
+One real CRLF caller line-number defect is documented with one named expected
+failure. LF/CR/mixed controls pass; no motion failure claimed. Full3,599 sanitizer/strict gate passes112.60s; helpers44 pass3.473s. Core untouchedlatestad57c78.
+Hosted46 run39044600759 fullygreen, exactharness/source/filter verified:
+16,871/17,634 lines95.67%;11,471/13,648 branches84.05%.
+PR20 remains OPEN/unmerged frozen40. Continue coverage after useful checkpoint.
+
 # Current batch46 delivery handoff
 
 Branch coverage-batch-46 starts at pushed45 b60ded4 (plus352a94a reportinggroup).

@@ -3511,3 +3511,42 @@ no longer has the oldUAF; KNOWN_BUGS correctly has no such entry. Helper remains
 for isolated backend testing, not as a required workaround. Comment-only edit
 does not change compiled behavior. Next exercise nested realRAM file streams
 through ordinaryvfs_close, rather than inherit that stale assumption.
+
+
+## Batch47 nested real RAM stream integration - 2026-10-17
+
+Five new cases total3,592 pass focused0.45s. Realfs_ram/vfs opens three distinct
+files throughstream_redirect_read; tests unwindLIFO, preserve parent line/position,
+restore original serial reader, route errors/EOF to active owner and chain previous
+EOF observer in order, preserve parents after missing child/reposition. Ordinary
+vfs_close is used throughout, no backend bypass/wrapper. Temporary RAM files
+are deleted after readers close. Initial fixture expectedgc_state.file_run, but
+stream_set_file does notset it; corrected to publicstream_is_file rather than
+force that separate parser/program flag. No bug/exception from that assumption.
+Next extend with actualprotocol/G65 loader workflows on the same real RAM files,
+focused checks first, full checkpoint after a substantial combined group.
+PR20 remains frozen at40; current47 starts at pushed46 c3755d9.
+
+
+## Batch47 nested macro protocol checkpoint - 2026-10-18
+
+Twelve new cases total3,599. Five real RAM stream cases plus seven actual G65
+protocol cases cover LIFO readers, missing child, EOF/error ownership, reposition,
+local numeric/named scope preservation, automatic M73 modal restore, error
+suppression and normal serial-query recovery. CR/LF/mixed controls distinguish
+one reproducible line-diagnostic defect: CRLF main/child report4/4 instead of3/3
+when pending caller LF survives asynchronous G65 return. Leaf reports2 correctly;
+ordinary LF and CR callers report3/3/2. Commands/modal results succeed. Correct
+regression retained with one dated known-bug entry, proposal and named WILL_FAIL;
+no sanitizer allowance or production source edit.16 known failures now.
+Focused14/14 pass0.76s including two existing controls;44 helpers pass3.473s.
+Full3,599 sanitizer/strict gate running; do not claim completion before checking.
+
+Fresh fetched Terje remains cleanad57c788e15fb4e5d8ef9c20ed50755ffa3d9216.
+PR20 still open/unmerged. Hosted46 run39044600759 passed alljobs, source lock
+matchesc3755d929a42e7f7b3a11098d848e777f6809e14 andad57; corefilter unchanged.
+coverage.xml:16,871/17,634 lines95.67%,11,471/13,648 branches84.05%.
+Artifacts saved beside checkout asrun-39044600759-{coverage-core,source-lock-core}.zip.
+
+Batch47 delivery gate: all3,599 ASan/UBSan cases and strict diagnosis pass112.60s;
+44 Python helpers pass3.473s.16 labelled known failures, zero unexpected failures.
