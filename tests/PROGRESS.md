@@ -3735,3 +3735,39 @@ through core file handles, using ordinary bounded programs and existing helpers.
 
 Batch54 delivery gate:3,668 ASan/UBSan cases and strict summary pass54.37s;
 51 helpers pass4.652s.17 expected failures plusone known UBSan, zero unexpected.
+
+
+## Batch55 named recursion and settings readback - 2026-10-19
+
+Twelve new cases total3,680. Eight real embedded named-file programs cover
+bounded recursion, repeated reopening, numeric caller preservation, M73 frames,
+looped child calls, error unwind and expression-valued RETURN/ENDSUB. Four
+settings cases query both registered getter and actual $id output for E-stop
+unlock, supported control inversion and subroutine options under advertised SD/
+littlefs capabilities, including persistent reload. They test availability/readback;
+actual macro file execution is covered separately, not storage board drivers.
+
+Two genuine return-expression regressions: callee#1=3 returns[#1+10] whilecaller
+has#1=99. Observed109, correct13. Both paths pop scope before expressionevaluation.
+All four invocations, restored caller and return-present controls pass before the
+correct result assertion fails. Primary LinuxCNC O-code scope/return documentation
+supports this contract. One datedknownentry withcodefixproposal/two namedWILL_FAIL
+blocks;19 total expected failures plusone existing recoveringUBSan. No coreedits.
+Six remaining recursion cases and four readback cases pass normally. Initial
+query fixture lacked report_init_fns/mandatoryhal.control.get_state; completed
+fixture before classification; those crashes were notcoredefects.
+
+Focused12/12 pass0.80s includingtwo labelled regressions;51 helpers pass4.721s.
+Full3,680 sanitizer/strict running inbatch55-tests.log (handle77056). Next commit
+only after terminal result.54 pushedf74d3d3, hosteddispatchdone obtainID.
+Hosted53 run39176095263 sourcepassed, GCC/Clang/coverage lastinprogress.
+Core remainscleanad57c78, PR20 open/frozen40, latestverified49 95.74/84.24.
+
+Batch55 delivery gate:3,680 ASan/UBSan cases and strict summary pass54.56s;
+51 helpers pass4.721s.19 expected failures plusone scoped known UBSan, no unexpected.
+Hosted53 repair run39176095263 fullygreen includingGCC/Clang/coverage/diagnosis.
+Source lockmatchesf3fe1d1c9c5726a743953a4400cf4537335ded1d/ad57 andcorefilter.
+Coverage16,895/17,634 lines95.81%;11,527/13,648 branches84.46%.
+Artifacts beside checkout; README snapshots refreshed to thisverifiedrun.
+Hosted54 run39176480077 still live. Earlier50-52 failures are notrerun/relabeled;
+53 cumulative checkpoint validates their fixes. PR20 remains open/frozen40.

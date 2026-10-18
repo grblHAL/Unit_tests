@@ -1,3 +1,15 @@
+# Current batch55 recursion/settings checkpoint - 2026-10-19
+
+Branch coverage-batch-55 starts at pushed54 f74d3d3. Twelve new cases total3,680
+pass focused0.80s;51 helpers pass4.721s. Full3,680 sanitizer/strict passes54.56s;51 helpers pass4.721s.19 expected failures
+plusone known UBSan now: RETURN/ENDSUB evaluate local expression after pop, so
+caller#1=99 yields109 insteadcallee#1=3 result13. Two correct named regressions,
+datedknownentry/proposal, no sanitizer allowance. LinuxCNC scope/return docschecked.
+Settings query fixture now initializes report handlers and mandatorycontrol reader;
+initial missing-callback crashes were fixture errors, not corebugs. No coreedits.
+Hosted53 run39176095263 fullygreen, locksverified95.81/84.46.54 run39176480077 live.
+PR20 open40, latestfullyverified49 95.74/84.24. Keepgoingaftercheckpoints.
+
 # Current batch54 status-report checkpoint - 2026-10-19
 
 Branch coverage-batch-54 starts at pushed53 f3fe1d1. Twelve new sender/pendant cases
