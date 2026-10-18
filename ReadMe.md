@@ -1,8 +1,8 @@
 # Unit tests for the grblHAL core
 
 [![Core tests](https://github.com/grblHAL/Unit_tests/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/grblHAL/Unit_tests/actions/workflows/tests.yml)
-[![Core line coverage: 95.45%](https://img.shields.io/badge/core_lines-95.45%25-brightgreen)](https://github.com/petervanderwalt/Unit_tests/actions/runs/39021372475)
-[![Core branch coverage: 83.79%](https://img.shields.io/badge/core_branches-83.79%25-green)](https://github.com/petervanderwalt/Unit_tests/actions/runs/39021372475)
+[![Core line coverage: 95.74%](https://img.shields.io/badge/core_lines-95.74%25-brightgreen)](https://github.com/petervanderwalt/Unit_tests/actions/runs/39081992616)
+[![Core branch coverage: 84.24%](https://img.shields.io/badge/core_branches-84.24%25-green)](https://github.com/petervanderwalt/Unit_tests/actions/runs/39081992616)
 
 Coverage badges show a verified successful report, not a live measurement of
 every source revision. Click either percentage for its run and coverage artifact.
@@ -411,7 +411,11 @@ scripts need cleanup. Depending on the defect, cleanup is in these places:
   These exceptions are documented in `KNOWN_BUGS.md`, but the actual warning
   allowance is stored in this JSON file. One defect can have several objects.
   Remove all objects for the resolved issue, keeping valid JSON (an empty
-  manifest is `[]`). The summary must then report those tests as clean passes.
+  manifest is `[]`). Also remove that test's `known_sanitizer_bug` label block
+  from [tests/known_bugs.cmake](tests/known_bugs.cmake). The label applies only
+  to sanitizer builds: if its expected diagnostic disappears, reporting fails
+  with cleanup guidance. An unrelated diagnostic or assertion still fails.
+  Keep the correct output assertions; the summary must then report a clean pass.
 - **Memory defect checked by a diagnostic wrapper:** follow the defect's linked
   instructions to replace its special Python-wrapper registration in
   [CMakeLists.txt](CMakeLists.txt) with a normal executable test. Remove the

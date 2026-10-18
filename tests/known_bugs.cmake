@@ -111,3 +111,10 @@ if(TEST fs_embedded.later_registered_file_can_be_opened_after_searching_first_li
   set_tests_properties(fs_embedded.later_registered_file_can_be_opened_after_searching_first_list
     PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Correct output assertions pass; only sanitizer builds must reproduce this diagnostic.
+# Remove this label AND its scoped manifest entry when the signed negation is fixed.
+if(ENABLE_SANITIZERS AND TEST stream_json.minimum_signed_integer_emits_full_decimal_value)
+  set_tests_properties(stream_json.minimum_signed_integer_emits_full_decimal_value
+    PROPERTIES LABELS known_sanitizer_bug)
+endif()

@@ -1,3 +1,15 @@
+# Current batch52 checkpoint
+
+Branch coverage-batch-52 starts at pushed51 a13c4be. Ten JSON helper cases total3,656;
+focused26/26 pass1.81s.50 Python helpers pass4.465s, six new cases prove scoped
+known-diagnostic matching, obsolete-exception cleanup, unrelated failure rejection
+and no diagnostic required without sanitizer label. Full3,656 sanitizer/strict passes53.62s; actual CI classifier also passes.17 expected failures plusone known recovering UBSan.
+Correct INT32_MIN JSON output passes but signednegation atstream_json.c228 isUB.
+Dated KNOWN_BUGS entry/proposal; scoped manifest and SAN-only known_sanitizer_bug
+label force reporting red when diagnostic disappears. Keep assertions; cleanup both.
+README explains cleanup. Core cleanad57c78; PR20 open/frozen40.
+Hosted48/49 verifiedgreen;49 coverage95.74/84.24, badges refreshed tothat run.50/51 pending.
+
 # Current batch51 checkpoint
 
 Branch coverage-batch-51 starts at pushed50 427a0a5. Twelve real embedded named

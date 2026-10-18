@@ -67,6 +67,7 @@ def test_findings(path, diagnostics):
     for case in cases:
         name = case.get("name", "unknown")
         known = any(p.get("name") == "cmake_labels" and "known_bug" in p.get("value", "").split(";") for p in case.findall("./properties/property"))
+        expected_diagnostic = any(p.get("name") == "cmake_labels" and "known_sanitizer_bug" in p.get("value", "").split(";") for p in case.findall("./properties/property"))
         error = next((case.find(tag) for tag in ("failure", "error") if case.find(tag) is not None), None)
         output = case.findtext("system-out", "")
         if case.find("skipped") is not None:
@@ -78,19 +79,20 @@ def test_findings(path, diagnostics):
                 if "runtime error:" not in line and "ERROR: AddressSanitizer" not in line:
                     continue
                 m = re.match(r"^(.*?):([0-9]+):([0-9]+): runtime error: (.*)$", line)
-                accepted = m and any(m[1].replace("\\", "/").endswith("/" + item["source"]) and int(m[2]) in item["lines"] and re.fullmatch(item["message_pattern"], m[4]) for item in manifest)
+                accepted = m and any(item.get("test", name) == name and m[1].replace("\\", "/").endswith("/" + item["source"]) and int(m[2]) in item["lines"] and re.fullmatch(item["message_pattern"], m[4]) for item in manifest)
                 if not accepted:
                     unexpected.append(line)
-        if error is not None or unexpected:
-            text = "\n".join(unexpected) if unexpected else output or error.get("message", "") + "\n" + "".join(error.itertext())
+        missing_diagnostic = expected_diagnostic and error is None and not any("runtime error:" in line or "ERROR: AddressSanitizer" in line for line in output.splitlines())
+        if error is not None or unexpected or missing_diagnostic:
+            text = "Known sanitizer diagnostic no longer reproduced; see known bugs, it may be a fixed regression. Review the label, scoped manifest and resolved entry." if missing_diagnostic else "\n".join(unexpected) if unexpected else output or error.get("message", "") + "\n" + "".join(error.itertext())
             if error is not None and "timeout" in error.get("message", "").lower():
                 text = "Test timed out: " + error.get("message")
-            kind = "known_changed" if known else "sanitizer" if unexpected or "AddressSanitizer" in text else "test"
+            kind = "known_changed" if known or expected_diagnostic else "sanitizer" if unexpected or "AddressSanitizer" in text else "test"
             item = finding(kind, name, concise(text), text)
             item["reproduce"] = "ctest --test-dir build -V -R '^" + re.escape(name) + "$'"
             findings.append(item)
             counts["failed"] += 1
-        elif known:
+        elif known or expected_diagnostic:
             counts["known"] += 1
         else:
             counts["clean"] += 1

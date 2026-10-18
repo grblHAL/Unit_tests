@@ -3651,3 +3651,37 @@ Batch50 pushed427a0a5; hosteddispatch done, obtainrun ID.47 fullyverifiedgreen,
 
 Batch51 delivery gate:3,646 ASan/UBSan cases and strict summary pass53.00s;
 44 helpers pass3.637s.17 unchanged known failures, no unexpected failures.
+
+
+## Batch52 JSON boundaries and mandatory diagnostic cleanup - 2026-10-18
+
+Ten new cases total3,656 cover unterminated/malformed members without callbacks,
+callback-driven search across mixed fields, absent-target/early-stop behavior,
+INT32_MAX/zero, UTF8 preservation with ASCII escaping, nested array/object separator
+restoration and INT32_MIN output. This remains the core's basic callback parser;
+no general JSON-validator contract is imposed. Focused26/26 pass1.81s.
+
+INT32_MIN emits the correct text but UBSan reports signed negation atstream_json.c228.
+One dated known entry proposes unsigned magnitude arithmetic; no production edit.
+Correct output assertions remain normal passes, not WILL_FAIL. The test/source/
+line/message-scoped manifest allows only this recovering diagnostic; SAN-only
+known_sanitizer_bug label requires the diagnostic to remain present until cleanup.
+Both summary and CI diagnosis now flag a missing diagnostic as changed known
+exception, retaining actual assertion failures/different diagnostics for review.
+Without SAN label, coverage is an ordinary clean output test. README explains
+removing label+manifest together.17 expected failures plusone recovering diagnostic.
+
+Six meaningful reporting tests cover match, wrong test, changed diagnostic,
+actual assertion failure, obsolete diagnostic and noninstrumented case. All50
+helpers pass4.465s. Full3,656 sanitizer/strict gate running in batch52-tests.log.
+Batch51 pusheda13c4be; dispatchdone, obtainrun ID. Core remainscleanad57c78.
+PR20 open/frozen40; later batches remain separate continuing work.
+
+Batch52 delivery gate:3,656 ASan/UBSan cases and strict summary pass53.62s;
+3,638 clean,17 expected failures,one known recovering diagnostic, zero unexpected.
+50 helpers pass4.465s. Actual CI classifier also yieldszero findings/18 known.
+Hosted48 run39081807991 and49 run39081992616 fullygreen, source/filter/harness
+locks verified.48:16,883/17,634 lines95.74%,11,495/13,648 branches84.22%.
+49:16,883/17,634 lines95.74%,11,497/13,648 branches84.24%.
+README snapshot badges refreshed to fullygreen49, both links changed together.
+Hosted50 run39082275393 and51 run39082526178 still running at latest check.

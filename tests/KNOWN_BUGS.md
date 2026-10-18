@@ -522,3 +522,43 @@ Retest differently sized lists, missing names, stat and directory enumeration.
 **Cleanup:** remove the named WILL_FAIL block when the complete regression passes,
 keep its correct open/read assertions, recheck the shorter-list ASan reproduction,
 run the full sanitizer suite, and delete this entry.
+
+
+## JSON minimum signed integer formatting negates INT32_MIN
+
+**Known since:** 2026-10-18. **Reproduced core:**
+`ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216`.
+
+json_add_int() accepts an int32_t, but formatting INT32_MIN negates it while still
+signed. Positive2147483648 cannot be represented by int32_t. The observed output
+is the correct -2147483648 on the tested compiler; UBSan reports the undefined
+signed negation. This is a formatter boundary defect, not an observed machine
+motion failure or a claim that a production caller currently emits this value.
+Ordinary maximum, zero and negative-number output controls pass.
+
+[Signed negation](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/stream_json.c#L221-L231)
+casts to uint32_t only after evaluating the signed conditional expression.
+
+**Regression:** [minimum signed output](cases/stream_json/minimum_signed_integer_emits_full_decimal_value.c).
+Correct decimal output assertions remain ordinary passes. Sanitizer builds also
+require the narrowly matched diagnostic via its known_sanitizer_bug label in
+[known_bugs.cmake](known_bugs.cmake) and test/source/line/message-scoped entry in
+[known_sanitizer_diagnostics.json](known_sanitizer_diagnostics.json). Coverage
+builds have no diagnostic expectation. A missing or changed sanitizer diagnostic
+fails reporting with cleanup guidance; an unrelated assertion/crash is not proof
+of a fix. No WILL_FAIL or global sanitizer suppression is used for this case.
+
+**Suggested fix (proposal, not applied):** compute the magnitude in unsigned
+arithmetic before formatting, preserving the existing minus sign output:
+
+```c
+uint32_t magnitude = (uint32_t)value;
+if(value < 0)
+    magnitude = 0u - magnitude;
+char *v = uitoa(magnitude);
+```
+
+**Cleanup:** retain the correct decimal output test; remove its known_sanitizer_bug
+label block and scoped manifest entry together after the corrected implementation
+passes without diagnostics. Run the full suite and both report classifiers, then
+delete this entry.
