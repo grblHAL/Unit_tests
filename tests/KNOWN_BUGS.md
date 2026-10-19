@@ -599,3 +599,48 @@ return-handler ownership. Retest nested named and numeric callers.
 **Cleanup:** remove both named WILL_FAIL blocks once both complete regressions
 pass, keep correct return-value and scope assertions, run the full sanitizer
 suite and classifiers, and delete this entry.
+
+
+## Running spindle override changes are skipped during ordinary feed hold
+
+**Known since:** 2026-10-19. **Verified core:**
+`ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216` (Terje).
+
+**Sender workflow:** start a normal variable-speed spindle with `M3S500`, run
+`G1X20F100`, issue feed hold and wait for axis deceleration to complete, then
+send the +10% spindle override realtime command. The registered non-laser PWM
+driver stays on at level500 while override_pct becomes110 and calculated
+rpm_overridden becomes550. Servicing the ordinary suspend manager clears
+update_spindle_rpm without applying level550. Axis motion remains paused.
+The same registered driver changes to550 while idle; stopping and restoring
+the held spindle also applies550 and the cut then reaches its1600-step endpoint.
+Coarse decrease and fine +/- show the same mismatch in local diagnostics.
+This is a host reproduction through parser/realtime/driver callbacks, not a
+claim about a particular board, physical acceleration or frequency in use.
+
+**Cause:** [pending held-spindle update](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/state_machine.c#L405-L407)
+calls state_spindle_restore(), but [spindle_restore()](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/spindle_control.c#L881-L891)
+short-circuits when enable/direction and programmed RPM match. A changed
+override alone does not invalidate that shortcut. The caller then clears the
+pending flag.
+
+**Regression:** [held override sequence](cases/state_machine/held_running_spindle_overrides_update_output_without_axis_motion.c).
+Passing controls: [idle override/reset](cases/state_machine/idle_registered_spindle_overrides_update_driver_and_restore_nominal_speed.c)
+and [held stop/restore followed by resume](cases/state_machine/held_spindle_stop_and_restore_apply_changed_override_before_resuming_cut.c).
+One exact named WILL_FAIL block in [known_bugs.cmake](known_bugs.cmake); no sanitizer allowance.
+Evidence: `../batch63-registered-diagnostic.log`, `../batch63-controls.log`.
+
+**Suggested fix (proposal, not applied):** make the pending normal-spindle
+override update bypass the unchanged-programmed-RPM shortcut. One candidate
+is setting the existing `spindle->hal->param->option.restore_rpm` flag inside
+that pending-update branch immediately before state_spindle_restore(), so the
+restore path actually rewrites the output and then clears that force flag.
+Review abort/delay/ramp behavior and only clear the pending update after an
+applied output. Preserve stopped-spindle, reduced-RPM hold, dynamic laser and
+plugin notification behavior. Do not use spindle_set_state_synced() here: a
+held planner must not be drained by a speed-only override. This proposal has
+not been validated as a production patch.
+
+**Cleanup:** when the whole override sequence passes, remove its exact
+WILL_FAIL block, keep all driver/output and no-axis-motion assertions, run the
+full sanitizer suite and strict classifier, and delete this entry.

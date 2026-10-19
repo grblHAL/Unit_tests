@@ -1,3 +1,20 @@
+# Current batch63 held-spindle regression checkpoint - 2026-10-19
+
+Branch coverage-batch-63 starts pushed62 33f97d1. Three new cases total3,732 pass
+full ASan/UBSan55.79s and strict summary;59 state-machine cases pass2.52s.
+One registered normal-PWM regression: after completed feed hold, override110%
+calculates550 from500 but driver level remains500 and pendingflagclears. Idle
+update/reset and held stop/restore/resume controls pass with same registered
+driver. Initial minimal fixture reproduced5000->5500 too; confirmed with proper
+spindle_register/standard-mode startup before classification.
+Shared PWM fixture now observes both set_state and update_pwm outputs; callback
+behavior unchanged. Correct assertion retained in one exact WILL_FAIL; dated
+KNOWN_BUGS entry, source cause, proposed fix/removal guide; no sanitizer allowance.
+20 known failures plusone known UBSan now. Core unchangedcleanad57c78.
+51 helper checks lastpass4.902s; new rerun pending automatic approval review.
+Hosted58/59 green;60 run39200502195,61 run39200605707 and62 dispatched need
+terminal verification. Latest exact locked report58 95.99/84.69. Continue.
+
 # Current batch62 rotated-arc checkpoint - 2026-10-19
 
 Branch coverage-batch-62 starts pushed61 62c3f36. Five registered arc cases

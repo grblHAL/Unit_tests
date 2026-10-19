@@ -128,3 +128,9 @@ if(TEST ngc_flowctrl.embedded_named_recursive_endsub_closes_each_real_file_handl
   set_tests_properties(ngc_flowctrl.embedded_named_recursive_endsub_closes_each_real_file_handle
     PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# A running normal spindle must apply override changes while feed hold remains active.
+if(TEST state_machine.held_running_spindle_overrides_update_output_without_axis_motion)
+  set_tests_properties(state_machine.held_running_spindle_overrides_update_output_without_axis_motion
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
