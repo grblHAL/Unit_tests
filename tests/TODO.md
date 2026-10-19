@@ -606,3 +606,31 @@ Evidence: batch69-controller-options-results.xml and
 batch69-probe-command-diagnostic.log (actual0, expected26). No expected-failure
 allowance, source change or coverage exclusion was added. The ordinary
 same-position-target rejection followed by a successful contact probe passes.
+
+## Additional unreachable coverage guards: help dispatch and MPG pullup
+
+**Reviewed 2026-10-19, Terje 16c7dff3aa9614322cfc2b47a2109cc9196ccca4.**
+`system_execute_line()` handles every HELP-prefixed command before command-table
+lookup, so the static HELP table handler `output_help()` is redundant in the
+ordinary dispatcher. Its public behavior is already tested via `$HELP`.
+In `ioports_configure()`, the `Input_MPGSelect` comparison is inside a condition
+requiring `xbar->function < Input_Probe`, although the MPG enum is greater than
+Input_Probe. That particular branch is unreachable. Existing loaded MPG-select
+configuration tests verify observable pullup/debounce behavior, which currently
+comes from the initial configuration value. Do not invent different enum values
+or invoke private dispatchers to execute these lines. These are source-audit
+notes, not new expected failures or coverage exclusions.
+
+## G66 after arcs: confirm intended supported motion types
+
+**Observed 2026-10-19, Terje 16c7dff3aa9614322cfc2b47a2109cc9196ccca4.**
+An armed G66 callback fires after G0/G1 but not after G2/G3. Source contains the
+scope-aware trigger only in the linear and rapid cases. Four real-stepper arc
+candidates (CW, CCW, helix and full circle) returnedOK and reached the callback
+count assertion with zero calls; a nested-arc scope candidate also assumes arc
+trigger support. All five are unregistered in proposals pending confirmation.
+Do not label an intentional/incomplete motion-type limitation as a confirmed
+regression. Evidence: batch69-startup-macros-results.xml and
+batch69-macro-diagnostic.log (stored P100/L1, zero callback calls).
+The linear nested-G65 scope case uses explicit L1 so it tests scope independently
+of the separately registered G65 default-repeat/required-P defect.

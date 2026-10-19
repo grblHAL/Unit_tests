@@ -32,13 +32,17 @@ static void debug_describe(pin_function_t function, pin_group_t group, const cha
     CHECK(function == Output_TX); CHECK(group == PinGroup_UART);
     CHECK(strcmp(description, "Debug out") == 0); debug_description_calls++;
 }
-static inline void prepare_debug_serial(void)
+static inline void register_debug_serial_driver(void)
 {
-    engine_prepare(); report_init_fns(); hal.stream.is_connected = debug_connected;
     debug_property = (io_stream_properties_t){.type = StreamType_Serial,
         .instance = 0, .flags = {.claimable = true}, .claim = debug_claim};
     static io_stream_details_t details = {.n_streams = 1, .streams = &debug_property};
     stream_register_streams(&details); hal.periph_port.set_pin_description = debug_describe;
+}
+static inline void prepare_debug_serial(void)
+{
+    engine_prepare(); report_init_fns(); hal.stream.is_connected = debug_connected;
+    register_debug_serial_driver();
 }
 static inline void start_debug_serial(void)
 {

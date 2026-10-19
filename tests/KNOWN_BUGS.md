@@ -213,3 +213,51 @@ unrelated to this pin-configuration issue.
 controls' mode expectations with the agreed behavior, run all pullup tests plus
 the full sanitizer suite/strict summary, and delete this entry. No sanitizer
 suppression or diagnostic wrapper applies.
+
+## An armed G66 skips required-P and default-repeat checks for a new G65
+
+**Known since:** 2026-10-19. **Reproduced core:**
+`16c7dff3aa9614322cfc2b47a2109cc9196ccca4`.
+
+Arm `G66P200X12`, then issue `G65P100X7`. The core dispatches macro100 with
+repeat count0; ordinary G65 normalizes an omitted/zero L to one iteration.
+With G66 armed, `G65X7` also returnsOK and calls macro0 instead of rejecting the
+missing required P. A loader's treatment of repeat0 determines its actual macro
+execution; the test does not claim every loader necessarily skips the body.
+The accidental acceptance/dispatch of a missing macro number is directly observed.
+
+[Macro validation](https://github.com/terjeio/grblHAL_core/blob/16c7dff3aa9614322cfc2b47a2109cc9196ccca4/gcode.c#L2264-L2279)
+is guarded by `gc_state.g66_args == NULL`, so it is bypassed even for a new
+explicit G65 whenever another modal macro is armed.
+
+**Regressions:**
+[default repeat](cases/ngc_params/g65_default_repeat_with_armed_g66_dispatches_one_iteration.c)
+and [missing P](cases/ngc_params/g65_missing_macro_number_with_armed_g66_rejects_before_callback.c).
+Both retain their correct assertions with exact named WILL_FAIL blocks in
+[known_bugs.cmake](known_bugs.cmake). No sanitizer suppression applies.
+
+**Passing controls:**
+[explicit L1 with G66 armed](cases/ngc_params/g65_explicit_repeat_with_armed_g66_preserves_modal_setup_and_parent_scope.c)
+and [ordinary G65 L0 defaults to one](cases/ngc_params/g65_zero_repeat_defaults_to_one.c).
+The armed control verifies the original modal macro and caller arguments survive.
+
+**Suggested fix (proposal, not applied):** always perform this validation for
+`MacroCall_NonModal` (G65), while retaining the existing handling for deferred
+G66/G66.1 argument blocks. A minimal guard change to review is:
+
+```c
+if(gc_block.macro_call
+#if NGC_PARAMETERS_ENABLE
+    && (gc_block.macro_call == MacroCall_NonModal || gc_state.g66_args == NULL)
+#endif
+) {
+    /* existing required-P, range and default-L checks */
+}
+```
+
+Check ordinary G65, G65 while G66 is armed, explicit repeats, nested macro files,
+and G66.1 argument updates before adopting it.
+
+**Cleanup:** once both regressions pass, remove their two exact WILL_FAIL blocks,
+keep the assertions and passing controls, and delete this entry. No other known
+issue allowance or sanitizer manifest entry needs changing for this fix.

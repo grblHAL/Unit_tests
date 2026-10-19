@@ -1,3 +1,42 @@
+# Current batch69 startup/macro checkpoint - 2026-10-19
+
+Branch coverage-batch-69 continues; ready PR22 remains open at aa80971.
+Hosted69 run39249281186 has all five jobs successful at de32a80/core16c7dff.
+Downloaded locks match harness/source, full test selection and unchanged header
+coverage filter. Verified17,033/17,652 lines96.49%;11,691/13,700 branches85.34%.
+README badges now link this verified report. Core latest fresh-fetch16c7dff clean.
+
+Fifteen additional cases plus startup fixture integration are ready locally:
+45 beyond PR22 /3,822 total. New normal boots cover compatibility2/10 default
+recovery, released EStop/reset, changed homing lock/reset, no-table G10L0 and
+existing UART/external DEBUGOUT variants. Existing debug libraries reused;
+no new production configuration or core patch. G66.1 no-motion argument blocks,
+nested G65 scope, incomplete threading inputs and custom I/O handler delegation
+are covered. Default I/O configuration control remains unchanged/passing.
+
+One full local gate3,823 ran59.97s. Four arc callback candidates and one nested
+arc-scope candidate assumed G66 supports arcs, while source triggers onlyG0/G1.
+They are unregistered proposals pending Terje, documented in TODO; no exceptions.
+The nested linear scope case now explicitly specifies G65 L1 and uses the
+established fixture arguments5/7. The I/O callback is a configuration delegate,
+not an observer; a separate passing delegation case preserves the default test.
+
+Confirmed one new bug: armed G66 skips explicit G65 validation. Omitted L passes
+repeat0 rather than1, and missing P dispatches macro0 instead of error26. Two
+focused regression assertions remain correct, narrowly marked WILL_FAIL; dated
+KNOWN_BUGS entry includes passing controls, source link, proposed guard fix and
+removal instructions. Nine total expected failures; no sanitizer allowances.
+Focused new/repair/control gate19/19 passed0.74s plus strict summary. Consolidated
+full-run plus focused-repair evidence3,822 also passes strict summary; raw XML/logs
+retained. No second full local run. Reporting scripts unchanged.
+
+Push this useful checkpoint on the same branch and dispatch one hosted run.
+Do not change ready PR22 or open an overlapping upstream PR while it is open.
+Continue local VFS workflows next (multiple mounted child directories, formatting
+current drive). Source audit notes explain private/dead handlers in TODO; no
+coverage exclusions or forced private execution. Refresh PR22 merge state before
+preparing the next PR, preserving all work if a squash rebase is needed.
+
 # Current batch69 controller-options checkpoint - 2026-10-19
 
 Keep coverage-batch-69 for continuing work. PR22 remains OPEN/READY at aa80971;
