@@ -1,3 +1,106 @@
+# Current batch69 exact-source checkpoint - 2026-10-19
+
+Goal remains active. Working branch coverage-batch-69; do not commit/push master.
+Core latest fresh-fetch49eff3c5c66afa1cc1915b26ae8160fa805593c7, clean/unmodified.
+Upstream latest20f186f still contains the116 incompatible incoming tests; our
+preserved attempt is integration-upstream-20f186f, not merged into this branch.
+User question pending about repairing that separate batch; continue independent work.
+
+Registered3,869 checks:92 beyond PR22 (90 behavior case files +2 compile configs).
+Last fully verified hosted checkpoint39288629614 at2881c0b/core16c7dff has all
+five jobs successful; both locks verified full regex/header filter. Measured
+17,052/17,652 lines96.60%;11,719/13,700 branches85.54%, README badges updated.
+This coverage is NOT a measurement of latest49eff3c.
+
+Latest-core single full build/gate:3,867 in123s,94 CTest failures. Analysis of
+all sanitizer outputs (including expected-failure labels) finds95 crashes:
+87 parse_path NULL reads at vfs.c264,3 unmount-root NULL writes at vfs.c741,
+5 static/stack base realloc bad-frees at strutils.c393. Two source root causes,
+not95 separate defects. Ordinary filename/directory/macro workflows reproduce.
+Also reproduced driver_opts.h531 rejecting SAFETY_DOOR_ENABLE=1; previous16c7
+header and latest disabled configuration compile. Three dated KNOWN_BUGS entries
+link exact source/reproductions/proposals. No new exception or sanitizer allowance.
+
+Latest core FIXES pullup live/load consistency. Removed its WILL_FAIL and bug
+entry, kept regression, changed loaded control from None to Down with descriptive
+filename. Focused repair16 checks in0.57s:14 pass, two real core failures remain
+(base-buffer promotion and enabled-door compile). Consolidated full+repair
+3,869 has93 raw failures; strict summary correctly reports96 failed,5 known,
+3,768 clean,0 sanitizer allowances. Original raw full/repair logs/XML retained;
+consolidated evidence is explicitly not a second full run. Eight expected-failure
+registrations remain, three currently interrupted by the NEW sanitizer fault.
+
+Reporting gap fixed in6741803: known_bug no longer skips scanning sanitizer
+output. Both stdout/stderr checked; crashes are failures, not known reproductions.
+Three new reporting regressions failed before fix; all55 Python checks pass after.
+Actual three-case crash XML now produces3 failed/0 known, matching CI diagnosis.
+Never claim earlier scripts would reject a crash hidden only by WILL_FAIL; they
+previously skipped it. This has now been corrected and freshly verified.
+
+Eighteen malformed sender-block cases preserve queued-cut identity, modal/feed
+state and actual motor endpoint; all pass latest full gate. Bare G10 maps to L0
+and correctly returns unsupported with no reload handler; not a missing-P case.
+Five string API cases cover heap allocation/growth/reuse/clear, base capacity and
+safe base-to-heap promotion. Feature detection skips only absent new API on old
+sources. MinGW forced header hides the unused CRT strset declaration, without
+editing core logic. Bool/size includes fixed and call-result comparisons sequenced
+before the completed full gate. Two public driver-option compile controls added.
+
+Push this checkpoint and one hosted49eff3c run. Any PR must remain DRAFT while
+these unsuppressed source crashes/compile regression remain; never mark ready or
+merge. Continue independent real-world coverage while hosted CI runs. Next useful
+areas: program-end coordinate read/write failures, saved-state CSS restoration,
+and normal driver callbacks. Do not suppress source faults or force private paths.
+No further unchanged full local run; next full gate only after substantial new
+code/source changes before the next push.
+
+# Latest core update introduces VFS crashes - 2026-10-19
+
+Core freshly fetched and selected49eff3c5c66afa1cc1915b26ae8160fa805593c7,
+clean/unmodified. Previous checkpoint39288629614 at2881c0b/core16c7dff has
+ALL FIVE hosted jobs successful. Both source/coverage locks were verified.
+Coverage17,052/17,652 lines96.60%;11,719/13,700 branches85.54%. README badges
+now point to that fully successful baseline; do not describe this as49eff3c.
+
+New49eff3c adds string_t/strset and refactors VFS. Windows CRT has an unrelated
+two-argument strset declaration. A MinGW-only forced header hides that unused
+CRT declaration before core headers; original core source/symbols unchanged.
+New string API cases are registered only when that API exists in selected core.
+
+Reproduced two NEW ordinary-workflow memory defects in existing tests:
+- vfs_locate_file("workbee_panel_fixture_01.nc") reallocates a static buffer;
+  ASan bad-free at strutils.c393 called from vfs.c901.
+- first vfs_chdir/unlink normalizes a path with cwd.name initially NULL;
+  ASan null read at strlen, vfs.c264.
+Three-case diagnostic XML/logs retained in build-asan/batch69-core49-reproduce*
+and parent logs. Two older known logical regressions appeared CTest-passing
+because WILL_FAIL inverted these new crashes; strict summary still rejects
+sanitizer text. Never interpret that as reproducing/fixing the older bugs.
+Two dated KNOWN_BUGS entries link exact source, normal reproductions, fix proposals
+and cleanup. No broad exception or sanitizer allowance was added.
+
+A single full rebuild/gate is now running for new core49eff3c (exec76959).
+Source and global Windows compatibility changed, so all variants rebuild. Do not
+edit test sources/fixtures during it. After completion fix the new heap-copy
+strset test's comparison expression: capture strset() result before comparing
+with text.data, avoiding unspecified operand evaluation order. Then targeted
+repairs only; no unchanged full rerun. Inspect structured failures for fixed
+pullup regression and new sanitizer effects before removing any allowances.
+
+Eighteen queued-cut validation cases authored;17 passed0.75s on16c7dff.
+Bare G10 correctly means L0/reload, not missing-P/L; renamed that case to
+bare_g10_without_reload_handler_rejection_preserves_preceding_cut and kept
+expected unsupported-command when no reload handler exists. Source guard
+missing-P/L inside values.l>0 is unreachable through ordinary L-word parsing;
+do not force it. Five normal string API cases also added (one directly asserts
+safe promotion of base storage). Working registered total should now3,867,
+90 beyond PR22 (verify from current CTest configuration).
+
+Pending upstream116-test integration question remains; preserved attempt branch
+integration-upstream-20f186f. No new PR readiness claim while latest source has
+unsuppressed crashes and that upstream batch fails compilation. Continue useful
+independent coverage and prepare truthful draft checkpoint if needed, no merging.
+
 # Current batch69 transport, threading and upgrade checkpoint - 2026-10-19
 
 Sixteen additional cases are validated:67 beyond PR22 /3,844 registered.

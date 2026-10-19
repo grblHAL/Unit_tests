@@ -9,6 +9,6 @@ int main(void)
     grbl.on_settings_changed(&settings, (settings_changed_flags_t){0});
     CHECK(input_config_calls[0] == 1 && input_config_calls[1] == 1);
     CHECK(captured_input[0].pull_mode == PullMode_Up);
-    CHECK(captured_input[1].pull_mode == PullMode_None && captured_input[1].debounce);
+    CHECK(captured_input[1].pull_mode == PullMode_Down && captured_input[1].debounce);
     return EXIT_SUCCESS;
 }

@@ -26,10 +26,6 @@ if(TEST vfs.current_directory_reallocation_failure_falls_back_to_root)
     PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
 endif()
 
-if(TEST ioports_pullup.pullup_disable_live_and_loaded_configuration_agree)
-  set_tests_properties(ioports_pullup.pullup_disable_live_and_loaded_configuration_agree
-    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
-endif()
 
 # Explicit G65 calls must retain required-P/default-repeat validation while G66 is armed.
 if(TEST ngc_params.g65_default_repeat_with_armed_g66_dispatches_one_iteration)

@@ -4,7 +4,9 @@ When updating the tested core, run the regressions before removing exceptions.
 For a fixed defect, keep its regression test and remove its CMake `WILL_FAIL` and
 `known_bug` properties so it becomes an ordinary passing test. Record the fix date
 and core revision in the cleanup commit message, then delete the resolved defect
-section from this file. Each entry below links to its test and exception.
+section from this file. Each entry links its reproduction and identifies any exception.
+New memory or compile failures can remain unsuppressed; being documented here
+does not by itself make a red run acceptable.
 All expected-failure blocks live in [known_bugs.cmake](known_bugs.cmake), so
 adding host configurations does not move the linked exceptions.
 For memory defects, also replace the diagnostic-wrapper registration with a direct
@@ -180,40 +182,6 @@ Alternatively retain the original directory and return failure consistently.
 [known_bugs.cmake](known_bugs.cmake), retain the ownership assertion, run GCC/Clang
 sanitizers and strict summaries, and delete this entry.
 
-## Auxiliary pullup disable differs between live and loaded settings
-
-**Marked known:** 2026-10-14 on Terje `39a69a22c72283ab186133b25fb89b8f5be35767`.
-
-With `AUX_SETTINGS_PULLUP=1`, writing pullup-disable mask 2 configures input 1
-with `PullMode_Down`. Loading the same stored mask configures that input with
-`PullMode_None`. The physical input bias therefore depends on whether the setting
-was changed live or loaded. The regression requires both paths to agree; it does
-not decide which disabled-pullup mode the maintainer should choose.
-
-The live mapping is at
-[ioports.c:1335](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/ioports.c#L1335),
-and the loaded mapping is at
-[ioports.c:1594](https://github.com/terjeio/grblHAL_core/blob/39a69a22c72283ab186133b25fb89b8f5be35767/ioports.c#L1594).
-
-**Regression:** [live/load consistency](cases/ioports_pullup/pullup_disable_live_and_loaded_configuration_agree.c).
-The [loaded control](cases/ioports_pullup/loaded_pullup_disable_uses_no_pull_without_changing_debounce.c)
-and other pullup cases verify selected pins, mask readback, clearing, unchanged
-values, inversion and absent driver configuration. Their mode-specific checks
-currently document each path's existing behavior and need review when aligning
-that behavior. No assertion was weakened to classify this inconsistency.
-
-**Suggested fix (not applied):** choose one disabled-pullup mode and use the same
-mapping for live changes and settings load. If disable means no pull, use
-`PullMode_None` in the live setter; otherwise align the load path to the agreed
-pull-down behavior. The number of driver retries and storage-failure TODO are
-unrelated to this pin-configuration issue.
-
-**Remove exception when fixed:** remove the named `WILL_FAIL` block in
-[known_bugs.cmake](known_bugs.cmake), retain the consistency regression, align the
-controls' mode expectations with the agreed behavior, run all pullup tests plus
-the full sanitizer suite/strict summary, and delete this entry. No sanitizer
-suppression or diagnostic wrapper applies.
-
 ## An armed G66 skips required-P and default-repeat checks for a new G65
 
 **Known since:** 2026-10-19. **Reproduced core:**
@@ -261,3 +229,92 @@ and G66.1 argument updates before adopting it.
 **Cleanup:** once both regressions pass, remove their two exact WILL_FAIL blocks,
 keep the assertions and passing controls, and delete this entry. No other known
 issue allowance or sanitizer manifest entry needs changing for this fix.
+
+
+## First filesystem path normalization reads an uninitialized directory string
+
+**Known since:** 2026-10-19. **Reproduced core:**
+`49eff3c5c66afa1cc1915b26ae8160fa805593c7`.
+
+A normal first `vfs_chdir("/store/dir")` or
+`vfs_unlink("/store/../elsewhere/file")` crashes before reaching its backend.
+AddressSanitizer reports a null read in `strlen`, called by
+[parse_path at vfs.c:264](https://github.com/terjeio/grblHAL_core/blob/49eff3c5c66afa1cc1915b26ae8160fa805593c7/vfs.c#L232-L265).
+The new `cwd` string has a base buffer but its `data/name` pointer is initially
+NULL; `parse_path` reads it before any `strset` call initializes it.
+Unmounting root storage before a path operation likewise writes through this
+NULL cached pointer at vfs.c:741; ordinary directory-list cleanup reproduces it.
+
+**Existing reproductions:**
+[current directory](cases/vfs/getcwd_without_backend_handler_preserves_mount_prefix_once.c)
+and [cross-mount unlink](cases/vfs/parent_path_crossing_mount_passes_target_local_filename.c).
+Their older logical-bug exceptions do not authorize this new sanitizer failure:
+the strict summary rejects it. No broad exception or sanitizer allowance is added.
+Raw evidence: `batch69-core49-reproduce-results.xml` and matching parent logs.
+
+**Suggested fix (proposal, not applied):** initialize the current directory's
+`data` and capacity from `_cwd` before its first read, rather than relying on a
+future string-write call. Audit other base-backed strings for the same ordering.
+Retest first path operations, relative paths, named macro lookup and allocation
+failure recovery under sanitizers. After confirming any older logical defects
+are also fixed, remove only their corresponding existing exceptions/entries.
+Delete this entry once ordinary path operations are sanitizer-clean.
+
+## Growing a base-backed string reallocates static or stack storage
+
+**Known since:** 2026-10-19. **Reproduced core:**
+`49eff3c5c66afa1cc1915b26ae8160fa805593c7`.
+
+Looking up `workbee_panel_fixture_01.nc` through `vfs_locate_file` calls
+[the new strset growth path](https://github.com/terjeio/grblHAL_core/blob/49eff3c5c66afa1cc1915b26ae8160fa805593c7/strutils.c#L383-L408).
+It initializes `data` to the supplied base buffer, then passes that pointer to
+`realloc`. The lookup buffer is a 32-byte static array rather than a heap
+allocation. AddressSanitizer reports an attempted free of non-malloc storage at
+`strutils.c:393`, called from `vfs.c:901`. Named macro construction also uses a
+local base buffer and needs the same ownership rule.
+
+**Existing reproduction:**
+[long macro/job filename lookup](cases/vfs/locate_long_filename_returns_mounted_file_path.c).
+The new direct [base-buffer promotion regression](cases/strutils/strset_long_filename_promotes_static_base_to_owned_heap.c)
+asserts successful growth, correct text and the original base remaining intact.
+No expected-failure registration or sanitizer allowance is added; this remains
+an ordinary red test until fixed. Existing heap copy/reuse and base-capacity
+controls exercise the supported small-string paths.
+
+**Suggested fix (proposal, not applied):** when `data` is the base buffer,
+allocate owned storage with `malloc` (or `realloc(NULL, size)`), never
+`realloc(base, size)`. Reallocate only owned heap buffers. On failure, retain a
+consistent base pointer/capacity and return NULL; avoid restoring the base and
+then overwriting that restored pointer with NULL. Review callers before choosing
+whether existing text must survive failure. Verify lookup and long named macros
+with ordinary controller filenames under sanitizers. Keep both regressions,
+remove no unrelated allowance, and delete this entry once fixed.
+
+
+## Enabling the safety-door driver option now fails preprocessing
+
+**Known since:** 2026-10-19. **Reproduced core:**
+`49eff3c5c66afa1cc1915b26ae8160fa805593c7`.
+
+A normal driver configuration with `SAFETY_DOOR_ENABLE=1` and no
+`NO_SAFETY_DOOR_SUPPORT` definition fails at
+[driver_opts.h:530-532](https://github.com/terjeio/grblHAL_core/blob/49eff3c5c66afa1cc1915b26ae8160fa805593c7/driver_opts.h#L530-L532).
+The former combined guard became `#if SAFETY_DOOR_ENABLE`, so every enabled
+configuration emits `Driver does not support safety door functionality!`.
+
+**Reproduction:** preprocess a translation unit including `driver_opts.h` with
+`clang -std=gnu11 -fsyntax-only -DSAFETY_DOOR_ENABLE=1 -Icore <probe.c>`.
+The same probe with the previous16c7dff header succeeds. The latest header with
+`SAFETY_DOOR_ENABLE=0` also succeeds. Parent logs `batch69-door-compile.log`,
+`batch69-door-old-compile.log` and `batch69-door-disabled-compile.log` retain all
+three outcomes. No board SDK, source modification or private state is involved.
+Positive compile regression: [safety-door driver configuration](compile/safety_door_configuration.c),
+registered as feature_compile.safety_door_option_1 with the disabled control
+feature_compile.safety_door_option_0. No diagnostic matcher or expected-failure
+exception is added.
+
+**Suggested fix (proposal, not applied):** remove the obsolete rejection guard
+if the removed NO_SAFETY_DOOR_SUPPORT mechanism is no longer supported, or gate
+it on an actual driver incompatibility rather than on enabling the feature.
+Verify both ordinary enabled and disabled configurations before adopting a fix.
+Keep the positive compile regression and delete this entry once fixed.
