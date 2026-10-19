@@ -45,6 +45,21 @@ Batch71 now adds25 passing cases; registered total4,002. No new overall coverage
 measurement or full-suite claim. Next: continue high-value supported workflows,
 then one full local gate at the delivery boundary; preserve clean core7a6a432.
 
+Full pre-push gate completed on clean Terje7a6a432: all4,002 targets build.
+Full ASan/UBSan CTest run completed130s. Strict classification:3,901 clean
+passes,3 known reproductions,98 failures,0 skips. All98 diagnostic cases report
+the same already documented strutils.c:393 NULL optional-base dereference;
+there are no other raw failed cases. Raw CTest reports96 failures because two
+VFS expected-failure labels invert their crashes; strict reporting rejects all98.
+All25 batch71 cases pass in the full run, with no skipped case or new exception.
+Evidence: ../batch71-full-build.log, build-asan/batch71-full-results.xml,
+../batch71-full-summary.md and ../batch71-full-failure-classification.json.
+This is not a green suite or a new coverage measurement. The source fix is
+Terje's responsibility; never modify CORE to make this run green. Push71 and
+run one hosted checkpoint against the exact revision before PR readiness claims.
+Four additional homing-rate drafts are outside the repo in
+../batch71-next-homing-proposals; unregistered/unvalidated, for the next group.
+
 # Core ownership and withdrawal - 2026-10-20
 
 Terje owns CORE implementation. This repository authors tests and documents
