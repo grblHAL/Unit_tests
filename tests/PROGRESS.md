@@ -1,3 +1,18 @@
+# Current batch66 public-command checkpoint - 2026-10-19
+
+Branch coverage-batch-66 starts local65 3448b44. Four new command cases total
+3,745 pass full ASan/UBSan55.69s and strict summary; focused4/4 pass0.43s.
+Public$RST=& restores registered numeric plugin storage, preserves core steps/mm
+and requests reset. Help advertises driver reset only with registered provider.
+$RTC query reads/formats driver time and propagates failed reads without output.
+No new exceptions;20 known failures plusone scoped known UBSan.
+51 helper checks latestpass4.112s unchanged. Core cleanlatestad57c78.
+Hosted60 run39200502195,61 run39200605707 and62 run39201007431 allgreen.
+64 run39202050479 inprogress lastseen; no isolated63run (coveredcumulatively).
+Deliver local65+66 together and dispatch cumulative66. Latest verified locked
+coverage58 95.99/84.69. PR20/21 merged; prepare new PR only after latest CIpasses.
+Keep working while CI runs.
+
 # Current batch65 expression checkpoint - 2026-10-19
 
 Branch coverage-batch-65 starts pushed64 e0c6707. Six new parser/stepper cases
