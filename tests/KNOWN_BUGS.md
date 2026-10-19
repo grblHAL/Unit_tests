@@ -108,3 +108,57 @@ serial markers, file completion callbacks and check-mode behavior.
 **Remove exception when fixed:** delete the [CMake block](known_bugs.cmake#L25),
 retain the correct regression and passing controls, then delete this section.
 No sanitizer diagnostic allowance applies.
+
+## Heap-backed string growth dereferences a missing optional base
+
+**Known since:** 2026-10-20. **Source:** Terje
+`7a6a432eaf78e028b81ff3a5f9804e14519f5f01`.
+
+[strutils.c:393](https://github.com/terjeio/grblHAL_core/blob/7a6a432eaf78e028b81ff3a5f9804e14519f5f01/strutils.c#L383-L421)
+reads `string->base->data` while choosing the realloc input, even when the
+optional base is NULL. Ordinary heap-only strings (including VFS normalized
+paths) have no base and crash on their first allocation/growth.
+
+**Regressions:** [heap copy/growth](cases/strutils/strset_heap_copy_can_grow_and_retains_requested_text.c)
+and [empty heap string](cases/strutils/strset_empty_string_has_writable_terminated_heap_storage.c).
+The source also blocks the ordinary filesystem path regressions below.
+No blanket expected-failure or sanitizer allowance is added. A known assertion
+exception does not authorize a new sanitizer crash; strict reporting rejects it.
+
+**Suggested fix for Terje (not applied):** check that `string->base` exists before
+reading its data pointer. Keep the new failure policy that preserves reachable
+owned storage for retry. Retain the regressions; remove this entry when Terje's
+clean source passes them and the filesystem tests under sanitizers.
+
+## Fallback getcwd does not preserve the frontend current directory
+
+**Marked known:** 2026-10-14. **Current source review:** Terje7a6a432.
+Mount `/store` without fgetcwd and change to `/store/dir`. The frontend must
+report `/store/dir`; older source duplicated the prefix, while the current
+[fallback](https://github.com/terjeio/grblHAL_core/blob/7a6a432eaf78e028b81ff3a5f9804e14519f5f01/vfs.c#L590-L616)
+uses `/` and loses the subdirectory. The current strset crash blocks a clean
+end-to-end recheck until Terje fixes that independent fault.
+
+**Regression:** [frontend getcwd](cases/vfs/getcwd_without_backend_handler_preserves_mount_prefix_once.c).
+**Control:** [backend-local getcwd](cases/vfs/getcwd_with_backend_local_directory_prefixes_mount_once.c).
+**Cleanup:** remove this named block in [known_bugs.cmake](known_bugs.cmake),
+retain the correct assertion and control, then delete this entry once fixed.
+**Suggested fix for Terje (not applied):** use the cached absolute frontend path
+when no backend callback exists; prefix only a backend-local path.
+
+## Failed directory growth leaves the previous mount selected
+
+**Known since:** 2026-10-20; related growth-failure regression dates to2026-10-14.
+After changing to a long `/store/...` directory, fail its next buffer growth.
+The error path [vfs.c:511-515](https://github.com/terjeio/grblHAL_core/blob/7a6a432eaf78e028b81ff3a5f9804e14519f5f01/vfs.c#L505-L516)
+writes `/` into the cached path but assigns the root to local `mount` rather
+than persistent `cwdmount`. Subsequent operations still select the old mount.
+This is a cache/mount consistency issue, not a claim that retained reachable
+storage leaks. Terje's current allocation-failure policy preserves that storage.
+A clean runtime recheck is blocked by the separate strset NULL-base crash above.
+
+**Regression:** [directory growth failure/retry](cases/vfs/current_directory_reallocation_failure_falls_back_to_root.c).
+**Cleanup:** remove its named [known_bugs.cmake](known_bugs.cmake) block, retain
+root-fallback/retry assertions and delete this entry after Terje fixes it.
+**Suggested fix for Terje (not applied):** make the persisted mount and cached
+path agree on the chosen error fallback without discarding owned retry storage.

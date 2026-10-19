@@ -647,3 +647,13 @@ values before machine-coordinate override; G51X0Y0P2 then G53G0X10Y10 targets
 X20 Y20. Confirm intended interaction with Terje before classifying a defect.
 Unregistered proposal: tests/proposals/g53_scaling_machine_coordinates.c.
 Registered control cancels scaling with G50 before the G53 move.
+
+
+## Formatting current-drive relative-path recovery (2026-10-20)
+Source review of clean Terje7a6a432: vfs_drive_format writes global '/' into the
+cached directory while retaining the selected non-root mount. After formatting
+/store, relative filenames should still resolve within /store. The existing
+formatting_current_drive_resets_removed_subdirectory_to_drive_root case now
+checks an actual relative stat as well as the displayed directory. Revalidate
+once Terje fixes the independent strset NULL-base crash; do not implement a core
+fix here or call the source-inspection concern a new confirmed runtime failure.

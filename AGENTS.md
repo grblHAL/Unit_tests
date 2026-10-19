@@ -1,43 +1,28 @@
-# Active latest-core fix round - 2026-10-20
+# Core ownership and withdrawal - 2026-10-20
 
-The user authorized source fixes and completion of this PR round. Do not stop
-at a failing report; repair tests/source and finish delivery. Feature branches
-only; no master pushes or PR merges. Unit_tests branch coverage-batch-69,
-existing PR23. Core branch fix-vfs-string-ownership, rebased onto Terje
-7a6a432eaf78e028b81ff3a5f9804e14519f5f01; current candidate
-a1013f42111906bde48af7ccb032cb9e348ec5f4. Source PR:
-https://github.com/terjeio/grblHAL_core/pull/1.
+Terje owns CORE implementation. This repository authors tests and documents
+bugs; NEVER modify, commit or push CORE, or create a core PR. Requests to fix
+failing tests/CI do not authorize changing the firmware. Record confirmed faults
+in KNOWN_BUGS.md, uncertain contracts in TODO.md, retain correct regressions and
+wait for Terje's implementation. Proposed fixes may be documentation only.
 
-Terje advanced source during the first validation, already incorporating cwd
-initialization/safety-door fixes and G65 required-P/default-repeat fixes. The
-rebase dropped those duplicate source patches. Source PR1 now fixes the remaining
-strset NULL-base/borrowed-buffer handling and VFS cache/mount fallback/formatting.
-Respect Terje's new allocation-failure policy: preserve owned data/capacity so
-callers can retry. Tests verify retained content and successful retry rather
-than requiring release. Core files are committed/clean, never implicitly patched
-by CI. Push the rebased feature branch with lease and select its exact SHA.
+The agent-created source PR terjeio/grblHAL_core#1 was a mistake and has been
+closed without merging. Its remote/local fix-vfs-string-ownership branch was
+deleted. Core is back on clean detached Terje7a6a432eaf78e028b81ff3a5f9804e14519f5f01.
+Unit_tests PR23 is draft again and must have no dependency on agent-patched core.
+Run39332728069 used agent-patched source and is WITHDRAWN as readiness/coverage
+evidence for this project. Do not present its green result as a Terje-core pass.
+The older fully green clean-Terje baseline39288629614 remains historical evidence.
 
-New core always enables NGC parameters. Ten old parameters-disabled configuration
-cases remain available for older sources but are not registered for this removed
-configuration; CMake detects the forced-on option. Ordinary current parameter
-workflows remain covered. Remove the two fixed G65 exceptions/entry, keeping
-assertions. Three known exceptions remain: analog fractions, percent marker,
-and the maintainer-deferred storage-write policy.
-
-The earlier 890e810 source passed one full3,987-case local sanitizer gate131.59s
-(3,982 clean+5 known,0 failures/diagnostics/skips), including all116 repaired
-incoming cases. Its hosted run39331678602 was cancelled as obsolete after the
-new core update. Do not claim it validates the rebased candidate.
-Latest-source affected-module validation PASSED187/187 in6.90s, strict summary
-187 clean,0 diagnostics/failures/skips. Evidence:
-build-asan/core-latest-fix-results.xml and ../core-latest-fix-summary.md.
-Includes both fixed G65 regressions as ordinary passes, zero-length string
-allocation, preserved heap content after failed growth/retry, filesystem
-normalization/current-directory/format recovery and enabled/disabled safety door.
-Next: push both branches and one full hosted GCC/Clang/coverage run against the
-exact rebased candidate; source comparison base is Terje7a6a432. Mark both PRs
-ready only after all five jobs pass and locks are verified. PR23 depends on core
-PR1; never merge either PR. Avoid repeating unchanged local gates/helpers.
+Keep genuine test repairs and API compatibility work. Terje's own cwd/safety-door/
+G65 fixes stay resolved. Restore still-unfixed directory bug documentation and
+narrow exceptions. Document the current strset NULL-base crash without suppressing
+unrelated sanitizer diagnostics. Allocation-failure tests follow Terje's retained
+storage policy; no requirement to free reachable storage is imposed.
+Clean-source targeted reproduction completed:7 string cases in0.54s;4 pass,
+3 reproduce the NULL-base sanitizer crash at strutils.c:393. Evidence:
+build-asan/core-withdrawal-results.xml and ../core-withdrawal-tests.log.
+No full rerun/CI dispatch is needed to reproduce this same fault. No source edits.
 
 # Current PR23 integrated repair checkpoint - 2026-10-19
 
