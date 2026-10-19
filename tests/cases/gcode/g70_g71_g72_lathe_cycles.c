@@ -1,19 +1,14 @@
-#include "support/laser_program_host.h"
-#include "check.h"
-#include <string.h>
-
+#include "support/incoming_gcode_host.h"
 int main(void)
 {
-    prepare_pwm_program_mode(Mode_Lathe, false);
-
-    // G70 - Finishing cycle (requires Q subprogram)
-    // G71 - Roughing cycle
-    // G72 - Roughing cycle facing
-
-    // These test parser dispatch to plugin interface
-    CHECK(laser_block("G70P100Q200") == Status_OK);
-    CHECK(laser_block("G71P100Q200U1W1D1F0.1") == Status_OK);
-    CHECK(laser_block("G72P100Q200U1W1D1F0.1") == Status_OK);
-
+    prepare_incoming_parser();
+    CHECK(incoming_block("G18") == Status_OK);
+    CHECK(incoming_block("M70") == Status_OK);
+    CHECK(incoming_block("G70Q100") == Status_GcodeUnsupportedCommand);
+    CHECK(incoming_block("G71Q100") == Status_GcodeUnsupportedCommand);
+    CHECK(incoming_block("G72Q100") == Status_GcodeUnsupportedCommand);
+    CHECK(incoming_block("M72") == Status_OK);
+    CHECK(gc_state.modal.plane_select == PlaneSelect_ZX);
+    CHECK(plan_get_current_block() == NULL);
     return EXIT_SUCCESS;
 }

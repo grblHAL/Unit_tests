@@ -551,3 +551,12 @@ Sources: [slot getter](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15f
 These are reachability observations, not confirmed firmware defects or requests
 for new features. Keep them in the reported denominator; revisit if the public
 interfaces expose these paths. Prefer remaining supported workflows first.
+
+
+## G53 with active Fanuc scaling - contract review (2026-10-19)
+
+The incoming test assumed G53 bypasses G51 scaling. Current parser scales axis
+values before machine-coordinate override; G51X0Y0P2 then G53G0X10Y10 targets
+X20 Y20. Confirm intended interaction with Terje before classifying a defect.
+Unregistered proposal: tests/proposals/g53_scaling_machine_coordinates.c.
+Registered control cancels scaling with G50 before the G53 move.

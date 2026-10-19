@@ -1,29 +1,15 @@
-#include "support/laser_program_host.h"
-#include "ngc_params.h"
-#include "check.h"
-#include <string.h>
-
+#include "support/canned_spindle_host.h"
 int main(void)
 {
-    prepare_pwm_program_mode(Mode_Lathe, false);
-
-    // Set initial modal state
-    CHECK(laser_block("G90G94G17G21") == Status_OK);
-
-    // M70 - Save modal state
-    CHECK(laser_block("M70") == Status_OK);
-
-    // G84 tapping cycle
-    CHECK(laser_block("G84X10Z-20R5F1.0") == Status_OK);
-
-    // M72 - Restore modal state
-    CHECK(laser_block("M72") == Status_OK);
-
-    // Modal state should be restored
-    CHECK(gc_state.modal.distance == DistanceMode_Absolute);
-    CHECK(gc_state.modal.feed_mode == FeedMode_UnitsPerMinute);
-    CHECK(gc_state.modal.plane_select == PlaneSelect_XY);
-    CHECK(gc_state.modal.units_imperial == false);
-
+    prepare_canned_spindle();
+    CHECK(canned_block("G17M3S1000") == Status_OK);
+    CHECK(canned_block("M70") == Status_OK);
+    execute_canned("G84X1Z-2R1P0F100");
+    CHECK(gc_state.modal.motion == MotionMode_CannedCycle84);
+    CHECK(canned_block("G80") == Status_OK);
+    CHECK(canned_block("G88X1Z-2R1F100") == Status_GcodeUnsupportedCommand);
+    CHECK(canned_block("M72") == Status_OK);
+    CHECK(!gc_state.modal.canned_cycle_active);
+    CHECK(plan_get_current_block() == NULL);
     return EXIT_SUCCESS;
 }

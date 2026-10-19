@@ -1,52 +1,14 @@
-#include "support/engine_host.h"
-#include "check.h"
-#include <string.h>
-
-static int macro_calls = 0;
-static float last_x, last_y;
-static status_code_t macro_exec(sys_state_t state, parser_block_t *gc_block)
-{
-    (void)state;
-    macro_calls++;
-    last_x = gc_block->values.x;
-    last_y = gc_block->values.y;
-    return Status_OK;
-}
-
+#include "support/incoming_macro_host.h"
 int main(void)
 {
-    engine_prepare(); sys.cold_start = true;
-    coord_system_data_t coordinates = {0};
-    for(unsigned i = 0; i < N_CoordinateSystems; i++) settings_write_coord_data((coord_system_id_t)i, &coordinates);
-    grbl.on_macro_execute = macro_exec;
-    CHECK(spindle_select(0)); gc_init(false); CHECK(plan_reset()); limits_init();
-    hal.control.get_state = engine_controls;
-    hal.stream.is_connected = engine_connected;
-    grbl.on_execute_realtime = protocol_execute_noop;
-    report_init_fns(); report_init(); state_set(STATE_IDLE);
-    sys.cold_start = false; sys.driver_started = true;
-
-    // G66.1 modal macro with block arguments
-    char block1[] = "G66.1P100A1B2";
-    CHECK(gc_execute_block(block1) == Status_OK);
-    CHECK(gc_state.modal.macro_id == 100);
-
-    // X10 Y20 - Should call macro with X=10, Y=20
-    char block2[] = "X10Y20";
-    CHECK(gc_execute_block(block2) == Status_OK);
+    prepare_incoming_macro();
+    CHECK(incoming_block("G66.1P100X12Y8") == Status_OK);
     CHECK(macro_calls == 1);
-    NEAR(last_x, 10.0f);
-    NEAR(last_y, 20.0f);
-
-    // G67 - Cancel modal macro
-    char block3[] = "G67";
-    CHECK(gc_execute_block(block3) == Status_OK);
-    CHECK(gc_state.modal.macro_id == 0);
-
-    // X30 - Should not call macro
-    char block4[] = "X30";
-    CHECK(gc_execute_block(block4) == Status_OK);
-    CHECK(macro_calls == 1);
-
+    CHECK(incoming_block("X20") == Status_OK);
+    CHECK(macro_calls == 2);
+    NEAR(incoming_arguments[23], 20); NEAR(incoming_arguments[24], 8);
+    CHECK(incoming_block("G67") == Status_OK && gc_state.g66_args == NULL);
+    CHECK(incoming_block("G0X1") == Status_OK);
+    CHECK(macro_calls == 2);
     return EXIT_SUCCESS;
 }

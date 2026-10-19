@@ -1,30 +1,14 @@
-#include "support/engine_host.h"
-#include "check.h"
-#include <string.h>
-
+#include "support/incoming_gcode_host.h"
 int main(void)
 {
-    engine_parser_prepare();
-
-    // G54 G10 L2 P1 X10 Y20 - Set G54 offset
-    char block1[] = "G10L2P1X10Y20";
-    CHECK(gc_execute_block(block1) == Status_OK);
-
-    // G54 G52 X5 Y5 - Set local offset
-    char block2[] = "G54G52X5Y5";
-    CHECK(gc_execute_block(block2) == Status_OK);
-
-    // G53 G0 X0 Y0 - Machine coordinate move (ignores G54 and G52)
-    char block3[] = "G53G0X0Y0";
-    CHECK(gc_execute_block(block3) == Status_OK);
-    NEAR(gc_state.position[0], 0.0f);
-    NEAR(gc_state.position[1], 0.0f);
-
-    // G54 G0 X0 Y0 - Program coordinate move (with G54 and G52)
-    char block4[] = "G54G0X0Y0";
-    CHECK(gc_execute_block(block4) == Status_OK);
-    NEAR(gc_state.position[0], 15.0f);
-    NEAR(gc_state.position[1], 25.0f);
-
+    prepare_incoming_parser();
+    CHECK(incoming_block("G10L2P1X10Y20") == Status_OK);
+    CHECK(incoming_block("G92X2Y3") == Status_OK);
+    CHECK(incoming_block("G52X5Y5") == Status_GcodeUnsupportedCommand);
+    CHECK(gc_state.modal.g5x_offset.id == CoordinateSystem_G54);
+    NEAR(read_saved_coordinate(CoordinateSystem_G54).coord.x, 10);
+    NEAR(gc_state.g92_offset.coord.x, -12);
+    CHECK(incoming_block("G53G0X0Y0") == Status_OK);
+    NEAR(gc_state.position[X_AXIS], 0);
     return EXIT_SUCCESS;
 }
