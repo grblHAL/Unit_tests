@@ -84,7 +84,7 @@ def test_findings(path, diagnostics):
                     unexpected.append(line)
         missing_diagnostic = expected_diagnostic and error is None and not any("runtime error:" in line or "ERROR: AddressSanitizer" in line for line in output.splitlines())
         if error is not None or unexpected or missing_diagnostic:
-            text = "Known sanitizer diagnostic no longer reproduced; see known bugs, it may be a fixed regression. Review the label, scoped manifest and resolved entry." if missing_diagnostic else "\n".join(unexpected) if unexpected else output or error.get("message", "") + "\n" + "".join(error.itertext())
+            text = "Known sanitizer diagnostic no longer reproduced; see known bugs, it may be a fixed regression. Review the label, scoped manifest and resolved entry." if missing_diagnostic else "\n".join(unexpected) if unexpected else (output if output.strip() else error.get("message", "") + "\n" + "".join(error.itertext()))
             if error is not None and "timeout" in error.get("message", "").lower():
                 text = "Test timed out: " + error.get("message")
             kind = "known_changed" if known or expected_diagnostic else "sanitizer" if unexpected or "AddressSanitizer" in text else "test"

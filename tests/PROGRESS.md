@@ -38,6 +38,29 @@ Evidence: build-asan/batch72-reference-help-results.xml and
 ../batch72-reference-help-tests.log. Batch72 now14 new passing cases;
 registered total4,016. No CORE change, known bug or allowance added.
 
+Batch72 fourth group: two public startup upload boundary cases PASS
+ASan/UBSan0.31s. Oversized normalized input returns Overflow before changing
+saved program or parser distance mode; a long valid pipe-separated program
+round-trips intact and preserves slot1. Evidence:
+build-asan/batch72-startup-results.xml and ../batch72-startup-tests.log.
+Batch72 now16 new passing core cases; registered total4,018.
+
+Hosted71 coverage artifact is terminal failure; GCC/Clang were still running at
+last query. Exact source-lock confirms clean Terje7a6a432. All25 additions pass
+in hosted coverage; full counts match local:3,901 clean,3 known,98 failed,0
+skips. All98 JUnit failures carry SEGFAULT. Coverage was NOT produced; do not
+claim a new percentage. Downloaded artifacts and extracted XML are in ../batch71-
+hosted-coverage*. No new dispatch is needed.
+
+Reporting repair for72: ci_report ignored JUnit's failure message when captured
+stdout/stderr contained only whitespace. Retain SEGFAULT instead of saying
+no diagnostic was emitted. Classification remains failed/known_changed; never
+call a crash a fixed regression. Regression test plus changed helper checks:
+14 CI-report and11 sanitizer-report checks PASS. Set TEMP/TMP to a workspace
+folder for Python helper tests; the default sandbox temp folder rejected child
+writes. Reclassifying the real coverage artifact now reports98 SEGFAULT findings.
+No CORE modification or diagnostic exception is involved.
+
 # Active coverage batch71 - 2026-10-20
 
 Goal ACTIVE: meaningful full supported core line/branch coverage. The hourly

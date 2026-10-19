@@ -51,6 +51,19 @@ class DiagnosisTests(unittest.TestCase):
         link = source_link(dict(file="plugins/example/code.c", line=7), lock)
         self.assertIn("fork/plugin/blob/" + "b"*40 + "/code.c#L7", link)
 
+    def test_empty_process_output_keeps_junit_crash_message_for_known_case(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            path = root / "results.xml"
+            path.write_text('<testsuite><testcase name="vfs.case"><failure message="SEGFAULT"/>'
+                            '<properties><property name="cmake_labels" value="known_bug"/></properties>'
+                            '<system-out/><system-err>  </system-err></testcase></testsuite>')
+            findings, counts = test_findings(path, root)
+            self.assertEqual(counts["failed"], 1)
+            self.assertEqual(counts["known"], 0)
+            self.assertEqual(findings[0]["kind"], "known_changed")
+            self.assertEqual(findings[0]["message"], "SEGFAULT")
+
     def test_known_changed_report_does_not_assert_fix(self):
         text = render([dict(job="gcc", findings=[dict(kind="known_changed", name="module.case", message="Different fault", severity="error")])], {})
         self.assertIn("it may be a fixed regression", text)
