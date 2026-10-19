@@ -1,3 +1,21 @@
+# Active continuation batch72 - 2026-10-20
+
+Branch coverage-batch-72 continues from pushed coverage-batch-71 at5133033.
+Do not duplicate batch71's PR or include unfinished72 work in its readiness claim.
+Batch71 hosted run39339402897 was confirmed in_progress against clean Terje
+7a6a432; check the existing run, never dispatch repeated unchanged validation.
+Local71 full gate:4,002 build;3,901 clean passes,3 known reproductions,98
+strict sanitizer failures all at documented strutils.c:393; all25 new cases pass.
+No CORE modifications, broad allowances or new coverage percentage claims.
+
+First72 group: four real homing workflows PASS ASan/UBSan in0.39s. Equal
+per-axis rates retain a combined XY cycle; distinct seek-only or locate-only
+rates split axes; noncontiguous XZ homing leaves Y completely unmoved. Verify
+physical endpoints, pulse counts, limit re-enabling and completion callback.
+Evidence: build-asan/batch72-homing-results.xml and ../batch72-homing-tests.log.
+Registered total4,006. Keep adding practical groups before the next full gate.
+Terje alone fixes source defects. Goal active; hourly recovery remains configured.
+
 # Active coverage batch71 - 2026-10-20
 
 Goal ACTIVE: meaningful full supported core line/branch coverage. The hourly
