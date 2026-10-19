@@ -1,3 +1,16 @@
+# Batch69 partial-peck group validated - 2026-10-19
+
+Fifteen new cases total3,767 pass full ASan/UBSan56.80s and strict summary.
+Latest four G73/G83 partial-final-peck cases pass0.46s: requested depth clips
+last peck, chip-break/full retract remain distinct, G98 returns clearance and
+three repeated holes retain common depth. Observer records emitted motor steps.
+No new exceptions;20 known failures plusone known UBSan.51 helpers last4.112s.
+PR22 CREATED and attached, frozen68 9a06753 with60cases: allfive hosted jobs
+green39203585952; source/scope lockverifiedad57. Do not merge or extend itshead.
+https://github.com/grblHAL/Unit_tests/pull/22
+Continue related modules on69, focused authoring checks then cumulative gate
+and useful push boundary. Current69work remains local until next checkpoint.
+
 # Batch69 numeric arc controls - 2026-10-19
 
 Eleven new cases now total3,763. Two added semicircle radius controls pass
