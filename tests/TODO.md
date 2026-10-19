@@ -636,11 +636,14 @@ The linear nested-G65 scope case uses explicit L1 so it tests scope independentl
 of the separately registered G65 default-repeat/required-P defect.
 
 
-## Incoming upstream G-code test integration (2026-10-19)
-
-Upstream commit20f186f adds116 cases but the attempted merged build fails against Terje16c7dff: ngc_tools.h is absent, settings_get_coord_data is absent and coord_system_data_t has xyz rather than offset. The first relative G10 L20 case also describes L20 as additive, which needs contract review (it sets the current work coordinate). Preserve the integration-upstream-20f186f branch and batch69-upstream-build.log; do not classify those compiler errors as core defects or count these cases as validated. User clarification requested; independent coverage continues.
-
-
 ## Unreachable G10 missing-P/L guard (2026-10-19)
 
 On core16c7dff, the missing-P/L check is inside values.l > 0. An ordinary parsed nonzero L already sets words.l, making !(words.p || words.l) false. Bare G10 instead selects L0/reload and correctly returns unsupported when no reload handler exists. Keep this gap visible; do not force private parser state to exercise it.
+
+## G53 with active Fanuc scaling - contract review (2026-10-19)
+
+The incoming test assumed G53 bypasses G51 scaling. Current parser scales axis
+values before machine-coordinate override; G51X0Y0P2 then G53G0X10Y10 targets
+X20 Y20. Confirm intended interaction with Terje before classifying a defect.
+Unregistered proposal: tests/proposals/g53_scaling_machine_coordinates.c.
+Registered control cancels scaling with G50 before the G53 move.
