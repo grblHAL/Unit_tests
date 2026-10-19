@@ -12,7 +12,7 @@ from ci_report import test_findings
 SCRIPTS = Path(__file__).resolve().parent
 
 class SanitizerExpectationTests(unittest.TestCase):
-    def reports(self, output="", label=True, failure=False, name="module.case"):
+    def reports(self, output="", label=True, failure=False, name="module.case", stderr_output=""):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             manifest = [{"test": "module.case", "source": "core/code.c", "lines": [7], "message_pattern": "negation of minimum"}]
@@ -21,10 +21,11 @@ class SanitizerExpectationTests(unittest.TestCase):
             case = ET.SubElement(suite, "testcase", name=name)
             if label:
                 properties = ET.SubElement(case, "properties")
-                ET.SubElement(properties, "property", name="cmake_labels", value="known_sanitizer_bug")
+                ET.SubElement(properties, "property", name="cmake_labels", value=label if isinstance(label, str) else "known_sanitizer_bug")
             if failure:
                 ET.SubElement(case, "failure", message="Correct assertion failed")
             ET.SubElement(case, "system-out").text = output
+            ET.SubElement(case, "system-err").text = stderr_output
             results = root / "results.xml"
             ET.ElementTree(suite).write(results)
             findings, counts = test_findings(results, root)
@@ -78,6 +79,39 @@ class SanitizerExpectationTests(unittest.TestCase):
         self.assertIn("Correct assertion failed", findings[0]["message"])
         self.assertNotIn("no longer reproduced", findings[0]["message"])
         self.assertNotEqual(summary.returncode, 0)
+
+    def test_expected_failure_label_does_not_hide_new_asan_crash(self):
+        findings, counts, summary = self.reports(
+            "ERROR: AddressSanitizer: access-violation", label="known_bug")
+        self.assertEqual(counts["failed"], 1)
+        self.assertEqual(counts["known"], 0)
+        self.assertEqual(findings[0]["kind"], "known_changed")
+        self.assertNotEqual(summary.returncode, 0)
+        self.assertIn("0 known regressions reproduced", summary.stdout)
+        self.assertIn("0 clean passes", summary.stdout)
+        self.assertIn("Unexpected sanitizer diagnostic", summary.stdout)
+
+    def test_expected_failure_label_does_not_hide_new_ubsan_fault(self):
+        findings, counts, summary = self.reports(
+            "/repo/core/code.c:8:1: runtime error: null pointer passed", label="known_bug")
+        self.assertEqual(counts["failed"], 1)
+        self.assertEqual(counts["known"], 0)
+        self.assertNotEqual(summary.returncode, 0)
+        self.assertIn("null pointer passed", findings[0]["message"])
+
+    def test_stderr_sanitizer_crash_on_expected_failure_is_not_hidden(self):
+        findings, counts, summary = self.reports(label="known_bug",
+            stderr_output="ERROR: AddressSanitizer: attempting free on invalid pointer")
+        self.assertEqual(counts["failed"], 1)
+        self.assertNotEqual(summary.returncode, 0)
+        self.assertIn("invalid pointer", findings[0]["message"])
+
+    def test_expected_assertion_failure_without_new_diagnostic_remains_known(self):
+        findings, counts, summary = self.reports("Correct regression assertion failed", label="known_bug")
+        self.assertEqual(findings, [])
+        self.assertEqual(counts["known"], 1)
+        self.assertEqual(summary.returncode, 0, summary.stderr)
+        self.assertIn("1 known regressions reproduced", summary.stdout)
 
     def test_uninstrumented_case_needs_no_diagnostic(self):
         findings, counts, summary = self.reports(label=False)

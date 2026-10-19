@@ -69,12 +69,12 @@ def test_findings(path, diagnostics):
         known = any(p.get("name") == "cmake_labels" and "known_bug" in p.get("value", "").split(";") for p in case.findall("./properties/property"))
         expected_diagnostic = any(p.get("name") == "cmake_labels" and "known_sanitizer_bug" in p.get("value", "").split(";") for p in case.findall("./properties/property"))
         error = next((case.find(tag) for tag in ("failure", "error") if case.find(tag) is not None), None)
-        output = case.findtext("system-out", "")
+        output = "\n".join(case.findtext(tag, "") for tag in ("system-out", "system-err"))
         if case.find("skipped") is not None:
             counts["skipped"] += 1
             continue
         unexpected = []
-        if not known and error is None:
+        if error is None:
             for line in output.splitlines():
                 if "runtime error:" not in line and "ERROR: AddressSanitizer" not in line:
                     continue
