@@ -94,6 +94,18 @@ Evidence: build-asan/batch72-stop-results.xml and batch72-secondary-invert-resul
 Batch72 now22 new core cases pass; registered total4,024; reporting checks25 pass.
 Next: one full local pre-push gate for72, not repeated focused/checker runs.
 
+Batch72 full pre-push gate completed: all4,024 targets build. Full
+ASan/UBSan run61s:3,923 clean passes,3 known reproductions,98 strict failures,
+0 skips. All22 additions pass. The exact set of98 sanitizer cases is identical
+to71, each at documented strutils.c:393 NULL-base access. No new failing case,
+exception or CORE change. Raw CTest96 still differs from strict98 due two
+inherited expected-failure labels.25 changed reporting checks pass.
+Evidence: ../batch72-full-build.log, build-asan/batch72-full-results.xml,
+../batch72-full-summary.md and ../batch72-validation.json.
+Push72 and dispatch one hosted check against clean7a6a432; no repeated run of
+unchanged source. PR24 is open for71. Avoid duplicating its changes in a new
+master-target PR until24 merges. Continue independent work while72 CI runs.
+
 # Active coverage batch71 - 2026-10-20
 
 Goal ACTIVE: meaningful full supported core line/branch coverage. The hourly
