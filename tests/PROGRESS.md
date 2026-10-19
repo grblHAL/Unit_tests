@@ -28,6 +28,16 @@ Evidence: build-asan/batch72-delta-results.xml and batch72-css-results.xml,
 ../batch72-delta-tests.log and ../batch72-css-tests.log. Nine new72 cases pass;
 registered total4,011. No full rerun until a substantial delivery boundary.
 
+Batch72 third group: five cases PASS ASan/UBSan0.43s. A real probe and
+$TLR establish a tool reference in each fixed X/Y/Z configuration. Public homing
+notifications preserve it for unrelated axes and invalidate it for the configured
+axis, regardless of active plane, with the expected report flag. Two public
+$HELP COMMANDS cases enumerate separate registered plugin groups exactly once
+and refresh optional command help availability without invoking commands.
+Evidence: build-asan/batch72-reference-help-results.xml and
+../batch72-reference-help-tests.log. Batch72 now14 new passing cases;
+registered total4,016. No CORE change, known bug or allowance added.
+
 # Active coverage batch71 - 2026-10-20
 
 Goal ACTIVE: meaningful full supported core line/branch coverage. The hourly
