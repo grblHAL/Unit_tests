@@ -1,8 +1,8 @@
 # Unit tests for the grblHAL core
 
 [![Core tests](https://github.com/grblHAL/Unit_tests/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/grblHAL/Unit_tests/actions/workflows/tests.yml)
-[![Core line coverage: 95.99%](https://img.shields.io/badge/core_lines-95.99%25-brightgreen)](https://github.com/petervanderwalt/Unit_tests/actions/runs/39199404867)
-[![Core branch coverage: 84.69%](https://img.shields.io/badge/core_branches-84.69%25-green)](https://github.com/petervanderwalt/Unit_tests/actions/runs/39199404867)
+[![Core line coverage: 96.08%](https://img.shields.io/badge/core_lines-96.08%25-brightgreen)](https://github.com/petervanderwalt/Unit_tests/actions/runs/39202050479)
+[![Core branch coverage: 84.81%](https://img.shields.io/badge/core_branches-84.81%25-green)](https://github.com/petervanderwalt/Unit_tests/actions/runs/39202050479)
 
 Coverage badges show a verified successful report, not a live measurement of
 every source revision. Click either percentage for its run and coverage artifact.

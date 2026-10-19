@@ -1,3 +1,19 @@
+# Current batch68 idle-door checkpoint - 2026-10-19
+
+Branch coverage-batch-68 starts local67 0b38941. Four new public setting/control
+IRQ cases total3,752 pass full ASan/UBSan56.44s and strict summary;focused4/4
+pass0.44s. Ignore-idle still shuts constant laser off immediately; closing does
+not restart it. Normal spindle control preserves output by configured policy;
+nonignored idle door enters suspension and disables laser without motion.
+Initial laser fixture used M3 in G0, correctly yielding zero power. Corrected
+setup to supported G1M3S500F100 without axis words; no defect/exception claimed.
+20 known failures plusone known UBSan unchanged;51 helpers latestpass4.112s.
+Hosted64 locksverified e0c6707/ad57/corefilter, fullygreen:
+16,942/17,634 lines96.08%;11,575/13,648 branches84.81%. Badges refreshed.
+66 run39203076490 live lastseen. Deliver local67+68 together and dispatch68.
+Core unchangedcleanad57c78. PR20/21 merged; next PR only after latest exact CI.
+Continue local boot pause work while CI runs.
+
 # Current batch67 probe-interrupt checkpoint - 2026-10-19
 
 Branch coverage-batch-67 starts pushed66 2c99b40. Three new real probe IRQ cases
