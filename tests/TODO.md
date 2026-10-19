@@ -657,3 +657,17 @@ formatting_current_drive_resets_removed_subdirectory_to_drive_root case now
 checks an actual relative stat as well as the displayed directory. Revalidate
 once Terje fixes the independent strset NULL-base crash; do not implement a core
 fix here or call the source-inspection concern a new confirmed runtime failure.
+
+
+## Secondary PWM inversion guard reachability
+
+**Reviewed:** 2026-10-20, clean Terje `7a6a432eaf78e028b81ff3a5f9804e14519f5f01`.
+
+Driver registration trims unsupported PWM inversion from the secondary spindle's
+public bitfield metadata. An ordinary setting write requesting that bit therefore
+returns `Status_SettingValueOutOfRange` before `set_spindle_invert()` can reach
+its older `Status_SettingDisabled` fallback. The supported rejection and subsequent
+enable/direction inversion are covered by
+[the public-setting case](cases/multi_spindle/secondary_pwm_rejects_signal_inversion_not_supported_by_driver.c).
+Do not call the private setter or replace registered metadata to color that guard
+in coverage. This is a reachability note, not a firmware bug or an exclusion.
