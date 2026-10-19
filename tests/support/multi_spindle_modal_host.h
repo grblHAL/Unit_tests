@@ -2,6 +2,7 @@
 #include "support/spindle_slot_settings_host.h"
 #include "ngc_params.h"
 static unsigned modal_rpm_update_calls[3];
+static bool modal_spindle_direction[3] = {true, true, true};
 static void modal_update_rpm(spindle_ptrs_t *spindle, float rpm)
 {
     CHECK(spindle->id >= 0 && spindle->id < 3);
@@ -15,7 +16,7 @@ static inline void prepare_multi_spindle_modal_program(void)
     for(unsigned id = 0; id < 3; id++) {
         registered_spindles[id] = (spindle_ptrs_t){.type = SpindleType_Basic,
             .ref_id = (uint8_t)(10 * (id + 1)), .rpm_min = 1000, .rpm_max = 12000,
-            .cap = {.direction = true, .variable = true, .rpm_range_locked = true},
+            .cap = {.direction = modal_spindle_direction[id], .variable = true, .rpm_range_locked = true},
             .config = spindle_configure, .set_state = spindle_output, .get_state = spindle_input,
             .update_rpm = modal_update_rpm};
         CHECK(spindle_register(&registered_spindles[id], names[id]) == (spindle_id_t)id);

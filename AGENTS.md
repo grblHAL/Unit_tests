@@ -1,3 +1,14 @@
+# Current batch56 multi-spindle checkpoint - 2026-10-19
+
+Branch coverage-batch-56 starts at pushed55 6ede665. Twelve new cases total3,692:
+eight broadcast direction/capability/selector checks and four independent override
+output checks through M48/M49/M51. Focused110/110 pass4.96s;51 helpers pass4.716s.
+Initial override fixture failures were float rounding at8400 RPM against1e-5;
+less than0.01 RPM tolerance passes, no core issue or exception added.
+Full3,692 sanitizer/strict verification passes54.40s;19 known failures and one scoped known UBSan unchanged.
+Hosted54 run39176480077 and55 run39176993923 both terminalsuccess. Latest parsed
+coverage remains verified53 95.81% lines/84.46% branches. Core cleanad57c78.
+PR20 remains frozen40; no merges. Continue after checkpoints.
 # Current batch55 recursion/settings checkpoint - 2026-10-19
 
 Branch coverage-batch-55 starts at pushed54 f74d3d3. Twelve new cases total3,680
