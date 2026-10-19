@@ -634,3 +634,8 @@ regression. Evidence: batch69-startup-macros-results.xml and
 batch69-macro-diagnostic.log (stored P100/L1, zero callback calls).
 The linear nested-G65 scope case uses explicit L1 so it tests scope independently
 of the separately registered G65 default-repeat/required-P defect.
+
+
+## Incoming upstream G-code test integration (2026-10-19)
+
+Upstream commit20f186f adds116 cases but the attempted merged build fails against Terje16c7dff: ngc_tools.h is absent, settings_get_coord_data is absent and coord_system_data_t has xyz rather than offset. The first relative G10 L20 case also describes L20 as additive, which needs contract review (it sets the current work coordinate). Preserve the integration-upstream-20f186f branch and batch69-upstream-build.log; do not classify those compiler errors as core defects or count these cases as validated. User clarification requested; independent coverage continues.

@@ -1,3 +1,17 @@
+# Incoming upstream test integration held - 2026-10-19
+
+Upstream20f186f adds116 G-code cases beyond merged PR22. A clean merge into
+coverage-batch-69 failed compilation against clean Terje16c7dff: missing
+ngc_tools.h in five initial targets; settings_get_coord_data and coord_system
+.offset do not exist. Build log ../batch69-upstream-build.log retains evidence.
+The merge attempt is preserved on integration-upstream-20f186f. Working branch
+coverage-batch-69 was restored with reset --keep to its own validated2fa6e30;
+no upstream cases were edited/deleted, no core source changed. Ask user whether
+to repair the incoming batch separately; continue independent coverage meanwhile.
+Do not merge that incoming batch or claim its116 cases passed. Next PR can still
+compare our51 cases against upstream because Git retains shared aa80971 ancestry.
+The original full sanitizer gate3,828 plus six-case repairs covers our actual tip.
+
 # Current batch69 filesystem checkpoint - 2026-10-19
 
 PR22 is merged upstream at20f186f; its exact head aa80971 is an ancestor.
