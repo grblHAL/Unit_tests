@@ -1,3 +1,15 @@
+# Current batch59 program-end checkpoint - 2026-10-19
+
+Branch coverage-batch-59 starts pushed58 1b6f00d. Nine new cases total3,713 pass
+full ASan/UBSan56.20s and strict summary. Seven multi-spindle M2/M30 cases cover
+public restore-overrides setting both policies, coolant/spindle shutdown, next
+program speed and G55-to-saved-G54 reset. Two compatibility1 G92.1 cases verify
+persisted offset erasure versus preservation under disabled persistence.
+Focused7/7 pass0.58s plus2/2 pass0.33s. No new exceptions, core unchangedad57c78.
+51 helper checks pass4.405s on unchanged reporting scripts; redundant rerun was
+blocked by reviewer capacity. Hosted58 dispatched, status query pending.
+PR20/21 merged; no new PR yet. Continue after useful validated module boundary.
+
 # Batch58 completed local validation - 2026-10-19
 
 Twelve new cases total3,704 pass full ASan/UBSan59.02s and strict summary.
