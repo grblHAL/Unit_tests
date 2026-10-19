@@ -491,3 +491,23 @@ that callback contract. Keep the gap visible until clarified; no change to
 independent primary/pendant pending-report semantics is proposed.
 Sources: [publisher](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/report.c#L3006-L3042),
 [MPG observer](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/stream.c#L608-L617).
+
+
+## Confirm coordinate-rotation pivot for translated work offsets
+
+**Recorded:** 2026-10-19, Terje core `ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216`.
+Undecided coordinate convention, not a confirmed defect or registered failure.
+Public parser/actual stepper reproduction: `G10L2P2R90`, `G10L2P2X3Y4`,
+`G55G0X0Y0`, then `G3X1Y1J1F100`. At 80 steps/mm, final machine/driver
+positions are (-400,320) steps = (-5,4) mm, with 400/320 motor pulses.
+The core adds the G55 offset to the work target before rotating, so the work
+origin itself rotates around the machine origin. A convention that rotates
+about the translated work origin would instead end at (2,5) mm = (160,400)
+steps. Confirm the intended pivot before changing either implementation or
+expectations. This also affects the initial linear move, so it is not claimed
+as an arc-only error. Zero-translation XY/ZX/YZ and inch arc controls pass.
+
+Candidate: `tests/proposals/translated_rotated_center_arc_keeps_work_origin_separate_from_center_delta.c`
+(unregistered; no WILL_FAIL or sanitizer allowance). Evidence:
+`../batch62-translation-proposal.log`. Source: [offset before rotation](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/gcode.c#L3258-L3263),
+[relative arc-centre rotation](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/gcode.c#L3794-L3796).

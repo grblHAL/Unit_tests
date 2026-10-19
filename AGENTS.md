@@ -1,3 +1,18 @@
+# Current batch62 rotated-arc checkpoint - 2026-10-19
+
+Branch coverage-batch-62 starts pushed61 62c3f36. Five registered arc cases
+total3,729 pass full ASan/UBSan55.83s and strict summary;22 rotation cases pass
+1.09s. Public G10/G55 rotation tested with XY positive/negative quarter turns,
+ZX/YZ helices and inch IJK conversion; exact physical endpoints/pulses checked.
+Translated-origin candidate is unregistered in tests/proposals with TODO evidence:
+core rotates work offset with target, yielding(-5,4) rather than proposed(2,5).
+Terje must confirm rotation pivot; not a confirmed failure or new exception.
+19 known failures plusone scoped known UBSan unchanged;core cleanad57c78.
+Hosted58 run39199404867 locksverified1b6f00d/ad57/corefilter, fullygreen:
+16,927/17,634 lines95.99%;11,558/13,648 branches84.69%. Badges refreshed.
+Hosted59 run39199851892 green;60 run39200502195 and61 run39200605707 live.
+51 helper checks lastpass4.902s unchanged. PR20/21 merged; continue after checkpoint.
+
 # Current batch61 PWM checkpoint - 2026-10-19
 
 Branch coverage-batch-61 starts60 bf98be2. Three new servo PWM conversion cases
