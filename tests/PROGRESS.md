@@ -1,3 +1,13 @@
+# Batch69 numeric arc controls - 2026-10-19
+
+Eleven new cases now total3,763. Two added semicircle radius controls pass
+focused2/2 in0.28s: float-roundoff radius still emits a curved path to exact
+motor endpoint; beyond-tolerance radius rejects without dropping prior queuedcut.
+Three CSS/G97 controls pass0.37s; six boot pause cases passed full3,758gate
+56.47s. Next cumulative gate must cover these5addedcases before push/PR.
+No new exceptions. Goal active. Keepwork on69 and commit coherent groups.
+68 exacthead CI39203585952 lastsource/coveragepass, compilerjobs stillrunning.
+
 # Batch69 continuing on the same branch - 2026-10-19
 
 Nine new cases now total3,761. Latest three registered-encoder CSS->G97S400
