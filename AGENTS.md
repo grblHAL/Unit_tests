@@ -74,6 +74,26 @@ GCC hosted71 is terminal failure solely from98 documented strutils.c:393
 NULL-base sanitizer cases; all25 new71 tests pass. Clang remains pending until
 rechecked. Never imply the source suite is green or fabricate coverage output.
 
+Batch71 delivery complete: PR24 is OPEN, non-draft:
+https://github.com/grblHAL/Unit_tests/pull/24 . Hosted39339402897 is terminal
+failure. Source selection/all builds pass; GCC and Clang each confirm3,901
+clean passes,3 known reproductions,98 source sanitizer failures,0 skips. Every
+new71 case passes in all jobs. Coverage is unavailable, not a percentage claim.
+PR explicitly documents the unchanged core fault and has no source patches.
+Do not merge PR24. Batch72 is based on71; avoid a cumulative duplicate PR before
+24 merges. Continue tests on72 and push at the next coherent boundary.
+
+Batch72 sixth group: normal all-off follows its configured PWM stop ramp,
+reset all-off stops immediately without ramp delay, and two enabled PWM spindles
+each ramp monotonically to zero. Three cases PASS ASan/UBSan0.34s.
+Secondary PWM unsupported inversion case PASS0.23s. Registration trims that
+option from public metadata, so its public validation returns OutOfRange before
+the private setter's Disabled guard. Do not invoke the private setter to force
+coverage; retain the supported public rejection and normal enable/direction path.
+Evidence: build-asan/batch72-stop-results.xml and batch72-secondary-invert-results.xml.
+Batch72 now22 new core cases pass; registered total4,024; reporting checks25 pass.
+Next: one full local pre-push gate for72, not repeated focused/checker runs.
+
 # Active coverage batch71 - 2026-10-20
 
 Goal ACTIVE: meaningful full supported core line/branch coverage. The hourly
