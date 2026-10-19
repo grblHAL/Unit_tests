@@ -9,6 +9,8 @@
 static spindle_ptrs_t laser_driver;
 static spindle_pwm_t laser_pwm_context;
 static unsigned laser_pwm_calls;
+/* Observe the driver level whether core uses set_state or update_pwm. */
+static uint_fast16_t laser_last_driver_level;
 static uint_fast16_t laser_pwm_log[2048];
 static uint_fast16_t laser_get_pwm(spindle_ptrs_t *spindle, float rpm)
 { CHECK(spindle == spindle_get(0)); CHECK(rpm >= 0 && rpm <= 1000); return (uint_fast16_t)lroundf(rpm); }
@@ -16,6 +18,7 @@ static void laser_update_pwm(spindle_ptrs_t *spindle, uint_fast16_t pwm)
 {
     CHECK(spindle == spindle_get(0)); CHECK(laser_pwm_calls < 2048);
     laser_pwm_log[laser_pwm_calls++] = pwm;
+    laser_last_driver_level = pwm;
 }
 static spindle_state_t laser_output_state;
 static float laser_output_power;
@@ -24,6 +27,7 @@ static void laser_output(spindle_ptrs_t *spindle, spindle_state_t state, float r
 {
     CHECK(spindle == spindle_get(0));
     laser_output_state = state; laser_output_power = rpm; laser_output_calls++;
+    laser_last_driver_level = state.on ? (uint_fast16_t)lroundf(rpm) : 0;
 }
 static spindle_state_t laser_input(spindle_ptrs_t *spindle) { (void)spindle; return laser_output_state; }
 static control_signals_t laser_controls(void) { return (control_signals_t){0}; }

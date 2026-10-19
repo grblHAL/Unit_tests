@@ -399,6 +399,13 @@ these do not claim protection is operational or prove physical interlock behavio
 No production patch, source exclusion or new known-failure exception is added.
 
 
+**Runtime clarification, 2026-10-19:** full normal boot with a registered
+watchable probe accepts `$65=32` and arms its guard after startup. Clearing the
+saved protection flag during settings initialization does not prevent this
+runtime workflow. The ordinary idle probe IRQ cases remain registered; see
+[cold boot then runtime enable](cases/boot/initialized_probe_options_allow_runtime_protection_enable.c).
+Do not withdraw those cases based solely on the startup flag clearing above.
+
 ## Failed-startup detailed driver diagnostic policy
 
 **Review date:** 2026-10-15, Terje feebef26222111f11c7a3b3b0156d023aa786937.
@@ -491,3 +498,56 @@ that callback contract. Keep the gap visible until clarified; no change to
 independent primary/pendant pending-report semantics is proposed.
 Sources: [publisher](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/report.c#L3006-L3042),
 [MPG observer](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/stream.c#L608-L617).
+
+
+## Confirm coordinate-rotation pivot for translated work offsets
+
+**Recorded:** 2026-10-19, Terje core `ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216`.
+Undecided coordinate convention, not a confirmed defect or registered failure.
+Public parser/actual stepper reproduction: `G10L2P2R90`, `G10L2P2X3Y4`,
+`G55G0X0Y0`, then `G3X1Y1J1F100`. At 80 steps/mm, final machine/driver
+positions are (-400,320) steps = (-5,4) mm, with 400/320 motor pulses.
+The core adds the G55 offset to the work target before rotating, so the work
+origin itself rotates around the machine origin. A convention that rotates
+about the translated work origin would instead end at (2,5) mm = (160,400)
+steps. Confirm the intended pivot before changing either implementation or
+expectations. This also affects the initial linear move, so it is not claimed
+as an arc-only error. Zero-translation XY/ZX/YZ and inch arc controls pass.
+
+Candidate: `tests/proposals/translated_rotated_center_arc_keeps_work_origin_separate_from_center_delta.c`
+(unregistered; no WILL_FAIL or sanitizer allowance). Evidence:
+`../batch62-translation-proposal.log`. Source: [offset before rotation](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/gcode.c#L3258-L3263),
+[relative arc-centre rotation](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/gcode.c#L3794-L3796).
+
+
+## Hold snapshot null-pointer guard is not reached by valid slot iteration
+
+**Reviewed:** 2026-10-19, Terje `ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216`.
+The new primary-only two-slot hold/resume tests exercise a disabled secondary
+slot through settings/startup, including the `spindle->hal == NULL` snapshot
+branch. The separate `gc_spindle_get(...) == NULL` fallback remains uncovered:
+initiate_hold iterates valid nonnegative slot indices, and gc_spindle_get returns
+the address of the corresponding modal slot for all such indices in both the
+single- and multi-spindle builds. Do not corrupt a slot pointer or call a private
+handler to cover this defensive fallback. Keep it visible in raw coverage;
+revisit if the getter contract changes. This is a reachability note, not a bug
+or a request to remove a defensive check.
+Sources: [slot getter](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/gcode.c#L886-L893),
+[hold snapshot](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/state_machine.c#L134-L158).
+
+## Remaining coverage: unexposed settings and parser branches
+
+**Reviewed 2026-10-19, Terje 16c7dff3aa9614322cfc2b47a2109cc9196ccca4.**
+
+- `ioports.c`: the `Settings_IoPort_OD_Enable` setting registration is commented
+  out. Existing ordinary tests verify that setting writes are disabled. Do not
+  invoke its private setter to cover its dormant configuration/getter cases.
+- `gcode.c`: M48/M49 branches for `spindle_id == -1` are not reached by normal
+  override blocks: `is_single_spindle_block()` does not address a spindle for
+  those commands, and the remaining dollar word is rejected. M51 explicitly
+  requires one spindle. Keep default/per-spindle workflow tests; do not forge
+  parser state to execute the dormant all-spindle loops.
+
+These are reachability observations, not confirmed firmware defects or requests
+for new features. Keep them in the reported denominator; revisit if the public
+interfaces expose these paths. Prefer remaining supported workflows first.

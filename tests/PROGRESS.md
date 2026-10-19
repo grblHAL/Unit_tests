@@ -1,3 +1,292 @@
+# Current combined batch69 delivery - 2026-10-19
+
+Stay on coverage-batch-69; consolidate its work into existing PR22 rather than
+creating another small PR. PR22 is draft pending exact updated-head hosted checks.
+Core clean/latest fetched: 16c7dff3aa9614322cfc2b47a2109cc9196ccca4.
+25 new cases beyond PR22's prior 3,752-case head: 3,777 registered now.
+Coverage remains last measured 96.14% lines /84.91% branches (run39203585952,
+9a06753/ad57c78); do not claim new-source coverage until its hosted report exists.
+
+Validation: one full 3,776-case ASan/UBSan gate on ad57c78 passed134.99s plus
+strict summary. A newly fetched core update required a shared-header rebuild.
+Latest-core affected-module check: 524/526 passed18.84s; two allocation fixtures
+still targeted malloc after upstream changed redirect contexts to calloc.
+Added narrowly scoped calloc wrapping; repair/new-case check54/54 passed1.31s
+with strict summary. JSON-close API test is skipped when source lacks that API.
+No repeated full local suite; next complete gate is hosted GCC/Clang/coverage.
+
+Removed 13 resolved WILL_FAIL allowances plus the resolved JSON sanitizer label/
+manifest entry, and deleted their 11 resolved bug sections. Correct regression
+assertions remain. Manual-tool door completion now checks observable safety-door
+state rather than the obsolete queued-flag implementation. Seven documented
+expected failures remain; no sanitizer diagnostic allowances remain.
+
+Full boot confirms runtime $65=32 is supported despite clearing its saved flag
+at initialization. Idle IRQ cases remain registered; uncommitted withdrawal was
+reverted. New cases cover pauses, G97/CSS queue ordering, semicircle roundoff,
+partial peck drilling, IPv4 provider success/failure, macro errors/recovery,
+corrupt build-info recovery, pull-setting notification and JSON close ownership.
+Next: push this cumulative checkpoint to PR22, one hosted run against16c7dff;
+continue supported workflow gaps on the same working branch while it runs.
+
+# Active efficiency policy - 2026-10-19
+
+This policy supersedes historical per-case/per-module validation and delivery notes.
+The user requests productive token use and realistic controller workflows.
+
+- Stay on one feature branch for a substantial batch. No branch/CI checkpoint for
+  every small module. Commit related work together; push at a useful review boundary.
+- Read one coverage report per batch. Rank remaining executable regions by reachable
+  lines per realistic workflow and reuse existing host fixtures. Work through the
+  largest supported gaps first, rather than chasing individual uncovered branches.
+- Prefer ordinary jobs, startup/settings changes, hold/resume, probing and realistic
+  driver error handling with externally observable outcomes. Combine related paths
+  in readable scenario tests; retain separate files for distinct behaviors.
+- Before authoring, check existing cases and source contracts once. Do not duplicate
+  already-covered assertions, manufacture invalid startup states, or force private
+  paths just to increase a percentage.
+- During authoring use source review. Build a substantial group together. Focused
+  execution is for unresolved behavior/failures, not an automatic per-case ritual.
+- Run the full local sanitizer suite and report checks ONCE at the pre-push boundary.
+  Fix failures, rerun affected tests, and repeat broader checks only when the repair
+  affects shared infrastructure or leaves suite-wide uncertainty. Do not rerun
+  unchanged reporting helpers. Then push and use one hosted validation checkpoint.
+- Record uncertain contracts and unfinished/unreachable regions in TODO with concise
+  evidence, then move on. Never weaken assertions or exclude code to claim 100%.
+- Report coverage gain and remaining reachable gaps at substantial checkpoints.
+  The target remains meaningful full supported coverage; any residual unavailable
+  implementation must be explained separately rather than consuming endless tests.
+
+Immediate work: keep coverage-batch-69, finish its existing motion/settings cases,
+then group the largest reachable gcode/settings/IO gaps from the latest report.
+Latest verified hosted baseline: 16,954/17,634 lines (96.14%) and
+11,588/13,648 branches (84.91%), core ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216.
+Probe audit correction: full boot accepts public $65=32 and arms the watchable
+probe guard. Existing idle IRQ cases remain registered. The contrary withdrawal
+was never committed; a full-boot runtime-enable control is pending batch validation.
+
+# Batch69 partial-peck group validated - 2026-10-19
+
+Fifteen new cases total3,767 pass full ASan/UBSan56.80s and strict summary.
+Latest four G73/G83 partial-final-peck cases pass0.46s: requested depth clips
+last peck, chip-break/full retract remain distinct, G98 returns clearance and
+three repeated holes retain common depth. Observer records emitted motor steps.
+No new exceptions;20 known failures plusone known UBSan.51 helpers last4.112s.
+PR22 CREATED and attached, frozen68 9a06753 with60cases: allfive hosted jobs
+green39203585952; source/scope lockverifiedad57. Do not merge or extend itshead.
+https://github.com/grblHAL/Unit_tests/pull/22
+Continue related modules on69, focused authoring checks then cumulative gate
+and useful push boundary. Current69work remains local until next checkpoint.
+
+# Batch69 numeric arc controls - 2026-10-19
+
+Eleven new cases now total3,763. Two added semicircle radius controls pass
+focused2/2 in0.28s: float-roundoff radius still emits a curved path to exact
+motor endpoint; beyond-tolerance radius rejects without dropping prior queuedcut.
+Three CSS/G97 controls pass0.37s; six boot pause cases passed full3,758gate
+56.47s. Next cumulative gate must cover these5addedcases before push/PR.
+No new exceptions. Goal active. Keepwork on69 and commit coherent groups.
+68 exacthead CI39203585952 lastsource/coveragepass, compilerjobs stillrunning.
+
+# Batch69 continuing on the same branch - 2026-10-19
+
+Nine new cases now total3,761. Latest three registered-encoder CSS->G97S400
+cases pass focused3/3 in0.37s: radial and longitudinal queues finish before
+mode/speed switch; same-block rapid remains queued and reaches new endpoint.
+No new exceptions. Last full sanitizer/strict gate is3,758 before these3; next
+substantial cumulative gate must include them. Six boot pause cases committed
+01d9ac5; keep coherent modules here until next batch-ready checkpoint.
+68 pushed9a06753, hosted39203585952 live lastseen; exact readiness required
+before opening cumulative PR for its60cases. Continue while CI runs.
+
+# Current batch69 pause-workflow checkpoint - 2026-10-19
+
+Branch coverage-batch-69 starts pushed68 9a06753. Six new actual boot/serial
+M0/M1/single-block/M60 cases total3,758 pass full ASan/UBSan56.47s and strict
+summary; focused6/6 pass0.61s. First move ends at80steps before pause; four
+held polls preserve position and ACK count; public cycle start allows second
+move to160steps. Physical optional-stop input controls M1 only. Single-block
+switch deassertion is a real control IRQ; M60 calls driver after completed motion.
+No new exceptions;20 known failures plusone known UBSan.51 helpers pass4.112s.
+Core unchangedcleanad57c78.66 run39203076490 and68 run39203585952 live lastseen;
+64 fullygreen/locked96.08line84.81branch. Upstream unchangedb281f42;60newcases
+through68 are next-PR candidate once its exact hosted checks finish. No PRcreated.
+Keep next related modules on coverage-batch-69, commit coherent groups, and use
+focused checks while authoring before the next substantial cumulative gate/push.
+Do not create a branch/CI run for every small group. Continue while CI runs.
+
+# Current batch68 idle-door checkpoint - 2026-10-19
+
+Branch coverage-batch-68 starts local67 0b38941. Four new public setting/control
+IRQ cases total3,752 pass full ASan/UBSan56.44s and strict summary;focused4/4
+pass0.44s. Ignore-idle still shuts constant laser off immediately; closing does
+not restart it. Normal spindle control preserves output by configured policy;
+nonignored idle door enters suspension and disables laser without motion.
+Initial laser fixture used M3 in G0, correctly yielding zero power. Corrected
+setup to supported G1M3S500F100 without axis words; no defect/exception claimed.
+20 known failures plusone known UBSan unchanged;51 helpers latestpass4.112s.
+Hosted64 locksverified e0c6707/ad57/corefilter, fullygreen:
+16,942/17,634 lines96.08%;11,575/13,648 branches84.81%. Badges refreshed.
+66 run39203076490 live lastseen. Deliver local67+68 together and dispatch68.
+Core unchangedcleanad57c78. PR20/21 merged; next PR only after latest exact CI.
+Continue local boot pause work while CI runs.
+
+# Current batch67 probe-interrupt checkpoint - 2026-10-19
+
+Branch coverage-batch-67 starts pushed66 2c99b40. Three new real probe IRQ cases
+total3,748 pass full ASan/UBSan56.93s and strict summary; focused3/3 pass0.34s.
+Actual probe_add/legacy IRQ registration drives core control_interrupt_handler.
+Public$65=32 protection and$6=1 inversion configure contact/release behavior;
+idle events rearm guard, preserve polarity and do not request stop/reset/alarm.
+No synthetic active probing state or private calls. No new exceptions.
+20 known failures plusone scoped UBSan unchanged;51 helpers latestpass4.112s.
+Core cleanad57c78. Hosted64 run39202050479 fullygreen at e0c6707.
+65/66 pushed and cumulative66 dispatched; no isolated65run. Latest locked
+parsed coverage58 95.99/84.69. Deliver this with next related command group.
+PR20/21 merged; prepare next PR only after cumulative exact-head CIpasses.
+
+# Current batch66 public-command checkpoint - 2026-10-19
+
+Branch coverage-batch-66 starts local65 3448b44. Four new command cases total
+3,745 pass full ASan/UBSan55.69s and strict summary; focused4/4 pass0.43s.
+Public$RST=& restores registered numeric plugin storage, preserves core steps/mm
+and requests reset. Help advertises driver reset only with registered provider.
+$RTC query reads/formats driver time and propagates failed reads without output.
+No new exceptions;20 known failures plusone scoped known UBSan.
+51 helper checks latestpass4.112s unchanged. Core cleanlatestad57c78.
+Hosted60 run39200502195,61 run39200605707 and62 run39201007431 allgreen.
+64 run39202050479 inprogress lastseen; no isolated63run (coveredcumulatively).
+Deliver local65+66 together and dispatch cumulative66. Latest verified locked
+coverage58 95.99/84.69. PR20/21 merged; prepare new PR only after latest CIpasses.
+Keep working while CI runs.
+
+# Current batch65 expression checkpoint - 2026-10-19
+
+Branch coverage-batch-65 starts pushed64 e0c6707. Six new parser/stepper cases
+total3,741 pass full ASan/UBSan55.63s and strict summary;99 ngc_expr pass3.71s.
+Computed parameter indices round within documented0.0001 integer tolerance,
+including indirection. Out-of-tolerance index preserves previous assignment and
+queuedcut; EXP overflow and MOD0 nonfinite feed reject without dropping valid
+queuedmotion. No new exceptions;20 known failures plusone scoped known UBSan.
+51 reporting helpers latestpass4.112s. Core freshfetch unchangedcleanad57c78.
+63 and64 delivered together; only cumulative64 dispatched.60/61/62/64 status
+refresh blocked by approval reviewer capacity; do not claim terminalsuccess.
+Latest locked verified report58 95.99/84.69;59 hostedgreen. PR20/21 merged.
+Commit this group; combine next local group for next hosted checkpoint. Keepgoing.
+
+# Current batch64 optional-spindle hold checkpoint - 2026-10-19
+
+Branch coverage-batch-64 starts local63 c63137f (push review timed out; not yet
+delivered). Three new supported hold/resume cases total3,735 pass full
+ASan/UBSan54.96s and strict summary; all120multi_spindle pass5.07s.
+Settings-mapped startup now optionally leaves secondary disabled before gc_init;
+default fixture still enables it. Primary-only hold/resume and held spindle
+stop/restore avoid unused drivers; two-enabled control preserves both outputs.
+No new core issues/exceptions:20 known failures plusone scoped known UBSan.
+TODO records why separate getter-null fallback cannot occur with valid indices;
+no source exclusions or private calls. Shared driver/stepper workflows retained.
+51 helpers lastpass4.902s; timed-out rerun retried once and still pending review.
+Deliver63+64 together and run cumulative hosted64 to avoid redundant small runs.
+Core cleanad57c78; latest verified locked report58 95.99/84.69;59 hostedgreen.
+60/61/62 need terminal checks. PR20/21 merged; no new PR. Keepgoing.
+
+# Current batch63 held-spindle regression checkpoint - 2026-10-19
+
+Branch coverage-batch-63 starts pushed62 33f97d1. Three new cases total3,732 pass
+full ASan/UBSan55.79s and strict summary;59 state-machine cases pass2.52s.
+One registered normal-PWM regression: after completed feed hold, override110%
+calculates550 from500 but driver level remains500 and pendingflagclears. Idle
+update/reset and held stop/restore/resume controls pass with same registered
+driver. Initial minimal fixture reproduced5000->5500 too; confirmed with proper
+spindle_register/standard-mode startup before classification.
+Shared PWM fixture now observes both set_state and update_pwm outputs; callback
+behavior unchanged. Correct assertion retained in one exact WILL_FAIL; dated
+KNOWN_BUGS entry, source cause, proposed fix/removal guide; no sanitizer allowance.
+20 known failures plusone known UBSan now. Core unchangedcleanad57c78.
+51 helper checks lastpass4.902s; new rerun pending automatic approval review.
+Hosted58/59 green;60 run39200502195,61 run39200605707 and62 dispatched need
+terminal verification. Latest exact locked report58 95.99/84.69. Continue.
+
+# Current batch62 rotated-arc checkpoint - 2026-10-19
+
+Branch coverage-batch-62 starts pushed61 62c3f36. Five registered arc cases
+total3,729 pass full ASan/UBSan55.83s and strict summary;22 rotation cases pass
+1.09s. Public G10/G55 rotation tested with XY positive/negative quarter turns,
+ZX/YZ helices and inch IJK conversion; exact physical endpoints/pulses checked.
+Translated-origin candidate is unregistered in tests/proposals with TODO evidence:
+core rotates work offset with target, yielding(-5,4) rather than proposed(2,5).
+Terje must confirm rotation pivot; not a confirmed failure or new exception.
+19 known failures plusone scoped known UBSan unchanged;core cleanad57c78.
+Hosted58 run39199404867 locksverified1b6f00d/ad57/corefilter, fullygreen:
+16,927/17,634 lines95.99%;11,558/13,648 branches84.69%. Badges refreshed.
+Hosted59 run39199851892 green;60 run39200502195 and61 run39200605707 live.
+51 helper checks lastpass4.902s unchanged. PR20/21 merged; continue after checkpoint.
+
+# Current batch61 PWM checkpoint - 2026-10-19
+
+Branch coverage-batch-61 starts60 bf98be2. Three new servo PWM conversion cases
+total3,724 pass full ASan/UBSan55.42s and strict summary; focused all146ioports
+pass5.41s.50Hz servo1-2ms range tested with hold-minimum, disabled-zero and
+inverted-disabled policies. Active output allows one timer tick of float/floor
+quantization; diagnostic log confirms1499/1999 and inverted18500/18000 at1MHz.
+No core defect claimed or exception added.51 helper checks pass4.902s unchanged.
+Batch60 successfully pushed/dispatched on retry. Hosted58 run39199404867 fully
+green at1b6f00d;59 run39199851892 inprogress lastseen. Coverage download blocked
+by approval-review capacity; latest parsed exact-source report56 95.93/84.63.
+Core cleanlatestad57c78. PR20/21 merged; no new PR. Continue independent work.
+
+# Current batch60 boot-backlash checkpoint - 2026-10-19
+
+Branch coverage-batch-60 starts pushed59 8e58b0a. Eight new real boot/parser
+stream cases total3,721 pass full ASan/UBSan56.18s and strict summary;51 helpers
+pass4.902s. New boot_backlash module reuses existing host_core_backlash and normal
+driver_init wrapper. No new core variant or production source changes.
+Serial$160/$161/$162 configure0.1mm take-up;40moves refill planner. XYZ reversals
+with both first directions and same-direction controls verify exact pulse counts,
+physical/logical distinction and final origin. Focused8/8 pass0.87s.
+19 known failures and one scoped known UBSan unchanged. No new issues claimed.
+Hosted58 run39199404867 inprogress lastverified;59 dispatched. Latest status
+query blocked by automatic approval review capacity; do not assume green.
+Core cleanlatestad57c78. Latest verified coverage56 95.93/84.63.
+PR20/21 merged; no new PR. Continue after checkpoint.
+
+# Current batch59 program-end checkpoint - 2026-10-19
+
+Branch coverage-batch-59 starts pushed58 1b6f00d. Nine new cases total3,713 pass
+full ASan/UBSan56.20s and strict summary. Seven multi-spindle M2/M30 cases cover
+public restore-overrides setting both policies, coolant/spindle shutdown, next
+program speed and G55-to-saved-G54 reset. Two compatibility1 G92.1 cases verify
+persisted offset erasure versus preservation under disabled persistence.
+Focused7/7 pass0.58s plus2/2 pass0.33s. No new exceptions, core unchangedad57c78.
+51 helper checks pass4.405s on unchanged reporting scripts; redundant rerun was
+blocked by reviewer capacity. Hosted58 dispatched, status query pending.
+PR20/21 merged; no new PR yet. Continue after useful validated module boundary.
+
+# Batch58 completed local validation - 2026-10-19
+
+Twelve new cases total3,704 pass full ASan/UBSan59.02s and strict summary.
+Five macro-depth/tool-capacity cases plus seven actual-stepper radius arc cases:
+inch conversion, positive/mirrored uniform scaling, CCW, helical allthreeplanes.
+51 reporting checks passed4.405s before C-only arc additions; redundant rerun
+blocked by approval reviewer capacity. No script changes or new exceptions.
+Core cleanlatestad57c78. Commit/push this module boundary and continue.
+PR20/21 merged; branch58 based b281f42. Verified hosted56 95.93/84.63, not
+yet these12newcases. Fork cleanupdone51mergedremote,59mergedlocal.
+
+# Current batch58 continuation - 2026-10-19
+
+PR20 and21 are merged; branch coverage-batch-58 starts upstream b281f42.
+Five new parser-facing macro depth/tool table capacity cases total3,697 pass
+ASan/UBSan118.89s and strict summary;51 reporting checks pass4.405s.
+Named recursion, nested G65, explicit RETURN and error recovery to sender tested.
+No new exceptions;19 expected failures and one scoped known UBSan unchanged.
+Fresh Terje fetch remains cleanad57c788e15fb4e5d8ef9c20ed50755ffa3d9216.
+Hosted56 run39179095314 success; exact harness520e3db/source/filter lock verified:
+16,916/17,634 lines95.93%;11,550/13,648 branches84.63%. Badges refreshed.
+Cleanup completed59 merged local branches and51 merged origin branches; fork
+retains onlymaster. Preserve other checked-out worktree and nonmergedlocal9.
+These five cases are localvalidated, not yet hosted. Continue meaningful coverage.
+
 # Current batch56 multi-spindle checkpoint - 2026-10-19
 
 Branch coverage-batch-56 starts at pushed55 6ede665. Twelve new cases total3,692:
