@@ -16,6 +16,18 @@ Evidence: build-asan/batch72-homing-results.xml and ../batch72-homing-tests.log.
 Registered total4,006. Keep adding practical groups before the next full gate.
 Terje alone fixes source defects. Goal active; hourly recovery remains configured.
 
+Batch72 second group: four delta nonlinear jog cases pass ASan/UBSan0.40s.
+Check positive/negative Y and diagonal XY/XYZ clipping preserves the requested
+line, produces finite motor coordinates and passes the public travel checker.
+One CSS-to-rapid lathe workflow passes: queued radial cut drains to its exact
+endpoint before the new rapid is queued; CSS mode remains active and the rapid
+reaches its exact motor endpoint. No fixed-RPM convention is assumed for G0.
+A second draft assuming two consecutive CSS cuts remain queued was discarded:
+the parser can synchronize them; it is not a core bug. No allowance added.
+Evidence: build-asan/batch72-delta-results.xml and batch72-css-results.xml,
+../batch72-delta-tests.log and ../batch72-css-tests.log. Nine new72 cases pass;
+registered total4,011. No full rerun until a substantial delivery boundary.
+
 # Active coverage batch71 - 2026-10-20
 
 Goal ACTIVE: meaningful full supported core line/branch coverage. The hourly
