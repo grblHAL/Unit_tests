@@ -1,3 +1,18 @@
+# Current batch60 boot-backlash checkpoint - 2026-10-19
+
+Branch coverage-batch-60 starts pushed59 8e58b0a. Eight new real boot/parser
+stream cases total3,721 pass full ASan/UBSan56.18s and strict summary;51 helpers
+pass4.902s. New boot_backlash module reuses existing host_core_backlash and normal
+driver_init wrapper. No new core variant or production source changes.
+Serial$160/$161/$162 configure0.1mm take-up;40moves refill planner. XYZ reversals
+with both first directions and same-direction controls verify exact pulse counts,
+physical/logical distinction and final origin. Focused8/8 pass0.87s.
+19 known failures and one scoped known UBSan unchanged. No new issues claimed.
+Hosted58 run39199404867 inprogress lastverified;59 dispatched. Latest status
+query blocked by automatic approval review capacity; do not assume green.
+Core cleanlatestad57c78. Latest verified coverage56 95.93/84.63.
+PR20/21 merged; no new PR. Continue after checkpoint.
+
 # Current batch59 program-end checkpoint - 2026-10-19
 
 Branch coverage-batch-59 starts pushed58 1b6f00d. Nine new cases total3,713 pass
