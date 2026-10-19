@@ -1,3 +1,19 @@
+# Current batch69 pause-workflow checkpoint - 2026-10-19
+
+Branch coverage-batch-69 starts pushed68 9a06753. Six new actual boot/serial
+M0/M1/single-block/M60 cases total3,758 pass full ASan/UBSan56.47s and strict
+summary; focused6/6 pass0.61s. First move ends at80steps before pause; four
+held polls preserve position and ACK count; public cycle start allows second
+move to160steps. Physical optional-stop input controls M1 only. Single-block
+switch deassertion is a real control IRQ; M60 calls driver after completed motion.
+No new exceptions;20 known failures plusone known UBSan.51 helpers pass4.112s.
+Core unchangedcleanad57c78.66 run39203076490 and68 run39203585952 live lastseen;
+64 fullygreen/locked96.08line84.81branch. Upstream unchangedb281f42;60newcases
+through68 are next-PR candidate once its exact hosted checks finish. No PRcreated.
+Keep next related modules on coverage-batch-69, commit coherent groups, and use
+focused checks while authoring before the next substantial cumulative gate/push.
+Do not create a branch/CI run for every small group. Continue while CI runs.
+
 # Current batch68 idle-door checkpoint - 2026-10-19
 
 Branch coverage-batch-68 starts local67 0b38941. Four new public setting/control
