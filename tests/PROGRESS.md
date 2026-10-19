@@ -1,58 +1,42 @@
-# Current batch69 exact-source checkpoint - 2026-10-19
+# Current PR23 integrated repair checkpoint - 2026-10-19
 
-Goal remains active. Working branch coverage-batch-69; do not commit/push master.
-Core latest fresh-fetch49eff3c5c66afa1cc1915b26ae8160fa805593c7, clean/unmodified.
-Upstream latest20f186f still contains the116 incompatible incoming tests; our
-preserved attempt is integration-upstream-20f186f, not merged into this branch.
-User question pending about repairing that separate batch; continue independent work.
+Working branch coverage-batch-69. PR22 is merged; existing PR23 receives this
+combined batch. Never commit/push master or merge PRs. User approved repairing
+upstream20f186f's incoming116 tests in this same PR, superseding older notes
+about a separate integration blocker/branch. Repair commit22a68cc is merged.
 
-Registered3,869 checks:92 beyond PR22 (90 behavior case files +2 compile configs).
-Last fully verified hosted checkpoint39288629614 at2881c0b/core16c7dff has all
-five jobs successful; both locks verified full regex/header filter. Measured
-17,052/17,652 lines96.60%;11,719/13,700 branches85.54%, README badges updated.
-This coverage is NOT a measurement of latest49eff3c.
+All116 incoming cases compile. Corrected invented APIs/fields and unsupported
+G-code assumptions, valid arc geometry, coordinate-offset calculations, macro
+callback/scope behavior, tool selection, overrides and spindle capabilities.
+Feature-specific cases link the appropriate real core configuration. Shared host
+fixtures provide valid callbacks and mutable parser input. No core source edits.
+G53 with active Fanuc scaling remains a contract question in TODO with an
+unregistered proposal; the registered control uses explicit G50 cancellation.
 
-Latest-core single full build/gate:3,867 in123s,94 CTest failures. Analysis of
-all sanitizer outputs (including expected-failure labels) finds95 crashes:
-87 parse_path NULL reads at vfs.c264,3 unmount-root NULL writes at vfs.c741,
-5 static/stack base realloc bad-frees at strutils.c393. Two source root causes,
-not95 separate defects. Ordinary filename/directory/macro workflows reproduce.
-Also reproduced driver_opts.h531 rejecting SAFETY_DOOR_ENABLE=1; previous16c7
-header and latest disabled configuration compile. Three dated KNOWN_BUGS entries
-link exact source/reproductions/proposals. No new exception or sanitizer allowance.
+Core fresh fetch remains49eff3c5c66afa1cc1915b26ae8160fa805593c7, clean.
+The known VFS cached-directory NULL pointer, borrowed-buffer realloc and enabled
+safety-door preprocessing faults remain unsuppressed. Existing KNOWN_BUGS entries
+include reproductions and proposed fixes. They are separate from incoming-test
+repairs; do not weaken assertions or add blanket sanitizer exceptions.
 
-Latest core FIXES pullup live/load consistency. Removed its WILL_FAIL and bug
-entry, kept regression, changed loaded control from None to Down with descriptive
-filename. Focused repair16 checks in0.57s:14 pass, two real core failures remain
-(base-buffer promotion and enabled-door compile). Consolidated full+repair
-3,869 has93 raw failures; strict summary correctly reports96 failed,5 known,
-3,768 clean,0 sanitizer allowances. Original raw full/repair logs/XML retained;
-consolidated evidence is explicitly not a second full run. Eight expected-failure
-registrations remain, three currently interrupted by the NEW sanitizer fault.
+Final integrated validation: all3,985 targets build after narrowing the boot
+link-wrap rule to its seven intended incoming fixtures. One full ASan/UBSan run
+completed137.97s. All116 repaired incoming tests pass, with zero skips/exceptions.
+Full strict result:3,884 clean passes,5 known reproductions,96 failures,0 skips.
+Failure names match the previous core49 checkpoint exactly:95 sanitizer crashes
+from the two documented memory faults plus the safety-door-enabled compile fault.
+CTest raw count93 differs because three inherited expected-failure labels invert
+crash exits; strict reporting correctly rejects those crashes. No new allowance.
+Evidence: build-asan/pr23-integrated-results.xml, extracted
+build-asan/pr23-incoming116-results.xml and ../pr23-integrated-summary.md.
+Build logs retain the six initial link failures and narrow repair separately.
+55 reporting helper checks passed previously after6741803; unchanged here.
 
-Reporting gap fixed in6741803: known_bug no longer skips scanning sanitizer
-output. Both stdout/stderr checked; crashes are failures, not known reproductions.
-Three new reporting regressions failed before fix; all55 Python checks pass after.
-Actual three-case crash XML now produces3 failed/0 known, matching CI diagnosis.
-Never claim earlier scripts would reject a crash hidden only by WILL_FAIL; they
-previously skipped it. This has now been corrected and freshly verified.
-
-Eighteen malformed sender-block cases preserve queued-cut identity, modal/feed
-state and actual motor endpoint; all pass latest full gate. Bare G10 maps to L0
-and correctly returns unsupported with no reload handler; not a missing-P case.
-Five string API cases cover heap allocation/growth/reuse/clear, base capacity and
-safe base-to-heap promotion. Feature detection skips only absent new API on old
-sources. MinGW forced header hides the unused CRT strset declaration, without
-editing core logic. Bool/size includes fixed and call-result comparisons sequenced
-before the completed full gate. Two public driver-option compile controls added.
-
-Push this checkpoint and one hosted49eff3c run. Any PR must remain DRAFT while
-these unsuppressed source crashes/compile regression remain; never mark ready or
-merge. Continue independent real-world coverage while hosted CI runs. Next useful
-areas: program-end coordinate read/write failures, saved-state CSS restoration,
-and normal driver callbacks. Do not suppress source faults or force private paths.
-No further unchanged full local run; next full gate only after substantial new
-code/source changes before the next push.
+Push this integrated repair to existing PR23 and dispatch one hosted checkpoint
+against the exact core49eff3c revision. Keep PR draft while unsuppressed source
+faults remain. Do not claim latest-core coverage or full hosted success.
+Latest fully green measured baseline remains39288629614/core16c7dff:
+17,052/17,652 lines96.60%,11,719/13,700 branches85.54%; not coverage of49eff3c.
 
 # Latest core update introduces VFS crashes - 2026-10-19
 
