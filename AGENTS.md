@@ -1,3 +1,16 @@
+# Current batch61 PWM checkpoint - 2026-10-19
+
+Branch coverage-batch-61 starts60 bf98be2. Three new servo PWM conversion cases
+total3,724 pass full ASan/UBSan55.42s and strict summary; focused all146ioports
+pass5.41s.50Hz servo1-2ms range tested with hold-minimum, disabled-zero and
+inverted-disabled policies. Active output allows one timer tick of float/floor
+quantization; diagnostic log confirms1499/1999 and inverted18500/18000 at1MHz.
+No core defect claimed or exception added.51 helper checks pass4.902s unchanged.
+Batch60 successfully pushed/dispatched on retry. Hosted58 run39199404867 fully
+green at1b6f00d;59 run39199851892 inprogress lastseen. Coverage download blocked
+by approval-review capacity; latest parsed exact-source report56 95.93/84.63.
+Core cleanlatestad57c78. PR20/21 merged; no new PR. Continue independent work.
+
 # Current batch60 boot-backlash checkpoint - 2026-10-19
 
 Branch coverage-batch-60 starts pushed59 8e58b0a. Eight new real boot/parser
