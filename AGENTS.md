@@ -1,3 +1,35 @@
+# Current batch69 controller-options checkpoint - 2026-10-19
+
+Keep coverage-batch-69 for continuing work. PR22 remains OPEN/READY at aa80971;
+all five hosted jobs39245386515 passed and locks confirm16c7dff/core/header filter.
+Latest measured coverage96.29% lines /85.15% branches; new local cases are not
+included in that measurement yet. Core fresh-fetch still16c7dff, clean.
+
+Thirty cases beyond PR22 are now validated locally:16 in81c2041 plus14 here.
+Registered total3,807; seven expected failures, no sanitizer allowances.
+The controller-options full gate executed3,808 tests in58.34s:3,807 passed and
+a proposed axis-free G38 rejection returnedOK rather than26. Its contract is
+uncertain (possibly intentional modal-only selection), so its unchanged assertion
+is unregistered in proposals and evidence is in TODO. This was not suppressed
+or changed into an assumed positive contract. Reconfigure confirms3,807 registered.
+Consolidated full-run evidence without that unregistered proposal passes strict
+summary; raw original failure XML/log and the targeted diagnostic are retained.
+No second full local execution. Earlier recovery group used one full gate plus
+three focused expression-configuration repairs. Reporting scripts unchanged.
+
+New14 cover GPIO spindle inversion metadata after normal boot, publicly configured
+homing help, probe target rejection/retry, real fixed-X/Y/Z probe references,
+startup-query storage recovery, parameter queries and compatibility2 offsets.
+Probe fixture defaults stillX; fixed-axis cases select their actual sensor axis.
+Unused header helper is inline; no core changes. G76 main-taper implementation
+scope and obsolete private settings-dispatch paths are documented in TODO.
+
+Push combined30-case continuation on coverage-batch-69 and run one hosted gate.
+Do not alter ready PR22 or create a duplicate upstream PR containing its85cases.
+Refresh its merge state before preparing the next PR; continue local work while
+CI runs. If PR22 is squash-merged, rebase only commits after aa80971 onto refreshed
+upstream master, preserving all uncommitted work before the rebase.
+
 # Current local recovery group - 2026-10-19
 
 PR22 is READY, not merged: all five jobs passed run39245386515 at
