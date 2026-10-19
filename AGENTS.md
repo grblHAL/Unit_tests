@@ -61,6 +61,19 @@ folder for Python helper tests; the default sandbox temp folder rejected child
 writes. Reclassifying the real coverage artifact now reports98 SEGFAULT findings.
 No CORE modification or diagnostic exception is involved.
 
+Batch72 fifth group: two protected-probe status workflows PASS
+ASan/UBSan0.30s. Register a real watchable/latchable probe, enable protection via
+$65=32, forward its actual queued report flags, and verify the protection marker
+is removed on disconnect/probing and restored on reconnect/return to idle guard.
+The initial draft used the generic report helper's empty flags; correcting the
+caller to pass pending stream flags fixed the fixture. No core bug or exception.
+Evidence: build-asan/batch72-probe-report-results.xml and
+../batch72-probe-report-tests.log. Batch72 now18 new passing core cases;
+registered total4,020. CI-report repair also has25 passing Python checks.
+GCC hosted71 is terminal failure solely from98 documented strutils.c:393
+NULL-base sanitizer cases; all25 new71 tests pass. Clang remains pending until
+rechecked. Never imply the source suite is green or fabricate coverage output.
+
 # Active coverage batch71 - 2026-10-20
 
 Goal ACTIVE: meaningful full supported core line/branch coverage. The hourly
