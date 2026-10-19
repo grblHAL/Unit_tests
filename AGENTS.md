@@ -1,3 +1,37 @@
+# Active coverage batch71 - 2026-10-20
+
+Goal ACTIVE: meaningful full supported core line/branch coverage. The hourly
+recovery task is configured in the app to continue stalled work when usage is
+available. Routine passing checks, commits and PR checkpoints do not stop work.
+
+Branch coverage-batch-71 starts freshly fetched upstream/master3b16ba3, which
+contains merged PR23. Core clean/unmodified Terje7a6a432eaf78e028b81ff3a5f9804e14519f5f01.
+Terje alone implements core fixes. Never edit/commit/push CORE or open core PRs.
+Confirmed faults go to KNOWN_BUGS.md; uncertain contracts/questions go to TODO.
+Requests to fix CI/tests never imply permission to change source firmware.
+
+Read one clean-source coverage report this batch:39288629614/core16c7dff,
+96.60% lines85.54% branches, as historical gap guidance only. Never use the
+withdrawn agent-patched run39332728069 as readiness/coverage evidence.
+Large dormant gaps include wall-plotter homing, unpublished settings and weak
+rigid-tapping implementation; avoid forcing private paths or unfinished features.
+
+First group:16 separate cases for job-end coordinate reload/CRC-error retry,
+check-mode persistence isolation, G92 save policy, completion callback ordering,
+feed/rapid/spindle override reset policy, parking policy and modal-snapshot
+invalidation. Settings cases cover supported spindle-sync/auto-square groups,
+optional plugin channel discovery and public homing-direction readback.
+First20 new cases PASS ASan/UBSan in0.67s, no diagnostics or new exceptions.
+The four added secondary-switch-first auto-square cases verify both homing
+directions, positive/negative trim, physical motor endpoints, completion and
+release of both motors. The two missing PWM coolant callbacks were fixture
+errors and are corrected, not recorded as core faults.
+Evidence: build-asan/batch71-first20-results.xml and ../batch71-first20-tests.log.
+Core remains clean7a6a432. Registered total3,997 (source still has documented
+independent faults; no full passing-core/coverage claim). Commit this coherent
+group, then continue practical gaps before a useful push/PR boundary. No full
+local rerun until pre-push; no unchanged reporting-helper reruns.
+
 # Core ownership and withdrawal - 2026-10-20
 
 Terje owns CORE implementation. This repository authors tests and documents
