@@ -1,3 +1,14 @@
+# Batch58 completed local validation - 2026-10-19
+
+Twelve new cases total3,704 pass full ASan/UBSan59.02s and strict summary.
+Five macro-depth/tool-capacity cases plus seven actual-stepper radius arc cases:
+inch conversion, positive/mirrored uniform scaling, CCW, helical allthreeplanes.
+51 reporting checks passed4.405s before C-only arc additions; redundant rerun
+blocked by approval reviewer capacity. No script changes or new exceptions.
+Core cleanlatestad57c78. Commit/push this module boundary and continue.
+PR20/21 merged; branch58 based b281f42. Verified hosted56 95.93/84.63, not
+yet these12newcases. Fork cleanupdone51mergedremote,59mergedlocal.
+
 # Current batch58 continuation - 2026-10-19
 
 PR20 and21 are merged; branch coverage-batch-58 starts upstream b281f42.
