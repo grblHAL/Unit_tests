@@ -1,3 +1,17 @@
+# Current batch65 expression checkpoint - 2026-10-19
+
+Branch coverage-batch-65 starts pushed64 e0c6707. Six new parser/stepper cases
+total3,741 pass full ASan/UBSan55.63s and strict summary;99 ngc_expr pass3.71s.
+Computed parameter indices round within documented0.0001 integer tolerance,
+including indirection. Out-of-tolerance index preserves previous assignment and
+queuedcut; EXP overflow and MOD0 nonfinite feed reject without dropping valid
+queuedmotion. No new exceptions;20 known failures plusone scoped known UBSan.
+51 reporting helpers latestpass4.112s. Core freshfetch unchangedcleanad57c78.
+63 and64 delivered together; only cumulative64 dispatched.60/61/62/64 status
+refresh blocked by approval reviewer capacity; do not claim terminalsuccess.
+Latest locked verified report58 95.99/84.69;59 hostedgreen. PR20/21 merged.
+Commit this group; combine next local group for next hosted checkpoint. Keepgoing.
+
 # Current batch64 optional-spindle hold checkpoint - 2026-10-19
 
 Branch coverage-batch-64 starts local63 c63137f (push review timed out; not yet
