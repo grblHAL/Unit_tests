@@ -1,3 +1,34 @@
+# Current batch69 transport, threading and upgrade checkpoint - 2026-10-19
+
+Sixteen additional cases are validated:67 beyond PR22 /3,844 registered.
+Five Modbus cases cover pin descriptions, oversized expected replies without
+exception callbacks, separate timeout notification, blocking no-callback timeout
+and device-exception recovery. G33 accepts cumulative encoder counters without
+an optional reset callback. Three G76 sender-stop workflows cancel initial
+radial approach, compound clearance and between-pass return; no subsequent cut
+starts and parser/motor positions agree for relative restart. Three repeated-hole
+G81 stops cover initial clearance, positioning and retract with unread tail
+canceled. Three persisted legacy-build cases verify one-time spindle tolerance/
+coolant migration and the downgrade opt-out. Full multi-spindle boot plus $RST=$
+verifies persisted registered compile-time default and stopped spindle outputs.
+
+One full local sanitizer gate3,844 ran57.32s,3,843 passed. The factory-reset
+candidate wrongly expected a reboot-required spindle selection to change during
+soft reset. Corrected it to assert persisted default reference, registered
+reboot-required metadata and both stopped outputs; focused repair passed0.26s.
+Consolidated full+repair3,844 passes strict summary. Raw evidence retained.
+No additional expected failure or sanitizer exception. Core16c7dff unmodified.
+
+Hosted51-case checkpoint39288629614 has source and coverage successful; compiler
+jobs were still running at last read. Both downloaded locks match2881c0b/core
+16c7dff, full regex and unchanged header filter. Measured17,052/17,652 lines
+96.60%;11,719/13,700 branches85.54%. Last fully green verified run39286594112
+measured96.54%/85.45%. No PR readiness claim until all five exact-head jobs pass.
+
+Continue ordinary rejected sender blocks identified by the latest gap report.
+Batch authoring first; no full-run repeats for unchanged code. Preserve separate
+upstream integration branch and pending user question about its116 broken cases.
+
 # Incoming upstream test integration held - 2026-10-19
 
 Upstream20f186f adds116 G-code cases beyond merged PR22. A clean merge into
