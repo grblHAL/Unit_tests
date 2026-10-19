@@ -1,47 +1,20 @@
-#include "support/engine_host.h"
-#include "ngc_tools.h"
+#include "support/incoming_tool_table_host.h"
 #include "check.h"
 #include <string.h>
 
-static tool_data_t tools[4];
-static tool_table_entry_t entries[4] = {{.data = &tools[0]}, {.data = &tools[1]}, {.data = &tools[2]}, {.data = &tools[3]}};
-static tool_table_entry_t *get_tool(tool_id_t id)
-{
-    if(id >= 1 && id <= 4) return &entries[id - 1];
-    return NULL;
-}
-
 int main(void)
 {
-    engine_prepare(); sys.cold_start = true;
-    coord_system_data_t coordinates = {0};
-    for(unsigned i = 0; i < N_CoordinateSystems; i++) settings_write_coord_data((coord_system_id_t)i, &coordinates);
-    grbl.tool_table.get_tool = get_tool;
-    grbl.tool_table.n_tools = 4;
-    CHECK(spindle_select(0)); gc_init(false); CHECK(plan_reset()); limits_init();
-    hal.control.get_state = engine_controls;
-    hal.stream.is_connected = engine_connected;
-    grbl.on_execute_realtime = protocol_execute_noop;
-    report_init_fns(); report_init(); state_set(STATE_IDLE);
-    sys.cold_start = false; sys.driver_started = true;
-
-    // G10 L1 P1 R5 - Set tool 1 radius offset
+    prepare_incoming_tool_table();
     char block1[] = "G10L1P1R5";
     CHECK(gc_execute_block(block1) == Status_OK);
     CHECK(tools[0].radius == 5.0f);
-
-    // G10 L10 P1 R3 - Set tool 1 radius offset relative
     char block2[] = "G10L10P1R3";
     CHECK(gc_execute_block(block2) == Status_OK);
-    CHECK(tools[0].radius == 8.0f); // 5 + 3
-
-    // G10 L1 P1 R5 Q10 - Set tool 1 radius and length
-    char block3[] = "G10L1P1R5Q10";
+    CHECK(tools[0].radius == 3.0f);
+    char block3[] = "G10L1P1R5Z10";
     CHECK(gc_execute_block(block3) == Status_OK);
     CHECK(tools[0].radius == 5.0f);
-    CHECK(tools[0].length == 10.0f);
-
-    // G10 L1 P5 - Invalid tool
+    CHECK(tools[0].offset.values[Z_AXIS] == 10.0f);
     char block4[] = "G10L1P5R5";
     CHECK(gc_execute_block(block4) == Status_GcodeIllegalToolTableEntry);
 

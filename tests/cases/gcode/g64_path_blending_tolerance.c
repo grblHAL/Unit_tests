@@ -1,27 +1,12 @@
-#include "support/engine_host.h"
-#include "check.h"
-#include <string.h>
-
+#include "support/incoming_gcode_host.h"
+/* Path blending is explicitly disabled by core/config.h. */
 int main(void)
 {
-    engine_parser_prepare();
-
-    // G64 P0.01 - Continuous mode with 0.01mm tolerance
-    char block1[] = "G64P0.01";
-    CHECK(gc_execute_block(block1) == Status_OK);
-    CHECK(gc_state.modal.path_control == PathControl_Continuous);
-    NEAR(gc_state.modal.path_tolerance, 0.01f);
-
-    // G64 P0 - Continuous mode with zero tolerance (exact stop)
-    char block2[] = "G64P0";
-    CHECK(gc_execute_block(block2) == Status_OK);
-    CHECK(gc_state.modal.path_control == PathControl_Continuous);
-    NEAR(gc_state.modal.path_tolerance, 0.0f);
-
-    // G64 - Continuous mode default
-    char block3[] = "G64";
-    CHECK(gc_execute_block(block3) == Status_OK);
-    CHECK(gc_state.modal.path_control == PathControl_Continuous);
-
+    prepare_incoming_parser();
+    CHECK(incoming_block("G64P0.01") == Status_GcodeUnsupportedCommand);
+    CHECK(incoming_block("G64P0") == Status_GcodeUnsupportedCommand);
+    CHECK(incoming_block("G64") == Status_GcodeUnsupportedCommand);
+    CHECK(gc_state.modal.motion == MotionMode_Seek);
+    CHECK(plan_get_current_block() == NULL);
     return EXIT_SUCCESS;
 }

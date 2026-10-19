@@ -551,3 +551,109 @@ Sources: [slot getter](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15f
 These are reachability observations, not confirmed firmware defects or requests
 for new features. Keep them in the reported denominator; revisit if the public
 interfaces expose these paths. Prefer remaining supported workflows first.
+
+## Named macro with a different SUB header: clarify supported structure
+
+**Observed 2026-10-19, Terje 16c7dff3aa9614322cfc2b47a2109cc9196ccca4.**
+Calling `fixture.macro` whose body starts with an assignment followed by
+`O<other>SUB` did not complete within the 15-second test timeout. Other ordinary
+named-macro syntax-error/unwind tests pass. The candidate expected a syntax
+error, caller scope restoration and suppression of the caller tail; the supported
+meaning of a differently named SUB within a named macro still needs review.
+The candidate is unregistered in
+[proposals](proposals/named_macro_mismatched_sub_header_unwinds_scope_and_suppresses_caller_tail.c).
+Evidence: local batch69-recovery-results.xml / batch69-recovery-tests.log.
+Do not classify it as a confirmed core defect or add an expected-failure allowance
+without checking the macro-file contract and identifying the exact stalled path.
+
+## G76 X-word main taper: confirm implementation scope
+
+**Source review 2026-10-19, Terje 16c7dff3aa9614322cfc2b47a2109cc9196ccca4.**
+`gcode.c` computes `thread.main_taper_height` and a pitch correction when G76 has
+an X word. `motion_control.c` rescales that height, but no generated threading
+move consumes the value. Existing entry/exit tapers, straight and reverse-Z
+threads have ordinary encoder-driven motion tests. Before adding a main-taper
+geometry assertion, confirm whether the X-word feature is intended to be complete.
+This is an implementation-scope question, not a registered defect or exception.
+Do not add a test that merely executes the calculation and blesses straight
+motion as a correctly tapered thread to improve a coverage percentage.
+
+## Settings coverage: obsolete private dispatch cases
+
+**Reviewed 2026-10-19, Terje 16c7dff3aa9614322cfc2b47a2109cc9196ccca4.**
+`Setting_HomingDirMask` and `Setting_SteppersEnergize` register `get_axis_mask`,
+so their older cases inside private `get_int` are not reachable through the
+registered settings API. Their public setting/query behavior already has tests.
+Likewise the safety-door delay settings have no availability callback, automatic
+and MPG report intervals register no availability callback, and the timezone
+setting registration is commented out. Those corresponding cases inside private
+`is_setting_available` cannot be reached through these current registrations.
+Do not replace registry entries or invoke static handlers to cover these obsolete
+paths. Leave them visible in coverage; revisit if core registrations change.
+
+## Bare G38 command: confirm whether modal-only selection is intentional
+
+**Observed 2026-10-19, Terje 16c7dff3aa9614322cfc2b47a2109cc9196ccca4.**
+Public parser input `G38.2F100` returns `Status_OK`, rather than the
+`Status_GcodeNoAxisWords` suggested by the probe-validation comment/check.
+The overall motion validation is gated by `AxisCommand_MotionMode`, so an
+axis-free block can instead select the modal probing mode without entering
+that check. Confirm whether this is intentionally supported before requiring
+an error or registering a positive modal-only contract test.
+The unchanged rejection assertion is unregistered in
+[proposals](proposals/probe_command_without_axis_words_rejects_without_arming_and_next_probe_works.c).
+Evidence: batch69-controller-options-results.xml and
+batch69-probe-command-diagnostic.log (actual0, expected26). No expected-failure
+allowance, source change or coverage exclusion was added. The ordinary
+same-position-target rejection followed by a successful contact probe passes.
+
+## Additional unreachable coverage guards: help dispatch and MPG pullup
+
+**Reviewed 2026-10-19, Terje 16c7dff3aa9614322cfc2b47a2109cc9196ccca4.**
+`system_execute_line()` handles every HELP-prefixed command before command-table
+lookup, so the static HELP table handler `output_help()` is redundant in the
+ordinary dispatcher. Its public behavior is already tested via `$HELP`.
+In `ioports_configure()`, the `Input_MPGSelect` comparison is inside a condition
+requiring `xbar->function < Input_Probe`, although the MPG enum is greater than
+Input_Probe. That particular branch is unreachable. Existing loaded MPG-select
+configuration tests verify observable pullup/debounce behavior, which currently
+comes from the initial configuration value. Do not invent different enum values
+or invoke private dispatchers to execute these lines. These are source-audit
+notes, not new expected failures or coverage exclusions.
+
+## G66 after arcs: confirm intended supported motion types
+
+**Observed 2026-10-19, Terje 16c7dff3aa9614322cfc2b47a2109cc9196ccca4.**
+An armed G66 callback fires after G0/G1 but not after G2/G3. Source contains the
+scope-aware trigger only in the linear and rapid cases. Four real-stepper arc
+candidates (CW, CCW, helix and full circle) returnedOK and reached the callback
+count assertion with zero calls; a nested-arc scope candidate also assumes arc
+trigger support. All five are unregistered in proposals pending confirmation.
+Do not label an intentional/incomplete motion-type limitation as a confirmed
+regression. Evidence: batch69-startup-macros-results.xml and
+batch69-macro-diagnostic.log (stored P100/L1, zero callback calls).
+The linear nested-G65 scope case uses explicit L1 so it tests scope independently
+of the separately registered G65 default-repeat/required-P defect.
+
+
+## Unreachable G10 missing-P/L guard (2026-10-19)
+
+On core16c7dff, the missing-P/L check is inside values.l > 0. An ordinary parsed nonzero L already sets words.l, making !(words.p || words.l) false. Bare G10 instead selects L0/reload and correctly returns unsupported when no reload handler exists. Keep this gap visible; do not force private parser state to exercise it.
+
+## G53 with active Fanuc scaling - contract review (2026-10-19)
+
+The incoming test assumed G53 bypasses G51 scaling. Current parser scales axis
+values before machine-coordinate override; G51X0Y0P2 then G53G0X10Y10 targets
+X20 Y20. Confirm intended interaction with Terje before classifying a defect.
+Unregistered proposal: tests/proposals/g53_scaling_machine_coordinates.c.
+Registered control cancels scaling with G50 before the G53 move.
+
+
+## Formatting current-drive relative-path recovery (2026-10-20)
+Source review of clean Terje7a6a432: vfs_drive_format writes global '/' into the
+cached directory while retaining the selected non-root mount. After formatting
+/store, relative filenames should still resolve within /store. The existing
+formatting_current_drive_resets_removed_subdirectory_to_drive_root case now
+checks an actual relative stat as well as the displayed directory. Revalidate
+once Terje fixes the independent strset NULL-base crash; do not implement a core
+fix here or call the source-inspection concern a new confirmed runtime failure.

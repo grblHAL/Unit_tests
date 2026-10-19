@@ -41,14 +41,13 @@ else:
     if args.kind == "tests":
         cases = list(root.iter("testcase"))
         failed = sum(c.find("failure") is not None or c.find("error") is not None for c in cases)
-        known = sum(any(p.get("name") == "cmake_labels" and "known_bug" in p.get("value", "").split(";") for p in c.findall("./properties/property")) and c.find("failure") is None and c.find("skipped") is None for c in cases)
         for case in cases:
-            labelled = any(p.get("name") == "cmake_labels" and "known_bug" in p.get("value", "").split(";") for p in case.findall("./properties/property"))
-            if labelled or any(case.find(tag) is not None for tag in ("failure", "error", "skipped")):
+            if any(case.find(tag) is not None for tag in ("failure", "error", "skipped")):
                 continue
             expected_diagnostic = any(p.get("name") == "cmake_labels" and "known_sanitizer_bug" in p.get("value", "").split(";") for p in case.findall("./properties/property"))
             diagnostics = []
-            for line in case.findtext("system-out", "").splitlines():
+            output = "\n".join(case.findtext(tag, "") for tag in ("system-out", "system-err"))
+            for line in output.splitlines():
                 if "runtime error:" not in line and "ERROR: AddressSanitizer" not in line:
                     continue
                 match = re.match(r"^(.*?):([0-9]+):([0-9]+): runtime error: (.*)$", line)
@@ -72,6 +71,9 @@ else:
                 case.set("sanitizer_status", "known" if all(known for _, known in diagnostics) else "failed")
                 case.set("sanitizer_output", "\n".join(line for line, _ in diagnostics))
         failed += len(sanitizer_failures)
+        known = sum(any(p.get("name") == "cmake_labels" and "known_bug" in p.get("value", "").split(";") for p in c.findall("./properties/property"))
+                    and not any(c.find(tag) is not None for tag in ("failure", "error", "skipped"))
+                    and c.get("sanitizer_status") is None for c in cases)
         skipped = sum(c.find("skipped") is not None for c in cases)
         lines = [f"## {args.suite_name} test results", f"Tests labelled `known_bug` are expected failures confirming documented defects; see {args.diagnostics_directory.as_posix()}/KNOWN_BUGS.md.", f"**{len(cases) - failed - skipped - known - len(known_diagnostics)} clean passes · {len(known_diagnostics)} passed with known sanitizer diagnostics · {known} known regressions reproduced · {failed} failed · {skipped} skipped**", "", "| Test | Result | Seconds |", "|---|---|---:|"]
         affected = [case for case in cases if case.find("failure") is not None or case.find("error") is not None or case.get("sanitizer_status") in ("failed", "missing")]

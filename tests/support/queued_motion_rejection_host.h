@@ -7,7 +7,10 @@ static inline void check_rejected_block_preserves_queued_motion(const char *text
     char command[96];
     CHECK(strlen(text) < sizeof(command));
     strcpy(command, text);
-    CHECK(gc_execute_block(command) == expected);
+    status_code_t actual = gc_execute_block(command);
+    if(actual != expected)
+        fprintf(stderr, "Rejected block '%s': status=%u expected=%u\n", text, (unsigned)actual, (unsigned)expected);
+    CHECK(actual == expected);
     CHECK(plan_get_current_block() == first && plan_get_block_buffer_available() == available);
     CHECK(gc_state.modal.motion == MotionMode_Linear);
     CHECK(gc_state.modal.feed_mode == FeedMode_UnitsPerMin);

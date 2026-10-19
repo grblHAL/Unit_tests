@@ -1,33 +1,68 @@
-# Current combined batch69 delivery - 2026-10-19
+# Core ownership and withdrawal - 2026-10-20
 
-Stay on coverage-batch-69; consolidate its work into existing PR22 rather than
-creating another small PR. PR22 is draft pending exact updated-head hosted checks.
-Core clean/latest fetched: 16c7dff3aa9614322cfc2b47a2109cc9196ccca4.
-25 new cases beyond PR22's prior 3,752-case head: 3,777 registered now.
-Coverage remains last measured 96.14% lines /84.91% branches (run39203585952,
-9a06753/ad57c78); do not claim new-source coverage until its hosted report exists.
+Terje owns CORE implementation. This repository authors tests and documents
+bugs; NEVER modify, commit or push CORE, or create a core PR. Requests to fix
+failing tests/CI do not authorize changing the firmware. Record confirmed faults
+in KNOWN_BUGS.md, uncertain contracts in TODO.md, retain correct regressions and
+wait for Terje's implementation. Proposed fixes may be documentation only.
 
-Validation: one full 3,776-case ASan/UBSan gate on ad57c78 passed134.99s plus
-strict summary. A newly fetched core update required a shared-header rebuild.
-Latest-core affected-module check: 524/526 passed18.84s; two allocation fixtures
-still targeted malloc after upstream changed redirect contexts to calloc.
-Added narrowly scoped calloc wrapping; repair/new-case check54/54 passed1.31s
-with strict summary. JSON-close API test is skipped when source lacks that API.
-No repeated full local suite; next complete gate is hosted GCC/Clang/coverage.
+The agent-created source PR terjeio/grblHAL_core#1 was a mistake and has been
+closed without merging. Its remote/local fix-vfs-string-ownership branch was
+deleted. Core is back on clean detached Terje7a6a432eaf78e028b81ff3a5f9804e14519f5f01.
+Unit_tests PR23 is draft again and must have no dependency on agent-patched core.
+Run39332728069 used agent-patched source and is WITHDRAWN as readiness/coverage
+evidence for this project. Do not present its green result as a Terje-core pass.
+The older fully green clean-Terje baseline39288629614 remains historical evidence.
 
-Removed 13 resolved WILL_FAIL allowances plus the resolved JSON sanitizer label/
-manifest entry, and deleted their 11 resolved bug sections. Correct regression
-assertions remain. Manual-tool door completion now checks observable safety-door
-state rather than the obsolete queued-flag implementation. Seven documented
-expected failures remain; no sanitizer diagnostic allowances remain.
+Keep genuine test repairs and API compatibility work. Terje's own cwd/safety-door/
+G65 fixes stay resolved. Restore still-unfixed directory bug documentation and
+narrow exceptions. Document the current strset NULL-base crash without suppressing
+unrelated sanitizer diagnostics. Allocation-failure tests follow Terje's retained
+storage policy; no requirement to free reachable storage is imposed.
+Clean-source targeted reproduction completed:7 string cases in0.54s;4 pass,
+3 reproduce the NULL-base sanitizer crash at strutils.c:393. Evidence:
+build-asan/core-withdrawal-results.xml and ../core-withdrawal-tests.log.
+No full rerun/CI dispatch is needed to reproduce this same fault. No source edits.
 
-Full boot confirms runtime $65=32 is supported despite clearing its saved flag
-at initialization. Idle IRQ cases remain registered; uncommitted withdrawal was
-reverted. New cases cover pauses, G97/CSS queue ordering, semicircle roundoff,
-partial peck drilling, IPv4 provider success/failure, macro errors/recovery,
-corrupt build-info recovery, pull-setting notification and JSON close ownership.
-Next: push this cumulative checkpoint to PR22, one hosted run against16c7dff;
-continue supported workflow gaps on the same working branch while it runs.
+# Current PR23 integrated repair checkpoint - 2026-10-19
+
+Working branch coverage-batch-69. PR22 is merged; existing PR23 receives this
+combined batch. Never commit/push master or merge PRs. User approved repairing
+upstream20f186f's incoming116 tests in this same PR, superseding older notes
+about a separate integration blocker/branch. Repair commit22a68cc is merged.
+
+All116 incoming cases compile. Corrected invented APIs/fields and unsupported
+G-code assumptions, valid arc geometry, coordinate-offset calculations, macro
+callback/scope behavior, tool selection, overrides and spindle capabilities.
+Feature-specific cases link the appropriate real core configuration. Shared host
+fixtures provide valid callbacks and mutable parser input. No core source edits.
+G53 with active Fanuc scaling remains a contract question in TODO with an
+unregistered proposal; the registered control uses explicit G50 cancellation.
+
+Core fresh fetch remains49eff3c5c66afa1cc1915b26ae8160fa805593c7, clean.
+The known VFS cached-directory NULL pointer, borrowed-buffer realloc and enabled
+safety-door preprocessing faults remain unsuppressed. Existing KNOWN_BUGS entries
+include reproductions and proposed fixes. They are separate from incoming-test
+repairs; do not weaken assertions or add blanket sanitizer exceptions.
+
+Final integrated validation: all3,985 targets build after narrowing the boot
+link-wrap rule to its seven intended incoming fixtures. One full ASan/UBSan run
+completed137.97s. All116 repaired incoming tests pass, with zero skips/exceptions.
+Full strict result:3,884 clean passes,5 known reproductions,96 failures,0 skips.
+Failure names match the previous core49 checkpoint exactly:95 sanitizer crashes
+from the two documented memory faults plus the safety-door-enabled compile fault.
+CTest raw count93 differs because three inherited expected-failure labels invert
+crash exits; strict reporting correctly rejects those crashes. No new allowance.
+Evidence: build-asan/pr23-integrated-results.xml, extracted
+build-asan/pr23-incoming116-results.xml and ../pr23-integrated-summary.md.
+Build logs retain the six initial link failures and narrow repair separately.
+55 reporting helper checks passed previously after6741803; unchanged here.
+
+Push this integrated repair to existing PR23 and dispatch one hosted checkpoint
+against the exact core49eff3c revision. Keep PR draft while unsuppressed source
+faults remain. Do not claim latest-core coverage or full hosted success.
+Latest fully green measured baseline remains39288629614/core16c7dff:
+17,052/17,652 lines96.60%,11,719/13,700 branches85.54%; not coverage of49eff3c.
 
 # Active efficiency policy - 2026-10-19
 

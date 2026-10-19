@@ -33,7 +33,7 @@ static void register_setup_spindle(unsigned i)
         .get_state = state_setup_spindle};
     CHECK(spindle_register(&setup_spindles[i], names[i]) == (spindle_id_t)i);
 }
-static void register_primary_during_init(void)
+static inline void register_primary_during_init(void)
 {
     register_setup_spindle(0);
 }

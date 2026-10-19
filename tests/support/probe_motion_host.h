@@ -3,6 +3,7 @@
 #include "probe.h"
 #include "report.h"
 static int32_t contact_steps = 40;
+static uint_fast8_t contact_axis = X_AXIS;
 static bool away_contact;
 static unsigned realtime_calls, completed_calls;
 static bool connected(void) { return true; }
@@ -10,7 +11,7 @@ static control_signals_t controls(void) { return (control_signals_t){0}; }
 static bool sensor_input(void *context)
 {
     CHECK(context == &contact_steps);
-    bool contact = sys.position[X_AXIS] >= contact_steps;
+    bool contact = sys.position[contact_axis] >= contact_steps;
     return away_contact ? !contact : contact;
 }
 static void execute_foreground(sys_state_t state)

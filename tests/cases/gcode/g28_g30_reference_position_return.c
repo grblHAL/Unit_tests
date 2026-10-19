@@ -1,36 +1,11 @@
-#include "support/engine_host.h"
-#include "check.h"
-#include <string.h>
-
+#include "support/boot_stream_motion_host.h"
 int main(void)
 {
-    engine_parser_prepare();
-
-    // Set G28 position
-    char block1[] = "G28.1X5Y5";
-    CHECK(gc_execute_block(block1) == Status_OK);
-
-    // Move away
-    char block2[] = "G0X10Y10";
-    CHECK(gc_execute_block(block2) == Status_OK);
-    NEAR(gc_state.position[0], 10.0f);
-    NEAR(gc_state.position[1], 10.0f);
-
-    // G28 - Return to G28 position
-    char block3[] = "G28";
-    CHECK(gc_execute_block(block3) == Status_OK);
-    NEAR(gc_state.position[0], 5.0f);
-    NEAR(gc_state.position[1], 5.0f);
-
-    // G30.1 - Set G30 position
-    char block4[] = "G30.1X15Y15";
-    CHECK(gc_execute_block(block4) == Status_OK);
-
-    // G30 - Return to G30 position
-    char block5[] = "G30";
-    CHECK(gc_execute_block(block5) == Status_OK);
-    NEAR(gc_state.position[0], 15.0f);
-    NEAR(gc_state.position[1], 15.0f);
-
+    prepare_boot_stream_motion("G1X5Y5F100\nG28.1\nG1X10Y10\nG30.1\nG53G0X0Y0\nG30\nG28\n");
+    CHECK(grbl_enter() == 0);
+    check_boot_motion_completion();
+    CHECK(sys.position[X_AXIS] == 400 && boot_motor_position[X_AXIS] == 400);
+    CHECK(sys.position[Y_AXIS] == 400);
+    CHECK(sys.position[Z_AXIS] == 0);
     return EXIT_SUCCESS;
 }

@@ -1,29 +1,14 @@
-#include "support/laser_program_host.h"
-#include "ngc_params.h"
-#include "check.h"
-#include <string.h>
-
+#include "support/incoming_gcode_host.h"
 int main(void)
 {
-    prepare_pwm_program_mode(Mode_Lathe, false);
-
-    // Set initial modal state
-    CHECK(laser_block("G90G94G17G21") == Status_OK);
-
-    // M70 - Save modal state
-    CHECK(laser_block("M70") == Status_OK);
-
-    // G71 roughing cycle
-    CHECK(laser_block("G71P100Q200U1W1D1F0.1") == Status_OK);
-
-    // M72 - Restore modal state
-    CHECK(laser_block("M72") == Status_OK);
-
-    // Modal state should be restored
-    CHECK(gc_state.modal.distance == DistanceMode_Absolute);
-    CHECK(gc_state.modal.feed_mode == FeedMode_UnitsPerMinute);
-    CHECK(gc_state.modal.plane_select == PlaneSelect_XY);
-    CHECK(gc_state.modal.units_imperial == false);
-
+    prepare_incoming_parser();
+    CHECK(incoming_block("G18") == Status_OK);
+    CHECK(incoming_block("M70") == Status_OK);
+    CHECK(incoming_block("G70Q100") == Status_GcodeUnsupportedCommand);
+    CHECK(incoming_block("G71Q100") == Status_GcodeUnsupportedCommand);
+    CHECK(incoming_block("G72Q100") == Status_GcodeUnsupportedCommand);
+    CHECK(incoming_block("M72") == Status_OK);
+    CHECK(gc_state.modal.plane_select == PlaneSelect_ZX);
+    CHECK(plan_get_current_block() == NULL);
     return EXIT_SUCCESS;
 }

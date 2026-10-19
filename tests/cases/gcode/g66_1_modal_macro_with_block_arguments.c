@@ -1,52 +1,15 @@
-#include "support/engine_host.h"
-#include "check.h"
-#include <string.h>
-
-static int macro_calls = 0;
-static float last_a, last_b;
-static status_code_t macro_exec(sys_state_t state, parser_block_t *gc_block)
-{
-    (void)state;
-    macro_calls++;
-    last_a = gc_block->values.a;
-    last_b = gc_block->values.b;
-    return Status_OK;
-}
-
+#include "support/incoming_macro_host.h"
 int main(void)
 {
-    engine_prepare(); sys.cold_start = true;
-    coord_system_data_t coordinates = {0};
-    for(unsigned i = 0; i < N_CoordinateSystems; i++) settings_write_coord_data((coord_system_id_t)i, &coordinates);
-    grbl.on_macro_execute = macro_exec;
-    CHECK(spindle_select(0)); gc_init(false); CHECK(plan_reset()); limits_init();
-    hal.control.get_state = engine_controls;
-    hal.stream.is_connected = engine_connected;
-    grbl.on_execute_realtime = protocol_execute_noop;
-    report_init_fns(); report_init(); state_set(STATE_IDLE);
-    sys.cold_start = false; sys.driver_started = true;
-
-    // G66.1 P100 A1 B2 - Modal macro with block arguments
-    char block1[] = "G66.1P100A1B2";
-    CHECK(gc_execute_block(block1) == Status_OK);
-    CHECK(gc_state.modal.macro_id == 100);
-
-    // X10 - Should call macro with A=10, B=10 (or just X?)
-    char block2[] = "X10";
-    CHECK(gc_execute_block(block2) == Status_OK);
-    CHECK(macro_calls == 1);
-    NEAR(last_a, 10.0f);
-
-    // Y20 - Should call macro
-    char block3[] = "Y20";
-    CHECK(gc_execute_block(block3) == Status_OK);
+    prepare_incoming_macro();
+    CHECK(incoming_block("G66.1P100A1B2") == Status_OK);
+    CHECK(macro_calls == 1 && active_modal_macro() == 100);
+    CHECK(incoming_block("A10") == Status_OK);
     CHECK(macro_calls == 2);
-    NEAR(last_b, 20.0f);
-
-    // G67 - Cancel
-    char block4[] = "G67";
-    CHECK(gc_execute_block(block4) == Status_OK);
-    CHECK(gc_state.modal.macro_id == 0);
-
+    NEAR(incoming_arguments[0], 10); NEAR(incoming_arguments[1], 2);
+    CHECK(incoming_block("B20") == Status_OK);
+    CHECK(macro_calls == 3);
+    NEAR(incoming_arguments[0], 10); NEAR(incoming_arguments[1], 20);
+    CHECK(incoming_block("G67") == Status_OK && gc_state.g66_args == NULL);
     return EXIT_SUCCESS;
 }

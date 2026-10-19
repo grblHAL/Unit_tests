@@ -8,6 +8,7 @@ static unsigned ram_sender_index, ram_sender_reads, ram_control_polls;
 static float ram_arguments[2], ram_return_arguments[3], ram_return_named[3];
 static bool ram_capture_named;
 static void (*ram_prepare_assets)(void);
+static on_macro_execute_ptr ram_macro_override;
 static uint_fast8_t ram_return_scopes[3];
 static line_number_t ram_return_lines[3];
 static status_code_t ram_return_status[3], ram_error_status[3], ram_expected_root_status = Status_OK;
@@ -56,6 +57,9 @@ static status_code_t ram_protocol_eof(vfs_file_t *file, status_code_t status)
 static status_code_t ram_execute_macro(macro_id_t id, line_number_t line, parameter_words_t words, uint32_t repeats)
 {
     (void)line;
+    if(!((id == 10 || id == 20) && words.a && repeats == 1))
+        fprintf(stderr, "RAM macro: id=%lu A=%u repeats=%lu scope=%u\n", (unsigned long)id,
+            (unsigned)words.a, (unsigned long)repeats, (unsigned)ngc_call_level());
     CHECK((id == 10 || id == 20) && words.a && repeats == 1);
     unsigned owner = id == 10 ? 1 : 2;
     CHECK(ngc_call_level() == owner);
@@ -79,7 +83,7 @@ static inline void prepare_ram_protocol(void)
     hal.stream.reset_read_buffer = nested_driver_reset;
     grbl.on_execute_realtime = protocol_execute_noop;
     grbl.on_file_end = NULL;
-    grbl.on_macro_execute = ram_execute_macro;
+    grbl.on_macro_execute = ram_macro_override ? ram_macro_override : ram_execute_macro;
 }
 static inline void run_ram_macro_protocol(const char *main_program, const char *sub_program, const char *leaf_program)
 {

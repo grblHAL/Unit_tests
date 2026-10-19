@@ -1,29 +1,14 @@
-#include "support/laser_program_host.h"
-#include "ngc_params.h"
-#include "check.h"
-#include <string.h>
-
+#include "support/sync_parser_host.h"
 int main(void)
 {
-    prepare_pwm_program_mode(Mode_Lathe, false);
-
-    // Set initial modal state
-    CHECK(laser_block("G90G94G17G21") == Status_OK);
-
-    // M70 - Save modal state
-    CHECK(laser_block("M70") == Status_OK);
-
-    // G76 threading cycle
-    CHECK(laser_block("G76X10Z-20P1000Q500F1.0") == Status_OK);
-
-    // M72 - Restore modal state
-    CHECK(laser_block("M72") == Status_OK);
-
-    // Modal state should be restored
-    CHECK(gc_state.modal.distance == DistanceMode_Absolute);
-    CHECK(gc_state.modal.feed_mode == FeedMode_UnitsPerMinute);
-    CHECK(gc_state.modal.plane_select == PlaneSelect_XY);
-    CHECK(gc_state.modal.units_imperial == false);
+    prepare_sync_parser();
+    sync_feedback.rpm = 500;
+    CHECK(css_block("M70") == Status_OK);
+    CHECK(css_block("G76Z-10P1I-1J0.2K1Q20H1") == Status_OK);
+    NEAR(gc_state.position[Z_AXIS], -10);
+    CHECK(plan_get_current_block() == NULL);
+    CHECK(css_block("M72") == Status_OK);
+    CHECK(gc_state.modal.plane_select == PlaneSelect_ZX);
 
     return EXIT_SUCCESS;
 }

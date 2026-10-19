@@ -17,16 +17,6 @@ if(TEST vfs.getcwd_without_backend_handler_preserves_mount_prefix_once)
   set_tests_properties(vfs.getcwd_without_backend_handler_preserves_mount_prefix_once PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
-if(TEST vfs.parent_path_crossing_mount_passes_target_local_filename)
-  set_tests_properties(vfs.parent_path_crossing_mount_passes_target_local_filename PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
 if(TEST vfs.current_directory_reallocation_failure_falls_back_to_root)
-  set_tests_properties(vfs.current_directory_reallocation_failure_falls_back_to_root
-    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
-endif()
-
-if(TEST ioports_pullup.pullup_disable_live_and_loaded_configuration_agree)
-  set_tests_properties(ioports_pullup.pullup_disable_live_and_loaded_configuration_agree
-    PROPERTIES WILL_FAIL TRUE LABELS "known_bug")
+  set_tests_properties(vfs.current_directory_reallocation_failure_falls_back_to_root PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
