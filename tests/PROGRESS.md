@@ -1,3 +1,29 @@
+# Current batch69 filesystem checkpoint - 2026-10-19
+
+PR22 is merged upstream at20f186f; its exact head aa80971 is an ancestor.
+Branch coverage-batch-69 now contains51 additional cases /3,828 registered.
+Six filesystem cases cover multiple visible mounts with hidden RAM omitted,
+early directory-close/reopen, current-drive format returning to its canonical
+root, and RAM writer metadata/buffer/growth allocation failures with safe
+cleanup and a subsequent successful job. Core remains unmodified16c7dff.
+
+One full local sanitizer gate ran3,828 in126.92s. Three fixture expectations
+were corrected from public contracts: hidden RAM mounts reject unlink, so
+consume/close the temporary reader; vfs_getcwd canonicalizes /store/ to /store.
+Focused six-case repair gate passed0.37s with strict summary. Consolidated
+full+repair evidence is retained separately; no second full local run.
+Nine documented expected failures remain; no sanitizer allowances.
+
+Hosted previous checkpoint39286594112 at b677af0 has source+coverage successful;
+GCC/Clang still queued when checked. Both downloaded locks match harness,core,
+full selection and header coverage filter. Measured17,041/17,652 lines96.54%;
+11,707/13,700 branches85.45%. Do not describe entire run as green until all five
+jobs finish. Prior fully verified run39249281186 remains96.49%/85.34%.
+
+Merge fresh upstream (normal ancestry, no squash replay needed), push this
+checkpoint and validate hosted exact head before presenting next PR as ready.
+Continue normal Modbus transport/error/recovery workflows independently.
+
 # Current batch69 startup/macro checkpoint - 2026-10-19
 
 Branch coverage-batch-69 continues; ready PR22 remains open at aa80971.
