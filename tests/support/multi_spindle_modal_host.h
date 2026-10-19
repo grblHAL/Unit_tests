@@ -3,6 +3,7 @@
 #include "ngc_params.h"
 static unsigned modal_rpm_update_calls[3];
 static bool modal_spindle_direction[3] = {true, true, true};
+static bool modal_secondary_enabled = true;
 static void modal_update_rpm(spindle_ptrs_t *spindle, float rpm)
 {
     CHECK(spindle->id >= 0 && spindle->id < 3);
@@ -22,8 +23,10 @@ static inline void prepare_multi_spindle_modal_program(void)
         CHECK(spindle_register(&registered_spindles[id], names[id]) == (spindle_id_t)id);
     }
     settings.spindle.ref_id = 10;
+    secondary_spindle_setting = modal_secondary_enabled ? 2 : 0;
     CHECK(settings_register(&spindle_slot_details));
-    CHECK(spindle_select(0)); CHECK(spindle_enable(1) == 1);
+    CHECK(spindle_select(0));
+    if(modal_secondary_enabled) CHECK(spindle_enable(1) == 1);
     coord_system_data_t coordinates = {0};
     for(unsigned id = 0; id < N_CoordinateSystems; id++)
         settings_write_coord_data((coord_system_id_t)id, &coordinates);

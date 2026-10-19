@@ -511,3 +511,19 @@ Candidate: `tests/proposals/translated_rotated_center_arc_keeps_work_origin_sepa
 (unregistered; no WILL_FAIL or sanitizer allowance). Evidence:
 `../batch62-translation-proposal.log`. Source: [offset before rotation](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/gcode.c#L3258-L3263),
 [relative arc-centre rotation](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/gcode.c#L3794-L3796).
+
+
+## Hold snapshot null-pointer guard is not reached by valid slot iteration
+
+**Reviewed:** 2026-10-19, Terje `ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216`.
+The new primary-only two-slot hold/resume tests exercise a disabled secondary
+slot through settings/startup, including the `spindle->hal == NULL` snapshot
+branch. The separate `gc_spindle_get(...) == NULL` fallback remains uncovered:
+initiate_hold iterates valid nonnegative slot indices, and gc_spindle_get returns
+the address of the corresponding modal slot for all such indices in both the
+single- and multi-spindle builds. Do not corrupt a slot pointer or call a private
+handler to cover this defensive fallback. Keep it visible in raw coverage;
+revisit if the getter contract changes. This is a reachability note, not a bug
+or a request to remove a defensive check.
+Sources: [slot getter](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/gcode.c#L886-L893),
+[hold snapshot](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/state_machine.c#L134-L158).

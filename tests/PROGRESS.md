@@ -1,3 +1,19 @@
+# Current batch64 optional-spindle hold checkpoint - 2026-10-19
+
+Branch coverage-batch-64 starts local63 c63137f (push review timed out; not yet
+delivered). Three new supported hold/resume cases total3,735 pass full
+ASan/UBSan54.96s and strict summary; all120multi_spindle pass5.07s.
+Settings-mapped startup now optionally leaves secondary disabled before gc_init;
+default fixture still enables it. Primary-only hold/resume and held spindle
+stop/restore avoid unused drivers; two-enabled control preserves both outputs.
+No new core issues/exceptions:20 known failures plusone scoped known UBSan.
+TODO records why separate getter-null fallback cannot occur with valid indices;
+no source exclusions or private calls. Shared driver/stepper workflows retained.
+51 helpers lastpass4.902s; timed-out rerun retried once and still pending review.
+Deliver63+64 together and run cumulative hosted64 to avoid redundant small runs.
+Core cleanad57c78; latest verified locked report58 95.99/84.69;59 hostedgreen.
+60/61/62 need terminal checks. PR20/21 merged; no new PR. Keepgoing.
+
 # Current batch63 held-spindle regression checkpoint - 2026-10-19
 
 Branch coverage-batch-63 starts pushed62 33f97d1. Three new cases total3,732 pass
