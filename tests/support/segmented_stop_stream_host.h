@@ -9,6 +9,7 @@ static bool program_can_pending, program_stop_sent, program_stopped, program_fin
 static bool program_resume_started;
 static bool program_full_seen;
 static bool program_stop_in_drill;
+static bool (*program_should_stop)(void);
 static void (*program_step_service)(sys_state_t state);
 static int32_t program_stop_position[N_AXIS];
 static float program_stop_parser[N_AXIS];
@@ -42,7 +43,8 @@ static void program_service(sys_state_t state)
             st_prep_buffer();
             stepper_driver_interrupt_handler();
         }
-        bool stop_point = program_stop_in_drill ? physical_position[Z_AXIS] <= -20 : axis_pulses[X_AXIS] >= 40;
+        bool stop_point = program_should_stop ? program_should_stop()
+            : (program_stop_in_drill ? physical_position[Z_AXIS] <= -20 : axis_pulses[X_AXIS] >= 40);
         if(!program_stop_sent && stop_point) {
             CHECK(program_line_reads == 1);
             if(!program_stop_in_drill) CHECK(program_full_seen);

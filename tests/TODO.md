@@ -551,3 +551,17 @@ Sources: [slot getter](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15f
 These are reachability observations, not confirmed firmware defects or requests
 for new features. Keep them in the reported denominator; revisit if the public
 interfaces expose these paths. Prefer remaining supported workflows first.
+
+## Named macro with a different SUB header: clarify supported structure
+
+**Observed 2026-10-19, Terje 16c7dff3aa9614322cfc2b47a2109cc9196ccca4.**
+Calling `fixture.macro` whose body starts with an assignment followed by
+`O<other>SUB` did not complete within the 15-second test timeout. Other ordinary
+named-macro syntax-error/unwind tests pass. The candidate expected a syntax
+error, caller scope restoration and suppression of the caller tail; the supported
+meaning of a differently named SUB within a named macro still needs review.
+The candidate is unregistered in
+[proposals](proposals/named_macro_mismatched_sub_header_unwinds_scope_and_suppresses_caller_tail.c).
+Evidence: local batch69-recovery-results.xml / batch69-recovery-tests.log.
+Do not classify it as a confirmed core defect or add an expected-failure allowance
+without checking the macro-file contract and identifying the exact stalled path.

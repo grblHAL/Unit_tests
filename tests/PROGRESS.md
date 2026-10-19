@@ -1,3 +1,30 @@
+# Current local recovery group - 2026-10-19
+
+PR22 is READY, not merged: all five jobs passed run39245386515 at
+ aa8097160bb572eb9e40f52c1d727b530cfc3c05 / core16c7dff3aa9614322cfc2b47a2109cc9196ccca4.
+Both downloaded locks match full selection and the unchanged core/header filter.
+Verified coverage16,997/17,652 lines96.29%;11,666/13,700 branches85.15%.
+The pushed PR has85 new cases /3,777 total, seven known failures, no known UBSan.
+README badges in this local continuation now link that verified report.
+
+Sixteen further local cases extend dwell-stop recovery, queued quadratic-spline
+rejections, corrupt work-offset recovery, malformed expressions, invalid macro
+loop targets and physical XY toolsetter checks. One full local gate3794 cases
+completed132.90s:3790 passed, three expression cases used the wrong (disabled)
+module, and one mismatched named-SUB header candidate timed out. Expression
+cases moved to ngc_expr with assertions unchanged; focused3/3 pass0.31s.
+The uncertain SUB-header candidate is unregistered in proposals with TODO.
+Consolidated full-run plus targeted-repair evidence has3793 cases /7 expected
+failures and passes strict summary; raw original/repair XML and logs retained.
+This is NOT a second all-tests execution. No core code or exclusions changed.
+
+Commit this related group locally. Keep coverage-batch-69 and continue larger
+batches; do not dispatch tiny CI follow-ups or alter ready PR22's head just for
+this checkpoint. Before the next push refresh PR22 merge state. New questions
+stay in TODO; never manufacture a macro-contract decision to make a case pass.
+Next useful gap: command help follows publicly configured homing options, then
+rank reachable regions using the newly downloaded39245386515 coverage report.
+
 # Current combined batch69 delivery - 2026-10-19
 
 Stay on coverage-batch-69; consolidate its work into existing PR22 rather than
