@@ -1,3 +1,14 @@
+# Batch69 continuing on the same branch - 2026-10-19
+
+Nine new cases now total3,761. Latest three registered-encoder CSS->G97S400
+cases pass focused3/3 in0.37s: radial and longitudinal queues finish before
+mode/speed switch; same-block rapid remains queued and reaches new endpoint.
+No new exceptions. Last full sanitizer/strict gate is3,758 before these3; next
+substantial cumulative gate must include them. Six boot pause cases committed
+01d9ac5; keep coherent modules here until next batch-ready checkpoint.
+68 pushed9a06753, hosted39203585952 live lastseen; exact readiness required
+before opening cumulative PR for its60cases. Continue while CI runs.
+
 # Current batch69 pause-workflow checkpoint - 2026-10-19
 
 Branch coverage-batch-69 starts pushed68 9a06753. Six new actual boot/serial
