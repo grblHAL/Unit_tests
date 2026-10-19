@@ -1,3 +1,17 @@
+# Current batch58 continuation - 2026-10-19
+
+PR20 and21 are merged; branch coverage-batch-58 starts upstream b281f42.
+Five new parser-facing macro depth/tool table capacity cases total3,697 pass
+ASan/UBSan118.89s and strict summary;51 reporting checks pass4.405s.
+Named recursion, nested G65, explicit RETURN and error recovery to sender tested.
+No new exceptions;19 expected failures and one scoped known UBSan unchanged.
+Fresh Terje fetch remains cleanad57c788e15fb4e5d8ef9c20ed50755ffa3d9216.
+Hosted56 run39179095314 success; exact harness520e3db/source/filter lock verified:
+16,916/17,634 lines95.93%;11,550/13,648 branches84.63%. Badges refreshed.
+Cleanup completed59 merged local branches and51 merged origin branches; fork
+retains onlymaster. Preserve other checked-out worktree and nonmergedlocal9.
+These five cases are localvalidated, not yet hosted. Continue meaningful coverage.
+
 # Current batch56 multi-spindle checkpoint - 2026-10-19
 
 Branch coverage-batch-56 starts at pushed55 6ede665. Twelve new cases total3,692:
