@@ -89,3 +89,42 @@ if(TEST boot_delta.sender_jog_cancel_stops_segment_refill_and_syncs_cartesian_po
   set_tests_properties(boot_delta.sender_jog_cancel_stops_segment_refill_and_syncs_cartesian_position
     PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Valid uint32 values must not be rejected based solely on their last digit.
+if(TEST settings.registered_plugin_counter_accepts_valid_ten_digit_value_ending_in_nine)
+  set_tests_properties(settings.registered_plugin_counter_accepts_valid_ten_digit_value_ending_in_nine
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+if(TEST nuts_bolts.read_uint_valid_ten_digit_values_ending_above_five)
+  set_tests_properties(nuts_bolts.read_uint_valid_ten_digit_values_ending_above_five
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+# Nested CRLF callers must retain physical line numbers after asynchronous G65 return.
+if(TEST ngc_params.nested_crlf_ram_g65_files_preserve_physical_line_numbers)
+  set_tests_properties(ngc_params.nested_crlf_ram_g65_files_preserve_physical_line_numbers
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+# Each appended embedded-file list must be searched from its first entry.
+if(TEST fs_embedded.later_registered_file_can_be_opened_after_searching_first_list)
+  set_tests_properties(fs_embedded.later_registered_file_can_be_opened_after_searching_first_list
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+# Correct output assertions pass; only sanitizer builds must reproduce this diagnostic.
+# Remove this label AND its scoped manifest entry when the signed negation is fixed.
+if(ENABLE_SANITIZERS AND TEST stream_json.minimum_signed_integer_emits_full_decimal_value)
+  set_tests_properties(stream_json.minimum_signed_integer_emits_full_decimal_value
+    PROPERTIES LABELS known_sanitizer_bug)
+endif()
+
+# Optional return expressions must use callee locals before the scope is unwound.
+if(TEST ngc_flowctrl.embedded_named_recursive_return_preserves_outer_return_value)
+  set_tests_properties(ngc_flowctrl.embedded_named_recursive_return_preserves_outer_return_value
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+if(TEST ngc_flowctrl.embedded_named_recursive_endsub_closes_each_real_file_handle)
+  set_tests_properties(ngc_flowctrl.embedded_named_recursive_endsub_closes_each_real_file_handle
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

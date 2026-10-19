@@ -46,17 +46,24 @@ else:
             labelled = any(p.get("name") == "cmake_labels" and "known_bug" in p.get("value", "").split(";") for p in case.findall("./properties/property"))
             if labelled or any(case.find(tag) is not None for tag in ("failure", "error", "skipped")):
                 continue
+            expected_diagnostic = any(p.get("name") == "cmake_labels" and "known_sanitizer_bug" in p.get("value", "").split(";") for p in case.findall("./properties/property"))
             diagnostics = []
             for line in case.findtext("system-out", "").splitlines():
                 if "runtime error:" not in line and "ERROR: AddressSanitizer" not in line:
                     continue
                 match = re.match(r"^(.*?):([0-9]+):([0-9]+): runtime error: (.*)$", line)
                 recognized = match and any(
-                    match[1].replace("\\", "/").endswith("/" + item["source"])
+                    item.get("test", case.get("name")) == case.get("name")
+                    and match[1].replace("\\", "/").endswith("/" + item["source"])
                     and int(match[2]) in item["lines"]
                     and re.fullmatch(item["message_pattern"], match[4])
                     for item in manifest)
                 diagnostics.append((line, bool(recognized)))
+            if expected_diagnostic and not diagnostics:
+                sanitizer_failures.append(case.get("name", "unknown"))
+                ET.SubElement(case, "failure", message="Known sanitizer diagnostic no longer reproduced; see known bugs, it may be a fixed regression.")
+                case.set("sanitizer_status", "missing")
+                case.set("sanitizer_output", "Expected diagnostic absent. Retain the correct test; review and remove its known_sanitizer_bug label, scoped manifest entry and resolved KNOWN_BUGS.md entry if fixed.")
             if diagnostics:
                 if all(known for _, known in diagnostics):
                     known_diagnostics.append(case.get("name", "unknown"))
@@ -67,12 +74,12 @@ else:
         failed += len(sanitizer_failures)
         skipped = sum(c.find("skipped") is not None for c in cases)
         lines = [f"## {args.suite_name} test results", f"Tests labelled `known_bug` are expected failures confirming documented defects; see {args.diagnostics_directory.as_posix()}/KNOWN_BUGS.md.", f"**{len(cases) - failed - skipped - known - len(known_diagnostics)} clean passes · {len(known_diagnostics)} passed with known sanitizer diagnostics · {known} known regressions reproduced · {failed} failed · {skipped} skipped**", "", "| Test | Result | Seconds |", "|---|---|---:|"]
-        affected = [case for case in cases if case.find("failure") is not None or case.find("error") is not None or case.get("sanitizer_status") == "failed"]
+        affected = [case for case in cases if case.find("failure") is not None or case.find("error") is not None or case.get("sanitizer_status") in ("failed", "missing")]
         if affected:
             guidance = ["", "### Failure guidance", ""]
             for case in affected:
                 name = html.escape(case.get("name", "unknown")).replace("|", "&#124;")
-                labelled = any(p.get("name") == "cmake_labels" and "known_bug" in p.get("value", "").split(";") for p in case.findall("./properties/property"))
+                labelled = any(p.get("name") == "cmake_labels" and any(label in p.get("value", "").split(";") for label in ("known_bug", "known_sanitizer_bug")) for p in case.findall("./properties/property"))
                 if labelled:
                     advice = "See " + known_link + "; it may be a fixed regression. Inspect the actual assertion/diagnostic before concluding it is fixed. If the correct expectations now pass, retain the test, remove only its linked WILL_FAIL/sanitizer/wrapper exception, delete the resolved known-bug entry, and rerun the suite plus summary. An unrelated crash or different failure is not proof of a fix."
                 else:
@@ -87,7 +94,7 @@ else:
             if any(p.get("name") == "cmake_labels" and "known_bug" in p.get("value", "").split(";") for p in case.findall("./properties/property")) and (case.find("failure") is not None or case.find("error") is not None):
                 status = "❌ Known regression changed; see guidance"
             if case.get("sanitizer_status"):
-                status = "⚠️ Assertions passed; known sanitizer diagnostic" if case.get("sanitizer_status") == "known" else "❌ Unexpected sanitizer diagnostic"
+                status = "⚠️ Assertions passed; known sanitizer diagnostic" if case.get("sanitizer_status") == "known" else "❌ Known sanitizer diagnostic absent; review exception" if case.get("sanitizer_status") == "missing" else "❌ Unexpected sanitizer diagnostic"
                 if case.get("sanitizer_status") == "failed" and os.environ.get("GITHUB_ACTIONS") == "true":
                     message = (case.get("name", "unknown") + "\n" + case.get("sanitizer_output"))[-6000:].replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
                     print(f"::error title=Unexpected sanitizer diagnostic::{message}")

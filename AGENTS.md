@@ -1,3 +1,171 @@
+# Current batch56 multi-spindle checkpoint - 2026-10-19
+
+Branch coverage-batch-56 starts at pushed55 6ede665. Twelve new cases total3,692:
+eight broadcast direction/capability/selector checks and four independent override
+output checks through M48/M49/M51. Focused110/110 pass4.96s;51 helpers pass4.716s.
+Initial override fixture failures were float rounding at8400 RPM against1e-5;
+less than0.01 RPM tolerance passes, no core issue or exception added.
+Full3,692 sanitizer/strict verification passes54.40s;19 known failures and one scoped known UBSan unchanged.
+Hosted54 run39176480077 and55 run39176993923 both terminalsuccess. Latest parsed
+coverage remains verified53 95.81% lines/84.46% branches. Core cleanad57c78.
+PR20 remains frozen40; no merges. Continue after checkpoints.
+# Current batch55 recursion/settings checkpoint - 2026-10-19
+
+Branch coverage-batch-55 starts at pushed54 f74d3d3. Twelve new cases total3,680
+pass focused0.80s;51 helpers pass4.721s. Full3,680 sanitizer/strict passes54.56s;51 helpers pass4.721s.19 expected failures
+plusone known UBSan now: RETURN/ENDSUB evaluate local expression after pop, so
+caller#1=99 yields109 insteadcallee#1=3 result13. Two correct named regressions,
+datedknownentry/proposal, no sanitizer allowance. LinuxCNC scope/return docschecked.
+Settings query fixture now initializes report handlers and mandatorycontrol reader;
+initial missing-callback crashes were fixture errors, not corebugs. No coreedits.
+Hosted53 run39176095263 fullygreen, locksverified95.81/84.46.54 run39176480077 live.
+PR20 open40, latestfullyverified49 95.74/84.24. Keepgoingaftercheckpoints.
+
+# Current batch54 status-report checkpoint - 2026-10-19
+
+Branch coverage-batch-54 starts at pushed53 f3fe1d1. Twelve new sender/pendant cases
+total3,668 pass focused0.80s;51 helpers pass4.652s. Full3,668 sanitizer/strict passes54.37s;51 helpers pass4.652s.
+G55/G54, inch WCO via$13, M8/M7/M9 use supported public commands and driver states;
+primary broadcast and directed pendant semantics preserved, exact fields checked.
+No new core defect/exception.17 expected failures plusone known UBSan unchanged.
+Hosted53 run39176095263 sourcepassed, GCC/Clang/coverage inprogress. PR20 open40.
+Latest fully verified hosted49 remains95.74/84.24. Do not call50-52 hostedgreen.
+
+# Current batch53 hosted compatibility repair - 2026-10-19
+
+Branch coverage-batch-53 starts at pushed52 3b62d3c. No new C cases yet.
+Actual hosted50/51 GCC+coverage builds failed on unused shared heap_more (Clang
+passed); moved append-only declarations into that case. Hosted52 source helpers
+failed because new reporting tests inherited GITHUB_STEP_SUMMARY; isolated fixture
+environment and added explicit parent-Actions regression.51 helpers pass4.186s
+with simulated GitHub environment. Full3,656 sanitizer/strict passes117.74s;51 helpers pass simulatedCI4.186s. No assertions weakened.
+Core freshfetchstillcleanad57c78; PR20 open/frozen40. Latest green49 is95.74/84.24.
+Do not call50/51/52 hostedgreen; allthree are terminalfailure as described.
+
+# Current batch52 checkpoint
+
+Branch coverage-batch-52 starts at pushed51 a13c4be. Ten JSON helper cases total3,656;
+focused26/26 pass1.81s.50 Python helpers pass4.465s, six new cases prove scoped
+known-diagnostic matching, obsolete-exception cleanup, unrelated failure rejection
+and no diagnostic required without sanitizer label. Full3,656 sanitizer/strict passes53.62s; actual CI classifier also passes.17 expected failures plusone known recovering UBSan.
+Correct INT32_MIN JSON output passes but signednegation atstream_json.c228 isUB.
+Dated KNOWN_BUGS entry/proposal; scoped manifest and SAN-only known_sanitizer_bug
+label force reporting red when diagnostic disappears. Keep assertions; cleanup both.
+README explains cleanup. Core cleanad57c78; PR20 open/frozen40.
+Hosted48/49 verifiedgreen;49 coverage95.74/84.24, badges refreshed tothat run.50/51 pending.
+
+# Current batch51 checkpoint
+
+Branch coverage-batch-51 starts at pushed50 427a0a5. Twelve real embedded named
+macro/protocol cases total3,646; focused31/31 pass1.78s,44 helpers pass3.637s.
+Full3,646 sanitizer/strict passes53.00s.
+Named error propagation can revisit root observer; require correct error/status
+and state restoration, not an invented exactly-once callback rule.17 known failures
+unchanged, no new core defects/exceptions. Core cleanlatestad57c78.
+Hosted47 verifiedgreen95.72/84.18;48/49/50 need terminal checks. PR20 open/frozen40.
+
+# Current batch50 checkpoint
+
+Branch coverage-batch-50 starts at pushed49 746d5b4. Twelve new file resource/lifecycle
+cases total3,634; focused30/30 pass1.57s,44 helpers pass3.723s. Full3,634 sanitizer/strict passes53.03s. No new known exceptions.
+Tracked malloc/free probe is enabled only around supported public operations;
+never inject into coverage shutdown. Actual embedded backend used for open retry.
+Core cleanlatestad57c78; PR20 open/frozen40. Hosted47 verifiedgreen95.72/84.18;48/49 still need terminal checks.
+
+# Current batch49 checkpoint
+
+Branch coverage-batch-49 starts at pushed48 8792adb (Modbus module d295c8e).
+Eleven real-RAM O-code protocol cases total3,622; focused18/18 pass0.86s.
+44 helpers pass3.623s. Full3,622 sanitizer/strict passes52.40s.17 known failures unchanged. Do not test/resolve
+DO-WHILE CONTINUE contract pending Terje. Common RAM fixture setup extracted,
+existing seven G65 cases included focused and full gates. No core changes.
+Hosted47 run39081516464 and48 run39081807991 in_progress lastseen; verify later.
+PR20 remains open/frozen40. Latest verified46 coverage95.67/84.05.
+
+# Current batch48 checkpoint
+
+Branch coverage-batch-48 starts at pushed47 bdd8da0. Twelve new cases total3,611:
+eight Modbus transaction recovery/frame boundaries, four embedded file integration.
+Focused46/46 pass1.98s, helpers44 pass3.695s. Full3,611 sanitizer/strict passes52.48s.17 labelled known failures now.
+Appended embedded lookup carries index across lists, skips valid assets; shorter
+list also ASan-overreads. Correct regression uses legitimate longer second list
+for deterministic no-UB failure; one named WILL_FAIL, no sanitizer allowance.
+Core cleanlatestad57c78. Hosted47 run39081516464 in_progresslast. PR20 stillopen40.
+
+# Current batch47 checkpoint
+
+Branch coverage-batch-47 starts at pushed46 c3755d9. Twelve nested real-RAM
+stream/protocol cases total3,599; focused14/14 pass including two older controls.
+One real CRLF caller line-number defect is documented with one named expected
+failure. LF/CR/mixed controls pass; no motion failure claimed. Full3,599 sanitizer/strict gate passes112.60s; helpers44 pass3.473s. Core untouchedlatestad57c78.
+Hosted46 run39044600759 fullygreen, exactharness/source/filter verified:
+16,871/17,634 lines95.67%;11,471/13,648 branches84.05%.
+PR20 remains OPEN/unmerged frozen40. Continue coverage after useful checkpoint.
+
+# Current batch46 delivery handoff
+
+Branch coverage-batch-46 starts at pushed45 b60ded4 (plus352a94a reportinggroup).
+17 new parser/modal cases pass full3,587 sanitizer/strict53.37s and44 helpers.
+15 existing known failures; no new defects/allowances. CSS S/D snapshot scope
+question source-only in TODO, do not register without maintainer contract.
+Latest hosted43 verified95.58/83.92;44 run39042584724 queued lastseen and45
+dispatched, obtain ID/status. PR20 frozen fullygreen40; no merge authorized.
+Core cleanad57c78 remains latest. See newest PROGRESS and finish validation.
+
+# Current batch45 combined delivery checkpoint
+
+Branch coverage-batch-45 has committed MPG group352a94a plus16 numeric/parser
+cases ready for full gate (3,570 total,20 added since44). One new documented
+unsigned-parser defect has2 named correct regressions;15 known failures total.
+No core edits/allowances. See newest PROGRESS. Run full sanitizer/strict/helpers
+passed52.65s with44 helpers; commit/push one combined checkpoint. PR20 remains ready/frozen at40.
+Core cleanad57c78; verify hosted43/44 and latestcore while full gate runs.
+
+# Continue batch45 as a substantial combined delivery
+
+Four MPG/report cases pass full3,554 sanitizer/strict51.98s. Commit module group
+locally, keep extending branch coverage-batch-45 before push/hosted gate rather
+than CI for every few cases. Next registered numeric plugin setting writes.
+Focused checks while authoring; full sanitizer/helpers at substantial checkpoint.
+PR20 open/frozen verified40. Hosted42 green95.56/83.90;43/44 still to verify.
+
+# Current batch45 handoff
+
+Branch coverage-batch-45 starts at pushed44 fda9a93. Four independent primary/MPG
+report-consumption cases pass focused; full gate pending. Preserve intentional
+primary broadcast and pendant-directed output behavior. See newest PROGRESS.
+PR20 open/frozen40;42 hosted green,43 run39042209299 and44 run39042584724 live.
+Core clean ad57c78. Next useful gap: registered numeric plugin setting writes.
+
+# Current batch44 handoff
+
+Branch coverage-batch-44 begins at pushed43 65856dc. Five registered PWM
+spindle hold/plugin-order cases pass full3,550 sanitizer/strict and44 helpers. See newest
+PROGRESS. PR20 frozen at verified40; later work separate. Hosted41 fully green
+95.53/83.85;42 run39041825459 and43 dispatched remain to verify. Core cleanad57c78.
+
+# Current batch43 handoff
+
+Branch coverage-batch-43 begins at pushed42 5d336fc. Six backlash/probe cases
+pass full3,545 sanitizer/strict and44 helpers. PR20 now open at fully green40 d795985.
+Do not merge;41/42/43 remain separate later work. Hosted41 run39041409247 live
+at latest check;42 dispatched, obtain run ID. Verified40 coverage95.50/83.81.
+Core clean ad57c78. See newest PROGRESS and preserve correct assertions.
+
+# Current batch42 handoff
+
+Branch coverage-batch-42 begins at pushed41 c0d76b8. Three CoreXY real-boot
+homing cases pass full3,539 sanitizer/strict and44 helpers. See latest PROGRESS. Both40
+run39040996935 and41 run39041409247 live; await completed exact-head hosted
+checks before ready PR. Core clean ad57c78. No new defects/allowances in42.
+
+# Current batch41 handoff
+
+Branch coverage-batch-41 starts at pushed40 d795985. Four configured geometry
+real homing cases pass full3,536 sanitizer/strict and44 helpers. Hosted40 run39040996935
+is live. PR19 merged; cumulative ready PR awaits exact40 hosted gate.
+See latest PROGRESS for evidence. Core remains clean ad57c78.
+
 # Current handoff
 
 Branch coverage-batch-40 retains all cumulative work through39. PR19 merged.

@@ -1,3 +1,14 @@
+# Current batch56 multi-spindle checkpoint - 2026-10-19
+
+Branch coverage-batch-56 starts at pushed55 6ede665. Twelve new cases total3,692:
+eight broadcast direction/capability/selector checks and four independent override
+output checks through M48/M49/M51. Focused110/110 pass4.96s;51 helpers pass4.716s.
+Initial override fixture failures were float rounding at8400 RPM against1e-5;
+less than0.01 RPM tolerance passes, no core issue or exception added.
+Full3,692 sanitizer/strict verification passes54.40s;19 known failures and one scoped known UBSan unchanged.
+Hosted54 run39176480077 and55 run39176993923 both terminalsuccess. Latest parsed
+coverage remains verified53 95.81% lines/84.46% branches. Core cleanad57c78.
+PR20 remains frozen40; no merges. Continue after checkpoints.
 # Coverage progress and continuation handoff
 
 Last verified: **2026-10-16**. Read this with the root `AGENTS.md` and README.
@@ -3360,3 +3371,414 @@ Batch40 delivery:3,532 full sanitizer cases pass53.06s, strict summary passes;
 13 labelled known failures. All44 helper tests pass3.254s outside sandbox after
 temporary-directory permission failures there. No core edits. Push/hosted gate
 next, then ready cumulative PR after exact-head GCC/Clang/coverage/diagnosis.
+
+
+## Batch41 configured delta geometry during real homing - 2026-10-17
+
+Four new cases total3,536. Settings are applied through settings_store_setting
+during normal driver setup: home angle30 degrees, motor travel30 degrees,
+base-to-floor350mm and forearm330mm. Real homing completes with all three
+switches. Analytic symmetric rod geometry independently checks home coordinates;
+travel/floor options shrink the finite ordered workspace without changing home.
+All four focused cases pass0.42s. No new bug, exception or core change.
+Batch40 d795985 pushed, exact-core hosted39040996935 confirmed in progress.
+Full41 validation pending; do not present it as ready.
+
+Batch41 delivery: full3,536 sanitizer/strict pass113.71s,44 helpers pass.
+13 existing known failures; no new defects or allowances. Push41 and continue42.
+Hosted40 exactd795985 run39040996935 remains live at last check.
+
+
+## Batch42 CoreXY startup homing policy and switch feedback - 2026-10-17
+
+Three new full-boot cases total3,539. Configured combinedXY cycle rejects $H
+with HomingFail before wake/pulses. Supported separate Z/X/Y cycles home all
+axes with actual ISR pulses and carriage switches from (A+B)/2,(A-B)/2.
+A single $HX uses both coupled motors, leavesZ stationary and retains the
+homing-required lock for remaining axes. Parser position is independently
+checked against joint sums/differences. Initial homing-required alarm is normal,
+not an erroneous no-alarms assumption. All three focused pass0.34s.
+Discarded $HXY candidate because that sender command is unsupported; no bug
+registered for it and no attempt to force the private combined-mask branch.
+No source changes, new exceptions or defects. Full validation pending.
+Hosted40 run39040996935 and41 run39041409247 are still live.
+
+Batch42 delivery: full3,539 sanitizer/strict pass52.02s;44 helper tests pass.
+13 unchanged known failures. Push/dispatch42 and continue43. Hosted40 has source,
+GCC and coverage successful; Clang test still in progress at latest check.
+
+
+## Batch43 Z backlash and probe-following motion - 2026-10-17
+
+Six new cases total3,545. Public per-axis settings configure compensation. Z
+reversal/continuation and negative-first travel check both motor pulses and
+logical endpoints; XYZ diagonal uses independent8/4/10-pulse take-up. Two real
+G38.2 probe/contact cases verify short forward follow-up adds no false reversal
+and reverse follow-up adds exactly8 take-up pulses. This exercises backlash
+position synchronization after probe abort removes its remaining queued target.
+All six focused pass0.57s. No new defects, exceptions or core changes.
+Full43 gate pending. Initial generated double constants corrected to float under
+strict Clang warnings.
+
+Hosted40 exactd795985/ad57c78 run39040996935 fully passed all jobs. Artifact
+verification:16,841/17,634 lines95.50%;11,439/13,648 branches83.81%, core filter.
+PR20 opened only after that full hosted gate: https://github.com/grblHAL/Unit_tests/pull/20
+It contains315 new cases since upstream master/merged19. Frozen at40;41/42 and
+current43 remain separate continuing work. Do not merge PR20. Hosted41
+run39041409247 remains in progress at last check.
+
+Batch43 delivery: full3,545 sanitizer/strict pass53.39s;44 helpers pass.
+13 existing known failures. Hosted41 exactc0d76b8/ad57c78 run39041409247 is fully
+green; downloaded lock/filter/coverage verify16,846/17,634 lines95.53% and
+11,444/13,648 branches83.85%. PR20 remains frozen at40. Push43 and continue44.
+
+
+## Batch44 held spindle plugin notification ordering - 2026-10-17
+
+Five new cases total3,550. PWM spindle registered before parser initialization
+and used in standard machine mode; no registered spindle pointer mutation.
+A real20mm move is held, stopped/restored via ordinary realtime overrides.
+Plugin programmed callbacks precede hardware changes, override callbacks see
+completed hardware state, and resume notification precedes any resumed steps.
+Two queued toggles produce neither false notifications nor hardware writes;
+stop during deceleration notifies only after completed hold. Exact1600-pulse
+endpoint is retained on resume. All five focused pass0.51s. No new defects,
+exceptions, allowances or source changes. Full44 gate pending.
+
+Batch44 delivery: full3,550 sanitizer/strict pass52.42s and44 helpers pass.
+13 unchanged known failures, no core edits. Push/dispatch44; continue45 with
+independent primary/MPG report consumption using public reporting APIs.
+Report_ClearAll returns early for primary only; do not force the unreachable
+zero-value MPG observer path just for coverage or call it a defect.
+
+
+## Batch45 independent primary and MPG report consumption - 2026-10-17
+
+Four new cases total3,554. Normal realtime requests consume primary and directed
+pendant reports in both orders after public feed override110% or G10 offsetX12.
+Both receive the new value even when the other report was already consumed.
+Primary replies broadcast to connected streams; pendant requests stay local and
+do not take primary input control. Initial fixture incorrectly expected primary
+replies to bypass pendant; corrected to documented broadcast behavior, not a bug.
+All four focused pass0.38s. No new defects, exceptions or core edits.
+The internal MPG zero-flags branch is unreachable from Report_ClearAll's early
+return; do not force it just to improve counts. Full45 validation pending.
+Hosted42 run39041825459 fully successful, downloaded artifacts pending extraction.
+Hosted43 run39042209299 and44 run39042584724 still in progress at last check.
+
+Batch45 reporting checkpoint:3,554 sanitizer/strict pass51.98s. Commit locally
+then extend the same feature branch with more module groups before another
+full hosted run, reducing repeated CI/push overhead. Keep focused checks while
+authoring and full sanitizer/helpers at the larger delivery checkpoint.
+Hosted42 verified5d336fc/ad57c78:16,851/17,634 lines95.56%,11,451/13,648
+branches83.90%. PR20 remains frozen and ready at40.
+
+
+Batch45 numeric settings extension:16 additional cases,3,570 total (20 since44).
+Registered plugin types cover decimal, axis masks,8/16/32-bit integers and bool,
+full-width accepted values, overflow/invalid-mask rejection, no save/notify on
+failure, saved-before-notification order, and selective core/driver restore.
+Two correct regressions expose read_uint incorrectly rejecting valid ten-digit
+values ending6-9: publicplugin2000000009 and minimaldirect1000000006/4294967289.
+2000000005 andUINT32_MAX controls pass;UINT32_MAX+1 rejects properly.
+One dated KNOWN_BUGS entry with exactsourceanchor and pre-multiplication overflow
+proposal; two named WILL_FAIL blocks,15 total labelled failures. No source
+modification or sanitizer allowance. Owner restore saves its own defaults before
+on_changed, matching the registered contract. All15 numeric focused cases pass
+expected classifications0.92s; direct uint group also verified. Combined full
+checkpoint next before one push/hosted run for the20 new cases.
+
+Batch45 combined delivery:3,570 sanitizer/strict pass52.65s,44 helpers pass3.348s;
+15 labelled known failures. Fresh core fetch confirms cleanad57c78 latest.
+Hosted43 exact65856dc/ad57c78 run39042209299 fullygreen, artifactlock/filter
+verified16,854/17,634 lines95.58%,11,454/13,648 branches83.92%. Hosted44
+run39042584724 now reports queued at latest snapshot (samehandle, not terminal).
+Push combined20case checkpoint, continue next branch with parser comment and
+optional-block workflows; do not force private/unreachable paths.
+
+
+## Batch46 parser normalization and modal restoration - 2026-10-17
+
+17 new cases total3,587. Public plugin G-code executes/skips optional blocks via
+normal$B setting, preserves semicolons inside comments and queued motion after
+plugin comment rejection. Three distinct M98 subroutine positions survive repeat
+registration. G65 passes positive/negative/inch-mode U/V/W as raw local macro
+arguments, restores caller values and queues no motion. Registered PWM lathe
+controls restore G96/G97, G7/G8 reporting, stopped or CCW spindle state and RPM;
+repeated unchanged diameter restore adds no false status flag. Cutter snapshot
+restores a changed radius with same compensation side after ordinaryG40/re-enable.
+M6 message comments precede driverchange and remain visible for an already fitted
+tool without repeating the change. All17 focused pass, no new core defect or
+exception. The $B fixture initially missed mandatory is_connected callback; fixed
+fixture, not a bug. Source-only CSS S/D saved-state scope question is in TODO,
+unregistered pending Terje; mode controls pass without claiming that contract.
+No core edits or sanitizer allowances. Full46 gate pending; preserve PR20 frozen40.
+Latest fully verified hosted43 is95.58% lines83.92% branches.
+
+Batch46 delivery:3,587 sanitizer/strict pass53.37s;44 helpers pass3.764s.
+15 unchanged known failures, no new exceptions. Also corrected a stale comment
+in backend_close.h: currentvfs_close caches metadata before backend close and
+no longer has the oldUAF; KNOWN_BUGS correctly has no such entry. Helper remains
+for isolated backend testing, not as a required workaround. Comment-only edit
+does not change compiled behavior. Next exercise nested realRAM file streams
+through ordinaryvfs_close, rather than inherit that stale assumption.
+
+
+## Batch47 nested real RAM stream integration - 2026-10-17
+
+Five new cases total3,592 pass focused0.45s. Realfs_ram/vfs opens three distinct
+files throughstream_redirect_read; tests unwindLIFO, preserve parent line/position,
+restore original serial reader, route errors/EOF to active owner and chain previous
+EOF observer in order, preserve parents after missing child/reposition. Ordinary
+vfs_close is used throughout, no backend bypass/wrapper. Temporary RAM files
+are deleted after readers close. Initial fixture expectedgc_state.file_run, but
+stream_set_file does notset it; corrected to publicstream_is_file rather than
+force that separate parser/program flag. No bug/exception from that assumption.
+Next extend with actualprotocol/G65 loader workflows on the same real RAM files,
+focused checks first, full checkpoint after a substantial combined group.
+PR20 remains frozen at40; current47 starts at pushed46 c3755d9.
+
+
+## Batch47 nested macro protocol checkpoint - 2026-10-18
+
+Twelve new cases total3,599. Five real RAM stream cases plus seven actual G65
+protocol cases cover LIFO readers, missing child, EOF/error ownership, reposition,
+local numeric/named scope preservation, automatic M73 modal restore, error
+suppression and normal serial-query recovery. CR/LF/mixed controls distinguish
+one reproducible line-diagnostic defect: CRLF main/child report4/4 instead of3/3
+when pending caller LF survives asynchronous G65 return. Leaf reports2 correctly;
+ordinary LF and CR callers report3/3/2. Commands/modal results succeed. Correct
+regression retained with one dated known-bug entry, proposal and named WILL_FAIL;
+no sanitizer allowance or production source edit.16 known failures now.
+Focused14/14 pass0.76s including two existing controls;44 helpers pass3.473s.
+Full3,599 sanitizer/strict gate running; do not claim completion before checking.
+
+Fresh fetched Terje remains cleanad57c788e15fb4e5d8ef9c20ed50755ffa3d9216.
+PR20 still open/unmerged. Hosted46 run39044600759 passed alljobs, source lock
+matchesc3755d929a42e7f7b3a11098d848e777f6809e14 andad57; corefilter unchanged.
+coverage.xml:16,871/17,634 lines95.67%,11,471/13,648 branches84.05%.
+Artifacts saved beside checkout asrun-39044600759-{coverage-core,source-lock-core}.zip.
+
+Batch47 delivery gate: all3,599 ASan/UBSan cases and strict diagnosis pass112.60s;
+44 Python helpers pass3.473s.16 labelled known failures, zero unexpected failures.
+
+
+## Batch48 Modbus recovery and embedded asset integration - 2026-10-18
+
+Twelve new cases total3,611: eight public modbus_message workflows cover timeout
+and exception recovery, stale-response clearing, optional callback, rejected
+transport recovery, packed-bit order across words, maximum register read, and
+write frame-size rejection followed by valid full-frame write. Four embedded VFS
+cases cover mount-root stat, independent readers/peer close/reopen, appending a
+list without disrupting an open reader/directory order, and opening a valid asset
+in an appended list. Ordinary vfs_close throughout, no backend wrappers.
+
+Confirmed appended-list lookup bug: find_file retains exhausted first-list index
+when moving to next list. With firstlist2 entries, secondlist3, opening its first
+entry returnsNULL. Original secondlist1 reproduces ASan global-buffer-overflow
+at fs_embedded.c:58 (batch48-embedded-focused.log). Committed legitimate longer
+list retains correct assertions without relying on UB, so non-ASan coverage is
+deterministic too. Dated known entry, reset-index proposal, one named WILL_FAIL;
+17 total expected failures, no sanitizer allowances or production core edits.
+
+Focused46/46 pass1.98s;44 helpers pass3.695s. Full sanitizer/strict gate running,
+see batch48-tests.log. Latestcore unchangedad57c78, PR20 remains open/frozen40.
+Batch47 pushedbdd8da0dc004706895d06a3878615352690517cd; hosted39081516464 running.
+Latest fully verified46 coverage95.67% lines84.05% branches.
+
+Batch48 delivery:3,611 ASan/UBSan cases and strict summary pass52.48s;
+44 helpers pass3.695s.17 labelled known failures, zero unexpected failures.
+
+
+## Batch49 O-code through real RAM protocol - 2026-10-18
+
+Eleven new cases total3,622 run actualprotocol_main_loop over real RAM files:
+nested repeats, WHILE/REPEAT CONTINUE, ordinary DO/WHILE, conditional BREAK,
+nested loop BREAK, false WHILE/zero REPEAT skip G65 loaders, IF/ELSEIF selection,
+nested subroutine local arguments, early RETURN/value flags and M73 restoration.
+They validate final parameters and normalEOF/serial$G recovery with no motion.
+DO/WHILE CONTINUE remains undecided TODO and unregistered as requested.
+
+Extracted shared protocol initialization in ram_macro_protocol_host.h rather than
+duplicate the driver/file setup. Bounded control polling detects runaway file loops.
+Existing seven nested G65 protocol cases still pass with the refactor. Focused18/18
+pass0.86s, including the one already labelled CRLF diagnostic regression.
+44 reporting helpers pass3.623s. Full3,622 sanitizer/strict gate running;17 existing
+known failures, no new exceptions or production-source modifications.
+Batch48 pushed8792adb5c451042ed58ca9e5a3bf2ba9207e30bf, hosted39081807991 running.
+Batch47 run39081516464 also running at latest check. PR20 remains open/frozen40.
+
+Batch49 delivery gate:3,622 ASan/UBSan cases and strict summary pass52.40s;
+44 helpers pass3.623s.17 unchanged labelled known failures, no unexpected failures.
+
+
+## Batch50 file-resource failure and lifecycle integration - 2026-10-18
+
+Twelve new cases total3,634. Four file redirects reject backend-handle or redirect-
+context allocation at root/nested depth, assert all partial allocations freed,
+original serial/parent reader preserved with parent line/position, then retry and
+read successfully. Four embedded asset resource cases cover failed file open,
+either directory allocation and failed appended-list allocation followed by retry;
+existing directory remains available. A reusable tracked malloc/free probe avoids
+duplicated instrumentation, is enabled only around public operations, and disabled
+before shutdown/gcov allocations. Link wrapping is scoped to the allocation cases.
+
+Four lifecycle cases cover repeated report-handler initialization through nested
+owners, closing all then opening a fresh RAM session, EOF forwarding without a
+local handler, and empty asynchronous G65 leaf scope return/caller continuation.
+Ordinary VFS/stream APIs used throughout, no production source edits.17 existing
+known failures unchanged. Focused30/30 pass1.57s,44 helpers pass3.723s.
+Full3,634 sanitizer/strict gate running in batch50-tests.log.
+Batch49 pushed746d5b46219ec3d990a6ed24c0a38b4ee9e57fd6; hosted39081992616 running.
+Earlier47 run39081516464 and48 run39081807991 still running at prior check.
+
+Batch50 delivery gate:3,634 ASan/UBSan cases and strict summary pass53.03s;
+44 helpers pass3.723s.17 unchanged known failures, no unexpected failures.
+Hosted47 run39081516464 fullygreen, lock matchesbdd8da0/ad57 and corefilter.
+Coverage16,879/17,634 lines95.72%;11,489/13,648 branches84.18%.
+Downloaded coverage/source-lock artifacts beside checkout.48/49 still live.
+
+
+## Batch51 named embedded macros through real file protocol - 2026-10-18
+
+Twelve new cases total3,646. Real read-only embedded .macro assets are located
+by the core and called from a real RAM root file throughprotocol_main_loop.
+Cases cover EOF and empty files, early RETURN/ENDSUB values and tail skipping,
+repeat independent opens, M73 restoration, M71 disarm, nested local/modal scopes,
+message output, and one/two named-file parser-error unwinds suppressing caller
+commands and restoring the serial sender. Ordinary vfs_close and core named-file
+handlers are exercised, replacing neither backend operations nor lifetime logic.
+
+Shared RAM root fixture supports an optional asset registration callback and
+expected root error status. Initial fixture required exactlyone root error callback;
+actual named-error propagation legitimately revisits that observer (observedtwo).
+Corrected the new fixture to require observed correct error, EOF status, restored
+scope and correct final parameters. No core bug was inferred from that callback
+count. Existing G65 and RAM-loop controls also pass after helper changes.
+Focused31/31 pass1.78s,44 helpers pass3.637s. Full3,646 sanitizer/strict running.
+17 existing known failures unchanged, no production edits or new allowances.
+Batch50 pushed427a0a5; hosteddispatch done, obtainrun ID.47 fullyverifiedgreen,
+48/49 still live at previous check. Latest verifiedcoverage95.72/84.18.
+
+Batch51 delivery gate:3,646 ASan/UBSan cases and strict summary pass53.00s;
+44 helpers pass3.637s.17 unchanged known failures, no unexpected failures.
+
+
+## Batch52 JSON boundaries and mandatory diagnostic cleanup - 2026-10-18
+
+Ten new cases total3,656 cover unterminated/malformed members without callbacks,
+callback-driven search across mixed fields, absent-target/early-stop behavior,
+INT32_MAX/zero, UTF8 preservation with ASCII escaping, nested array/object separator
+restoration and INT32_MIN output. This remains the core's basic callback parser;
+no general JSON-validator contract is imposed. Focused26/26 pass1.81s.
+
+INT32_MIN emits the correct text but UBSan reports signed negation atstream_json.c228.
+One dated known entry proposes unsigned magnitude arithmetic; no production edit.
+Correct output assertions remain normal passes, not WILL_FAIL. The test/source/
+line/message-scoped manifest allows only this recovering diagnostic; SAN-only
+known_sanitizer_bug label requires the diagnostic to remain present until cleanup.
+Both summary and CI diagnosis now flag a missing diagnostic as changed known
+exception, retaining actual assertion failures/different diagnostics for review.
+Without SAN label, coverage is an ordinary clean output test. README explains
+removing label+manifest together.17 expected failures plusone recovering diagnostic.
+
+Six meaningful reporting tests cover match, wrong test, changed diagnostic,
+actual assertion failure, obsolete diagnostic and noninstrumented case. All50
+helpers pass4.465s. Full3,656 sanitizer/strict gate running in batch52-tests.log.
+Batch51 pusheda13c4be; dispatchdone, obtainrun ID. Core remainscleanad57c78.
+PR20 open/frozen40; later batches remain separate continuing work.
+
+Batch52 delivery gate:3,656 ASan/UBSan cases and strict summary pass53.62s;
+3,638 clean,17 expected failures,one known recovering diagnostic, zero unexpected.
+50 helpers pass4.465s. Actual CI classifier also yieldszero findings/18 known.
+Hosted48 run39081807991 and49 run39081992616 fullygreen, source/filter/harness
+locks verified.48:16,883/17,634 lines95.74%,11,495/13,648 branches84.22%.
+49:16,883/17,634 lines95.74%,11,497/13,648 branches84.24%.
+README snapshot badges refreshed to fullygreen49, both links changed together.
+Hosted50 run39082275393 and51 run39082526178 still running at latest check.
+
+
+## Batch53 hosted compatibility repair - 2026-10-19
+
+Fresh live state: clean branchcoverage-batch-53 starts at pushed52 3b62d3c;
+core fetched lateststillad57c788e15fb4e5d8ef9c20ed50755ffa3d9216, PR20 open.
+Previous goal turn made concrete progress through52; continue full objective.
+
+Hosted50 run39082275393 and51 run39082526178 failed GCC+coverage compilation:
+heap_more in embedded_allocation_host.h is unused in cases that do not append.
+Their Clang jobs passed and source jobs passed. Moved heap_second/heap_more
+into only the append test; no assertion or production-source change.
+Hosted52 run39082907285 failed source helpers: new sanitizer-expectation fixture
+inherited GITHUB_STEP_SUMMARY, so it wrote to parent Actions summary instead of
+captured stdout. Now remove that variable and GITHUB_ACTIONS only in the fixture
+subprocess environment, matching existing reporting-test isolation. Added a
+regression that injects those parent variables and verifies no parent file write.
+All51 helpers pass4.186s under simulated Actions variables. These are harness
+compatibility defects, not core regressions; three failed runs remain failed.
+Full3,656 local sanitizer/strict gate running in batch53-tests.log (handle84410).
+Downloaded report-core artifacts beside checkout contain exact failure evidence.
+Latest fully verified hosted49 remains95.74% lines84.24% branches.
+
+Batch53 delivery gate:3,656 ASan/UBSan cases and strict summary pass117.74s;
+51 helpers pass4.186s with inherited Actions variables injected.17 expected
+failures plusone scoped known UBSan diagnostic; zero unexpected failures/skips.
+
+
+## Batch54 sender and pendant status independence - 2026-10-19
+
+Twelve new cases total3,668 verify pending G55/G54 coordinate-system selection,
+inch-display WCO, M8 flood/M7 mist/M9 off state reach both independently tracked
+streams regardless of which requests first. Public G-code/settings commands and
+registered MPG transport are used with complete driver coolant callbacks. Inch
+status formatting correctly follows$13; no NGC parameter unit contract is changed.
+Expected fields are checked to delimiter boundaries, including empty accessory
+field when coolant is off. Primary replies broadcast as designed; directed MPG
+replies remain quiet on primary, and control stays with the primary stream.
+No motion/private state forcing and no new defects/exceptions.
+
+Focused12/12 pass0.80s,51 helpers pass4.652s. Full3,668 sanitizer/strict gate
+running in batch54-tests.log (handle35509).17 existing expected failures andone
+recovering known UBSan remain. Hosted repair53 run39176095263 sourcejob passed;
+GCC/Clang/coverage running.53 headf3fe1d1c9c5726a743953a4400cf4537335ded1d.
+Corecleanad57c78, PR20 open/frozen40, latestverifiedcoverage49 95.74/84.24.
+Next useful area: real embedded named-macro recursion and repeated-return lifetime
+through core file handles, using ordinary bounded programs and existing helpers.
+
+Batch54 delivery gate:3,668 ASan/UBSan cases and strict summary pass54.37s;
+51 helpers pass4.652s.17 expected failures plusone known UBSan, zero unexpected.
+
+
+## Batch55 named recursion and settings readback - 2026-10-19
+
+Twelve new cases total3,680. Eight real embedded named-file programs cover
+bounded recursion, repeated reopening, numeric caller preservation, M73 frames,
+looped child calls, error unwind and expression-valued RETURN/ENDSUB. Four
+settings cases query both registered getter and actual $id output for E-stop
+unlock, supported control inversion and subroutine options under advertised SD/
+littlefs capabilities, including persistent reload. They test availability/readback;
+actual macro file execution is covered separately, not storage board drivers.
+
+Two genuine return-expression regressions: callee#1=3 returns[#1+10] whilecaller
+has#1=99. Observed109, correct13. Both paths pop scope before expressionevaluation.
+All four invocations, restored caller and return-present controls pass before the
+correct result assertion fails. Primary LinuxCNC O-code scope/return documentation
+supports this contract. One datedknownentry withcodefixproposal/two namedWILL_FAIL
+blocks;19 total expected failures plusone existing recoveringUBSan. No coreedits.
+Six remaining recursion cases and four readback cases pass normally. Initial
+query fixture lacked report_init_fns/mandatoryhal.control.get_state; completed
+fixture before classification; those crashes were notcoredefects.
+
+Focused12/12 pass0.80s includingtwo labelled regressions;51 helpers pass4.721s.
+Full3,680 sanitizer/strict running inbatch55-tests.log (handle77056). Next commit
+only after terminal result.54 pushedf74d3d3, hosteddispatchdone obtainID.
+Hosted53 run39176095263 sourcepassed, GCC/Clang/coverage lastinprogress.
+Core remainscleanad57c78, PR20 open/frozen40, latestverified49 95.74/84.24.
+
+Batch55 delivery gate:3,680 ASan/UBSan cases and strict summary pass54.56s;
+51 helpers pass4.721s.19 expected failures plusone scoped known UBSan, no unexpected.
+Hosted53 repair run39176095263 fullygreen includingGCC/Clang/coverage/diagnosis.
+Source lockmatchesf3fe1d1c9c5726a743953a4400cf4537335ded1d/ad57 andcorefilter.
+Coverage16,895/17,634 lines95.81%;11,527/13,648 branches84.46%.
+Artifacts beside checkout; README snapshots refreshed to thisverifiedrun.
+Hosted54 run39176480077 still live. Earlier50-52 failures are notrerun/relabeled;
+53 cumulative checkpoint validates their fixes. PR20 remains open/frozen40.

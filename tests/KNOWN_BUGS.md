@@ -420,3 +420,182 @@ as its ordinary endpoint may still be queued for execution.
 **Cleanup:** remove the named WILL_FAIL block once the full regression passes,
 retain both tests and their correct assertions, run the full sanitizer suite,
 and delete this entry.
+
+
+## Valid ten-digit unsigned numbers ending in 6-9 are rejected
+
+**Known since:** 2026-10-17. **Reproduced core:**
+`ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216`.
+
+A registered plugin's ordinary uint32 setting accepts `2000000005` and
+`4294967295`, but rejects `2000000009` with SettingValueOutOfRange. The latter
+is inside uint32 range and below the registered maximum. This affects the core
+numeric parser, independently of board hardware; no particular production plugin
+or physical failure is claimed. A direct parser regression also checks valid
+`1000000006` and `4294967289`.
+
+[read_uint() overflow check](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/nuts_bolts.c#L218-L223)
+requires the tenth digit to be at most5 regardless of the preceding value.
+That restriction is needed only when the preceding value equals429496729.
+The ordinary controls verify UINT32_MAX is accepted and UINT32_MAX+1 rejected;
+plugin save/notification and independent typed storage are also checked.
+
+**Regressions:** [public plugin counter store](cases/settings/registered_plugin_counter_accepts_valid_ten_digit_value_ending_in_nine.c)
+and [minimal unsigned parser](cases/nuts_bolts/read_uint_valid_ten_digit_values_ending_above_five.c).
+Two named WILL_FAIL blocks in [known_bugs.cmake](known_bugs.cmake); no sanitizer allowance.
+
+**Suggested fix (proposal, not applied):** validate the accumulated value before
+multiplication using the actual uint32 limit, rather than digit count:
+
+```c
+if(intval > (UINT32_MAX - c) / 10u)
+    return Status_SettingValueOutOfRange;
+intval = intval * 10u + c;
+```
+
+Remove the now-unused digit counter from this function. Preserve the existing
+leading-zero, optional-plus, negative-value, zero-decimal and fractional-rejection
+contracts. Retest valid ten-digit endings6-9 and actual overflow.
+
+**Cleanup:** remove both named WILL_FAIL blocks once both complete regressions
+pass, keep their correct assertions and ordinary maximum/overflow controls,
+run the full sanitizer suite, and delete this entry.
+
+
+## Nested CRLF macro returns overcount caller file lines
+
+**Known since:** 2026-10-18. **Reproduced core:**
+`ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216`.
+
+An asynchronous G65 file provider opens a child RAM file while its caller's
+CRLF command still has the LF pending. On return, that LF is counted again.
+A three-line main file calling a three-line child, which calls a two-line leaf,
+finishes with reported line numbers 4, 4, 2 instead of 3, 3, 2. These are real
+VFS files executed through protocol_main_loop, not manually forced parser state.
+This affects file line diagnostics; the tested commands and modal results succeed.
+LF-only callers, CR-only callers, and a CRLF leaf with LF callers pass.
+
+[Shared end-of-line state](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/stream_file.c#L24-L79)
+is a static variable in stream_read_file(). Nested contexts save the position and
+line number but not that state; the child's EOF clears it before the caller's LF.
+
+**Regression:** [nested CRLF files](cases/ngc_params/nested_crlf_ram_g65_files_preserve_physical_line_numbers.c).
+One named WILL_FAIL block in [known_bugs.cmake](known_bugs.cmake); no sanitizer allowance.
+
+**Suggested fix (proposal, not applied):** keep end-of-line state per active file
+context. Initialize it for a new file and restore the caller's pending CRLF state
+when closing its child. Preserve ordinary EOF and synthetic final-newline behavior.
+
+**Cleanup:** remove the named WILL_FAIL block once the full regression passes,
+keep its correct physical-line assertions and the LF/CR/mixed controls, run the
+full sanitizer suite, and delete this entry.
+
+
+## Embedded file lookup skips entries in later registered lists
+
+**Known since:** 2026-10-18. **Reproduced core:**
+`ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216`.
+
+Registering two embedded file lists is supported by fs_embedded_mount(). With
+two files in the first list and three in the second, opening the first file in
+the second list returns NULL even though directory enumeration exposes it.
+The lookup carries index2 from the exhausted first list into the second list,
+skipping that list's first two entries. This can affect separately registered
+plugin assets; no particular plugin deployment failure is claimed.
+
+With a one-file second list, the same ordinary open additionally reproduces
+AddressSanitizer global-buffer-overflow at fs_embedded.c:58. The committed test
+uses a longer second list so its correct open/read assertions fail deterministically
+without an invalid read, including in the non-sanitized coverage configuration.
+It does not pad or alter a production list and no source fix is applied.
+
+[find_file()](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/fs_embedded.c#L46-L64)
+initializes idx only before searching the first list.
+
+**Regression:** [open appended-list file](cases/fs_embedded/later_registered_file_can_be_opened_after_searching_first_list.c).
+One named WILL_FAIL block in [known_bugs.cmake](known_bugs.cmake); no sanitizer allowance.
+
+**Suggested fix (proposal, not applied):** reset idx to zero for every registered
+list before its search. Preserve first-match ordering and hidden-file direct reads.
+Retest differently sized lists, missing names, stat and directory enumeration.
+
+**Cleanup:** remove the named WILL_FAIL block when the complete regression passes,
+keep its correct open/read assertions, recheck the shorter-list ASan reproduction,
+run the full sanitizer suite, and delete this entry.
+
+
+## JSON minimum signed integer formatting negates INT32_MIN
+
+**Known since:** 2026-10-18. **Reproduced core:**
+`ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216`.
+
+json_add_int() accepts an int32_t, but formatting INT32_MIN negates it while still
+signed. Positive2147483648 cannot be represented by int32_t. The observed output
+is the correct -2147483648 on the tested compiler; UBSan reports the undefined
+signed negation. This is a formatter boundary defect, not an observed machine
+motion failure or a claim that a production caller currently emits this value.
+Ordinary maximum, zero and negative-number output controls pass.
+
+[Signed negation](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/stream_json.c#L221-L231)
+casts to uint32_t only after evaluating the signed conditional expression.
+
+**Regression:** [minimum signed output](cases/stream_json/minimum_signed_integer_emits_full_decimal_value.c).
+Correct decimal output assertions remain ordinary passes. Sanitizer builds also
+require the narrowly matched diagnostic via its known_sanitizer_bug label in
+[known_bugs.cmake](known_bugs.cmake) and test/source/line/message-scoped entry in
+[known_sanitizer_diagnostics.json](known_sanitizer_diagnostics.json). Coverage
+builds have no diagnostic expectation. A missing or changed sanitizer diagnostic
+fails reporting with cleanup guidance; an unrelated assertion/crash is not proof
+of a fix. No WILL_FAIL or global sanitizer suppression is used for this case.
+
+**Suggested fix (proposal, not applied):** compute the magnitude in unsigned
+arithmetic before formatting, preserving the existing minus sign output:
+
+```c
+uint32_t magnitude = (uint32_t)value;
+if(value < 0)
+    magnitude = 0u - magnitude;
+char *v = uitoa(magnitude);
+```
+
+**Cleanup:** retain the correct decimal output test; remove its known_sanitizer_bug
+label block and scoped manifest entry together after the corrected implementation
+passes without diagnostics. Run the full suite and both report classifiers, then
+delete this entry.
+
+
+## Subroutine return expressions use restored caller arguments
+
+**Known since:** 2026-10-19. **Reproduced core:**
+`ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216`.
+
+A named subroutine called with local #1=3 returns [#1+10]. Its caller has #1=99.
+The observed result is109 rather than13 because the core restores the caller's
+arguments before evaluating the expression. Both RETURN and ENDSUB are affected.
+The regressions execute bounded recursive .macro programs through real embedded
+file handles and a RAM caller. All four invocations, caller argument restoration,
+normal sender recovery and return-present flags (where asserted) succeed before
+the correct return-value assertion fails. Constant return-value controls pass.
+This can affect macros that calculate a result from their local arguments; no
+specific deployed probing/machining failure is claimed.
+
+[LinuxCNC subroutine scope and return values](https://linuxcnc.org/docs/html/gcode/o-code.html#_subroutine_return_values)
+document local call arguments and optional return expressions, including a local
+parameter expression. The core supports those expressions but its
+[ENDSUB path](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/ngc_flowctrl.c#L661-L672)
+and [RETURN path](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/ngc_flowctrl.c#L767-L785)
+unwind the subroutine before ngc_eval_expression().
+
+**Regressions:** [RETURN expression](cases/ngc_flowctrl/embedded_named_recursive_return_preserves_outer_return_value.c)
+and [ENDSUB expression](cases/ngc_flowctrl/embedded_named_recursive_endsub_closes_each_real_file_handle.c).
+Two named WILL_FAIL blocks in [known_bugs.cmake](known_bugs.cmake); no sanitizer allowance.
+
+**Suggested fix (proposal, not applied):** evaluate the optional expression while
+the callee's local/modal scope still exists, save its result and presence flag,
+then unwind and publish the saved return value to the caller. Preserve normal
+no-expression behavior, M73 restoration, named-file callback lifetime and G65
+return-handler ownership. Retest nested named and numeric callers.
+
+**Cleanup:** remove both named WILL_FAIL blocks once both complete regressions
+pass, keep correct return-value and scope assertions, run the full sanitizer
+suite and classifiers, and delete this entry.
