@@ -12,12 +12,3 @@ endif()
 if(TEST nvs_buffer.failed_version_only_write_remains_pending_for_retry)
   set_tests_properties(nvs_buffer.failed_version_only_write_remains_pending_for_retry PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
-
-
-# Explicit G65 calls must retain required-P/default-repeat validation while G66 is armed.
-if(TEST ngc_params.g65_default_repeat_with_armed_g66_dispatches_one_iteration)
-  set_tests_properties(ngc_params.g65_default_repeat_with_armed_g66_dispatches_one_iteration PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-if(TEST ngc_params.g65_missing_macro_number_with_armed_g66_rejects_before_callback)
-  set_tests_properties(ngc_params.g65_missing_macro_number_with_armed_g66_rejects_before_callback PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
