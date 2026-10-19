@@ -399,6 +399,13 @@ these do not claim protection is operational or prove physical interlock behavio
 No production patch, source exclusion or new known-failure exception is added.
 
 
+**Runtime clarification, 2026-10-19:** full normal boot with a registered
+watchable probe accepts `$65=32` and arms its guard after startup. Clearing the
+saved protection flag during settings initialization does not prevent this
+runtime workflow. The ordinary idle probe IRQ cases remain registered; see
+[cold boot then runtime enable](cases/boot/initialized_probe_options_allow_runtime_protection_enable.c).
+Do not withdraw those cases based solely on the startup flag clearing above.
+
 ## Failed-startup detailed driver diagnostic policy
 
 **Review date:** 2026-10-15, Terje feebef26222111f11c7a3b3b0156d023aa786937.
@@ -527,3 +534,20 @@ revisit if the getter contract changes. This is a reachability note, not a bug
 or a request to remove a defensive check.
 Sources: [slot getter](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/gcode.c#L886-L893),
 [hold snapshot](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216/state_machine.c#L134-L158).
+
+## Remaining coverage: unexposed settings and parser branches
+
+**Reviewed 2026-10-19, Terje 16c7dff3aa9614322cfc2b47a2109cc9196ccca4.**
+
+- `ioports.c`: the `Settings_IoPort_OD_Enable` setting registration is commented
+  out. Existing ordinary tests verify that setting writes are disabled. Do not
+  invoke its private setter to cover its dormant configuration/getter cases.
+- `gcode.c`: M48/M49 branches for `spindle_id == -1` are not reached by normal
+  override blocks: `is_single_spindle_block()` does not address a spindle for
+  those commands, and the remaining dollar word is rejected. M51 explicitly
+  requires one spindle. Keep default/per-spindle workflow tests; do not forge
+  parser state to execute the dormant all-spindle loops.
+
+These are reachability observations, not confirmed firmware defects or requests
+for new features. Keep them in the reported denominator; revisit if the public
+interfaces expose these paths. Prefer remaining supported workflows first.

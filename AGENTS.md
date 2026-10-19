@@ -1,3 +1,70 @@
+# Current combined batch69 delivery - 2026-10-19
+
+Stay on coverage-batch-69; consolidate its work into existing PR22 rather than
+creating another small PR. PR22 is draft pending exact updated-head hosted checks.
+Core clean/latest fetched: 16c7dff3aa9614322cfc2b47a2109cc9196ccca4.
+25 new cases beyond PR22's prior 3,752-case head: 3,777 registered now.
+Coverage remains last measured 96.14% lines /84.91% branches (run39203585952,
+9a06753/ad57c78); do not claim new-source coverage until its hosted report exists.
+
+Validation: one full 3,776-case ASan/UBSan gate on ad57c78 passed134.99s plus
+strict summary. A newly fetched core update required a shared-header rebuild.
+Latest-core affected-module check: 524/526 passed18.84s; two allocation fixtures
+still targeted malloc after upstream changed redirect contexts to calloc.
+Added narrowly scoped calloc wrapping; repair/new-case check54/54 passed1.31s
+with strict summary. JSON-close API test is skipped when source lacks that API.
+No repeated full local suite; next complete gate is hosted GCC/Clang/coverage.
+
+Removed 13 resolved WILL_FAIL allowances plus the resolved JSON sanitizer label/
+manifest entry, and deleted their 11 resolved bug sections. Correct regression
+assertions remain. Manual-tool door completion now checks observable safety-door
+state rather than the obsolete queued-flag implementation. Seven documented
+expected failures remain; no sanitizer diagnostic allowances remain.
+
+Full boot confirms runtime $65=32 is supported despite clearing its saved flag
+at initialization. Idle IRQ cases remain registered; uncommitted withdrawal was
+reverted. New cases cover pauses, G97/CSS queue ordering, semicircle roundoff,
+partial peck drilling, IPv4 provider success/failure, macro errors/recovery,
+corrupt build-info recovery, pull-setting notification and JSON close ownership.
+Next: push this cumulative checkpoint to PR22, one hosted run against16c7dff;
+continue supported workflow gaps on the same working branch while it runs.
+
+# Active efficiency policy - 2026-10-19
+
+This policy supersedes historical per-case/per-module validation and delivery notes.
+The user requests productive token use and realistic controller workflows.
+
+- Stay on one feature branch for a substantial batch. No branch/CI checkpoint for
+  every small module. Commit related work together; push at a useful review boundary.
+- Read one coverage report per batch. Rank remaining executable regions by reachable
+  lines per realistic workflow and reuse existing host fixtures. Work through the
+  largest supported gaps first, rather than chasing individual uncovered branches.
+- Prefer ordinary jobs, startup/settings changes, hold/resume, probing and realistic
+  driver error handling with externally observable outcomes. Combine related paths
+  in readable scenario tests; retain separate files for distinct behaviors.
+- Before authoring, check existing cases and source contracts once. Do not duplicate
+  already-covered assertions, manufacture invalid startup states, or force private
+  paths just to increase a percentage.
+- During authoring use source review. Build a substantial group together. Focused
+  execution is for unresolved behavior/failures, not an automatic per-case ritual.
+- Run the full local sanitizer suite and report checks ONCE at the pre-push boundary.
+  Fix failures, rerun affected tests, and repeat broader checks only when the repair
+  affects shared infrastructure or leaves suite-wide uncertainty. Do not rerun
+  unchanged reporting helpers. Then push and use one hosted validation checkpoint.
+- Record uncertain contracts and unfinished/unreachable regions in TODO with concise
+  evidence, then move on. Never weaken assertions or exclude code to claim 100%.
+- Report coverage gain and remaining reachable gaps at substantial checkpoints.
+  The target remains meaningful full supported coverage; any residual unavailable
+  implementation must be explained separately rather than consuming endless tests.
+
+Immediate work: keep coverage-batch-69, finish its existing motion/settings cases,
+then group the largest reachable gcode/settings/IO gaps from the latest report.
+Latest verified hosted baseline: 16,954/17,634 lines (96.14%) and
+11,588/13,648 branches (84.91%), core ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216.
+Probe audit correction: full boot accepts public $65=32 and arms the watchable
+probe guard. Existing idle IRQ cases remain registered. The contrary withdrawal
+was never committed; a full-boot runtime-enable control is pending batch validation.
+
 # Batch69 partial-peck group validated - 2026-10-19
 
 Fifteen new cases total3,767 pass full ASan/UBSan56.80s and strict summary.

@@ -1,11 +1,1 @@
-[
-  {
-    "test": "stream_json.minimum_signed_integer_emits_full_decimal_value",
-    "source": "core/stream_json.c",
-    "lines": [
-      228
-    ],
-    "message_pattern": "negation of -2147483648 cannot be represented in type .+; cast to an unsigned type to negate this value to itself",
-    "issue": "json-int32-min-negation"
-  }
-]
+[]
