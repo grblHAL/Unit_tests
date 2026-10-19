@@ -32,6 +32,19 @@ independent faults; no full passing-core/coverage claim). Commit this coherent
 group, then continue practical gaps before a useful push/PR boundary. No full
 local rerun until pre-push; no unchanged reporting-helper reruns.
 
+I/O follow-up: five new public plugin-configuration cases pass ASan/UBSan
+in 0.32s: named output restoration, capability-filtered fallback after a saved
+name disappears, nonexistent output rejection without changing selection,
+reserved coolant output rejection, and early termination of unfiltered port
+enumeration. A first draft incorrectly treated setting selection as ownership;
+review showed set_value validates capability while claim handles ownership.
+The replacement uses the existing driver assignment fixture and a real coolant
+function. No core bug or exception was added. Evidence:
+build-asan/batch71-io-results.xml and ../batch71-io-tests.log.
+Batch71 now adds25 passing cases; registered total4,002. No new overall coverage
+measurement or full-suite claim. Next: continue high-value supported workflows,
+then one full local gate at the delivery boundary; preserve clean core7a6a432.
+
 # Core ownership and withdrawal - 2026-10-20
 
 Terje owns CORE implementation. This repository authors tests and documents
