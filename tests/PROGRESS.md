@@ -1,3 +1,17 @@
+# Current batch67 probe-interrupt checkpoint - 2026-10-19
+
+Branch coverage-batch-67 starts pushed66 2c99b40. Three new real probe IRQ cases
+total3,748 pass full ASan/UBSan56.93s and strict summary; focused3/3 pass0.34s.
+Actual probe_add/legacy IRQ registration drives core control_interrupt_handler.
+Public$65=32 protection and$6=1 inversion configure contact/release behavior;
+idle events rearm guard, preserve polarity and do not request stop/reset/alarm.
+No synthetic active probing state or private calls. No new exceptions.
+20 known failures plusone scoped UBSan unchanged;51 helpers latestpass4.112s.
+Core cleanad57c78. Hosted64 run39202050479 fullygreen at e0c6707.
+65/66 pushed and cumulative66 dispatched; no isolated65run. Latest locked
+parsed coverage58 95.99/84.69. Deliver this with next related command group.
+PR20/21 merged; prepare next PR only after cumulative exact-head CIpasses.
+
 # Current batch66 public-command checkpoint - 2026-10-19
 
 Branch coverage-batch-66 starts local65 3448b44. Four new command cases total
