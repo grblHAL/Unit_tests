@@ -59,6 +59,7 @@ static void reset_read(void) { }
 static uint16_t count(void) { return 0; }
 static bool connected(void) { return true; }
 static bool write_char(uint8_t c) { char s[2] = {(char)c, 0}; hal.stream.write(s); return true; }
+static enqueue_realtime_command_ptr boot_receive_realtime = protocol_enqueue_realtime_command;
 static int32_t read_char(void)
 {
     CHECK(++boot_read_calls < boot_read_limit);
@@ -69,7 +70,7 @@ static int32_t read_char(void)
             boot_feed_before_reset = sys.override.feed_rate;
             boot_rapid_before_reset = sys.override.rapid_rate;
         }
-        if((c == CMD_RESET || c >= 0x80) && protocol_enqueue_realtime_command(c))
+        if((c == CMD_RESET || c >= 0x80) && boot_receive_realtime(c))
             return SERIAL_NO_DATA;
         return c;
     }

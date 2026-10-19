@@ -1,21 +1,232 @@
+# Current handoff
+
+Branch coverage-batch-40 retains all cumulative work through39. PR19 merged.
+Four delta real-boot cases added; full3,532 sanitizer/strict and44 helpers pass. See newest PROGRESS
+entry and named known-bug entry for refill-time jog parser-position mismatch.
+README snapshot badges now verified from successful hosted39 (95.45/83.79).
+Do not report PR ready until full local/hosted validation. Continue goal.
+
 # Repository working instructions
 
 ## Objective and delivery
 
-Current new work is coverage-batch-14, rebased onto upstream master e6edb45
-(merged PR #18). It adds 18 cases, 3,217 total. Full local ASan/UBSan, strict
-summary and 44 helper checks pass; publish/inspect exact-head hosted GCC,
-Clang, coverage and diagnosis before presenting a ready PR. Core remains clean
-Terje feebef2. PR #18 combined head 9c7099d passed hosted run 38735673645:
-93.17% header-inclusive lines / 80.68% branches, 3,199 cases. New batch 14
-coverage is not measured until hosted validation completes. Continue the full
-goal autonomously; never merge PRs automatically or commit/push master/main.
-Questions and unimplemented public workflows belong in tests/TODO.md.
+Current branch coverage-batch-39 starts at pushed batch38 f88713e.
+Ten new I/O ownership cases total3,528. Driver ports are registered and claimed
+through public APIs before commands. All-claimed banks reject G-code without
+losing queued80-pulse motion; plugin operations still reach original pins.
+Partial claims remap G-code to remaining physical port1 while plugin retains0;
+reserved indexes reject without output. Analog rejection checks error/non-output,
+not the current incidental RPM-specific status label. Input bank isolation and
+mixed synchronized output timing also pass. Integer analog values avoid the
+separate documented fractional-value defect; its assertions remain unchanged.
+Initial fixture retried aux0 twice; fixed to claim aux0 and aux1. API consumes
+an auxiliary number and returns the mapped number to use afterwards.
+Shared queued rejection helper factors existing assertions without removal.
+All ten focused pass0.57 s. Full batch39-delivery-results.xml passes3,528 in47.53 s; strict summary and44
+helpers pass. Session85317 completed. Freeze/push/dispatch39 and continue40.
+No core changes, new defects, exceptions or allowances. Hosted37 run39020604172
+and38 run39020997626 remain in progress at latest check; latest fully green
+batch36 is95.33%/83.57%. Continue independent work while hosted CI runs.
 
-DO/WHILE CONTINUE is a maintainer question in TODO.md at the user's request. Its
-candidate in tests/proposals is not registered and must await Terje's chosen
-contract. The separate WHILE false-condition regression remains documented with
-one narrow expected-failure exception and unchanged assertions.
+Current branch coverage-batch-38 starts at pushed batch37 77d91aa.
+Fourteen new cases total3,518. Ten public parser rejections verify unavailable
+I/O/mist, mill-versus-lathe modes, disabled parking override and invalid fractions/
+axis-command conflicts preserve modal state and an existing80-pulse move.
+Two registered driver-capability cases cover torch start/stop bypass and400 ms
+startup delay without feedback polling. Capabilities assigned before registration,
+never by modifying spindle_get pointers. Existing feedback helper retains defaults.
+Two G65 M-word cases prove M3/M8 preceding G65 become local argument13 without
+spindle/coolant activation; callback failure restores parent99 and scope.
+No new core defects, exceptions or source changes. Earlier3,516 full checkpoint
+passed46.96 s/strict/44 helpers. Full batch38-delivery-results.xml passes3,518 in46.97 s, strict summary and44
+helpers pass. Session60112 completed. Freeze/push/dispatch38 and continue39.
+Useful next area: ports advertised by driver but unavailable after plugin claims;
+use real registration/claim APIs and preserve normal I/O positive controls.
+Batch37 exact77d91aa run39020604172 is in progress at last check. Latest fully
+green batch36 is95.33% lines/83.57% branches. Latest fetched core remains clean
+ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216. Continue substantial coverage work.
+
+Current branch coverage-batch-37 starts at pushed batch36 4dab01a.
+Five full-boot cases total3,504. Ordinary reset retains tool0; resetting during
+M6/G30 retract preserves stopped position but selects uncompleted tool3 after
+warm init. One narrow dated known-bug entry/exception preserves correct tool0.
+Normal streamed manual, no-return and G30 return/touch-off controls all pass,
+with tool3, actual return positions, original handler and RX suspension released.
+The earlier unresolved restoration candidate is now an ordinary test: its mock
+needed real stream_rx_suspend and independently delivered tool ACK while read
+is paused. TODO removed; no exception for that fixture mistake. Sender waits
+for the actual tool pause and for G30 return before sending reference settings.
+Real homing calibrates raw motor counters; restart observation requires second
+startup greeting. Exclude host CMD_EXIT cleanup from reset counts. Never classify
+intermediate pre-init parser state as a restart result.
+Full earlier3,501 gate passed49.44 s/strict/44 helpers. Full batch37-delivery-results.xml passes3,504 in46.58 s; strict summary and44
+helpers pass. Freeze/push/dispatch37 and continue38. Source unmodified, no
+sanitizer allowances;12 known failures. Session50785 completed.
+Batch36 run39019490072 fully green verifies4dab01a510964c9563f2ff346b96544553970c08/ad57c78,
+16,810/17,634 lines95.33%,11,405/13,648 branches83.57%. PR19 remains open.
+Latest fetched core ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216 is clean.
+
+Current branch coverage-batch-36 starts at pushed batch35 63aa882.
+Twelve new cases total3,499. Six fixed XYZ tool-offset cases exercise three
+new documented TOOL_LENGTH_OFFSET_AXIS variants: correct G43.1 axis, wrong-axis
+rejection, actual offset motion, and manual retract/return under G18. CMake
+links matching host/test definitions. README configuration list is updated.
+Other cases cover compatibility2 rejected fixture modes with handlers preserved,
+three parameter-disabled O-number rejection paths preserving queued motor motion,
+and G66.1 following-block argument update/error cleanup. Repeating G66.1 was an
+invalid modal-group fixture; plain X20 is the intended implicit following block.
+No core edits, exceptions or allowances added. Six-case earlier full checkpoint
+passed3,493/46.02 s with strict summary and44 helpers; six fixed-axis cases pass
+focused0.45 s. Final batch36-final-results.xml passes3,499 in46.23 s; strict summary and
+all44 helpers pass. Freeze/push/dispatch36 and continue37. Useful next workflow:
+public sender reset/stop during actual G30/toolsetter positioning; verify stopped
+position and restored driver/stream handlers, not a forced private abort flag. Latest fetch confirms clean
+ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216 remains latest.
+Batch34 run39018542932 fully green verifiescaa7509c776e2948c3620329592b6934a72a6c85/ad57c78,
+16,792/17,630 lines95.25%,11,386/13,648 branches83.43%. Batch35
+run39018951320 remains in progress at last check. Continue independent coverage.
+
+Current branch coverage-batch-35 starts at pushed batch34 caa7509.
+Five new tool-change cases total3,487. Observer is installed before tc_init;
+real G10 saves notify once, unrelated G55 does not release touch-off wait,
+current G54 does, and repeated init does not wrap again. Actual negative-Z
+return motion is serviced by the public realtime hook; initial timeout was an
+unserviced fixture move, not core failure. Safety-door completion reproduces
+lost pending tool: T3M6/current-G10/open door/ack/start/close/start reaches Idle
+with parser tool0 and no changed callback, versus tool3/one callback closed-door.
+Correct regression remains, one dated known-bug exception/proposal/cleanup added.
+No core changes or sanitizer allowance. Full batch35-delivery-results.xml passes46.89 s; strict summary and all44
+helpers pass,11 documented expected failures. Freeze/push/dispatch35, continue36.
+Latest fetch confirms clean ad57c78 remains latest. Batch33 run39017951972 fully
+passes all jobs; artifacts verify8282b95a6b5422aa092b481a6ca75706ed269b72/ad57c78
+and header-inclusive filter:16,789/17,630 lines95.23%,11,378/13,648 branches83.37%.
+Batch34 run39018542932 was in progress at last check. Continue beyond checkpoint.
+
+Batch34 is validated from pushed batch33 8282b95. Seven laser cases total3,482.
+Full batch34-final-results.xml passes46.13 s; strict summary and all44 helpers
+pass, ten existing expected failures, no sanitizer allowances/core modifications.
+Public hold actions cover M3/M4 disabled/on, stationary zero power, resumed pulses
+and50% sender override while held. Door cases use explicit HoldActions3, declared
+door capability and valid homed Z/parking setup; laser suppresses Z parking,
+blocks open-door start, requires explicit start after closing and resumes power.
+Initial implicit-zero fixture flags caused missing restoration; explicit valid
+configuration fixes that fixture. No core defect or exception was registered.
+Drivers registered before gc_init. Shared ordinary parking setup remains fully
+tested. Freeze/push/dispatch34, continue35 with supported tool-change workflows.
+Next useful gap: preserve a plugin WCO-saved observer through tc_init and real
+G10 during manual tool change; install observer before tc_init, not afterwards.
+Batch32 run39017513432 fully green verifies8c0f688/ad57c78,16,781/17,630 lines
+95.18%,11,373/13,648 branches83.33%. Batch33 exact8282b95 run39017951972 is
+still in progress at last live check. Never call hosted validation green early.
+
+Batch33 is validated from pushed batch32 8c0f688. Six new cases total3,475.
+Full batch33-delivery-results.xml passes in46.56 s, strict summary and all44
+helpers pass; ten existing expected failures and no sanitizer allowances.
+Cases cover sender reset/status during spindle feedback wait, computed O-label
+branch/loop execution, common mill header reset and G91.1 arc motor pulses.
+No new core defects/exceptions. Core clean latest ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216.
+Freeze/push/dispatch33, then continue34 with supported laser hold/resume workflows.
+Use registered driver fixture laser_stepper_host.h and public realtime commands;
+do not modify spindle_get pointers or force private restoration flags.
+Batch32 run39017513432 is still in progress at last live check, source passed.
+
+Current work is coverage-batch-32 from pushed batch31 46c984e.
+Seven new reporting cases total 3,469. Full batch32-delivery-results.xml passes
+in 46.49 s; strict summary and all 44 helpers pass. Ten documented expected
+failures, no sanitizer allowances. Core is clean ad57c788e15fb4e5d8ef9c20ed50755ffa3d9216.
+Build capabilities, actual M60 pause reporting and multi-plugin help are ordinary
+passes. Two narrow allocation-fallback regressions retain correct visibility and
+legacy-only selection assertions; evidence/proposal/cleanup are in KNOWN_BUGS.md.
+No core modifications. Freeze/push/dispatch32, continue independent coverage gaps.
+Batch31 run38990060016 is fully green, artifacts verify exact46c984e4283b777ad8ed29c5d44c0d9667a389e5
+and ad57c78 with header-inclusive core filter: 16,772/17,630 lines (95.13%),
+11,362/13,648 branches (83.25%). Batch30 diagnosis also passed.
+PR19 remains open on the latest live check; do not call later PRs ready before
+required hosted validation or merge PRs yourself.
+
+Frozen batch 24 starts from batch 23 7398414.
+Nine new G95 cases pass full sanitizer/strict checks (3,370 total, 54.66 s),
+all 44 helpers, ten expected failures and two documented recovering warnings.
+Physical timer/step measurements verify RPM up/down changes, feed override,
+G94 transition, inch units, lathe radial feed, rapid and zero-RPM guards.
+Freeze/push this module and continue on coverage-batch-25. Useful next gap:
+public planner allocation fallback/retry with realistic constrained heap budgets.
+Batch 23 hosted run 38869601270 is validating exact head 7398414 against 4ec1ae4.
+Latest fully green hosted baseline remains batch 22 (94.52% lines / 82.34% branches).
+
+Frozen batch 23 starts from batch 22 b59409f.
+Ten new motion/message/synchronization cases bring the local suite to 3,361.
+Four G33 parser-to-stepper cases pass: metric, inch pitch/endpoint, reverse
+travel and reuse of modal pitch. Index feedback advances independently; timer
+interrupts run only after each driver's wakeup. Full batch23-delivery passes in
+59.47 s, strict summary and all 44 helpers pass. Freeze/push and continue on batch 24.
+The earlier 3,357-case batch23-final
+passes in 49.13 s, strict summary and all 44 helpers. Ten expected failures remain.
+Two message cases pass behavior assertions
+with one narrowly documented recovering callback-type diagnostic (manifest).
+Four G92 cases check executing offsets and actual sender status across queued
+changes/suspension, away from the ambiguous shared endpoint tick.
+Batch 22 run 38867880603 is fully green: source, GCC, Clang, coverage and diagnosis.
+Coverage is 94.52% lines / 82.34% branches. It verifies the
+ordinary stop test is Linux leak-clean and the portable ownership bug is isolated.
+Continue independent gaps on batch 23; do not call it a ready PR yet.
+
+Frozen batch 22 starts from batch 21 d4dc212.
+Eleven new cases bring the suite to 3,351. The earlier nine-case checkpoint
+passed full sanitizers/strict checks (3,349 total, 45.15 s and all 44 helpers).
+They cover sender $SED reboot notices/hidden settings, named tool pacing,
+compatibility-2 tool-reference format, and lathe mode/unit reporting.
+Macro typo recovery and independent paired PWM M73 restoration also pass.
+Batch 21 run 38866070072 passed coverage at 94.45% lines / 82.18% branches,
+but GCC and Clang found a 12-byte parser comment leak. Batch 22 isolates it
+with a portable malloc/free lifetime regression and one linked known-bug
+exception. The stop-message test now supplies its message via public mc_line,
+independently checking planner cancellation without triggering the parser leak.
+The valid Modbus no-callback/next-transaction workflow also passes.
+Full 3,351-case batch22-final passes in 44.52 s, strict summary and all 44
+helpers pass; ten expected failures. Freeze/push and continue on batch 23.
+Require fresh hosted validation of these changes before presenting a ready PR.
+
+Frozen batch 21 starts from batch 20 3be1df6.
+Thirteen new cases cover boot spindle hooks, selection veto, sleep/status/reset,
+sender message clearing, modal macro/CSS/cutter reports, modal snapshot hooks,
+CAN startup reporting and discarded future messages/outputs on sender stop.
+Full 3,340-case sanitizer/strict gate passes in 54.71 s with nine expected
+failures and all 44 helpers (batch21-final). Freeze/push this checkpoint and
+continue independent work on coverage-batch-22 while its hosted validation runs.
+Batch 20 exact-head hosted run 38804109761 against core 4ec1ae4 passed all jobs:
+16,619/17,624 lines (94.30%), 11,187/13,648 branches (81.97%). PR 19 remains open.
+Batch 19 adds 15 cases / 3,312 total. Full ASan/UBSan, strict summary and 44 helper
+checks pass in 58.09 s (batch19-delivery), nine expected failures. It is pushed;
+exact-head hosted run 38799824879 is fully green: 94.18% lines / 81.85% branches.
+Batch 20 now adds 15 cases / 3,327 total. Full sanitizer/strict gate and 44 helpers
+passed the earlier 3,319-case checkpoint (54.68 s). New soft-limit tests exercise idle/active
+alarms, status/reset, interrupted deceleration and coupled CoreXY motors.
+Continue from the latest hosted report; lathe threading unit/diameter conversion
+and remaining supported parser workflows are useful next areas.
+Core is clean latest Terje 4ec1ae4 after its forced remote update. Two fixed
+exceptions/entries (paired ramp cache and legacy $4 readback) are removed; their
+unchanged regressions pass. New G76 inch P/E conversion regressions are narrowly
+documented expected failures; metric/depth/diameter controls pass. Full 3,327-case
+latest-source gate passed in 113.54 s with nine expected failures, strict summary
+and 44 helper tests (batch20-latest-delivery). Exact-head hosted validation is
+required before a ready PR. Uncertain driver-failure detail reporting
+is a TODO policy question, not a new known-failure exception.
+
+Frozen batches 15-18 all passed exact-head hosted source/GCC/Clang/coverage and
+diagnosis. Latest measured baseline is batch 19 run 38799824879: 16,600/17,625
+lines (94.18%) and 11,171/13,648 branches (81.85%), 3,312 cases. Batch 17 run
+38795069102 measured 93.79% / 81.35%. Source-lock artifacts verify both revisions
+and header-inclusive filters; full history/evidence lives in tests/PROGRESS.md.
+PR 19 (batch 14) remains ready/open at last live check. Prefer its merge before
+rebasing/presenting later batches without duplicate parent tests. Never merge PRs
+automatically or commit/push master/main. Continue toward the full coverage goal.
+
+DO/WHILE CONTINUE remains a maintainer question in TODO.md; its candidate is
+unregistered. The separate WHILE false-condition regression is fixed on current
+core and retained as an ordinary passing test. NO_SAFETY_DOOR_SUPPORT build
+support is also a TODO question; keep its four candidates unregistered until
+support status and missing setter/table guards are resolved.
 
 Continue toward meaningful full grblHAL core coverage: every core module and
 supported feature configuration, with line and branch coverage guiding the work.
@@ -152,6 +363,10 @@ GitHub submodule. Check remaining anchors after deleting exception blocks.
   Switching fixture mode after registration can retain stale capabilities.
 - With LATHE_UVW_OPTION, U is always an incremental diameter (half its value
   changes X radius); V/W increment Y/Z. These differ from six-axis UVW remapping.
+- A streamed manual M6 ACK must pass through real stream_rx_suspend/its
+  receive handler. A no-op suspend callback silently drops ACK and can make
+  cycle start skip tool-return motion. Deliver ACK independently while read is
+  suspended, as a UART ISR would, and pace sender commands to the tool pause.
 - Constant RPM output does not require redundant PWM writes. Verify retained
   output state as well as update callbacks.
 - Encoder feedback must remain measured input: output mocks must not overwrite

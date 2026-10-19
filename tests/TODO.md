@@ -360,3 +360,91 @@ solely to cover their lines. Revisit normal sender-driven homing tests when the
 maintainer implements the wall-plotter homing workflow and defines its reference
 contract. This is a pending feature/coverage limitation, not a new confirmed bug;
 no source exclusion or expected-failure exception is added.
+
+## Confirm whether NO_SAFETY_DOOR_SUPPORT remains supported
+
+**Review date:** 2026-10-15, Terje core feebef26222111f11c7a3b3b0156d023aa786937.
+
+A proposed runtime host variant defining NO_SAFETY_DOOR_SUPPORT=1 cannot compile:
+settings.c:1152-1173 removes set_parking_enable and set_restore_overrides, but the
+setting table still references them at lines 2425 and 2444. The first two Clang
+errors identify those undeclared names; the later incomplete-array sizeof error
+is consequential. driver_opts.h:530 still checks this symbol against enabled
+safety-door hardware, and grbllib.c:324 clears the door capability for it.
+
+Confirm whether the option is an intended current configuration or obsolete.
+If supported, align setting-table guards with the setter definitions (review
+parking/restore semantics rather than guessing), then register and run the four
+candidate startup/settings tests in proposals/boot_no_safety_door and
+proposals/no_safety_door with consistent host/test compile definitions. Current
+proposals are unregistered; no production patch, broad compiler allowance or
+expected-failure exception is introduced. Local compiler evidence is in the
+parent workspace batch15-no-door-build.log. Reproduce with:
+
+```sh
+cc -std=gnu11 -fsyntax-only -DNO_SAFETY_DOOR_SUPPORT=1 -Icore core/settings.c
+```
+
+## Probe protection startup workflow is currently disabled
+
+**Review date:** 2026-10-15, Terje feebef26222111f11c7a3b3b0156d023aa786937.
+settings.c:3885-3893 uses an inactive #if 0 capability branch and unconditionally
+clears settings.probe.enable_protection. Thus normal boot cannot currently reach
+protocol.c's enabled-protection startup alarm via a saved setting. Do not force
+it back on after settings_init simply to cover that branch. Two candidate enabled
+startup cases remain unregistered in proposals/boot_probe_protection, pending
+maintainer activation/support confirmation. Registered controls verify that boot
+clears the unavailable stored flag and leaves ordinary parser commands usable;
+these do not claim protection is operational or prove physical interlock behavior.
+No production patch, source exclusion or new known-failure exception is added.
+
+
+## Failed-startup detailed driver diagnostic policy
+
+**Review date:** 2026-10-15, Terje feebef26222111f11c7a3b3b0156d023aa786937.
+This is a maintainer question, not a registered defect or expected failure.
+[grbllib.c:413](https://github.com/terjeio/grblHAL_core/blob/feebef26222111f11c7a3b3b0156d023aa786937/grbllib.c#L413)
+queues report_driver_error, which formats the incompatible-driver detail at
+[lines 140-150](https://github.com/terjeio/grblHAL_core/blob/feebef26222111f11c7a3b3b0156d023aa786937/grbllib.c#L140-L150).
+Failed-startup filtering at
+[lines 837-860](https://github.com/terjeio/grblHAL_core/blob/feebef26222111f11c7a3b3b0156d023aa786937/grbllib.c#L837-L860)
+retains only report_warning tasks, so this differently named diagnostic task is
+discarded along with ordinary plugin work. Confirm whether that detail should
+also survive, or whether the generic self-test message is the intended output.
+Do not call the private formatter directly simply to cover its lines.
+
+The registered [USB failure test](cases/boot/usb_connection_reports_failed_selftest_then_retained_startup_warnings.c)
+checks the existing public connection workflow: matching DTR emits the delayed
+generic failure message and retained warnings in order; unrelated startup tasks
+stay suppressed. No change to the startup policy or core source was made.
+
+
+## Planner exhaustion during controller startup
+
+**Recorded:** 2026-10-16, core `4ec1ae44b857a70d2f9298344feac4b43ed0eb6b`.
+The new public planner tests verify reduced usable capacity and a successful
+retry after an allocation failure. A normal boot test verifies fallback warning
+output and a successful sender query. Complete startup exhaustion is a separate
+policy/defensive-handling question, not a registered failure.
+[plan_reset](https://github.com/terjeio/grblHAL_core/blob/4ec1ae44b857a70d2f9298344feac4b43ed0eb6b/planner.c#L225-L247)
+returns false if it cannot allocate even its minimum attempted buffer;
+[grbllib.c:489](https://github.com/terjeio/grblHAL_core/blob/4ec1ae44b857a70d2f9298344feac4b43ed0eb6b/grbllib.c#L489)
+does not check that return. Confirm how startup should report this condition and
+restrict operation. No boot-exhaustion regression/alarm expectation has been
+registered, and no controller crash or physical outcome is claimed here.
+
+## Possible improvement: simultaneous override-change notifications
+
+**Recorded:** 2026-10-16, core `4ec1ae44b857a70d2f9298344feac4b43ed0eb6b`.
+Individual feed and rapid changes notify the matching observer exactly once;
+repeated unchanged requests do not. The new ordinary control tests verify those
+contracts and their resulting nominal rates.
+In [planner.c:753-765](https://github.com/terjeio/grblHAL_core/blob/4ec1ae44b857a70d2f9298344feac4b43ed0eb6b/planner.c#L753-L765),
+the logical OR short-circuits assignment of rapidrate_changed when feed changes.
+Both percentages are still stored/applied, but the rapid-specific callback is
+then omitted. Confirm whether a combined update should notify both groups or
+whether one callback is intended to prompt an observer to refresh all values.
+This is source-review evidence and an undecided observer policy, not a confirmed
+motion defect. Do not register a two-callback expected failure before review.
+If both events are desired, compute the two change booleans independently before
+testing their OR, then add a combined-update regression.

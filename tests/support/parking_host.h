@@ -6,9 +6,8 @@ static control_signals_t parking_controls(void) { return (control_signals_t){.sa
 static coolant_state_t parking_get_coolant(void) { return parking_coolant; }
 static void parking_set_coolant(coolant_state_t state) { parking_coolant = state; }
 static message_code_t parking_feedback(message_code_t message) { return message; }
-static inline void prepare_parking_move(void)
+static inline void configure_parking_move(void)
 {
-    prepare_motion_program();
     hal.control.get_state = parking_controls;
     hal.coolant.get_state = parking_get_coolant;
     hal.coolant.set_state = parking_set_coolant;
@@ -23,6 +22,11 @@ static inline void prepare_parking_move(void)
     sys.position[Z_AXIS] = physical_position[Z_AXIS] = -800;
     gc_sync_position();
     plan_sync_position();
+}
+static inline void prepare_parking_move(void)
+{
+    prepare_motion_program();
+    configure_parking_move();
 }
 static inline void begin_parking_move(void)
 {

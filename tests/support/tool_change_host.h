@@ -30,7 +30,7 @@ static void original_homing(axes_signals_t axes, bool success)
     homing_calls++;
 }
 static control_signals_t tool_control_state(void) { return (control_signals_t){0}; }
-static inline void prepare_tool_change(void)
+static inline void prepare_tool_change_with_wco_observer(on_wco_saved_ptr observer)
 {
     prepare_motion_program();
     hal.tool.atc_get_state = no_atc;
@@ -39,9 +39,14 @@ static inline void prepare_tool_change(void)
     hal.driver_reset = original_reset;
     hal.control.get_state = tool_control_state;
     grbl.on_homing_completed = original_homing;
+    grbl.on_wco_saved = observer;
     settings.tool_change.mode = ToolChange_Manual;
     tc_init();
     CHECK(hal.tool.change != NULL);
+}
+static inline void prepare_tool_change(void)
+{
+    prepare_tool_change_with_wco_observer(NULL);
 }
 
 static enqueue_realtime_command_ptr tool_stream_handler;

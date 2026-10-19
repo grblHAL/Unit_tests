@@ -19,6 +19,12 @@ static inline void prepare_thread_plan(void)
     hal.stream.is_connected = thread_connected;
     state_set(STATE_IDLE);
 }
+static inline void prepare_thread_parser_plan(void)
+{
+    prepare_thread_plan();
+    /* Programmed/measured 2000 RPM with enough Z feed capacity for inch pitch. */
+    settings.axis[Z_AXIS].max_rate = 5000;
+}
 static inline gc_thread_data basic_thread(void)
 {
     return (gc_thread_data){.pitch = 1, .z_final = 10, .peak = 1,
