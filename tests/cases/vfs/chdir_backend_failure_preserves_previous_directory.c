@@ -6,6 +6,6 @@ int main(void)
     CHECK(vfs_chdir("/store/dir") == 0); operation_result = -1;
     CHECK(vfs_chdir("/store/other") == -1); operation_result = 0;
     CHECK(vfs_unlink("file") == 0);
-    CHECK(strcmp(operation_path, "file") == 0 && strcmp(unlink_directory, "/dir") == 0); cleanup_operations();
+    CHECK(strcmp(operation_path, "/dir/file") == 0 && strcmp(unlink_directory, "/dir") == 0); cleanup_operations();
     return EXIT_SUCCESS;
 }

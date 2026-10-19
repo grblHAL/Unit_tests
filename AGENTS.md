@@ -1,3 +1,42 @@
+# Active source-fix validation - 2026-10-19
+
+The user explicitly authorized fixing the core faults as well as tests. This
+supersedes earlier instructions to leave these source faults unfixed and keep
+PR23 draft indefinitely. Core checkout is clean on fix-vfs-string-ownership,
+890e810 (based on Terje49eff3c); never push core upstream master.
+Push source fixes to petervanderwalt/core on that feature branch and open a PR
+against terjeio/grblHAL_core, linking the tested candidate from Unit_tests PR23.
+No automatic source patches or hidden CI workarounds; dispatch against the
+explicit candidate repository/SHA. Keep CI manual/reusable.
+
+Fixes initialize cwd before use, promote borrowed string buffers through owned
+allocation, keep failure fallback pointer/capacity consistent and remove the
+obsolete safety-door rejection. Related directory fixes keep the cache/mount
+consistent after growth failure, use the cached frontend path when the backend
+has no getcwd callback, and retain the current drive root after formatting.
+Parent traversal was already corrected by49eff3c once the NULL crash was fixed.
+Removed its stale allowance plus getcwd/growth allowances; correct assertions
+remain. Six resolved KNOWN_BUGS sections removed. Five expected failures remain.
+
+New string allocation-failure/retry cases pass, as do long filename promotion
+and both enabled/disabled safety-door compile controls. The focused filesystem
+set ran219 cases; four expected raw-path assertions needed adaptation to Terje's
+intentional normalization, and formatting exposed the drive-root cache issue.
+All five repaired checks now pass0.50s. New allocation fixtures account for
+strset capacity plus terminator without changing old-source injection behavior.
+Full local gate PASSED:3,987/3,987 in131.59s on clean core890e8102c3ac6ce4f7c7c2c0e854b999bfb508ed.
+Strict summary:3,982 clean passes,5 documented expected-failure reproductions,
+0 failures,0 skips,0 sanitizer allowances. All116 incoming repairs pass in this
+same run. Evidence: build-asan/core-fix-full-results.xml and
+../core-fix-full-summary.md. Reporting55 helpers already passed after6741803;
+unchanged, not rerun. Core fixes are pushed in draft
+https://github.com/terjeio/grblHAL_core/pull/1. Update/push Unit_tests PR23 and
+run one exact-head hosted checkpoint with source_repository=petervanderwalt/core,
+source_ref=890e8102c3ac6ce4f7c7c2c0e854b999bfb508ed and comparison base
+terjeio/grblHAL_core@49eff3c5c66afa1cc1915b26ae8160fa805593c7.
+Mark both PRs ready only after source/GCC/Clang/coverage/diagnosis finish green.
+No further unchanged full local run or helper rerun.
+
 # Current PR23 integrated repair checkpoint - 2026-10-19
 
 Working branch coverage-batch-69. PR22 is merged; existing PR23 receives this

@@ -15,8 +15,8 @@ defects, remove the diagnostic matcher and retain an ordinary successful compile
 check. Recovering sanitizer diagnostics have a separate, narrowly scoped
 [manifest](known_sanitizer_diagnostics.json); remove its linked entries when fixed.
 
-Remaining exceptions were revalidated on 2026-10-19 against Terje core
-`16c7dff3aa9614322cfc2b47a2109cc9196ccca4`. Fixed entries and their allowances
+Remaining exceptions are validated with the selected source revision recorded in
+[PROGRESS.md](PROGRESS.md). Fixed entries and their allowances
 are removed; their regression assertions remain ordinary tests.
 Source links identify the revision used for the described code and reproduction. CI can test
 a newer revision; a fixed regression forces review and cleanup of its exception.
@@ -109,79 +109,6 @@ serial markers, file completion callbacks and check-mode behavior.
 retain the correct regression and passing controls, then delete this section.
 No sanitizer diagnostic allowance applies.
 
-## Current-directory fallback duplicates a filesystem mount prefix
-
-**Marked known:** 2026-10-14, Terje `50055a283328c3f9726bbc8f22d20a801190c66e`.
-
-Mount a filesystem at `/store` without an optional `fgetcwd` callback and change
-to `/store/dir`. `vfs_getcwd()` returns `/store/store/dir` rather than `/store/dir`.
-The [fallback at vfs.c:604](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/vfs.c#L604)
-uses the frontend's already absolute `cwd.name`; the
-[concatenation at line 615](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/vfs.c#L615)
-then prepends the mount prefix again. A backend supplying its own local `/dir`
-current-directory callback passes the separate control.
-
-**Regression:** [fallback getcwd](cases/vfs/getcwd_without_backend_handler_preserves_mount_prefix_once.c).
-**Passing control:** [backend local getcwd](cases/vfs/getcwd_with_backend_local_directory_prefixes_mount_once.c).
-
-**Suggested fix (proposal, not runtime-verified):** Copy the absolute frontend
-path directly for the fallback; prepend the mount only for a backend-local path.
-Preserve allocation, length checks and root formatting.
-
-**Remove exception when fixed:** remove its block from
-[known_bugs.cmake](known_bugs.cmake), retain correct assertions and control, run
-filesystem/current-directory tests and full sanitizers, then delete this entry.
-No sanitizer allowance applies.
-
-## Parent traversal selects the target mount but sends a malformed filename
-
-**Marked known:** 2026-10-14, Terje `50055a283328c3f9726bbc8f22d20a801190c66e`.
-
-Mount `/store` and `/elsewhere`, then unlink `/store/../elsewhere/file`.
-`mount_modifiable()` resolves the parent traversal and correctly selects the
-`/elsewhere` backend, but
-[vfs.c:453](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/vfs.c#L453)
-strips the selected mount's prefix length from the original unnormalized path.
-The target backend receives `elsewhere/file`, not its local `/file`. This can
-operate on the wrong backend-local file. Same-mount paths may retain dot segments
-for the backend to resolve; that supported delegation is covered by passing cases.
-
-**Regression:** [cross-mount parent path](cases/vfs/parent_path_crossing_mount_passes_target_local_filename.c).
-The test independently verifies selection of the target backend before checking
-its received filename.
-
-**Suggested fix (proposal, not runtime-verified):** Preserve the resolved path
-alongside the chosen mount and strip that same path's mount prefix before calling
-the backend. Check unlink/mkdir/rmdir and avoid reparsing a shared static path
-buffer through itself. Retain relative-path support for backend current directories.
-
-**Remove exception when fixed:** remove its block from
-[known_bugs.cmake](known_bugs.cmake), retain correct assertions, run filesystem
-path/permission tests and full sanitizers, then delete this entry.
-No sanitizer allowance applies.
-
-## Directory buffer growth failure leaks the previous allocation
-
-**Marked known:** 2026-10-14.
-
-When a heap-backed current directory needs to grow and `realloc` fails,
-[vfs.c:513–521](https://github.com/terjeio/grblHAL_core/blob/50055a283328c3f9726bbc8f22d20a801190c66e/vfs.c#L513)
-overwrites the old pointer before falling back to root. GCC and Clang Linux
-sanitizers both report the original 118-byte allocation as leaked in run
-[38521365384](https://github.com/petervanderwalt/Unit_tests/actions/runs/38521365384).
-
-**Regression:** [directory growth failure](cases/vfs/current_directory_reallocation_failure_falls_back_to_root.c)
-checks root fallback and release of the original allocation. It reclaims a leaked
-fixture allocation before asserting, allowing the same ownership check on Windows.
-
-**Suggested fix (not applied):** assign `realloc` to a temporary pointer; if growth
-fails and root fallback is retained, free the original buffer before replacing it.
-Alternatively retain the original directory and return failure consistently.
-
-**Remove exception when fixed:** remove the named `WILL_FAIL` block from
-[known_bugs.cmake](known_bugs.cmake), retain the ownership assertion, run GCC/Clang
-sanitizers and strict summaries, and delete this entry.
-
 ## An armed G66 skips required-P and default-repeat checks for a new G65
 
 **Known since:** 2026-10-19. **Reproduced core:**
@@ -229,92 +156,3 @@ and G66.1 argument updates before adopting it.
 **Cleanup:** once both regressions pass, remove their two exact WILL_FAIL blocks,
 keep the assertions and passing controls, and delete this entry. No other known
 issue allowance or sanitizer manifest entry needs changing for this fix.
-
-
-## First filesystem path normalization reads an uninitialized directory string
-
-**Known since:** 2026-10-19. **Reproduced core:**
-`49eff3c5c66afa1cc1915b26ae8160fa805593c7`.
-
-A normal first `vfs_chdir("/store/dir")` or
-`vfs_unlink("/store/../elsewhere/file")` crashes before reaching its backend.
-AddressSanitizer reports a null read in `strlen`, called by
-[parse_path at vfs.c:264](https://github.com/terjeio/grblHAL_core/blob/49eff3c5c66afa1cc1915b26ae8160fa805593c7/vfs.c#L232-L265).
-The new `cwd` string has a base buffer but its `data/name` pointer is initially
-NULL; `parse_path` reads it before any `strset` call initializes it.
-Unmounting root storage before a path operation likewise writes through this
-NULL cached pointer at vfs.c:741; ordinary directory-list cleanup reproduces it.
-
-**Existing reproductions:**
-[current directory](cases/vfs/getcwd_without_backend_handler_preserves_mount_prefix_once.c)
-and [cross-mount unlink](cases/vfs/parent_path_crossing_mount_passes_target_local_filename.c).
-Their older logical-bug exceptions do not authorize this new sanitizer failure:
-the strict summary rejects it. No broad exception or sanitizer allowance is added.
-Raw evidence: `batch69-core49-reproduce-results.xml` and matching parent logs.
-
-**Suggested fix (proposal, not applied):** initialize the current directory's
-`data` and capacity from `_cwd` before its first read, rather than relying on a
-future string-write call. Audit other base-backed strings for the same ordering.
-Retest first path operations, relative paths, named macro lookup and allocation
-failure recovery under sanitizers. After confirming any older logical defects
-are also fixed, remove only their corresponding existing exceptions/entries.
-Delete this entry once ordinary path operations are sanitizer-clean.
-
-## Growing a base-backed string reallocates static or stack storage
-
-**Known since:** 2026-10-19. **Reproduced core:**
-`49eff3c5c66afa1cc1915b26ae8160fa805593c7`.
-
-Looking up `workbee_panel_fixture_01.nc` through `vfs_locate_file` calls
-[the new strset growth path](https://github.com/terjeio/grblHAL_core/blob/49eff3c5c66afa1cc1915b26ae8160fa805593c7/strutils.c#L383-L408).
-It initializes `data` to the supplied base buffer, then passes that pointer to
-`realloc`. The lookup buffer is a 32-byte static array rather than a heap
-allocation. AddressSanitizer reports an attempted free of non-malloc storage at
-`strutils.c:393`, called from `vfs.c:901`. Named macro construction also uses a
-local base buffer and needs the same ownership rule.
-
-**Existing reproduction:**
-[long macro/job filename lookup](cases/vfs/locate_long_filename_returns_mounted_file_path.c).
-The new direct [base-buffer promotion regression](cases/strutils/strset_long_filename_promotes_static_base_to_owned_heap.c)
-asserts successful growth, correct text and the original base remaining intact.
-No expected-failure registration or sanitizer allowance is added; this remains
-an ordinary red test until fixed. Existing heap copy/reuse and base-capacity
-controls exercise the supported small-string paths.
-
-**Suggested fix (proposal, not applied):** when `data` is the base buffer,
-allocate owned storage with `malloc` (or `realloc(NULL, size)`), never
-`realloc(base, size)`. Reallocate only owned heap buffers. On failure, retain a
-consistent base pointer/capacity and return NULL; avoid restoring the base and
-then overwriting that restored pointer with NULL. Review callers before choosing
-whether existing text must survive failure. Verify lookup and long named macros
-with ordinary controller filenames under sanitizers. Keep both regressions,
-remove no unrelated allowance, and delete this entry once fixed.
-
-
-## Enabling the safety-door driver option now fails preprocessing
-
-**Known since:** 2026-10-19. **Reproduced core:**
-`49eff3c5c66afa1cc1915b26ae8160fa805593c7`.
-
-A normal driver configuration with `SAFETY_DOOR_ENABLE=1` and no
-`NO_SAFETY_DOOR_SUPPORT` definition fails at
-[driver_opts.h:530-532](https://github.com/terjeio/grblHAL_core/blob/49eff3c5c66afa1cc1915b26ae8160fa805593c7/driver_opts.h#L530-L532).
-The former combined guard became `#if SAFETY_DOOR_ENABLE`, so every enabled
-configuration emits `Driver does not support safety door functionality!`.
-
-**Reproduction:** preprocess a translation unit including `driver_opts.h` with
-`clang -std=gnu11 -fsyntax-only -DSAFETY_DOOR_ENABLE=1 -Icore <probe.c>`.
-The same probe with the previous16c7dff header succeeds. The latest header with
-`SAFETY_DOOR_ENABLE=0` also succeeds. Parent logs `batch69-door-compile.log`,
-`batch69-door-old-compile.log` and `batch69-door-disabled-compile.log` retain all
-three outcomes. No board SDK, source modification or private state is involved.
-Positive compile regression: [safety-door driver configuration](compile/safety_door_configuration.c),
-registered as feature_compile.safety_door_option_1 with the disabled control
-feature_compile.safety_door_option_0. No diagnostic matcher or expected-failure
-exception is added.
-
-**Suggested fix (proposal, not applied):** remove the obsolete rejection guard
-if the removed NO_SAFETY_DOOR_SUPPORT mechanism is no longer supported, or gate
-it on an actual driver incompatibility rather than on enabling the feature.
-Verify both ordinary enabled and disabled configurations before adopting a fix.
-Keep the positive compile regression and delete this entry once fixed.

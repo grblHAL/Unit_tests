@@ -7,7 +7,11 @@ int main(void)
     memset(first + 7, 'a', 110); first[117] = 0;
     memset(second + 7, 'b', 120); second[127] = 0;
     CHECK(vfs_chdir(first) == 0);
-    rejected_size = strlen(second) + 1; reject_realloc = 1;
+    rejected_size = strlen(second) + 1;
+#ifdef HOST_STRSET_API
+    rejected_size++; /* strset reserves capacity plus its terminator. */
+#endif
+    reject_realloc = 1;
     CHECK(vfs_chdir(second) == -1 && realloc_failures == 1);
     char cwd[16]; CHECK(vfs_getcwd(cwd, sizeof(cwd)) != NULL);
     CHECK(strcmp(cwd, "/") == 0); cleanup_operations();
