@@ -1,3 +1,35 @@
+# Current continuation checkpoint - 2026-10-20
+
+This section supersedes historical snapshots below. Refresh live state before delivery.
+
+- Active branch coverage-batch-72, based on unmerged batch71 PR24. Do not merge
+  PRs or duplicate PR24 in a new master-target coverage PR.
+- Clean Terje CORE: 7a6a432eaf78e028b81ff3a5f9804e14519f5f01. Never modify CORE.
+- Batch72 adds50 cases, total4,052. Latest12 are local-only beyond hosted539278b.
+- Full gate at539278b:4,040 targets build;129.52s;3,939 clean passes,3 known
+  reproductions,98 strict sanitizer failures,0 new failures. Raw CTest96 differs
+  because two inherited WILL_FAIL labels invert crashes. Exact98-case set unchanged.
+- Hosted run39371716116 tests539278b. Last live API: source success, coverage
+  failed, GCC/Clang running. Poll that run, never redispatch unchanged. Its branch
+  predates isolated partial-coverage CI repair, so failed coverage cannot yield
+  a new percentage. Never call the suite green.
+- Isolated CI repair PR25 is open/non-draft, on ci-partial-coverage at eb746fe.
+  Hosted39369581523 terminal: builds pass, only98 documented source failures;
+  labelled partial HTML/XML emitted, changed-code assessment withheld.57 helpers pass.
+- PR24 and25 last verified open/unmerged. Do not merge them.
+- Gap map ../ci-partial-coverage-core.gaps.json is PARTIAL and predates batches71/72.
+  Check existing cases before authoring from it. Crashes can prevent profile flush;
+  uncovered lines do not prove absent tests. Existing VFS/macro/description cases
+  are blocked by the documented strutils.c:393 optional-base NULL access.
+- Next: continue supported public gaps outside already-covered reset phase aliases;
+  verify terminal hosted artifacts at a useful boundary. No next full suite merely
+  for the12 focused local cases. Keep uncertain contracts in TODO; no firmware fixes.
+- Recent focused evidence: batch72-address-results.xml (3), profile-results.xml (1),
+  drill-followup-results.xml (5), metadata-results.xml (2), stepper-reset-results.xml (1)
+  under build-asan. Exact checkpoints and earlier evidence follow below.
+
+Historical entries below may describe old branches, completed runs or superseded pauses.
+
 # Live CI measurement recovery - 2026-10-20
 
 The coverage workflow previously skipped gcovr whenever tests failed, preventing
@@ -4703,7 +4735,7 @@ changes, preserving linear X help. Actual settings iteration invokes the bound
 stepper spindle unit hook for each axis, with step/rev only on A and normal
 step/mm elsewhere; public description lookup reaches the spindle hook too.
 The inherited callback-only fixture used a long placeholder unit; this integration
-case instead supplies ordinary step/mm units fitting the documented core storage.
+case instead supplies ordinary step/mm units fitting the existing core unit buffer.
 No overflow issue is classified from that artificial placeholder. Evidence:
 build-asan/batch72-metadata-results.xml. Batch72 adds49, total4,051; eleven
 local-only after hosted539278b. No CORE changes, exception or full rerun.
