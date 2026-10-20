@@ -5,7 +5,9 @@ This section supersedes historical snapshots below. Refresh live state before de
 - Active branch coverage-batch-72, based on unmerged batch71 PR24. Do not merge
   PRs or duplicate PR24 in a new master-target coverage PR.
 - Clean Terje CORE: 7a6a432eaf78e028b81ff3a5f9804e14519f5f01. Never modify CORE.
-- Batch72 adds50 cases, total4,052. All50 pass the full local gate; latest12 await hosted verification.
+- Batch72 adds52 cases, total4,054. The50-case full gate passes additions; latest two are local-only.
+- Current hosted checkpoint39373002337 tests c9941ca (4,052 cases). Poll this
+  existing run at a useful boundary; never redispatch unchanged validation.
 - Full integrated gate:4,052 targets build;62.67s;3,951 clean passes,3 known
   reproductions,98 strict sanitizer failures,0 new failures. Raw CTest96 differs
   because two inherited WILL_FAIL labels invert crashes. Exact98-case set unchanged.
@@ -4769,3 +4771,13 @@ pass; zero new/removed sanitizer cases and no failure without sanitizer output.
 Hosted539278b evidence is now fully inspected: all38 additions pass both compilers;
 source/harness locks verified; sole error location strutils.c:393. No firmware edit.
 Push this50-case checkpoint and dispatch once to obtain fresh PARTIAL coverage.
+
+Backlash restore group: two cases PASS ASan/UBSan0.30s. Public default restore
+on a started driver clears cached take-up before the next real move; pulse and
+physical/logical positions match the restored steps/mm with no compensation.
+Coordinate-only restore retains the existing .1mm compensation:88 physical
+pulses versus80 logical steps. These test settings_restore, not a reload API.
+Evidence: build-asan/batch72-backlash-restore-results.xml. Batch72 adds52,
+total4,054; latest two local-only after c9941ca. No CORE or exception changes.
+Hosted integrated checkpoint is39373002337 at c9941ca (4,052 cases). Poll that
+existing handle at the next useful boundary; do not dispatch unchanged validation.
