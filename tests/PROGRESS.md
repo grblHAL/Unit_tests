@@ -4696,3 +4696,14 @@ and holes. The existing three cases also pass after shared fixture extension:
 Batch72 adds47, total4,049; nine local-only beyond hosted539278b. No new full
 suite, hosted or coverage claim; source remains unmodified. Next work should
 move to another supported gap rather than proliferating reset phase aliases.
+
+Two sender-facing metadata cases PASS ASan/UBSan0.29s. Public resolution help
+switches A between steps/degree and steps/millimeter as rotary configuration
+changes, preserving linear X help. Actual settings iteration invokes the bound
+stepper spindle unit hook for each axis, with step/rev only on A and normal
+step/mm elsewhere; public description lookup reaches the spindle hook too.
+The inherited callback-only fixture used a long placeholder unit; this integration
+case instead supplies ordinary step/mm units fitting the documented core storage.
+No overflow issue is classified from that artificial placeholder. Evidence:
+build-asan/batch72-metadata-results.xml. Batch72 adds49, total4,051; eleven
+local-only after hosted539278b. No CORE changes, exception or full rerun.
