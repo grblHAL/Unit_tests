@@ -10,7 +10,7 @@ import unittest
 SCRIPTS = Path(__file__).resolve().parent
 
 class SuiteReportingTests(unittest.TestCase):
-    def run_report(self, stage, warning=False, failure=False, known=False):
+    def run_report(self, stage, warning=False, failure=False, known=False, partial=False):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             (root / "scripts").mkdir()
@@ -34,6 +34,9 @@ class SuiteReportingTests(unittest.TestCase):
             env = os.environ.copy()
             env.pop("GITHUB_STEP_SUMMARY", None)
             env.pop("GITHUB_ACTIONS", None)
+            env.pop("COVERAGE_COMPLETE", None)
+            if partial:
+                env["COVERAGE_COMPLETE"] = "false"
             return subprocess.run([sys.executable, "scripts/run_suite.py", stage], cwd=root, env=env, capture_output=True, text=True)
 
     def test_summary_accepts_suite_specific_manifest(self):
@@ -46,6 +49,14 @@ class SuiteReportingTests(unittest.TestCase):
         result = self.run_report("summary", warning=True)
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("1 failed", result.stdout)
+
+    def test_partial_coverage_is_explicitly_not_a_passing_baseline(self):
+        result = self.run_report("coverage-summary", partial=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("Partial coverage: tests failed", result.stdout)
+        self.assertIn("incomplete execution", result.stdout)
+        self.assertIn("do not establish a passing baseline", result.stdout)
+        self.assertIn("plugins/example_plugin/code.c", result.stdout)
 
     def test_plugin_coverage_inventories_plugin_instead_of_core(self):
         result = self.run_report("coverage-summary")

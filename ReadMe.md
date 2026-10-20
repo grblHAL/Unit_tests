@@ -121,6 +121,14 @@ instructions: it may be a fixed regression, but a different crash is not a fix.
 Setup/build failures are reported even when tests never execute. Missing reports
 and failed jobs cannot produce a successful diagnosis.
 
+When the coverage build succeeds but tests fail, download the annotated HTML/XML
+from the coverage artifact to investigate remaining gaps. Its HTML title and job
+summary mark the data as **partial coverage**: crashed or aborted tests may not
+flush their counters or reach later assertions. The run stays failed. Partial
+results are not a passing baseline, and changed-code coverage assessment waits
+for a successful test run. Fix the reported failures before drawing conclusions
+about newly added code without tests.
+
 Changed-code coverage is a **warning**, not a required coverage threshold. A source
 PR automatically supplies its base repository and SHA. The upstream caller templates
 supply the PR base or the previous source commit for pushes. For a branch/SHA run,
