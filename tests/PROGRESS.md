@@ -5,7 +5,7 @@ This section supersedes historical snapshots below. Refresh live state before de
 - Active branch coverage-batch-72, based on unmerged batch71 PR24. Do not merge
   PRs or duplicate PR24 in a new master-target coverage PR.
 - Clean Terje CORE: 7a6a432eaf78e028b81ff3a5f9804e14519f5f01. Never modify CORE.
-- Batch72 adds57 cases, total4,059. The50-case full gate passes additions; latest seven are local-only.
+- Batch72 adds58 cases, total4,060. The50-case full gate passes additions; latest eight are local-only.
 - Current hosted checkpoint39373002337 tests c9941ca (4,052 cases). Poll this
   existing run at a useful boundary; never redispatch unchanged validation.
 - Full integrated gate:4,052 targets build;62.67s;3,951 clean passes,3 known
@@ -4812,3 +4812,12 @@ Batch72 adds57, total4,059; latest seven local-only after c9941ca. Existing
 standalone deletion/order tests were inspected first to avoid duplicate cases.
 No CORE/exception changes. Hosted39373002337 last checked live with source-lock
 and source-report artifacts only; await its fresh coverage, do not redispatch.
+
+Builtin parameter macro read-only-write guard PASS ASan/UBSan0.27s. G65P3
+cannot overwrite read-only position parameter5420; its value and caller Q scope
+remain intact, call level unwinds and the failed return flag is clear. A following
+write to writable global100 succeeds. Evidence:
+build-asan/batch72-param-write-results.xml. Batch72 adds58, total4,060; latest
+eight local-only after c9941ca. No source or exception changes. Hosted39373002337
+was checked live this turn: all compiler/coverage jobs still running, no coverage
+artifact published yet. Continue supported gaps without restarting that run.
