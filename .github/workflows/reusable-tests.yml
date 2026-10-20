@@ -155,15 +155,21 @@ jobs:
         run: python scripts/report_stage.py --job coverage --stage fetch -- python scripts/prepare_sources.py
       - run: python scripts/report_stage.py --job coverage --stage tooling -- pip install gcovr==8.4
       - run: python scripts/report_stage.py --job coverage --stage configure -- python scripts/configure_suite.py --mode coverage --compiler gcc
-      - run: python scripts/report_stage.py --job coverage --stage build -- cmake --build build --parallel 2
-      - run: python scripts/report_stage.py --job coverage --stage test -- python scripts/run_suite.py test
+      - id: coverage_build
+        run: python scripts/report_stage.py --job coverage --stage build -- cmake --build build --parallel 2
+      - id: coverage_tests
+        run: python scripts/report_stage.py --job coverage --stage test -- python scripts/run_suite.py test
       - name: Classify coverage test results
+        id: coverage_classify
         if: always()
         run: python scripts/report_stage.py --job coverage --stage classify -- python scripts/run_suite.py summary
       - name: Report coverage
+        id: coverage_report
+        if: always() && !cancelled() && steps.coverage_build.outcome == 'success'
         env:
+          COVERAGE_TITLE: ${{ steps.coverage_tests.outcome == 'success' && steps.coverage_classify.outcome == 'success' && 'Core coverage' || 'Partial core coverage - tests failed' }}
           COVERAGE_FILTER: ${{ needs.source.outputs.coverage_filter }}
-        run: python scripts/report_stage.py --job coverage --stage coverage -- gcovr --merge-mode-functions=separate --root . --filter "$COVERAGE_FILTER" --html-details coverage.html --xml coverage.xml --print-summary
+        run: python scripts/report_stage.py --job coverage --stage coverage -- gcovr --merge-mode-functions=separate --root . --filter "$COVERAGE_FILTER" --html-details coverage.html --html-title "$COVERAGE_TITLE" --xml coverage.xml --print-summary
       - name: Collect concise coverage diagnostics
         if: always()
         run: python scripts/ci_report.py --job coverage
@@ -175,7 +181,11 @@ jobs:
             report-coverage.json
             source-lock.json
             logs/
-      - run: python scripts/run_suite.py coverage-summary
+      - name: Summarize collected coverage
+        if: always() && !cancelled() && steps.coverage_report.outcome == 'success'
+        env:
+          COVERAGE_COMPLETE: ${{ steps.coverage_tests.outcome == 'success' && steps.coverage_classify.outcome == 'success' }}
+        run: python scripts/run_suite.py coverage-summary
       - uses: actions/upload-artifact@v7
         if: always()
         with:
