@@ -7,6 +7,7 @@ static unsigned settings_callbacks;
 static unsigned ganging_options_calls;
 static bool ganging_new_options;
 static axes_signals_t (*ganging_driver_axes)(bool auto_squared);
+static stepper_disable_motors_ptr ganging_driver_disable;
 static void ganging_options(bool newopt)
 { ganging_options_calls++; ganging_new_options = newopt; }
 static limit_signals_t fixture_limits;
@@ -26,5 +27,6 @@ static inline void prepare_ganging(void)
     grbl.on_settings_changed = settings_changed;
     grbl.on_report_options = ganging_options;
     hal.stepper.get_ganged = ganging_driver_axes;
+    hal.stepper.disable_motors = ganging_driver_disable;
     asymmetric_ganging_init();
 }

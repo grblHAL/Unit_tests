@@ -5,7 +5,7 @@ This section supersedes historical snapshots below. Refresh live state before de
 - Active branch coverage-batch-72, based on unmerged batch71 PR24. Do not merge
   PRs or duplicate PR24 in a new master-target coverage PR.
 - Clean Terje CORE: 7a6a432eaf78e028b81ff3a5f9804e14519f5f01. Never modify CORE.
-- Batch72 adds54 cases, total4,056. The50-case full gate passes additions; latest four are local-only.
+- Batch72 adds55 cases, total4,057. The50-case full gate passes additions; latest five are local-only.
 - Current hosted checkpoint39373002337 tests c9941ca (4,052 cases). Poll this
   existing run at a useful boundary; never redispatch unchanged validation.
 - Full integrated gate:4,052 targets build;62.67s;3,951 clean passes,3 known
@@ -4791,3 +4791,13 @@ optional pre-registration driver hook; all34 cases across both affected modules
 PASS ASan/UBSan1.77s. Evidence: build-asan/batch72-ganged-hook-results.xml.
 Batch72 adds54, total4,056; latest four local-only after c9941ca. No source or
 exception changes. Next full gate remains deferred until a substantial boundary.
+
+Auto-square driver-disable chaining PASS: original driver receives the exact Y/B
+request and the subsequent all-motors re-enable request. Pulses suppress only
+the secondary motor before re-enable, then restore the complete mask. Optional
+pre-registration fixture callback leaves other cases unchanged. All35 affected
+asymmetric ganging/auto-square cases PASS ASan/UBSan1.26s, evidence:
+build-asan/batch72-disable-hook-results.xml and ../batch72-disable-hook-tests.log.
+Batch72 adds55, total4,057; latest five local-only after c9941ca. No source,
+known-bug or exception changes. Keep building a substantial group before another
+full gate/push; current hosted run39373002337 must not be restarted unchanged.
