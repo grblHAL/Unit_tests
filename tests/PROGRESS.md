@@ -4678,3 +4678,13 @@ previously uncovered fractional G187 guard through normal parser input.
 Batch72 now42 additions, registered4,044; four are local-only after539278b.
 Hosted39371716116 remains genuinely in_progress (source success; GCC/Clang/
 coverage running). Do not restart or claim its result before terminal evidence.
+
+Repeated drilling reset group: three workflows PASS ASan/UBSan0.40s.
+A sender realtime reset interrupts G91 G81 L20 during initial clearance,
+first-hole XY positioning or first drill feed. Real pulses verify that no
+following phase/hole runs, the driver resets once, position is marked lost,
+and motor/software positions remain at the reset snapshot. No speculative
+alarm severity or restart policy assertion. Evidence:
+build-asan/batch72-drill-reset-results.xml and ../batch72-drill-reset-build.log.
+Batch72 now45 additions, total4,047; seven are local-only after hosted539278b.
+No CORE modifications, known-bug changes, exception or full rerun.
