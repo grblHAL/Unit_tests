@@ -48,6 +48,19 @@ and diagnosis status must still be verified before CI PR readiness. Current gap
 map: ../ci-partial-coverage-core.gaps.json, explicitly partial. Do not promote its
 percentages to a passing baseline. The CI branch predates batches71/72.
 
+Isolated partial-coverage CI repair is now PR25 (open, non-draft):
+https://github.com/grblHAL/Unit_tests/pull/25 . Hosted39369581523 is terminal;
+all builds pass, GCC/Clang each reproduce only98 known strutils.c:393 failures.
+Coverage collection succeeds despite failed tests, produces labelled partial
+HTML/XML, records coverage_partial and withholds changed-code assessment.
+Summary step succeeds with COVERAGE_COMPLETE=false.57 Python checks pass.
+No CORE or exception change. Do not merge either PR24 or25.
+Use ../ci-partial-coverage-core.gaps.json for current-source investigation only;
+it is based on upstream/master before batches71/72, so discount already covered
+paths from our new cases. VFS/macro gaps may be downstream of the core crash.
+Continue batch72 tests on this branch. No new hosted/full-suite claim for the11
+local post05806c8 cases; local total4,035,72 additions33. No repeated CI dispatch.
+
 # Current batch72 continuation - refreshed 2026-10-20
 
 Goal active after usage reset. Reuse coverage-batch-72; do not proliferate branches.
