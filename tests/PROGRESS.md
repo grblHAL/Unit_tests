@@ -5,7 +5,7 @@ This section supersedes historical snapshots below. Refresh live state before de
 - Active branch coverage-batch-72, based on unmerged batch71 PR24. Do not merge
   PRs or duplicate PR24 in a new master-target coverage PR.
 - Clean Terje CORE: 7a6a432eaf78e028b81ff3a5f9804e14519f5f01. Never modify CORE.
-- Batch72 adds58 cases, total4,060. The50-case full gate passes additions; latest eight are local-only.
+- Batch72 adds59 cases, total4,061. The50-case full gate passes additions; latest nine are local-only.
 - Current hosted checkpoint39373002337 tests c9941ca (4,052 cases). Poll this
   existing run at a useful boundary; never redispatch unchanged validation.
 - Full integrated gate:4,052 targets build;62.67s;3,951 clean passes,3 known
@@ -4821,3 +4821,11 @@ build-asan/batch72-param-write-results.xml. Batch72 adds58, total4,060; latest
 eight local-only after c9941ca. No source or exception changes. Hosted39373002337
 was checked live this turn: all compiler/coverage jobs still running, no coverage
 artifact published yet. Continue supported gaps without restarting that run.
+
+No-tool-table builtin macro control PASS ASan/UBSan0.26s. Normal table-free
+configuration rejects a G65P2 offset query, unwinds call scope, preserves caller
+Q and clears the failed-return marker. A following writable-parameter macro works.
+No fabricated tool pointer, source modification or expected-failure allowance.
+Evidence: build-asan/batch72-no-tool-table-results.xml. Batch72 adds59,
+registered4,061; latest nine local-only after c9941ca. Continue pending fresh
+coverage39373002337 before selecting duplicates from the old map.
