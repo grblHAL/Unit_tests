@@ -4609,3 +4609,13 @@ Coverage16,895/17,634 lines95.81%;11,527/13,648 branches84.46%.
 Artifacts beside checkout; README snapshots refreshed to thisverifiedrun.
 Hosted54 run39176480077 still live. Earlier50-52 failures are notrerun/relabeled;
 53 cumulative checkpoint validates their fixes. PR20 remains open/frozen40.
+
+CoreXY manual referencing: two normal-boot sender workflows PASS ASan/UBSan
+0.30s. Public settings enable manual homing with empty automatic cycles; $H
+zeros all Cartesian/motor coordinates, while $HX preserves Y/Z and updates
+the coupled A/B motor coordinates. The host rejects any pulse or wakeup, so
+manual referencing is verified without motion. Evidence:
+build-asan/batch72-corexy-manual-results.xml and ../batch72-corexy-manual-tests.log.
+Batch72 now35 new cases:22 hosted at05806c8 plus13 later local cases.
+Registered total4,037. No new full-suite/hosted claim or CORE/exception changes.
+
