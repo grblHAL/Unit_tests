@@ -5,7 +5,7 @@ This section supersedes historical snapshots below. Refresh live state before de
 - Active branch coverage-batch-72, based on unmerged batch71 PR24. Do not merge
   PRs or duplicate PR24 in a new master-target coverage PR.
 - Clean Terje CORE: 7a6a432eaf78e028b81ff3a5f9804e14519f5f01. Never modify CORE.
-- Batch72 adds59 cases, total4,061. The50-case full gate passes additions; latest nine are local-only.
+- Batch72 adds61 cases, total4,063. The50-case full gate passes additions; latest eleven are local-only.
 - Current hosted checkpoint39373002337 tests c9941ca (4,052 cases). Poll this
   existing run at a useful boundary; never redispatch unchanged validation.
 - Full integrated gate:4,052 targets build;62.67s;3,951 clean passes,3 known
@@ -21,7 +21,7 @@ This section supersedes historical snapshots below. Refresh live state before de
   Hosted39369581523 terminal: builds pass, only98 documented source failures;
   labelled partial HTML/XML emitted, changed-code assessment withheld.57 helpers pass.
 - PR24 and25 last verified open/unmerged. Do not merge them.
-- Gap map ../ci-partial-coverage-core.gaps.json is PARTIAL and predates batches71/72.
+- Fresh gap map ../batch72-integrated-coverage-core.gaps.json is PARTIAL at c9941ca.
   Check existing cases before authoring from it. Crashes can prevent profile flush;
   uncovered lines do not prove absent tests. Existing VFS/macro/description cases
   are blocked by the documented strutils.c:393 optional-base NULL access.
@@ -4829,3 +4829,22 @@ No fabricated tool pointer, source modification or expected-failure allowance.
 Evidence: build-asan/batch72-no-tool-table-results.xml. Batch72 adds59,
 registered4,061; latest nine local-only after c9941ca. Continue pending fresh
 coverage39373002337 before selecting duplicates from the old map.
+
+Fresh integrated coverage artifact is available from live run39373002337, harness
+c9941ca and clean Terje7a6a432. HTML explicitly titled "Partial core coverage -
+tests failed". Coverage JUnit has4,052 cases and98 SEGFAULT failures, exact same
+case set as the documented core fault. GCC/Clang terminal results are still
+pending; do not call the run complete. Partial investigation counters only:
+16,916/17,645 lines and11,644/13,696 branches (NOT a passing baseline).
+Relative to the earlier same-source partial artifact this records49 more covered
+lines and80 more covered branches. Fresh map:
+../batch72-integrated-coverage-core.gaps.json. It includes50 additions but not
+later local cases. Use this map instead of the older ci-partial map.
+
+Two full-queue drilling reset cases PASS, alongside all five affected existing
+cases (7/7 ASan/UBSan0.44s). Sender queues ordinary short X moves, then G81
+blocks waiting for planner room; reset interrupts preceding X motion before
+any drill clearance/positioning or Z pulse. Positive-R and below-current-R
+controls cover the distinct entry paths without private calls or forced abort
+state. Evidence: build-asan/batch72-full-queue-results.xml. Batch72 adds61,
+total4,063; latest eleven local-only after c9941ca. CORE/allowances unchanged.
