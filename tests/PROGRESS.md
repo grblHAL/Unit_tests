@@ -5,7 +5,7 @@ This section supersedes historical snapshots below. Refresh live state before de
 - Active branch coverage-batch-72, based on unmerged batch71 PR24. Do not merge
   PRs or duplicate PR24 in a new master-target coverage PR.
 - Clean Terje CORE: 7a6a432eaf78e028b81ff3a5f9804e14519f5f01. Never modify CORE.
-- Batch72 adds52 cases, total4,054. The50-case full gate passes additions; latest two are local-only.
+- Batch72 adds54 cases, total4,056. The50-case full gate passes additions; latest four are local-only.
 - Current hosted checkpoint39373002337 tests c9941ca (4,052 cases). Poll this
   existing run at a useful boundary; never redispatch unchanged validation.
 - Full integrated gate:4,052 targets build;62.67s;3,951 clean passes,3 known
@@ -4781,3 +4781,13 @@ Evidence: build-asan/batch72-backlash-restore-results.xml. Batch72 adds52,
 total4,054; latest two local-only after c9941ca. No CORE or exception changes.
 Hosted integrated checkpoint is39373002337 at c9941ca (4,052 cases). Poll that
 existing handle at the next useful boundary; do not dispatch unchanged validation.
+
+Driver ganged-axis hook chaining: two cases PASS in normal/asymmetric auto-square
+builds. A driver advertises an independently paired/auto-squared X axis before
+kinematics registration. Public get_ganged queries preserve that X and add the
+kinematics Y pair; Y is auto-squared only in its corresponding build. Both query
+modes reach the original driver hook exactly once. The shared fixture gains an
+optional pre-registration driver hook; all34 cases across both affected modules
+PASS ASan/UBSan1.77s. Evidence: build-asan/batch72-ganged-hook-results.xml.
+Batch72 adds54, total4,056; latest four local-only after c9941ca. No source or
+exception changes. Next full gate remains deferred until a substantial boundary.
