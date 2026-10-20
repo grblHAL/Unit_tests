@@ -4619,7 +4619,42 @@ build-asan/batch72-corexy-manual-results.xml and ../batch72-corexy-manual-tests.
 Batch72 now35 new cases:22 hosted at05806c8 plus13 later local cases.
 Registered total4,037. No new full-suite/hosted claim or CORE/exception changes.
 
-`nMixed CoreXY referencing: automatic Z switch homing plus manual XY completes`nfrom normal boot through $H/$G. The test verifies real Z pulses and switch`npulloff, zero XY pulses, all axes homed, zero parser/motor origins and idle`nwithout an alarm. PASS ASan/UBSan0.28s, evidence:`nbuild-asan/batch72-mixed-results.xml. Batch72 now36 new cases, total4,038;`n22 hosted plus14 later local. No new full-suite claim or CORE change.`n
-`nProbe synchronization reset workflow PASS ASan/UBSan0.25s: queue a real cut,`nrequest probing and send realtime reset after ten actual X pulses while the`nprobe waits for preceding motion. Verify interrupted motion, one driver reset,`nGCProbe_Abort and no probe-start/completion callbacks or active probe monitor.`nFixture supplies mandatory coolant shutdown and driver reset callbacks; initial`nmissing-callback crashes were fixture errors, not CORE defects. Evidence:`nbuild-asan/batch72-probe-reset-results.xml. Batch72 adds37, total4,039:`n22 hosted and15 later local. No full-suite rerun, CORE change or allowance.`n
-`nActive probe reset also PASS: a realtime reset after ten physical pulses aborts`nbefore contact, invokes driver reset once, marks position lost and never reports`na successful probe/completion. Shared reset fixture now serves both timing cases.`nBoth PASS ASan/UBSan0.32s (batch72-active-probe-results.xml). Batch72 adds38,`nregistered4,040, with22 hosted plus16 local. One full gate now running in`n../batch72-next-full-{build,tests}.log, tool session29505. Poll that handle; do`nnot restart. Fresh API: PR24 and25 remain open/unmerged; fetched clean Terje`ncore still7a6a432. Do not duplicate PR24 in a master-target coverage PR.`n
-`nBatch72 second delivery gate is terminal: all4,040 targets build; full ASan/UBSan`n129.52s gives3,939 clean passes,3 known reproductions and98 strict sanitizer`nfailures. Raw CTest96 differs because two inherited WILL_FAIL labels invert`ncrashes. Exact sanitizer case set matches prior checkpoint: zero additions or`nremovals; no failing case without sanitizer output. All38 batch72 cases pass.`nEvidence: build-asan/batch72-next-full-results.xml, ../batch72-next-validation.json,`n../batch72-next-full-summary.md and ../batch72-next-full-{build,tests}.log.`nPush this checkpoint and dispatch one hosted check against clean7a6a432.`nPR24/25 remain open; do not duplicate unmerged71 changes in a new master PR.`n
+
+Mixed CoreXY referencing: automatic Z switch homing plus manual XY completes
+from normal boot through $H/$G. The test verifies real Z pulses and switch
+pulloff, zero XY pulses, all axes homed, zero parser/motor origins and idle
+without an alarm. PASS ASan/UBSan0.28s, evidence:
+build-asan/batch72-mixed-results.xml. Batch72 now36 new cases, total4,038;
+22 hosted plus14 later local. No new full-suite claim or CORE change.
+
+
+Probe synchronization reset workflow PASS ASan/UBSan0.25s: queue a real cut,
+request probing and send realtime reset after ten actual X pulses while the
+probe waits for preceding motion. Verify interrupted motion, one driver reset,
+GCProbe_Abort and no probe-start/completion callbacks or active probe monitor.
+Fixture supplies mandatory coolant shutdown and driver reset callbacks; initial
+missing-callback crashes were fixture errors, not CORE defects. Evidence:
+build-asan/batch72-probe-reset-results.xml. Batch72 adds37, total4,039:
+22 hosted and15 later local. No full-suite rerun, CORE change or allowance.
+
+
+Active probe reset also PASS: a realtime reset after ten physical pulses aborts
+before contact, invokes driver reset once, marks position lost and never reports
+a successful probe/completion. Shared reset fixture now serves both timing cases.
+Both PASS ASan/UBSan0.32s (batch72-active-probe-results.xml). Batch72 adds38,
+registered4,040, with22 hosted plus16 local. One full gate now running in
+../batch72-next-full-{build,tests}.log, tool session29505. Poll that handle; do
+not restart. Fresh API: PR24 and25 remain open/unmerged; fetched clean Terje
+core still7a6a432. Do not duplicate PR24 in a master-target coverage PR.
+
+
+Batch72 second delivery gate is terminal: all4,040 targets build; full ASan/UBSan
+129.52s gives3,939 clean passes,3 known reproductions and98 strict sanitizer
+failures. Raw CTest96 differs because two inherited WILL_FAIL labels invert
+crashes. Exact sanitizer case set matches prior checkpoint: zero additions or
+removals; no failing case without sanitizer output. All38 batch72 cases pass.
+Evidence: build-asan/batch72-next-full-results.xml, ../batch72-next-validation.json,
+../batch72-next-full-summary.md and ../batch72-next-full-{build,tests}.log.
+Push this checkpoint and dispatch one hosted check against clean7a6a432.
+PR24/25 remain open; do not duplicate unmerged71 changes in a new master PR.
+
