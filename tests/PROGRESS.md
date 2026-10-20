@@ -5,14 +5,16 @@ This section supersedes historical snapshots below. Refresh live state before de
 - Active branch coverage-batch-72, based on unmerged batch71 PR24. Do not merge
   PRs or duplicate PR24 in a new master-target coverage PR.
 - Clean Terje CORE: 7a6a432eaf78e028b81ff3a5f9804e14519f5f01. Never modify CORE.
-- Batch72 adds50 cases, total4,052. Latest12 are local-only beyond hosted539278b.
-- Full gate at539278b:4,040 targets build;129.52s;3,939 clean passes,3 known
+- Batch72 adds50 cases, total4,052. All50 pass the full local gate; latest12 await hosted verification.
+- Full integrated gate:4,052 targets build;62.67s;3,951 clean passes,3 known
   reproductions,98 strict sanitizer failures,0 new failures. Raw CTest96 differs
   because two inherited WILL_FAIL labels invert crashes. Exact98-case set unchanged.
-- Hosted run39371716116 tests539278b. Last live API: source success, coverage
-  failed, GCC/Clang running. Poll that run, never redispatch unchanged. Its branch
-  predates isolated partial-coverage CI repair, so failed coverage cannot yield
-  a new percentage. Never call the suite green.
+- Hosted39371716116 is terminal failure, confirming all38 new cases at539278b
+  PASS in GCC/Clang. Source locks match clean7a6a432; both compilers report only
+  the unchanged98 strutils.c:393 failures. Evidence ../batch72-next-hosted-validation.json.
+- Integrated PR25 reporting as a dependency (merge d93b15a) for the next fresh
+  gap measurement.58 helpers pass6.808s. CI remains red for source failures and
+  coverage will be labelled PARTIAL; never publish it as a passing baseline.
 - Isolated CI repair PR25 is open/non-draft, on ci-partial-coverage at eb746fe.
   Hosted39369581523 terminal: builds pass, only98 documented source failures;
   labelled partial HTML/XML emitted, changed-code assessment withheld.57 helpers pass.
@@ -22,8 +24,8 @@ This section supersedes historical snapshots below. Refresh live state before de
   uncovered lines do not prove absent tests. Existing VFS/macro/description cases
   are blocked by the documented strutils.c:393 optional-base NULL access.
 - Next: continue supported public gaps outside already-covered reset phase aliases;
-  verify terminal hosted artifacts at a useful boundary. No next full suite merely
-  for the12 focused local cases. Keep uncertain contracts in TODO; no firmware fixes.
+  verify the next hosted artifact at a useful boundary. No repeated full suite
+  for unchanged code. Keep uncertain contracts in TODO; no firmware fixes.
 - Recent focused evidence: batch72-address-results.xml (3), profile-results.xml (1),
   drill-followup-results.xml (5), metadata-results.xml (2), stepper-reset-results.xml (1)
   under build-asan. Exact checkpoints and earlier evidence follow below.
@@ -4757,3 +4759,13 @@ AGENTS/PROGRESS and combines both CI-report fixes.58 Python helpers PASS6.808s.
 No source changes or allowances. Next hosted run can now emit PARTIAL HTML/XML
 while remaining red for documented CORE crashes; changed-code assessment stays
 withheld on failed execution. This is not new passing coverage evidence.
+
+Integrated batch72 checkpoint: all4,052 targets build; full sanitizer/strict
+62.67s gives3,951 clean passes,3 known reproductions and98 source sanitizer
+failures, identical case set to prior hosted/local checkpoints. All50 additions
+pass; zero new/removed sanitizer cases and no failure without sanitizer output.
+58 helpers pass. Evidence: build-asan/batch72-integrated-full-results.xml,
+../batch72-integrated-validation.json and ../batch72-integrated-full-summary.md.
+Hosted539278b evidence is now fully inspected: all38 additions pass both compilers;
+source/harness locks verified; sole error location strutils.c:393. No firmware edit.
+Push this50-case checkpoint and dispatch once to obtain fresh PARTIAL coverage.
