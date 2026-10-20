@@ -101,6 +101,26 @@ class DiagnosisTests(unittest.TestCase):
             self.assertIn('bad callback',(Path(d)/'logs/gcc-build.log').read_text())
             self.assertEqual(report['findings'][0]['line'],7)
 
+    def test_failed_execution_keeps_partial_coverage_without_passing_job(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "build").mkdir()
+            (root / "build/results.xml").write_text('<testsuite><testcase name="core.case"><failure message="SEGFAULT"/></testcase></testsuite>')
+            (root / "coverage.xml").write_text('<coverage/>')
+            (root / "report-coverage.json").write_text(json.dumps(dict(job="coverage", findings=[], stages=[dict(stage="test", exit_code=1, log="unused.log")])))
+            env = os.environ.copy()
+            env.pop("GITHUB_STEP_SUMMARY", None)
+            env.pop("GITHUB_ACTIONS", None)
+            result = subprocess.run([sys.executable, str(SCRIPTS / "ci_report.py"), "--job", "coverage"], cwd=root, env=env, capture_output=True, text=True)
+            self.assertNotEqual(result.returncode, 0, result.stderr)
+            report = json.loads((root / "report-coverage.json").read_text())
+            self.assertEqual(report["counts"]["failed"], 1)
+            partial = [item for item in report["findings"] if item["kind"] == "coverage_partial"]
+            self.assertEqual(len(partial), 1)
+            self.assertEqual(partial[0]["severity"], "warning")
+            self.assertIn("execution is incomplete", partial[0]["message"])
+            self.assertNotIn("coverage_unavailable", [item["kind"] for item in report["findings"]])
+
     def test_aggregate_never_passes_missing_compiler_report(self):
         with tempfile.TemporaryDirectory() as d:
             p=Path(d); (p/'reports').mkdir()

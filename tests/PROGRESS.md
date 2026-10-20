@@ -4750,3 +4750,10 @@ Evidence: build-asan/batch72-stepper-reset-results.xml. Batch72 adds50,
 registered4,052; twelve local-only after hosted539278b. CORE unmodified.
 Hosted39371716116 last verified live: source success, coverage failed, GCC/Clang
 running. Poll that exact run at next useful boundary, never redispatch unchanged.
+
+Integrated pending PR25 reporting as a dependency for the next fresh coverage
+checkpoint, preserving its independent review branch/PR. Merge retains current
+AGENTS/PROGRESS and combines both CI-report fixes.58 Python helpers PASS6.808s.
+No source changes or allowances. Next hosted run can now emit PARTIAL HTML/XML
+while remaining red for documented CORE crashes; changed-code assessment stays
+withheld on failed execution. This is not new passing coverage evidence.

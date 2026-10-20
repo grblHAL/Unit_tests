@@ -122,6 +122,8 @@ else:
         measured = {entry.get("filename", "").replace("\\", "/"): entry for entry in root.iter("class")}
         inventory = sorted(path.as_posix() for path in args.source_directory.rglob("*.c"))
         lines = [f"## {args.suite_name} coverage", f"**{len(measured)} of {len(inventory)} source files instrumented**", "The remaining files are visible below; percentages apply to this build configuration.", "", "| Module | Line coverage | Lines | Branches |", "|---|---|---:|---:|"]
+        if os.environ.get("COVERAGE_COMPLETE") == "false":
+            lines[1:1] = ["**Partial coverage: tests failed.** These measurements describe incomplete execution; they do not establish a passing baseline or prove that uncovered code has no tests.", ""]
         missing = [name for name in inventory if name not in measured]
         uncovered = [name for name in inventory if name in measured and float(measured[name].get("line-rate", "0")) < 1]
         if missing or uncovered:
