@@ -4669,3 +4669,12 @@ Batch72 now41 additions, total4,043. These three are local-only after the
 https://github.com/petervanderwalt/Unit_tests/actions/runs/39371716116
 Do not dispatch unchanged validation or claim these three are hosted-verified.
 No CORE changes, new exceptions or defect claims.
+
+Acceleration profile guard: fractional G187.1 rejection preserves a previously
+queued G187P2 cut, modal units/distance and selected acceleration. The following
+ordinary move still plans at the same factor; both execute to160 physical pulses.
+PASS ASan/UBSan0.26s, build-asan/batch72-profile-results.xml. This exercises the
+previously uncovered fractional G187 guard through normal parser input.
+Batch72 now42 additions, registered4,044; four are local-only after539278b.
+Hosted39371716116 remains genuinely in_progress (source success; GCC/Clang/
+coverage running). Do not restart or claim its result before terminal evidence.
