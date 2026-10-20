@@ -325,7 +325,9 @@ function(add_core_test name module source)
   endif()
   if(name STREQUAL "ngc_params.string_growth_allocation_failure_preserves_neighbors_and_allows_retry"
     OR name STREQUAL "ngc_params.string_insert_allocation_failure_preserves_existing_values"
-    OR name STREQUAL "ngc_params.string_name_allocation_failure_reports_zero_and_allows_retry")
+    OR name STREQUAL "ngc_params.string_name_allocation_failure_reports_zero_and_allows_retry"
+    OR name STREQUAL "ngc_params.named_label_allocation_failure_allows_conditional_retry"
+    OR name STREQUAL "ngc_params.named_label_reuse_needs_no_reallocation_under_memory_pressure")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=realloc)
   endif()
   if(name STREQUAL "nvs_buffer.buffer_allocation_failure_can_retry_without_changing_storage_handlers"

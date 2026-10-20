@@ -16,6 +16,17 @@ and three later local snapshot cases atad3ed49. PR24 remains open/unmerged.
 Continue independent tests here while CI runs. Do not duplicate PR24 in a new
 master-target PR. The separate CI branch can be reviewed independently of24.
 
+Named-label parser follow-up: four new cases PASS ASan/UBSan. Allocation
+failure/retry and label reuse under memory pressure pass0.31s; unterminated and
+overlong label rejection/recovery pass0.31s. The rejection cases execute an
+already queued cut to its exact motor endpoint, then accept a corrected named
+conditional and assignment. No VFS workaround, source patch or exception.
+Evidence: build-asan/batch72-label-results.xml and batch72-label-rejection-results.xml,
+../batch72-label-tests.log and ../batch72-label-rejection-tests.log.
+Batch72 now29 additions:22 verified hosted at05806c8 plus7 later local cases.
+Registered total4,031. No updated full-suite/hosted claim for those7. Continue
+supported gaps; await the existing isolated CI run for fresh partial measurements.
+
 # Current batch72 continuation - refreshed 2026-10-20
 
 Goal active after usage reset. Reuse coverage-batch-72; do not proliferate branches.
