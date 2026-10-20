@@ -1,10 +1,11 @@
 #pragma once
 #include "support/motion_program_host.h"
 
-typedef enum { Reset_Clearance, Reset_Positioning, Reset_Drilling } drill_reset_phase_t;
+typedef enum { Reset_Clearance, Reset_Positioning, Reset_Drilling, Reset_Retracting } drill_reset_phase_t;
 static drill_reset_phase_t reset_phase;
 static unsigned services, resets;
 static bool reset_sent;
+static bool drilled_below_surface;
 static int32_t reset_position[N_AXIS];
 static control_signals_t reset_controls(void) { return (control_signals_t){0}; }
 static bool reset_connected(void) { return true; }
@@ -20,16 +21,18 @@ static void service_reset_drill(sys_state_t state)
     if(state == STATE_CYCLE) {
         st_prep_buffer();
         stepper_driver_interrupt_handler();
+        if(physical_position[Z_AXIS] <= -20) drilled_below_surface = true;
         bool reached = reset_phase == Reset_Clearance ? physical_position[Z_AXIS] >= 40
                      : reset_phase == Reset_Positioning ? physical_position[X_AXIS] >= 40
-                     : physical_position[Z_AXIS] <= -20;
+                     : reset_phase == Reset_Drilling ? physical_position[Z_AXIS] <= -20
+                     : drilled_below_surface && physical_position[Z_AXIS] >= 0;
         if(!reset_sent && reached) {
             reset_sent = true;
             CHECK(protocol_enqueue_realtime_command(CMD_RESET));
         }
     }
 }
-static inline void run_reset_drilling(drill_reset_phase_t phase)
+static inline void run_reset_drilling_program(drill_reset_phase_t phase, const char *text)
 {
     prepare_motion_program();
     reset_phase = phase;
@@ -39,7 +42,9 @@ static inline void run_reset_drilling(drill_reset_phase_t phase)
     hal.driver_reset = reset_driver;
     grbl.on_execute_realtime = grbl.on_execute_delay = service_reset_drill;
     for(unsigned axis = 0; axis < N_AXIS; axis++) settings.axis[axis].acceleration = 36000;
-    char program[] = "G91G81X1Z-5R2L20F100";
+    char program[96];
+    CHECK(strlen(text) < sizeof(program));
+    strcpy(program, text);
     CHECK(gc_execute_block(program) == Status_OK);
     CHECK(reset_sent && sys.abort && sys.position_lost && resets == 1);
     for(unsigned axis = 0; axis < N_AXIS; axis++) {
@@ -48,4 +53,8 @@ static inline void run_reset_drilling(drill_reset_phase_t phase)
     }
     CHECK(axis_pulses[Y_AXIS] == 0);
     CHECK(physical_position[X_AXIS] <= 80);
+}
+static inline void run_reset_drilling(drill_reset_phase_t phase)
+{
+    run_reset_drilling_program(phase, "G91G81X1Z-5R2L20F100");
 }

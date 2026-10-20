@@ -4688,3 +4688,11 @@ alarm severity or restart policy assertion. Evidence:
 build-asan/batch72-drill-reset-results.xml and ../batch72-drill-reset-build.log.
 Batch72 now45 additions, total4,047; seven are local-only after hosted539278b.
 No CORE modifications, known-bug changes, exception or full rerun.
+
+Drill-reset follow-up adds two PASS cases: reset during G81 retract prevents
+positioning for the next hole; reset during G83 drilling discards later pecks
+and holes. The existing three cases also pass after shared fixture extension:
+5/5 ASan/UBSan0.48s. Evidence: build-asan/batch72-drill-followup-results.xml.
+Batch72 adds47, total4,049; nine local-only beyond hosted539278b. No new full
+suite, hosted or coverage claim; source remains unmodified. Next work should
+move to another supported gap rather than proliferating reset phase aliases.
