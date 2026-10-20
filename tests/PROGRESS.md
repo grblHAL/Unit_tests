@@ -4658,3 +4658,14 @@ Evidence: build-asan/batch72-next-full-results.xml, ../batch72-next-validation.j
 Push this checkpoint and dispatch one hosted check against clean7a6a432.
 PR24/25 remain open; do not duplicate unmerged71 changes in a new master PR.
 
+
+Spindle-address group: three sender-command cases PASS ASan/UBSan0.40s.
+With primary M3/5000 and secondary M4/7000 running, reject M51P0$-1,
+M5$-2 and disabled M5$2 without any hardware output callback, direction or
+RPM change. A valid M5$1 afterward still stops only the secondary spindle.
+Evidence: build-asan/batch72-address-results.xml and ../batch72-address-build.log.
+Batch72 now41 additions, total4,043. These three are local-only after the
+4,040-case full gate and hosted checkpoint539278b. Existing hosted run:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/39371716116
+Do not dispatch unchanged validation or claim these three are hosted-verified.
+No CORE changes, new exceptions or defect claims.
