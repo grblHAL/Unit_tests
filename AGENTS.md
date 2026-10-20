@@ -1,3 +1,21 @@
+# Live CI measurement recovery - 2026-10-20
+
+The coverage workflow previously skipped gcovr whenever tests failed, preventing
+fresh gap guidance. An isolated fix is pushed on ci-partial-coverage at eb746fe,
+based on upstream/master3b16ba3; it contains no coverage batch tests or CORE edits.
+57 Python checks pass. Hosted run 39369581523 is in_progress at last query:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/39369581523
+Poll that existing handle; do not redispatch. Verify it emits labelled PARTIAL
+HTML/XML, retains failed CI and skips changed-code assessment after failed tests.
+Do not call it ready or create its PR before hosted evidence is inspected.
+The raw counters are investigation data, never a new passing coverage baseline.
+Core stays clean7a6a432 and the98 documented crashes remain unsuppressed.
+
+Back on coverage-batch-72; its25 new cases comprise22 hosted-verified at05806c8
+and three later local snapshot cases atad3ed49. PR24 remains open/unmerged.
+Continue independent tests here while CI runs. Do not duplicate PR24 in a new
+master-target PR. The separate CI branch can be reviewed independently of24.
+
 # Current batch72 continuation - refreshed 2026-10-20
 
 Goal active after usage reset. Reuse coverage-batch-72; do not proliferate branches.
