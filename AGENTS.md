@@ -1,3 +1,26 @@
+# Current batch72 continuation - refreshed 2026-10-20
+
+Goal active after usage reset. Reuse coverage-batch-72; do not proliferate branches.
+Core freshly fetched remains clean/unmodified Terje7a6a432. PR24 is open,
+unmerged, for the25-case71 batch. Never merge it or modify CORE.
+
+Hosted72 run39341429819 is terminal failure. Source/build stages pass; GCC and
+Clang each run4,024 cases:3,923 clean passes,3 known reproductions,98 failures,
+0 skips. All22 additions at pushed05806c8 pass in both compilers. Every sanitizer
+case reports the same documented strutils.c:393 NULL-base access. No coverage
+percentage was produced. Artifacts: ../batch72-hosted-{results,report}-core-*.zip.
+Do not rerun that unchanged checkpoint or treat its source fault as a test fix.
+
+Three additional local snapshot cases PASS ASan/UBSan0.36s: M70 allocation
+failure leaves parser state intact and permits retry; replacing an existing save
+reuses storage under memory pressure; a failed local M73 preserves the caller's
+snapshot and permits later restore. Public parser/modal-scope APIs plus existing
+malloc failure fixture; linker wrapping is narrow to these three cases. No new
+bug/exception. Registered total4,027. Evidence: build-asan/batch72-snapshot-results.xml
+and ../batch72-snapshot-tests.log. These three are NOT in hosted05806c8 evidence.
+Keep authoring supported gaps before the next single pre-push full gate. PR72
+must not duplicate PR24 changes while24 remains unmerged.
+
 # Active continuation batch72 - 2026-10-20
 
 Branch coverage-batch-72 continues from pushed coverage-batch-71 at5133033.
