@@ -7,6 +7,7 @@ static unsigned services, resets;
 static bool reset_sent;
 static bool drilled_below_surface;
 static bool drill_prefill_motion;
+static unsigned drill_planner_slots_to_leave;
 static int32_t reset_position[N_AXIS];
 static control_signals_t reset_controls(void) { return (control_signals_t){0}; }
 static bool reset_connected(void) { return true; }
@@ -44,7 +45,8 @@ static inline void run_reset_drilling_program(drill_reset_phase_t phase, const c
     grbl.on_execute_realtime = grbl.on_execute_delay = service_reset_drill;
     for(unsigned axis = 0; axis < N_AXIS; axis++) settings.axis[axis].acceleration = 36000;
     if(drill_prefill_motion)
-        while(plan_get_block_buffer_available()) queue_motion_program("G91G1X1F100");
+        while(plan_get_block_buffer_available() > drill_planner_slots_to_leave)
+            queue_motion_program("G91G1X1F100");
     char program[96];
     CHECK(strlen(text) < sizeof(program));
     strcpy(program, text);

@@ -5,7 +5,7 @@ This section supersedes historical snapshots below. Refresh live state before de
 - Active branch coverage-batch-72, based on unmerged batch71 PR24. Do not merge
   PRs or duplicate PR24 in a new master-target coverage PR.
 - Clean Terje CORE: 7a6a432eaf78e028b81ff3a5f9804e14519f5f01. Never modify CORE.
-- Batch72 adds61 cases, total4,063. The50-case full gate passes additions; latest eleven are local-only.
+- Batch72 adds64 cases, total4,066. The50-case full gate passes additions; latest14 are local-only.
 - Current hosted checkpoint39373002337 tests c9941ca (4,052 cases). Poll this
   existing run at a useful boundary; never redispatch unchanged validation.
 - Full integrated gate:4,052 targets build;62.67s;3,951 clean passes,3 known
@@ -4848,3 +4848,14 @@ any drill clearance/positioning or Z pulse. Positive-R and below-current-R
 controls cover the distinct entry paths without private calls or forced abort
 state. Evidence: build-asan/batch72-full-queue-results.xml. Batch72 adds61,
 total4,063; latest eleven local-only after c9941ca. CORE/allowances unchanged.
+
+Three additional buffered-drill reset controls PASS with all seven affected
+existing cases (10/10 ASan/UBSan0.52s). Ordinary X cuts occupy the planner;
+G81 then waits for room for its R-plane approach, feed or retract. Reset during
+preceding X motion stops at the driver snapshot without any Z pulse, including
+when the drill feed was already queued before retract enqueue blocked. Tests
+use public queue availability and valid G-code, not private entry calls or
+forced abort flags. Targeted paths come from the fresh partial gap map; no
+new line-coverage claim until the next measured checkpoint.
+Evidence: build-asan/batch72-drill-enqueue-results.xml. Batch72 adds64,
+registered4,066; latest14 local-only after c9941ca. CORE/allowances unchanged.
