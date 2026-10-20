@@ -4619,3 +4619,4 @@ build-asan/batch72-corexy-manual-results.xml and ../batch72-corexy-manual-tests.
 Batch72 now35 new cases:22 hosted at05806c8 plus13 later local cases.
 Registered total4,037. No new full-suite/hosted claim or CORE/exception changes.
 
+`nMixed CoreXY referencing: automatic Z switch homing plus manual XY completes`nfrom normal boot through $H/$G. The test verifies real Z pulses and switch`npulloff, zero XY pulses, all axes homed, zero parser/motor origins and idle`nwithout an alarm. PASS ASan/UBSan0.28s, evidence:`nbuild-asan/batch72-mixed-results.xml. Batch72 now36 new cases, total4,038;`n22 hosted plus14 later local. No new full-suite claim or CORE change.`n
