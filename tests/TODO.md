@@ -671,3 +671,15 @@ enable/direction inversion are covered by
 [the public-setting case](cases/multi_spindle/secondary_pwm_rejects_signal_inversion_not_supported_by_driver.c).
 Do not call the private setter or replace registered metadata to color that guard
 in coverage. This is a reachability note, not a firmware bug or an exclusion.
+
+
+## Redundant YZ cutter-compensation plane guard
+
+**Reviewed:** 2026-10-20, clean Terje7a6a432. The common validation in
+`gcode.c:2720-2721` rejects YZ cutter compensation with
+`Status_CutterCompConflict` before the later same-condition
+`Status_GcodeIllegalPlane` check at2853-2854. The public rejection and corrected
+XY retry are tested in
+[the activation case](cases/cutter_comp/enabling_compensation_in_yz_plane_rejects_before_plugin_and_allows_xy_retry.c).
+Do not bypass the earlier guard to color the later one in coverage. This is a
+reachability observation, not a new defect or a coverage exclusion.

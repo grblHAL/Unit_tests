@@ -27,6 +27,27 @@ Batch72 now29 additions:22 verified hosted at05806c8 plus7 later local cases.
 Registered total4,031. No updated full-suite/hosted claim for those7. Continue
 supported gaps; await the existing isolated CI run for fresh partial measurements.
 
+Fresh partial-coverage guided group: four cases PASS ASan/UBSan0.36s.
+Negative G10 P preserves the queued cut, modal state and saved coordinates;
+inverse-time canned drilling rejects then accepts a G94 retry; rotary A words
+in an eight-axis canned cycle reject without pulses, then linear drilling works;
+YZ cutter-comp activation rejects before the plugin and accepts a G17 retry.
+The first cutter assertion expected the later IllegalPlane guard; source review
+shows the earlier common check returns CutterCompConflict. The test follows
+that public contract. Do not force the redundant later guard for coverage.
+Evidence: build-asan/batch72-public-validation-results.xml and
+../batch72-public-validation-tests.log. Batch72 now33 new cases:22 previously
+hosted plus11 later local cases. Registered total4,035. No CORE or exception change.
+
+Isolated CI coverage job39369581523 has completed with its expected failed test
+stage but SUCCESSFUL coverage collection. Artifact contains HTML/XML; HTML title
+is "Partial core coverage - tests failed". Classification retains98 failures and
+coverage_partial warning, suppressing changed-code assessment. Summary step ran
+successfully with COVERAGE_COMPLETE=false (job log retained). Remaining compiler
+and diagnosis status must still be verified before CI PR readiness. Current gap
+map: ../ci-partial-coverage-core.gaps.json, explicitly partial. Do not promote its
+percentages to a passing baseline. The CI branch predates batches71/72.
+
 # Current batch72 continuation - refreshed 2026-10-20
 
 Goal active after usage reset. Reuse coverage-batch-72; do not proliferate branches.
