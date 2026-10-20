@@ -1,19 +1,64 @@
-# Isolated CI partial-coverage recovery - 2026-10-20
+# Active coverage batch71 - 2026-10-20
 
-Current branch ci-partial-coverage starts upstream/master3b16ba3, separate from
-all coverage test batches. User's test work is preserved on coverage-batch-72
-(ad3ed49 local head; pushed05806c8). Return to72 after CI delivery; do not
-recreate branches or lose its three local snapshot tests. PR24 remains open.
+Goal ACTIVE: meaningful full supported core line/branch coverage. The hourly
+recovery task is configured in the app to continue stalled work when usage is
+available. Routine passing checks, commits and PR checkpoints do not stop work.
 
-Purpose: current workflow skips gcovr after tests fail, so the98 documented clean
-core7a6a432 crashes prevent fresh gap guidance. Collect HTML/XML after a successful
-build even when tests/classification fail. Label title/summary as PARTIAL, keep
-CI failed, and skip changed-code assessment on incomplete execution. No core
-change, exception, trigger/caller or coverage denominator change.
-57 Python checks PASS6.825s, including partial summary and failed-job integration.
-Evidence: ../ci-partial-all-checks.log. One hosted validation needed before PR
-readiness claim. README describes usage, not this progress history. Source remains
-clean/unmodified7a6a432. Never edit/commit/push CORE; Terje owns source fixes.
+Branch coverage-batch-71 starts freshly fetched upstream/master3b16ba3, which
+contains merged PR23. Core clean/unmodified Terje7a6a432eaf78e028b81ff3a5f9804e14519f5f01.
+Terje alone implements core fixes. Never edit/commit/push CORE or open core PRs.
+Confirmed faults go to KNOWN_BUGS.md; uncertain contracts/questions go to TODO.
+Requests to fix CI/tests never imply permission to change source firmware.
+
+Read one clean-source coverage report this batch:39288629614/core16c7dff,
+96.60% lines85.54% branches, as historical gap guidance only. Never use the
+withdrawn agent-patched run39332728069 as readiness/coverage evidence.
+Large dormant gaps include wall-plotter homing, unpublished settings and weak
+rigid-tapping implementation; avoid forcing private paths or unfinished features.
+
+First group:16 separate cases for job-end coordinate reload/CRC-error retry,
+check-mode persistence isolation, G92 save policy, completion callback ordering,
+feed/rapid/spindle override reset policy, parking policy and modal-snapshot
+invalidation. Settings cases cover supported spindle-sync/auto-square groups,
+optional plugin channel discovery and public homing-direction readback.
+First20 new cases PASS ASan/UBSan in0.67s, no diagnostics or new exceptions.
+The four added secondary-switch-first auto-square cases verify both homing
+directions, positive/negative trim, physical motor endpoints, completion and
+release of both motors. The two missing PWM coolant callbacks were fixture
+errors and are corrected, not recorded as core faults.
+Evidence: build-asan/batch71-first20-results.xml and ../batch71-first20-tests.log.
+Core remains clean7a6a432. Registered total3,997 (source still has documented
+independent faults; no full passing-core/coverage claim). Commit this coherent
+group, then continue practical gaps before a useful push/PR boundary. No full
+local rerun until pre-push; no unchanged reporting-helper reruns.
+
+I/O follow-up: five new public plugin-configuration cases pass ASan/UBSan
+in 0.32s: named output restoration, capability-filtered fallback after a saved
+name disappears, nonexistent output rejection without changing selection,
+reserved coolant output rejection, and early termination of unfiltered port
+enumeration. A first draft incorrectly treated setting selection as ownership;
+review showed set_value validates capability while claim handles ownership.
+The replacement uses the existing driver assignment fixture and a real coolant
+function. No core bug or exception was added. Evidence:
+build-asan/batch71-io-results.xml and ../batch71-io-tests.log.
+Batch71 now adds25 passing cases; registered total4,002. No new overall coverage
+measurement or full-suite claim. Next: continue high-value supported workflows,
+then one full local gate at the delivery boundary; preserve clean core7a6a432.
+
+Full pre-push gate completed on clean Terje7a6a432: all4,002 targets build.
+Full ASan/UBSan CTest run completed130s. Strict classification:3,901 clean
+passes,3 known reproductions,98 failures,0 skips. All98 diagnostic cases report
+the same already documented strutils.c:393 NULL optional-base dereference;
+there are no other raw failed cases. Raw CTest reports96 failures because two
+VFS expected-failure labels invert their crashes; strict reporting rejects all98.
+All25 batch71 cases pass in the full run, with no skipped case or new exception.
+Evidence: ../batch71-full-build.log, build-asan/batch71-full-results.xml,
+../batch71-full-summary.md and ../batch71-full-failure-classification.json.
+This is not a green suite or a new coverage measurement. The source fix is
+Terje's responsibility; never modify CORE to make this run green. Push71 and
+run one hosted checkpoint against the exact revision before PR readiness claims.
+Four additional homing-rate drafts are outside the repo in
+../batch71-next-homing-proposals; unregistered/unvalidated, for the next group.
 
 # Core ownership and withdrawal - 2026-10-20
 

@@ -1,20 +1,3 @@
-# Isolated CI partial-coverage recovery - 2026-10-20
-
-Current branch ci-partial-coverage starts upstream/master3b16ba3, separate from
-all coverage test batches. User's test work is preserved on coverage-batch-72
-(ad3ed49 local head; pushed05806c8). Return to72 after CI delivery; do not
-recreate branches or lose its three local snapshot tests. PR24 remains open.
-
-Purpose: current workflow skips gcovr after tests fail, so the98 documented clean
-core7a6a432 crashes prevent fresh gap guidance. Collect HTML/XML after a successful
-build even when tests/classification fail. Label title/summary as PARTIAL, keep
-CI failed, and skip changed-code assessment on incomplete execution. No core
-change, exception, trigger/caller or coverage denominator change.
-57 Python checks PASS6.825s, including partial summary and failed-job integration.
-Evidence: ../ci-partial-all-checks.log. One hosted validation needed before PR
-readiness claim. README describes usage, not this progress history. Source remains
-clean/unmodified7a6a432. Never edit/commit/push CORE; Terje owns source fixes.
-
 # Core ownership and withdrawal - 2026-10-20
 
 Terje owns CORE implementation. This repository authors tests and documents
