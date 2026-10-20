@@ -4707,3 +4707,14 @@ case instead supplies ordinary step/mm units fitting the documented core storage
 No overflow issue is classified from that artificial placeholder. Evidence:
 build-asan/batch72-metadata-results.xml. Batch72 adds49, total4,051; eleven
 local-only after hosted539278b. No CORE changes, exception or full rerun.
+
+Secondary-stepper reset chain PASS ASan/UBSan0.26s. Three registered motors
+emit actual pulses; public mc_reset stops all before invoking the prior plugin
+hook. Subsequent polling emits no pulses and reports zero speed. Repeated reset
+while EXEC_RESET remains pending does not call the hook again. This covers the
+third motor registration/list traversal and chained reset callback through the
+public reset entry rather than directly invoking the installed callback.
+Evidence: build-asan/batch72-stepper-reset-results.xml. Batch72 adds50,
+registered4,052; twelve local-only after hosted539278b. CORE unmodified.
+Hosted39371716116 last verified live: source success, coverage failed, GCC/Clang
+running. Poll that exact run at next useful boundary, never redispatch unchanged.
