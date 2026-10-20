@@ -5,7 +5,7 @@ This section supersedes historical snapshots below. Refresh live state before de
 - Active branch coverage-batch-72, based on unmerged batch71 PR24. Do not merge
   PRs or duplicate PR24 in a new master-target coverage PR.
 - Clean Terje CORE: 7a6a432eaf78e028b81ff3a5f9804e14519f5f01. Never modify CORE.
-- Batch72 adds55 cases, total4,057. The50-case full gate passes additions; latest five are local-only.
+- Batch72 adds57 cases, total4,059. The50-case full gate passes additions; latest seven are local-only.
 - Current hosted checkpoint39373002337 tests c9941ca (4,052 cases). Poll this
   existing run at a useful boundary; never redispatch unchanged validation.
 - Full integrated gate:4,052 targets build;62.67s;3,951 clean passes,3 known
@@ -4801,3 +4801,14 @@ build-asan/batch72-disable-hook-results.xml and ../batch72-disable-hook-tests.lo
 Batch72 adds55, total4,057; latest five local-only after c9941ca. No source,
 known-bug or exception changes. Keep building a substantial group before another
 full gate/push; current hosted run39373002337 must not be restarted unchanged.
+
+Delayed plugin retry lifecycle: two cases PASS ASan/UBSan0.52s. A due event
+callback cancels another pending retry during task processing while unrelated
+due work still runs in order. A second case replaces that retry with a deadline
+relative to current time, verifies it does not run early, then runs exactly once.
+No private scheduler calls or simulated interrupt races; public task APIs and
+controlled host ticks only. Evidence: build-asan/batch72-task-retry-results.xml.
+Batch72 adds57, total4,059; latest seven local-only after c9941ca. Existing
+standalone deletion/order tests were inspected first to avoid duplicate cases.
+No CORE/exception changes. Hosted39373002337 last checked live with source-lock
+and source-report artifacts only; await its fresh coverage, do not redispatch.
