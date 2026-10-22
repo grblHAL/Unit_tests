@@ -35,9 +35,9 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Reviewed:** 2026-10-22, clean Terje `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39828039606)
-measures 17,304/17,684 lines (97.85%) and 12,116/13,754 branches (88.09%).
-The 380 uncovered lines include the following known gaps; this table does not
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39831104507)
+measures 17,313/17,684 lines (97.90%) and 12,121/13,754 branches (88.13%).
+The 371 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable.
 
 | Region | Status and evidence | What makes it testable |
@@ -389,3 +389,25 @@ in the initial pull-off lock/motion mask while preserving switch checking and
 normal independent homing. Keep the correct regression; remove its exact
 WILL_FAIL/known_bug block and this entry once upstream passes under sanitizers.
 No CORE edit or sanitizer allowance.
+
+## RTCP rotation at the tool center loses the rotary endpoint
+
+**Confirmed:** 2026-10-22, clean CORE `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
+[Regression](cases/rtcp_ac/rotation_at_tool_center_preserves_requested_rotary_endpoint.c)
+enables RTCP through its registered M851 handler with zero rotation centers,
+then asks the public segmenter for a C=90 degree move at XYZ=0. The move emits
+one segment, but its C endpoint remains0 instead of90. Linear coordinates stay
+zero. [Short-move control](cases/rtcp_ac/short_rotary_move_keeps_one_segment_and_exact_endpoint.c)
+starts one millimeter off-center and reaches the requested transformed endpoint
+in one segment. Existing longer rotary paths continue to exercise interpolation.
+Raw sanitizer evidence: `build-asan/rtcp-short-raw.xml` (endpoint assertion).
+
+In `kinematics/rtcp_ac.c`, segment count is based solely on XYZ arc length.
+Zero linear distance is clamped to one segment at line308; the sampling cursor
+remains0, so the idx==0 branch at line363 chooses s_out=0 before the final-segment
+branch can choose1. The commanded rotary delta is therefore discarded.
+
+**Suggested fix for Terje (not applied):** preserve the exact final endpoint for
+zero-linear-distance rotary motion, including both rotary axes and subsequent
+moves. Keep the correct regression and remove this exact WILL_FAIL/known_bug
+block and entry after upstream passes. No CORE changes or sanitizer allowance.

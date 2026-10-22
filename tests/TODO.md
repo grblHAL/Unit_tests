@@ -950,3 +950,11 @@ mc_homing_cycle, yet $H returnsOK without alarm. Confirm intended driver-provide
 contract and sender-visible error policy before claiming a core defect or selecting
 a different status. Passing API regression preserves partial-homing and retry
 behavior in split_rate_homing_stops_after_later_driver_refusal_and_allows_retry.
+
+
+2026-10-22: named macro mismatched SUB header: unregistered proposal
+proposals/named_macro_wrong_sub_header_unwinds_scope_and_skips_both_tails.c
+opens fixture.macro through a real CALL but encounters O<inner>SUB. Hosted-style
+protocol fixture timed out at15.03s locally. Need isolate error-report/stream ownership before classifying
+the timeout or asserting a specific cleanup contract. Not a WILL_FAIL allowance.
+Separate bounded file-level orphan named SUB rejection is registered.

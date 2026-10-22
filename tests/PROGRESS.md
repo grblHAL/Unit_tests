@@ -6404,3 +6404,29 @@ Previous pushed4c0c021 coverage artifact source/harness/filter locks match:
 17,313/17,684 lines97.90%,12,121/13,754 branches88.13%,371 raw uncovered.
 All seven coverage stage exits0; GCC/Clang still running at inspection, so this
 is a coverage-job result rather than a new fully-green snapshot badge.
+
+
+### 2026-10-22 - macro returns and short RTCP paths authored
+
+Four cases: nested G65 O-word RETURN unwinds live IF frames through a plugin
+return callback, preserves each caller argument, returns values13/17 and skips
+both file tails; orphan named SUB rejects while retaining caller-owned file and
+allows next assignment; short rotary move off-center emits one exact segment;
+zero-linear-distance C90 exposes lost rotary endpoint, exact WILL_FAIL documented.
+A mismatched named-file SUB protocol proposal timed out15.03s; retained outside
+registration with TODO evidence pending error/stream ownership isolation.
+No CORE changes. Cumulative sanitizer gate follows before next push.
+
+
+### 2026-10-22 - macro/RTCP cumulative delivery gate
+
+Full build/ASan/UBSan/strict summary all0:4,169 cases in69.07s,4,151 clean,
+18 exact expected failures,0 unexpected failures/skipped. RTCP raw output
+confirms requestedC90/emittedC0; no sanitizer diagnostic allowance. Four new
+cases and the unregistered malformed-header proposal are retained distinctly.
+All five individual hosted jobs for39831104507 at4c0c021 are terminalsuccess.
+Both downloaded locks verify68eba79/source filter/core scope, all7 coverage
+stages0,4,160total/4,144clean/16known. Report17,313/17,68497.90% lines and
+12,121/13,75488.13% branches; badges/known-gap snapshot updated,371 raw gaps.
+Newer homing run39833149909 at3c3f1d9 remainslive; no new coverage attributed
+to this macro/RTCP batch before its exact hosted report. CORE remains clean.

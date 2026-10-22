@@ -71,3 +71,7 @@ endif()
 if(TEST boot_square.engaged_switches_pull_off_before_independent_motor_homing)
   set_tests_properties(boot_square.engaged_switches_pull_off_before_independent_motor_homing PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+if(TEST rtcp_ac.rotation_at_tool_center_preserves_requested_rotary_endpoint)
+  set_tests_properties(rtcp_ac.rotation_at_tool_center_preserves_requested_rotary_endpoint PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
