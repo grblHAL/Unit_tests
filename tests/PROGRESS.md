@@ -1,3 +1,43 @@
+# Planner/files/parser cumulative gate - 2026-10-22
+
+Full4,141 ASan/UBSan suite passes60.11s:4,125 clean,16 known,0 failures/skips.
+Build/test/strict all0 in batch72-planner-files-gate.json. Includes third asset
+catalog, driver plan initialization with acceleration profile, explicit G33.1I
+check-mode parsing and pitch reuse. No new allowances/CORE changes.
+
+Prior964457f coverage39818343521: artifacts12443293519/12444650465 lock both
+harness964457f73230556d5b047dedd5012197c5873672/source68eba79/core filter;
+all report stages0,4,138/4,122clean/16known/0failed/0skipped.17,280/17,684
+lines97.72%,12,089/13,754branches87.89%:+3lines/+4branches versusd89ca53.
+New lines gcode4737/4738,settings1926. GCC/Clang remain running, so published
+snapshot stays fullygreen97.70/87.87. Current local group awaits hosted gain.
+
+# Explicit tapping multiplier dry-run parser path - 2026-10-22
+
+Extended existing synchronized-command check-mode case with G33.1Z2K0.2I2,
+accepting and consuming explicitI multiplier, updating simulatedZ2/pitch0.2,
+retaining overrides and empty planner. Following G33Z3 reuses pitch0.2 without
+motion. Targets gcode2431. Native tapping runtime remains separately documented
+unsupported-status bug; no execution-support claim or exception changes. Focused
+sanitizer passes. No new case/CORE edit; pending cumulative batch validation.
+
+# Driver planner initialization under selected acceleration profile - 2026-10-22
+
+New acceleration-profile case queues G187P5 feed at20% acceleration, initializes
+normal driver plan data and submits actual mc_line. Driver block gets default
+factor1/acceleration36000 and800 steps toX20; previous G-code block retains7200,
+modal factor remains0.2. Targets planner807 under enabled supported configuration.
+Focused ASan/UBSan passes0.26s. Total4,141,no allowances/CORE edits. Grouped with
+third embedded catalog extension pending cumulative gate/hosted measurement.
+
+# Third embedded catalog preserves reader and enumeration - 2026-10-22
+
+Extended existing catalog append case to register three distinct asset catalogs
+while first asset reader is open. Directory enumerates first/later/last exactly
+thenEOF; reader retains offset2 and remainingcde. Targets fs_embedded257 append
+traversal without touching known cross-list name-lookup defect. Focused sanitizer
+passes. No new cases/allowances/CORE edits; next cumulative batch begins here.
+
 # Metadata/report cumulative gate and green coverage snapshot - 2026-10-22
 
 Full4,140-case ASan/UBSan suite passes59.38s:4,124 clean,16 documented
