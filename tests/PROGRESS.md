@@ -1,103 +1,64 @@
-# Current batch72 compatibility checkpoint - 2026-10-22
+# Current batch72 delivery checkpoint - 2026-10-22
 
-This section supersedes historical snapshots. The persistent full-supported-coverage
-goal is ACTIVE in the current chat. Passing checkpoints do not complete it.
+This checkpoint supersedes historical snapshots. The persistent full-supported-
+coverage goal remains ACTIVE; a passing test group or draft PR is not completion.
 
-- Delivery: draft PR26 https://github.com/grblHAL/Unit_tests/pull/26 at
-  da170df50a0ebee016a5f71b80f2c00ae7accc24, pushed and attached. Not ready:
-  current CORE compilation/runtime failures remain. No redundant hosted dispatch.
-- Local follow-up adds two analog workflows beyond the PR head: synchronized
-  rejection preserves an already queued output and accepts its retry; negative
-  servo angle preserves motion and accepts zero. Both pass ASan/UBSan in0.32s,
-  build-asan/batch72-analog-followup.xml. No new exceptions. Local total4,075 /
-  73 batch additions; these2 are not part of the last broad/hosted checkpoint.
-  Accumulate the next substantial group here before another push/CI checkpoint.
-- Further local settings group: malformed core integer values preserve the
-  motor-enable callback state and saved mask; public plugin description allocation
-  failure preserves metadata and succeeds on retry. Both pass ASan/UBSan in0.29s,
-  build-asan/batch72-settings-recovery.xml. No exceptions or shared-header changes.
-  Local total4,077 /75 additions; four locally validated cases beyond PR26's head.
-  Settings metadata reachability audit in TODO avoids forcing dormant dispatches.
-- Local sleep-parking group: four ASan/UBSan cases pass0.37s, including manual
-  idle $SLP, timed completed-hold sleep, timed open-door sleep after parking, and
-  cycle start during fast sleep retract. Existing timer/parking fixtures drive
-  real motor steps; coolant-off callbacks require the actual parking height,
-  X never resumes, and already parked motion is not repeated. No exceptions.
-  Evidence: build-asan/batch72-sleep-parking.xml and its build log. This exercises
-  the public sleep/parking and interrupted-resume paths left in the partial map.
-  Current local total4,081 /79 additions: eight focused-validated cases beyond
-  PR26's4,073/71 checkpoint. No new full-suite or hosted/coverage claim.
-- Local interactive-motion group: two encoder hold cases pass0.34s. G33 defers
-  hold to its exact800-step endpoint, waits through four held polls, then permits
-  the next cut; G95 stops before its endpoint and resumes the same cut. Two manual
-  tool-jog cases pass0.32s: completed jog returns to M6 wait, and full-boot sender
-  jog cancellation delivers ASCII_CAN through the real receive loop before
-  acknowledgement/touch-off/cycle start selects tool3 and restores position.
-  Initial fixture callback/ordering errors were repaired; no CORE bug or exception.
-  Evidence: build-asan/batch72-sync-hold.xml and batch72-tool-jog.xml.
-  Current local total4,085 /83 additions,12 focused-validated cases beyond PR26.
-  Next useful delivery boundary: one cumulative buildable sanitizer/strict gate,
-  keeping the58 CORE-blocked cutter cases explicit; update the existing draft.
-- Branch coverage-batch-72 preserves all eight original unpushed commits.
-  Reconciled upstream/master4d73b8b (merged PR24/25) in28083db; no duplicate
-  merged dependency changes remain. Existing handoff edits were preserved inda34ddf.
-- Clean ignored CORE is Terje fab8d1c248990f53f13a444018fbb3ee353061dd.
-  Remote master rechecked at the end of this batch and still matches. No CORE
-  source edits, commits, pushes or PRs. Terje is actively developing plasma material
-  handling; plugin-specific contracts are recorded separately in TODO.
-- Delivered checkpoint has4,073 registered tests and71 additions beyond upstream;
-  the local follow-up above makes4,075/73. Seven new
-  workflows this continuation: malformed second expression operator with queued
-  motion/retry; failed directory rollback; optional-getcwd regression; DAC fraction
-  and range rejection/retry; servo range/fraction retry; synchronized fractional PWM.
-- Source-detected HOST_PARSER_FLAGS migrates existing tests for direct versus nested
-  parser flags. Analog fixture now advertises an8-bit DAC; fractional-output tests
-  select PWM explicitly. VFS fixtures supply stat and stable getcwd snapshots where
-  needed. Allocation tests follow Terje's restored-base/previous-directory policy.
-- The latest all-target build fails ONLY in CORE gcode.c at2920/3364/3373/5036:
-  CUTTER_COMP_ENABLE still refers to gc_state.ccomp_off after the flags refactor.
-  58 cutter-linked tests cannot be freshly built. They remain registered; no source
-  or coverage filter changes and no compile-diagnostic suppression were added.
-  Evidence: build-asan/batch72-final-compat-build.log and
-  batch72-unavailable-current-core-tests.txt. Never count stale cutter binaries.
-- One broad ASan/UBSan gate executed4,011 buildable tests in127.48s: raw18 failures;
-  strict summary FAIL. It explicitly withheld the58 unbuildable cutter tests, so
-  this is NOT a full passing suite. No unchanged broad rerun followed fixture repairs.
-  Evidence: batch72-current-core-available.xml/.log and batch72-current-core-strict.log.
-- Focused repaired/new modules:188 tests in3.91s,10 raw failures including the now
-  obsolete fractional-PWM WILL_FAIL. Final cleanup/new-PWM check3/3 passes0.33s.
-  Evidence: batch72-repair.xml/.log and batch72-fixed-regressions.xml.
-- Latest observations across those runs cover4,015 current buildable cases, with
-  10 remaining failures: four embedded/RAM directory rejections, regular-file
-  rejection, two root returns, optional-getcwd sanitizer crash, post-format relative
-  routing, and alarm-upload closing demarcation after rejected G91. The alarm/error
-  policy question is in TODO; confirmed faults are in KNOWN_BUGS. One sanitizer
-  failure remains, unsuppressed. Two justified expected failures remain (storage
-  version retry policy and frontend getcwd). This aggregate is NOT a rerun or a
-  green baseline: build-asan/batch72-current-observations.json.
-- The71 batch additions have69 latest passing observations, one source-failing
-  optional-getcwd regression, and one cutter case unavailable from source compile.
-- Removed obsolete fractional-output and unexpected-file-percent exceptions and
-  defect entries after clean-source passing controls; retained correct assertions.
-  The string NULL-base defect is fixed. The old directory-growth failure was replaced
-  by the intended previous-directory recovery/retry check, now passing ordinarily.
-- Hosted39373002337 was re-inspected: completed FAILURE at harness c9941ca,
-  CORE7a6a432. Both GCC/Clang artifacts have4,052 cases, exactly98 sanitizer
-  failures at strutils.c:393, and all50 then-new cases pass. Source/harness locks
-  verified, source report clean, coverage report red. Local evidence:
-  build-asan/batch72-integrated-hosted-verification.json and downloaded ZIPs there.
-- Last coverage remains PARTIAL c9941ca/7a6a432:16,916/17,645 lines95.87%,
-  11,644/13,696 branches85.02%. No current-source coverage gain or passing baseline
-  is claimed. Badges still refer to the earlier verified successful run.
-- Reporting helpers unchanged; no redundant rerun. CI remains manual-only with
-  reusable callers intact. Existing recovery automation card was inspected; no
-  competing automation was created. Its current scheduling/target was not exposed
-  in the tool response, so no unverified scheduling change was made.
-- Next: continue independent
-  supported gaps. Refresh Terje at the next deliberate compatibility boundary;
-  do not rerun an unchanged broad gate or dispatch known-unbuildable source just
-  to reproduce its same compile fault. Once CORE builds, run the58 withheld cases,
-  affected regressions and one useful exact-head hosted checkpoint for fresh coverage.
+- Branch coverage-batch-72; existing draft PR26:
+  https://github.com/grblHAL/Unit_tests/pull/26. All original local commits are
+  preserved; upstream/master4d73b8b (merged PR24/25) is reconciled in28083db.
+- Runtime-validated harness e95eef7f3fa7ebf33df50213a0508110ef6d95aa;
+  clean ignored CORE fab8d1c248990f53f13a444018fbb3ee353061dd. Remote Terje
+  master rechecked before this gate and still matches. No CORE changes or delivery.
+  The following delivery checkpoint changes documentation only.
+- 4,085 registered tests;83 additions beyond merged upstream. Twelve additions
+  since PR26's prior head all pass this cumulative gate: analog queue/servo
+  boundaries; malformed integer and description allocation recovery; four actual
+  sleep-parking workflows; encoder-driven G33/G95 hold/resume; completed manual
+  tool jog and full-boot sender jog cancellation/acknowledgement.
+- One cumulative all-target build attempts the current supported configurations.
+  It fails ONLY in CORE gcode.c2920/3364/3373/5036, using the removed direct
+  ccomp_off member under CUTTER_COMP_ENABLE. The58 linked cutter tests remain
+  registered but cannot be freshly built. They are explicitly withheld from this
+  runtime gate; stale binaries are never counted. No coverage filters changed.
+- Cumulative ASan/UBSan:4,027 buildable cases in62.72s;4,015 clean passes,
+  two known reproductions,10 actual failures. Strict summary FAIL. The exact
+  failure set is unchanged; all12 follow-up cases are present and pass.
+  Evidence under build-asan/: batch72-delivery-build.log, batch72-delivery.xml,
+  batch72-delivery-tests.log, batch72-delivery-strict.log,
+  batch72-delivery-status.json and batch72-delivery-validation.json.
+- Remaining failures: four embedded/RAM directory rejections, regular-file
+  directory rejection, two root returns, optional-getcwd sanitizer crash,
+  post-format relative routing, and alarm-upload closing demarcation after
+  rejected G91. Confirmed source faults are in KNOWN_BUGS; the alarm/error policy
+  question is in TODO. One sanitizer failure remains unsuppressed. Existing
+  expected failures are only storage version retry policy and frontend getcwd.
+- Tests use source-detected HOST_PARSER_FLAGS, advertised DAC resolution, explicit
+  PWM/servo mode, required driver callbacks and stable getcwd snapshots. Allocation
+  recovery follows Terje's restored-base/previous-directory policy. Obsolete PWM
+  fraction and unexpected-percent exceptions were removed after ordinary passing
+  regressions; the original correct assertions remain.
+- Focused evidence: batch72-analog-followup.xml2/2 in0.32s;
+  batch72-settings-recovery.xml2/2 in0.29s; batch72-sleep-parking.xml4/4 in0.37s;
+  batch72-sync-hold.xml2/2 in0.34s; batch72-tool-jog.xml2/2 in0.32s. Initial
+  fixture callback/order errors were repaired, without new defect claims or allowances.
+- Last hosted39373002337 remains terminal FAILURE at c9941ca/CORE7a6a432:
+  GCC/Clang both ran4,052 cases, all50 then-new cases pass, and exactly98
+  sanitizer crashes identify the old strutils.c393 fault. Source/harness locks and
+  diagnosis artifacts were verified; batch72-integrated-hosted-verification.json.
+- Coverage is still historical PARTIAL c9941ca/7a6a432:16,916/17,645 lines95.87%,
+  11,644/13,696 branches85.02%. No current-source gain or green baseline claimed.
+  Current compiler/runtime failures prevent full coverage verification. Badges
+  retain the earlier successful measurement; reporting helpers are unchanged.
+- CI remains manual-only with reusable callers intact. No redundant dispatch
+  against unchanged known-unbuildable CORE. The existing recovery automation card
+  was inspected; scheduling/target details were not exposed, so no unverified
+  scheduling change or competing runner was created.
+- Next: continue supported gaps while preserving this source/evidence checkpoint.
+  Recheck Terje at a deliberate compatibility boundary. Once CORE builds, validate
+  the58 withheld cases and affected regressions, then obtain one useful exact-head
+  hosted GCC/Clang/coverage checkpoint. Keep raw defensive/unexposed paths visible;
+  the settings/expression and unfinished-feature audits in TODO forbid private
+  state forcing or duplicate aliases. Plasma material integration stays plugin-scoped.
 
 Historical entries below may describe old branches, completed runs or superseded pauses.
 
