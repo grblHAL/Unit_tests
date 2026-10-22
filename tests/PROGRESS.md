@@ -1,3 +1,73 @@
+# Modbus/startup batch full validation - 2026-10-22
+
+Full4,129-case ASan/UBSan build/test/strict passes(all0):4,114 clean plus15
+known reproductions,no failed/skipped. Evidence:build-asan/batch72-rtu-startup-
+gate.json,delivery XML/log,strict log. Two new RTU scenarios cover automatic UART
+fallback through rejected/invalid claims plus real reply, and nested synchronous
+send rejection/later recovery. Existing timeout scenario spans two scheduler ticks;
+normal boot now queries empty spindle list in both formats. No CORE changes or
+new allowances; latest upstream remains68eba79. Deliver together on existingPR26.
+
+Hosted39804789709 coverage/report locks verifiedb473a27/68eba79/filter; stages0,
+4,127 tests/4,112 clean/15 known,no failures/skips.17,249/17,684 lines97.54%,
+12,006/13,754 branches87.29%,+4 lines/+7 branches same source. New lines exactly
+gcode2819,ngc_flowctrl340,ngc_params1077,stream428. GCC/Clang live at last check;
+retain prior fully green badge baseline. Latest batch needs its own hosted report.
+
+# Normal boot with no real spindle: sender query boundary - 2026-10-22
+
+Extended existing complete startup scenario with$G/$SPINDLES/$SPINDLESH stream.
+Normal core dummy-spindle boot retains0 real registered devices, human query
+reports No spindles registered, queries emit no error, setup/release counts and
+welcome/driver-start assertions remain. Focused ASan/UBSan1/1 passes0.27s.
+Targets report2898 via real sender workflow, no synthetic inventory/private state.
+Registered total unchanged4,129. Current local batch now two new Modbus cases
+and two expanded scenarios (timeout scheduling and boot reporting); no CORE
+changes or new allowances. Previous hosted39804789709 source passed, compiler/
+coverage jobs live at latest individual endpoint check; no artifact yet.
+
+# Modbus timeout across scheduler ticks - 2026-10-22
+
+Extended existing dedicated-timeout/recovery scenario to service two timer ticks
+per foreground callback using existing public task executor. Allows poll to see
+pending synchronous TimeoutException before sender resumes, without modifying
+private protocol state. Exact one timeout, no exception/reply, one transmission,
+then next independent request receives valid1234 reply. Focused ASan/UBSan passes
+0.34s;4,129 cases unchanged. Local Modbus batch now two new/one expanded cases.
+No new exceptions, fixture variants or CORE edits.
+
+All five individual jobs of39802929753 now terminal success atba111a2/68eba79.
+Verified coverage/report artifacts already17,245/17,684 lines97.52%,
+11,999/13,754 branches87.24%,4,127 tests/4,112 clean/15 known/no failed/skipped.
+Updated badges/known-gap summary to fully green report,439 raw uncovered lines.
+Newer39804789709 source passed;coverage/GCC/Clang still live at last check.
+
+# Blocking Modbus callback re-entry guard - 2026-10-22
+
+New real reply callback attempts another blocking send. Exact false return and
+unchanged TX count verify guard273; outer reply completes once with1234 payload,
+then a subsequent independent blocking request succeeds. Focused ASan/UBSan1/1
+passes0.56s using existing RTU blocking scheduler/CRC fixture. No private calls,
+state forcing or timeout allowances. Distinct from unresolved asynchronous
+spin-lock re-entry policy: this synchronous callback executes outside poll lock
+while is_blocking remains set, with explicit rejection contract in source.
+Total4,129 cases; two new local Modbus scenarios sinceb473a27, no CORE changes
+or new expected failures. Keep building batch before cumulative gate/push.
+
+# Modbus automatic UART selection recovery - 2026-10-22
+
+New public initialization scenario passes focused ASan/UBSan0.28s. Inventory:
+non-Modbus port and already-claimed port must never be claimed; next ready port
+claim fails, next returns an incomplete driver, final valid UART succeeds. Public
+modbus_rtu_init(-1,-2) selects it, settings load exposes live transport, request
+transmits once and a CRC-checked reply returns1234 payload with no exception.
+Existing RTU fixture and polling reused, no new host variant or private states.
+Targets automatic selection/invalid-claim guards509/529; new total4,128 cases.
+No CORE edits or expected failures. Keep local for next substantial API batch.
+
+Failed-startup detailed driver diagnostic is already a policy question in TODO;
+do not duplicate it or call its private formatter to chase grbllib140-150.
+
 # Parser/list/stream cumulative delivery gate - 2026-10-22
 
 Full4,127-case ASan/UBSan build/test/strict gate passes(all0),4,112 clean plus15
