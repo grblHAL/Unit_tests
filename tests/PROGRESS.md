@@ -1,3 +1,38 @@
+# Probe/backlash reset cumulative gate - 2026-10-22
+
+Full4,143-case ASan/UBSan suite passes, build/test/strict all0 recorded in
+batch72-reset-windows-gate.json.4,127 clean,16 documented expected failures,
+0 failures/skips. Includes public reset after probe setup and while full planner
+waits for backlash reversal. No new allowances/CORE changes. Local group awaits
+hosted gain; full reset path callbacks are provided by fixtures.
+
+Run39818343521 at964457f now allfive individual jobs terminalsuccess. Artifact
+locks/stages previously verified; published snapshot updated to17,280/17,684
+lines97.72% and12,089/13,754branches87.89%,404 raw uncovered lines. Later
+metadata39819657478 Clang stillrunning; latest7270deb run39820646831 running.
+
+# Probe reset after setup before planner submission - 2026-10-22
+
+New real probe-registration case installs public probe-start observer, then sends
+normal realtime reset on first motion service poll. mc_probe_cycle returnsAbort,
+sys.abort set,no success/completion,no X pulses or position change,empty planner.
+Targets motion_control1064 prequeue abort. Status_Aborted is deliberately0, so
+boolean motion checks are valid; no bug claimed. Initial callback signature fixed
+to declared bool provider type. Focused sanitizer passes0.27s. Total4,143; no
+allowances/CORE edits. Grouped with backlash full-queue reset for cumulative gate.
+
+# Reset during full-queue backlash reversal - 2026-10-22
+
+New public motion case enables backlash, queues forward motion, fills planner with
+valid driver lines, then requests reversal. Realtime observer sends normal reset
+while compensation waits. ReturnsStatus_Aborted,sys.abort set,no X pulses/physical
+position change,and requested zero endpoint absent from latest plan block.
+Focused ASan/UBSan passes0.27s; total4,142. Initial fixture lacked mandatory
+control/coolant/reset callbacks; corrected locally. Initial frozen/empty planner
+assumptions were invalid because normal realtime servicing stages queued blocks;
+assert observable abort/nonmovement instead. No defect/allowance/CORE edit claimed.
+Exact abort branch gain remains for hosted coverage, not assumed from timing.
+
 # Planner/files/parser cumulative gate - 2026-10-22
 
 Full4,141 ASan/UBSan suite passes60.11s:4,125 clean,16 known,0 failures/skips.
