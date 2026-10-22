@@ -226,3 +226,28 @@ failure to public operations without dispatching an unnormalized destructive
 request, or preserve correct absolute routing without allocation. Keep the
 unrelated-file and retry assertions; remove the allowance/entry once clean
 source preserves both directory identity and normal retry under sanitizers.
+
+## A later successful comment clears a plugin validation error
+
+**Confirmed:** 2026-10-22, clean Terje68eba7906ba60d66c8b55c4adc90cd5e85b5a828.
+[gc_normalize_block](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/gcode.c#L1144-L1145)
+overwrites the shared normalization status on every plain comment callback.
+A plugin rejecting the first comment with Status_UserException is overridden
+by a later ordinary comment returning Status_OK, so gc_execute_block accepts
+and queues the block. This can defeat material-validation rejection when a
+line also carries a contour note; no plasma-plugin implementation is assumed.
+
+**Regression:** [material error followed by ordinary comment](cases/gcode/trailing_comment_does_not_clear_material_validation_error.c)
+uses a registered public comment handler, valid queued1mm cut, then
+`G20G91G1X2F50(Material selection)(Cut contour)`. The first callback rejects,
+the second succeeds; actual status is0 and parser X becomes51.8mm instead of
+remaining1mm. Correct error, planner-capacity, modal-state and80-pulse endpoint
+assertions reuse the queued-rejection fixture. Those preservation checks cannot
+execute until status propagation is fixed. One named WILL_FAIL/known_bug, no
+sanitizer allowance. Raw evidence: batch72-comment-status-raw.xml.
+
+**Suggested fix for Terje (not applied):** retain a prior comment error across
+normalization or stop processing once a comment fails. Do not allow a later
+successful callback to authorize a rejected block. Preserve ordinary multi-
+comment processing and the existing single-comment rejection control. Remove
+this entry and allowance once clean source passes both under sanitizers.

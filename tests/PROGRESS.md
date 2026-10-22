@@ -1,3 +1,29 @@
+# Local material-comment bug and verified coverage report - 2026-10-22
+
+Previous turn made progress: committed wrong-directory unlink reproduction.
+This group adds a second concrete public bug, not duplicate confidence tests:
+normalization overwrites a plugin comment error with a later successful plain
+comment. A rejected material-selection comment followed by a contour note
+accepts G20/G91 motion and advances parser X from1 to51.8mm. Correct rejection,
+modal, queue-capacity and80-step assertions reuse the existing shared fixture;
+status fails before preservation assertions run. Narrow named WILL_FAIL,
+dated KNOWN_BUGS cause/proposal/cleanup. CORE untouched.4,104 registrations.
+
+Grouped follow-up ASan/UBSan and strict reporting:3 clean controls,2 known
+reproductions,0 failures (batch72-bug-followup.xml /strict.log). Format case
+separately confirms doubled separator. Do not rerun the full unchanged suite
+or push a tiny checkpoint while the published run is still finishing.
+
+Hosted39779207602 exact97bb6aa/68eba79 source-lock verified. Source, Clang and
+coverage jobs are terminal success; GCC remains live at last authoritative
+check. Coverage artifact stages fetch/tooling/configure/build/test/classify/
+coverage all exit0,4,102 tests:4,091 clean,11 known,0 failed/skipped. New measured
+baseline17,185/17,684 lines97.18%;11,928/13,754 branches86.72%,499 uncovered
+lines. No like-for-like gain claim against older different-source reports.
+Raw artifact/lock/report/gaps saved at build-asan/hosted39779207602/.
+Badges/PR readiness await the complete matrix. New grbllib atomic-selection
+fallback reachability evidence is in TODO; no exclusions or forced interrupts.
+
 # Current local file-safety follow-up - 2026-10-22
 
 Published97bb6aa is under hosted39779207602, authoritatively in progress at

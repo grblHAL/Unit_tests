@@ -51,3 +51,7 @@ endif()
 if(TEST vfs.relative_unlink_path_allocation_failure_preserves_other_directory_and_retries)
   set_tests_properties(vfs.relative_unlink_path_allocation_failure_preserves_other_directory_and_retries PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+if(TEST gcode.trailing_comment_does_not_clear_material_validation_error)
+  set_tests_properties(gcode.trailing_comment_does_not_clear_material_validation_error PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

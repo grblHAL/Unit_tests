@@ -750,3 +750,29 @@ Hidden embedded mount navigation is a separate maintainer contract question:
 68eba79 allows chdir while all embedded entries are hidden. Existing directory
 listing assertions pass; two old rejection assertions remain named expected
 failures pending confirmation whether hidden means invisible or inaccessible.
+
+
+## Delayed-task fallback after atomic selection (68eba79)
+
+Passing hosted coverage job39779207602 measures grbllib.c590-594 as uncovered.
+The new task_get_due selects and returns tasks.delayed while leaving IRQs
+masked; task_execute has no intervening callback before comparing that result
+with tasks.delayed. Under the supported single-core ISR model the old fallback
+search cannot be reached. Existing pending-IRQ insertion/cancellation controls
+pass. Do not force a private queue change or violate the IRQ-mask contract to
+hit this defensive search. Retain these lines in raw coverage, and revisit if
+selection or supported concurrency changes.
+
+## Remaining large extension gaps at exact68eba79 report
+
+Coverage job39779207602 at harness97bb6aa measures17,185/17,684 executable
+lines (97.18%) and11,928/13,754 branches (86.72%);499 lines remain. This is a
+successful coverage job, while full compiler matrix readiness is separate.
+The highest remaining regions still include unfinished wall-plotter homing,
+unregistered I/O open-drain settings, unexposed settings metadata and the weak
+unsupported rigid-tapping extension/macro path. Prior dispositions remain in
+this TODO. Do not register inaccessible settings, forge private state or replace
+an unimplemented motion extension solely to improve the number. Raw counts
+retain all measured regions. Reuse the exact new gaps inventory under
+build-asan/hosted39779207602/gaps.json for the next substantial batch, checking
+already-written local follow-ups before authoring.
