@@ -1,3 +1,36 @@
+# Inversion/sleep cumulative gate and green homing snapshot - 2026-10-22
+
+Full4,158-case ASan/UBSan passes73.06s:4,142 clean,16 known,0 failures/skips.
+Build/test/strict all0 in batch72-square-sleep-gate.json. Asymmetric inversion
+publicwrites and sleep scheduling pressure/retry validated together. No new
+allowances/CORE edits. Local group awaits delivery/hosted gain.
+
+Allfive individual jobs on39826209629 terminalsuccess. Artifacts12446239029/
+12446827666 both lock277db12dfae59d7a4bebb056f24c7c3db081e18c/source68eba79/
+corefilter;all reportstages0,4,153/4,137clean/16known/0/0.17,301/17,684
+lines97.83%,12,113/13,754branches88.07%:+1line/+2branches versus6a8d34f.
+New machine_limits327.383 raw lines remain. README/known snapshot updated.
+2b0cc0c run39826891832 Clangpending;4616165 run39828039606 running.
+
+# Sleep timeout task-pool pressure and retry - 2026-10-22
+
+New public scheduler/sleep case fills available delayed-task pool with valid future
+plugin tasks. Sleep check cannot schedule timeout:returns immediately,noinputreads
+or schedulerpolls,no sleepflag,stillIdle. Deleteone task and advance50ms;retry
+schedules timeout,expires through normal callback andrequestsSleep. Remaining
+plugin tasks neverexecute and aredeleted;IRQdepth0. Targets sleep39 without heap
+wrappers/private pool writes. Focused sanitizer passes0.27s. Initial task_delete
+return assumption corrected to declared void API. Total4,158,no allowances/CORE
+edits. Grouped with asymmetric inversion for cumulative gate/hosted gain.
+
+# Asymmetric auto-square public limit inversion propagation - 2026-10-22
+
+New normal settings-store case appliesY inversion thenX-only thennone. Actual
+registered kinematics settings hook propagatesY to secondaryaxis3,clearssecondary
+whenY clears,preservesX,and chains prior settings notification once perwrite.
+Targets asymmetric_ganging287 under supported auto-square build. Focused sanitizer
+passes0.40s. Total4,157,no allowances/CORE edits. Next cumulative batch starts.
+
 # Homing refusal/backlash wait cumulative gate - 2026-10-22
 
 Full4,156-case ASan/UBSan passes74.17s:4,140 clean,16 known,0 failures/skips.
