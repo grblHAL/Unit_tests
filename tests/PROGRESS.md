@@ -1,3 +1,40 @@
+# Expression branch batch full gate - 2026-10-22
+
+Full4,135-case ASan/UBSan build/test/strict passes(all0):4,119 clean,16 known
+reproductions,0 failures/skips. Evidence:build-asan/batch72-expression-branches-
+gate.json,delivery XML/log,strict log. Four existing Boolean/comparison scenarios
+extended with seven missing truth-table outcomes; one new real-reader scenario
+covers malformed signs/decimal syntax and valid signed fractions/axis stopping.
+No new allowance/CORE edits. Upstream clean68eba79 unchanged. Deliver coherent
+expression group on existingPR26. Full supported objective remains incomplete.
+
+Hosted39810197175 source/GCC/coverage passed,Clang still live. Verified31718f9/
+68eba79/filter locks and report stages0:17,269/17,684 lines97.65%,12,040/13,754
+branches87.54%,+1 line/+8 branches same source.4,132/4,117 clean/15 known,
+no failures/skips. New line settings805, expected configuration-specific guard.
+Newer39811711030 source passed,remaining jobs live at last check; local latest
+expression batch requires its own exact-head coverage report.
+
+# Public real-reader malformed/sign boundaries - 2026-10-22
+
+New focused real-number reader case passes ASan/UBSan0.28s. Empty input returns
+ExpressionSyntaxError; dangling signs/decimal points and lowercase nonnumber
+return BadNumberFormat. Following+.5X/-.25Y parse correct signed fractions and
+stop at the next axis letter. No assumptions about output on rejected input,
+private parser calls or new allowances. Targets partial ngc_expr811/814/818/821
+branches. Total4,135. Local expression batch now one new/four extended scenarios
+with seven added truth-table outcomes; cumulative gate pending. CORE unchanged.
+
+# Expression truth-table branch completion - 2026-10-22
+
+Expanded four existing public expression cases with seven missing outcomes:
+XOR0/0 and0/nonzero,AND0/nonzero,ORnegative/0,GEfalse,NEequal andNEpositive
+difference. Negative nonzero operands verify Boolean interpretation; existing
+full-input consumption checks remain. Grouped build and ASan/UBSan4/4 passes
+0.80s. No new executable/fixture/CORE change/allowance; total4,134 unchanged.
+Targets partial branches atngc_expr138/142/150/172/173/182. Exact hosted gain
+still pending. Keep grouped with next parser/expression coverage work.
+
 # Modal/G84 policy batch cumulative gate - 2026-10-22
 
 Full4,134-case ASan/UBSan build/test/strict passes(all0):4,118 clean,16 documented

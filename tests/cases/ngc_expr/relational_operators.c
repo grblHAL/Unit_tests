@@ -15,5 +15,8 @@ int main(void)
     char expression2[] = "[3GT4]"; NEAR(eval(expression2), 0);
     char expression3[] = "[2EQ2]"; NEAR(eval(expression3), 1);
     char expression4[] = "[2NE3]"; NEAR(eval(expression4), 1);
+    char expression5[] = "[2GE3]"; NEAR(eval(expression5), 0);
+    char expression6[] = "[3NE3]"; NEAR(eval(expression6), 0);
+    char expression7[] = "[3NE2]"; NEAR(eval(expression7), 1);
     return EXIT_SUCCESS;
 }

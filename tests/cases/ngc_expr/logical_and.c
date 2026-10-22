@@ -12,5 +12,6 @@ int main(void)
     engine_parser_prepare();
     char expression0[] = "[1AND0]"; NEAR(eval(expression0), 0);
     char expression1[] = "[2AND3]"; NEAR(eval(expression1), 1);
+    char expression2[] = "[0AND-2]"; NEAR(eval(expression2), 0);
     return EXIT_SUCCESS;
 }
