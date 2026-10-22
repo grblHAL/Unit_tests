@@ -1,3 +1,28 @@
+# Y/Z autosquare cumulative gate - 2026-10-22
+
+Full4,155-case ASan/UBSan suite passes71.20s:4,139 clean,16 known,0 failures
+or skips. Build/test/strict all0 in batch72-square-axis-gate.json. Shared simulated
+axis selector preserves existingX cases and validates publicY/Z independenttrim
+homing with no other-axis pulses. CORE clean,no new allowances. Delivery pending.
+
+Prior6a8d34f coverage39824927291: artifacts12446203148/12446682058 bothlocks
+6a8d34f7bef01a0ead460b2a2fd448d293135c7b/source68eba79/corefilter;all stages0,
+4,151/4,135clean/16known/0/0.17,300/17,684lines97.83%,
+12,111/13,754branches88.05%:+3lines/+5branches versusfac105e.
+New tool_change204/364/368. GCC/Clang remain running; no allgreen claim or badge
+refresh. Current277db12 run39826209629 also running. LocalY/Z gain unmeasured.
+
+# Y/Z auto-square axis selection and independent trims - 2026-10-22
+
+Generalized existing autosquare simulated motor axis from fixedX to selectable
+index(defaultX,existing behavior retained). New public$HY positiveoffset0.25 and
+$HZ negativeoffset-0.25 cases verify primary/secondary final70/90 and50/110steps,
+only selected axis homed,other axis pulses0,motors reenabled,Idle and no abort.
+Targets machine_limits611 loop pastX through valid driver registration. Built all
+20 autosquare targets together; focused ASan/UBSan20/20 passes1.71s. Total4,155,
+no allowances/CORE edits. Shared fixture change requires next full cumulative gate
+before delivery; existing assertions unchanged.
+
 # Homing/manual-control cumulative gate and green snapshot - 2026-10-22
 
 Full4,153-case ASan/UBSan passes58.80s:4,137 clean,16 known,0 failures/skips.
