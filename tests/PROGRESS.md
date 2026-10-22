@@ -1,3 +1,36 @@
+# Default driver callbacks cumulative gate - 2026-10-22
+
+Full4,159-case ASan/UBSan passes77.95s:4,143 clean,16 known,0 failures/skips.
+Build/test/strict all0 in batch72-default-drivers-gate.json. Defaultweak passthrough
+command and default Modbus exception handling through realRTU validated together.
+No new allowances/CORE edits. Local group delivery/hosted gain pending.
+
+Allfive jobs on39826891832 at2b0cc0c individually terminalsuccess. Artifacts
+12447807241/12447012617 bothlocks2b0cc0caeff0510b2aa4924c18becb3cb9cf98b0,
+source68eba79/corefilter;all reportstages0,4,155/4,139clean/16known/0/0.
+17,302/17,684lines97.84%,12,114/13,754branches88.08%:+1line/+1branch
+versus277db12 (machine_limits611).382 raw lines remain. README/knownsnapshot
+updated.4616165 run39828039606 Clangpending;091fc1c39829068251 running.
+
+# Default Modbus exception handler releases transport for next reply - 2026-10-22
+
+Extended existing realRTU exception/recovery case to deliver illegal-address
+exception firstwithoutcallback,thenwith supplied modbus_null_exception_handler.
+Both complete without userfailure callback or packet delivery; subsequent valid
+request sends thirdframe and receives exactlyone response. Targets modbus129/132
+through registered transportcallback,not directemptyfunction call. Focused sanitizer
+passes0.33s. No new case/allowance/CORE edit; total4,159. Grouped with default
+passthrough command case pending cumulative gate and hosted measurement.
+
+# Default passthrough driver entry preserves connection ownership - 2026-10-22
+
+New normal$PTRGH command case uses default weak stream_passthru_enter instead
+of replacement. Command warning/delay executes,default hook returns with passthru
+false,no USB/UART handler installation,no reset/boot pinchanges,cancel0 and no
+linestate hook. Targets stream_passthru33/36. Focused sanitizer passes0.32s.
+No success of programming/driver transition claimed. Total4,159,no allowances or
+CORE edits. Next cumulative batch starts; gain pending hosted measurement.
+
 # Inversion/sleep cumulative gate and green homing snapshot - 2026-10-22
 
 Full4,158-case ASan/UBSan passes73.06s:4,142 clean,16 known,0 failures/skips.
