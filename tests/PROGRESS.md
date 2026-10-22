@@ -1,3 +1,80 @@
+# Parking/tool/storage recovery batch full gate - 2026-10-22
+
+Full4,123-case ASan/UBSan build/test/strict gate passes (all exit0), retaining15
+known reproductions and no new allowances. Evidence: build-asan/batch72-parking-
+tools-gate.json plus delivery XML/log and strict log. Three new cases cover
+parking pullout clamping and M61/M6 plugin spindle stop preservation; two expanded
+existing cases cover public homing driver-error completion/retry and current-drive
+format-error fallback/remount/routing recovery. CORE remains clean68eba79, fresh
+upstream master check unchanged. Deliver together on coverage-batch-72/PR26;
+next hosted run must lock the new harness head before attributing coverage gain.
+
+# Hosted recovery checkpoint fully green - 2026-10-22
+
+All five individual job endpoints now confirm terminal success for run39797619172:
+source119888956919, GCC119889103663, coverage119889103764, Clang119889103785,
+diagnosis119896396248. Exact773569c/68eba79 coverage/report locks and filter
+verified previously;4,120 executed,4,105 clean,15 known,0 failed/skipped.
+ReadMe badges/KNOWN_BUGS gap summary refreshed97.39% lines/87.07% branches,
+462 raw executable lines remaining. Local five-scenario additions/extensions
+remain outside that hosted head and require cumulative gate before delivery.
+
+# Current-drive format failure and recovery - 2026-10-22
+
+Extended existing backend format-error test with current-directory routing:
+chdir/store/jobs, preserve exact backend error-7 and TUFD drain/unmount/format/
+dismount ordering, verify fallback root cwd, successfully reformat/remount, then
+re-enter/jobs and route relative part.nc to/jobs/part.nc. Focused sanitizer test
+passes0.28s. Existing frontend-only getcwd omission is separately documented and
+its correct regression retained; this case verifies routing recovery instead.
+No new allowance or CORE change. Current batch has three new cases and two
+expanded workflows,4,123 total; hold full gate/push for substantial boundary.
+
+# Public homing driver-error recovery - 2026-10-22
+
+Extended the existing missing-auto-square-disable test through public $H rather
+than adding another low-level duplicate. Invalid driver returns the exact
+IllegalHomingConfiguration status, leaves IDLE, reports one failed completion,
+and emits no pulses or homed flags. After normal realtime polling consumes the
+completion event, correcting the driver capability allows $H retry: all XYZ
+references and exact physical endpoints/pulse totals pass, with success callback.
+Focused ASan/UBSan1/1 passes0.28s. No new CORE defect or allowance; initial retry
+fixture omitted the normal command-loop realtime poll and was corrected.
+Total remains4,123; three new cases plus this expanded workflow await the next
+substantial cumulative gate/push. CORE unchanged.
+
+# Tool-selection callback boundaries - 2026-10-22
+
+Two new M61/M6 scenarios pass grouped ASan/UBSan2/2 in0.31s. Registered
+on_tool_selected callback calls public gc_spindle_off while spindle is running;
+block commit preserves its stopped state, selected tool completes, and following
+M3S600/M5 still starts/stops normally. These target distinct immediate selection
+and ATC selection branches, not private parser-state mutation. Total4,123 cases,
+including the local parking boundary. No new exceptions or CORE edits.
+
+Hosted39797619172 coverage artifact locks verified773569c/68eba79 and
+core/.*\.[ch]$; all coverage stages exit0,4,120 executed/4,105 clean/15 known,
+0 failed/skipped.17,222/17,684 lines97.38747%,11,976/13,754 branches87.07285%:
++8 lines/+18 branches against the same-source prior baseline. New lines include
+legacy CRC recovery settings3783, G66 allocation failure gcode2287, registration
+settings3088, expression null guards997/1083 and deferred alarm system456.
+Compiler jobs still live at last individual-endpoint check; retain draft PR26.
+The three new local tests are not part of that hosted coverage report.
+
+# Parking clearance boundary - 2026-10-22
+
+One new supported parking scenario passes focused ASan/UBSan (0.30s total).
+Pullout20mm from Z-10 with parking target-2 exercises the clamped waypoint and
+immediate parked completion without a fast retract. Actual motor position/pulses
+verify640 retract steps, then1280 total Z steps after restoration; interrupted
+X cut completes at1600 steps. Existing parking fixture reused; no CORE changes,
+exceptions or source exclusions. Registered total4,121. Keep local for the next
+substantial batch; no repeated full suite or hosted dispatch for this one case.
+
+Hosted39797619172 exact773569c/68eba79 is live: individual source and coverage
+jobs succeeded; GCC/Clang still running. Do not claim all hosted checks complete
+or attribute coverage gain to this new local case before its own report exists.
+
 # Eight-scenario recovery/validation delivery - 2026-10-22
 
 Complete4,120-case ASan/UBSan gate passes62s:4,105 clean,15 documented
