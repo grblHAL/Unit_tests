@@ -3,6 +3,15 @@
 This checkpoint supersedes historical snapshots. The persistent full-supported-
 coverage goal remains ACTIVE; a passing test group or draft PR is not completion.
 
+- Local header follow-up adds one RGB packing case and strengthens the existing
+  device-classification case. Red/blue masked byte updates preserve green and
+  payload guards; mixed channel capabilities and missing-output checks cover
+  genuine RGB helper conditions. Both cases pass ASan/UBSan plus strict summary
+  in0.34s: build-asan/batch72-rgb-header.xml and batch72-rgb-header-strict.log.
+  New local total4,089 /87 additions; this follow-up is not part of the previous
+  cumulative/hosted checkpoint. No new exceptions or percentage claim. The only
+  CORE fault-axis caller is range-guarded; TODO records that remaining fallback
+  reachability without forcing unrelated pin values. RGB-clear remains deferred.
 - Separate reporting draft PR27 is pushed/attached:
   https://github.com/grblHAL/Unit_tests/pull/27, coverage-header-inventory135e8f5.
   Live filter already includes .h files, but the existing summary hides them and

@@ -719,3 +719,18 @@ registrations change. Existing public motor-hold write/read/persistence tests
 remain; malformed integer rejection now also verifies driver and stored-state
 preservation followed by a successful retry. Description allocation recovery
 is tested through the ordinary registered plugin query.
+
+
+## Fault-axis inline fallback is guarded at the CORE caller
+
+**Reviewed:** 2026-10-22, clean Terje fab8d1c; archived header branch detail is
+unchanged except for new analog declarations in crossbar.h. The remaining
+false-range conditions in xbar_fault_pin_to_axis require a non-motor-fault
+function. Its only CORE caller, config_fault_pins in ioports.c1495-1497,
+first requires xbar_is_motor_fault_in(function). Existing primary/secondary
+XYZ identity tests exercise both valid fault ranges.
+
+No current supported CORE workflow reaches the unmatched fallback. Do not route
+an unrelated signal through a private configuration path merely to fill these
+branches. Retain the raw denominator; revisit if callers or supported pin ranges
+change. RGB-clear index semantics remain the separate deferred contract above.
