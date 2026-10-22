@@ -1,4 +1,5 @@
 """Render CTest JUnit results and Cobertura coverage into GitHub job summaries."""
+from known_crash import matches_known_crash
 import argparse
 import html
 import json
@@ -47,6 +48,10 @@ else:
             expected_diagnostic = any(p.get("name") == "cmake_labels" and "known_sanitizer_bug" in p.get("value", "").split(";") for p in case.findall("./properties/property"))
             diagnostics = []
             output = "\n".join(case.findtext(tag, "") for tag in ("system-out", "system-err"))
+            fatal = any(p.get("name") == "cmake_labels" and "known_crash" in p.get("value", "").split(";") for p in case.findall("./properties/property"))
+            expected_diagnostic = expected_diagnostic or fatal
+            if fatal and matches_known_crash(case.get("name"), output, manifest):
+                continue
             for line in output.splitlines():
                 if "runtime error:" not in line and "ERROR: AddressSanitizer" not in line:
                     continue
@@ -75,7 +80,7 @@ else:
                     and not any(c.find(tag) is not None for tag in ("failure", "error", "skipped"))
                     and c.get("sanitizer_status") is None for c in cases)
         skipped = sum(c.find("skipped") is not None for c in cases)
-        lines = [f"## {args.suite_name} test results", f"Tests labelled `known_bug` are expected failures confirming documented defects; see {args.diagnostics_directory.as_posix()}/KNOWN_BUGS.md.", f"**{len(cases) - failed - skipped - known - len(known_diagnostics)} clean passes · {len(known_diagnostics)} passed with known sanitizer diagnostics · {known} known regressions reproduced · {failed} failed · {skipped} skipped**", "", "| Test | Result | Seconds |", "|---|---|---:|"]
+        lines = [f"## {args.suite_name} test results", f"Tests labelled `known_bug` are expected failures confirming documented defects (known crashes do not validate assertions after the fault); see {args.diagnostics_directory.as_posix()}/KNOWN_BUGS.md.", f"**{len(cases) - failed - skipped - known - len(known_diagnostics)} clean passes · {len(known_diagnostics)} passed with known sanitizer diagnostics · {known} known regressions reproduced · {failed} failed · {skipped} skipped**", "", "| Test | Result | Seconds |", "|---|---|---:|"]
         affected = [case for case in cases if case.find("failure") is not None or case.find("error") is not None or case.get("sanitizer_status") in ("failed", "missing")]
         if affected:
             guidance = ["", "### Failure guidance", ""]

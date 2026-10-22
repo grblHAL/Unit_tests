@@ -362,7 +362,15 @@ function(add_core_test name module source)
   if(name MATCHES "^fs_ram\\.allocation_failure_")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=realloc -Wl,--wrap=free)
   endif()
-  add_test(NAME ${name} COMMAND test_${name})
+  if(ENABLE_SANITIZERS AND (name STREQUAL "vfs.repeated_chdir_without_getcwd_handler_preserves_relative_resolution"
+      OR name STREQUAL "grbllib.interrupt_cancelling_due_task_before_masking_preserves_later_work"))
+    find_package(Python3 REQUIRED COMPONENTS Interpreter)
+    add_test(NAME ${name} COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/scripts/known_crash.py ${name}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/known_sanitizer_diagnostics.json $<TARGET_FILE:test_${name}>)
+  else()
+    add_test(NAME ${name} COMMAND test_${name})
+  endif()
   set_tests_properties(${name} PROPERTIES TIMEOUT 15)
 endfunction()
 

@@ -14,7 +14,7 @@ class SuiteReportingTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             (root / "scripts").mkdir()
-            for name in ("summary.py", "run_suite.py"):
+            for name in ("summary.py", "run_suite.py", "known_crash.py"):
                 shutil.copyfile(SCRIPTS / name, root / "scripts" / name)
             (root / "build").mkdir()
             (root / "plugin-diagnostics").mkdir()

@@ -138,6 +138,7 @@ jobs:
             source-lock.json
             build/results.xml
             build/Testing/Temporary/LastTest.log
+            build/known-crash-*.log
   coverage:
     needs: source
     runs-on: ubuntu-latest
@@ -195,6 +196,7 @@ jobs:
             coverage*
             build/results.xml
             build/Testing/Temporary/LastTest.log
+            build/known-crash-*.log
   diagnosis:
     name: CI diagnosis
     if: always()

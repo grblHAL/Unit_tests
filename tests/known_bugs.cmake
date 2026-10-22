@@ -42,3 +42,13 @@ if(TEST vfs_integration.formatting_current_drive_resets_removed_subdirectory_to_
   set_tests_properties(vfs_integration.formatting_current_drive_resets_removed_subdirectory_to_drive_root PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
+
+# Fatal diagnostics are matched by exact test/source/frame in known_crash.py.
+if(ENABLE_SANITIZERS)
+  foreach(name vfs.repeated_chdir_without_getcwd_handler_preserves_relative_resolution
+      grbllib.interrupt_cancelling_due_task_before_masking_preserves_later_work)
+    if(TEST ${name})
+      set_tests_properties(${name} PROPERTIES WILL_FAIL TRUE LABELS "known_bug;known_crash")
+    endif()
+  endforeach()
+endif()

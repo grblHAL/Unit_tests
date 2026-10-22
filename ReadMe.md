@@ -28,6 +28,12 @@ Recovering sanitizer errors are also checked: the narrow
 [known diagnostic manifest](tests/known_sanitizer_diagnostics.json) links to the
 defect and removal instructions. Affected assertion passes are shown separately;
 unrecognized sanitizer diagnostics fail the reporting step.
+Fatal ASan regressions may use a named `known_crash` wrapper with exact test,
+source line, top frame and fault matching. They appear as known reproductions;
+assertions after the crash did not run. The wrapper retains full process output
+in `build/known-crash-<test>.log`. Fixes, changed/additional faults and runner
+errors fail and require exception review. Non-sanitizer builds retain direct tests.
+
 Feature compile regressions also check configurations where a known upstream
 build defect prevents runtime tests.
 

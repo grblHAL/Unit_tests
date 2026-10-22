@@ -105,7 +105,13 @@ unconditionally calls fgetcwd on a second change within the current mount.
 The public getcwd frontend explicitly supports an absent backend callback.
 Complete-driver controls now register the paired callback; the dedicated
 [optional-callback regression](cases/vfs/repeated_chdir_without_getcwd_handler_preserves_relative_resolution.c)
-retains a missing callback intentionally. No sanitizer allowance is added.
+retains a missing callback intentionally. In sanitizer builds, an exact-diagnostic
+wrapper plus named WILL_FAIL/known_bug/known_crash allowance reproduces only the
+inventoried ASan access-violation at vfs.c509, frame vfs_chdir. Full output is
+retained in build-asan/known-crash-<test>.log. A fix, runner error or different
+diagnostic makes the wrapper/strict report fail; post-crash assertions remain
+unvalidated. Cleanup: restore direct registration in CMakeLists.txt and remove
+the named known_bugs.cmake allowance and known_sanitizer_diagnostics.json entry.
 
 **Suggested fix for Terje (not applied):** guard the optional callback and use
 frontend directory state for recovery when a backend has no getcwd operation.
@@ -149,7 +155,12 @@ and [future retry cancellation](cases/grbllib/interrupt_cancelling_future_retry_
 The same driver IRQ-mask hook models a pending interrupt just before masking;
 all scenarios use only public ISR-safe task APIs. No private queue access or
 firmware patch is used. The cancellation case retains correct no-callback and
-later-work assertions; there is no WILL_FAIL or sanitizer diagnostic allowance.
+later-work assertions. Sanitizer builds now use an exact-diagnostic wrapper and
+named WILL_FAIL/known_bug/known_crash allowance for only the inventoried ASan
+access-violation at grbllib.c595, frame task_execute. Post-crash assertions remain
+unvalidated. Cleanup: restore direct registration in CMakeLists.txt and remove
+the named known_bugs.cmake allowance and known_sanitizer_diagnostics.json entry.
+Different diagnostics, additional sanitizer faults, fixes and runner errors fail.
 Evidence: build-asan/batch72-task-irq.xml (insertion passes; cancellation crashes
 at grbllib.c595), plus batch72-task-irq-build.log. The future-retry cancellation
 control passes in0.32s: batch72-task-irq-control.xml. This is a host-controlled

@@ -18,6 +18,10 @@ Terje alone fixes CORE: never modify, commit, push or open PRs for firmware.
   Do not repeatedly rerun unchanged checks, generators or hosted jobs.
 - Continue independent coverage work while CI runs. Passing checks, commits,
   status reports and PR checkpoints are not reasons to stop the active goal.
+- Confirmed CORE assertion failures get narrow WILL_FAIL/known_bug allowances
+  and linked KNOWN_BUGS entries; they do not stop independent coverage work.
+  Known fatal regressions require exact diagnostic wrappers, never blanket crash
+  acceptance. Compile failures and post-crash paths remain explicitly unvalidated.
 - Questions/uncertain contracts go to tests/TODO.md while the user is away;
   confirmed defects go to tests/KNOWN_BUGS.md. Preserve correct assertions and
   narrow documented exceptions. Never blanket-suppress crashes.

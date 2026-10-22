@@ -1,72 +1,48 @@
 # Current batch72 verification checkpoint - 2026-10-22
 
-User correction: confirmed ordinary CORE assertion defects are expected failures,
-not reasons to stop coverage work. Eight directory-validation/root-routing
-regressions now have narrow WILL_FAIL/known_bug allowances linked from KNOWN_BUGS.
-Correct assertions remain. Sanitizer crashes, compilation errors and the unsettled
-alarm-upload contract remain separately visible. Focused ASan/UBSan CTest confirms
-all eight expected failures in0.53s; strict summary passes with eight known
-reproductions. No source/assertion changes or redundant full-suite rerun.
-Evidence: batch72-expected-failures.xml and related configure/strict logs.
+Full supported CORE line/branch coverage remains ACTIVE and unproven. Confirmed
+CORE defects are expected regressions, not reasons to stop independent coverage.
+This checkpoint supersedes historical snapshots.
 
-
-The full-supported CORE line/branch objective remains ACTIVE and unproven.
-This checkpoint supersedes historical snapshots; do not substitute test counts
-or partial reports for completion evidence.
-
-- Branch coverage-batch-72 preserves all prior work and contains4,089 registered
-  cases /87 additions beyond merged upstream. Existing draft PR26 receives this
-  delivery: https://github.com/grblHAL/Unit_tests/pull/26. Never merge PRs here.
-- Clean ignored CORE and freshly checked Terje master are both
-  fab8d1c248990f53f13a444018fbb3ee353061dd. No firmware changes, commits or PRs.
-- Independent reporting PR27 at135e8f5 remains draft:
-  https://github.com/grblHAL/Unit_tests/pull/27. Its dependency is integrated into
-  this branch ind58f2bc; only documentation conflicts needed resolution. Current
-  integrated reporting helpers59/59 PASS in5.481s, no CMake/filter/trigger changes.
-  Evidence: build-asan/batch72-integrated-reporting-tests.log.
-- Source filter already includes .c/.h. The corrected summary displays header
-  rows and uses the same file types for numerator/denominator. Archived PARTIAL
-  data has58 measured files /114 C-header inventory files, including six measured
-  headers; original XML metrics/status remain unchanged. Declaration-only headers
-  need not emit executable instrumentation. Evidence: header-inventory-review/.
-- Last cumulative runtime harness e95eef7f3fa7ebf33df50213a0508110ef6d95aa:
-  4,027 buildable ASan/UBSan cases in62.72s;4,015 clean passes, two known
-  reproductions,10 actual failures; strict FAIL. All12 then-new follow-up cases
-  pass, with exactly the prior failure set. Evidence: batch72-delivery.xml,
-  batch72-delivery-validation.json, batch72-delivery-status.json and related logs.
-- The58 cutter-linked cases remain registered but unavailable: current CORE
-  gcode.c2920/3364/3373/5036 still uses removed direct ccomp_off fields. The
-  all-target build fails only there. No stale cutter binaries count as validation.
-- Later task/IRQ group: insertion and future-retry cancellation controls pass;
-  selected-due-task cancellation crashes at grbllib.c595. Public ISR APIs and the
-  driver IRQ-mask interleaving were checked. The new source fault is documented
-  and unsuppressed. Evidence: batch72-task-irq.xml (one pass/one crash) and
-  batch72-task-irq-control.xml (one pass). These are outside the cumulative gate.
-- Latest RGB follow-up adds red/blue masked-byte preservation and strengthens
-  mixed-capability/missing-output checks. Both ASan/UBSan and strict checks pass
-  in0.34s: batch72-rgb-header.xml / batch72-rgb-header-strict.log. This does not
-  establish fresh whole-suite or coverage success.
-- Latest observations retain11 runtime failures across the cumulative and focused
-  evidence, including two unsuppressed sanitizer faults. Two justified exceptions
-  remain: storage version retry policy and frontend getcwd. The alarm-upload
-  closing-demarcation contract is in TODO; other confirmed faults are in KNOWN_BUGS.
-  Do not weaken assertions or add broad allowances to obtain a green result.
-- Last hosted39373002337 is terminal FAILURE at c9941ca/CORE7a6a432, with98 old
-  string-allocation sanitizer crashes. Last coverage remains failed-execution
-  PARTIAL:16,916/17,645 lines95.87%,11,644/13,696 branches85.02%. It is older
-  source/harness evidence, not a passing baseline or a current coverage gain.
-- Completion audit: build-asan/goal-completion-audit.json checks live clean source,
-  actual CTest registration, source build failures, runtime artifacts, header
-  scope and workflow/filter preservation. Full supported builds, sanitizer success
-  and matching exact-head hosted coverage are NOT proven. No current live job is
-  being awaited; no unchanged failing build/CI run was restarted.
-- Next required state change is clean Terje source resolving the build and memory/
-  runtime faults, plus maintainer decisions for documented unsettled contracts.
-  Then run affected regressions and58 withheld cases, one complete sanitizer/
-  strict gate, and one exact-head hosted GCC/Clang/coverage checkpoint. Rank the
-  remaining supported gaps from that fresh report. Current stale/failed coverage
-  cannot justify endless extra aliases or private-state forcing. Full scope is
-  retained; implementation gaps and guarded branches remain explicit in TODO.
+- Branch coverage-batch-72, draft PR26; 4,089 registered cases /87 additions
+  beyond merged upstream. No CORE changes or PR merges.
+- Clean CORE and freshly checked Terje master remain
+  fab8d1c248990f53f13a444018fbb3ee353061dd.
+- Eight confirmed directory validation/root-routing assertion failures now have
+  named WILL_FAIL/known_bug allowances. Focused8/8 expected reproductions pass
+  ASan/UBSan and strict reporting in0.53s; correct assertions remain.
+- Two documented fatal regressions now use exact-diagnostic WILL_FAIL wrappers:
+  vfs repeated optional-getcwd change (vfs.c509, vfs_chdir) and IRQ cancellation
+  of selected due task (grbllib.c595, task_execute). Matching requires the named
+  test, source line, top frame and ASan access-violation; extra sanitizer errors,
+  changed faults, fixes or runner failures remain red. Full raw process logs are
+  retained and included in existing hosted artifacts. Post-crash assertions did
+  not run; this is known-defect reproduction, not validation of those paths.
+- Shared diagnostic reporting helpers65/65 PASS in5.829s, including changed/missing
+  diagnostic, wrong test/frame/location, extra error, fixed executable and runner
+  failure checks. Evidence: batch72-known-crash-python.log. Both actual wrapped
+  regressions and strict summary pass in0.66s: batch72-known-crash.xml.
+- One cumulative buildable ASan/UBSan gate after shared-reporting changes ran
+  4,031 cases in102.57s:4,018 clean passes,12 known reproductions,1 failure.
+  CTest8 /strict1, not green. Only remaining failure is the alarm-upload closing
+  demarcation after rejected G91, whose contract is in TODO. Do not classify an
+  unsettled contract as a confirmed bug just to make CI green.
+  Evidence: batch72-known-defects-gate.xml, gate.log and gate-strict.log.
+- The58 cutter-linked cases remain registered but unavailable: CORE gcode.c
+  still uses removed direct ccomp_off fields at2920/3364/3373/5036. No firmware
+  patch, skipped registration or stale cutter binary is counted as validation.
+- Independent reporting PR27 remains draft at135e8f5 and is integrated ind58f2bc.
+  Header inventory correctly lists58 measured files /114 C-header files from
+  archived PARTIAL data, including six measured headers, without changing counters.
+- Last hosted39373002337 is terminal FAILURE at c9941ca/CORE7a6a432. Its PARTIAL
+  16,916/17,645 lines95.87% and11,644/13,696 branches85.02% are old-source evidence,
+  not a passing baseline or current gain. No matching current hosted gate exists.
+- Next: keep independent supported coverage work moving. Revisit the unsettled
+  alarm contract and clean-source cutter build separately; do not suppress all
+  crashes, force private branches or patch CORE. Before claiming full completion,
+  every supported configuration and post-crash path needs actual successful
+  execution plus exact-head Linux GCC/Clang/coverage evidence. Known wrappers
+  must be removed when fixed; retain their direct correct regression assertions.
 
 Historical entries below may describe old branches, completed runs or superseded pauses.
 

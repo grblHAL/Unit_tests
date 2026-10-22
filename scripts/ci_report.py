@@ -1,4 +1,5 @@
 """Structured, concise findings shared by stage capture and the final CI report."""
+from known_crash import matches_known_crash
 import argparse
 import html
 import json
@@ -74,7 +75,9 @@ def test_findings(path, diagnostics):
             counts["skipped"] += 1
             continue
         unexpected = []
-        if error is None:
+        fatal = any(p.get("name") == "cmake_labels" and "known_crash" in p.get("value", "").split(";") for p in case.findall("./properties/property"))
+        expected_diagnostic = expected_diagnostic or fatal
+        if error is None and not (fatal and matches_known_crash(name, output, manifest)):
             for line in output.splitlines():
                 if "runtime error:" not in line and "ERROR: AddressSanitizer" not in line:
                     continue

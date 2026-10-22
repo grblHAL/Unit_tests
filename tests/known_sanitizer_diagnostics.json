@@ -1,1 +1,24 @@
-[]
+[
+  {
+    "kind": "fatal_asan",
+    "test": "vfs.repeated_chdir_without_getcwd_handler_preserves_relative_resolution",
+    "source": "core/vfs.c",
+    "lines": [
+      509
+    ],
+    "function": "vfs_chdir",
+    "message_pattern": "access-violation",
+    "issue": "optional-getcwd-null-call"
+  },
+  {
+    "kind": "fatal_asan",
+    "test": "grbllib.interrupt_cancelling_due_task_before_masking_preserves_later_work",
+    "source": "core/grbllib.c",
+    "lines": [
+      595
+    ],
+    "function": "task_execute",
+    "message_pattern": "access-violation",
+    "issue": "selected-task-irq-cancellation"
+  }
+]
