@@ -1,3 +1,48 @@
+# Same-source measured coverage improvement - 2026-10-22
+
+Hosted39788587225 coverage and Clang jobs terminal success; GCC remains live
+at last authoritative check. Downloaded coverage artifact source lock verified:
+harness2847aaef7522a9d6c5dc53f4c809f0bc9ab64615 / CORE68eba7906ba60d66c8b55c4adc90cd5e85b5a828 /
+filter core C+headers. All coverage stages exit0.4,106 executed:4,091 clean,
+15 documented reproductions,0 failed/skipped.
+
+Measured17,198/17,684 lines97.25%,11,937/13,754 branches86.79%. Compared with
+successful39779207602 at the SAME source/filter/configuration denominators,
+13 additional lines and9 branches are covered (approximately+0.074/+0.065
+percentage points). Newly covered lines: gcode2428/2429 and4812-4838 selections,
+motion_control793/795 native unsupported stub, and vfs259 path-allocation
+fallback.486 measured lines remain uncovered. No exclusions or adjusted totals.
+Raw coverage/report/lock/gaps saved in build-asan/hosted39788587225/.
+
+Five newer local scenario cases below are not part of these metrics and have
+only grouped focused validation. No duplicate hosted run. Keep badges on the
+last FULL-matrix successful checkpoint until GCC/diagnosis are terminal too.
+
+# Five reachable parser-gap scenarios validated locally - 2026-10-22
+
+Coverage-driven authoring resumes from exact68eba79 report39779207602, with
+existing-case checks before each candidate. Five new scenario files (4,111
+registrations) pass grouped ASan/UBSan and strict reporting,5 clean/0 exceptions,
+0.4s runtime: build-asan/batch72-parser-gaps.xml and strict.log.
+
+- No-table G43/G43.2 rejection preserves active dynamic Z offset and queued cut.
+- Read-only material provider assignment rejects through the parser, preserves
+  both provider/queued feed, and the following two cuts finish at160steps.
+- Failed computed O-label expression preserves root scope and queued80step cut.
+- Canned-cycle compensation conflict and active-compensation work-system switch
+  reject without changing modal/callback state; cancelling allows valid retry.
+- Static cutter radius uses the fitted tool both with omitted D and D0. Fitted
+  tool is declared using M61 in execution mode with mandatory tool notification
+  installed, then check mode validates extension configuration. Initial missing
+  callback/check-mode fixture mistakes were corrected, not labelled CORE bugs.
+
+Existing negative coordinate-index regression was found and not duplicated.
+No CORE edits, forced private state, new configuration, source exclusions or
+known allowances. These five are outside the last full/hosted checkpoint and
+have no measured coverage gain yet. Accumulate on this branch; no per-module
+full suite/push/CI. Published2847aae is under exact hosted39788587225; source job
+passed and runtime jobs were confirmed live, with no duplicate dispatch.
+
 # Combined parser/state coverage delivery - 2026-10-22
 
 Resume coverage-driven unit testing: inspect uncovered executable paths, select
