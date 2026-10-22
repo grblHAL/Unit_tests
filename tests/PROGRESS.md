@@ -1,3 +1,40 @@
+# Encoder/utility/Modbus cumulative gate - 2026-10-22
+
+Full4,138-case ASan/UBSan suite passes58.57s:4,122 clean and16 documented
+expected failures; no failures/skips. Build/test/strict exits all0 recorded in
+build-asan/batch72-boundaries-gate.json. Includes third-encoder append/recovery,
+bounded overlapping search, numeric retained-precision overflow, and unsupported
+Modbus response recovery. CORE clean, no new allowances. Hosted gain pending.
+
+# Modbus unsupported response and recovery - 2026-10-22
+
+New public high-level transaction case injects transport response function0
+(unassigned table entry) and255(out of range), checks completion exception255
+with zero values, then valid read after each returns current register0x1234 and
+cleared exception. Exact four request/completion counts verified. Uses existing
+transaction fixture with local transport wrapper, no shared-fixture changes.
+Focused ASan/UBSan passes; total4,138. No new allowances or CORE changes.
+Pending combined utility/encoder/Modbus cumulative gate and hosted measurement.
+
+# Bounded overlap search and numeric precision overflow - 2026-10-22
+
+Extended existing bounded-search case with aaab/AAB overlap restart and AAX
+negative control (strutils114-115). Extended float signs case with twelve-digit
+integer and twelve-digit fractional input, preserving next-axis cursor; numeric
+checks allow normal float precision while exercising dropped-digit exponent and
+fraction handling (nuts_bolts278-279,305-306). Focused ASan/UBSan2/2 passes0.46s.
+No new cases/allowances/CORE changes. Combined with encoder append group for next
+cumulative validation; measured gain remains pending hosted report.
+
+# Encoder third-driver append and heap recovery - 2026-10-22
+
+Locked report39812566612 leaves encoders.c46 uncovered: third registration
+traverses an existing linked-list next node. Extended existing enumeration order
+case to three real driver objects, with callback bounds and exact pointer order.
+Extended allocation-recovery case to fail third append, retain count2, then retry
+and enumerate all3 in order. Focused ASan/UBSan2/2 passes0.33s. No new cases,
+allowances or CORE changes; pending next cumulative gate and hosted measurement.
+
 # Spindle API cumulative validation - 2026-10-22
 
 Full4,137-case ASan/UBSan gate passes57.98s:4,121 clean and16 documented
