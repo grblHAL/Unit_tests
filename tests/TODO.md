@@ -792,3 +792,29 @@ Existing ordinary transaction, timeout/retry and deferred-send behavior remains
 covered. Source evidence: modbus_rtu.c async callbacks around181/212/226 and
 send's spin-lock wait around268. Revisit using the actual registered RTU stream
 fixture and a bounded process if direct callback re-entry is supported.
+
+
+## Settings-list N/A fallback cannot be reached by a valid plugin descriptor
+
+**Reviewed:** 2026-10-22, clean68eba79. report.c450-452 prints N/A only when
+setting->value is NULL. Public settings_register validates every descriptor's
+value before linking its owner (settings.c2765). A null-storage plugin therefore
+cannot reach that listing fallback. The new executable registration case proves
+whole-owner rejection (neither setting is discoverable), corrected registration
+and ordered reporting of both valid values. Do not mutate already registered
+metadata or bypass settings_register to claim that fallback covered. Raw source
+coverage retains the lines; no global-table reachability claim is made here.
+Further registration branch coverage can extend the same scenario for missing
+persistence/getter callbacks and invalid group/description metadata, rather than
+adding duplicate aliases for each boolean guard.
+
+## Legacy recovery report counter needs attribution review before more tests
+
+Exact68eba79 coverage39788587225 reports settings.c3783 as0 hits, but existing
+boot_compat_2 and boot_compat_10 unrecognized-version tests already exercise
+persisted-version rejection, restoration, error reporting and sender readback.
+Both pass in its full results. Do not add another equivalent startup test to
+chase that counter. Investigate per-configuration gcov attribution/collection
+and the legacy harness's nonlocal exit before asserting what the0 represents.
+Keep the raw counter and successful runtime evidence separate; no exclusion or
+coverage adjustment is justified by this discrepancy.

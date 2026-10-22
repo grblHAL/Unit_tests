@@ -1,3 +1,36 @@
+# Nine-scenario public API/parser delivery - 2026-10-22
+
+4,115 registered tests pass complete ASan/UBSan66s:4,100 clean,15 documented
+reproductions,0 failed/skipped. Build/test/strict all0 in
+build-asan/batch72-nine-scenarios-gate.json; delivery XML/strict.log retain detail.
+Nine additions beyond published2847aae are all ordinary passing cases, with no
+new exceptions. The earlier five parser/compensation cases are listed below.
+
+Four additional public-API scenarios pass grouped/strict (batch72-public-gaps.xml):
+- Directory query's owned-buffer size rejection and malloc failure preserve
+  caller storage/errno and allow correct current-directory retry.
+- Missing plugin value storage rejects the whole settings owner; corrected
+  registration exposes both settings and reports their values in order.
+- A setting write during a real queued cycle preserves calibration and the
+  original80step physical cut.
+- Existing legacy help API respects its supplied command count and preformatted
+  text; zero-count call adds no output.
+
+Rejected the attempted null-value N/A listing candidate: public registration
+forbids that descriptor. Its real validation boundary is tested instead. Added
+source-backed known-gap/TODO evidence without bypassing registration. Existing
+legacy corrupt-version recovery cases were found, not duplicated; their
+uncovered report-call counter discrepancy is separately recorded for attribution
+review. CORE remains clean68eba79. No new host variant or source exclusion.
+
+Hosted39788587225 is now FULLY successful: source/GCC/Clang/coverage/diagnosis.
+Exact2847aae/68eba79 lock/filter verified. Measured17,198/17,684 lines97.25%,
+11,937/13,754 branches86.79%. Compared with the same-source prior checkpoint,
++13 lines/+9 branches, unchanged denominators. ReadMe badges now point here.
+The nine additions have no hosted coverage measurement yet. Push this combined
+boundary on existing PR26 and dispatch one exact-head68eba79 run; keep draft
+until its full matrix completes. No redundant helper/full local rerun.
+
 # Same-source measured coverage improvement - 2026-10-22
 
 Hosted39788587225 coverage and Clang jobs terminal success; GCC remains live
