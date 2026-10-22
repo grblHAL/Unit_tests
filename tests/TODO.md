@@ -776,3 +776,19 @@ an unimplemented motion extension solely to improve the number. Raw counts
 retain all measured regions. Reuse the exact new gaps inventory under
 build-asan/hosted39779207602/gaps.json for the next substantial batch, checking
 already-written local follow-ups before authoring.
+
+
+## RTU callback re-entry contract
+
+**Source review:** 2026-10-22, clean68eba79. Blocking receive callbacks run after
+poll releases spin_lock, and modbus_send_rtu explicitly rejects nested blocking
+requests while is_blocking is set. Async receive/timeout/CRC callbacks instead
+run while the poll spin_lock is held; a synchronous re-entry into modbus_send
+would reach its while(spin_lock) before queuing. Confirm whether async callbacks
+must defer sends to a foreground task, or direct nonblocking chaining is meant
+to be supported. No watchdog/timeout placeholder or speculative assertion is
+registered, and no confirmed bug is claimed without that callback contract.
+Existing ordinary transaction, timeout/retry and deferred-send behavior remains
+covered. Source evidence: modbus_rtu.c async callbacks around181/212/226 and
+send's spin-lock wait around268. Revisit using the actual registered RTU stream
+fixture and a bounded process if direct callback re-entry is supported.

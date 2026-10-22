@@ -43,7 +43,7 @@ claim that every remaining line is unavailable.
 | Region | Status and evidence | What makes it testable |
 |---|---|---|
 | Wall-plotter homing helpers | Unimplemented public workflow. [home_machine](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/kinematics/wall_plotter.c#L301) warns and returns false; [existing rejection test](cases/wall_plotter/unsupported_homing_reports_warning.c) passes. The report has 56 uncovered helper lines. | Implement public homing and define its reference/endpoint contract; then test actual motion through that entry point. |
-| Native rigid tapping and its downstream execution | Unimplemented extension. [mc_rigid_tapping](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/motion_control.c#L793) is a weak TBC stub returning unsupported. | Supply a supported implementation, then validate encoder/spindle synchronization, reversal and physical endpoint. |
+| Native rigid tapping and its downstream execution | Unimplemented extension. [mc_rigid_tapping](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/motion_control.c#L793) is a weak TBC stub returning unsupported. | The real parser/stub rejection path now has a [documented regression](#unsupported-rigid-tapping-reports-success-and-advances-only-parser-position). Native geometry still needs a supported implementation, then encoder/spindle synchronization, reversal and physical endpoint tests. |
 | Auxiliary open-drain setting handlers | Inaccessible setting. [Public registration](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/ioports.c#L1449) is commented out; [existing setting-disabled test](cases/ioports/open_drain_setting_is_not_exposed.c) passes. | Expose the setting upstream; test public write/readback, persistence and driver effect. |
 | Timezone setting availability | Inaccessible setting. [Registration](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/settings.c#L2494) is commented out. | Expose it upstream and define accepted units/range before public setting tests. |
 | Stale setting getters/availability and closed-loop group arms | Unreachable through current registry: registered getters bypass the old cases, some settings have no availability callback, and the closed-loop group is not registered. See [detailed registry audit](TODO.md#remaining-coverage-unexposed-settings-and-parser-branches). | Update the registry or remove obsolete implementation upstream. Test the public behavior if exposed; never install a fake registry entry to hit a private case. |
@@ -281,3 +281,57 @@ normalization or stop processing once a comment fails. Do not allow a later
 successful callback to authorize a rejected block. Preserve ordinary multi-
 comment processing and the existing single-comment rejection control. Remove
 this entry and allowance once clean source passes both under sanitizers.
+
+## Direct modal restore reports compensation that its extension refused
+
+**Confirmed:** 2026-10-22, clean Terje68eba7906ba60d66c8b55c4adc90cd5e85b5a828.
+[gc_modal_state_restore](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/gcode.c#L594-L616)
+updates the live cutter-compensation state from the snapshot before calling
+cc_enable, then ignores a false return. Public ngc_modal_state_restore therefore
+returns true and leaves the parser in G41 even when the extension refused to
+leave G40. Ordinary M72 follows the checked block-execution path and correctly
+returns Status_GcodeUnsupportedCommand while preserving G40 in the same setup.
+
+**Regression:** [refused direct restore and retry](cases/cutter_comp/direct_modal_restore_preserves_disabled_mode_when_extension_refuses.c).
+The existing linked extension fixture first accepts G41.1D6 and M70, then
+accepts G40 and its10mm exit. With refusal enabled, M72 is a passing control;
+direct restore is invoked through its public API and incorrectly reports side1.
+The test records that inconsistency, re-enables the extension, demonstrates a
+successful saved-state retry and frees the snapshot before its final correct
+assertion. No compensated geometry or physical-controller result is invented.
+One named WILL_FAIL/known_bug, no sanitizer allowance. Raw evidence:
+batch72-cutter-refusal-raw.xml (result1, parser side1 after refusal).
+
+**Suggested fix for Terje (not applied):** validate/commit cutter compensation
+restoration consistently with the checked parser path, retaining the previous
+accepted state if the extension refuses and reporting restoration failure.
+Preserve successful restore/disable behavior. Remove this allowance and entry
+once clean source passes the refusal, M72 control and accepted retry under
+sanitizers.
+
+## Unsupported rigid tapping reports success and advances only parser position
+
+**Confirmed:** 2026-10-22, clean Terje68eba7906ba60d66c8b55c4adc90cd5e85b5a828.
+The native [mc_rigid_tapping stub](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/motion_control.c#L793-L796)
+explicitly returns Status_GcodeUnsupportedCommand. The parser's
+[rigid-tapping case](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/gcode.c#L4811-L4841)
+does not propagate that status: it falls through to successful block completion
+and copies the target into parser position without executing the requested move.
+This is a rejection/status defect in existing code, separate from implementing
+native tapping geometry.
+
+**Regression:** [unsupported tapping and following supported move](cases/spindle_sync/unsupported_rigid_tapping_preserves_position_and_next_supported_sync_move.c).
+The existing valid encoder/stepper fixture first executes G33Z1K1 and observes80
+physical pulses. G33.1Z2K1 then returns0 and sets parser Z=2 while physical/system
+position remains80steps (1mm). Correct unsupported-status, unchanged-position
+and following ordinary G33 endpoint assertions are retained; the status fails
+before the preservation/retry checks execute. No private state injection or
+replacement tapping implementation. One named WILL_FAIL/known_bug; no sanitizer
+allowance. Raw evidence: batch72-tapping-rejection-raw.xml.
+
+**Suggested fix for Terje (not applied):** propagate unsupported status before
+committing a target that did not move, and preserve the existing position for
+the next supported move. Confirm the intended macro fallback separately. Remove
+this exception/entry once the stub path correctly rejects under sanitizers. If
+native tapping is implemented upstream, replace the unsupported-stub expectation
+with its agreed execution test and remove the native-feature gap entry as well.

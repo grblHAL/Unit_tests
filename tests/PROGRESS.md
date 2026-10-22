@@ -1,3 +1,33 @@
+# Combined parser/state coverage delivery - 2026-10-22
+
+Resume coverage-driven unit testing: inspect uncovered executable paths, select
+supported public inputs and assert observable behavior. Real failures become
+known regressions; incomplete/unreachable implementation remains explicit in
+KNOWN_BUGS' gap table, without fake tests or adjusted coverage totals.
+
+Four accumulated cases beyond validated97bb6aa now total4,106 registrations:
+wrong-directory unlink on allocation failure, trailing comment overriding a
+validation error, direct compensation restore ignoring extension refusal, and
+unsupported native G33.1 returning success with parser-only displacement.
+The last specifically exercises previously uncovered parser/native-stub paths
+using the existing working encoder/stepper fixture; no tapping geometry added.
+Each has a correct assertion, narrow WILL_FAIL and dated evidence/cleanup.
+No CORE edits, source exclusions or sanitizer suppression.
+
+Full4,105-case ASan/UBSan gate before the final G33.1 addition passes63s:
+4,091 clean,14 documented reproductions,0 failed/skipped. Build/test/strict all0
+in build-asan/batch72-three-bugs-gate.json; XML and strict.log retain detail.
+Final G33.1 case +two real synchronized-motion controls pass focused/strict:
+2 clean,1 documented reproduction (batch72-tapping-final.xml). The final case
+fails correct unsupported-status assertion after observing parser Z2 vs physical
+Z1; later preservation/retry assertions are unvalidated until that fix. No
+redundant unchanged full suite/helper run; next complete gate is hosted.
+
+Latest successful hosted baseline39779207602 remains exact97bb6aa/68eba79,
+all five jobs green,97.18% lines/86.72% branches. Current additions have no new
+coverage measurement yet. Deliver together on existing PR26 and dispatch one
+updated-head/source checkpoint. PR remains draft pending that exact run.
+
 # Explicit known-gap placeholders - 2026-10-22
 
 User requested visible placeholders for unfinished/inaccessible coverage regions.
