@@ -11,7 +11,7 @@ int main(void)
     CHECK(cutter_enable_calls == 2);
     CHECK(cutter_received.side == CComp_Off);
     CHECK(gc_state.modal.cutter_comp.side == CComp_Off);
-    CHECK(!gc_state.ccomp_off);
+    CHECK(!HOST_PARSER_FLAGS.ccomp_off);
     CHECK(plan_get_current_block() == NULL);
     CHECK(strstr(engine_output, "[MSG:Pgm End]") != NULL);
     return EXIT_SUCCESS;

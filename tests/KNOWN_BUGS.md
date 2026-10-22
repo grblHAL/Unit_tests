@@ -43,101 +43,14 @@ keep the regression assertions, and delete the resolved entry. Then run the full
 suite and strict diagnostic summary before committing. Multiple defects can
 block the same test; remove only allowances whose underlying faults are fixed.
 
-## Analog output commands truncate fractional values
-
-**Maintainer disposition (2026-10-14):** Deferred to the longer-term TODO list.
-Keep the fractional-value regression and its explicit exception until implemented.
-See [maintainer follow-ups](TODO.md#deferred-confirmed-defects).
-
-**Marked known:** 2026-10-09
-
-**Regression:** [test](cases/gcode/m68_preserves_fractional_output.c).
-
-**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L4).
-
-`M68E1Q1.25` passes 1.0 to the analog output callback instead of 1.25.
-The callback accepts a float (`core/ioports.h:49`), but `output_command_t.value`
-is an `int32_t` ([gcode.h:312](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/gcode.h#L312)). Assigning Q at `core/gcode.c:2604`
-truncates fractional values before immediate output at line 4201 or synchronized
-M67 output in `core/stepper.c:515`. Preserve the numeric value through command
-storage. The regression retains the fractional output expectation.
-
-**Suggested fix (proposal):** Preserve the floating-point Q value in
-[output_command_t at gcode.h:312](https://github.com/terjeio/grblHAL_core/blob/4b128e68bc63f9a3af11a01a7d8fbb5d5ccc98aa/gcode.h#L312):
-
-```diff
--    int32_t value;
-+    float value;
-```
-
-Immediate M68 and queued M67 then carry the same value through storage to the
-float callback. Review every `output_command_t.value` consumer: digital M62/M63
-must retain their boolean 0/1 behavior. This changes a shared structure's type;
-rebuild core and dependent plugins/drivers together. Validate fractional immediate
-and synchronized output, queued command ordering and digital output controls.
-
-## Unexpected file percent marker reports success
-
-**Maintainer disposition (2026-10-14):** Deferred pending review of file-demarcation
-status semantics. Terje currently uses demarcation to bundle mass settings updates
-into one storage commit; avoid changing that event behavior without reviewing the
-sender/update workflow. The status regression remains explicit, with its exception.
-See [maintainer follow-ups](TODO.md#deferred-confirmed-defects).
-
-**Marked known:** 2026-10-12. **Reconfirmed:** 2026-10-13 against Terje's core
-`e65020a8389b19d3c03277e02f34219e25800e6a`.
-
-After parsing a normal block from a redirected file without an opening `%`, a
-later `%` should return `Status_UnexpectedDemarcation`. The parser detects it at
-[gcode.c:1293–1294](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/gcode.c#L1293),
-then clears the block and returns `Status_OK` from the
-[empty-block path at line 1343](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/gcode.c#L1343).
-The caller therefore receives success for the detected invalid marker.
-
-**Regression:** [unmarked file start](cases/gcode/file_percent_marker_after_unmarked_start_is_rejected.c).
-[Runtime](cases/gcode/file_percent_markers_complete_once_in_runtime.c) and
-[check-mode](cases/gcode/file_percent_markers_complete_once_in_check_mode.c)
-valid-marker tests provide passing controls. This test and entry were preserved
-in the archived earlier batch; they have now been restored and revalidated.
-
-**Suggested fix (proposal, not runtime-verified):** Return the detected error
-before continuing ordinary block parsing, using the existing `RETURN(status)`
-cleanup path when `status != Status_OK` after handling demarcation. Retain valid
-serial markers, file completion callbacks and check-mode behavior.
-
-**Remove exception when fixed:** delete the [CMake block](known_bugs.cmake#L25),
-retain the correct regression and passing controls, then delete this section.
-No sanitizer diagnostic allowance applies.
-
-## Heap-backed string growth dereferences a missing optional base
-
-**Known since:** 2026-10-20. **Source:** Terje
-`7a6a432eaf78e028b81ff3a5f9804e14519f5f01`.
-
-[strutils.c:393](https://github.com/terjeio/grblHAL_core/blob/7a6a432eaf78e028b81ff3a5f9804e14519f5f01/strutils.c#L383-L421)
-reads `string->base->data` while choosing the realloc input, even when the
-optional base is NULL. Ordinary heap-only strings (including VFS normalized
-paths) have no base and crash on their first allocation/growth.
-
-**Regressions:** [heap copy/growth](cases/strutils/strset_heap_copy_can_grow_and_retains_requested_text.c)
-and [empty heap string](cases/strutils/strset_empty_string_has_writable_terminated_heap_storage.c).
-The source also blocks the ordinary filesystem path regressions below.
-No blanket expected-failure or sanitizer allowance is added. A known assertion
-exception does not authorize a new sanitizer crash; strict reporting rejects it.
-
-**Suggested fix for Terje (not applied):** check that `string->base` exists before
-reading its data pointer. Keep the new failure policy that preserves reachable
-owned storage for retry. Retain the regressions; remove this entry when Terje's
-clean source passes them and the filesystem tests under sanitizers.
-
 ## Fallback getcwd does not preserve the frontend current directory
 
-**Marked known:** 2026-10-14. **Current source review:** Terje7a6a432.
+**Marked known:** 2026-10-14. **Reconfirmed:** 2026-10-22, Terje fab8d1c.
 Mount `/store` without fgetcwd and change to `/store/dir`. The frontend must
 report `/store/dir`; older source duplicated the prefix, while the current
 [fallback](https://github.com/terjeio/grblHAL_core/blob/7a6a432eaf78e028b81ff3a5f9804e14519f5f01/vfs.c#L590-L616)
-uses `/` and loses the subdirectory. The current strset crash blocks a clean
-end-to-end recheck until Terje fixes that independent fault.
+uses `/` and loses the subdirectory. The ordinary regression reproduces the
+assertion failure after the independent string-allocation crash was fixed.
 
 **Regression:** [frontend getcwd](cases/vfs/getcwd_without_backend_handler_preserves_mount_prefix_once.c).
 **Control:** [backend-local getcwd](cases/vfs/getcwd_with_backend_local_directory_prefixes_mount_once.c).
@@ -146,19 +59,70 @@ retain the correct assertion and control, then delete this entry once fixed.
 **Suggested fix for Terje (not applied):** use the cached absolute frontend path
 when no backend callback exists; prefix only a backend-local path.
 
-## Failed directory growth leaves the previous mount selected
 
-**Known since:** 2026-10-20; related growth-failure regression dates to2026-10-14.
-After changing to a long `/store/...` directory, fail its next buffer growth.
-The error path [vfs.c:511-515](https://github.com/terjeio/grblHAL_core/blob/7a6a432eaf78e028b81ff3a5f9804e14519f5f01/vfs.c#L505-L516)
-writes `/` into the cached path but assigns the root to local `mount` rather
-than persistent `cwdmount`. Subsequent operations still select the old mount.
-This is a cache/mount consistency issue, not a claim that retained reachable
-storage leaks. Terje's current allocation-failure policy preserves that storage.
-A clean runtime recheck is blocked by the separate strset NULL-base crash above.
+## Cutter compensation still references flags removed from parser state
 
-**Regression:** [directory growth failure/retry](cases/vfs/current_directory_reallocation_failure_falls_back_to_root.c).
-**Cleanup:** remove its named [known_bugs.cmake](known_bugs.cmake) block, retain
-root-fallback/retry assertions and delete this entry after Terje fixes it.
-**Suggested fix for Terje (not applied):** make the persisted mount and cached
-path agree on the chosen error fallback without discarding owned retry storage.
+**Known since:** 2026-10-22, clean Terje `fab8d1c248990f53f13a444018fbb3ee353061dd`.
+With `CUTTER_COMP_ENABLE=1`, [gcode.c:2920](https://github.com/terjeio/grblHAL_core/blob/fab8d1c248990f53f13a444018fbb3ee353061dd/gcode.c#L2920),
+3364, 3373 and 5036 use `gc_state.ccomp_off`, but the field moved into
+`gc_state.flags`. The existing `host_core_cutter` build fails before its ordinary
+[cutter-compensation cases](cases/cutter_comp) can run. Test callers use the
+source-detected parser-flag accessor; firmware references remain untouched.
+
+**Suggested fix for Terje (not applied):** update the stale field references to
+the new parser flags structure. Rebuild the complete supported configuration
+matrix and run the existing cutter, tool-table and tool-selection regressions.
+There is no compile-diagnostic matcher, skipped registration or sanitizer allowance.
+Remove this entry after the clean source builds and those regressions pass.
+
+## Directory validation accepts a regular file and rejects returning to root
+
+**Known since:** 2026-10-22, clean Terje `fab8d1c248990f53f13a444018fbb3ee353061dd`.
+The new [vfs_chdir validation](https://github.com/terjeio/grblHAL_core/blob/fab8d1c248990f53f13a444018fbb3ee353061dd/vfs.c#L499-L504)
+only sets ENOTDIR when stat fails and its output directory flag is true. A
+successful stat identifying a regular file passes the check and changes the
+frontend directory. The built-in root stat path also returns failure for `/`,
+so ordinary directory-growth controls cannot return to root.
+
+**Regressions:** [regular-file rejection](cases/vfs/chdir_without_backend_handler_rejects_regular_file.c),
+[long-directory root return](cases/vfs/long_current_directory_allocates_and_resolves_relative_stat.c)
+and [growth root return](cases/vfs/current_directory_growth_preserves_relative_path_resolution.c).
+Keep their correct assertions. No expected-failure or sanitizer allowance is added.
+
+**Suggested fix for Terje (not applied):** reject failed stat or a successful
+non-directory result, and make the built-in root stat resolve `/` correctly.
+Retain directory-positive controls and remove this entry once all three regressions
+pass against clean source under sanitizers.
+
+## Repeated directory change calls an absent optional getcwd callback
+
+**Known since:** 2026-10-22, clean Terje `fab8d1c248990f53f13a444018fbb3ee353061dd`.
+[vfs_chdir:509](https://github.com/terjeio/grblHAL_core/blob/fab8d1c248990f53f13a444018fbb3ee353061dd/vfs.c#L507-L509)
+unconditionally calls fgetcwd on a second change within the current mount.
+The public getcwd frontend explicitly supports an absent backend callback.
+Complete-driver controls now register the paired callback; the dedicated
+[optional-callback regression](cases/vfs/repeated_chdir_without_getcwd_handler_preserves_relative_resolution.c)
+retains a missing callback intentionally. No sanitizer allowance is added.
+
+**Suggested fix for Terje (not applied):** guard the optional callback and use
+frontend directory state for recovery when a backend has no getcwd operation.
+Keep the regression and remove this entry once repeated directory changes and
+relative backend routing pass under sanitizers on clean source.
+
+## Formatting the current drive loses relative-file routing
+
+**Confirmed:** 2026-10-22, clean Terje `fab8d1c248990f53f13a444018fbb3ee353061dd`.
+[vfs_drive_format](https://github.com/terjeio/grblHAL_core/blob/fab8d1c248990f53f13a444018fbb3ee353061dd/vfs.c)
+writes `/` into the frontend cached directory while leaving the current non-root
+mount selected. After formatting `/store`, displayed getcwd is `/store`, but
+relative `new.nc` stat returns failure instead of reaching `/store`'s backend.
+
+**Regression:** [current-drive format and relative stat](cases/vfs_integration/formatting_current_drive_resets_removed_subdirectory_to_drive_root.c).
+The fixture now supplies the stat callback required before changing directory.
+Its format/remount and displayed-directory assertions pass; relative stat fails.
+No expected-failure or sanitizer allowance is added.
+
+**Suggested fix for Terje (not applied):** keep frontend absolute directory and
+selected mount consistent when resetting the formatted drive to its root.
+Retain the relative backend operation assertion and remove this entry once it
+passes on clean source under sanitizers.

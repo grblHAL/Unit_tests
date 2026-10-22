@@ -5,7 +5,7 @@ int main(void)
 {
     prepare_mpg_stream();
     CHECK(stream_mpg_register(&pendant_device, false, NULL));
-    gc_state.file_run = true;
+    HOST_PARSER_FLAGS.file_run = true;
     CHECK(!stream_mpg_enable(true));
     CHECK(!sys.mpg_mode && !hal.stream.state.is_mpg);
     CHECK(hal.stream.read == primary_input);

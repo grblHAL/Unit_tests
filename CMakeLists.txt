@@ -21,6 +21,10 @@ file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/core/core_handlers.h" HOST_TOOL_PERSIS
 if(HOST_TOOL_PERSIST_DECLARATION)
   list(APPEND HOST_API_DEFINITIONS HOST_TOOL_PERSIST_API=1)
 endif()
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/core/gcode.h" HOST_PARSER_FLAGS_DECLARATION REGEX "parser_state_flags_t flags;")
+if(HOST_PARSER_FLAGS_DECLARATION)
+  list(APPEND HOST_API_DEFINITIONS HOST_PARSER_FLAGS_API=1)
+endif()
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/core/config.h" HOST_PARAMETERS_FORCED_ON REGEX "^#ifdef NGC_PARAMETERS_ENABLE")
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/core/strutils.h" HOST_STRSET_DECLARATION REGEX "^char [*]strset")
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/core/stream_json.h" HOST_JSON_CLOSE_DECLARATION REGEX "^bool json_close")
@@ -247,7 +251,8 @@ function(add_core_test name module source)
   if(name MATCHES "^strutils\\.strset_failed_")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=realloc -Wl,--wrap=free)
   endif()
-  if(HOST_STRSET_DECLARATION AND name MATCHES "^vfs\\.current_directory_(allocation|reallocation)_failure_falls_back_to_root$")
+  if(HOST_STRSET_DECLARATION AND (name STREQUAL "vfs.current_directory_allocation_failure_falls_back_to_root"
+    OR name STREQUAL "vfs.current_directory_reallocation_failure_preserves_previous_directory_and_retries"))
     target_compile_definitions(test_${name} PRIVATE HOST_STRSET_API=1)
   endif()
   if(module STREQUAL "strutils")
@@ -335,10 +340,10 @@ function(add_core_test name module source)
     OR name STREQUAL "nvs_buffer.initialization_without_buffer_reports_startup_warning")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc)
   endif()
-  if(name STREQUAL "vfs.current_directory_reallocation_failure_falls_back_to_root")
+  if(name STREQUAL "vfs.current_directory_reallocation_failure_preserves_previous_directory_and_retries")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=free)
   endif()
-  if(name STREQUAL "vfs.current_directory_reallocation_failure_falls_back_to_root"
+  if(name STREQUAL "vfs.current_directory_reallocation_failure_preserves_previous_directory_and_retries"
     OR name STREQUAL "vfs.current_directory_allocation_failure_falls_back_to_root"
     OR name STREQUAL "vfs.drive_iterator_allocation_failure_can_retry"
     OR name STREQUAL "vfs.mount_allocation_failure_reports_failure_without_notification"

@@ -5,7 +5,7 @@ int main(void)
 {
     prepare_tool_change();
     CHECK(hal.tool.change(&gc_state) == Status_GCodeToolError);
-    CHECK(!gc_state.tool_change);
+    CHECK(!HOST_PARSER_FLAGS.tool_change);
     CHECK(plan_get_current_block() == NULL);
     return EXIT_SUCCESS;
 }

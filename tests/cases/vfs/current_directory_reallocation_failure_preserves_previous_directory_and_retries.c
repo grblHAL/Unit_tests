@@ -13,14 +13,14 @@ int main(void)
 #endif
     reject_realloc = 1;
     CHECK(vfs_chdir(second) == -1 && realloc_failures == 1);
-    char cwd[16]; CHECK(vfs_getcwd(cwd, sizeof(cwd)) != NULL);
-    CHECK(strcmp(cwd, "/") == 0);
-    /* The current core retains reachable owned storage when growth fails. */
-    CHECK(!failed_realloc_released);
-    CHECK(vfs_chdir(first) == 0);
-    char recovered[128];
+    char cwd[128]; CHECK(vfs_getcwd(cwd, sizeof(cwd)) == cwd);
+    CHECK(strcmp(cwd, first) == 0);
+    CHECK(strcmp(backend_directory, first + 6) == 0);
+    CHECK(failed_realloc_released);
+    CHECK(vfs_chdir(second) == 0);
+    char recovered[144];
     CHECK(vfs_getcwd(recovered, sizeof(recovered)) == recovered);
-    CHECK(strcmp(recovered, first) == 0);
+    CHECK(strcmp(recovered, second) == 0);
     cleanup_operations();
     return EXIT_SUCCESS;
 }

@@ -5,7 +5,7 @@ int main(void)
     toolsetter_contact_z = -16000;
     CHECK(workpiece_touch_off() == Status_GCodeToolError);
     CHECK(!sys.flags.probe_succeeded);
-    CHECK(gc_state.tool_change);
+    CHECK(HOST_PARSER_FLAGS.tool_change);
     CHECK(gc_state.modal.tool_offset_mode == ToolLengthOffset_Cancel);
     NEAR(gc_state.modal.tool_length_offset[Z_AXIS], 0);
     CHECK(!(sys.rt_exec_state & EXEC_CYCLE_START));

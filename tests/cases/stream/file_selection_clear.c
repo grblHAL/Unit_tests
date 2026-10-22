@@ -10,10 +10,10 @@ int main(void)
     stream_set_file(&file, stream_get_null);
     CHECK(stream_is_file());
     CHECK(hal.stream.read == stream_get_null);
-    gc_state.file_stream = true;
+    HOST_PARSER_FLAGS.file_stream = true;
     stream_set_file(NULL, NULL);
     CHECK(!stream_is_file());
-    CHECK(!gc_state.file_stream);
+    CHECK(!HOST_PARSER_FLAGS.file_stream);
     CHECK(hal.stream.read == stream_get_null);
     return EXIT_SUCCESS;
 }

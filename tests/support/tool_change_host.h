@@ -94,7 +94,7 @@ static inline void start_manual_change(void)
     install_manual_change_interface();
     hal.tool.select(&next, true);
     CHECK(hal.tool.change(&gc_state) == Status_OK);
-    CHECK(gc_state.tool_change);
+    CHECK(HOST_PARSER_FLAGS.tool_change);
     CHECK(state_get() == STATE_TOOL_CHANGE);
 }
 

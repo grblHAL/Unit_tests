@@ -8,7 +8,7 @@ int main(void)
     CHECK(boot_tool_reset_sent && boot_tool_restart_observed);
     CHECK(!boot_tool_positioning);
     CHECK(boot_tool_resets_after_restart == boot_tool_resets_before_change + 1);
-    CHECK(gc_state.tool->tool_id == 0 && !gc_state.tool_change);
+    CHECK(gc_state.tool->tool_id == 0 && !HOST_PARSER_FLAGS.tool_change);
     for(unsigned axis = 0; axis < N_AXIS; axis++)
         CHECK(sys.position[axis] == boot_motor_position[axis] - boot_tool_home_offset[axis]);
     CHECK(plan_get_current_block() == NULL);

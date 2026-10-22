@@ -25,7 +25,7 @@ static inline void check_workpiece_touch_off(void)
     CHECK(physical_position[Z_AXIS] == 0);
     CHECK(physical_position[X_AXIS] == 160 && physical_position[Y_AXIS] == 240);
     CHECK(plan_get_current_block() == NULL);
-    CHECK(gc_state.tool_change);
+    CHECK(HOST_PARSER_FLAGS.tool_change);
     CHECK(tool_stream_handler != original_enqueue);
     CHECK(!(sys.rt_exec_state & EXEC_CYCLE_START));
 }

@@ -99,20 +99,6 @@ validator independently; no expected-failure exception applies.
 See [registered validator](cases/asymmetric_ganging/registered_resolution_validator_rejects_large_difference_without_mutating_motor.c)
 and [public valid write](cases/asymmetric_ganging/resolution_setting_accepts_and_reports_small_motor_difference.c).
 
-## Deferred confirmed defects
-
-**Maintainer review:** 2026-10-14.
-
-- [Fractional analog output](KNOWN_BUGS.md#analog-output-commands-truncate-fractional-values):
-  Terje deferred implementation to a longer-term TODO list. Retain the correct
-  fractional-value assertion and its linked exception; deferral is not a fix.
-- [Unexpected file percent marker status](KNOWN_BUGS.md#unexpected-file-percent-marker-reports-success):
-  Terje is wary of changing status semantics and deferred review. File-demarcation
-  events currently bundle mass settings updates into one storage commit. Senders
-  should demarcate bulk updates, especially with flash emulation: unbundled writes
-  can each erase and rewrite the emulated EEPROM. Review status/event semantics
-  together before changing the regression or implementation.
-
 ## Lathe diameter-mode conventions for reported offsets
 
 **Maintainer review:** 2026-10-14; design question, not a newly confirmed failure.
@@ -649,16 +635,6 @@ Unregistered proposal: tests/proposals/g53_scaling_machine_coordinates.c.
 Registered control cancels scaling with G50 before the G53 move.
 
 
-## Formatting current-drive relative-path recovery (2026-10-20)
-Source review of clean Terje7a6a432: vfs_drive_format writes global '/' into the
-cached directory while retaining the selected non-root mount. After formatting
-/store, relative filenames should still resolve within /store. The existing
-formatting_current_drive_resets_removed_subdirectory_to_drive_root case now
-checks an actual relative stat as well as the displayed directory. Revalidate
-once Terje fixes the independent strset NULL-base crash; do not implement a core
-fix here or call the source-inspection concern a new confirmed runtime failure.
-
-
 ## Secondary PWM inversion guard reachability
 
 **Reviewed:** 2026-10-20, clean Terje `7a6a432eaf78e028b81ff3a5f9804e14519f5f01`.
@@ -683,3 +659,33 @@ XY retry are tested in
 [the activation case](cases/cutter_comp/enabling_compensation_in_yz_plane_rejects_before_plugin_and_allows_xy_retry.c).
 Do not bypass the earlier guard to color the later one in coverage. This is a
 reachability observation, not a new defect or a coverage exclusion.
+
+
+## Plasma material handling is a plugin integration contract
+
+**Maintainer context supplied by the user:** 2026-10-22. Terje is developing
+controller-local SD-card material handling in the plasma plugin and ioSender.
+The plugin handles M190 and LinuxCNC-style material comments; feed can reference
+`F#<_hal[plasmac.cut-feed-rate]>`. The material comment itself is separate from
+that named parameter expression.
+
+Keep standalone CORE tests on published parameter-provider and comment-hook
+contracts. Do not invent material persistence, selection, required fields or
+sender behavior without the plasma plugin and its supported configuration.
+The current parser-flag refactor and source build failures are recorded against
+an exact revision in KNOWN_BUGS; they do not establish a settled material API.
+Revisit integration coverage when the implementation and plugin fixture are available.
+
+
+## Closing serial demarcation after an alarm-rejected block
+
+**Observed:** 2026-10-22, Terje `fab8d1c248990f53f13a444018fbb3ee353061dd`.
+The existing full-boot alarm-locked settings-upload case sends `%`, a valid
+$11 setting, rejected G91, then `%`. The closing marker no longer reaches the
+observer: compatibility-level-zero last_error gating follows the demarcation
+alarm bypass. Confirm whether closing demarcation must release a settings batch
+after an intervening error, or whether the sender must explicitly clear the error.
+Keep the existing regression and its callback/motion assertions pending that
+contract review; no new expected-failure or sanitizer allowance is added.
+Evidence: build-asan/batch72-current-core-available.xml,
+boot.alarm_locked_settings_upload_demarcates_batch_and_keeps_motion_blocked.

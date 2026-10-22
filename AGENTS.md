@@ -226,6 +226,10 @@ on GitHub. Check remaining anchors after deleting exception blocks.
 
 ## Established contracts and fixture lessons
 
+- Existing parser-flag checks use `HOST_PARSER_FLAGS` from `engine_host.h`;
+  CMake detects the old direct fields versus the new `gc_state.flags` layout.
+  Do not patch CORE references to compensate for an incomplete upstream refactor.
+
 - NGC coordinate parameters use `gc_state.modal.units_imperial` (G20/G21 in the pinned core), not the `$13`
   serial display setting. Set modal units in those tests.
 - MPG buffered commands may overwrite queued lines by design. Pendants must

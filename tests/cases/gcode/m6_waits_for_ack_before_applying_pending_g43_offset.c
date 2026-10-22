@@ -6,11 +6,11 @@ int main(void)
     prepare_m6_program();
     m6_wait_for_ack = true;
     CHECK(m6_block("T1M6G43H1") == Status_OK);
-    CHECK(state_get() == STATE_TOOL_CHANGE && gc_state.tool_change);
+    CHECK(state_get() == STATE_TOOL_CHANGE && HOST_PARSER_FLAGS.tool_change);
     CHECK(gc_state.tool->tool_id == 0 && gc_state.g43_pending == 1);
     CHECK(m6_changed_calls == 0);
     NEAR(gc_state.modal.tool_length_offset[Z_AXIS], 0);
-    gc_state.tool_change = false;
+    HOST_PARSER_FLAGS.tool_change = false;
     state_update(EXEC_CYCLE_START);
     CHECK(state_get() == STATE_IDLE);
     CHECK(sys.rt_exec_state & EXEC_STATUS_REPORT);

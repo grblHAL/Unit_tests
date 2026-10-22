@@ -9,6 +9,6 @@ int main(void)
     grbl.on_probe_completed();
     CHECK(strstr(engine_output, "Probe failed, try again.") != NULL);
     CHECK(gc_state.modal.tool_length_offset[Z_AXIS] == 0.0f);
-    CHECK(gc_state.tool_change);
+    CHECK(HOST_PARSER_FLAGS.tool_change);
     return EXIT_SUCCESS;
 }

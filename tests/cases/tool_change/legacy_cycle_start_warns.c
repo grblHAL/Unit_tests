@@ -10,6 +10,6 @@ int main(void)
     CHECK(forwarded_bytes == 0);
     engine_execute_tasks(STATE_TOOL_CHANGE);
     CHECK(strstr(engine_output, "Perform a probe with $TPW first!") != NULL);
-    CHECK(gc_state.tool_change);
+    CHECK(HOST_PARSER_FLAGS.tool_change);
     return EXIT_SUCCESS;
 }

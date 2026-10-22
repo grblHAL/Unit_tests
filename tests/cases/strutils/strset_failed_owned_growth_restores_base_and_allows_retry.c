@@ -8,12 +8,11 @@ int main(void)
     string_t text = {.base = &base};
     CHECK(strset(&text, strlen(job), job) != NULL);
     tracked_allocation = text.data;
-    size_t capacity = text.len;
     reject_growth = true;
     CHECK(strset(&text, strlen(longer), longer) == NULL);
-    CHECK(rejected_growths == 1 && tracked_frees == 0);
-    CHECK(text.data == tracked_allocation && text.len == capacity);
-    CHECK(strcmp(text.data, job) == 0);
+    CHECK(rejected_growths == 1 && tracked_frees == 1);
+    CHECK(text.data == storage && text.len == base.len);
+    CHECK(strcmp(text.data, "old.nc") == 0);
     CHECK(strcmp(storage, "old.nc") == 0);
     CHECK(strset(&text, strlen(longer), longer) != NULL);
     CHECK(text.data != storage && strcmp(text.data, longer) == 0);

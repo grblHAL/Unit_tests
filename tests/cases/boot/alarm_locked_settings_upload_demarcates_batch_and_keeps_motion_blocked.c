@@ -17,7 +17,7 @@ int main(void)
     CHECK(demarcations == 2 && events[0] && !events[1]);
     NEAR(settings.junction_deviation, .02f);
     CHECK(state_get() == STATE_ALARM);
-    CHECK(!gc_state.file_run && !gc_state.modal.distance_incremental);
+    CHECK(!HOST_PARSER_FLAGS.file_run && !gc_state.modal.distance_incremental);
     CHECK(strstr(engine_output, "error:9") != NULL);
     return EXIT_SUCCESS;
 }

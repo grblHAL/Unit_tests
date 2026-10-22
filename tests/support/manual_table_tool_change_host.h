@@ -23,7 +23,7 @@ static inline void acknowledge_table_change(void)
 {
     resume_manual_change();
     CHECK(protocol_execute_realtime());
-    CHECK(!gc_state.tool_change && gc_state.tool->tool_id == 3);
+    CHECK(!HOST_PARSER_FLAGS.tool_change && gc_state.tool->tool_id == 3);
 }
 static inline void cut_with_table_offset(int32_t expected_z)
 {

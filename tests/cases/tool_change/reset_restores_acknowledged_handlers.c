@@ -8,7 +8,7 @@ int main(void)
     grbl.on_toolchange_ack();
     hal.driver_reset();
     CHECK(reset_calls == 1);
-    CHECK(!gc_state.tool_change);
+    CHECK(!HOST_PARSER_FLAGS.tool_change);
     CHECK(tool_stream_handler == original_enqueue);
     CHECK(hal.control.interrupt_callback == original_control);
     CHECK(stream_handler_changes == 2 && engine_irq_depth == 0);

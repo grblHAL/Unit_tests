@@ -1,5 +1,10 @@
 #pragma once
 #include "hal.h"
+#ifdef HOST_PARSER_FLAGS_API
+#define HOST_PARSER_FLAGS gc_state.flags
+#else
+#define HOST_PARSER_FLAGS gc_state
+#endif
 /* Call once per test executable. Each executable starts with fresh core statics. */
 void engine_prepare(void);
 void engine_parser_prepare(void);

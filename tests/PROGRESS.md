@@ -1,51 +1,67 @@
-# Current continuation checkpoint - 2026-10-22
+# Current batch72 compatibility checkpoint - 2026-10-22
 
-This section supersedes historical snapshots below. Refresh live state before delivery.
+This section supersedes historical snapshots. The persistent full-supported-coverage
+goal is ACTIVE in the current chat. Passing checkpoints do not complete it.
 
-- Local branch coverage-batch-72, clean before this documentation update, HEAD
-  92f3e81; eight commits ahead of origin/coverage-batch-72. Preserve unique work.
-- PR24 and PR25 are BOTH MERGED (live GitHub verification2026-10-22).
-  Fetch remotes and reconcile merged dependencies before the next PR; old
-  instructions to wait for their merge are obsolete. Never merge PRs yourself.
-- Ignored CORE checkout is clean7a6a432eaf78e028b81ff3a5f9804e14519f5f01.
-  Terje master nowfab8d1c248990f53f13a444018fbb3ee353061dd (live verification).
-  Refresh again before testing. First do a deliberate compatibility/known-bug
-  pass against clean current Terje source; do not assume old failures remain.
-- Batch72 adds64 cases, total4,066. Latest14 have focused local evidence only;
-  they are not in the last full/hosted checkpoint. No tests rerun on2026-10-22.
-- Hosted39373002337 at c9941caf4aa45b45f88cb7acfb79c821fa5ad656 is COMPLETED/
-  FAILURE, not running. Coverage artifact was inspected; final GCC/Clang and
-  diagnosis artifacts still need inspection. Do not redispatch unchanged code.
-- Full local c9941ca checkpoint:4,052 targets build;62.67s;3,951 clean passes,
-  3 known reproductions,98 strict sanitizer failures,0 new failures. Raw CTest96
-  differs because two inherited WILL_FAIL labels invert crashes. All50 additions
-  pass. The98-case set matched the documented strutils.c:393 NULL-base fault on
-  7a6a432. Recheck it on new CORE before removing exceptions or claiming fixes.
-- Hosted39371716116 verified all38 additions at539278b pass GCC/Clang; both
-  report only the same98 source failures. ../batch72-next-hosted-validation.json.
-- PR25 reporting was integrated as dependency d93b15a;58 helper checks passed.
-  It retains red CI, labels failed-execution coverage PARTIAL and withholds
-  changed-code assessment. Never promote partial counters to passing badges.
-- Partial c9941ca artifact:16,916/17,645 lines (95.87%),11,644/13,696 branches
-  (85.02%). NOT a passing baseline. Same-source earlier partial report had49 fewer
-  covered lines/80 fewer covered branches. Crashes can prevent profile flushing.
-- Freshest local gap map: ../batch72-integrated-coverage-core.gaps.json, PARTIAL
-  at c9941ca; it excludes latest14. Check existing cases before adding tests.
-- No persistent goal exists in the old chat as of2026-10-22. Only recreate one
-  when resuming authorized sustained work. Goals and automation do not transfer
-  to a new chat automatically; inspect any existing hourly recovery before
-  retargeting it, and avoid competing runners.
-- Next: reconcile Git/PR state and current source, then extend supported gaps.
-  Last investigation: ngc_expr.c:909, malformed operator after a valid operation
-  (e.g. [1+2BOGUS3]); no new expression case written. Check duplicates and verify
-  queued motion preservation on rejection. No private/unreachable-path forcing.
-- Latest focused evidence under build-asan/: batch72-backlash-restore-results.xml,
-  ganged-hook-results.xml, disable-hook-results.xml, task-retry-results.xml,
-  param-write-results.xml, no-tool-table-results.xml, full-queue-results.xml and
-  drill-enqueue-results.xml (each filename has the batch72- prefix).
-- Maintained rules/toolchain/source-refresh instructions are in root AGENTS.md.
-  Local standalone handoff: ../../RESUME_PROMPT.txt. Parent scratch helpers and
-  downloaded artifacts are conveniences, not required repository dependencies.
+- Branch coverage-batch-72 preserves all eight original unpushed commits.
+  Reconciled upstream/master4d73b8b (merged PR24/25) in28083db; no duplicate
+  merged dependency changes remain. Existing handoff edits were preserved inda34ddf.
+- Clean ignored CORE is Terje fab8d1c248990f53f13a444018fbb3ee353061dd.
+  Remote master rechecked at the end of this batch and still matches. No CORE
+  source edits, commits, pushes or PRs. Terje is actively developing plasma material
+  handling; plugin-specific contracts are recorded separately in TODO.
+- 4,073 registered tests; batch72 now adds71 beyond merged upstream. Seven new
+  workflows this continuation: malformed second expression operator with queued
+  motion/retry; failed directory rollback; optional-getcwd regression; DAC fraction
+  and range rejection/retry; servo range/fraction retry; synchronized fractional PWM.
+- Source-detected HOST_PARSER_FLAGS migrates existing tests for direct versus nested
+  parser flags. Analog fixture now advertises an8-bit DAC; fractional-output tests
+  select PWM explicitly. VFS fixtures supply stat and stable getcwd snapshots where
+  needed. Allocation tests follow Terje's restored-base/previous-directory policy.
+- The latest all-target build fails ONLY in CORE gcode.c at2920/3364/3373/5036:
+  CUTTER_COMP_ENABLE still refers to gc_state.ccomp_off after the flags refactor.
+  58 cutter-linked tests cannot be freshly built. They remain registered; no source
+  or coverage filter changes and no compile-diagnostic suppression were added.
+  Evidence: build-asan/batch72-final-compat-build.log and
+  batch72-unavailable-current-core-tests.txt. Never count stale cutter binaries.
+- One broad ASan/UBSan gate executed4,011 buildable tests in127.48s: raw18 failures;
+  strict summary FAIL. It explicitly withheld the58 unbuildable cutter tests, so
+  this is NOT a full passing suite. No unchanged broad rerun followed fixture repairs.
+  Evidence: batch72-current-core-available.xml/.log and batch72-current-core-strict.log.
+- Focused repaired/new modules:188 tests in3.91s,10 raw failures including the now
+  obsolete fractional-PWM WILL_FAIL. Final cleanup/new-PWM check3/3 passes0.33s.
+  Evidence: batch72-repair.xml/.log and batch72-fixed-regressions.xml.
+- Latest observations across those runs cover4,015 current buildable cases, with
+  10 remaining failures: four embedded/RAM directory rejections, regular-file
+  rejection, two root returns, optional-getcwd sanitizer crash, post-format relative
+  routing, and alarm-upload closing demarcation after rejected G91. The alarm/error
+  policy question is in TODO; confirmed faults are in KNOWN_BUGS. One sanitizer
+  failure remains, unsuppressed. Two justified expected failures remain (storage
+  version retry policy and frontend getcwd). This aggregate is NOT a rerun or a
+  green baseline: build-asan/batch72-current-observations.json.
+- The71 batch additions have69 latest passing observations, one source-failing
+  optional-getcwd regression, and one cutter case unavailable from source compile.
+- Removed obsolete fractional-output and unexpected-file-percent exceptions and
+  defect entries after clean-source passing controls; retained correct assertions.
+  The string NULL-base defect is fixed. The old directory-growth failure was replaced
+  by the intended previous-directory recovery/retry check, now passing ordinarily.
+- Hosted39373002337 was re-inspected: completed FAILURE at harness c9941ca,
+  CORE7a6a432. Both GCC/Clang artifacts have4,052 cases, exactly98 sanitizer
+  failures at strutils.c:393, and all50 then-new cases pass. Source/harness locks
+  verified, source report clean, coverage report red. Local evidence:
+  build-asan/batch72-integrated-hosted-verification.json and downloaded ZIPs there.
+- Last coverage remains PARTIAL c9941ca/7a6a432:16,916/17,645 lines95.87%,
+  11,644/13,696 branches85.02%. No current-source coverage gain or passing baseline
+  is claimed. Badges still refer to the earlier verified successful run.
+- Reporting helpers unchanged; no redundant rerun. CI remains manual-only with
+  reusable callers intact. Existing recovery automation card was inspected; no
+  competing automation was created. Its current scheduling/target was not exposed
+  in the tool response, so no unverified scheduling change was made.
+- Next: preserve/deliver this coherent test checkpoint, then continue independent
+  supported gaps. Refresh Terje at the next deliberate compatibility boundary;
+  do not rerun an unchanged broad gate or dispatch known-unbuildable source just
+  to reproduce its same compile fault. Once CORE builds, run the58 withheld cases,
+  affected regressions and one useful exact-head hosted checkpoint for fresh coverage.
 
 Historical entries below may describe old branches, completed runs or superseded pauses.
 

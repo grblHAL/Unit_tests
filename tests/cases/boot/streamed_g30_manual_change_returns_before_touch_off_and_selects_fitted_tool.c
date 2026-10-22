@@ -6,7 +6,7 @@ int main(void)
     boot_program = "$H\nG0X-2Y-3Z-1\nT3M6\n" "\xA3\x81" "G10L2P1Z0\n" "\x81" "$G\n";
     CHECK(grbl_enter() == 0);
     CHECK(boot_tool_exit_sent && !boot_tool_reset_sent);
-    CHECK(!gc_state.tool_change && gc_state.tool->tool_id == 3);
+    CHECK(!HOST_PARSER_FLAGS.tool_change && gc_state.tool->tool_id == 3);
     CHECK(sys.position[X_AXIS] == -160 && sys.position[Y_AXIS] == -240 && sys.position[Z_AXIS] == -80);
     CHECK(boot_tool_rt_handler == protocol_enqueue_realtime_command);
     CHECK(stream_is_rx_suspended() == StreamSuspend_Off);

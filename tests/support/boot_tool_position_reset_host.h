@@ -22,10 +22,10 @@ static int32_t boot_tool_read(void)
         const char *ack = strchr(boot_program, CMD_TOOL_ACK);
         const char *query = strstr(boot_program, "$G");
         if(ack && boot_reads == (unsigned)(ack - boot_program) &&
-           (state_get() != STATE_TOOL_CHANGE || !gc_state.tool_change))
+           (state_get() != STATE_TOOL_CHANGE || !HOST_PARSER_FLAGS.tool_change))
             return SERIAL_NO_DATA;
         if(query && boot_reads == (unsigned)(query - boot_program) &&
-           (gc_state.tool_change || state_get() != STATE_IDLE || plan_get_current_block() != NULL))
+           (HOST_PARSER_FLAGS.tool_change || state_get() != STATE_IDLE || plan_get_current_block() != NULL))
             return SERIAL_NO_DATA;
         if(!boot_tool_plain_manual && strncmp(boot_program + boot_reads, "G10", 3) == 0 &&
            (state_get() != STATE_TOOL_CHANGE || plan_get_current_block() != NULL ||
@@ -91,7 +91,7 @@ static void boot_reset_during_tool_retract(sys_state_t state)
         boot_tool_resets_before_change = boot_tool_resets;
         CHECK(protocol_enqueue_realtime_command(CMD_RESET));
     }
-    if((boot_tool_restart_observed || (boot_tool_skip_reset && !gc_state.tool_change && state == STATE_IDLE)) && !boot_tool_exit_sent &&
+    if((boot_tool_restart_observed || (boot_tool_skip_reset && !HOST_PARSER_FLAGS.tool_change && state == STATE_IDLE)) && !boot_tool_exit_sent &&
        boot_reads == strlen(boot_program) && strstr(engine_output, "[GC:") != NULL) {
         boot_tool_exit_sent = true;
         CHECK(protocol_enqueue_realtime_command(CMD_EXIT));

@@ -3,8 +3,8 @@
 static xbar_t analog_pins[2][2] = {
     {{.id = 0, .function = Input_Analog_Aux0, .cap = {.input = true, .analog = true}},
      {.id = 1, .function = Input_Analog_Aux1, .cap = {.input = true, .analog = true}}},
-    {{.id = 0, .function = Output_Analog_Aux0, .cap = {.output = true, .analog = true}},
-     {.id = 1, .function = Output_Analog_Aux1, .cap = {.output = true, .analog = true}}}
+    {{.id = 0, .function = Output_Analog_Aux0, .cap = {.output = true, .analog = true, .resolution = Resolution_8bit}},
+     {.id = 1, .function = Output_Analog_Aux1, .cap = {.output = true, .analog = true, .resolution = Resolution_8bit}}}
 };
 static unsigned analog_output_calls, analog_read_calls;
 static uint8_t analog_output_port, analog_input_port;

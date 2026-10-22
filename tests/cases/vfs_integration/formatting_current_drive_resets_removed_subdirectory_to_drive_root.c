@@ -1,4 +1,11 @@
 #include "support/vfs_drive_format_host.h"
+static int stat_before_format(const char *path, vfs_stat_t *st)
+{
+    CHECK(strcmp(path, "/jobs") == 0);
+    memset(st, 0, sizeof(*st));
+    st->st_mode.directory = true;
+    return 0;
+}
 static int change_storage_directory(const char *path)
 {
     CHECK(strcmp(path, "/jobs") == 0);
@@ -14,6 +21,7 @@ int main(void)
 {
     vfs_drive_t *drive = prepare_format_drive();
     format_fs.fchdir = change_storage_directory;
+    format_fs.fstat = stat_before_format;
     CHECK(vfs_chdir("/store/jobs") == 0);
     CHECK(vfs_drive_format(drive) == 0);
     char directory[128];

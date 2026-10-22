@@ -42,7 +42,7 @@ static inline void run_fixed_axis_manual_change(void)
     CHECK(tool_stream_handler(CMD_CYCLE_START));
     engine_execute_tasks(STATE_TOOL_CHANGE);
     CHECK(protocol_execute_realtime());
-    CHECK(!gc_state.tool_change && gc_state.tool->tool_id == 3);
+    CHECK(!HOST_PARSER_FLAGS.tool_change && gc_state.tool->tool_id == 3);
     for(unsigned axis = 0; axis < N_AXIS; axis++) {
         CHECK(physical_position[axis] == original[axis]);
         CHECK(axis_pulses[axis] == (axis == TOOL_LENGTH_OFFSET_AXIS ? (unsigned)(-2 * original[axis]) : 0u));

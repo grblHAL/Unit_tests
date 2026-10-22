@@ -32,11 +32,11 @@ int main(void)
     CHECK(hal.stream.read() == SERIAL_NO_DATA);
     CHECK(tool_stream_handler(CMD_TOOL_ACK));
     CHECK(stream_is_rx_suspended() == StreamSuspend_Active && pending_input.backup);
-    CHECK(gc_state.tool_change && pending_input.tail == pending_input.head);
+    CHECK(HOST_PARSER_FLAGS.tool_change && pending_input.tail == pending_input.head);
     CHECK(protocol_enqueue_realtime_command(CMD_STOP));
     CHECK(!protocol_exec_rt_system());
     CHECK(sys.cancel && !sys.abort && state_get() == STATE_IDLE);
-    CHECK(!gc_state.tool_change && reset_calls == 1);
+    CHECK(!HOST_PARSER_FLAGS.tool_change && reset_calls == 1);
     CHECK(stream_is_rx_suspended() == StreamSuspend_Off && !pending_input.backup);
     /* Stop cancels current input, then cancels the saved input restored on unsuspend. */
     CHECK(cancel_calls == 2 && pending_input.tail == pending_input.head);
