@@ -1,3 +1,66 @@
+# I/O claim/search capability batch cumulative gate - 2026-10-22
+
+Full4,136-case ASan/UBSan build/test/strict passes(all0):4,120 clean,16 known
+reproductions,no failed/skipped. Evidence:build-asan/batch72-io-claims-gate.json,
+delivery XML/log,strict log. One new provider-refusal/routed-retry case and three
+extended search/capability/control-assignment scenarios. No new allowances/CORE
+changes; upstream68eba79 unchanged. Search ordering with filter0 remains explicit
+TODO question. Deliver coherent group on existingPR26; objective incomplete.
+
+All five39811711030 jobs terminal success,eaead02/68eba79; verified locked
+coverage17,269/17,684 lines97.65%,12,043/13,754 branches87.56%. Badges updated.
+Expression39812566612 source/GCC/coverage passed,Clang live; locked artifacts
+verify17,269 lines unchanged,12,058/13,754 branches87.67%,+15 branches on same
+source/filter;4,135/4,119 clean/16 known/no failed/skipped,stages0.
+Newer VFS39813351754 source passed,remaining jobs live at last check; artifacts
+exist but not yet read. Local I/O group needs its own exact-head hosted report.
+
+# Control assignment without optional capability record - 2026-10-22
+
+Extended existing control-input assignment case:public CycleStart assignment with
+empty driver_caps succeeds and preserves existing signal capability mask; then
+FeedHold assignment with supplied capability record sets that bit. Exact callback
+counts,function,available-input count and independent output bank checks remain.
+ASan/UBSan1/1 passes0.28s. Targets ioports413 optional-record false branch, no
+new executable/fixture/CORE change/allowance.4,136 unchanged. Existing rejection
+case already covers provider refusal, so no redundant copy authored. Local I/O
+batch now one new/three expanded scenarios, ready for cumulative gate/delivery.
+
+# Missing claim/pin-info callback rejection and recovery - 2026-10-22
+
+Expanded existing explicit-claim capability case beyond query flags:actual claim
+with missing provider returnsNULL; missing pin-info handler returnsNULL/UNASSIGNED.
+Both leave pins unclaimed and advertised count2. Restoring handlers makes claim
+succeed with original pin/relay description and exactly one fewer free output.
+ASan/UBSan1/1 passes0.27s. Covers ioports325/get_info272 guard outcomes using
+supported absent-driver capability surface. No CORE edits/new allowance/case.
+Total4,136; local I/O batch one new provider-refusal scenario/two extensions for
+search and capability recovery. Cumulative validation remains for batch boundary.
+
+# Driver claim refusal and routed retry - 2026-10-22
+
+New public ownership scenario passes ASan/UBSan0.26s. One provider claim callback
+returnsfalse for valid output0:resultNULL/indexUNASSIGNED,free/advertised counts2,
+both pins unclaimed,description untouched. Restore normal provider and retry:
+exact physical pin0 claimed,counts decrement once,Vacuum description retained,
+returned handle drives original physical output0. Existing host and actual claim/
+remap API reused; no private ownership forcing/CORE change/new allowance.
+Targets ioports332 provider-failure branch. Total4,136 cases. Local I/O batch
+one new case/one extended search scenario; cumulative gate still pending.
+Hosted39811711030 source/GCC/coverage/Clang individually succeeded at last check;
+diagnosis not yet listed,so do not claim full five-job completion.
+
+# Claimable port search bounds and empty description - 2026-10-22
+
+Expanded existing description lookup with explicit claimable filter:upper bound0
+returns0,bound1 returns1,empty description returns last port1. Both pins remain
+unclaimed,free count2 and named description unchanged. ASan/UBSan1/1 passes0.26s.
+Targets ioports216 false-bound and244 empty-description branches; no new case/
+CORE edit/allowance.4,135 unchanged. Unfiltered search initially returned0 because
+enumeration with filter0 is ascending; documented source/comment discrepancy in
+TODO rather than silently asserting a universal descending-order contract.
+Keep local I/O batch for cumulative validation.
+
 # VFS observer-boundary batch full validation - 2026-10-22
 
 Full4,135-case ASan/UBSan build/test/strict passes(all0):4,119 clean,16 documented

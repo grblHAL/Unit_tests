@@ -893,3 +893,16 @@ Do not export/call private helpers or pass fabricated flags to cover these arms.
 The separate saved-policy branches199/210 are reachable and have a real G84
 pre-disabled-controls scenario, including actual retract pulses and reenabling.
 Retain raw branch counts; revisit if upstream adds a caller with partial flags.
+
+## Free-port search order with an empty capability filter
+
+2026-10-22, CORE68eba7906ba60d66c8b55c4adc90cd5e85b5a828. ioport_find_free
+comment promises search from last port. For numeric/empty descriptions it forwards
+the caller filter to ioports_enumerate:nonzero filter enumerates descending,
+zero filter enumerates ascending (ioports.c587-603). In a two-output bank,
+filter0/upper-bound1 returns0, whereas claimable filter returns1. Clarify whether
+zero-filter search ordering is intentional or should follow the free-search
+comment. Do not change unfiltered enumeration's established ascending contract.
+Existing free-search tests now cover explicit claimable filter, numeric bounds,
+empty description and unchanged ownership. This discrepancy is a policy question,
+not a confirmed failure allowance.
