@@ -1,3 +1,29 @@
+# Local validation-branch and deferred-alarm follow-up - 2026-10-22
+
+Previous turn delivered nine scenarios; this turn extends an existing case,
+rather than adding one alias per branch. Renamed the plugin registration test
+for its broader metadata scope: nine malformed declarations independently reject
+(missing load/restore/save, invalid public type, missing value/getter, missing
+description/group name, self-parent group). Every rejection leaves both settings
+and the group undiscoverable, invokes no provider callbacks and preserves data.
+Corrected registration then exposes group/description and ordered values.
+
+One new full-boot scenario raises a second alarm through public system_raise_alarm
+while E-stop is active, releases the input, sends reset and serial unlock/G-code.
+The pending alarm survives warm reset, the first unlock reports it and still
+blocks G91; a second explicit unlock returns to idle. No internal pending-alarm
+flags are assigned. No motor motion occurs; all physical coordinates stay0.
+This exercises previously uncovered system_raise_alarm/disable_lock branches.
+
+Grouped ASan/UBSan +strict passes2/2,0 exceptions (build-asan/batch72-guard-alarm.xml
+and strict.log).4,116 registrations expected; last complete local gate is4,115
+before this follow-up. CORE clean/latest checked68eba79. No new source variant,
+source edit, allowance or percentage claim. Keep local until a useful batch.
+
+Hosted39792966993 source job passed; GCC/Clang/coverage confirmed live at last
+check. Do not restart or dispatch a duplicate. Latest fully successful measured
+baseline remains39788587225, exact2847aae/68eba79,97.25% lines/86.79% branches.
+
 # Nine-scenario public API/parser delivery - 2026-10-22
 
 4,115 registered tests pass complete ASan/UBSan66s:4,100 clean,15 documented
