@@ -1,3 +1,41 @@
+# Homing/manual-control cumulative gate and green snapshot - 2026-10-22
+
+Full4,153-case ASan/UBSan passes58.80s:4,137 clean,16 known,0 failures/skips.
+Build/test/strict all0 in batch72-homing-manual-gate.json. Public zero-travel
+homing/recovery and physicalmanual restore validated together. No new allowances
+or CORE edits. Local group awaits delivery/hosted gain.
+
+Runs39823116932 and39823928447 allfive jobs individually terminalsuccess.
+Latestfac105e artifacts12445943834/12444859897 both lock exact
+fac105e42075ae3d776aedb3e950c3084612242c/source68eba79/corefilter; all stages0,
+4,148/4,132clean/16known/0/0.17,297/17,684lines97.81%,
+12,106/13,754branches88.02%:+7lines/+9branches sincepublished59b8f60;
++4/+4 since1582c74. New tool_change177/506/517/524 in latestgroup;
+previousgroup ngc_params1011,tool_change200/531.387 raw lines remain.
+README/known snapshot updated. Newer6a8d34f run39824927291 stillrunning.
+
+# Public zero-travel homing and recovery - 2026-10-22
+
+New public settings/homing case stores maxtravel0,executes X homing,no wake/pulses
+or homedX,empty planner; restores travel10 and normal homing produces pulses and
+homedX whileYZ staystill. Targets machine_limits327. Initial recovery failed due
+fixture issuing step IRQs while motor was never awakened; directtravel10 control
+passed. Local wake/idle wrappers now gate IRQ service correctly,with no shared
+fixture change. st_is_stepping was insufficient before first actual ISR; replaced
+with driver wake tracking after stopping that stalled authoring run. Corrected
+focused sanitizer passes0.27s. No core defect/allowance claimed. Total4,153;
+grouped with physicalmanual restore pending cumulative gate/hosted measurement.
+
+# Physical manual-change restore after touch-off - 2026-10-22
+
+New serialT3M6/G10L2P1Z0 workflow acknowledges change, then sends two physical
+cycle-start events before foreground task. No immediate motion; actual restore
+returns to160/240/-80steps,clears change,restores stream/control handlers and
+normal realtime transition emits exactlyone tool3 completion. Targets false arm
+of physical-control execute_probe/execute_restore dispatch attool_change364.
+Focused sanitizer passes0.27s. Total4,152,no allowances/CORE edits. Local group
+awaits cumulative validation/hosted gain.
+
 # Toolsetter/physical controls cumulative gate - 2026-10-22
 
 Full4,151-case ASan/UBSan suite passes57.73s:4,135 clean,16 known,0 failures
