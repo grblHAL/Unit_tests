@@ -75,3 +75,7 @@ endif()
 if(TEST rtcp_ac.rotation_at_tool_center_preserves_requested_rotary_endpoint)
   set_tests_properties(rtcp_ac.rotation_at_tool_center_preserves_requested_rotary_endpoint PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+if(TEST ngc_flowctrl.named_macro_flow_syntax_error_closes_file_before_status_returns)
+  set_tests_properties(ngc_flowctrl.named_macro_flow_syntax_error_closes_file_before_status_returns PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

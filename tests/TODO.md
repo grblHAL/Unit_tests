@@ -952,9 +952,9 @@ a different status. Passing API regression preserves partial-homing and retry
 behavior in split_rate_homing_stops_after_later_driver_refusal_and_allows_retry.
 
 
-2026-10-22: named macro mismatched SUB header: unregistered proposal
-proposals/named_macro_wrong_sub_header_unwinds_scope_and_skips_both_tails.c
-opens fixture.macro through a real CALL but encounters O<inner>SUB. Hosted-style
-protocol fixture timed out at15.03s locally. Need isolate error-report/stream ownership before classifying
-the timeout or asserting a specific cleanup contract. Not a WILL_FAIL allowance.
-Separate bounded file-level orphan named SUB rejection is registered.
+2026-10-22: named macro mismatched SUB header timeout isolated: flow-level
+syntax cleanup removes call ownership before the named error/EOF handlers.
+Bounded registered WILL_FAIL and source cause now live in KNOWN_BUGS.md under
+"Flow syntax errors orphan an active named macro file". The full-protocol
+proposal remains unregistered until upstream ownership cleanup is fixed; then
+promote it to check sender recovery without relying on a timeout allowance.

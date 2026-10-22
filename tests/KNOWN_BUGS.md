@@ -35,9 +35,9 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Reviewed:** 2026-10-22, clean Terje `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39831104507)
-measures 17,313/17,684 lines (97.90%) and 12,121/13,754 branches (88.13%).
-The 371 uncovered lines include the following known gaps; this table does not
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39833149909)
+measures 17,317/17,684 lines (97.92%) and 12,124/13,754 branches (88.15%).
+The 367 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable.
 
 | Region | Status and evidence | What makes it testable |
@@ -411,3 +411,32 @@ branch can choose1. The commanded rotary delta is therefore discarded.
 zero-linear-distance rotary motion, including both rotary axes and subsequent
 moves. Keep the correct regression and remove this exact WILL_FAIL/known_bug
 block and entry after upstream passes. No CORE changes or sanitizer allowance.
+
+## Flow syntax errors orphan an active named macro file
+
+**Confirmed:** 2026-10-22, clean CORE `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
+[Bounded regression](cases/ngc_flowctrl/named_macro_flow_syntax_error_closes_file_before_status_returns.c)
+opens a real named macro with CALL, encounters a SUB with a different named
+label, then reports the returned FlowControlSyntaxError through the installed
+status handler. The local argument scope returns to its caller, but the macro
+file and redirected reader remain installed. The test captures this ownership
+failure, releases the orphan for cleanup, then retains the correct assertion
+that the error handler should have closed it. Raw evidence:
+`build-asan/macro-flow-error-raw.xml` (closed_on_error assertion).
+The valid same-label SUB header is covered by the existing successful CALL/EOF
+control. Generic parser-error cleanup remains separately tested.
+
+`ngc_flowctrl.c:789-790` clears all sub records and flow frames on this syntax
+error before the installed `onNamedSubError` sees it. That handler only closes
+named files through a surviving frame/sub lookup (lines395-419), so it can no
+longer identify the redirected file. Its EOF handler has the same frame guard.
+The full-protocol malformed-header reproduction is retained as an unregistered
+[proposal](proposals/named_macro_wrong_sub_header_unwinds_scope_and_skips_both_tails.c):
+it reaches a repeat-EOF timeout15.03s rather than returning to the sender.
+
+**Suggested fix for Terje (not applied):** preserve ownership until named-file
+error unwinding completes, or close the corresponding files while clearing the
+frames. Validate nested files, parameter restoration, and sender recovery. Keep
+the bounded regression; remove this exact WILL_FAIL/known_bug block and entry
+when upstream passes, then promote the full-protocol proposal if it terminates
+with the intended error. No CORE edits or sanitizer diagnostic allowance.

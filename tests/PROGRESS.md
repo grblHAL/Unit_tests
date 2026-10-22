@@ -6430,3 +6430,25 @@ stages0,4,160total/4,144clean/16known. Report17,313/17,68497.90% lines and
 12,121/13,75488.13% branches; badges/known-gap snapshot updated,371 raw gaps.
 Newer homing run39833149909 at3c3f1d9 remainslive; no new coverage attributed
 to this macro/RTCP batch before its exact hosted report. CORE remains clean.
+
+
+### 2026-10-22 - flow error ownership and public rejection batch
+
+Three new cases total4,172. Malformed named SUB timeout isolated to frame/sub
+cleanup before named-file error reporting: bounded correct file-closure assertion
+fails after safely releasing observed orphan, exact WILL_FAIL/known_bug and
+source cause/removal guide added. Existing valid named CALL control now checks
+its matching SUB header. Original full-protocol proposal remains unregistered
+until upstream fixes ownership, replacing the previous uncertain TODO account.
+Two grouped parser controls reject negative output/input ports, invalid wait
+mode, and G70/71/72 axis-command conflicts without disturbing queued80-pulse cut;
+registered output and input commands work afterwards. No CORE changes.
+Full ASan/UBSan build/test/strict all0:4,172 in59.82s,4,153 clean,19 known,
+0 unexpected/skipped. No sanitizer diagnostic allowance. Fresh core master
+still68eba79 and clean. Logs batch72-flow-ownership-io-*.
+Hosted39833149909 at3c3f1d9 now has all5 individual jobs terminalsuccess;
+both artifact source/harness/filter locks and7 coverage stage exits verified.
+17,317/17,684 lines97.92%,12,124/13,754 branches88.15%,367 raw uncovered.
+New covered lines machine_limits206/524/527,motion_control1181. README/known-gap
+snapshot updated. Newer0522e4e run39834732774 stilllive at inspection; current
+ownership/I/O batch needs its own exact-head hosted validation before readiness.
