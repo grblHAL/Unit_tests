@@ -15,6 +15,17 @@ def matches_known_crash(name, output, manifest):
     for item in manifest:
         if item.get("kind") != "fatal_asan" or item.get("test") != name:
             continue
+        # GCC reports a NULL indirect call at PC zero and omits the tail-called
+        # CORE frame. Require the exact recorded harness caller chain instead.
+        frames = item.get("zero_pc_frames", [])
+        if (frames and re.search(r"ERROR: AddressSanitizer: SEGV on unknown address 0x0+ \(pc 0x0+\b", errors[0])
+                and summaries[0].strip() == "SUMMARY: AddressSanitizer: SEGV (<unknown module>)"
+                and re.search(r"^\s*#0 0x0+  \(<unknown module>\)", output, re.MULTILINE)):
+            if all(re.search(r"^\s*#" + str(index) + r" 0x[0-9a-f]+ in " + re.escape(frame["function"])
+                             + r" .*[/\\]" + re.escape(frame["source"]).replace("/", r"[/\\]")
+                             + ":" + str(frame["line"]) + r"(?::[0-9]+)?(?:\s|$)", output, re.MULTILINE)
+                   for index, frame in enumerate(frames, 1)):
+                return True
         source = re.escape(item["source"]).replace("/", r"[/\\]")
         location = source + r":(?:" + "|".join(map(str, item["lines"])) + r"):\d+\b"
         if (re.search(r"ERROR: AddressSanitizer: " + item["message_pattern"] + r"\b", errors[0])
@@ -38,7 +49,7 @@ def main():
             # CTest truncates passing output to 1KiB. Keep the exact matching
             # evidence together; preserve the complete process output separately.
             for line in result.stdout.splitlines():
-                if "ERROR: AddressSanitizer:" in line or "SUMMARY: AddressSanitizer:" in line or re.search(r"#0 ", line):
+                if "ERROR: AddressSanitizer:" in line or "SUMMARY: AddressSanitizer:" in line or re.search(r"#0 ", line) or ("Hint: pc points to the zero page." in result.stdout and re.search(r"#[12] ", line)):
                     print(line)
             print("Full process output:", log.resolve())
             print("Documented fatal regression reproduced; assertions after the crash did not run.")

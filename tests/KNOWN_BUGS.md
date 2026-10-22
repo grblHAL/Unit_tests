@@ -92,6 +92,13 @@ fs_embedded/fs_ram missing or hidden directory rejection regressions have named
 `WILL_FAIL` / `known_bug` allowances in [known_bugs.cmake](known_bugs.cmake).
 Remove all seven allowances when directory validation and root routing are fixed.
 
+**Additional Linux reproduction:**
+[device-directory rejection](cases/fs_device/device_nodes_reject_directory_and_delete_operations.c)
+fails at `/dev/subdir` in hosted39762025374, both coverage and GCC. The failed
+stat's output is not a valid directory classification. Its named Linux-only
+WILL_FAIL allowance preserves the ordinary Windows control, which currently
+happens to reject the path. Remove this allowance too after fixing validation.
+
 **Suggested fix for Terje (not applied):** reject failed stat or a successful
 non-directory result, and make the built-in root stat resolve `/` correctly.
 Retain directory-positive controls and remove this entry once all three regressions
@@ -172,3 +179,43 @@ under the mask before dispatch. Account for cancellation and pool-slot reuse;
 merely checking the old queue link does not establish callback lifetime. Keep
 callbacks outside the critical section. Retain the regression and both controls, run the task
 module and full sanitizers, then remove this entry when clean source passes.
+
+### Linux diagnostics for the two documented indirect NULL calls
+
+Hosted39762025374 confirms both faults under GCC and Clang. Clang reports SEGV
+at the same exact CORE source/frame as Windows access-violation. GCC reports
+PC/address zero and omits the tail-called CORE frame: VFS has main at its test
+line9; tasks have engine_execute_tasks at task_host.c8 followed by main at test
+line27. The fatal inventory now records these exact caller chains. Matching
+requires PC zero, unknown-module frame0 and summary, the named test and every
+recorded caller frame. Changed source/caller/line/PC, additional sanitizer errors,
+runner errors and fixed executables remain failures. This is diagnostic
+classification, not successful execution of assertions after the crash.
+Captured evidence: hosted39762025374/{gcc,clang}-results/build/results.xml.
+All four captured diagnostics replay successfully;71 helper checks pass, and
+both actual Windows reproducers plus strict summary pass in0.54s. Keep cleanup
+of both named wrappers, allowances and manifest entries linked above.
+
+## MPG select pull-up initialization depends on another input's configuration
+
+**Confirmed:** 2026-10-22, clean Terje fab8d1c248990f53f13a444018fbb3ee353061dd.
+[ioports.c1599-1606](https://github.com/terjeio/grblHAL_core/blob/fab8d1c248990f53f13a444018fbb3ee353061dd/ioports.c#L1599-L1606)
+places `Input_MPGSelect` handling inside `function < Input_Probe`, but the MPG
+function is declared after Input_Probe in crossbar.h. Its forced pull-up branch
+is unreachable. The reused in_config then retains the previous input's pull mode,
+or its initial None when MPG is configured first.
+
+**Regressions:** [first configured input](cases/ioports/loaded_first_mpg_input_receives_pullup_without_neighbor_state.c)
+and [neighbor uses pull-down](cases/ioports/loaded_mpg_input_does_not_inherit_neighbor_pulldown.c).
+Both configure valid driver capabilities and pin functions before public bank
+registration, then load settings through grbl.on_settings_changed. Neighbor
+configuration, callback counts, debounce and inversion controls pass; only MPG
+pull-up assertions fail. Existing [up-neighbor control](cases/ioports/loaded_mpg_select_pin_uses_pullup_and_preserves_debounce.c)
+passes incidentally because its auxiliary neighbor supplies PullMode_Up.
+Evidence: batch72-mpg-pull-raw.xml. Narrow named WILL_FAIL/known_bug allowances
+are in known_bugs.cmake; correct assertions remain.
+
+**Suggested fix for Terje (not applied):** handle MPG outside the lower-valued
+control-function guard and give each pin a deliberate pull configuration. Retain
+both pin-order regressions and the existing control; remove their two allowances
+and this entry once clean source passes the I/O settings group under sanitizers.

@@ -4,7 +4,7 @@ Full supported CORE line/branch coverage remains ACTIVE and unproven. Confirmed
 CORE defects are expected regressions, not reasons to stop independent coverage.
 This checkpoint supersedes historical snapshots.
 
-- Branch coverage-batch-72, draft PR26; 4,094 registered cases /92 additions
+- Local branch coverage-batch-72, draft PR26; 4,096 registered cases /94 additions
   beyond merged upstream. No CORE changes or PR merges.
 - Local next-group checkpoint: five new public virtual-feed/motion cases pass
   ASan/UBSan and strict summary in0.48s. Tests exercise the exact
@@ -18,6 +18,35 @@ This checkpoint supersedes historical snapshots.
 - Old PARTIAL map reviewed for the next group: top settings candidates overlap
   current capability/MPG/homing/description tests or documented unexposed metadata
   paths. Do not treat that old map as proof of absent tests or current gain.
+- New local group (not yet pushed or included in a whole-suite gate): two MPG
+  input-order regressions expose an unreachable pull-up branch. Valid driver
+  functions/capabilities are installed before registration; first input gets None,
+  while another order inherits a neighbor's pull-down. Correct assertions are
+  retained as named WILL_FAIL known bugs. Existing up-neighbor control passes.
+  Focused ASan/UBSan3/3 +strict pass0.35s: batch72-mpg-pull.xml; raw evidence
+  records the two actual assertion failures in batch72-mpg-pull-raw.xml.
+- Current-source hosted39762025374 is terminal FAILURE at delivered19bb4ab and
+  COREfab8d1c. Exact source/header scope verified from artifact. All three runtime
+  jobs attempted4,094 registrations:4,022 clean,10 known,58 unavailable cutter
+  cases,4 failures (alarm contract, Linux /dev rejection, two documented crashes).
+  The source/helper job passed. No live job is still awaited or restarted.
+- Fresh PARTIAL coverage:17,065/17,583 lines97.05%;11,818/13,635 branches86.67%.
+  Builds/tests failed, denominator differs from old reports, and post-crash paths
+  did not run. This is NOT a passing baseline or proven comparable coverage gain.
+  Badges unchanged. Evidence under build-asan/hosted39762025374/ includes XML,
+  HTML, compiler results, source locks, diagnosis and the fresh gaps.json.
+- Linux /dev rejection is the documented failed-stat validation fault; add its
+  narrow Linux-only WILL_FAIL while retaining Windows's currently passing result.
+  GCC/Clang crash reports now match only their captured exact source or PC-zero
+  caller chains. Changed/additional faults and fixed executables stay red.
+  All71 Python checks pass6.695s; all four captured Linux crash outputs replay;
+  actual Windows2/2 crash checks plus strict pass0.54s. Evidence:
+  batch72-linux-diagnostic-python.log and batch72-mpg-linux-repair.xml/strict.log.
+  These are focused repairs, not a new hosted or complete runtime gate.
+- Next source review uses the fresh map: gcode102 missing lines (discount cutter
+  unavailability), settings73, wall_plotter56 (unimplemented homing), ioports38
+  (includes the now-confirmed guarded MPG defect), ngc_flowctrl17. Existing tests
+  and documented unexposed/private paths must still be checked before authoring.
 - Clean CORE and freshly checked Terje master remain
   fab8d1c248990f53f13a444018fbb3ee353061dd.
 - Eight confirmed directory validation/root-routing assertion failures now have
@@ -59,9 +88,6 @@ This checkpoint supersedes historical snapshots.
 - Independent reporting PR27 remains draft at135e8f5 and is integrated ind58f2bc.
   Header inventory correctly lists58 measured files /114 C-header files from
   archived PARTIAL data, including six measured headers, without changing counters.
-- Last hosted39373002337 is terminal FAILURE at c9941ca/CORE7a6a432. Its PARTIAL
-  16,916/17,645 lines95.87% and11,644/13,696 branches85.02% are old-source evidence,
-  not a passing baseline or current gain. No matching current hosted gate exists.
 - Next: keep independent supported coverage work moving. Revisit the unsettled
   alarm contract and clean-source cutter build separately; do not suppress all
   crashes, force private branches or patch CORE. Before claiming full completion,

@@ -29,7 +29,9 @@ Recovering sanitizer errors are also checked: the narrow
 defect and removal instructions. Affected assertion passes are shown separately;
 unrecognized sanitizer diagnostics fail the reporting step.
 Fatal ASan regressions may use a named `known_crash` wrapper with exact test,
-source line, top frame and fault matching. They appear as known reproductions;
+source line, top frame and fault matching. For GCC NULL calls that omit the CORE
+frame, the inventory instead requires PC zero and the exact captured harness
+caller chain. They appear as known reproductions;
 assertions after the crash did not run. The wrapper retains full process output
 in `build/known-crash-<test>.log`. Fixes, changed/additional faults and runner
 errors fail and require exception review. Non-sanitizer builds retain direct tests.
