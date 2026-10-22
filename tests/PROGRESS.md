@@ -6376,3 +6376,31 @@ forced abort flags. Targeted paths come from the fresh partial gap map; no
 new line-coverage claim until the next measured checkpoint.
 Evidence: build-asan/batch72-drill-enqueue-results.xml. Batch72 adds64,
 registered4,066; latest14 local-only after c9941ca. CORE/allowances unchanged.
+
+
+### 2026-10-22 - asymmetric boot homing authoring
+
+Added two public full-boot $H workflows with real asymmetric Y/A motor pulses.
+Clear switches home independently to Y=80/A=160; X/Z remain stationary.
+Engaged switches expose initial pull-off using a primary-only motor lock:
+secondary receives no pulses and homing raises alarm8. Correct assertion retained
+as exact WILL_FAIL/known_bug with source cause and removal guide in KNOWN_BUGS.
+Four boot_square cases pass classification in0.43s:3 clean,1 expected failure.
+Raw evidence square-engaged-raw.xml; classified square-engaged-classified.xml.
+No CORE changes or sanitizer allowance. Local authoring group awaits the next
+substantial cumulative full gate/push. No coverage gain claimed for this group.
+
+
+### 2026-10-22 - asymmetric boot homing cumulative gate
+
+Five new scenarios now cover initially clear/engaged switches, positive/negative
+motor alignment trim, and public reset during final trim. Reset raises alarm6
+and leaves both homed flags clear; physical travel and unrelated motors checked.
+Full ASan/UBSan build/test/strict gates all0:4,165 cases in73.21s,4,148 clean,
+17 exact expected failures,0 failed/skipped. Logs batch72-square-homing-*.
+One new confirmed primary-only initial pull-off lock defect; no CORE changes
+or sanitizer diagnostic allowances. Fresh origin master remains clean68eba79.
+Previous pushed4c0c021 coverage artifact source/harness/filter locks match:
+17,313/17,684 lines97.90%,12,121/13,754 branches88.13%,371 raw uncovered.
+All seven coverage stage exits0; GCC/Clang still running at inspection, so this
+is a coverage-job result rather than a new fully-green snapshot badge.

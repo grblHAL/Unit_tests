@@ -67,3 +67,7 @@ endif()
 if(TEST ngc_params.m72_restores_override_percentages_when_enable_flags_are_unchanged)
   set_tests_properties(ngc_params.m72_restores_override_percentages_when_enable_flags_are_unchanged PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+if(TEST boot_square.engaged_switches_pull_off_before_independent_motor_homing)
+  set_tests_properties(boot_square.engaged_switches_pull_off_before_independent_motor_homing PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

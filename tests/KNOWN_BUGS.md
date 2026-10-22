@@ -364,3 +364,28 @@ percentage differences when selecting restoration work, preserving enable policy
 and planner update semantics. Keep this correct regression, remove its exact
 WILL_FAIL/known_bug block and this entry once upstream passes under sanitizers.
 One new named allowance; no sanitizer suppression or CORE modification.
+
+## Asymmetric auto-squaring initial pull-off leaves the secondary motor on its switch
+
+**Confirmed:** 2026-10-22, clean CORE `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
+[Regression](cases/boot_square/engaged_switches_pull_off_before_independent_motor_homing.c)
+boots the four-axis asymmetric Y/A configuration, with both physical switches
+engaged, then sends public `$H`. The primary motor pulls away, but the secondary
+receives no pulses and remains engaged; homing raises alarm 8 rather than
+completing. The same driver and settings with initially clear switches pass
+[the independent motor control](cases/boot_square/clear_switches_home_both_motors_independently.c),
+including final physical positions Y=80/A=160, released switches, both homed bits,
+and no X/Z pulses. Startup alarm 11 is expected before either homing command.
+Raw sanitizer evidence: `build-asan/square-engaged-raw.xml`.
+
+`machine_limits.c:616` passes only the auto-squared primary axis to
+`limits_pull_off`. Its kinematics transform creates a secondary target, but
+`sys.homing_axis_lock` is still set to that primary-only mask at line 213.
+The secondary motor therefore cannot move. The later dual-axis offset path
+explicitly adds the asymmetric secondary axis before calling the same helper.
+
+**Suggested fix for Terje (not applied):** include the asymmetric secondary motor
+in the initial pull-off lock/motion mask while preserving switch checking and
+normal independent homing. Keep the correct regression; remove its exact
+WILL_FAIL/known_bug block and this entry once upstream passes under sanitizers.
+No CORE edit or sanitizer allowance.
