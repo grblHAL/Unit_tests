@@ -4,7 +4,7 @@ Full supported CORE line/branch coverage remains ACTIVE and unproven. Confirmed
 CORE defects are expected regressions, not reasons to stop independent coverage.
 This checkpoint supersedes historical snapshots.
 
-- Local branch coverage-batch-72, draft PR26; 4,099 registered cases /97 additions
+- Local branch coverage-batch-72, draft PR26; 4,101 registered cases /99 additions
   beyond merged upstream. No CORE changes or PR merges.
 - Local next-group checkpoint: five new public virtual-feed/motion cases pass
   ASan/UBSan and strict summary in0.48s. Tests exercise the exact
@@ -18,6 +18,19 @@ This checkpoint supersedes historical snapshots.
 - Old PARTIAL map reviewed for the next group: top settings candidates overlap
   current capability/MPG/homing/description tests or documented unexposed metadata
   paths. Do not treat that old map as proof of absent tests or current gain.
+- Added paired real-protocol WHILE allocation tests. No-fault macro/sender
+  reopening control passes; injected loop-expression allocation failure leaves
+  the named file current at actual EOF after flow metadata was cleared. An EOF
+  ownership observer replaces a timeout with a direct correct assertion. One
+  narrow WILL_FAIL/known_bug and dated KNOWN_BUGS entry retain full sender retry,
+  parent scope and tail-skipping expectations. Focused ASan/UBSan2/2 +strict
+  pass0.29s: batch72-while-allocation.xml. Raw failure/control evidence is in
+  batch72-while-allocation-raw.xml. CORE untouched; no sanitizer allowance added.
+- Seven local cases now accumulate beyond hosted19bb4ab: two MPG regressions,
+  three loader recovery controls, one WHILE regression and its normal control.
+  Next is one cumulative pre-push sanitizer/strict gate, with the same58 known
+  unavailable cutter cases recorded separately, then a useful combined delivery.
+  No repeated unchanged Python helper gate or tiny per-case hosted runs.
 - Added local macro-loader recovery group: three new realistic parser/file cases
   cover long-name filename growth, subroutine-record allocation after redirect
   creation, and callee-argument installation. Actual file reads execute G21 and

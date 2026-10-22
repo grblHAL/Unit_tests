@@ -66,3 +66,7 @@ endforeach()
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND TEST fs_device.device_nodes_reject_directory_and_delete_operations)
   set_tests_properties(fs_device.device_nodes_reject_directory_and_delete_operations PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+if(TEST ngc_flowctrl.macro_while_expression_allocation_failure_returns_to_sender_and_retries)
+  set_tests_properties(ngc_flowctrl.macro_while_expression_allocation_failure_returns_to_sender_and_retries PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

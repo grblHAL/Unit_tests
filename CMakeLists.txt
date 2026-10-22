@@ -365,7 +365,9 @@ function(add_core_test name module source)
   if(name STREQUAL "ngc_long_names.long_macro_filename_allocation_failure_preserves_sender_and_retries")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=realloc)
   endif()
-  if(name STREQUAL "ngc_flowctrl.named_macro_argument_allocation_failure_restores_caller_and_retries")
+  if(name STREQUAL "ngc_flowctrl.named_macro_argument_allocation_failure_restores_caller_and_retries"
+      OR name STREQUAL "ngc_flowctrl.macro_while_expression_allocation_failure_returns_to_sender_and_retries"
+      OR name STREQUAL "ngc_flowctrl.macro_while_expression_normal_completion_returns_to_sender_and_reopens")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc)
   endif()
   if(name STREQUAL "ngc_flowctrl.named_macro_record_allocation_failure_closes_file_and_allows_retry")

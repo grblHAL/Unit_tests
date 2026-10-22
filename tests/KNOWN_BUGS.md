@@ -219,3 +219,33 @@ are in known_bugs.cmake; correct assertions remain.
 control-function guard and give each pin a deliberate pull configuration. Retain
 both pin-order regressions and the existing control; remove their two allowances
 and this entry once clean source passes the I/O settings group under sanitizers.
+
+## Active macro flow error clears scope metadata before closing its file
+
+**Confirmed:** 2026-10-22, clean Terje fab8d1c248990f53f13a444018fbb3ee353061dd.
+A real embedded named macro enters a WHILE block after a comment arms one malloc
+failure. Failure retaining the loop expression returns FlowControlOutOfMemory.
+[ngc_flowctrl.c789-791](https://github.com/terjeio/grblHAL_core/blob/fab8d1c248990f53f13a444018fbb3ee353061dd/ngc_flowctrl.c#L789-L791)
+calls ngc_flowctrl_init, clearing subroutine records and stack frames before the
+redirect's error/EOF callbacks finish. onNamedSubError and onNamedSubEOF require
+that metadata to unwind/close. At actual EOF the named file remains current,
+so the protocol repeatedly consumes EOF instead of returning to the sender.
+
+**Regression:** [WHILE allocation recovery](cases/ngc_flowctrl/macro_while_expression_allocation_failure_returns_to_sender_and_retries.c).
+**Control:** [normal completion and sender reopen](cases/ngc_flowctrl/macro_while_expression_normal_completion_returns_to_sender_and_reopens.c).
+The shared fixture runs actual RAM/embedded file streams through protocol_main_loop;
+a public comment callback arms one allocation failure immediately before WHILE.
+A global EOF observer runs after the CORE named-sub EOF handler and checks that
+its owned file is no longer current. This makes the fault an immediate ordinary
+assertion, rather than relying on a timeout. Sender query/retry, parent#1=99 and
+skipped caller tail assertions remain for validating a fix. With injection off,
+the same fixture completes both calls, counts four loop iterations and restores
+the caller. No synthetic EOF, private queue manipulation or firmware patch.
+
+Raw ASan/UBSan evidence: batch72-while-allocation-raw.xml (failure plus passing
+control). One named WILL_FAIL/known_bug allowance is in known_bugs.cmake; no new
+sanitizer allowance. **Suggested fix for Terje (not applied):** coordinate named
+redirect unwinding with flow reset before discarding the metadata needed by the
+error/EOF handlers, preserving parent error propagation. Keep the regression and
+control, remove its allowance and this entry when clean source passes both plus
+related macro-loader/scope tests under sanitizers.
