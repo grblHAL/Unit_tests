@@ -60,70 +60,13 @@ retain the correct assertion and control, then delete this entry once fixed.
 when no backend callback exists; prefix only a backend-local path.
 
 
-## Cutter compensation still references flags removed from parser state
+## Hidden embedded mount directory policy remains unresolved
 
-**Known since:** 2026-10-22, clean Terje `fab8d1c248990f53f13a444018fbb3ee353061dd`.
-With `CUTTER_COMP_ENABLE=1`, [gcode.c:2920](https://github.com/terjeio/grblHAL_core/blob/fab8d1c248990f53f13a444018fbb3ee353061dd/gcode.c#L2920),
-3364, 3373 and 5036 use `gc_state.ccomp_off`, but the field moved into
-`gc_state.flags`. The existing `host_core_cutter` build fails before its ordinary
-[cutter-compensation cases](cases/cutter_comp) can run. Test callers use the
-source-detected parser-flag accessor; firmware references remain untouched.
-
-**Suggested fix for Terje (not applied):** update the stale field references to
-the new parser flags structure. Rebuild the complete supported configuration
-matrix and run the existing cutter, tool-table and tool-selection regressions.
-There is no compile-diagnostic matcher, skipped registration or sanitizer allowance.
-Remove this entry after the clean source builds and those regressions pass.
-
-## Directory validation accepts a regular file and rejects returning to root
-
-**Known since:** 2026-10-22, clean Terje `fab8d1c248990f53f13a444018fbb3ee353061dd`.
-The new [vfs_chdir validation](https://github.com/terjeio/grblHAL_core/blob/fab8d1c248990f53f13a444018fbb3ee353061dd/vfs.c#L499-L504)
-only sets ENOTDIR when stat fails and its output directory flag is true. A
-successful stat identifying a regular file passes the check and changes the
-frontend directory. The built-in root stat path also returns failure for `/`,
-so ordinary directory-growth controls cannot return to root.
-
-**Regressions:** [regular-file rejection](cases/vfs/chdir_without_backend_handler_rejects_regular_file.c),
-[long-directory root return](cases/vfs/long_current_directory_allocates_and_resolves_relative_stat.c)
-and [growth root return](cases/vfs/current_directory_growth_preserves_relative_path_resolution.c).
-Keep their correct assertions. These three regressions and the four existing
-fs_embedded/fs_ram missing or hidden directory rejection regressions have named
-`WILL_FAIL` / `known_bug` allowances in [known_bugs.cmake](known_bugs.cmake).
-Remove all seven allowances when directory validation and root routing are fixed.
-
-**Additional Linux reproduction:**
-[device-directory rejection](cases/fs_device/device_nodes_reject_directory_and_delete_operations.c)
-fails at `/dev/subdir` in hosted39762025374, both coverage and GCC. The failed
-stat's output is not a valid directory classification. Its named Linux-only
-WILL_FAIL allowance preserves the ordinary Windows control, which currently
-happens to reject the path. Remove this allowance too after fixing validation.
-
-**Suggested fix for Terje (not applied):** reject failed stat or a successful
-non-directory result, and make the built-in root stat resolve `/` correctly.
-Retain directory-positive controls and remove this entry once all three regressions
-pass against clean source under sanitizers.
-
-## Repeated directory change calls an absent optional getcwd callback
-
-**Known since:** 2026-10-22, clean Terje `fab8d1c248990f53f13a444018fbb3ee353061dd`.
-[vfs_chdir:509](https://github.com/terjeio/grblHAL_core/blob/fab8d1c248990f53f13a444018fbb3ee353061dd/vfs.c#L507-L509)
-unconditionally calls fgetcwd on a second change within the current mount.
-The public getcwd frontend explicitly supports an absent backend callback.
-Complete-driver controls now register the paired callback; the dedicated
-[optional-callback regression](cases/vfs/repeated_chdir_without_getcwd_handler_preserves_relative_resolution.c)
-retains a missing callback intentionally. In sanitizer builds, an exact-diagnostic
-wrapper plus named WILL_FAIL/known_bug/known_crash allowance reproduces only the
-inventoried ASan access-violation at vfs.c509, frame vfs_chdir. Full output is
-retained in build-asan/known-crash-<test>.log. A fix, runner error or different
-diagnostic makes the wrapper/strict report fail; post-crash assertions remain
-unvalidated. Cleanup: restore direct registration in CMakeLists.txt and remove
-the named known_bugs.cmake allowance and known_sanitizer_diagnostics.json entry.
-
-**Suggested fix for Terje (not applied):** guard the optional callback and use
-frontend directory state for recovery when a backend has no getcwd operation.
-Keep the regression and remove this entry once repeated directory changes and
-relative backend routing pass under sanitizers on clean source.
+Two existing hidden-only mount cases still expect chdir rejection on clean
+Terje 68eba7906ba60d66c8b55c4adc90cd5e85b5a828. Their named allowances remain
+pending confirmation of whether hidden mount metadata controls navigation or
+only listing. Ordinary file rejection and root-return regressions now pass;
+their allowances were removed. See TODO for the policy distinction.
 
 ## Formatting the current drive loses relative-file routing
 
@@ -143,58 +86,6 @@ This regression has a named `WILL_FAIL` / `known_bug` allowance in
 selected mount consistent when resetting the formatted drive to its root.
 Retain the relative backend operation assertion and remove this entry once it
 passes on clean source under sanitizers.
-
-## Interrupt cancellation of a selected delayed task calls a cleared callback
-
-**Known since:** 2026-10-22, clean Terje
-`fab8d1c248990f53f13a444018fbb3ee353061dd`; remote master rechecked unchanged.
-
-[task_execute](https://github.com/terjeio/grblHAL_core/blob/fab8d1c248990f53f13a444018fbb3ee353061dd/grbllib.c#L573-L595)
-selects a due queue entry before masking interrupts. An interrupt can call the
-ISR-safe [task_delete](https://github.com/terjeio/grblHAL_core/blob/fab8d1c248990f53f13a444018fbb3ee353061dd/grbllib.c#L647-L666)
-for that still-queued entry. Deletion unlinks it and clears its callback via
-task_free. The foreground resumes with the cached entry, copies its now-NULL
-callback and calls it at line595, producing an ASan access violation.
-
-**Regression:** [interrupt cancellation](cases/grbllib/interrupt_cancelling_due_task_before_masking_preserves_later_work.c).
-**Passing controls:** [interrupt insertion](cases/grbllib/interrupt_arrival_before_masking_preserves_due_and_new_delayed_work.c)
-and [future retry cancellation](cases/grbllib/interrupt_cancelling_future_retry_preserves_selected_due_work.c).
-The same driver IRQ-mask hook models a pending interrupt just before masking;
-all scenarios use only public ISR-safe task APIs. No private queue access or
-firmware patch is used. The cancellation case retains correct no-callback and
-later-work assertions. Sanitizer builds now use an exact-diagnostic wrapper and
-named WILL_FAIL/known_bug/known_crash allowance for only the inventoried ASan
-access-violation at grbllib.c595, frame task_execute. Post-crash assertions remain
-unvalidated. Cleanup: restore direct registration in CMakeLists.txt and remove
-the named known_bugs.cmake allowance and known_sanitizer_diagnostics.json entry.
-Different diagnostics, additional sanitizer faults, fixes and runner errors fail.
-Evidence: build-asan/batch72-task-irq.xml (insertion passes; cancellation crashes
-at grbllib.c595), plus batch72-task-irq-build.log. The future-retry cancellation
-control passes in0.32s: batch72-task-irq-control.xml. This is a host-controlled
-single-core interrupt interleaving, not a claim of reproduction on a board.
-
-**Suggested fix for Terje (not applied):** select/remove the due task and snapshot
-its callback/data atomically under the IRQ mask, or revalidate a cached candidate
-under the mask before dispatch. Account for cancellation and pool-slot reuse;
-merely checking the old queue link does not establish callback lifetime. Keep
-callbacks outside the critical section. Retain the regression and both controls, run the task
-module and full sanitizers, then remove this entry when clean source passes.
-
-### Linux diagnostics for the two documented indirect NULL calls
-
-Hosted39762025374 confirms both faults under GCC and Clang. Clang reports SEGV
-at the same exact CORE source/frame as Windows access-violation. GCC reports
-PC/address zero and omits the tail-called CORE frame: VFS has main at its test
-line9; tasks have engine_execute_tasks at task_host.c8 followed by main at test
-line27. The fatal inventory now records these exact caller chains. Matching
-requires PC zero, unknown-module frame0 and summary, the named test and every
-recorded caller frame. Changed source/caller/line/PC, additional sanitizer errors,
-runner errors and fixed executables remain failures. This is diagnostic
-classification, not successful execution of assertions after the crash.
-Captured evidence: hosted39762025374/{gcc,clang}-results/build/results.xml.
-All four captured diagnostics replay successfully;71 helper checks pass, and
-both actual Windows reproducers plus strict summary pass in0.54s. Keep cleanup
-of both named wrappers, allowances and manifest entries linked above.
 
 ## MPG select pull-up initialization depends on another input's configuration
 
@@ -250,7 +141,7 @@ error/EOF handlers, preserving parent error propagation. Keep the regression and
 control, remove its allowance and this entry when clean source passes both plus
 related macro-loader/scope tests under sanitizers.
 
-## Pre-execution plugin rejection loses a CORE-allocated message
+## Rejected parser and plugin blocks lose CORE-allocated messages
 
 **Confirmed:** 2026-10-22, clean Terje fab8d1c248990f53f13a444018fbb3ee353061dd.
 A normal MSG comment allocates a message before the public on_pre_gcode_execute
@@ -276,3 +167,29 @@ release a still-owned message on the hook's early-return path, and preserve
 normal parser error cleanup. Retain the regression/controls; remove its allowance
 and this entry when clean source frees the message and passes related parser,
 planner and message-ownership sanitizer tests.
+
+**Expanded reproduction, 2026-10-22, clean Terje 68eba79:**
+[ordinary parser errors](cases/lathe_ngc/parser_rejection_releases_message_and_preserves_queued_motion.c)
+combine unsupported G999, negative feed and unused Q after allocating MSG comments.
+All three return the expected status, preserve the queued cut and finish at80
+steps, but CORE releases zero of the three messages. This needs no plugin
+rejection. RETURN calls gc_at_exit, which cannot access the local message;
+planner ownership has not yet begun. The combined case retains the correct
+three-release assertion with one named WILL_FAIL. Probe teardown reclaims the
+observed orphans after measuring ownership, without suppressing diagnostics.
+Fix parser early-exit ownership as well as plugin-hook rejection; remove both
+message allowances when clean source passes. Evidence: batch72-core68-affected.xml.
+
+## Alarm-rejected block prevents closing settings-upload demarcation
+
+**Observed:** 2026-10-22, clean Terje fab8d1c and68eba79.
+[Full boot regression](cases/boot/alarm_locked_settings_upload_demarcates_batch_and_keeps_motion_blocked.c)
+streams `%`, valid $11, alarm-rejected G91, then `%`. The closing observer
+callback is missing: the test fails its two-demarcation assertion. The later
+motion-blocking assertions have not executed. Compatibility-zero last_error
+gating follows the demarcation alarm bypass. Whether the sender must clear
+that error is a pending contract question, not a confirmed firmware diagnosis.
+Per requested nonblocking failure handling, retain the correct assertions and
+one named WILL_FAIL while Terje confirms the contract. No sanitizer allowance.
+Remove it when the agreed public upload workflow passes; see TODO's closing
+serial demarcation entry. Full evidence: batch72-core68-delivery.xml.

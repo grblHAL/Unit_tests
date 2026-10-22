@@ -4,6 +4,9 @@
 int main(void)
 {
     operation_fs.fgetcwd = NULL;
+    CHECK(!vfs_mount(NULL, "/store", &operation_fs, (vfs_st_mode_t){0}));
+    CHECK(chdir_calls == 0);
+    operation_fs.fgetcwd = operation_getcwd;
     prepare_operations((vfs_st_mode_t){0});
     CHECK(vfs_chdir("/store/dir") == 0);
     CHECK(vfs_chdir("/store/other") == 0);

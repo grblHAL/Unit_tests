@@ -1,3 +1,43 @@
+# Current batch72 bug-hunting delivery - 2026-10-22
+
+CORE is clean detached68eba7906ba60d66c8b55c4adc90cd5e85b5a828. No firmware
+edits. Prior checkpoint below is historical. Branch coverage-batch-72 retains
+five accumulated local follow-ups plus this source-compatibility/bug group.
+
+- Prioritize plausible public bug paths, reuse existing regressions, and avoid
+  confidence-only additions. One shared-header rebuild, grouped affected run,
+  one full pre-push sanitizer gate. No new source coverage claimed yet.
+- All4,102 current registrations now build/run; zero unavailable. Full
+  ASan/UBSan147s:4,091 clean,10 known reproductions,1 existing alarm-upload
+  failure. Evidence: build-asan/batch72-core68-delivery.xml and strict.log.
+  The upload contract remains unsettled; its correct assertion now has one
+  documented named WILL_FAIL per requested nonblocking handling. Focused final
+  classification XML/strict log records upload and combined message regression.
+- All41 cutter cases pass again after upstream's flag-field fix. Scheduler
+  cancellation and five ordinary directory/root regressions pass; their
+  allowances removed. The invalid chdir-without-getcwd provider is now rejected
+  at public mount; adapted regression checks rejection and corrected retry,
+  retaining repeated-directory and relative-unlink assertions. Removed both old
+  fatal manifests/wrappers; remaining failures use no sanitizer exemptions.
+  Linux device allowance removed with the common validation fix, pending hosted
+  Linux confirmation. Local fs_device passes; do not call hosted checks green.
+- Fallback frontend-only getcwd still loses its directory. Format relative path
+  assertion and two hidden-mount navigation assumptions still fail. Preserve
+  named exceptions and distinguish unresolved hidden-navigation policy in TODO.
+- Default backend's old direct-call metadata assumptions changed upstream.
+  Existing root/missing tests now use public stat and check metadata/status;
+  no promise is imposed on failed output buffers. Retired callback-free child
+  metadata fallback case because that implementation was removed, not replaced
+  by forced NULL-callback invocation. Evidence and scope recorded in TODO.
+- New combined public parser-error probe confirms zero messages released across
+  unsupported G999, negative feed and unused Q. Expected errors, prior queued
+  cut and80-step endpoint all pass before correct ownership assertion fails.
+  One named WILL_FAIL, expanded existing message-leak entry, no suppression.
+- Latest hosted report remains failing39762025374 at19bb4ab/fab8d1c, PARTIAL
+  97.05% lines/86.67% branches. Changed source/config denominators prevent a
+  defensible gain claim. Keep successful96.60/85.54 badges unchanged until an
+  exact updated-head/source hosted report exists. PR26 remains draft.
+
 # Current batch72 verification checkpoint - 2026-10-22
 
 The full supported CORE coverage goal is active and unproven. Highest priority:

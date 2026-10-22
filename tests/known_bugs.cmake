@@ -10,9 +10,6 @@ if(TEST vfs.getcwd_without_backend_handler_preserves_mount_prefix_once)
 endif()
 
 # Confirmed directory validation/root-routing defects, Terje fab8d1c (2026-10-22).
-if(TEST fs_embedded.change_directory_enables_relative_reads_and_rejects_subdirectory)
-  set_tests_properties(fs_embedded.change_directory_enables_relative_reads_and_rejects_subdirectory PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
 
 if(TEST fs_embedded.hidden_only_directory_has_no_visible_entries)
   set_tests_properties(fs_embedded.hidden_only_directory_has_no_visible_entries PROPERTIES WILL_FAIL TRUE LABELS known_bug)
@@ -22,35 +19,8 @@ if(TEST fs_embedded.visible_registration_reveals_previously_hidden_mount)
   set_tests_properties(fs_embedded.visible_registration_reveals_previously_hidden_mount PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
-if(TEST fs_ram.flat_filesystem_rejects_directory_mutations)
-  set_tests_properties(fs_ram.flat_filesystem_rejects_directory_mutations PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
-if(TEST vfs.chdir_without_backend_handler_rejects_regular_file)
-  set_tests_properties(vfs.chdir_without_backend_handler_rejects_regular_file PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
-if(TEST vfs.current_directory_growth_preserves_relative_path_resolution)
-  set_tests_properties(vfs.current_directory_growth_preserves_relative_path_resolution PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
-if(TEST vfs.long_current_directory_allocates_and_resolves_relative_stat)
-  set_tests_properties(vfs.long_current_directory_allocates_and_resolves_relative_stat PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
 if(TEST vfs_integration.formatting_current_drive_resets_removed_subdirectory_to_drive_root)
   set_tests_properties(vfs_integration.formatting_current_drive_resets_removed_subdirectory_to_drive_root PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
-
-# Fatal diagnostics are matched by exact test/source/frame in known_crash.py.
-if(ENABLE_SANITIZERS)
-  foreach(name vfs.repeated_chdir_without_getcwd_handler_preserves_relative_resolution
-      grbllib.interrupt_cancelling_due_task_before_masking_preserves_later_work)
-    if(TEST ${name})
-      set_tests_properties(${name} PROPERTIES WILL_FAIL TRUE LABELS "known_bug;known_crash")
-    endif()
-  endforeach()
 endif()
 
 # MPG's enum lies outside the guard protecting its pull-up initialization.
@@ -61,16 +31,19 @@ foreach(name ioports.loaded_first_mpg_input_receives_pullup_without_neighbor_sta
   endif()
 endforeach()
 
-# Confirmed on hosted Linux; the invalid-stat validation reads undefined output,
-# so the same regression currently happens to pass on the Windows fixture stack.
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND TEST fs_device.device_nodes_reject_directory_and_delete_operations)
-  set_tests_properties(fs_device.device_nodes_reject_directory_and_delete_operations PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
 if(TEST ngc_flowctrl.macro_while_expression_allocation_failure_returns_to_sender_and_retries)
   set_tests_properties(ngc_flowctrl.macro_while_expression_allocation_failure_returns_to_sender_and_retries PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
 if(TEST lathe_ngc.pre_execute_rejection_releases_core_message_and_preserves_queued_motion)
   set_tests_properties(lathe_ngc.pre_execute_rejection_releases_core_message_and_preserves_queued_motion PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+if(TEST lathe_ngc.parser_rejection_releases_message_and_preserves_queued_motion)
+  set_tests_properties(lathe_ngc.parser_rejection_releases_message_and_preserves_queued_motion PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+# Observed upload failure; demarcation contract remains pending maintainer review.
+if(TEST boot.alarm_locked_settings_upload_demarcates_batch_and_keeps_motion_blocked)
+  set_tests_properties(boot.alarm_locked_settings_upload_demarcates_batch_and_keeps_motion_blocked PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()

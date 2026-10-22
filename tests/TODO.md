@@ -684,7 +684,9 @@ observer: compatibility-level-zero last_error gating follows the demarcation
 alarm bypass. Confirm whether closing demarcation must release a settings batch
 after an intervening error, or whether the sender must explicitly clear the error.
 Keep the existing regression and its callback/motion assertions pending that
-contract review; no new expected-failure or sanitizer allowance is added.
+contract review. A named WILL_FAIL now records the observed failure per the
+requested nonblocking policy; it does not establish the intended contract, and
+there is no sanitizer allowance.
 Evidence: build-asan/batch72-current-core-available.xml,
 boot.alarm_locked_settings_upload_demarcates_batch_and_keeps_motion_blocked.
 
@@ -732,3 +734,19 @@ No current supported CORE workflow reaches the unmatched fallback. Do not route
 an unrelated signal through a private configuration path merely to fill these
 branches. Retain the raw denominator; revisit if callers or supported pin ranges
 change. RGB-clear index semantics remain the separate deferred contract above.
+
+
+## Default VFS metadata after 68eba79
+
+The rewritten default backend only implements root stat for `/`; it no longer
+synthesizes mounted-child metadata or preserves a failed stat output buffer.
+Existing root/missing-path regressions now exercise public vfs_stat and check
+success metadata or ENOTDIR, without imposing failure-buffer contents. Retired
+the old direct-default-backend child-stat test: its callback-free child was
+never a usable provider for public stat, which requires fstat. Do not call a
+missing child callback just to cover the removed fallback. No CORE edits.
+
+Hidden embedded mount navigation is a separate maintainer contract question:
+68eba79 allows chdir while all embedded entries are hidden. Existing directory
+listing assertions pass; two old rejection assertions remain named expected
+failures pending confirmation whether hidden means invisible or inaccessible.
