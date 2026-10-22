@@ -818,3 +818,16 @@ chase that counter. Investigate per-configuration gcov attribution/collection
 and the legacy harness's nonlocal exit before asserting what the0 represents.
 Keep the raw counter and successful runtime evidence separate; no exclusion or
 coverage adjustment is justified by this discrepancy.
+
+
+## Tool-table absence guards implied by earlier parsing
+
+**Verified source review:** 2026-10-22, clean68eba79. The G43/G43.2 word parser
+requires grbl.tool_table.n_tools before selecting Enable/ApplyAdditional
+(gcode.c1678/1680). The later n_tools==0 rejection arms at2959/2971 therefore
+cannot be reached with supported stable table metadata. The passing no-table
+scenario tests the actual early rejection branches and preserves a dynamic
+offset plus queued80step cut; it does not cover those later defensive lines.
+Do not change table capacity from a callback mid-block or forge the private
+modal block merely to reach them. Keep raw coverage and revisit if parsing or
+the table-lifetime contract changes.

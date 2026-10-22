@@ -1,3 +1,32 @@
+# Local macro-allocation and public null-guard follow-up - 2026-10-22
+
+The previous turn expanded registration guards and added deferred-alarm boot
+coverage. This turn adds two passing scenario files,4,118 registrations total:
+G66 argument-allocation rejection preserving an existing cut, corrected retry,
+G67 cleanup and exact160step endpoint; and the public null-input guards of
+ngc_substitute_parameters/ngc_process_comment, followed by unchanged parameter
+readback and valid formatted output. Reuse existing macro/motion/heap fixtures;
+one exact new target gets the existing malloc/calloc/free wrappers.
+
+Six affected/control cases pass grouped ASan/UBSan +strict,6 clean,0 exceptions
+(build-asan/batch72-resource-guard-followup.xml and strict.log). No full suite or
+new hosted checkpoint for this local group. Last cumulative gate remains4,115
+at publishedec17fcb. No source edits, source exclusions or new allowances.
+
+Hosted39792966993 coverage job terminal success, all artifact stages exit0:
+4,115 executed,4,100 clean,15 known,0 failed/skipped. Exactec17fcb/68eba79 source
+lock and C+header filter verified. Measured17,214/17,684 lines97.34%,
+11,958/13,754 branches86.94%; same-source delta+16 lines/+21 branches with
+unchanged denominators against39788587225.470 measured lines remain uncovered.
+Artifact/report/gaps saved in build-asan/hosted39792966993/. GCC/Clang remain
+live and diagnosis queued at last authoritative check; do not call full matrix
+green or dispatch a duplicate. Badges remain the fully successful97.25/86.79
+baseline. Known-gap summary synchronized to that verified baseline.
+
+New report confirms no-table offset cases exercise earlier parser branches,
+not the later defensive zero-table arms. Added exact reachability evidence in
+TODO rather than another duplicate test or forced metadata mutation.
+
 # Local validation-branch and deferred-alarm follow-up - 2026-10-22
 
 Previous turn delivered nine scenarios; this turn extends an existing case,
