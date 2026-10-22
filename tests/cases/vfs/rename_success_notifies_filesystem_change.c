@@ -13,6 +13,9 @@ int main(void)
     CHECK(vfs_rename("/test/source", "/test/target") == 0);
     CHECK(rename_calls == 1 && change_calls == 1);
     CHECK(changed_fs == &fs);
+    vfs.on_fs_changed = NULL;
+    CHECK(vfs_rename("/test/source", "/test/target") == 0);
+    CHECK(rename_calls == 2 && change_calls == 1);
     CHECK(vfs_unmount(NULL, "/test"));
     return EXIT_SUCCESS;
 }

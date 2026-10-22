@@ -1,3 +1,42 @@
+# VFS observer-boundary batch full validation - 2026-10-22
+
+Full4,135-case ASan/UBSan build/test/strict passes(all0):4,119 clean,16 documented
+reproductions,no failures/skips. Evidence:build-asan/batch72-vfs-observers-gate.json
+plusdelivery XML/log/strict log. Four existing mkdir/rmdir/rename/writable-close
+scenarios extended for absent observer; mkdir backend failure/retry emits correct
+notification counts. No new executable/allowance/CORE edits. Upstream clean68eba79
+unchanged. Deliver coherent observer group on existingPR26; objective incomplete.
+
+Hosted39811711030 exacteaead02/68eba79/filter artifacts verified,stages0:
+17,269/17,684 lines97.65%,12,043/13,754 branches87.56%,+0 lines/+3 branches.
+4,134/4,118 clean/16 known/no failed/skipped,including isolated real M72 defect.
+GCC/Clang live at last check. Newer expression39812566612 source succeeded,
+remaining jobs live. This local VFS group still needs its own hosted report.
+
+# Writable close without observer and hosted settings checkpoint - 2026-10-22
+
+Expanded existing writable-close case with second public writable open after
+observer removal: provider identity/update flag/path preserved,exact second
+backend close,no extra notification. ASan/UBSan1/1 passes0.33s. Targets vfs342
+callback-absent branch; no new executable/CORE edit/allowance.4,135 unchanged.
+Local VFS batch now four extended filesystem cases, ready for cumulative gate.
+
+All five individual jobs39810197175 terminal success at31718f9/68eba79. Verified
+locked artifacts17,269/17,684 lines97.65%,12,040/13,754 branches87.54%,
+4,132/4,117 clean/15 known/no failed/skipped. Refreshed badges/gap summary,
+415 raw uncovered lines. Newer39811711030 source passed,coverage/GCC/Clang live.
+Current M72 allowance count16 appears only in later heads, not this old report.
+
+# Filesystem optional-observer and backend-failure branches - 2026-10-22
+
+Three existing VFS scenarios expanded together, ASan/UBSan3/3 passes0.49s.
+Successful mkdir/rmdir/rename still forward exact backend-local paths with no
+registered change observer. mkdir backend failure returns-1 and emits no event;
+corrected retry succeeds and notifies once. Previous normal-observer/path/count
+assertions remain. No new executable/fixture or allowance,4,135 tests unchanged.
+Targets partial branches vfs407/435/453 using public API/provider results only.
+CORE untouched; cumulative gate/hosted branch gain deferred to batch boundary.
+
 # Expression branch batch full gate - 2026-10-22
 
 Full4,135-case ASan/UBSan build/test/strict passes(all0):4,119 clean,16 known
