@@ -906,3 +906,25 @@ comment. Do not change unfiltered enumeration's established ascending contract.
 Existing free-search tests now cover explicit claimable filter, numeric bounds,
 empty description and unchanged ownership. This discrepancy is a policy question,
 not a confirmed failure allowance.
+
+
+## M6 check-mode message cleanup guard audit - 2026-10-22
+
+CORE68eba79 gcode.c4238 is inside the tool-change execution block guarded at
+4231 by !gc_parser_flags.check_mode, then tests the same flag at4237 without
+any intervening callback or assignment. The free(message) arm cannot execute
+through supported controller commands. Keep it in raw coverage; no placeholder
+WILL_FAIL or private flag mutation. Existing check-mode comment test verifies
+normalization suppresses plugin/message handlers. Revisit if upstream changes
+the enclosing guard or message ownership.
+
+
+## Parser post-reader NaN guard audit - 2026-10-22
+
+CORE68eba79 gcode.c1470-1471 rejects NaN only when user_mcode is not
+UserMCode_NoValueWords. With expressions enabled, ngc_read_real_value rejects
+NaN/Inf with Status_ExpressionInvalidResult at ngc_expr.c823-826 and the caller
+returns that error before this guard. The only explicit NaN assignment immediately
+above is limited to UserMCode_NoValueWords, excluded by the guard. Existing custom
+M-code normal-value and valueless-word tests cover supported contracts. Retain raw
+coverage; do not mutate parser locals or add fake expected failures for this arm.

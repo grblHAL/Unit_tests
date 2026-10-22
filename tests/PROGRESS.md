@@ -1,3 +1,49 @@
+# Custom M-code reader guard audit - 2026-10-22
+
+Existing normal-required-value and plugin-valueless tests already cover contracts.
+Uncovered post-reader NaN rejection at gcode1471 cannot be reached with expression
+reader: nonfinite status returns first, while explicit valueless NaN excludes the
+guard. Added source evidence to TODO/known gap table, no duplicate tests or fake
+expected failures. CORE unchanged; motion recovery test edits remain local.
+
+# Motion extension queued-work recovery control - 2026-10-22
+
+Extended existing arc rejection scenario to queue a valid160-step X cut, reject
+a clockwise arc through registered extension, retain same sole planner block and
+parser2,0, then retry after driver recovery. Retry appends arc while preserving
+first block and reaches parser3,-1; exact callback counts/turn direction checked.
+Focused ASan/UBSan passes0.28s. This strengthens recovery assertions; no measured
+coverage gain claimed. No new cases/allowances/CORE changes. Pending cumulative
+gate with rapid error-path addition and coverage audit documentation.
+
+# Rapid extension rejection and recovery - 2026-10-22
+
+Extended existing cutter motion-extension rejection scenario to G0: driver error
+propagates, target reaches callback, parser XY stays origin and planner stays
+empty. Re-enable actual previous motion handler and retry G0X3Y4: parser reaches
+3,4, planner records240/320 steps and rapid flag. Three line callbacks, no arc
+callbacks. Focused ASan/UBSan passes0.26s. Targets gcode4737-4738 missing rapid
+error path. No new case/allowance/CORE change. Pending cumulative validation.
+
+# G-code message cleanup reachability audit - 2026-10-22
+
+Audited raw uncovered gcode.c4238 against enclosing4231 guard: check-mode arm
+cannot execute because outer block excludes that mode and no callback/assignment
+intervenes. Added source evidence to TODO and known coverage gap table, retaining
+denominator. Broadcast override gap already documented; no duplicate tests or
+fake expected failures. Coverage snapshot docs from green39814748999 remain local.
+
+# Fully green I/O checkpoint and measured branches - 2026-10-22
+
+Run39814748999 at1049a015df5cdbb8a2180f9621f51e29851e0b65/source68eba79
+has allfive individual jobs terminalsuccess(source,GCC,Clang,coverage,diagnosis).
+Downloaded coverage/report artifacts12441717480/12442811224; both locks match
+exact harness/source/core filter; allseven report stage exits0.4,136 total,
+4,120 clean,16 known,0 failed/skipped. Coverage17,269/17,684 lines97.65%,
+12,067/13,754 branches87.73%: unchanged lines,+24 branches versus published
+39811711030; +9 branches versus expression39812566612. README badges and known
+gap snapshot refreshed. Newer spindle and utility/Modbus heads remain pending.
+
 # Encoder/utility/Modbus cumulative gate - 2026-10-22
 
 Full4,138-case ASan/UBSan suite passes58.57s:4,122 clean and16 documented
