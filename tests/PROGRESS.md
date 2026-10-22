@@ -27,6 +27,17 @@ goal is ACTIVE in the current chat. Passing checkpoints do not complete it.
   the public sleep/parking and interrupted-resume paths left in the partial map.
   Current local total4,081 /79 additions: eight focused-validated cases beyond
   PR26's4,073/71 checkpoint. No new full-suite or hosted/coverage claim.
+- Local interactive-motion group: two encoder hold cases pass0.34s. G33 defers
+  hold to its exact800-step endpoint, waits through four held polls, then permits
+  the next cut; G95 stops before its endpoint and resumes the same cut. Two manual
+  tool-jog cases pass0.32s: completed jog returns to M6 wait, and full-boot sender
+  jog cancellation delivers ASCII_CAN through the real receive loop before
+  acknowledgement/touch-off/cycle start selects tool3 and restores position.
+  Initial fixture callback/ordering errors were repaired; no CORE bug or exception.
+  Evidence: build-asan/batch72-sync-hold.xml and batch72-tool-jog.xml.
+  Current local total4,085 /83 additions,12 focused-validated cases beyond PR26.
+  Next useful delivery boundary: one cumulative buildable sanitizer/strict gate,
+  keeping the58 CORE-blocked cutter cases explicit; update the existing draft.
 - Branch coverage-batch-72 preserves all eight original unpushed commits.
   Reconciled upstream/master4d73b8b (merged PR24/25) in28083db; no duplicate
   merged dependency changes remain. Existing handoff edits were preserved inda34ddf.
