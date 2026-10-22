@@ -3,6 +3,15 @@
 This section supersedes historical snapshots. The persistent full-supported-coverage
 goal is ACTIVE in the current chat. Passing checkpoints do not complete it.
 
+- Delivery: draft PR26 https://github.com/grblHAL/Unit_tests/pull/26 at
+  da170df50a0ebee016a5f71b80f2c00ae7accc24, pushed and attached. Not ready:
+  current CORE compilation/runtime failures remain. No redundant hosted dispatch.
+- Local follow-up adds two analog workflows beyond the PR head: synchronized
+  rejection preserves an already queued output and accepts its retry; negative
+  servo angle preserves motion and accepts zero. Both pass ASan/UBSan in0.32s,
+  build-asan/batch72-analog-followup.xml. No new exceptions. Local total4,075 /
+  73 batch additions; these2 are not part of the last broad/hosted checkpoint.
+  Accumulate the next substantial group here before another push/CI checkpoint.
 - Branch coverage-batch-72 preserves all eight original unpushed commits.
   Reconciled upstream/master4d73b8b (merged PR24/25) in28083db; no duplicate
   merged dependency changes remain. Existing handoff edits were preserved inda34ddf.
@@ -10,7 +19,8 @@ goal is ACTIVE in the current chat. Passing checkpoints do not complete it.
   Remote master rechecked at the end of this batch and still matches. No CORE
   source edits, commits, pushes or PRs. Terje is actively developing plasma material
   handling; plugin-specific contracts are recorded separately in TODO.
-- 4,073 registered tests; batch72 now adds71 beyond merged upstream. Seven new
+- Delivered checkpoint has4,073 registered tests and71 additions beyond upstream;
+  the local follow-up above makes4,075/73. Seven new
   workflows this continuation: malformed second expression operator with queued
   motion/retry; failed directory rollback; optional-getcwd regression; DAC fraction
   and range rejection/retry; servo range/fraction retry; synchronized fractional PWM.
@@ -57,7 +67,7 @@ goal is ACTIVE in the current chat. Passing checkpoints do not complete it.
   reusable callers intact. Existing recovery automation card was inspected; no
   competing automation was created. Its current scheduling/target was not exposed
   in the tool response, so no unverified scheduling change was made.
-- Next: preserve/deliver this coherent test checkpoint, then continue independent
+- Next: continue independent
   supported gaps. Refresh Terje at the next deliberate compatibility boundary;
   do not rerun an unchanged broad gate or dispatch known-unbuildable source just
   to reproduce its same compile fault. Once CORE builds, run the58 withheld cases,

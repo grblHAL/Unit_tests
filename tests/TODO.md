@@ -689,3 +689,16 @@ Keep the existing regression and its callback/motion assertions pending that
 contract review; no new expected-failure or sanitizer allowance is added.
 Evidence: build-asan/batch72-current-core-available.xml,
 boot.alarm_locked_settings_upload_demarcates_batch_and_keeps_motion_blocked.
+
+
+## Expression dispatcher gaps that require invalid private enums
+
+**Reviewed:** 2026-10-22, clean Terje fab8d1c. The old partial map marks
+ngc_expr.c115-116,189-190,292-293 and337-341 as missing. These are private
+binary/unary/precedence defaults: read_operation/read_unary reject unknown text
+before dispatching a valid enum. Do not inject enum values into private helpers.
+The execute_unary EXISTS no-op at250-252 is bypassed by read_unary's dedicated
+EXISTS evaluation path. Existing public EXISTS and unknown-operator controls,
+including a malformed second operator with queued motion, remain registered.
+Keep these defensive/unemitted paths in raw reporting; revisit if public dispatch
+changes. This is reachability evidence, not a request to remove source lines.
