@@ -1,3 +1,38 @@
+# Flow-control error cumulative gate and confirmed backlash wait gain - 2026-10-22
+
+Full4,160-case ASan/UBSan passes82.19s:4,144 clean,16 known,0 failures/skips.
+Build/test/strict all0 in batch72-flow-errors-gate.json. Unknowninitial/barelabel
+rejection andnumericSUB recordOOM/retry validated together. No allowances/CORE
+edits. Localgroup awaits delivery/hosted gain.
+
+Allfive jobs on39828039606 at4616165 terminalsuccess. Artifacts12447802567/
+12447773947 lock461616550703e3c95f6a342f9853a737b43464da/source68eba79/
+corefilter;all stages0,4,156/4,140clean/16known/0/0.17,304/17,684lines97.85%,
+12,116/13,754branches88.09%:+2lines/+2branches versus2b0cc0c. Newlycovered
+machine_limits587 andmotion_control163 confirm split-rate rejection andfirstpoll
+backlashwait target.380 raw lines remain. README/knownsnapshot updated. Later
+091fc1c39829068251 compilerpending;73a2abf39829941823 running.
+
+# Numeric SUB definition allocation failure and retry - 2026-10-22
+
+New actualfile/publicparser O10SUB case rejects scoped recordcalloc,returnsOOM,
+retains exact file/reader with no close or callscope. Retry defines successfully,
+bodyassignment staysskipped,ENDSUB restores execution and nextassignmentupdates
+parameter42to43. Properfile cleanup. Reuses existing flow/calloc fixtures; narrow
+pertest calloc linker option alongside namedmacro counterpart. Targets flowctrl659.
+Focused sanitizer passes0.37s. Total4,160,no allowances/CORE edits. Grouped with
+unknownkeyword controls pending cumulative validation and measured gain.
+
+# Unknown O-code initial and bare label rejection - 2026-10-22
+
+Extended existing misspelled keyword/recovery case with O10XYZ andO10Z[1],
+exercising general unknown-initial syntaxerror atngc_flowctrl199-200. Existing
+parameter42/noalarm/noabort/emptyplanner controls retained and validIF assignment
+stillrecovers. BareO10 is rejected earlier by mainparser asUnusedWords,so distinct
+assertion follows that actual contract rather than classifying it asflowkeyword.
+Focused sanitizer passes0.35s. No new cases/allowances/CORE edits,total4,159.
+Local batch begins; cumulative gate and measured gainpending.
+
 # Default driver callbacks cumulative gate - 2026-10-22
 
 Full4,159-case ASan/UBSan passes77.95s:4,143 clean,16 known,0 failures/skips.
