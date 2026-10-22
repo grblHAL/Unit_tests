@@ -1,106 +1,62 @@
-# Current batch72 delivery checkpoint - 2026-10-22
+# Current batch72 verification checkpoint - 2026-10-22
 
-This checkpoint supersedes historical snapshots. The persistent full-supported-
-coverage goal remains ACTIVE; a passing test group or draft PR is not completion.
+The full-supported CORE line/branch objective remains ACTIVE and unproven.
+This checkpoint supersedes historical snapshots; do not substitute test counts
+or partial reports for completion evidence.
 
-- Local header follow-up adds one RGB packing case and strengthens the existing
-  device-classification case. Red/blue masked byte updates preserve green and
-  payload guards; mixed channel capabilities and missing-output checks cover
-  genuine RGB helper conditions. Both cases pass ASan/UBSan plus strict summary
-  in0.34s: build-asan/batch72-rgb-header.xml and batch72-rgb-header-strict.log.
-  New local total4,089 /87 additions; this follow-up is not part of the previous
-  cumulative/hosted checkpoint. No new exceptions or percentage claim. The only
-  CORE fault-axis caller is range-guarded; TODO records that remaining fallback
-  reachability without forcing unrelated pin values. RGB-clear remains deferred.
-- Reporting dependency135e8f5 is now integrated into coverage-batch-72; PR27
-  remains an independent draft against upstream. Runtime PROGRESS/TODO evidence
-  was preserved while resolving documentation-only merge conflicts. The current
-  summary now displays header rows; CI triggers, source filters and XML metrics
-  are unchanged. Integrated Python helpers59/59 PASS in5.481s; evidence
-  build-asan/batch72-integrated-reporting-tests.log.
-- Separate reporting draft PR27 is pushed/attached:
-  https://github.com/grblHAL/Unit_tests/pull/27, coverage-header-inventory135e8f5.
-  Live filter already includes .h files, but the existing summary hides them and
-  says58 of52 files. The isolated fix inventories C+headers, preserves measured
-  rows with no XML children, and clarifies declaration-only headers. All58 helper
-  tests pass5.390s; archived-PARTIAL output shows six header rows /58 of114 files
-  without changing metrics or status. Runtime work remains on coverage-batch-72;
-  PR27 is not merged upstream; its dependency is integrated here. No new
-  runtime validation is claimed by this reporting-only merge.
-  Evidence: build-asan/header-inventory-python-tests.log and
-  header-inventory-review/summary.md, validation.json. Reconcile PR27 before the
-  next useful hosted report; do not redo the stale .c-only-filter TODO.
-- The three task/IRQ cases are delivered in PR26 at28ab350 (working tree clean).
-  They remain outside the earlier e95eef7 cumulative gate.
-- Local follow-up beyond the delivered checkpoint adds three public task/IRQ cases.
-  Pending interrupt insertion before masking preserves due/new/later work (PASS);
-  cancelling a different future retry at the same boundary also passes.
-  ISR-safe cancellation of the selected due task crashes at grbllib.c595 when the
-  foreground calls its cleared callback. Clean source/API contracts and the same
-  IRQ insertion control were checked; KNOWN_BUGS has reproduction and cleanup.
-  No new expected-failure or sanitizer allowance. Focused2-case gate is RED,
-  build-asan/batch72-task-irq.xml in0.59s. Future-retry control1/1 passes0.32s, batch72-task-irq-control.xml.
-  Delivered total4,088 /86 additions; these3
-  are outside the last cumulative/hosted checkpoint. Deliver them in the existing
-  draft as a source-fault reproduction boundary, without repeating the unchanged
-  4,027-case gate: no shared fixture or firmware implementation was changed. Do not rerun the unchanged
-  broad gate solely to reproduce this new, precisely scoped source fault.
-- Branch coverage-batch-72; existing draft PR26:
-  https://github.com/grblHAL/Unit_tests/pull/26. All original local commits are
-  preserved; upstream/master4d73b8b (merged PR24/25) is reconciled in28083db.
-- Runtime-validated harness e95eef7f3fa7ebf33df50213a0508110ef6d95aa;
-  clean ignored CORE fab8d1c248990f53f13a444018fbb3ee353061dd. Remote Terje
-  master rechecked before this gate and still matches. No CORE changes or delivery.
-  The following delivery checkpoint changes documentation only.
-- 4,085 registered tests;83 additions beyond merged upstream. Twelve additions
-  since PR26's prior head all pass this cumulative gate: analog queue/servo
-  boundaries; malformed integer and description allocation recovery; four actual
-  sleep-parking workflows; encoder-driven G33/G95 hold/resume; completed manual
-  tool jog and full-boot sender jog cancellation/acknowledgement.
-- One cumulative all-target build attempts the current supported configurations.
-  It fails ONLY in CORE gcode.c2920/3364/3373/5036, using the removed direct
-  ccomp_off member under CUTTER_COMP_ENABLE. The58 linked cutter tests remain
-  registered but cannot be freshly built. They are explicitly withheld from this
-  runtime gate; stale binaries are never counted. No coverage filters changed.
-- Cumulative ASan/UBSan:4,027 buildable cases in62.72s;4,015 clean passes,
-  two known reproductions,10 actual failures. Strict summary FAIL. The exact
-  failure set is unchanged; all12 follow-up cases are present and pass.
-  Evidence under build-asan/: batch72-delivery-build.log, batch72-delivery.xml,
-  batch72-delivery-tests.log, batch72-delivery-strict.log,
-  batch72-delivery-status.json and batch72-delivery-validation.json.
-- Remaining failures: four embedded/RAM directory rejections, regular-file
-  directory rejection, two root returns, optional-getcwd sanitizer crash,
-  post-format relative routing, and alarm-upload closing demarcation after
-  rejected G91. Confirmed source faults are in KNOWN_BUGS; the alarm/error policy
-  question is in TODO. One sanitizer failure remains unsuppressed. Existing
-  expected failures are only storage version retry policy and frontend getcwd.
-- Tests use source-detected HOST_PARSER_FLAGS, advertised DAC resolution, explicit
-  PWM/servo mode, required driver callbacks and stable getcwd snapshots. Allocation
-  recovery follows Terje's restored-base/previous-directory policy. Obsolete PWM
-  fraction and unexpected-percent exceptions were removed after ordinary passing
-  regressions; the original correct assertions remain.
-- Focused evidence: batch72-analog-followup.xml2/2 in0.32s;
-  batch72-settings-recovery.xml2/2 in0.29s; batch72-sleep-parking.xml4/4 in0.37s;
-  batch72-sync-hold.xml2/2 in0.34s; batch72-tool-jog.xml2/2 in0.32s. Initial
-  fixture callback/order errors were repaired, without new defect claims or allowances.
-- Last hosted39373002337 remains terminal FAILURE at c9941ca/CORE7a6a432:
-  GCC/Clang both ran4,052 cases, all50 then-new cases pass, and exactly98
-  sanitizer crashes identify the old strutils.c393 fault. Source/harness locks and
-  diagnosis artifacts were verified; batch72-integrated-hosted-verification.json.
-- Coverage is still historical PARTIAL c9941ca/7a6a432:16,916/17,645 lines95.87%,
-  11,644/13,696 branches85.02%. No current-source gain or green baseline claimed.
-  Current compiler/runtime failures prevent full coverage verification. Badges
-  retain the earlier successful measurement; reporting helpers are unchanged.
-- CI remains manual-only with reusable callers intact. No redundant dispatch
-  against unchanged known-unbuildable CORE. The existing recovery automation card
-  was inspected; scheduling/target details were not exposed, so no unverified
-  scheduling change or competing runner was created.
-- Next: continue supported gaps while preserving this source/evidence checkpoint.
-  Recheck Terje at a deliberate compatibility boundary. Once CORE builds, validate
-  the58 withheld cases and affected regressions, then obtain one useful exact-head
-  hosted GCC/Clang/coverage checkpoint. Keep raw defensive/unexposed paths visible;
-  the settings/expression and unfinished-feature audits in TODO forbid private
-  state forcing or duplicate aliases. Plasma material integration stays plugin-scoped.
+- Branch coverage-batch-72 preserves all prior work and contains4,089 registered
+  cases /87 additions beyond merged upstream. Existing draft PR26 receives this
+  delivery: https://github.com/grblHAL/Unit_tests/pull/26. Never merge PRs here.
+- Clean ignored CORE and freshly checked Terje master are both
+  fab8d1c248990f53f13a444018fbb3ee353061dd. No firmware changes, commits or PRs.
+- Independent reporting PR27 at135e8f5 remains draft:
+  https://github.com/grblHAL/Unit_tests/pull/27. Its dependency is integrated into
+  this branch ind58f2bc; only documentation conflicts needed resolution. Current
+  integrated reporting helpers59/59 PASS in5.481s, no CMake/filter/trigger changes.
+  Evidence: build-asan/batch72-integrated-reporting-tests.log.
+- Source filter already includes .c/.h. The corrected summary displays header
+  rows and uses the same file types for numerator/denominator. Archived PARTIAL
+  data has58 measured files /114 C-header inventory files, including six measured
+  headers; original XML metrics/status remain unchanged. Declaration-only headers
+  need not emit executable instrumentation. Evidence: header-inventory-review/.
+- Last cumulative runtime harness e95eef7f3fa7ebf33df50213a0508110ef6d95aa:
+  4,027 buildable ASan/UBSan cases in62.72s;4,015 clean passes, two known
+  reproductions,10 actual failures; strict FAIL. All12 then-new follow-up cases
+  pass, with exactly the prior failure set. Evidence: batch72-delivery.xml,
+  batch72-delivery-validation.json, batch72-delivery-status.json and related logs.
+- The58 cutter-linked cases remain registered but unavailable: current CORE
+  gcode.c2920/3364/3373/5036 still uses removed direct ccomp_off fields. The
+  all-target build fails only there. No stale cutter binaries count as validation.
+- Later task/IRQ group: insertion and future-retry cancellation controls pass;
+  selected-due-task cancellation crashes at grbllib.c595. Public ISR APIs and the
+  driver IRQ-mask interleaving were checked. The new source fault is documented
+  and unsuppressed. Evidence: batch72-task-irq.xml (one pass/one crash) and
+  batch72-task-irq-control.xml (one pass). These are outside the cumulative gate.
+- Latest RGB follow-up adds red/blue masked-byte preservation and strengthens
+  mixed-capability/missing-output checks. Both ASan/UBSan and strict checks pass
+  in0.34s: batch72-rgb-header.xml / batch72-rgb-header-strict.log. This does not
+  establish fresh whole-suite or coverage success.
+- Latest observations retain11 runtime failures across the cumulative and focused
+  evidence, including two unsuppressed sanitizer faults. Two justified exceptions
+  remain: storage version retry policy and frontend getcwd. The alarm-upload
+  closing-demarcation contract is in TODO; other confirmed faults are in KNOWN_BUGS.
+  Do not weaken assertions or add broad allowances to obtain a green result.
+- Last hosted39373002337 is terminal FAILURE at c9941ca/CORE7a6a432, with98 old
+  string-allocation sanitizer crashes. Last coverage remains failed-execution
+  PARTIAL:16,916/17,645 lines95.87%,11,644/13,696 branches85.02%. It is older
+  source/harness evidence, not a passing baseline or a current coverage gain.
+- Completion audit: build-asan/goal-completion-audit.json checks live clean source,
+  actual CTest registration, source build failures, runtime artifacts, header
+  scope and workflow/filter preservation. Full supported builds, sanitizer success
+  and matching exact-head hosted coverage are NOT proven. No current live job is
+  being awaited; no unchanged failing build/CI run was restarted.
+- Next required state change is clean Terje source resolving the build and memory/
+  runtime faults, plus maintainer decisions for documented unsettled contracts.
+  Then run affected regressions and58 withheld cases, one complete sanitizer/
+  strict gate, and one exact-head hosted GCC/Clang/coverage checkpoint. Rank the
+  remaining supported gaps from that fresh report. Current stale/failed coverage
+  cannot justify endless extra aliases or private-state forcing. Full scope is
+  retained; implementation gaps and guarded branches remain explicit in TODO.
 
 Historical entries below may describe old branches, completed runs or superseded pauses.
 
