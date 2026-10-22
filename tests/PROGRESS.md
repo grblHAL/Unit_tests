@@ -3,6 +3,19 @@
 This checkpoint supersedes historical snapshots. The persistent full-supported-
 coverage goal remains ACTIVE; a passing test group or draft PR is not completion.
 
+- Separate reporting draft PR27 is pushed/attached:
+  https://github.com/grblHAL/Unit_tests/pull/27, coverage-header-inventory135e8f5.
+  Live filter already includes .h files, but the existing summary hides them and
+  says58 of52 files. The isolated fix inventories C+headers, preserves measured
+  rows with no XML children, and clarifies declaration-only headers. All58 helper
+  tests pass5.390s; archived-PARTIAL output shows six header rows /58 of114 files
+  without changing metrics or status. Runtime work remains on coverage-batch-72;
+  PR27 is not merged/integrated here, and no new runtime validation is claimed.
+  Evidence: build-asan/header-inventory-python-tests.log and
+  header-inventory-review/summary.md, validation.json. Reconcile PR27 before the
+  next useful hosted report; do not redo the stale .c-only-filter TODO.
+- The three task/IRQ cases are delivered in PR26 at28ab350 (working tree clean).
+  They remain outside the earlier e95eef7 cumulative gate.
 - Local follow-up beyond the delivered checkpoint adds three public task/IRQ cases.
   Pending interrupt insertion before masking preserves due/new/later work (PASS);
   cancelling a different future retry at the same boundary also passes.
@@ -11,7 +24,7 @@ coverage goal remains ACTIVE; a passing test group or draft PR is not completion
   IRQ insertion control were checked; KNOWN_BUGS has reproduction and cleanup.
   No new expected-failure or sanitizer allowance. Focused2-case gate is RED,
   build-asan/batch72-task-irq.xml in0.59s. Future-retry control1/1 passes0.32s, batch72-task-irq-control.xml.
-  Local total4,088 /86 additions; these3
+  Delivered total4,088 /86 additions; these3
   are outside the last cumulative/hosted checkpoint. Deliver them in the existing
   draft as a source-fault reproduction boundary, without repeating the unchanged
   4,027-case gate: no shared fixture or firmware implementation was changed. Do not rerun the unchanged
