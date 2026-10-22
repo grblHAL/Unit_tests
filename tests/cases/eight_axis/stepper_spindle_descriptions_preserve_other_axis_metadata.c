@@ -9,5 +9,6 @@ int main(void)
     CHECK(strcmp(grbl.on_setting_get_description(Setting_AxisAcceleration + A_AXIS), "Acceleration in revolutions/sec^2.") == 0);
     CHECK(strcmp(grbl.on_setting_get_description(Setting_AxisMaxTravel + A_AXIS), "This setting is ignored for stepper spindles.") == 0);
     CHECK(strcmp(grbl.on_setting_get_description(Setting_AxisStepsPerMM + X_AXIS), "original description") == 0);
+    CHECK(strcmp(grbl.on_setting_get_description((setting_id_t)(Setting_AxisStepperCurrent + A_AXIS)), "original description") == 0);
     return EXIT_SUCCESS;
 }

@@ -1,3 +1,50 @@
+# Metadata/report cumulative gate and green coverage snapshot - 2026-10-22
+
+Full4,140-case ASan/UBSan suite passes59.38s:4,124 clean,16 documented
+expected failures,0 failures/skips; build/test/strict all0 in
+batch72-metadata-report-gate.json. Includes bound-spindle metadata provider
+fallbacks and M99 callback report. CORE clean/latest remote remains68eba79.
+No new allowances. Current local group awaits delivery/hosted gain.
+
+Allfive individual jobs on39816875087 are terminalsuccess. Previously verified
+artifact locks/stages now support publishing its17,277/17,684 lines97.70% and
+12,085/13,754 branches87.87%;407 raw uncovered lines. Updated README and known
+gap snapshot. Exact newer964457f hosted run39818343521 still running.
+
+# M99 callback modal reporting - 2026-10-22
+
+New report case registers normal macro-return provider and executes M99. Callback
+sees ProgramFlow_Return, requests public modal report, verifies complete GC frame
+with spindle-off state and no invented M99 modal word; parser resumes Running
+and callback fires once. Targets report848-849 default using valid transient
+program-flow state rather than invalid enum injection. Focused sanitizer passes
+0.27s. Total4,140,no new allowances/CORE edits; cumulative gate pending.
+
+# Stepper spindle optional metadata providers - 2026-10-22
+
+New eight-axis case binds actual spindle motor with optional prior unit/description
+hooks unset. Bound step-resolution metadata is supplied; bound driver-current
+and unbound-axis metadata both returnNULL without dereferencing missing provider.
+Focused ASan/UBSan passes0.31s. Total4,139,no allowances/CORE edits. Grouped
+with previous-provider fallback extensions; pending cumulative gate/hosted gain.
+
+# File reader fallback reachability audit - 2026-10-22
+
+Remaining stream_file.c72 is a no-file fallback in the private reader. Reviewed
+normal redirect close: restores saved reader before restoring file stream; existing
+close_restores_input verifies final serial reader and close count. No supported
+workflow identified to reach fallback; recorded source evidence in TODO without
+private callback manipulation or fake failure. Stepper metadata test group remains
+local pending cumulative validation. No CORE changes.
+
+# Bound stepper-spindle driver metadata fallback - 2026-10-22
+
+Extended existing eight-axis metadata cases with driver motor-current setting
+on the spindle-bound A axis. Unit and description callbacks preserve the previous
+provider values rather than substituting spindle units. Targets stepper2.c149-150
+and191-192 defaults using valid driver axis-setting identifier. Focused sanitizer
+2/2 passes0.35s. No new cases/allowances/CORE edits; cumulative validation pending.
+
 # Motion recovery cumulative gate and prior batch coverage - 2026-10-22
 
 Full4,138 ASan/UBSan passes58.58s; build/test/strict all0 recorded in

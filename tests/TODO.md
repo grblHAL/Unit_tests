@@ -928,3 +928,14 @@ returns that error before this guard. The only explicit NaN assignment immediate
 above is limited to UserMCode_NoValueWords, excluded by the guard. Existing custom
 M-code normal-value and valueless-word tests cover supported contracts. Retain raw
 coverage; do not mutate parser locals or add fake expected failures for this arm.
+
+
+## File-reader no-file fallback audit - 2026-10-22
+
+CORE68eba79 stream_file.c72 returns SERIAL_NO_DATA if stream_read_file is called
+without hal.stream.file. Normal stream_redirect_close restores stream->read before
+stream_set_file restores parent file/reader; final close restores serial reader.
+Existing close_restores_input checks the handoff and file close count. No supported
+file workflow identified that leaves this reader installed without a file. Keep raw
+coverage; do not reinstall a detached reader or clear its file solely for coverage.
+Revisit if a plugin-supported stream replacement workflow establishes reachability.

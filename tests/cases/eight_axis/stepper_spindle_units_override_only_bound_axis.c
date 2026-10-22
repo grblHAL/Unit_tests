@@ -9,5 +9,6 @@ int main(void)
     CHECK(strcmp(grbl.on_set_axis_setting_unit(Setting_AxisAcceleration, A_AXIS), "rev/sec^2") == 0);
     CHECK(strcmp(grbl.on_set_axis_setting_unit(Setting_AxisMaxTravel, A_AXIS), "--") == 0);
     CHECK(strcmp(grbl.on_set_axis_setting_unit(Setting_AxisStepsPerMM, X_AXIS), "original unit") == 0);
+    CHECK(strcmp(grbl.on_set_axis_setting_unit(Setting_AxisStepperCurrent, A_AXIS), "original unit") == 0);
     return EXIT_SUCCESS;
 }
