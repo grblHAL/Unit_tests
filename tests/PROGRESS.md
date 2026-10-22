@@ -1,3 +1,15 @@
+# Verified hosted checkpoint39779207602 - 2026-10-22
+
+All five jobs terminal success: source, GCC, Clang, coverage, CI diagnosis.
+Exact published harness97bb6aa5b379732701e117ed5caa73b7d1a40d5c / clean CORE
+68eba7906ba60d66c8b55c4adc90cd5e85b5a828 / filter core C+headers verified
+against downloaded source lock.4,102 registrations:4,091 clean,11 documented
+expected failures,0 skipped/unexpected failures. Coverage17,185/17,684 lines
+97.18%;11,928/13,754 branches86.72%. ReadMe badges now reference this successful
+baseline; no comparable-source gain claim. PR26 body updated with exact evidence.
+Do not merge automatically. Current two local bug commits remain outside that
+head and need a future combined delivery; goal remains active and incomplete.
+
 # Local material-comment bug and verified coverage report - 2026-10-22
 
 Previous turn made progress: committed wrong-directory unlink reproduction.
