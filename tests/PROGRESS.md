@@ -1,3 +1,66 @@
+# Settings branch batch cumulative gate - 2026-10-22
+
+Full4,132-case ASan/UBSan build/test/strict passes(all0):4,117 clean plus15
+known reproductions,0 failed/skipped. Evidence:build-asan/batch72-settings-
+branches-gate.json plus delivery XML/log and strict log. One new mixed8-axis
+pulse setting scenario, three existing Boolean inversion/acceleration/jerk
+scenarios extended. Metadata default reachability documented without exclusions.
+No CORE edits/new allowances; clean upstream68eba79 unchanged. Deliver grouped.
+
+Hosted39808684184 coverage/report locks verified0f2406d/68eba79/filter; all
+stages0,4,131/4,116 clean/15 known/no failed/skipped.17,268/17,684 lines97.65%,
+12,032/13,754 branches87.48%,+10/+11 same-source. New lines:machine_limits93/
+94/312/842 anddelta236/237/259/260/591/602. GCC/Clang still running at latest
+check; no full hosted/current settings-head coverage claim. Objective incomplete.
+
+# Override reset before backup exists - 2026-10-22
+
+Extended existing acceleration and jerk restore scenarios with public zero reset
+before first positive override. Configured values12345 acceleration/216000 jerk
+remain unchanged; subsequent multiple overrides and restoration assertions remain.
+Grouped ASan/UBSan2/2 passes0.35s. Targets missing false branches of backup-valid
+checks settings578/601, no private backup manipulation/new executables/allowances.
+Total4,132 remains. Local batch now one mixed-axis case/three expanded legacy/
+override scenarios plus metadata audit, ready for substantial cumulative gate.
+CORE unchanged; hosted coverage gain not yet measured for local additions.
+
+# Compatibility Boolean inversion round trips - 2026-10-22
+
+Branch audit found partial settings646/654 despite covered lines. Expanded
+existing compatibility10 Boolean metadata case to write1 then0 for step-enable
+and limit inversion, verify exact axis-mask translation and normalized getter
+values in both directions, then checksummed persisted values. Original invalid2
+assertion retained. ASan/UBSan1/1 passes0.28s. No duplicate executable, CORE
+edit or allowance;4,132 total. Local batch one new/eight-axis setting case and
+one expanded legacy scenario plus metadata reachability audit; keep grouped.
+
+All five individual jobs39807024328 are now terminal success,d0b2f90/68eba79.
+Existing locked artifacts verify17,258/17,684 lines97.59%,12,021/13,754 branches
+87.40%,4,129 total/4,114 clean/15 known/no failed/skipped. Refreshed badges/gap
+summary,426 raw uncovered lines. Newer39808684184 source passed, compiler/
+coverage jobs live at latest check; no current-head green claim.
+
+# Mixed eight-axis pulse-width configuration - 2026-10-22
+
+New supported8-axis case uses public rotary-mask and pulse-width settings. With
+8 runtime axes and mixed rotary mask40,8.5us pulse setting succeeds, emits one
+change notification and persists exact width/mask in checksummed NVS. Focused
+ASan/UBSan passes0.30s. Existing3-axis pulse tests do not compile the N_AXIS>3
+guard; this targets settings805 without changing source/configuration variants.
+validate_pulse_width rate computation is commented out upstream; no claim of
+physical timing validation or invented failure. Total4,132 cases, no allowances.
+Keep local metadata/settings batch for cumulative gate/push. CORE unchanged.
+
+# Metadata guard reachability audit - 2026-10-22
+
+Classified report1955-1956: complete declared datatype enum is handled after
+Int8/Int16 normalization to Integer. Recorded exact enum/conversion/switch source
+in TODO and coverage-gap table. No invalid enum injection, fake WILL_FAIL or
+coverage exclusion. This does not classify other residual lines as unavailable.
+CORE unchanged. Hosted39807024328 latest individual endpoints:source,coverage,
+GCC succeeded;Clang still running. Newer39808684184 remains separate current
+head validation; no claim of merge readiness or completed objective.
+
 # Limits/homing/delta cumulative gate - 2026-10-22
 
 Full4,131-case ASan/UBSan build/test/strict passes(all0)61.76s:4,116 clean plus15

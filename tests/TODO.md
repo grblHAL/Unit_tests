@@ -870,3 +870,14 @@ locating while retaining the seek reference, disables homing for that axis, or
 must be rejected by settings. Do not invent final machine coordinates or force a
 private homing phase to cover this branch. Existing zero-seek/locate-count tests
 cover their established contracts. This is a source concern, not a reproduced bug.
+
+## Tab-setting metadata default datatype arm
+
+2026-10-22, CORE68eba7906ba60d66c8b55c4adc90cd5e85b5a828. report.c1955-1956
+is a defensive default after setting_datatype_to_external. settings.h1014-1026
+lists Bool, Bitfield, XBitfield, RadioButtons, AxisMask, Integer, Decimal, String,
+Password, IPv4, Int8 and Int16. settings.c3360-3372 maps Int8/Int16 to Integer;
+report.c1916-1952 explicitly handles every remaining valid type. Reaching default
+would require an out-of-enum metadata value. Do not register malformed metadata
+or call a private printer merely to cover it. Keep both lines in raw coverage;
+revisit when a new valid setting datatype is introduced.
