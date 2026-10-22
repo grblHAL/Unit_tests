@@ -3,6 +3,19 @@
 This checkpoint supersedes historical snapshots. The persistent full-supported-
 coverage goal remains ACTIVE; a passing test group or draft PR is not completion.
 
+- Local follow-up beyond the delivered checkpoint adds three public task/IRQ cases.
+  Pending interrupt insertion before masking preserves due/new/later work (PASS);
+  cancelling a different future retry at the same boundary also passes.
+  ISR-safe cancellation of the selected due task crashes at grbllib.c595 when the
+  foreground calls its cleared callback. Clean source/API contracts and the same
+  IRQ insertion control were checked; KNOWN_BUGS has reproduction and cleanup.
+  No new expected-failure or sanitizer allowance. Focused2-case gate is RED,
+  build-asan/batch72-task-irq.xml in0.59s. Future-retry control1/1 passes0.32s, batch72-task-irq-control.xml.
+  Local total4,088 /86 additions; these3
+  are outside the last cumulative/hosted checkpoint. Deliver them in the existing
+  draft as a source-fault reproduction boundary, without repeating the unchanged
+  4,027-case gate: no shared fixture or firmware implementation was changed. Do not rerun the unchanged
+  broad gate solely to reproduce this new, precisely scoped source fault.
 - Branch coverage-batch-72; existing draft PR26:
   https://github.com/grblHAL/Unit_tests/pull/26. All original local commits are
   preserved; upstream/master4d73b8b (merged PR24/25) is reconciled in28083db.

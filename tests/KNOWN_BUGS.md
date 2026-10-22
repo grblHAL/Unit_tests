@@ -126,3 +126,34 @@ No expected-failure or sanitizer allowance is added.
 selected mount consistent when resetting the formatted drive to its root.
 Retain the relative backend operation assertion and remove this entry once it
 passes on clean source under sanitizers.
+
+## Interrupt cancellation of a selected delayed task calls a cleared callback
+
+**Known since:** 2026-10-22, clean Terje
+`fab8d1c248990f53f13a444018fbb3ee353061dd`; remote master rechecked unchanged.
+
+[task_execute](https://github.com/terjeio/grblHAL_core/blob/fab8d1c248990f53f13a444018fbb3ee353061dd/grbllib.c#L573-L595)
+selects a due queue entry before masking interrupts. An interrupt can call the
+ISR-safe [task_delete](https://github.com/terjeio/grblHAL_core/blob/fab8d1c248990f53f13a444018fbb3ee353061dd/grbllib.c#L647-L666)
+for that still-queued entry. Deletion unlinks it and clears its callback via
+task_free. The foreground resumes with the cached entry, copies its now-NULL
+callback and calls it at line595, producing an ASan access violation.
+
+**Regression:** [interrupt cancellation](cases/grbllib/interrupt_cancelling_due_task_before_masking_preserves_later_work.c).
+**Passing controls:** [interrupt insertion](cases/grbllib/interrupt_arrival_before_masking_preserves_due_and_new_delayed_work.c)
+and [future retry cancellation](cases/grbllib/interrupt_cancelling_future_retry_preserves_selected_due_work.c).
+The same driver IRQ-mask hook models a pending interrupt just before masking;
+all scenarios use only public ISR-safe task APIs. No private queue access or
+firmware patch is used. The cancellation case retains correct no-callback and
+later-work assertions; there is no WILL_FAIL or sanitizer diagnostic allowance.
+Evidence: build-asan/batch72-task-irq.xml (insertion passes; cancellation crashes
+at grbllib.c595), plus batch72-task-irq-build.log. The future-retry cancellation
+control passes in0.32s: batch72-task-irq-control.xml. This is a host-controlled
+single-core interrupt interleaving, not a claim of reproduction on a board.
+
+**Suggested fix for Terje (not applied):** select/remove the due task and snapshot
+its callback/data atomically under the IRQ mask, or revalidate a cached candidate
+under the mask before dispatch. Account for cancellation and pool-slot reuse;
+merely checking the old queue link does not establish callback lifetime. Keep
+callbacks outside the critical section. Retain the regression and both controls, run the task
+module and full sanitizers, then remove this entry when clean source passes.
