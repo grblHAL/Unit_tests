@@ -12,6 +12,12 @@ goal is ACTIVE in the current chat. Passing checkpoints do not complete it.
   build-asan/batch72-analog-followup.xml. No new exceptions. Local total4,075 /
   73 batch additions; these2 are not part of the last broad/hosted checkpoint.
   Accumulate the next substantial group here before another push/CI checkpoint.
+- Further local settings group: malformed core integer values preserve the
+  motor-enable callback state and saved mask; public plugin description allocation
+  failure preserves metadata and succeeds on retry. Both pass ASan/UBSan in0.29s,
+  build-asan/batch72-settings-recovery.xml. No exceptions or shared-header changes.
+  Local total4,077 /75 additions; four locally validated cases beyond PR26's head.
+  Settings metadata reachability audit in TODO avoids forcing dormant dispatches.
 - Branch coverage-batch-72 preserves all eight original unpushed commits.
   Reconciled upstream/master4d73b8b (merged PR24/25) in28083db; no duplicate
   merged dependency changes remain. Existing handoff edits were preserved inda34ddf.

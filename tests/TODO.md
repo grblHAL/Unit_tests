@@ -702,3 +702,20 @@ EXISTS evaluation path. Existing public EXISTS and unknown-operator controls,
 including a malformed second operator with queued motion, remain registered.
 Keep these defensive/unemitted paths in raw reporting; revisit if public dispatch
 changes. This is reachability evidence, not a request to remove source lines.
+
+
+## Settings dispatch cases not wired by public metadata
+
+**Reviewed:** 2026-10-22, clean Terje fab8d1c. The saved partial map lists
+settings.c2181-2187 and2198-2204 in is_setting_available. DoorSpindleOnDelay,
+DoorCoolantOnDelay and AutoReportInterval registrations pass NULL for
+is_available, so ordinary queries do not call those switch cases. TimeZoneOffset
+registration is commented out. The get_int SteppersEnergize case at1789-1791
+is also unused: the registered setting routes reads to get_axis_mask instead.
+
+Do not call private setters/getters with unrelated IDs or replace metadata just
+to enter these cases. Keep them in the raw source denominator and revisit if
+registrations change. Existing public motor-hold write/read/persistence tests
+remain; malformed integer rejection now also verifies driver and stored-state
+preservation followed by a successful retry. Description allocation recovery
+is tested through the ordinary registered plugin query.
