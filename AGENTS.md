@@ -29,15 +29,110 @@ Terje alone fixes CORE: never modify, commit, push or open PRs for firmware.
 
 ## Start or resume
 
-Read [tests/PROGRESS.md](tests/PROGRESS.md), [ReadMe.md](ReadMe.md), and
+Use the installed `ponytail` skill in full mode unless the user overrides it:
+read `C:/Users/User/.codex/skills/ponytail/SKILL.md`. Read
+`C:/Users/User/.codex/RTK.md` and explicitly use RTK for supported shell commands,
+including PowerShell (`rtk git status`, `rtk rg`). Run unsupported commands
+normally; use `rtk bypass` only when condensed output is unusable.
+
+Read the current checkpoint at the top of [tests/PROGRESS.md](tests/PROGRESS.md), [ReadMe.md](ReadMe.md), and
 [tests/KNOWN_BUGS.md](tests/KNOWN_BUGS.md). Inspect current Git status, tested core revision,
 latest test outputs and CI. Progress snapshots can become stale; commands and
 current files are authoritative. Keep `tests/PROGRESS.md` updated at delivery
 boundaries with evidence, next work and any unfinished changes.
+Search historical progress only for a specific question; do not load the whole
+old chat or archived handoffs on every resumption.
 
 The repository root contains `CMakeLists.txt`, `ReadMe.md`, `tests/`, and the
 ignored ordinary `core` checkout. Parent workspace scratch files are optional local conveniences,
 not required project dependencies. Never assume a new machine has them.
+
+The maintained local checkout is
+`C:/Users/User/Documents/Codex/2026-10-08/https-github-com-petervanderwalt-unit-tests/work/Unit_tests`.
+Its `origin` is `petervanderwalt/Unit_tests`; `upstream` is `grblHAL/Unit_tests`.
+Inspect branch status and fetch both before a new delivery/rebase. Preserve
+unpushed commits, compare merged PRs and avoid duplicate PR diffs. Do not reset,
+delete or recreate a branch based only on an old handoff.
+
+If the user requests sustained coverage, inspect `get_goal`; create a goal only
+when authorized and none exists. A new chat does not inherit the old goal or
+automation. Check the existing `overnight-core-coverage` recovery automation
+before changing scheduling; never create competing runners or assume an old
+chat is still working. Respect explicit pauses and usage limits.
+
+## Maintain these instructions
+
+Keep `AGENTS.md` up to date as part of the work. When a lasting user decision,
+toolchain requirement, fixture contract or workflow changes, update the relevant
+rule here and remove contradictions. Do not merely append another dated rule.
+Verify paths and commands before documenting them; flag unverified assumptions.
+
+Keep volatile branch/PR/run state, source SHAs, coverage counts, process handles,
+validation evidence and the next action in the TOP checkpoint of
+`tests/PROGRESS.md`. Replace stale current-state statements at each useful
+checkpoint and before handing work to another chat. Historical entries must not
+override current instructions. Keep README instructional and this file focused
+on reusable rules, rather than accumulating batch reports again.
+
+## Terje's CORE and when to refresh it
+
+Coverage work normally targets `https://github.com/terjeio/grblHAL_core`, branch
+`master`, unless the user selects a different repository/ref/PR. The upstream
+firmware is `https://github.com/grblHAL/core`; do not assume they are synchronized.
+The ignored `core/` directory is an ordinary independent Git checkout, NOT a
+tracked submodule. Verify its remote, cleanliness and HEAD before using it.
+Do not restore submodules or pin the default source registry to a transient SHA.
+
+- Check Terje's latest ref when starting/resuming after an interruption, before
+  classifying a new defect, when the maintainer reports fixes/refactors, and
+  before a substantial delivery. Do not fetch or switch sources per test.
+- Record the exact selected SHA and keep it stable throughout a batch/checkpoint
+  so focused/full/hosted results refer to the same code. If master advances
+  mid-batch, preserve the evidence and perform a deliberate compatibility pass.
+- Switching a CLEAN checkout to an unmodified upstream revision for testing is
+  allowed. Editing firmware is not. Never overwrite dirty source, discard changes
+  or test an agent-patched tree. No CORE commits, pushes or PRs.
+- When CORE changes, first run relevant compatibility and known-regression cases.
+  Adapt fixtures only for confirmed intended API/behavior changes. Remove fixed
+  exceptions/bug entries with evidence; do not assume old failures still exist.
+  Retain correct assertions and defer firmware fixes to Terje.
+- Use CI `source_repository` and `source_ref`/`source_pr` inputs for the selected
+  source; verify source-lock AND harness SHA in artifacts. A green run against a
+  different source/harness does not validate the current work.
+
+## Local Windows toolchain
+
+Verified on 2026-10-22; recheck availability on a different machine:
+
+- Clang/LLVM-MinGW bin:
+  `C:/Users/User/Documents/Codex/2026-10-08/https-github-com-petervanderwalt-unit-tests/work/toolchain/llvm-mingw-20261006-ucrt-x86_64/bin`
+- CMake: `C:/Users/User/.pico-sdk/cmake/v3.31.5/bin/cmake.exe`
+- Ninja: `C:/Users/User/.pico-sdk/ninja/v1.12.1/ninja.exe`
+- Python: `C:/Python313/python.exe`
+
+Prepend LLVM-MinGW bin to PATH so its sanitizer DLLs resolve. Existing
+`build-asan` uses that clang, Ninja, Debug and `ENABLE_SANITIZERS=ON`; reuse its
+cache. Fresh configuration from the repository directory:
+
+```powershell
+$env:PATH=(Resolve-Path '../toolchain/llvm-mingw-20261006-ucrt-x86_64/bin').Path+';'+$env:PATH
+cmake -S . -B build-asan -G Ninja -DCMAKE_C_COMPILER=../toolchain/llvm-mingw-20261006-ucrt-x86_64/bin/clang.exe -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=ON
+```
+
+Build focused targets and run their CTest regex with `--output-on-failure` and
+`--output-junit`. CTest regex does not support `(?:...)`. Before pushing a
+substantial batch, run one full build/sanitizer gate and
+`C:/Python313/python.exe scripts/summary.py tests build-asan/<results.xml>`.
+The strict summary may fail when raw CTest appears green; inspect diagnostics.
+After a failure, repair and check the affected cases instead of repeatedly
+rerunning an unchanged full suite.
+
+For changed Python helpers, run unittest discovery under `scripts/`. If sandbox
+temporary writes fail, set TEMP/TMP to an existing workspace-local directory.
+Read/write text with explicit UTF-8; avoid wholesale recoding of historical
+`KNOWN_BUGS.md` content. The tracked README filename is `ReadMe.md`.
+GitHub CLI was not installed here; GitHub REST with the existing Git credential
+helper is an available fallback. Never print credentials or pass them to CORE.
 
 ## Write and validate tests
 
@@ -123,9 +218,11 @@ Delete the resolved section from `KNOWN_BUGS.md`; record fix date and revision
 in the cleanup commit. Retain partial entries only for outstanding failures.
 Reconfigure and run the full suite plus summary without the removed allowances.
 
-Link core source directly to `https://github.com/grblHAL/core/blob/<commit>/...`
-with verified line anchors. Relative `../core/file.c` links do not traverse the
-GitHub submodule. Check remaining anchors after deleting exception blocks.
+Link source to the repository that actually contains the tested commit, normally
+`https://github.com/terjeio/grblHAL_core/blob/<commit>/...`, with verified line
+anchors. Do not substitute a Terje SHA into an upstream URL without checking it
+exists there. Relative `../core/file.c` links cannot reach the ignored checkout
+on GitHub. Check remaining anchors after deleting exception blocks.
 
 ## Established contracts and fixture lessons
 
@@ -212,14 +309,20 @@ GitHub submodule. Check remaining anchors after deleting exception blocks.
 
 ## CI diagnosis maintenance
 
-Concise reporting work belongs on `ci-actionable-reports`, separate from coverage
-expansion. `report_stage.py` preserves command exit codes and full logs;
+New CI design work belongs on its own feature branch/PR, separate from coverage
+expansion; do not revive historical branch names without checking live state.
+Existing reviewed CI changes may be integrated as dependencies without creating
+duplicate review work. `report_stage.py` preserves command exit codes and full logs;
 `ci_report.py` groups first-error/test findings across jobs; `changed_coverage.py`
 warns on added executable C lines relative to the locked source merge base.
 Warnings must not be described as proof that code has no tests. Missing diagnostic
 artifacts or unexpected sanitizer output must never turn a failed job green.
 Caller baseline refs/repositories and source PR bases resolve once in the lock.
 Keep README instructions, not dated progress reports; record validation separately.
+Coverage collected after failed execution is investigation data only: label it
+PARTIAL, retain the failed CI result and withhold changed-code assessment. Crashes
+can prevent profile flushing and later execution; an uncovered line alone does
+not prove a missing test. Never update passing-baseline badges from partial data.
 
 ## Practical test-authoring guardrails (2026-10-14)
 

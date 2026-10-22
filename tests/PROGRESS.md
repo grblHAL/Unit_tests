@@ -1,36 +1,51 @@
-# Current continuation checkpoint - 2026-10-20
+# Current continuation checkpoint - 2026-10-22
 
 This section supersedes historical snapshots below. Refresh live state before delivery.
 
-- Active branch coverage-batch-72, based on unmerged batch71 PR24. Do not merge
-  PRs or duplicate PR24 in a new master-target coverage PR.
-- Clean Terje CORE: 7a6a432eaf78e028b81ff3a5f9804e14519f5f01. Never modify CORE.
-- Batch72 adds64 cases, total4,066. The50-case full gate passes additions; latest14 are local-only.
-- Current hosted checkpoint39373002337 tests c9941ca (4,052 cases). Poll this
-  existing run at a useful boundary; never redispatch unchanged validation.
-- Full integrated gate:4,052 targets build;62.67s;3,951 clean passes,3 known
-  reproductions,98 strict sanitizer failures,0 new failures. Raw CTest96 differs
-  because two inherited WILL_FAIL labels invert crashes. Exact98-case set unchanged.
-- Hosted39371716116 is terminal failure, confirming all38 new cases at539278b
-  PASS in GCC/Clang. Source locks match clean7a6a432; both compilers report only
-  the unchanged98 strutils.c:393 failures. Evidence ../batch72-next-hosted-validation.json.
-- Integrated PR25 reporting as a dependency (merge d93b15a) for the next fresh
-  gap measurement.58 helpers pass6.808s. CI remains red for source failures and
-  coverage will be labelled PARTIAL; never publish it as a passing baseline.
-- Isolated CI repair PR25 is open/non-draft, on ci-partial-coverage at eb746fe.
-  Hosted39369581523 terminal: builds pass, only98 documented source failures;
-  labelled partial HTML/XML emitted, changed-code assessment withheld.57 helpers pass.
-- PR24 and25 last verified open/unmerged. Do not merge them.
-- Fresh gap map ../batch72-integrated-coverage-core.gaps.json is PARTIAL at c9941ca.
-  Check existing cases before authoring from it. Crashes can prevent profile flush;
-  uncovered lines do not prove absent tests. Existing VFS/macro/description cases
-  are blocked by the documented strutils.c:393 optional-base NULL access.
-- Next: continue supported public gaps outside already-covered reset phase aliases;
-  verify the next hosted artifact at a useful boundary. No repeated full suite
-  for unchanged code. Keep uncertain contracts in TODO; no firmware fixes.
-- Recent focused evidence: batch72-address-results.xml (3), profile-results.xml (1),
-  drill-followup-results.xml (5), metadata-results.xml (2), stepper-reset-results.xml (1)
-  under build-asan. Exact checkpoints and earlier evidence follow below.
+- Local branch coverage-batch-72, clean before this documentation update, HEAD
+  92f3e81; eight commits ahead of origin/coverage-batch-72. Preserve unique work.
+- PR24 and PR25 are BOTH MERGED (live GitHub verification2026-10-22).
+  Fetch remotes and reconcile merged dependencies before the next PR; old
+  instructions to wait for their merge are obsolete. Never merge PRs yourself.
+- Ignored CORE checkout is clean7a6a432eaf78e028b81ff3a5f9804e14519f5f01.
+  Terje master nowfab8d1c248990f53f13a444018fbb3ee353061dd (live verification).
+  Refresh again before testing. First do a deliberate compatibility/known-bug
+  pass against clean current Terje source; do not assume old failures remain.
+- Batch72 adds64 cases, total4,066. Latest14 have focused local evidence only;
+  they are not in the last full/hosted checkpoint. No tests rerun on2026-10-22.
+- Hosted39373002337 at c9941caf4aa45b45f88cb7acfb79c821fa5ad656 is COMPLETED/
+  FAILURE, not running. Coverage artifact was inspected; final GCC/Clang and
+  diagnosis artifacts still need inspection. Do not redispatch unchanged code.
+- Full local c9941ca checkpoint:4,052 targets build;62.67s;3,951 clean passes,
+  3 known reproductions,98 strict sanitizer failures,0 new failures. Raw CTest96
+  differs because two inherited WILL_FAIL labels invert crashes. All50 additions
+  pass. The98-case set matched the documented strutils.c:393 NULL-base fault on
+  7a6a432. Recheck it on new CORE before removing exceptions or claiming fixes.
+- Hosted39371716116 verified all38 additions at539278b pass GCC/Clang; both
+  report only the same98 source failures. ../batch72-next-hosted-validation.json.
+- PR25 reporting was integrated as dependency d93b15a;58 helper checks passed.
+  It retains red CI, labels failed-execution coverage PARTIAL and withholds
+  changed-code assessment. Never promote partial counters to passing badges.
+- Partial c9941ca artifact:16,916/17,645 lines (95.87%),11,644/13,696 branches
+  (85.02%). NOT a passing baseline. Same-source earlier partial report had49 fewer
+  covered lines/80 fewer covered branches. Crashes can prevent profile flushing.
+- Freshest local gap map: ../batch72-integrated-coverage-core.gaps.json, PARTIAL
+  at c9941ca; it excludes latest14. Check existing cases before adding tests.
+- No persistent goal exists in the old chat as of2026-10-22. Only recreate one
+  when resuming authorized sustained work. Goals and automation do not transfer
+  to a new chat automatically; inspect any existing hourly recovery before
+  retargeting it, and avoid competing runners.
+- Next: reconcile Git/PR state and current source, then extend supported gaps.
+  Last investigation: ngc_expr.c:909, malformed operator after a valid operation
+  (e.g. [1+2BOGUS3]); no new expression case written. Check duplicates and verify
+  queued motion preservation on rejection. No private/unreachable-path forcing.
+- Latest focused evidence under build-asan/: batch72-backlash-restore-results.xml,
+  ganged-hook-results.xml, disable-hook-results.xml, task-retry-results.xml,
+  param-write-results.xml, no-tool-table-results.xml, full-queue-results.xml and
+  drill-enqueue-results.xml (each filename has the batch72- prefix).
+- Maintained rules/toolchain/source-refresh instructions are in root AGENTS.md.
+  Local standalone handoff: ../../RESUME_PROMPT.txt. Parent scratch helpers and
+  downloaded artifacts are conveniences, not required repository dependencies.
 
 Historical entries below may describe old branches, completed runs or superseded pauses.
 
