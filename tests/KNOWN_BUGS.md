@@ -1,4 +1,4 @@
-# Confirmed core defects
+# Known CORE issues and coverage gaps
 
 When updating the tested core, run the regressions before removing exceptions.
 For a fixed defect, keep its regression test and remove its CMake `WILL_FAIL` and
@@ -26,6 +26,43 @@ in [storage write-failure policy](TODO.md#storage-write-failure-policy), includi
 its observations, existing test exceptions and cleanup links. It is not a
 settled requirement to retry physical writes a specific number of times.
 
+## Known coverage gaps
+
+These are tracked placeholders for missing or inaccessible implementation, not
+executable bug reproductions. They are **known uncovered**, not covered code.
+They do not create synthetic CTest failures, increase test counts, exclude source
+or change the coverage denominator. Existing public rejection tests still run.
+`WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
+
+**Reviewed:** 2026-10-22, clean Terje `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39834732774)
+measures 17,323/17,684 lines (97.96%) and 12,131/13,754 branches (88.20%).
+The 361 uncovered lines include the following known gaps; this table does not
+claim that every remaining line is unavailable.
+
+| Region | Status and evidence | What makes it testable |
+|---|---|---|
+| VFS lookup/rename residual guards | Three unreachable lines: lookup always returns cwd/root; cross-mount rename rejects before its second notification. [Source audit](TODO.md#verified-residual-guards-vfs-lookuprename-and-virtual-parameter-root). | Upstream changes lookup or cross-mount rename semantics. |
+| G84 helper flag guards | Six false arms are unreachable: both private helper call sites pass every flag enabled. [Caller audit](TODO.md#g84-private-override-helper-flag-guards). | A supported caller uses partial flags. Saved disabled-policy behavior is separately tested. |
+| Tab-setting datatype default | All declared public datatypes are handled; Int8/Int16 normalize to Integer. [Source audit](TODO.md#tab-setting-metadata-default-datatype-arm). | A new valid datatype reaches the formatter. |
+| Virtual-parameter empty-list registration | Built-in `_value`/`_value_returned` nodes keep the list nonempty. [Source audit](TODO.md#verified-residual-guards-vfs-lookuprename-and-virtual-parameter-root). | A supported lifecycle permits an empty list. |
+| Wall-plotter homing helpers | Unimplemented public workflow. [home_machine](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/kinematics/wall_plotter.c#L301) warns and returns false; [existing rejection test](cases/wall_plotter/unsupported_homing_reports_warning.c) passes. The report has 56 uncovered helper lines. | Implement public homing and define its reference/endpoint contract; then test actual motion through that entry point. |
+| Native rigid tapping and its downstream execution | Unimplemented extension. [mc_rigid_tapping](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/motion_control.c#L793) is a weak TBC stub returning unsupported. | The real parser/stub rejection path now has a [documented regression](#unsupported-rigid-tapping-reports-success-and-advances-only-parser-position). Native geometry still needs a supported implementation, then encoder/spindle synchronization, reversal and physical endpoint tests. |
+| Auxiliary open-drain setting handlers | Inaccessible setting. [Public registration](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/ioports.c#L1449) is commented out; [existing setting-disabled test](cases/ioports/open_drain_setting_is_not_exposed.c) passes. | Expose the setting upstream; test public write/readback, persistence and driver effect. |
+| Timezone setting availability | Inaccessible setting. [Registration](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/settings.c#L2494) is commented out. | Expose it upstream and define accepted units/range before public setting tests. |
+| Stale setting getters/availability and closed-loop group arms | Unreachable through current registry: registered getters bypass the old cases, some settings have no availability callback, and the closed-loop group is not registered. See [detailed registry audit](TODO.md#remaining-coverage-unexposed-settings-and-parser-branches). | Update the registry or remove obsolete implementation upstream. Test the public behavior if exposed; never install a fake registry entry to hit a private case. |
+| Plugin-induced N/A setting listing | Public registration rejects a null value pointer before linking the provider. See [registration/listing audit](TODO.md#settings-list-na-fallback-cannot-be-reached-by-a-valid-plugin-descriptor). The actual rejection and corrected retry have an executable test. | Reassess if public descriptor rules change; do not corrupt registered metadata to enter the fallback. |
+| Delayed-task fallback search | Defensive/unreachable under supported single-core IRQ masking: task_get_due returns the selected head with IRQs still masked. See [atomic-selection audit](TODO.md#delayed-task-fallback-after-atomic-selection-68eba79). | Reassess if the selection/concurrency contract changes; retain the passing public interrupt/cancellation regressions. |
+| Post-reader NaN rejection | Expression reader rejects NaN before this guard; explicit valueless-word NaN is excluded by its M-code type condition (gcode.c1470-1471). See [reader audit](TODO.md#parser-post-reader-nan-guard-audit---2026-10-22). | Revisit if reader or valueless-word contract changes; retain raw coverage. |
+| M6 check-mode message cleanup | Nested check-mode branch is enclosed by a guard excluding check mode, with no intervening callback or assignment (gcode.c4231-4238). See [guard audit](TODO.md#m6-check-mode-message-cleanup-guard-audit---2026-10-22). | Revisit after upstream changes the guard or ownership; retain raw coverage. |
+| M48/M49/M51 broadcast override arms | Unreachable through current parser addressing rules; ordinary blocks reject the unused/invalid dollar selector before these arms. See [parser audit](TODO.md#remaining-coverage-unexposed-settings-and-parser-branches). | Define and expose broadcast syntax upstream, then test observable output of every enabled spindle. |
+
+Pending contract questions, including G70-G72 execution/reporting and G76 main
+taper, remain in [TODO.md](TODO.md). They cannot become asserted failures until
+the required behavior is settled. Move a gap to an executable regression when
+it becomes publicly reachable, or to a confirmed defect entry when a supported
+workflow demonstrably fails. Retain raw coverage throughout.
+
 ## Using the suggested fixes
 
 Each **Suggested fix (proposal)** below is based on source inspection of the
@@ -43,101 +80,14 @@ keep the regression assertions, and delete the resolved entry. Then run the full
 suite and strict diagnostic summary before committing. Multiple defects can
 block the same test; remove only allowances whose underlying faults are fixed.
 
-## Analog output commands truncate fractional values
-
-**Maintainer disposition (2026-10-14):** Deferred to the longer-term TODO list.
-Keep the fractional-value regression and its explicit exception until implemented.
-See [maintainer follow-ups](TODO.md#deferred-confirmed-defects).
-
-**Marked known:** 2026-10-09
-
-**Regression:** [test](cases/gcode/m68_preserves_fractional_output.c).
-
-**Remove exception when fixed:** [CMake registration](known_bugs.cmake#L4).
-
-`M68E1Q1.25` passes 1.0 to the analog output callback instead of 1.25.
-The callback accepts a float (`core/ioports.h:49`), but `output_command_t.value`
-is an `int32_t` ([gcode.h:312](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/gcode.h#L312)). Assigning Q at `core/gcode.c:2604`
-truncates fractional values before immediate output at line 4201 or synchronized
-M67 output in `core/stepper.c:515`. Preserve the numeric value through command
-storage. The regression retains the fractional output expectation.
-
-**Suggested fix (proposal):** Preserve the floating-point Q value in
-[output_command_t at gcode.h:312](https://github.com/terjeio/grblHAL_core/blob/4b128e68bc63f9a3af11a01a7d8fbb5d5ccc98aa/gcode.h#L312):
-
-```diff
--    int32_t value;
-+    float value;
-```
-
-Immediate M68 and queued M67 then carry the same value through storage to the
-float callback. Review every `output_command_t.value` consumer: digital M62/M63
-must retain their boolean 0/1 behavior. This changes a shared structure's type;
-rebuild core and dependent plugins/drivers together. Validate fractional immediate
-and synchronized output, queued command ordering and digital output controls.
-
-## Unexpected file percent marker reports success
-
-**Maintainer disposition (2026-10-14):** Deferred pending review of file-demarcation
-status semantics. Terje currently uses demarcation to bundle mass settings updates
-into one storage commit; avoid changing that event behavior without reviewing the
-sender/update workflow. The status regression remains explicit, with its exception.
-See [maintainer follow-ups](TODO.md#deferred-confirmed-defects).
-
-**Marked known:** 2026-10-12. **Reconfirmed:** 2026-10-13 against Terje's core
-`e65020a8389b19d3c03277e02f34219e25800e6a`.
-
-After parsing a normal block from a redirected file without an opening `%`, a
-later `%` should return `Status_UnexpectedDemarcation`. The parser detects it at
-[gcode.c:1293–1294](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/gcode.c#L1293),
-then clears the block and returns `Status_OK` from the
-[empty-block path at line 1343](https://github.com/terjeio/grblHAL_core/blob/e65020a8389b19d3c03277e02f34219e25800e6a/gcode.c#L1343).
-The caller therefore receives success for the detected invalid marker.
-
-**Regression:** [unmarked file start](cases/gcode/file_percent_marker_after_unmarked_start_is_rejected.c).
-[Runtime](cases/gcode/file_percent_markers_complete_once_in_runtime.c) and
-[check-mode](cases/gcode/file_percent_markers_complete_once_in_check_mode.c)
-valid-marker tests provide passing controls. This test and entry were preserved
-in the archived earlier batch; they have now been restored and revalidated.
-
-**Suggested fix (proposal, not runtime-verified):** Return the detected error
-before continuing ordinary block parsing, using the existing `RETURN(status)`
-cleanup path when `status != Status_OK` after handling demarcation. Retain valid
-serial markers, file completion callbacks and check-mode behavior.
-
-**Remove exception when fixed:** delete the [CMake block](known_bugs.cmake#L25),
-retain the correct regression and passing controls, then delete this section.
-No sanitizer diagnostic allowance applies.
-
-## Heap-backed string growth dereferences a missing optional base
-
-**Known since:** 2026-10-20. **Source:** Terje
-`7a6a432eaf78e028b81ff3a5f9804e14519f5f01`.
-
-[strutils.c:393](https://github.com/terjeio/grblHAL_core/blob/7a6a432eaf78e028b81ff3a5f9804e14519f5f01/strutils.c#L383-L421)
-reads `string->base->data` while choosing the realloc input, even when the
-optional base is NULL. Ordinary heap-only strings (including VFS normalized
-paths) have no base and crash on their first allocation/growth.
-
-**Regressions:** [heap copy/growth](cases/strutils/strset_heap_copy_can_grow_and_retains_requested_text.c)
-and [empty heap string](cases/strutils/strset_empty_string_has_writable_terminated_heap_storage.c).
-The source also blocks the ordinary filesystem path regressions below.
-No blanket expected-failure or sanitizer allowance is added. A known assertion
-exception does not authorize a new sanitizer crash; strict reporting rejects it.
-
-**Suggested fix for Terje (not applied):** check that `string->base` exists before
-reading its data pointer. Keep the new failure policy that preserves reachable
-owned storage for retry. Retain the regressions; remove this entry when Terje's
-clean source passes them and the filesystem tests under sanitizers.
-
 ## Fallback getcwd does not preserve the frontend current directory
 
-**Marked known:** 2026-10-14. **Current source review:** Terje7a6a432.
+**Marked known:** 2026-10-14. **Reconfirmed:** 2026-10-22, Terje fab8d1c.
 Mount `/store` without fgetcwd and change to `/store/dir`. The frontend must
 report `/store/dir`; older source duplicated the prefix, while the current
 [fallback](https://github.com/terjeio/grblHAL_core/blob/7a6a432eaf78e028b81ff3a5f9804e14519f5f01/vfs.c#L590-L616)
-uses `/` and loses the subdirectory. The current strset crash blocks a clean
-end-to-end recheck until Terje fixes that independent fault.
+uses `/` and loses the subdirectory. The ordinary regression reproduces the
+assertion failure after the independent string-allocation crash was fixed.
 
 **Regression:** [frontend getcwd](cases/vfs/getcwd_without_backend_handler_preserves_mount_prefix_once.c).
 **Control:** [backend-local getcwd](cases/vfs/getcwd_with_backend_local_directory_prefixes_mount_once.c).
@@ -146,19 +96,347 @@ retain the correct assertion and control, then delete this entry once fixed.
 **Suggested fix for Terje (not applied):** use the cached absolute frontend path
 when no backend callback exists; prefix only a backend-local path.
 
-## Failed directory growth leaves the previous mount selected
 
-**Known since:** 2026-10-20; related growth-failure regression dates to2026-10-14.
-After changing to a long `/store/...` directory, fail its next buffer growth.
-The error path [vfs.c:511-515](https://github.com/terjeio/grblHAL_core/blob/7a6a432eaf78e028b81ff3a5f9804e14519f5f01/vfs.c#L505-L516)
-writes `/` into the cached path but assigns the root to local `mount` rather
-than persistent `cwdmount`. Subsequent operations still select the old mount.
-This is a cache/mount consistency issue, not a claim that retained reachable
-storage leaks. Terje's current allocation-failure policy preserves that storage.
-A clean runtime recheck is blocked by the separate strset NULL-base crash above.
+## Hidden embedded mount directory policy remains unresolved
 
-**Regression:** [directory growth failure/retry](cases/vfs/current_directory_reallocation_failure_falls_back_to_root.c).
-**Cleanup:** remove its named [known_bugs.cmake](known_bugs.cmake) block, retain
-root-fallback/retry assertions and delete this entry after Terje fixes it.
-**Suggested fix for Terje (not applied):** make the persisted mount and cached
-path agree on the chosen error fallback without discarding owned retry storage.
+Two existing hidden-only mount cases still expect chdir rejection on clean
+Terje 68eba7906ba60d66c8b55c4adc90cd5e85b5a828. Their named allowances remain
+pending confirmation of whether hidden mount metadata controls navigation or
+only listing. Ordinary file rejection and root-return regressions now pass;
+their allowances were removed. See TODO for the policy distinction.
+
+## Formatting the current drive loses relative-file routing
+
+**Confirmed:** 2026-10-22, clean Terje `fab8d1c248990f53f13a444018fbb3ee353061dd`.
+[vfs_drive_format](https://github.com/terjeio/grblHAL_core/blob/fab8d1c248990f53f13a444018fbb3ee353061dd/vfs.c)
+writes `/` into the frontend cached directory while leaving the current non-root
+mount selected. After formatting `/store`, displayed getcwd is `/store`, but
+relative `new.nc` stat returns failure instead of reaching `/store`'s backend.
+
+**Regression:** [current-drive format and relative stat](cases/vfs_integration/formatting_current_drive_resets_removed_subdirectory_to_drive_root.c).
+The fixture now supplies the stat callback required before changing directory.
+Its format/remount and displayed-directory assertions pass; relative stat fails.
+This regression has a named `WILL_FAIL` / `known_bug` allowance in
+[known_bugs.cmake](known_bugs.cmake); remove it when relative routing is fixed.
+
+**Reconfirmed on68eba79:** the cache now stores the mount path `/store/`
+with its trailing separator. parse_path appends another separator for a relative
+file, so the backend receives `//new.nc` rather than `/new.nc`. The fixture now
+uses valid frontend-only directories (neither chdir nor getcwd callback), records
+the routed name, and asserts it after stat. Evidence: batch72-format-routing.xml
+and its strict summary. The earlier `/` cache fault is fixed, but normalization
+still fails; keep the existing exception until the backend path is correct.
+
+**Suggested fix for Terje (not applied):** keep frontend absolute directory and
+selected mount consistent when resetting the formatted drive to its root.
+Retain the relative backend operation assertion and remove this entry once it
+passes on clean source under sanitizers.
+
+## MPG select pull-up initialization depends on another input's configuration
+
+**Confirmed:** 2026-10-22, clean Terje fab8d1c248990f53f13a444018fbb3ee353061dd.
+[ioports.c1599-1606](https://github.com/terjeio/grblHAL_core/blob/fab8d1c248990f53f13a444018fbb3ee353061dd/ioports.c#L1599-L1606)
+places `Input_MPGSelect` handling inside `function < Input_Probe`, but the MPG
+function is declared after Input_Probe in crossbar.h. Its forced pull-up branch
+is unreachable. The reused in_config then retains the previous input's pull mode,
+or its initial None when MPG is configured first.
+
+**Regressions:** [first configured input](cases/ioports/loaded_first_mpg_input_receives_pullup_without_neighbor_state.c)
+and [neighbor uses pull-down](cases/ioports/loaded_mpg_input_does_not_inherit_neighbor_pulldown.c).
+Both configure valid driver capabilities and pin functions before public bank
+registration, then load settings through grbl.on_settings_changed. Neighbor
+configuration, callback counts, debounce and inversion controls pass; only MPG
+pull-up assertions fail. Existing [up-neighbor control](cases/ioports/loaded_mpg_select_pin_uses_pullup_and_preserves_debounce.c)
+passes incidentally because its auxiliary neighbor supplies PullMode_Up.
+Evidence: batch72-mpg-pull-raw.xml. Narrow named WILL_FAIL/known_bug allowances
+are in known_bugs.cmake; correct assertions remain.
+
+**Suggested fix for Terje (not applied):** handle MPG outside the lower-valued
+control-function guard and give each pin a deliberate pull configuration. Retain
+both pin-order regressions and the existing control; remove their two allowances
+and this entry once clean source passes the I/O settings group under sanitizers.
+
+## Active macro flow error clears scope metadata before closing its file
+
+**Confirmed:** 2026-10-22, clean Terje fab8d1c248990f53f13a444018fbb3ee353061dd.
+A real embedded named macro enters a WHILE block after a comment arms one malloc
+failure. Failure retaining the loop expression returns FlowControlOutOfMemory.
+[ngc_flowctrl.c789-791](https://github.com/terjeio/grblHAL_core/blob/fab8d1c248990f53f13a444018fbb3ee353061dd/ngc_flowctrl.c#L789-L791)
+calls ngc_flowctrl_init, clearing subroutine records and stack frames before the
+redirect's error/EOF callbacks finish. onNamedSubError and onNamedSubEOF require
+that metadata to unwind/close. At actual EOF the named file remains current,
+so the protocol repeatedly consumes EOF instead of returning to the sender.
+
+**Regression:** [WHILE allocation recovery](cases/ngc_flowctrl/macro_while_expression_allocation_failure_returns_to_sender_and_retries.c).
+**Control:** [normal completion and sender reopen](cases/ngc_flowctrl/macro_while_expression_normal_completion_returns_to_sender_and_reopens.c).
+The shared fixture runs actual RAM/embedded file streams through protocol_main_loop;
+a public comment callback arms one allocation failure immediately before WHILE.
+A global EOF observer runs after the CORE named-sub EOF handler and checks that
+its owned file is no longer current. This makes the fault an immediate ordinary
+assertion, rather than relying on a timeout. Sender query/retry, parent#1=99 and
+skipped caller tail assertions remain for validating a fix. With injection off,
+the same fixture completes both calls, counts four loop iterations and restores
+the caller. No synthetic EOF, private queue manipulation or firmware patch.
+
+Raw ASan/UBSan evidence: batch72-while-allocation-raw.xml (failure plus passing
+control). One named WILL_FAIL/known_bug allowance is in known_bugs.cmake; no new
+sanitizer allowance. **Suggested fix for Terje (not applied):** coordinate named
+redirect unwinding with flow reset before discarding the metadata needed by the
+error/EOF handlers, preserving parent error propagation. Keep the regression and
+control, remove its allowance and this entry when clean source passes both plus
+related macro-loader/scope tests under sanitizers.
+
+## Rejected parser and plugin blocks lose CORE-allocated messages
+
+**Confirmed:** 2026-10-22, clean Terje fab8d1c248990f53f13a444018fbb3ee353061dd.
+A normal MSG comment allocates a message before the public on_pre_gcode_execute
+hook. [gcode.c3983-3984](https://github.com/terjeio/grblHAL_core/blob/fab8d1c248990f53f13a444018fbb3ee353061dd/gcode.c#L3983-L3984)
+returns the plugin status directly. The message has not reached planner ownership,
+and the hook API receives no message pointer. A rejected block therefore loses
+its allocated message while correctly preserving previously queued motion.
+
+**Regression:** [message ownership after rejection](cases/lathe_ngc/pre_execute_rejection_releases_core_message_and_preserves_queued_motion.c).
+The supported LATHE_UVW_OPTION/NGC expression build executes the shared hook
+without the currently broken cutter configuration. One tracked allocation is
+observed around the rejected block; after the prior cut finishes at80 motor
+steps, CORE has freed zero messages. Probe teardown reclaims only the observed
+orphan after recording the result, avoiding a secondary leak diagnostic without
+suppressing sanitizers or changing the failing ownership assertion.
+
+Four existing generic hook tests were relocated from cutter_comp to lathe_ngc
+and use a generic motion fixture, preserving their assertions instead of adding
+duplicates. They pass unhandled, consumed and rejected-block controls. Raw
+ASan/UBSan evidence: batch72-plugin-hook-raw.xml. One named WILL_FAIL/known_bug
+allowance is in known_bugs.cmake. **Suggested fix for Terje (not applied):**
+release a still-owned message on the hook's early-return path, and preserve
+normal parser error cleanup. Retain the regression/controls; remove its allowance
+and this entry when clean source frees the message and passes related parser,
+planner and message-ownership sanitizer tests.
+
+**Expanded reproduction, 2026-10-22, clean Terje 68eba79:**
+[ordinary parser errors](cases/lathe_ngc/parser_rejection_releases_message_and_preserves_queued_motion.c)
+combine unsupported G999, negative feed and unused Q after allocating MSG comments.
+All three return the expected status, preserve the queued cut and finish at80
+steps, but CORE releases zero of the three messages. This needs no plugin
+rejection. RETURN calls gc_at_exit, which cannot access the local message;
+planner ownership has not yet begun. The combined case retains the correct
+three-release assertion with one named WILL_FAIL. Probe teardown reclaims the
+observed orphans after measuring ownership, without suppressing diagnostics.
+Fix parser early-exit ownership as well as plugin-hook rejection; remove both
+message allowances when clean source passes. Evidence: batch72-core68-affected.xml.
+
+## Alarm-rejected block prevents closing settings-upload demarcation
+
+**Observed:** 2026-10-22, clean Terje fab8d1c and68eba79.
+[Full boot regression](cases/boot/alarm_locked_settings_upload_demarcates_batch_and_keeps_motion_blocked.c)
+streams `%`, valid $11, alarm-rejected G91, then `%`. The closing observer
+callback is missing: the test fails its two-demarcation assertion. The later
+motion-blocking assertions have not executed. Compatibility-zero last_error
+gating follows the demarcation alarm bypass. Whether the sender must clear
+that error is a pending contract question, not a confirmed firmware diagnosis.
+Per requested nonblocking failure handling, retain the correct assertions and
+one named WILL_FAIL while Terje confirms the contract. No sanitizer allowance.
+Remove it when the agreed public upload workflow passes; see TODO's closing
+serial demarcation entry. Full evidence: batch72-core68-delivery.xml.
+
+## Path allocation failure can unlink a same-named file in another directory
+
+**Confirmed:** 2026-10-22, clean Terje68eba7906ba60d66c8b55c4adc90cd5e85b5a828.
+[vfs.c parse_path](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/vfs.c#L227-L265)
+falls back to copying the unnormalized input when its temporary path malloc
+fails. A valid frontend-only provider (no chdir/getcwd callbacks) is mounted at
+`/store`; public chdir sets `/store/jobs`. Public unlink of `part.nc` should
+reach `/jobs/part.nc`, but the allocation-failure path instead invokes the backend
+with `part.nc`, reports success, and can remove the same-named root file.
+
+**Regression:** [wrong-directory unlink under memory pressure](cases/vfs/relative_unlink_path_allocation_failure_preserves_other_directory_and_retries.c).
+The registered backend models two distinct files. One size-specific malloc
+failure is enabled only around the public unlink. The wrong root-file removal
+is recorded, then normal retry demonstrably reaches `/jobs/part.nc` and removes
+the intended job file. The final correct unrelated-file-preservation assertion
+fails. One named WILL_FAIL/known_bug; no sanitizer allowance. Raw evidence:
+batch72-unlink-oom-raw.xml. This is deterministic host driver injection, not a
+claim of reproduction on a physical controller.
+
+**Suggested fix for Terje (not applied):** propagate path-normalization allocation
+failure to public operations without dispatching an unnormalized destructive
+request, or preserve correct absolute routing without allocation. Keep the
+unrelated-file and retry assertions; remove the allowance/entry once clean
+source preserves both directory identity and normal retry under sanitizers.
+
+## A later successful comment clears a plugin validation error
+
+**Confirmed:** 2026-10-22, clean Terje68eba7906ba60d66c8b55c4adc90cd5e85b5a828.
+[gc_normalize_block](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/gcode.c#L1144-L1145)
+overwrites the shared normalization status on every plain comment callback.
+A plugin rejecting the first comment with Status_UserException is overridden
+by a later ordinary comment returning Status_OK, so gc_execute_block accepts
+and queues the block. This can defeat material-validation rejection when a
+line also carries a contour note; no plasma-plugin implementation is assumed.
+
+**Regression:** [material error followed by ordinary comment](cases/gcode/trailing_comment_does_not_clear_material_validation_error.c)
+uses a registered public comment handler, valid queued1mm cut, then
+`G20G91G1X2F50(Material selection)(Cut contour)`. The first callback rejects,
+the second succeeds; actual status is0 and parser X becomes51.8mm instead of
+remaining1mm. Correct error, planner-capacity, modal-state and80-pulse endpoint
+assertions reuse the queued-rejection fixture. Those preservation checks cannot
+execute until status propagation is fixed. One named WILL_FAIL/known_bug, no
+sanitizer allowance. Raw evidence: batch72-comment-status-raw.xml.
+
+**Suggested fix for Terje (not applied):** retain a prior comment error across
+normalization or stop processing once a comment fails. Do not allow a later
+successful callback to authorize a rejected block. Preserve ordinary multi-
+comment processing and the existing single-comment rejection control. Remove
+this entry and allowance once clean source passes both under sanitizers.
+
+## Direct modal restore reports compensation that its extension refused
+
+**Confirmed:** 2026-10-22, clean Terje68eba7906ba60d66c8b55c4adc90cd5e85b5a828.
+[gc_modal_state_restore](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/gcode.c#L594-L616)
+updates the live cutter-compensation state from the snapshot before calling
+cc_enable, then ignores a false return. Public ngc_modal_state_restore therefore
+returns true and leaves the parser in G41 even when the extension refused to
+leave G40. Ordinary M72 follows the checked block-execution path and correctly
+returns Status_GcodeUnsupportedCommand while preserving G40 in the same setup.
+
+**Regression:** [refused direct restore and retry](cases/cutter_comp/direct_modal_restore_preserves_disabled_mode_when_extension_refuses.c).
+The existing linked extension fixture first accepts G41.1D6 and M70, then
+accepts G40 and its10mm exit. With refusal enabled, M72 is a passing control;
+direct restore is invoked through its public API and incorrectly reports side1.
+The test records that inconsistency, re-enables the extension, demonstrates a
+successful saved-state retry and frees the snapshot before its final correct
+assertion. No compensated geometry or physical-controller result is invented.
+One named WILL_FAIL/known_bug, no sanitizer allowance. Raw evidence:
+batch72-cutter-refusal-raw.xml (result1, parser side1 after refusal).
+
+**Suggested fix for Terje (not applied):** validate/commit cutter compensation
+restoration consistently with the checked parser path, retaining the previous
+accepted state if the extension refuses and reporting restoration failure.
+Preserve successful restore/disable behavior. Remove this allowance and entry
+once clean source passes the refusal, M72 control and accepted retry under
+sanitizers.
+
+## Unsupported rigid tapping reports success and advances only parser position
+
+**Confirmed:** 2026-10-22, clean Terje68eba7906ba60d66c8b55c4adc90cd5e85b5a828.
+The native [mc_rigid_tapping stub](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/motion_control.c#L793-L796)
+explicitly returns Status_GcodeUnsupportedCommand. The parser's
+[rigid-tapping case](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/gcode.c#L4811-L4841)
+does not propagate that status: it falls through to successful block completion
+and copies the target into parser position without executing the requested move.
+This is a rejection/status defect in existing code, separate from implementing
+native tapping geometry.
+
+**Regression:** [unsupported tapping and following supported move](cases/spindle_sync/unsupported_rigid_tapping_preserves_position_and_next_supported_sync_move.c).
+The existing valid encoder/stepper fixture first executes G33Z1K1 and observes80
+physical pulses. G33.1Z2K1 then returns0 and sets parser Z=2 while physical/system
+position remains80steps (1mm). Correct unsupported-status, unchanged-position
+and following ordinary G33 endpoint assertions are retained; the status fails
+before the preservation/retry checks execute. No private state injection or
+replacement tapping implementation. One named WILL_FAIL/known_bug; no sanitizer
+allowance. Raw evidence: batch72-tapping-rejection-raw.xml.
+
+**Suggested fix for Terje (not applied):** propagate unsupported status before
+committing a target that did not move, and preserve the existing position for
+the next supported move. Confirm the intended macro fallback separately. Remove
+this exception/entry once the stub path correctly rejects under sanitizers. If
+native tapping is implemented upstream, replace the unsupported-stub expectation
+with its agreed execution test and remove the native-feature gap entry as well.
+
+## M72 misses saved feed/rapid percentages when enable flags are unchanged
+
+**Confirmed:** 2026-10-22, clean CORE `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
+[Regression](cases/ngc_params/m72_restores_override_percentages_when_enable_flags_are_unchanged.c)
+saves80% feed/50% rapid with M70, changes them through public plan_feed_override
+to65%/25%, then executes M72. Both modal/runtime override-enable flags remain
+unchanged. M72 returns success but leaves65%/25%, instead of restoring80%/50%.
+The snapshot is released before the correct failing percentage assertion.
+Raw ASan/UBSan evidence: build-asan/modal-percentage-raw.xml.
+
+[Action selection](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/gcode.c#L583)
+sets M9 only when override-control flags differ. Both the direct restore and
+parser M72 percentage restoration are gated on M9 (gcode.c606-607/4382-4385),
+so percentage-only changes are skipped. Existing flag-change controls pass;
+scoped direct restore also passes while retaining its parent snapshot.
+
+**Suggested fix for Terje (not applied):** include saved/current feed and rapid
+percentage differences when selecting restoration work, preserving enable policy
+and planner update semantics. Keep this correct regression, remove its exact
+WILL_FAIL/known_bug block and this entry once upstream passes under sanitizers.
+One new named allowance; no sanitizer suppression or CORE modification.
+
+## Asymmetric auto-squaring initial pull-off leaves the secondary motor on its switch
+
+**Confirmed:** 2026-10-22, clean CORE `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
+[Regression](cases/boot_square/engaged_switches_pull_off_before_independent_motor_homing.c)
+boots the four-axis asymmetric Y/A configuration, with both physical switches
+engaged, then sends public `$H`. The primary motor pulls away, but the secondary
+receives no pulses and remains engaged; homing raises alarm 8 rather than
+completing. The same driver and settings with initially clear switches pass
+[the independent motor control](cases/boot_square/clear_switches_home_both_motors_independently.c),
+including final physical positions Y=80/A=160, released switches, both homed bits,
+and no X/Z pulses. Startup alarm 11 is expected before either homing command.
+Raw sanitizer evidence: `build-asan/square-engaged-raw.xml`.
+
+`machine_limits.c:616` passes only the auto-squared primary axis to
+`limits_pull_off`. Its kinematics transform creates a secondary target, but
+`sys.homing_axis_lock` is still set to that primary-only mask at line 213.
+The secondary motor therefore cannot move. The later dual-axis offset path
+explicitly adds the asymmetric secondary axis before calling the same helper.
+
+**Suggested fix for Terje (not applied):** include the asymmetric secondary motor
+in the initial pull-off lock/motion mask while preserving switch checking and
+normal independent homing. Keep the correct regression; remove its exact
+WILL_FAIL/known_bug block and this entry once upstream passes under sanitizers.
+No CORE edit or sanitizer allowance.
+
+## RTCP rotation at the tool center loses the rotary endpoint
+
+**Confirmed:** 2026-10-22, clean CORE `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
+[Regression](cases/rtcp_ac/rotation_at_tool_center_preserves_requested_rotary_endpoint.c)
+enables RTCP through its registered M851 handler with zero rotation centers,
+then asks the public segmenter for a C=90 degree move at XYZ=0. The move emits
+one segment, but its C endpoint remains0 instead of90. Linear coordinates stay
+zero. [Short-move control](cases/rtcp_ac/short_rotary_move_keeps_one_segment_and_exact_endpoint.c)
+starts one millimeter off-center and reaches the requested transformed endpoint
+in one segment. Existing longer rotary paths continue to exercise interpolation.
+Raw sanitizer evidence: `build-asan/rtcp-short-raw.xml` (endpoint assertion).
+
+In `kinematics/rtcp_ac.c`, segment count is based solely on XYZ arc length.
+Zero linear distance is clamped to one segment at line308; the sampling cursor
+remains0, so the idx==0 branch at line363 chooses s_out=0 before the final-segment
+branch can choose1. The commanded rotary delta is therefore discarded.
+
+**Suggested fix for Terje (not applied):** preserve the exact final endpoint for
+zero-linear-distance rotary motion, including both rotary axes and subsequent
+moves. Keep the correct regression and remove this exact WILL_FAIL/known_bug
+block and entry after upstream passes. No CORE changes or sanitizer allowance.
+
+## Flow syntax errors orphan an active named macro file
+
+**Confirmed:** 2026-10-22, clean CORE `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
+[Bounded regression](cases/ngc_flowctrl/named_macro_flow_syntax_error_closes_file_before_status_returns.c)
+opens a real named macro with CALL, encounters a SUB with a different named
+label, then reports the returned FlowControlSyntaxError through the installed
+status handler. The local argument scope returns to its caller, but the macro
+file and redirected reader remain installed. The test captures this ownership
+failure, releases the orphan for cleanup, then retains the correct assertion
+that the error handler should have closed it. Raw evidence:
+`build-asan/macro-flow-error-raw.xml` (closed_on_error assertion).
+The valid same-label SUB header is covered by the existing successful CALL/EOF
+control. Generic parser-error cleanup remains separately tested.
+
+`ngc_flowctrl.c:789-790` clears all sub records and flow frames on this syntax
+error before the installed `onNamedSubError` sees it. That handler only closes
+named files through a surviving frame/sub lookup (lines395-419), so it can no
+longer identify the redirected file. Its EOF handler has the same frame guard.
+The full-protocol malformed-header reproduction is retained as an unregistered
+[proposal](proposals/named_macro_wrong_sub_header_unwinds_scope_and_skips_both_tails.c):
+it reaches a repeat-EOF timeout15.03s rather than returning to the sender.
+
+**Suggested fix for Terje (not applied):** preserve ownership until named-file
+error unwinding completes, or close the corresponding files while clearing the
+frames. Validate nested files, parameter restoration, and sender recovery. Keep
+the bounded regression; remove this exact WILL_FAIL/known_bug block and entry
+when upstream passes, then promote the full-protocol proposal if it terminates
+with the intended error. No CORE edits or sanitizer diagnostic allowance.

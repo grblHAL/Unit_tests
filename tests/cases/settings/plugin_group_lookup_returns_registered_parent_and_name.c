@@ -10,5 +10,7 @@ int main(void)
     CHECK(strcmp(group->name, "Channels") == 0);
     CHECK(settings_is_group_available((setting_group_t)1000));
     CHECK(setting_get_group_details((setting_group_t)65530) == NULL);
+    CHECK(!settings_is_group_available((setting_group_t)65530));
+    CHECK(settings_is_group_available((setting_group_t)1000));
     return EXIT_SUCCESS;
 }

@@ -99,20 +99,6 @@ validator independently; no expected-failure exception applies.
 See [registered validator](cases/asymmetric_ganging/registered_resolution_validator_rejects_large_difference_without_mutating_motor.c)
 and [public valid write](cases/asymmetric_ganging/resolution_setting_accepts_and_reports_small_motor_difference.c).
 
-## Deferred confirmed defects
-
-**Maintainer review:** 2026-10-14.
-
-- [Fractional analog output](KNOWN_BUGS.md#analog-output-commands-truncate-fractional-values):
-  Terje deferred implementation to a longer-term TODO list. Retain the correct
-  fractional-value assertion and its linked exception; deferral is not a fix.
-- [Unexpected file percent marker status](KNOWN_BUGS.md#unexpected-file-percent-marker-reports-success):
-  Terje is wary of changing status semantics and deferred review. File-demarcation
-  events currently bundle mass settings updates into one storage commit. Senders
-  should demarcate bulk updates, especially with flash emulation: unbundled writes
-  can each erase and rewrite the emulated EEPROM. Review status/event semantics
-  together before changing the regression or implementation.
-
 ## Lathe diameter-mode conventions for reported offsets
 
 **Maintainer review:** 2026-10-14; design question, not a newly confirmed failure.
@@ -252,22 +238,21 @@ production change or source exclusion was added for this observation.
 
 ## Coverage inventory: inline/header implementations
 
-**Recorded:** 2026-10-15, test branch coverage-batch-10, core Terje 683589b.
+**Rechecked:** 2026-10-22. The current core coverage_filter and README gcovr
+example already include both .c and .h files. Archived PARTIAL run39373002337
+(c9941ca/CORE7a6a432) measures six headers, including rgb.h and stepper2.h.
+The previous .c-only scope note was stale.
 
-The core suite's coverage_filter in [ci/suites.json](../ci/suites.json) and
-README local gcovr example include only core .c files. Current percentages
-therefore do not account for executable inline/header bodies such as
-stepper2.h profile functions, even when tests exercise them. This is a reporting
-scope limitation, not evidence that those bodies are tested completely.
+The detailed summary now inventories C sources and headers together, so measured
+header line/branch gaps are visible and its file count uses the same file types.
+Uninstrumented headers may contain only declarations; their absence is not proof
+of missing executable tests. No coverage filters, XML metrics or runtime cases
+were changed by this reporting repair. The archived report remains PARTIAL.
 
-Keep this separate from the test batch's CI changes. A CI reporting follow-up
-should include instrumented core headers and inventory supported conditional
-code/inline bodies that are not emitted in the chosen builds. Retain the
-source-file inventory and meaningful behavior assertions; do not exclude
-uncovered code or equate 100% of the existing .c report with full core coverage.
-An independent local header-inclusive measurement can guide further test work
-without changing manual triggers or reusable callers.
-
+Full-supported coverage still requires reviewing executable inline bodies and
+conditional code that are not emitted in the tested configurations. Retain them
+in the source inventory; never equate a green suite or a covered file with full
+CORE line/branch coverage.
 
 ## Hide pullup-disable settings for protected board inputs
 
@@ -329,12 +314,11 @@ C:/Users/User/Documents/Codex/p12/rgb-mask. This is a host profiler/path issue,
 not nine untested RGB helpers or new core faults. Earlier local header totals
 may have the same limitation and must not be treated as authoritative.
 
-Keep the header-inclusive Linux CI reporting change separate from this test
-batch. Inventory executable header bodies, verify profile collection and emitted
-configuration scope, and use hosted Linux results for authoritative percentages.
-Do not suppress gcovr errors, exclude real code or call 100% of the current
-.c-only report full core coverage. A short source/build path may help local LLVM
-collection, but verify actual profile files before trusting the resulting total.
+Header filters are already inclusive; the reporting-only inventory correction
+is separate from the runtime test batch. It does not repair Windows profile-path
+collection. Use hosted Linux results for authoritative totals and keep failed-run
+measurements explicitly PARTIAL. Never suppress gcovr errors or exclude real code
+to claim full CORE coverage.
 
 
 ## Compatibility-level coordinate availability documentation
@@ -649,11 +633,328 @@ Unregistered proposal: tests/proposals/g53_scaling_machine_coordinates.c.
 Registered control cancels scaling with G50 before the G53 move.
 
 
-## Formatting current-drive relative-path recovery (2026-10-20)
-Source review of clean Terje7a6a432: vfs_drive_format writes global '/' into the
-cached directory while retaining the selected non-root mount. After formatting
-/store, relative filenames should still resolve within /store. The existing
-formatting_current_drive_resets_removed_subdirectory_to_drive_root case now
-checks an actual relative stat as well as the displayed directory. Revalidate
-once Terje fixes the independent strset NULL-base crash; do not implement a core
-fix here or call the source-inspection concern a new confirmed runtime failure.
+## Secondary PWM inversion guard reachability
+
+**Reviewed:** 2026-10-20, clean Terje `7a6a432eaf78e028b81ff3a5f9804e14519f5f01`.
+
+Driver registration trims unsupported PWM inversion from the secondary spindle's
+public bitfield metadata. An ordinary setting write requesting that bit therefore
+returns `Status_SettingValueOutOfRange` before `set_spindle_invert()` can reach
+its older `Status_SettingDisabled` fallback. The supported rejection and subsequent
+enable/direction inversion are covered by
+[the public-setting case](cases/multi_spindle/secondary_pwm_rejects_signal_inversion_not_supported_by_driver.c).
+Do not call the private setter or replace registered metadata to color that guard
+in coverage. This is a reachability note, not a firmware bug or an exclusion.
+
+
+## Redundant YZ cutter-compensation plane guard
+
+**Reviewed:** 2026-10-20, clean Terje7a6a432. The common validation in
+`gcode.c:2720-2721` rejects YZ cutter compensation with
+`Status_CutterCompConflict` before the later same-condition
+`Status_GcodeIllegalPlane` check at2853-2854. The public rejection and corrected
+XY retry are tested in
+[the activation case](cases/cutter_comp/enabling_compensation_in_yz_plane_rejects_before_plugin_and_allows_xy_retry.c).
+Do not bypass the earlier guard to color the later one in coverage. This is a
+reachability observation, not a new defect or a coverage exclusion.
+
+
+## Plasma material handling is a plugin integration contract
+
+**Maintainer context supplied by the user:** 2026-10-22. Terje is developing
+controller-local SD-card material handling in the plasma plugin and ioSender.
+The plugin handles M190 and LinuxCNC-style material comments; feed can reference
+`F#<_hal[plasmac.cut-feed-rate]>`. The material comment itself is separate from
+that named parameter expression.
+
+Keep standalone CORE tests on published parameter-provider and comment-hook
+contracts. Do not invent material persistence, selection, required fields or
+sender behavior without the plasma plugin and its supported configuration.
+The current parser-flag refactor and source build failures are recorded against
+an exact revision in KNOWN_BUGS; they do not establish a settled material API.
+Revisit integration coverage when the implementation and plugin fixture are available.
+
+
+## Closing serial demarcation after an alarm-rejected block
+
+**Observed:** 2026-10-22, Terje `fab8d1c248990f53f13a444018fbb3ee353061dd`.
+The existing full-boot alarm-locked settings-upload case sends `%`, a valid
+$11 setting, rejected G91, then `%`. The closing marker no longer reaches the
+observer: compatibility-level-zero last_error gating follows the demarcation
+alarm bypass. Confirm whether closing demarcation must release a settings batch
+after an intervening error, or whether the sender must explicitly clear the error.
+Keep the existing regression and its callback/motion assertions pending that
+contract review. A named WILL_FAIL now records the observed failure per the
+requested nonblocking policy; it does not establish the intended contract, and
+there is no sanitizer allowance.
+Evidence: build-asan/batch72-current-core-available.xml,
+boot.alarm_locked_settings_upload_demarcates_batch_and_keeps_motion_blocked.
+
+
+## Expression dispatcher gaps that require invalid private enums
+
+**Reviewed:** 2026-10-22, clean Terje fab8d1c. The old partial map marks
+ngc_expr.c115-116,189-190,292-293 and337-341 as missing. These are private
+binary/unary/precedence defaults: read_operation/read_unary reject unknown text
+before dispatching a valid enum. Do not inject enum values into private helpers.
+The execute_unary EXISTS no-op at250-252 is bypassed by read_unary's dedicated
+EXISTS evaluation path. Existing public EXISTS and unknown-operator controls,
+including a malformed second operator with queued motion, remain registered.
+Keep these defensive/unemitted paths in raw reporting; revisit if public dispatch
+changes. This is reachability evidence, not a request to remove source lines.
+
+
+## Settings dispatch cases not wired by public metadata
+
+**Reviewed:** 2026-10-22, clean Terje fab8d1c. The saved partial map lists
+settings.c2181-2187 and2198-2204 in is_setting_available. DoorSpindleOnDelay,
+DoorCoolantOnDelay and AutoReportInterval registrations pass NULL for
+is_available, so ordinary queries do not call those switch cases. TimeZoneOffset
+registration is commented out. The get_int SteppersEnergize case at1789-1791
+is also unused: the registered setting routes reads to get_axis_mask instead.
+
+Do not call private setters/getters with unrelated IDs or replace metadata just
+to enter these cases. Keep them in the raw source denominator and revisit if
+registrations change. Existing public motor-hold write/read/persistence tests
+remain; malformed integer rejection now also verifies driver and stored-state
+preservation followed by a successful retry. Description allocation recovery
+is tested through the ordinary registered plugin query.
+
+
+## Fault-axis inline fallback is guarded at the CORE caller
+
+**Reviewed:** 2026-10-22, clean Terje fab8d1c; archived header branch detail is
+unchanged except for new analog declarations in crossbar.h. The remaining
+false-range conditions in xbar_fault_pin_to_axis require a non-motor-fault
+function. Its only CORE caller, config_fault_pins in ioports.c1495-1497,
+first requires xbar_is_motor_fault_in(function). Existing primary/secondary
+XYZ identity tests exercise both valid fault ranges.
+
+No current supported CORE workflow reaches the unmatched fallback. Do not route
+an unrelated signal through a private configuration path merely to fill these
+branches. Retain the raw denominator; revisit if callers or supported pin ranges
+change. RGB-clear index semantics remain the separate deferred contract above.
+
+
+## Default VFS metadata after 68eba79
+
+The rewritten default backend only implements root stat for `/`; it no longer
+synthesizes mounted-child metadata or preserves a failed stat output buffer.
+Existing root/missing-path regressions now exercise public vfs_stat and check
+success metadata or ENOTDIR, without imposing failure-buffer contents. Retired
+the old direct-default-backend child-stat test: its callback-free child was
+never a usable provider for public stat, which requires fstat. Do not call a
+missing child callback just to cover the removed fallback. No CORE edits.
+
+Hidden embedded mount navigation is a separate maintainer contract question:
+68eba79 allows chdir while all embedded entries are hidden. Existing directory
+listing assertions pass; two old rejection assertions remain named expected
+failures pending confirmation whether hidden means invisible or inaccessible.
+
+
+## Delayed-task fallback after atomic selection (68eba79)
+
+Passing hosted coverage job39779207602 measures grbllib.c590-594 as uncovered.
+The new task_get_due selects and returns tasks.delayed while leaving IRQs
+masked; task_execute has no intervening callback before comparing that result
+with tasks.delayed. Under the supported single-core ISR model the old fallback
+search cannot be reached. Existing pending-IRQ insertion/cancellation controls
+pass. Do not force a private queue change or violate the IRQ-mask contract to
+hit this defensive search. Retain these lines in raw coverage, and revisit if
+selection or supported concurrency changes.
+
+## Remaining large extension gaps at exact68eba79 report
+
+Coverage job39779207602 at harness97bb6aa measures17,185/17,684 executable
+lines (97.18%) and11,928/13,754 branches (86.72%);499 lines remain. This is a
+successful coverage job, while full compiler matrix readiness is separate.
+The highest remaining regions still include unfinished wall-plotter homing,
+unregistered I/O open-drain settings, unexposed settings metadata and the weak
+unsupported rigid-tapping extension/macro path. Prior dispositions remain in
+this TODO. Do not register inaccessible settings, forge private state or replace
+an unimplemented motion extension solely to improve the number. Raw counts
+retain all measured regions. Reuse the exact new gaps inventory under
+build-asan/hosted39779207602/gaps.json for the next substantial batch, checking
+already-written local follow-ups before authoring.
+
+
+## RTU callback re-entry contract
+
+**Source review:** 2026-10-22, clean68eba79. Blocking receive callbacks run after
+poll releases spin_lock, and modbus_send_rtu explicitly rejects nested blocking
+requests while is_blocking is set. Async receive/timeout/CRC callbacks instead
+run while the poll spin_lock is held; a synchronous re-entry into modbus_send
+would reach its while(spin_lock) before queuing. Confirm whether async callbacks
+must defer sends to a foreground task, or direct nonblocking chaining is meant
+to be supported. No watchdog/timeout placeholder or speculative assertion is
+registered, and no confirmed bug is claimed without that callback contract.
+Existing ordinary transaction, timeout/retry and deferred-send behavior remains
+covered. Source evidence: modbus_rtu.c async callbacks around181/212/226 and
+send's spin-lock wait around268. Revisit using the actual registered RTU stream
+fixture and a bounded process if direct callback re-entry is supported.
+
+
+## Settings-list N/A fallback cannot be reached by a valid plugin descriptor
+
+**Reviewed:** 2026-10-22, clean68eba79. report.c450-452 prints N/A only when
+setting->value is NULL. Public settings_register validates every descriptor's
+value before linking its owner (settings.c2765). A null-storage plugin therefore
+cannot reach that listing fallback. The new executable registration case proves
+whole-owner rejection (neither setting is discoverable), corrected registration
+and ordered reporting of both valid values. Do not mutate already registered
+metadata or bypass settings_register to claim that fallback covered. Raw source
+coverage retains the lines; no global-table reachability claim is made here.
+Further registration branch coverage can extend the same scenario for missing
+persistence/getter callbacks and invalid group/description metadata, rather than
+adding duplicate aliases for each boolean guard.
+
+## Legacy version repair and checksum repair are separate startup paths
+
+**Resolved source distinction:** 2026-10-22, clean68eba79. The existing legacy
+unrecognized-version tests exercise nvs_buffer_init's early repair when byte0
+does not match SETTINGS_VERSION. That restores the record before settings_init
+reads it, so it cannot cover the later settings.c3783 recovery report call.
+This is not evidence of a gcov attribution error.
+
+New boot_compat_2/boot_compat_10 checksum cases instead store a valid changed
+calibration and valid version marker, verify the good record, corrupt one CRC
+byte and verify checksum rejection. The normal boot then restores defaults,
+reports the read failure and setting values, and persists a valid repaired
+record. Shared fixture reuses the existing version-repair assertions; both old
+and new fault types pass grouped sanitizers/strict. No private settings call or
+alternate implementation is used. The next hosted report must establish the
+measured line gain; current source review alone is not a percentage claim.
+
+
+## Tool-table absence guards implied by earlier parsing
+
+**Verified source review:** 2026-10-22, clean68eba79. The G43/G43.2 word parser
+requires grbl.tool_table.n_tools before selecting Enable/ApplyAdditional
+(gcode.c1678/1680). The later n_tools==0 rejection arms at2959/2971 therefore
+cannot be reached with supported stable table metadata. The passing no-table
+scenario tests the actual early rejection branches and preserves a dynamic
+offset plus queued80step cut; it does not cover those later defensive lines.
+Do not change table capacity from a callback mid-block or forge the private
+modal block merely to reach them. Keep raw coverage and revisit if parsing or
+the table-lifetime contract changes.
+
+## Verified residual guards: VFS lookup/rename and virtual-parameter root
+
+2026-10-22, CORE68eba7906ba60d66c8b55c4adc90cd5e85b5a828, compared with
+source-locked hosted39801089848. These four lines remain in raw coverage.
+
+- get_mount (vfs.c265-289) returns cwdmount for relative paths, and an existing
+  mount or &root for absolute paths. Public unmount selects root/null filesystem;
+  no public API removes root. Thus null-mount arms vfs_chdir474 and
+  vfs_get_drive774 cannot run for valid path pointers.
+- vfs_rename403 only permits backend success for equal source/destination mounts.
+  Its later second-mount notification410 requires different mounts, contradicting
+  that guard. Existing cross-mount rejection and same-mount notification tests
+  exercise the meaningful contract.
+- ngc_params.c169-171 initializes the virtual list with built-in _value and
+  _value_returned nodes. No public API clears it; registration appends nodes.
+  The empty-list assignment942 is unreachable. Existing multi-provider tests
+  exercise append and lookup.
+
+Do not force private state or create fake WILL_FAIL placeholders. Revisit these
+source-proven guards if upstream lookup, rename or parameter lifecycle changes.
+
+## Zero per-axis locate rate: define completion coordinates before asserting
+
+2026-10-22, CORE68eba7906ba60d66c8b55c4adc90cd5e85b5a828. Axis homing-feed
+metadata has no nonzero minimum; get_homing_rate returns that value. A zero rate
+after a successful seek/pulloff clears the axis from cycle at machine_limits502.
+The final limits_set_machine_positions(cycle,true) therefore omits it, while the
+previous homed mask is still merged into sys.homed. Clarify whether zero disables
+locating while retaining the seek reference, disables homing for that axis, or
+must be rejected by settings. Do not invent final machine coordinates or force a
+private homing phase to cover this branch. Existing zero-seek/locate-count tests
+cover their established contracts. This is a source concern, not a reproduced bug.
+
+## Tab-setting metadata default datatype arm
+
+2026-10-22, CORE68eba7906ba60d66c8b55c4adc90cd5e85b5a828. report.c1955-1956
+is a defensive default after setting_datatype_to_external. settings.h1014-1026
+lists Bool, Bitfield, XBitfield, RadioButtons, AxisMask, Integer, Decimal, String,
+Password, IPv4, Int8 and Int16. settings.c3360-3372 maps Int8/Int16 to Integer;
+report.c1916-1952 explicitly handles every remaining valid type. Reaching default
+would require an out-of-enum metadata value. Do not register malformed metadata
+or call a private printer merely to cover it. Keep both lines in raw coverage;
+revisit when a new valid setting datatype is introduced.
+
+## G84 private override-helper flag guards
+
+2026-10-22, CORE68eba7906ba60d66c8b55c4adc90cd5e85b5a828. Static helpers
+in gcode.c override_disable/override_restore have one call site each, at4908 and
+4915. Both pass the same constant flags:feed_hold=On,feed_rates=On,spindle_rpm=On.
+Thus false arms at174/180/185 and198/205/208 cannot run through current supported
+parser workflows. The enable/disable field names alias the same flag storage.
+Do not export/call private helpers or pass fabricated flags to cover these arms.
+The separate saved-policy branches199/210 are reachable and have a real G84
+pre-disabled-controls scenario, including actual retract pulses and reenabling.
+Retain raw branch counts; revisit if upstream adds a caller with partial flags.
+
+## Free-port search order with an empty capability filter
+
+2026-10-22, CORE68eba7906ba60d66c8b55c4adc90cd5e85b5a828. ioport_find_free
+comment promises search from last port. For numeric/empty descriptions it forwards
+the caller filter to ioports_enumerate:nonzero filter enumerates descending,
+zero filter enumerates ascending (ioports.c587-603). In a two-output bank,
+filter0/upper-bound1 returns0, whereas claimable filter returns1. Clarify whether
+zero-filter search ordering is intentional or should follow the free-search
+comment. Do not change unfiltered enumeration's established ascending contract.
+Existing free-search tests now cover explicit claimable filter, numeric bounds,
+empty description and unchanged ownership. This discrepancy is a policy question,
+not a confirmed failure allowance.
+
+
+## M6 check-mode message cleanup guard audit - 2026-10-22
+
+CORE68eba79 gcode.c4238 is inside the tool-change execution block guarded at
+4231 by !gc_parser_flags.check_mode, then tests the same flag at4237 without
+any intervening callback or assignment. The free(message) arm cannot execute
+through supported controller commands. Keep it in raw coverage; no placeholder
+WILL_FAIL or private flag mutation. Existing check-mode comment test verifies
+normalization suppresses plugin/message handlers. Revisit if upstream changes
+the enclosing guard or message ownership.
+
+
+## Parser post-reader NaN guard audit - 2026-10-22
+
+CORE68eba79 gcode.c1470-1471 rejects NaN only when user_mcode is not
+UserMCode_NoValueWords. With expressions enabled, ngc_read_real_value rejects
+NaN/Inf with Status_ExpressionInvalidResult at ngc_expr.c823-826 and the caller
+returns that error before this guard. The only explicit NaN assignment immediately
+above is limited to UserMCode_NoValueWords, excluded by the guard. Existing custom
+M-code normal-value and valueless-word tests cover supported contracts. Retain raw
+coverage; do not mutate parser locals or add fake expected failures for this arm.
+
+
+## File-reader no-file fallback audit - 2026-10-22
+
+CORE68eba79 stream_file.c72 returns SERIAL_NO_DATA if stream_read_file is called
+without hal.stream.file. Normal stream_redirect_close restores stream->read before
+stream_set_file restores parent file/reader; final close restores serial reader.
+Existing close_restores_input checks the handoff and file close count. No supported
+file workflow identified that leaves this reader installed without a file. Keep raw
+coverage; do not reinstall a detached reader or clear its file solely for coverage.
+Revisit if a plugin-supported stream replacement workflow establishes reachability.
+
+
+## Homing driver refusal and sender status mapping - 2026-10-22
+
+CORE68eba79 system.go_home maps Status_Unhandled to Status_OK. A registered
+homing feedrate provider returning0 for laterY in split-rate XYZ homing leaves
+X homed, Y/Z unmoved, calls completion(false), and returns Unhandled from
+mc_homing_cycle, yet $H returnsOK without alarm. Confirm intended driver-provider
+contract and sender-visible error policy before claiming a core defect or selecting
+a different status. Passing API regression preserves partial-homing and retry
+behavior in split_rate_homing_stops_after_later_driver_refusal_and_allows_retry.
+
+
+2026-10-22: named macro mismatched SUB header timeout isolated: flow-level
+syntax cleanup removes call ownership before the named error/EOF handlers.
+Bounded registered WILL_FAIL and source cause now live in KNOWN_BUGS.md under
+"Flow syntax errors orphan an active named macro file". The full-protocol
+proposal remains unregistered until upstream ownership cleanup is fixed; then
+promote it to check sender recovery without relying on a timeout allowance.

@@ -7,9 +7,9 @@ int main(void)
 {
     engine_prepare();
     state_set(STATE_IDLE);
-    gc_state.file_run = true;
+    HOST_PARSER_FLAGS.file_run = true;
     CHECK(stream_is_busy(false));
-    gc_state.file_run = false;
+    HOST_PARSER_FLAGS.file_run = false;
     CHECK(!stream_is_busy(false));
     return EXIT_SUCCESS;
 }

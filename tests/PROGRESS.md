@@ -1,3 +1,1750 @@
+# Flow-control error cumulative gate and confirmed backlash wait gain - 2026-10-22
+
+Full4,160-case ASan/UBSan passes82.19s:4,144 clean,16 known,0 failures/skips.
+Build/test/strict all0 in batch72-flow-errors-gate.json. Unknowninitial/barelabel
+rejection andnumericSUB recordOOM/retry validated together. No allowances/CORE
+edits. Localgroup awaits delivery/hosted gain.
+
+Allfive jobs on39828039606 at4616165 terminalsuccess. Artifacts12447802567/
+12447773947 lock461616550703e3c95f6a342f9853a737b43464da/source68eba79/
+corefilter;all stages0,4,156/4,140clean/16known/0/0.17,304/17,684lines97.85%,
+12,116/13,754branches88.09%:+2lines/+2branches versus2b0cc0c. Newlycovered
+machine_limits587 andmotion_control163 confirm split-rate rejection andfirstpoll
+backlashwait target.380 raw lines remain. README/knownsnapshot updated. Later
+091fc1c39829068251 compilerpending;73a2abf39829941823 running.
+
+# Numeric SUB definition allocation failure and retry - 2026-10-22
+
+New actualfile/publicparser O10SUB case rejects scoped recordcalloc,returnsOOM,
+retains exact file/reader with no close or callscope. Retry defines successfully,
+bodyassignment staysskipped,ENDSUB restores execution and nextassignmentupdates
+parameter42to43. Properfile cleanup. Reuses existing flow/calloc fixtures; narrow
+pertest calloc linker option alongside namedmacro counterpart. Targets flowctrl659.
+Focused sanitizer passes0.37s. Total4,160,no allowances/CORE edits. Grouped with
+unknownkeyword controls pending cumulative validation and measured gain.
+
+# Unknown O-code initial and bare label rejection - 2026-10-22
+
+Extended existing misspelled keyword/recovery case with O10XYZ andO10Z[1],
+exercising general unknown-initial syntaxerror atngc_flowctrl199-200. Existing
+parameter42/noalarm/noabort/emptyplanner controls retained and validIF assignment
+stillrecovers. BareO10 is rejected earlier by mainparser asUnusedWords,so distinct
+assertion follows that actual contract rather than classifying it asflowkeyword.
+Focused sanitizer passes0.35s. No new cases/allowances/CORE edits,total4,159.
+Local batch begins; cumulative gate and measured gainpending.
+
+# Default driver callbacks cumulative gate - 2026-10-22
+
+Full4,159-case ASan/UBSan passes77.95s:4,143 clean,16 known,0 failures/skips.
+Build/test/strict all0 in batch72-default-drivers-gate.json. Defaultweak passthrough
+command and default Modbus exception handling through realRTU validated together.
+No new allowances/CORE edits. Local group delivery/hosted gain pending.
+
+Allfive jobs on39826891832 at2b0cc0c individually terminalsuccess. Artifacts
+12447807241/12447012617 bothlocks2b0cc0caeff0510b2aa4924c18becb3cb9cf98b0,
+source68eba79/corefilter;all reportstages0,4,155/4,139clean/16known/0/0.
+17,302/17,684lines97.84%,12,114/13,754branches88.08%:+1line/+1branch
+versus277db12 (machine_limits611).382 raw lines remain. README/knownsnapshot
+updated.4616165 run39828039606 Clangpending;091fc1c39829068251 running.
+
+# Default Modbus exception handler releases transport for next reply - 2026-10-22
+
+Extended existing realRTU exception/recovery case to deliver illegal-address
+exception firstwithoutcallback,thenwith supplied modbus_null_exception_handler.
+Both complete without userfailure callback or packet delivery; subsequent valid
+request sends thirdframe and receives exactlyone response. Targets modbus129/132
+through registered transportcallback,not directemptyfunction call. Focused sanitizer
+passes0.33s. No new case/allowance/CORE edit; total4,159. Grouped with default
+passthrough command case pending cumulative gate and hosted measurement.
+
+# Default passthrough driver entry preserves connection ownership - 2026-10-22
+
+New normal$PTRGH command case uses default weak stream_passthru_enter instead
+of replacement. Command warning/delay executes,default hook returns with passthru
+false,no USB/UART handler installation,no reset/boot pinchanges,cancel0 and no
+linestate hook. Targets stream_passthru33/36. Focused sanitizer passes0.32s.
+No success of programming/driver transition claimed. Total4,159,no allowances or
+CORE edits. Next cumulative batch starts; gain pending hosted measurement.
+
+# Inversion/sleep cumulative gate and green homing snapshot - 2026-10-22
+
+Full4,158-case ASan/UBSan passes73.06s:4,142 clean,16 known,0 failures/skips.
+Build/test/strict all0 in batch72-square-sleep-gate.json. Asymmetric inversion
+publicwrites and sleep scheduling pressure/retry validated together. No new
+allowances/CORE edits. Local group awaits delivery/hosted gain.
+
+Allfive individual jobs on39826209629 terminalsuccess. Artifacts12446239029/
+12446827666 both lock277db12dfae59d7a4bebb056f24c7c3db081e18c/source68eba79/
+corefilter;all reportstages0,4,153/4,137clean/16known/0/0.17,301/17,684
+lines97.83%,12,113/13,754branches88.07%:+1line/+2branches versus6a8d34f.
+New machine_limits327.383 raw lines remain. README/known snapshot updated.
+2b0cc0c run39826891832 Clangpending;4616165 run39828039606 running.
+
+# Sleep timeout task-pool pressure and retry - 2026-10-22
+
+New public scheduler/sleep case fills available delayed-task pool with valid future
+plugin tasks. Sleep check cannot schedule timeout:returns immediately,noinputreads
+or schedulerpolls,no sleepflag,stillIdle. Deleteone task and advance50ms;retry
+schedules timeout,expires through normal callback andrequestsSleep. Remaining
+plugin tasks neverexecute and aredeleted;IRQdepth0. Targets sleep39 without heap
+wrappers/private pool writes. Focused sanitizer passes0.27s. Initial task_delete
+return assumption corrected to declared void API. Total4,158,no allowances/CORE
+edits. Grouped with asymmetric inversion for cumulative gate/hosted gain.
+
+# Asymmetric auto-square public limit inversion propagation - 2026-10-22
+
+New normal settings-store case appliesY inversion thenX-only thennone. Actual
+registered kinematics settings hook propagatesY to secondaryaxis3,clearssecondary
+whenY clears,preservesX,and chains prior settings notification once perwrite.
+Targets asymmetric_ganging287 under supported auto-square build. Focused sanitizer
+passes0.40s. Total4,157,no allowances/CORE edits. Next cumulative batch starts.
+
+# Homing refusal/backlash wait cumulative gate - 2026-10-22
+
+Full4,156-case ASan/UBSan passes74.17s:4,140 clean,16 known,0 failures/skips.
+Build/test/strict all0 in batch72-homing-refusal-gate.json. Later-axis driverrefusal
+with earlieraxis retained,publicretry and refined firstpoll backlash reset validated
+together. No new allowances/CORE edits. CORE remote still68eba79 andclean.
+
+Allfive individual jobs on39824927291 at6a8d34f nowterminalsuccess. Prior locked
+artifacts rechecked:17,300/17,684lines97.83%,12,111/13,754branches88.05%,
+384 raw uncovered lines. UpdatedREADME/known snapshot.277db12 run39826209629
+coverage/source success,compilerspending;2b0cc0c run39826891832 running. Current
+localgroup delivery/hosted gainpending. Sender homing status question retainedTODO.
+
+# Backlash full-queue abort event boundary refinement - 2026-10-22
+
+Existing reset scenario now uses long100mm leading cut and requests actual reset
+on first service poll,processed at compensation-space wait. Source/trace review:
+cycle-start transfers first planner block to stepper,freeing slot even for long
+move; secondpoll reset was too late and allowed compensation append. Firstpoll
+reset processes before transfer,returnsAborted,keeps exact previous lastblock
+(no compensation append),no pulses/physical movement,onecallback. Focused sanitizer
+passes0.32s. Targets motion_control163; measured gain stillpending. No new cases,
+allowances or CORE edits. Grouped with split-rate provider failure for cumulative gate.
+
+# Later split-rate homing provider refusal and recovery - 2026-10-22
+
+New public homing API case requests configuredXYZ with unequal rates; X completes
+110pulses/homedX,driver refusesY seek rate,API returnsUnhandled and failure callback;
+YZ emit0,queueempty,Idle/noabort. Provider recovery and public$HY succeeds with
+150Ypulses,homedXY;Xunchanged,Zneverstarted. Targets machine_limits587. Focused
+sanitizer passes0.35s. Initial$H return expectation corrected after source review:
+system.go_home deliberately mapsUnhandled toOK,so direct exportedhomingAPI used
+for status assertion. No new defect/allowance claimed. Total4,156,CORE unchanged.
+
+# Y/Z autosquare cumulative gate - 2026-10-22
+
+Full4,155-case ASan/UBSan suite passes71.20s:4,139 clean,16 known,0 failures
+or skips. Build/test/strict all0 in batch72-square-axis-gate.json. Shared simulated
+axis selector preserves existingX cases and validates publicY/Z independenttrim
+homing with no other-axis pulses. CORE clean,no new allowances. Delivery pending.
+
+Prior6a8d34f coverage39824927291: artifacts12446203148/12446682058 bothlocks
+6a8d34f7bef01a0ead460b2a2fd448d293135c7b/source68eba79/corefilter;all stages0,
+4,151/4,135clean/16known/0/0.17,300/17,684lines97.83%,
+12,111/13,754branches88.05%:+3lines/+5branches versusfac105e.
+New tool_change204/364/368. GCC/Clang remain running; no allgreen claim or badge
+refresh. Current277db12 run39826209629 also running. LocalY/Z gain unmeasured.
+
+# Y/Z auto-square axis selection and independent trims - 2026-10-22
+
+Generalized existing autosquare simulated motor axis from fixedX to selectable
+index(defaultX,existing behavior retained). New public$HY positiveoffset0.25 and
+$HZ negativeoffset-0.25 cases verify primary/secondary final70/90 and50/110steps,
+only selected axis homed,other axis pulses0,motors reenabled,Idle and no abort.
+Targets machine_limits611 loop pastX through valid driver registration. Built all
+20 autosquare targets together; focused ASan/UBSan20/20 passes1.71s. Total4,155,
+no allowances/CORE edits. Shared fixture change requires next full cumulative gate
+before delivery; existing assertions unchanged.
+
+# Homing/manual-control cumulative gate and green snapshot - 2026-10-22
+
+Full4,153-case ASan/UBSan passes58.80s:4,137 clean,16 known,0 failures/skips.
+Build/test/strict all0 in batch72-homing-manual-gate.json. Public zero-travel
+homing/recovery and physicalmanual restore validated together. No new allowances
+or CORE edits. Local group awaits delivery/hosted gain.
+
+Runs39823116932 and39823928447 allfive jobs individually terminalsuccess.
+Latestfac105e artifacts12445943834/12444859897 both lock exact
+fac105e42075ae3d776aedb3e950c3084612242c/source68eba79/corefilter; all stages0,
+4,148/4,132clean/16known/0/0.17,297/17,684lines97.81%,
+12,106/13,754branches88.02%:+7lines/+9branches sincepublished59b8f60;
++4/+4 since1582c74. New tool_change177/506/517/524 in latestgroup;
+previousgroup ngc_params1011,tool_change200/531.387 raw lines remain.
+README/known snapshot updated. Newer6a8d34f run39824927291 stillrunning.
+
+# Public zero-travel homing and recovery - 2026-10-22
+
+New public settings/homing case stores maxtravel0,executes X homing,no wake/pulses
+or homedX,empty planner; restores travel10 and normal homing produces pulses and
+homedX whileYZ staystill. Targets machine_limits327. Initial recovery failed due
+fixture issuing step IRQs while motor was never awakened; directtravel10 control
+passed. Local wake/idle wrappers now gate IRQ service correctly,with no shared
+fixture change. st_is_stepping was insufficient before first actual ISR; replaced
+with driver wake tracking after stopping that stalled authoring run. Corrected
+focused sanitizer passes0.27s. No core defect/allowance claimed. Total4,153;
+grouped with physicalmanual restore pending cumulative gate/hosted measurement.
+
+# Physical manual-change restore after touch-off - 2026-10-22
+
+New serialT3M6/G10L2P1Z0 workflow acknowledges change, then sends two physical
+cycle-start events before foreground task. No immediate motion; actual restore
+returns to160/240/-80steps,clears change,restores stream/control handlers and
+normal realtime transition emits exactlyone tool3 completion. Targets false arm
+of physical-control execute_probe/execute_restore dispatch attool_change364.
+Focused sanitizer passes0.27s. Total4,152,no allowances/CORE edits. Local group
+awaits cumulative validation/hosted gain.
+
+# Toolsetter/physical controls cumulative gate - 2026-10-22
+
+Full4,151-case ASan/UBSan suite passes57.73s:4,135 clean,16 known,0 failures
+or skips. Build/test/strict all0 in batch72-tool-controls-gate.json. Includes reset
+before setterZ and physical-cycle-start automatic/G30 paths with duplicatepresses.
+No new allowances/CORE edits. Local group awaits delivery/hosted gain.
+
+Prior1582c74 coverage39823116932: artifacts12444694343/12444988901 locks exact
+1582c74411155d104664d0afd96e54af7826b0ed/source68eba79/corefilter; all report
+stages0,4,145/4,129clean/16known/0/0.17,293/17,684lines97.79%,
+12,102/13,754branches87.99%:+3lines/+5branches versus59b8f60.
+New ngc_params1011 andtool_change200/531. GCC/Clang remain running; published
+snapshot stays green97.77/87.95. Currentfac105e run39823928447 also running.
+
+# Physical cycle-start tool workflows - 2026-10-22
+
+Two new actual HAL control-callback cases cover physical cycle-start while automatic
+toolsetter waits and manualG30 return-to-fixture waits. Send duplicate press before
+foreground execution; no immediate pulses. Automatic probe establishes reference,
+restores originalXYZ and probe/command handlers; subsequent normal realtime service
+emits one tool-change completion. G30 return reachesfixture1,1,-2 while retaining
+manual-change wait and no completion. Targets tool_change364/368 control path,
+complementing existing serial-resume tests. Built together,focused sanitizer2/2
+passes0.32s. Initial completion assertion preceded required realtime transition;
+serviced public transition before asserting. Total4,151,no allowances/CORE edits.
+Grouped with pending toolsetterZ reset for cumulative gate.
+
+# Reset before toolsetter Z approach - 2026-10-22
+
+New Manual_G59_3 case observes normal queued toolsetterXY target via public planner
+and sends actual reset before nextZ submission. Driver change returnsReset,one
+reset/positioncallback,no XYZ pulses or completed tool notification; physical
+160/240/-80 retained and latest queued targetZ stays0 rather thanapproach-2.
+Targets tool_change204. Focused sanitizer passes0.27s. Total4,149,no allowances
+or CORE changes. Pending next cumulative group validation/hosted measurement.
+
+# Tool-change queue reset cumulative gate - 2026-10-22
+
+Full4,148-case ASan/UBSan suite passes57.49s:4,132 clean,16 known,0 failures
+or skips. Build/test/strict all0 in batch72-tool-queue-reset-gate.json. Initial
+retract and G30XY/finalZ reset boundaries validated as group. No new allowances
+or CORE changes. Local head awaits delivery/hosted gain.
+
+Allfive jobs on39821728933 at59b8f60 terminalsuccess. Coverage/report artifacts
+12445023812/12445896104 both exact59b8f600d2157444e4353c8409992620318ae918,
+source68eba79/corefilter; all stages0,4,143/4,127clean/16known/0/0.
+17,290/17,684lines97.77%,12,097/13,754branches87.95%:+1line/+1branch
+versus7270deb (motion_control1064). Backlash reset scenario did not cover163;
+retain this remaining gap without claiming gain.394 raw uncovered lines remain.
+Published snapshot links/counts refreshed.1582c74 hosted run39823116932 running.
+
+# G30 intermediate queue reset controls - 2026-10-22
+
+Two new manual-change cases send actual reset after initial retract is queued
+(beforeXY traverse) and afterXY is queued(before finalZ approach). Shared small
+fixture observes public planner target to select event boundary; no static/private
+state changes. Both driver changes returnReset,one reset,noXYZ pulses or completed
+tool notification,physical160/240/-80 retained; latest queued target remains prior
+stage atZ0. Targets tool_change517/524. Built together,focused sanitizer2/2 passes
+0.33s. Total4,148,no allowances/CORE edits. Grouped with initial retract reset.
+
+# Reset before initial manual-tool retract - 2026-10-22
+
+New real manual change case sends public reset on initial motion service poll.
+Driver change returnsReset,one reset callback,no pending tool-change or completed
+notification,empty planner and zeroXYZ pulses; physical160,240,-80 unchanged.
+Targets tool_change177/506. Focused sanitizer passes0.28s. Total4,146,no
+allowances/CORE edits. This begins next cumulative tool-change error batch.
+
+# Resource/stop cumulative gate and fully green coverage - 2026-10-22
+
+Full4,145-case ASan/UBSan suite passes59.85s:4,129 clean,16 known,0 failures
+or skips. Build/test/strict all0 in batch72-resource-stop-gate.json. String third
+entry growth, actual probe protection stop completion and reset before toolsetter
+traverse validated together. No new allowances/CORE edits; local delivery pending.
+
+Allfive individual jobs on39820646831 terminalsuccess at7270deb. Downloaded
+12444129239/12445625277; both locks exact7270deb8fb6bc43910c0f09fef7eb66b821d7356,
+source68eba79/core filter; all report stages0,4,141/4,125clean/16known/0/0.
+17,289/17,684 lines97.77%,12,096/13,754branches87.95%:+9lines/+7branches
+versus prior published964457f. Newfs_embedded257,gcode2431,planner807,
+report848/849,stepper2 149/150/191/192.395 raw lines remain. README/known
+snapshot updated. Newer59b8f60 run39821728933 remains running.
+
+# Toolsetter position callback reset prevents traverse - 2026-10-22
+
+New real Manual_G59_3 tool-change case installs positioning callback that sends
+normal realtime reset before go_toolsetter submits XY. Driver change returnsReset,
+sys.abort set,tool-change flag clears,one position callback/driver reset,no completed
+tool notification and no XYZ pulses; physical160,240,-80 unchanged. Initial
+assumption Z home already executed was corrected: go_linear_home queues it, then
+position callback runs before queue synchronization. Targets tool_change200/531.
+Focused sanitizer passes. Total4,145,no allowances/CORE edits. Cumulative gate pending.
+
+# Later string parameter growth retains list ownership - 2026-10-22
+
+New public string API case stores four entries, grows third from5 to240chars,
+checks both predecessors and successor unchanged, deletes/reinserts third and
+checks every entry before cleanup. Uses actual allocator; relocation-specific
+branch gain is measured later, not forced by private list manipulation. Targets
+remaining ngc_params1011 traversal when growth relocates. Focused sanitizer passes
+0.28s. Total4,144,no allowances/CORE edits; grouped with probe stop completion.
+
+# Probe protection stop completes through public realtime service - 2026-10-22
+
+Extended existing unexpected probe IRQ case beyond request flags: execute normal
+realtime stop, verify cancellation returnfalse, actual Alarm_ProbeProtect with
+pending alarm cleared, empty planner,no pulses/position change and ALARM:13 output.
+Source protocol551-592 confirms cancellation returnfalse is expected, not a
+continuable service return. Focused sanitizer passes0.26s. No new case/allowance
+or CORE edit; no unmeasured state-machine branch gain claimed. Local group starts.
+
+# Probe/backlash reset cumulative gate - 2026-10-22
+
+Full4,143-case ASan/UBSan suite passes, build/test/strict all0 recorded in
+batch72-reset-windows-gate.json.4,127 clean,16 documented expected failures,
+0 failures/skips. Includes public reset after probe setup and while full planner
+waits for backlash reversal. No new allowances/CORE changes. Local group awaits
+hosted gain; full reset path callbacks are provided by fixtures.
+
+Run39818343521 at964457f now allfive individual jobs terminalsuccess. Artifact
+locks/stages previously verified; published snapshot updated to17,280/17,684
+lines97.72% and12,089/13,754branches87.89%,404 raw uncovered lines. Later
+metadata39819657478 Clang stillrunning; latest7270deb run39820646831 running.
+
+# Probe reset after setup before planner submission - 2026-10-22
+
+New real probe-registration case installs public probe-start observer, then sends
+normal realtime reset on first motion service poll. mc_probe_cycle returnsAbort,
+sys.abort set,no success/completion,no X pulses or position change,empty planner.
+Targets motion_control1064 prequeue abort. Status_Aborted is deliberately0, so
+boolean motion checks are valid; no bug claimed. Initial callback signature fixed
+to declared bool provider type. Focused sanitizer passes0.27s. Total4,143; no
+allowances/CORE edits. Grouped with backlash full-queue reset for cumulative gate.
+
+# Reset during full-queue backlash reversal - 2026-10-22
+
+New public motion case enables backlash, queues forward motion, fills planner with
+valid driver lines, then requests reversal. Realtime observer sends normal reset
+while compensation waits. ReturnsStatus_Aborted,sys.abort set,no X pulses/physical
+position change,and requested zero endpoint absent from latest plan block.
+Focused ASan/UBSan passes0.27s; total4,142. Initial fixture lacked mandatory
+control/coolant/reset callbacks; corrected locally. Initial frozen/empty planner
+assumptions were invalid because normal realtime servicing stages queued blocks;
+assert observable abort/nonmovement instead. No defect/allowance/CORE edit claimed.
+Exact abort branch gain remains for hosted coverage, not assumed from timing.
+
+# Planner/files/parser cumulative gate - 2026-10-22
+
+Full4,141 ASan/UBSan suite passes60.11s:4,125 clean,16 known,0 failures/skips.
+Build/test/strict all0 in batch72-planner-files-gate.json. Includes third asset
+catalog, driver plan initialization with acceleration profile, explicit G33.1I
+check-mode parsing and pitch reuse. No new allowances/CORE changes.
+
+Prior964457f coverage39818343521: artifacts12443293519/12444650465 lock both
+harness964457f73230556d5b047dedd5012197c5873672/source68eba79/core filter;
+all report stages0,4,138/4,122clean/16known/0failed/0skipped.17,280/17,684
+lines97.72%,12,089/13,754branches87.89%:+3lines/+4branches versusd89ca53.
+New lines gcode4737/4738,settings1926. GCC/Clang remain running, so published
+snapshot stays fullygreen97.70/87.87. Current local group awaits hosted gain.
+
+# Explicit tapping multiplier dry-run parser path - 2026-10-22
+
+Extended existing synchronized-command check-mode case with G33.1Z2K0.2I2,
+accepting and consuming explicitI multiplier, updating simulatedZ2/pitch0.2,
+retaining overrides and empty planner. Following G33Z3 reuses pitch0.2 without
+motion. Targets gcode2431. Native tapping runtime remains separately documented
+unsupported-status bug; no execution-support claim or exception changes. Focused
+sanitizer passes. No new case/CORE edit; pending cumulative batch validation.
+
+# Driver planner initialization under selected acceleration profile - 2026-10-22
+
+New acceleration-profile case queues G187P5 feed at20% acceleration, initializes
+normal driver plan data and submits actual mc_line. Driver block gets default
+factor1/acceleration36000 and800 steps toX20; previous G-code block retains7200,
+modal factor remains0.2. Targets planner807 under enabled supported configuration.
+Focused ASan/UBSan passes0.26s. Total4,141,no allowances/CORE edits. Grouped with
+third embedded catalog extension pending cumulative gate/hosted measurement.
+
+# Third embedded catalog preserves reader and enumeration - 2026-10-22
+
+Extended existing catalog append case to register three distinct asset catalogs
+while first asset reader is open. Directory enumerates first/later/last exactly
+thenEOF; reader retains offset2 and remainingcde. Targets fs_embedded257 append
+traversal without touching known cross-list name-lookup defect. Focused sanitizer
+passes. No new cases/allowances/CORE edits; next cumulative batch begins here.
+
+# Metadata/report cumulative gate and green coverage snapshot - 2026-10-22
+
+Full4,140-case ASan/UBSan suite passes59.38s:4,124 clean,16 documented
+expected failures,0 failures/skips; build/test/strict all0 in
+batch72-metadata-report-gate.json. Includes bound-spindle metadata provider
+fallbacks and M99 callback report. CORE clean/latest remote remains68eba79.
+No new allowances. Current local group awaits delivery/hosted gain.
+
+Allfive individual jobs on39816875087 are terminalsuccess. Previously verified
+artifact locks/stages now support publishing its17,277/17,684 lines97.70% and
+12,085/13,754 branches87.87%;407 raw uncovered lines. Updated README and known
+gap snapshot. Exact newer964457f hosted run39818343521 still running.
+
+# M99 callback modal reporting - 2026-10-22
+
+New report case registers normal macro-return provider and executes M99. Callback
+sees ProgramFlow_Return, requests public modal report, verifies complete GC frame
+with spindle-off state and no invented M99 modal word; parser resumes Running
+and callback fires once. Targets report848-849 default using valid transient
+program-flow state rather than invalid enum injection. Focused sanitizer passes
+0.27s. Total4,140,no new allowances/CORE edits; cumulative gate pending.
+
+# Stepper spindle optional metadata providers - 2026-10-22
+
+New eight-axis case binds actual spindle motor with optional prior unit/description
+hooks unset. Bound step-resolution metadata is supplied; bound driver-current
+and unbound-axis metadata both returnNULL without dereferencing missing provider.
+Focused ASan/UBSan passes0.31s. Total4,139,no allowances/CORE edits. Grouped
+with previous-provider fallback extensions; pending cumulative gate/hosted gain.
+
+# File reader fallback reachability audit - 2026-10-22
+
+Remaining stream_file.c72 is a no-file fallback in the private reader. Reviewed
+normal redirect close: restores saved reader before restoring file stream; existing
+close_restores_input verifies final serial reader and close count. No supported
+workflow identified to reach fallback; recorded source evidence in TODO without
+private callback manipulation or fake failure. Stepper metadata test group remains
+local pending cumulative validation. No CORE changes.
+
+# Bound stepper-spindle driver metadata fallback - 2026-10-22
+
+Extended existing eight-axis metadata cases with driver motor-current setting
+on the spindle-bound A axis. Unit and description callbacks preserve the previous
+provider values rather than substituting spindle units. Targets stepper2.c149-150
+and191-192 defaults using valid driver axis-setting identifier. Focused sanitizer
+2/2 passes0.35s. No new cases/allowances/CORE edits; cumulative validation pending.
+
+# Motion recovery cumulative gate and prior batch coverage - 2026-10-22
+
+Full4,138 ASan/UBSan passes58.58s; build/test/strict all0 recorded in
+batch72-motion-recovery-gate.json.4,122 clean,16 known,0 failed/skipped.
+CORE unchanged; no new allowances. Rapid callback refusal/retry, queued arc
+recovery and missing-setting value handling validated together.
+
+Prior head d89ca53 coverage run39816875087 completed coverage/source, while GCC
+and Clang remain running. Artifacts12442099474/12443365993 locks verified to
+harnessd89ca535a8b9c16f91370fbaf48cdae532bb3a3b/source68eba79/core filter;
+all stage exits0,counts4,138/4,122/16/0/0.17,277/17,684 lines97.70%,
+12,085/13,754 branches87.87%:+8lines/+18branches versus green1049a01.
+New lines encoders46,modbus249,nuts_bolts278/279/305/306,strutils114/115.
+Do not call whole hosted run green or advance badges before compiler/diagnosis.
+
+# Missing setting lookup/value boundary - 2026-10-22
+
+Extended existing unknown-setting rejection with actual public detail lookup
+returningNULL and setting_get_value(NULL,0) returningNULL before failed store.
+No notifications remain asserted. Focused sanitizer passes; targets settings1926
+without synthetic registered metadata. No new case/allowance/CORE change.
+Pending cumulative gate with motion callback recovery group.
+
+# Custom M-code reader guard audit - 2026-10-22
+
+Existing normal-required-value and plugin-valueless tests already cover contracts.
+Uncovered post-reader NaN rejection at gcode1471 cannot be reached with expression
+reader: nonfinite status returns first, while explicit valueless NaN excludes the
+guard. Added source evidence to TODO/known gap table, no duplicate tests or fake
+expected failures. CORE unchanged; motion recovery test edits remain local.
+
+# Motion extension queued-work recovery control - 2026-10-22
+
+Extended existing arc rejection scenario to queue a valid160-step X cut, reject
+a clockwise arc through registered extension, retain same sole planner block and
+parser2,0, then retry after driver recovery. Retry appends arc while preserving
+first block and reaches parser3,-1; exact callback counts/turn direction checked.
+Focused ASan/UBSan passes0.28s. This strengthens recovery assertions; no measured
+coverage gain claimed. No new cases/allowances/CORE changes. Pending cumulative
+gate with rapid error-path addition and coverage audit documentation.
+
+# Rapid extension rejection and recovery - 2026-10-22
+
+Extended existing cutter motion-extension rejection scenario to G0: driver error
+propagates, target reaches callback, parser XY stays origin and planner stays
+empty. Re-enable actual previous motion handler and retry G0X3Y4: parser reaches
+3,4, planner records240/320 steps and rapid flag. Three line callbacks, no arc
+callbacks. Focused ASan/UBSan passes0.26s. Targets gcode4737-4738 missing rapid
+error path. No new case/allowance/CORE change. Pending cumulative validation.
+
+# G-code message cleanup reachability audit - 2026-10-22
+
+Audited raw uncovered gcode.c4238 against enclosing4231 guard: check-mode arm
+cannot execute because outer block excludes that mode and no callback/assignment
+intervenes. Added source evidence to TODO and known coverage gap table, retaining
+denominator. Broadcast override gap already documented; no duplicate tests or
+fake expected failures. Coverage snapshot docs from green39814748999 remain local.
+
+# Fully green I/O checkpoint and measured branches - 2026-10-22
+
+Run39814748999 at1049a015df5cdbb8a2180f9621f51e29851e0b65/source68eba79
+has allfive individual jobs terminalsuccess(source,GCC,Clang,coverage,diagnosis).
+Downloaded coverage/report artifacts12441717480/12442811224; both locks match
+exact harness/source/core filter; allseven report stage exits0.4,136 total,
+4,120 clean,16 known,0 failed/skipped. Coverage17,269/17,684 lines97.65%,
+12,067/13,754 branches87.73%: unchanged lines,+24 branches versus published
+39811711030; +9 branches versus expression39812566612. README badges and known
+gap snapshot refreshed. Newer spindle and utility/Modbus heads remain pending.
+
+# Encoder/utility/Modbus cumulative gate - 2026-10-22
+
+Full4,138-case ASan/UBSan suite passes58.57s:4,122 clean and16 documented
+expected failures; no failures/skips. Build/test/strict exits all0 recorded in
+build-asan/batch72-boundaries-gate.json. Includes third-encoder append/recovery,
+bounded overlapping search, numeric retained-precision overflow, and unsupported
+Modbus response recovery. CORE clean, no new allowances. Hosted gain pending.
+
+# Modbus unsupported response and recovery - 2026-10-22
+
+New public high-level transaction case injects transport response function0
+(unassigned table entry) and255(out of range), checks completion exception255
+with zero values, then valid read after each returns current register0x1234 and
+cleared exception. Exact four request/completion counts verified. Uses existing
+transaction fixture with local transport wrapper, no shared-fixture changes.
+Focused ASan/UBSan passes; total4,138. No new allowances or CORE changes.
+Pending combined utility/encoder/Modbus cumulative gate and hosted measurement.
+
+# Bounded overlap search and numeric precision overflow - 2026-10-22
+
+Extended existing bounded-search case with aaab/AAB overlap restart and AAX
+negative control (strutils114-115). Extended float signs case with twelve-digit
+integer and twelve-digit fractional input, preserving next-axis cursor; numeric
+checks allow normal float precision while exercising dropped-digit exponent and
+fraction handling (nuts_bolts278-279,305-306). Focused ASan/UBSan2/2 passes0.46s.
+No new cases/allowances/CORE changes. Combined with encoder append group for next
+cumulative validation; measured gain remains pending hosted report.
+
+# Encoder third-driver append and heap recovery - 2026-10-22
+
+Locked report39812566612 leaves encoders.c46 uncovered: third registration
+traverses an existing linked-list next node. Extended existing enumeration order
+case to three real driver objects, with callback bounds and exact pointer order.
+Extended allocation-recovery case to fail third append, retain count2, then retry
+and enumerate all3 in order. Focused ASan/UBSan2/2 passes0.33s. No new cases,
+allowances or CORE changes; pending next cumulative gate and hosted measurement.
+
+# Spindle API cumulative validation - 2026-10-22
+
+Full4,137-case ASan/UBSan gate passes57.98s:4,121 clean and16 documented
+expected failures; no failures/skips. Build/test/strict exits all0 in
+build-asan/batch72-spindle-api-gate.json. Includes complete three-driver enumeration
+with unclaimed callback return and current-driver identity, identifier boundaries,
+empty enumeration/capabilities, configuration refusal/retry and raw/configured
+capability isolation. CORE remains clean; no new allowances. Hosted gain pending.
+
+# Spindle capability views and empty enumeration - 2026-10-22
+
+Extended configuration recovery to have the actual config callback advertise
+runtime direction support: configured aggregate and enabled driver reflect it,
+raw registration aggregate and original driver remain unchanged. Extended empty
+registry case with a valid callback that must never run, plus zero raw/configured
+capabilities. Focused ASan/UBSan2/2 passes0.37s. Total4,137; no allowances or
+CORE changes. Local spindle group remains pending cumulative gate and hosted gain.
+
+# Spindle identifier boundary controls - 2026-10-22
+
+Extended existing multi-spindle cases with negative and upper-bound enable IDs,
+negative name/raw/configured lookups, and missing active lookups. Rejections
+preserve default spindle and configuration counts, leave other slots disabled;
+valid active lookup still resolves the selected driver. Focused ASan/UBSan2/2
+passes0.33s. No new allowances or CORE edits; count remains4,137. Together with
+configuration-refusal retry, this local spindle group awaits cumulative validation.
+
+# Spindle configuration refusal and activation retry - 2026-10-22
+
+New public registration/selection case passes ASan/UBSan0.27s. Registered real
+basic driver rejects firstconfig:selectfalse,slot disabled,getNULL,default-2,
+no selected callback. Provider recovery/retry configures again,activates once,
+preserves real callbacks;repeat selection does not reconfigure/notify again.
+Targets spindle_control104 failure and249 disabled-default branches. Uses engine
+fixture with tiny local driver; unrelated listing fixture had a non-inline unused
+setup warning,so avoided that fixture without weakening compiler flags or editing
+shared infrastructure. Total4,137 cases,no new allowances/CORE edits. Local
+spindle batch begins here; cumulative gate/hosted gain remain pending.
+
+# I/O claim/search capability batch cumulative gate - 2026-10-22
+
+Full4,136-case ASan/UBSan build/test/strict passes(all0):4,120 clean,16 known
+reproductions,no failed/skipped. Evidence:build-asan/batch72-io-claims-gate.json,
+delivery XML/log,strict log. One new provider-refusal/routed-retry case and three
+extended search/capability/control-assignment scenarios. No new allowances/CORE
+changes; upstream68eba79 unchanged. Search ordering with filter0 remains explicit
+TODO question. Deliver coherent group on existingPR26; objective incomplete.
+
+All five39811711030 jobs terminal success,eaead02/68eba79; verified locked
+coverage17,269/17,684 lines97.65%,12,043/13,754 branches87.56%. Badges updated.
+Expression39812566612 source/GCC/coverage passed,Clang live; locked artifacts
+verify17,269 lines unchanged,12,058/13,754 branches87.67%,+15 branches on same
+source/filter;4,135/4,119 clean/16 known/no failed/skipped,stages0.
+Newer VFS39813351754 source passed,remaining jobs live at last check; artifacts
+exist but not yet read. Local I/O group needs its own exact-head hosted report.
+
+# Control assignment without optional capability record - 2026-10-22
+
+Extended existing control-input assignment case:public CycleStart assignment with
+empty driver_caps succeeds and preserves existing signal capability mask; then
+FeedHold assignment with supplied capability record sets that bit. Exact callback
+counts,function,available-input count and independent output bank checks remain.
+ASan/UBSan1/1 passes0.28s. Targets ioports413 optional-record false branch, no
+new executable/fixture/CORE change/allowance.4,136 unchanged. Existing rejection
+case already covers provider refusal, so no redundant copy authored. Local I/O
+batch now one new/three expanded scenarios, ready for cumulative gate/delivery.
+
+# Missing claim/pin-info callback rejection and recovery - 2026-10-22
+
+Expanded existing explicit-claim capability case beyond query flags:actual claim
+with missing provider returnsNULL; missing pin-info handler returnsNULL/UNASSIGNED.
+Both leave pins unclaimed and advertised count2. Restoring handlers makes claim
+succeed with original pin/relay description and exactly one fewer free output.
+ASan/UBSan1/1 passes0.27s. Covers ioports325/get_info272 guard outcomes using
+supported absent-driver capability surface. No CORE edits/new allowance/case.
+Total4,136; local I/O batch one new provider-refusal scenario/two extensions for
+search and capability recovery. Cumulative validation remains for batch boundary.
+
+# Driver claim refusal and routed retry - 2026-10-22
+
+New public ownership scenario passes ASan/UBSan0.26s. One provider claim callback
+returnsfalse for valid output0:resultNULL/indexUNASSIGNED,free/advertised counts2,
+both pins unclaimed,description untouched. Restore normal provider and retry:
+exact physical pin0 claimed,counts decrement once,Vacuum description retained,
+returned handle drives original physical output0. Existing host and actual claim/
+remap API reused; no private ownership forcing/CORE change/new allowance.
+Targets ioports332 provider-failure branch. Total4,136 cases. Local I/O batch
+one new case/one extended search scenario; cumulative gate still pending.
+Hosted39811711030 source/GCC/coverage/Clang individually succeeded at last check;
+diagnosis not yet listed,so do not claim full five-job completion.
+
+# Claimable port search bounds and empty description - 2026-10-22
+
+Expanded existing description lookup with explicit claimable filter:upper bound0
+returns0,bound1 returns1,empty description returns last port1. Both pins remain
+unclaimed,free count2 and named description unchanged. ASan/UBSan1/1 passes0.26s.
+Targets ioports216 false-bound and244 empty-description branches; no new case/
+CORE edit/allowance.4,135 unchanged. Unfiltered search initially returned0 because
+enumeration with filter0 is ascending; documented source/comment discrepancy in
+TODO rather than silently asserting a universal descending-order contract.
+Keep local I/O batch for cumulative validation.
+
+# VFS observer-boundary batch full validation - 2026-10-22
+
+Full4,135-case ASan/UBSan build/test/strict passes(all0):4,119 clean,16 documented
+reproductions,no failures/skips. Evidence:build-asan/batch72-vfs-observers-gate.json
+plusdelivery XML/log/strict log. Four existing mkdir/rmdir/rename/writable-close
+scenarios extended for absent observer; mkdir backend failure/retry emits correct
+notification counts. No new executable/allowance/CORE edits. Upstream clean68eba79
+unchanged. Deliver coherent observer group on existingPR26; objective incomplete.
+
+Hosted39811711030 exacteaead02/68eba79/filter artifacts verified,stages0:
+17,269/17,684 lines97.65%,12,043/13,754 branches87.56%,+0 lines/+3 branches.
+4,134/4,118 clean/16 known/no failed/skipped,including isolated real M72 defect.
+GCC/Clang live at last check. Newer expression39812566612 source succeeded,
+remaining jobs live. This local VFS group still needs its own hosted report.
+
+# Writable close without observer and hosted settings checkpoint - 2026-10-22
+
+Expanded existing writable-close case with second public writable open after
+observer removal: provider identity/update flag/path preserved,exact second
+backend close,no extra notification. ASan/UBSan1/1 passes0.33s. Targets vfs342
+callback-absent branch; no new executable/CORE edit/allowance.4,135 unchanged.
+Local VFS batch now four extended filesystem cases, ready for cumulative gate.
+
+All five individual jobs39810197175 terminal success at31718f9/68eba79. Verified
+locked artifacts17,269/17,684 lines97.65%,12,040/13,754 branches87.54%,
+4,132/4,117 clean/15 known/no failed/skipped. Refreshed badges/gap summary,
+415 raw uncovered lines. Newer39811711030 source passed,coverage/GCC/Clang live.
+Current M72 allowance count16 appears only in later heads, not this old report.
+
+# Filesystem optional-observer and backend-failure branches - 2026-10-22
+
+Three existing VFS scenarios expanded together, ASan/UBSan3/3 passes0.49s.
+Successful mkdir/rmdir/rename still forward exact backend-local paths with no
+registered change observer. mkdir backend failure returns-1 and emits no event;
+corrected retry succeeds and notifies once. Previous normal-observer/path/count
+assertions remain. No new executable/fixture or allowance,4,135 tests unchanged.
+Targets partial branches vfs407/435/453 using public API/provider results only.
+CORE untouched; cumulative gate/hosted branch gain deferred to batch boundary.
+
+# Expression branch batch full gate - 2026-10-22
+
+Full4,135-case ASan/UBSan build/test/strict passes(all0):4,119 clean,16 known
+reproductions,0 failures/skips. Evidence:build-asan/batch72-expression-branches-
+gate.json,delivery XML/log,strict log. Four existing Boolean/comparison scenarios
+extended with seven missing truth-table outcomes; one new real-reader scenario
+covers malformed signs/decimal syntax and valid signed fractions/axis stopping.
+No new allowance/CORE edits. Upstream clean68eba79 unchanged. Deliver coherent
+expression group on existingPR26. Full supported objective remains incomplete.
+
+Hosted39810197175 source/GCC/coverage passed,Clang still live. Verified31718f9/
+68eba79/filter locks and report stages0:17,269/17,684 lines97.65%,12,040/13,754
+branches87.54%,+1 line/+8 branches same source.4,132/4,117 clean/15 known,
+no failures/skips. New line settings805, expected configuration-specific guard.
+Newer39811711030 source passed,remaining jobs live at last check; local latest
+expression batch requires its own exact-head coverage report.
+
+# Public real-reader malformed/sign boundaries - 2026-10-22
+
+New focused real-number reader case passes ASan/UBSan0.28s. Empty input returns
+ExpressionSyntaxError; dangling signs/decimal points and lowercase nonnumber
+return BadNumberFormat. Following+.5X/-.25Y parse correct signed fractions and
+stop at the next axis letter. No assumptions about output on rejected input,
+private parser calls or new allowances. Targets partial ngc_expr811/814/818/821
+branches. Total4,135. Local expression batch now one new/four extended scenarios
+with seven added truth-table outcomes; cumulative gate pending. CORE unchanged.
+
+# Expression truth-table branch completion - 2026-10-22
+
+Expanded four existing public expression cases with seven missing outcomes:
+XOR0/0 and0/nonzero,AND0/nonzero,ORnegative/0,GEfalse,NEequal andNEpositive
+difference. Negative nonzero operands verify Boolean interpretation; existing
+full-input consumption checks remain. Grouped build and ASan/UBSan4/4 passes
+0.80s. No new executable/fixture/CORE change/allowance; total4,134 unchanged.
+Targets partial branches atngc_expr138/142/150/172/173/182. Exact hosted gain
+still pending. Keep grouped with next parser/expression coverage work.
+
+# Modal/G84 policy batch cumulative gate - 2026-10-22
+
+Full4,134-case ASan/UBSan build/test/strict passes(all0):4,118 clean,16 documented
+reproductions,no unexpected failures/skips. Evidence:build-asan/batch72-modal-
+policy-gate.json,delivery XML/log,strict log. New G84 pre-disabled-control case,
+scoped direct-restore ownership extension and isolated M72 percentage-only bug
+regression all included. New allowance is one exact known_bug/WILL_FAIL; correct
+80/50 assertion retained after actual65/25 result, snapshot cleaned before failure.
+No CORE edits or sanitizer suppressions. Six private constant-flag false arms
+source-audited without exclusions. Clean upstream68eba79 unchanged. Deliver group.
+
+All five individual39808684184 jobs terminal success at0f2406d/68eba79. Locked
+coverage17,268/17,684 lines97.65%,12,032/13,754 branches87.48%,4,131 tests/4,116
+clean/15 known/no failures/skips. Badges/gap summary now this fully green report,
+416 raw executable lines uncovered. Newer39810197175 source passed, remaining
+jobs live; this latest modal group needs its own exact-head report.
+
+# G84 helper flag branch audit - 2026-10-22
+
+Verified all call sites of static override_disable/override_restore:one each,
+constant all-enabled flags. Six false guard arms atgcode174/180/185/198/205/208
+are unreachable under current callers, documented in TODO/coverage-gap table.
+Do not confuse these with saved disabled-policy branches199/210, covered by the
+new real G84 control test. Raw denominator/CORE/assertions unchanged. Existing
+M72 percentage-only defect remains isolated exactWILL_FAIL; continue independent
+work. No full objective/coverage completion claim.
+
+# Confirmed modal percentage-only restore defect - 2026-10-22
+
+New correct M70/M72 regression: saved80/50, changed65/25 with unchanged enable
+flags, M72 returnsOK but leaves65/25. Raw sanitizer assertion failure retained;
+exact WILL_FAIL/known_bug and dated source-cause/fix/removal entry added. Snapshot
+freed before failing assertion; no diagnostic allowance/CORE edit. Existing
+root/scoped direct restore now also verifies separate snapshot ownership using
+legal flag-change restoration; passes focused. Two-case raw result1 pass/1 real
+failure0.34s. Total4,134,16 known allowances now. Continue independent work.
+
+# G84 retains preexisting disabled override policies - 2026-10-22
+
+New supported tapping scenario passes ASan/UBSan0.28s. Public M49 thenM53P0
+establish disabled spindle/feed overrides and hold beforeG84Z-1R0P0. After actual
+160 Z pulses/retract to0 and spindle forward1000, both modal/runtime policies
+remain disabled; subsequentG80/M48/M53P1 reenables controls. Existing canned
+spindle fixture reused, no source/private-state changes or allowances. Initial
+combinedM49M53 fixture block violated modal grouping; corrected to legal blocks.
+Targets missing restored-disabled branches gcode199/210, not duplicate enabled
+restore behavior. Total4,133 cases; keep local for cumulative parser batch.
+
+# Settings branch batch cumulative gate - 2026-10-22
+
+Full4,132-case ASan/UBSan build/test/strict passes(all0):4,117 clean plus15
+known reproductions,0 failed/skipped. Evidence:build-asan/batch72-settings-
+branches-gate.json plus delivery XML/log and strict log. One new mixed8-axis
+pulse setting scenario, three existing Boolean inversion/acceleration/jerk
+scenarios extended. Metadata default reachability documented without exclusions.
+No CORE edits/new allowances; clean upstream68eba79 unchanged. Deliver grouped.
+
+Hosted39808684184 coverage/report locks verified0f2406d/68eba79/filter; all
+stages0,4,131/4,116 clean/15 known/no failed/skipped.17,268/17,684 lines97.65%,
+12,032/13,754 branches87.48%,+10/+11 same-source. New lines:machine_limits93/
+94/312/842 anddelta236/237/259/260/591/602. GCC/Clang still running at latest
+check; no full hosted/current settings-head coverage claim. Objective incomplete.
+
+# Override reset before backup exists - 2026-10-22
+
+Extended existing acceleration and jerk restore scenarios with public zero reset
+before first positive override. Configured values12345 acceleration/216000 jerk
+remain unchanged; subsequent multiple overrides and restoration assertions remain.
+Grouped ASan/UBSan2/2 passes0.35s. Targets missing false branches of backup-valid
+checks settings578/601, no private backup manipulation/new executables/allowances.
+Total4,132 remains. Local batch now one mixed-axis case/three expanded legacy/
+override scenarios plus metadata audit, ready for substantial cumulative gate.
+CORE unchanged; hosted coverage gain not yet measured for local additions.
+
+# Compatibility Boolean inversion round trips - 2026-10-22
+
+Branch audit found partial settings646/654 despite covered lines. Expanded
+existing compatibility10 Boolean metadata case to write1 then0 for step-enable
+and limit inversion, verify exact axis-mask translation and normalized getter
+values in both directions, then checksummed persisted values. Original invalid2
+assertion retained. ASan/UBSan1/1 passes0.28s. No duplicate executable, CORE
+edit or allowance;4,132 total. Local batch one new/eight-axis setting case and
+one expanded legacy scenario plus metadata reachability audit; keep grouped.
+
+All five individual jobs39807024328 are now terminal success,d0b2f90/68eba79.
+Existing locked artifacts verify17,258/17,684 lines97.59%,12,021/13,754 branches
+87.40%,4,129 total/4,114 clean/15 known/no failed/skipped. Refreshed badges/gap
+summary,426 raw uncovered lines. Newer39808684184 source passed, compiler/
+coverage jobs live at latest check; no current-head green claim.
+
+# Mixed eight-axis pulse-width configuration - 2026-10-22
+
+New supported8-axis case uses public rotary-mask and pulse-width settings. With
+8 runtime axes and mixed rotary mask40,8.5us pulse setting succeeds, emits one
+change notification and persists exact width/mask in checksummed NVS. Focused
+ASan/UBSan passes0.30s. Existing3-axis pulse tests do not compile the N_AXIS>3
+guard; this targets settings805 without changing source/configuration variants.
+validate_pulse_width rate computation is commented out upstream; no claim of
+physical timing validation or invented failure. Total4,132 cases, no allowances.
+Keep local metadata/settings batch for cumulative gate/push. CORE unchanged.
+
+# Metadata guard reachability audit - 2026-10-22
+
+Classified report1955-1956: complete declared datatype enum is handled after
+Int8/Int16 normalization to Integer. Recorded exact enum/conversion/switch source
+in TODO and coverage-gap table. No invalid enum injection, fake WILL_FAIL or
+coverage exclusion. This does not classify other residual lines as unavailable.
+CORE unchanged. Hosted39807024328 latest individual endpoints:source,coverage,
+GCC succeeded;Clang still running. Newer39808684184 remains separate current
+head validation; no claim of merge readiness or completed objective.
+
+# Limits/homing/delta cumulative gate - 2026-10-22
+
+Full4,131-case ASan/UBSan build/test/strict passes(all0)61.76s:4,116 clean plus15
+known reproductions,no failed/skipped. Evidence:build-asan/batch72-limits-delta-
+gate.json,delivery XML/log,strict log. Two new cases/three extensions cover driver
+homing-rate rejection/retry with actual pulses, short delta segment validation/
+endpoint, unhomed travel guard, rotary-excluded IRQ handling, and nonlinear delta
+clip validation in both coordinate domains. No CORE changes/new allowances.
+Clean upstream68eba79 unchanged. Zero-locate reference contract remains TODO,
+not a fabricated expected failure. Deliver coherent group on existingPR26.
+
+Hosted39807024328 coverage/report locks verifiedd0b2f90/68eba79/filter; stages0,
+4,129/4,114 clean/15 known/no failed/skipped.17,258/17,684 lines97.59%,
+12,021/13,754 branches87.40%,+9/+15 same source. New lines:modbus_rtu239-240/
+242-244/273/509/529,report2898. GCC/Clang still running at latest check;
+current limit/delta group requires its own exact-head hosted report.
+
+# Nonlinear clipped delta target accepted in both coordinate domains - 2026-10-22
+
+Extended existing positive-X nonlinear jog clip case: finite inverse alone is
+insufficient, so check the resulting Cartesian endpoint and converted motor
+coordinates through grbl.check_travel_limits with all XYZ homed. Both accepted,
+ASan/UBSan1/1 passes0.26s. Reuses real clipping/transform/limit callbacks; no
+private geometry edits or new allowance. Targets fallback motor-coordinate
+validation after cuboid fast path; exact new coverage awaits hosted report.
+Count unchanged4,131. Current local batch two new cases/three extensions across
+limits, driver homing recovery and delta geometry is ready for cumulative gate.
+CORE unchanged; no claim of completed full supported objective.
+
+# Delta short-move validation and endpoint - 2026-10-22
+
+New delta public-kinematics scenario passes ASan/UBSan0.26s:0.01mm X move at
+Z-300 starts unvalidated, becomes accepted, returns exactly one finite positive-
+feed segment, reconstructs XYZ endpoint within0.001mm through quantized motor
+coordinates. Existing delta fixture/conversion precision convention reused.
+Targets delta236-237 successful validation and259-260 unsegmented short-move
+path. No internal state edits/CORE changes or new allowances. Total4,131 cases;
+local batch now two new cases/two expanded limit/homing scenarios. Full gate
+remains for cumulative delivery. This validates kinematics, not physical hardware.
+
+# Driver-provided homing rate unavailable/retry - 2026-10-22
+
+New supported provider-boundary case passes ASan/UBSan0.27s. Driver feedrate
+callback returns0 for initial Y seek while normal global X seek remains valid.
+Public mc_homing_cycle returnsUnhandled, restoresIDLE, reports failed completion,
+no homed bits/pulses. After normal realtime poll/provider recovery,$HY succeeds:
+Y physical110/reference-10,150 pulses,other axes untouched,successful callback.
+Existing homing fixture reused, no private phase forcing/CORE edits/allowances.
+Targets machine_limits312; total4,130 cases. Unlike pending zero-locate policy,
+this rejection occurs before any seek motion. Local batch one new/two expanded
+limit/homing scenarios; cumulative gate still pending.
+
+All five individual jobs39804789709 now terminal success for b473a27/68eba79.
+Verified locked coverage17,249/17,684 lines97.54%,12,006/13,754 branches87.29%,
+4,127/4,112 clean/15 known/no failed/skipped. Badges/known-gap summary refreshed
+435 raw uncovered lines. Newer39807024328 source passed,coverage/compilers live.
+
+# Excluded rotary-limit interrupt boundary - 2026-10-22
+
+Extended existing8-axis rotary hard-limit setting case beyond metadata: invoke
+public limit IRQ handler with empty signal and excluded rotary min/max mask40.
+Verify last-event snapshot, state, realtime flags/alarm and abort flag unchanged,
+while enabled nonrotary mask215 and driver enable remain. Focused ASan/UBSan
+1/1 passes0.27s after adding the required state_machine declaration include.
+Targets machine_limits93-94 via valid registered settings, no source edits or
+private-state injection. Existing hard-limit reset tests retain enabled-axis
+positive coverage. Count remains4,129, no new allowances. Two local limit cases
+now extend existing scenarios since publishedd0b2f90; batch full gate deferred.
+
+# Unhomed travel-limit boundary - 2026-10-22
+
+Extended partial-homing clipping test with initial unhomed calls, both endpoint-
+only and positioned travel API. All target coordinates and caller position remain
+unchanged; existing homed-X-only clipping assertions remain. Focused ASan/UBSan
+1/1 passes0.31s. Targets machine_limits842 through supported installed callback,
+no new fixture/CORE edits/allowances. Count remains4,129; keep local for batch.
+
+Zero locate feed rate after successful search has ambiguous reference semantics:
+source clears cycle axis before final reference assignment but merges previous
+homed mask. Recorded exact concern in TODO rather than inventing expected final
+coordinates or registering an unsupported failure. No runtime defect claimed.
+
+# Modbus/startup batch full validation - 2026-10-22
+
+Full4,129-case ASan/UBSan build/test/strict passes(all0):4,114 clean plus15
+known reproductions,no failed/skipped. Evidence:build-asan/batch72-rtu-startup-
+gate.json,delivery XML/log,strict log. Two new RTU scenarios cover automatic UART
+fallback through rejected/invalid claims plus real reply, and nested synchronous
+send rejection/later recovery. Existing timeout scenario spans two scheduler ticks;
+normal boot now queries empty spindle list in both formats. No CORE changes or
+new allowances; latest upstream remains68eba79. Deliver together on existingPR26.
+
+Hosted39804789709 coverage/report locks verifiedb473a27/68eba79/filter; stages0,
+4,127 tests/4,112 clean/15 known,no failures/skips.17,249/17,684 lines97.54%,
+12,006/13,754 branches87.29%,+4 lines/+7 branches same source. New lines exactly
+gcode2819,ngc_flowctrl340,ngc_params1077,stream428. GCC/Clang live at last check;
+retain prior fully green badge baseline. Latest batch needs its own hosted report.
+
+# Normal boot with no real spindle: sender query boundary - 2026-10-22
+
+Extended existing complete startup scenario with$G/$SPINDLES/$SPINDLESH stream.
+Normal core dummy-spindle boot retains0 real registered devices, human query
+reports No spindles registered, queries emit no error, setup/release counts and
+welcome/driver-start assertions remain. Focused ASan/UBSan1/1 passes0.27s.
+Targets report2898 via real sender workflow, no synthetic inventory/private state.
+Registered total unchanged4,129. Current local batch now two new Modbus cases
+and two expanded scenarios (timeout scheduling and boot reporting); no CORE
+changes or new allowances. Previous hosted39804789709 source passed, compiler/
+coverage jobs live at latest individual endpoint check; no artifact yet.
+
+# Modbus timeout across scheduler ticks - 2026-10-22
+
+Extended existing dedicated-timeout/recovery scenario to service two timer ticks
+per foreground callback using existing public task executor. Allows poll to see
+pending synchronous TimeoutException before sender resumes, without modifying
+private protocol state. Exact one timeout, no exception/reply, one transmission,
+then next independent request receives valid1234 reply. Focused ASan/UBSan passes
+0.34s;4,129 cases unchanged. Local Modbus batch now two new/one expanded cases.
+No new exceptions, fixture variants or CORE edits.
+
+All five individual jobs of39802929753 now terminal success atba111a2/68eba79.
+Verified coverage/report artifacts already17,245/17,684 lines97.52%,
+11,999/13,754 branches87.24%,4,127 tests/4,112 clean/15 known/no failed/skipped.
+Updated badges/known-gap summary to fully green report,439 raw uncovered lines.
+Newer39804789709 source passed;coverage/GCC/Clang still live at last check.
+
+# Blocking Modbus callback re-entry guard - 2026-10-22
+
+New real reply callback attempts another blocking send. Exact false return and
+unchanged TX count verify guard273; outer reply completes once with1234 payload,
+then a subsequent independent blocking request succeeds. Focused ASan/UBSan1/1
+passes0.56s using existing RTU blocking scheduler/CRC fixture. No private calls,
+state forcing or timeout allowances. Distinct from unresolved asynchronous
+spin-lock re-entry policy: this synchronous callback executes outside poll lock
+while is_blocking remains set, with explicit rejection contract in source.
+Total4,129 cases; two new local Modbus scenarios sinceb473a27, no CORE changes
+or new expected failures. Keep building batch before cumulative gate/push.
+
+# Modbus automatic UART selection recovery - 2026-10-22
+
+New public initialization scenario passes focused ASan/UBSan0.28s. Inventory:
+non-Modbus port and already-claimed port must never be claimed; next ready port
+claim fails, next returns an incomplete driver, final valid UART succeeds. Public
+modbus_rtu_init(-1,-2) selects it, settings load exposes live transport, request
+transmits once and a CRC-checked reply returns1234 payload with no exception.
+Existing RTU fixture and polling reused, no new host variant or private states.
+Targets automatic selection/invalid-claim guards509/529; new total4,128 cases.
+No CORE edits or expected failures. Keep local for next substantial API batch.
+
+Failed-startup detailed driver diagnostic is already a policy question in TODO;
+do not duplicate it or call its private formatter to chase grbllib140-150.
+
+# Parser/list/stream cumulative delivery gate - 2026-10-22
+
+Full4,127-case ASan/UBSan build/test/strict gate passes(all0),4,112 clean plus15
+known reproductions,0 failures/skips. Logs/XML/JSON:build-asan/batch72-parser-
+stream-*. Four existing scenarios extended for G51/G50 lathe UVW geometry,
+undefined subroutine callback after valid registration, absent/repeated string
+parameter deletion, and disabled-base serial fallback after network disconnect.
+No new executable or allowance; CORE clean68eba79 and upstream unchanged.
+Residual four-line reachability proof included in TODO/KNOWN_BUGS without
+changing raw coverage. Deliver together on existing branch/PR26.
+
+Hosted39802929753 exactba111a2/68eba79 coverage/report locks/filter verified,
+all stages0:17,245/17,684 lines97.52%,11,999/13,754 branches87.24%,+9/+11
+same-source.4,127/4,112 clean/15 known/no failed/skipped. New lines:ioports1220/
+1262,spindle_control154/445,vfs467/498-500/871. Individual GCC/Clang endpoints
+still running; retain older fully green badge checkpoint until all finish.
+
+# Lathe UVW scaling and cancellation - 2026-10-22
+
+Expanded existing UVW absolute-mode scenario through public G51/G1/G50 blocks.
+Starting10/24/36, scale2/2/4 plusU4V2W3 yields14/28/48 (U remains diameter
+increment); G50 then identical increments yield16/30/51. G90 remains active.
+Focused ASan/UBSan1/1 passes0.29s. Targets previously missing gcode2819 UVW
+scaling with existing LATHE_UVW_OPTION fixture; check-mode parser geometry only,
+no claim of additional physical motor coverage. Registered count stays4,127,
+no CORE edits or new allowances. Current local batch has four extended scenarios
+(stream fallback, callback miss, string deletion miss, UVW scaling) plus residual
+reachability evidence; cumulative full gate remains for the next delivery boundary.
+
+# Macro and string-list missing-entry boundaries - 2026-10-22
+
+Two existing scenarios expanded, grouped ASan/UBSan2/2 passes0.34s. A failed
+callback registration for undefined label999 traverses populated subroutine list
+without invoking/replacing the valid label10 callback; subsequent real call/return
+still restores parameter scope and invokes it once successfully. String deletion
+of absent999 traverses all three entries, preserves exact values, then middle
+removal/repeated removal preserves neighbors. Existing return/cleanup assertions
+retained. Registered count unchanged4,127; no redundant new executable, CORE
+change or allowance. Covers populated-list miss paths in ngc_flowctrl340 and
+ngc_params1077; hosted attribution awaits the next cumulative batch report.
+
+# Base serial fallback and fully green hosted checkpoint - 2026-10-22
+
+Expanded existing network-disconnect scenario: base serial broadcast explicitly
+disabled while network client stays active, verified network-only output, then
+network disconnect restores base serial connected state and sole output route.
+Existing callback-count/output assertions retained. Focused ASan/UBSan1/1 passes
+0.28s, no new exception or CORE edits; registered count unchanged4,127.
+
+All five individual hosted39801089848 job endpoints now terminal success for
+5205e56/68eba79:source,coverage,GCC,Clang,diagnosis. Earlier downloaded source-
+locked coverage/report artifacts verify17,236/17,684 lines97.47% and
+11,988/13,754 branches87.16%,4,123 tests/4,108 clean/15 known/no failures/skips.
+ReadMe badges/gap summary refreshed to that fully green checkpoint,448 raw
+uncovered lines. Current ba111a2 run39802929753:source succeeded, compilers
+running,coverage queued; do not claim current-head green or local-test coverage.
+
+# Residual guard reachability audit - 2026-10-22
+
+Verified four residual lines are unreachable under current public contracts:
+vfs474/774 null-mount fallback, vfs410 second rename notification, ngc_params942
+empty virtual list. Added source reasoning to TODO/KNOWN_BUGS gap table. Raw
+coverage and correct assertions unchanged; no fake tests or private-state forcing.
+Existing lookup/rename/provider tests retain reachable behavior. CORE unchanged.
+TODO has legacy non-UTF8 bytes; appended ASCII without transcoding existing text.
+
+# API-boundary batch cumulative gate - 2026-10-22
+
+Full4,127-case ASan/UBSan build/test/strict gate passes, all exit0,15 known
+reproductions and no new allowances. Evidence: build-asan/batch72-api-boundaries-
+gate.json, delivery XML/log and strict log. Four new cases/two expanded scenarios
+cover VFS allocation+failed rollback/root safety/retry, null spindle replacement,
+default selector bounds, expansion-bank input/output persistence and root-format
+failure/fallback/remount. No CORE edits or source exclusions. Root-format case
+focused passes0.30s; full gate includes all accumulated local work.
+
+Previous hosted39801089848 coverage locks verified5205e56/68eba79/filter,
+all coverage stages0,4,123 total/4,108 clean/15 known/no failures/skips.
+17,236/17,684 lines97.47%,11,988/13,754 branches87.16% (+14/+12 same-source).
+New lines:gcode4182-4183/4253-4254;motion_control927/950-951/953-954/956;
+state_machine807;vfs870/873-874. GCC/Clang live; do not claim full hosted success.
+
+# Expansion-bank configuration persistence - 2026-10-22
+
+New realistic multi-bank settings scenario passes focused ASan/UBSan0.28s.
+Public pin lookup selects bank1/local1 (global3) for input/output. Save inversion,
+pull-down and open-drain, verify global bit3 plus preserved primary bit0 in live
+settings and checksummed NVS; clear the expansion configuration and verify only
+bit0 remains persisted. No output/event callbacks emitted. Existing multi-bank
+fixture reused; no new variant or private-state forcing. Covers settings-save
+bank-list traversal absent from first-bank tests. Total4,126 cases; three new
+cases/two extended scenarios local since5205e56, no new exceptions/CORE edits.
+
+Current hosted39801089848 individual jobs confirm source success; coverage,
+GCC and Clang in progress. That run is for5205e56/68eba79, not these local cases.
+
+# Dummy spindle replacement and default selector - 2026-10-22
+
+New startup registration case installs the public null placeholder, replaces it
+with a real registered basic driver before activation, then verifies one listed
+driver, preserved name, default selection, real callbacks and repeated selection.
+Use normal registration-before-activation order; replacing an already active
+spindle was not assumed to be a supported hot-swap contract. Existing multi-
+spindle selection case now checks documented-1 default alias and invalid-2 guard
+without another duplicate scenario. Grouped ASan/UBSan2/2 passes0.32s.
+Total4,125 cases, no new expected failures or CORE changes. Current local batch
+contains two new cases and two expanded scenarios since pushed5205e56; keep
+building the coherent API-boundary batch before full gate/push.
+
+# Directory allocation and rollback boundaries - 2026-10-22
+
+One new VFS case and one expanded existing scenario pass grouped ASan/UBSan2/2
+in0.31s. Initial saved-cwd malloc rejection returns ENOMEM without backend change;
+existing reallocation recovery assertions remain. New double-failure scenario
+accepts backend chdir, rejects cache growth, then rejects backend rollback: EIO,
+root fallback, no relative unlink to the affected backend, followed by successful
+long-directory retry and correctly routed unlink. Uses existing allocation fixture;
+new target added to its exact wrapping/strset compatibility lists. Initial missing
+compatibility define was a fixture error, corrected before classification.
+Registered total4,124, no new allowances/CORE edits. Keep local for next batch.
+Previous full gate/push5205e56 has4,123 cases; run39801089848 was dispatched
+for that exact head, not these new local changes.
+
+# Parking/tool/storage recovery batch full gate - 2026-10-22
+
+Full4,123-case ASan/UBSan build/test/strict gate passes (all exit0), retaining15
+known reproductions and no new allowances. Evidence: build-asan/batch72-parking-
+tools-gate.json plus delivery XML/log and strict log. Three new cases cover
+parking pullout clamping and M61/M6 plugin spindle stop preservation; two expanded
+existing cases cover public homing driver-error completion/retry and current-drive
+format-error fallback/remount/routing recovery. CORE remains clean68eba79, fresh
+upstream master check unchanged. Deliver together on coverage-batch-72/PR26;
+next hosted run must lock the new harness head before attributing coverage gain.
+
+# Hosted recovery checkpoint fully green - 2026-10-22
+
+All five individual job endpoints now confirm terminal success for run39797619172:
+source119888956919, GCC119889103663, coverage119889103764, Clang119889103785,
+diagnosis119896396248. Exact773569c/68eba79 coverage/report locks and filter
+verified previously;4,120 executed,4,105 clean,15 known,0 failed/skipped.
+ReadMe badges/KNOWN_BUGS gap summary refreshed97.39% lines/87.07% branches,
+462 raw executable lines remaining. Local five-scenario additions/extensions
+remain outside that hosted head and require cumulative gate before delivery.
+
+# Current-drive format failure and recovery - 2026-10-22
+
+Extended existing backend format-error test with current-directory routing:
+chdir/store/jobs, preserve exact backend error-7 and TUFD drain/unmount/format/
+dismount ordering, verify fallback root cwd, successfully reformat/remount, then
+re-enter/jobs and route relative part.nc to/jobs/part.nc. Focused sanitizer test
+passes0.28s. Existing frontend-only getcwd omission is separately documented and
+its correct regression retained; this case verifies routing recovery instead.
+No new allowance or CORE change. Current batch has three new cases and two
+expanded workflows,4,123 total; hold full gate/push for substantial boundary.
+
+# Public homing driver-error recovery - 2026-10-22
+
+Extended the existing missing-auto-square-disable test through public $H rather
+than adding another low-level duplicate. Invalid driver returns the exact
+IllegalHomingConfiguration status, leaves IDLE, reports one failed completion,
+and emits no pulses or homed flags. After normal realtime polling consumes the
+completion event, correcting the driver capability allows $H retry: all XYZ
+references and exact physical endpoints/pulse totals pass, with success callback.
+Focused ASan/UBSan1/1 passes0.28s. No new CORE defect or allowance; initial retry
+fixture omitted the normal command-loop realtime poll and was corrected.
+Total remains4,123; three new cases plus this expanded workflow await the next
+substantial cumulative gate/push. CORE unchanged.
+
+# Tool-selection callback boundaries - 2026-10-22
+
+Two new M61/M6 scenarios pass grouped ASan/UBSan2/2 in0.31s. Registered
+on_tool_selected callback calls public gc_spindle_off while spindle is running;
+block commit preserves its stopped state, selected tool completes, and following
+M3S600/M5 still starts/stops normally. These target distinct immediate selection
+and ATC selection branches, not private parser-state mutation. Total4,123 cases,
+including the local parking boundary. No new exceptions or CORE edits.
+
+Hosted39797619172 coverage artifact locks verified773569c/68eba79 and
+core/.*\.[ch]$; all coverage stages exit0,4,120 executed/4,105 clean/15 known,
+0 failed/skipped.17,222/17,684 lines97.38747%,11,976/13,754 branches87.07285%:
++8 lines/+18 branches against the same-source prior baseline. New lines include
+legacy CRC recovery settings3783, G66 allocation failure gcode2287, registration
+settings3088, expression null guards997/1083 and deferred alarm system456.
+Compiler jobs still live at last individual-endpoint check; retain draft PR26.
+The three new local tests are not part of that hosted coverage report.
+
+# Parking clearance boundary - 2026-10-22
+
+One new supported parking scenario passes focused ASan/UBSan (0.30s total).
+Pullout20mm from Z-10 with parking target-2 exercises the clamped waypoint and
+immediate parked completion without a fast retract. Actual motor position/pulses
+verify640 retract steps, then1280 total Z steps after restoration; interrupted
+X cut completes at1600 steps. Existing parking fixture reused; no CORE changes,
+exceptions or source exclusions. Registered total4,121. Keep local for the next
+substantial batch; no repeated full suite or hosted dispatch for this one case.
+
+Hosted39797619172 exact773569c/68eba79 is live: individual source and coverage
+jobs succeeded; GCC/Clang still running. Do not claim all hosted checks complete
+or attribute coverage gain to this new local case before its own report exists.
+
+# Eight-scenario recovery/validation delivery - 2026-10-22
+
+Complete4,120-case ASan/UBSan gate passes62s:4,105 clean,15 documented
+reproductions,0 failed/skipped. Build/test/strict all0 in
+build-asan/batch72-eight-boundaries-gate.json; delivery XML/strict.log retain detail.
+Five added tests and three extended scenarios beyond publishedec17fcb; no new
+allowances, host variants, source exclusions or CORE edits.
+
+Previously local work now included: metadata registration's nine invalid-input
+boundaries and corrected retry; deferred alarm across E-stop/reset/two unlocks;
+G66 allocation failure/queued-cut retry; public substitution/comment null guards.
+This final group extends unknown-group availability lookup and expression-enabled
+malformed-block rejection, preserving scope/queue and following160step endpoint.
+
+Two new legacy compatibility2/10 checksum cases reuse the existing boot recovery
+fixture. They verify a valid changed saved record, damage only its CRC while
+keeping the version valid, and check defaults, sender error/query output and
+repaired persistent checksum. Four old/new fault controls plus the group lookup
+pass5/5; parser/basic guard group passes7/7 strict. The earlier counter question
+is resolved: version repair occurs in NVS buffering before settings_init, whereas
+CRC damage reaches the later recovery branch. No attribution bug is claimed.
+
+Hosted39792966993 is FULLY successful at ec17fcbb838f1a17054eccf2b6049e34122292ed /
+CORE68eba7906ba60d66c8b55c4adc90cd5e85b5a828, exact lock/filter verified.
+Individual job endpoints confirm source/coverage/Clang/GCC/diagnosis terminal
+success; listing responses had stale states.4,115 executed,4,100 clean,15 known,
+0 failed/skipped. Measured17,214/17,684 lines97.34%,11,958/13,754 branches86.94%,
+470 uncovered lines. Same-source prior delta+16 lines/+21 branches. Badges and
+known-gap summary now point to this fully verified baseline. Current additions
+have no hosted measurement yet. Push once on PR26 and dispatch one exact-head
+68eba79 checkpoint; retain draft until its complete matrix passes.
+
+# Local macro-allocation and public null-guard follow-up - 2026-10-22
+
+The previous turn expanded registration guards and added deferred-alarm boot
+coverage. This turn adds two passing scenario files,4,118 registrations total:
+G66 argument-allocation rejection preserving an existing cut, corrected retry,
+G67 cleanup and exact160step endpoint; and the public null-input guards of
+ngc_substitute_parameters/ngc_process_comment, followed by unchanged parameter
+readback and valid formatted output. Reuse existing macro/motion/heap fixtures;
+one exact new target gets the existing malloc/calloc/free wrappers.
+
+Six affected/control cases pass grouped ASan/UBSan +strict,6 clean,0 exceptions
+(build-asan/batch72-resource-guard-followup.xml and strict.log). No full suite or
+new hosted checkpoint for this local group. Last cumulative gate remains4,115
+at publishedec17fcb. No source edits, source exclusions or new allowances.
+
+Hosted39792966993 coverage job terminal success, all artifact stages exit0:
+4,115 executed,4,100 clean,15 known,0 failed/skipped. Exactec17fcb/68eba79 source
+lock and C+header filter verified. Measured17,214/17,684 lines97.34%,
+11,958/13,754 branches86.94%; same-source delta+16 lines/+21 branches with
+unchanged denominators against39788587225.470 measured lines remain uncovered.
+Artifact/report/gaps saved in build-asan/hosted39792966993/. GCC/Clang remain
+live and diagnosis queued at last authoritative check; do not call full matrix
+green or dispatch a duplicate. Badges remain the fully successful97.25/86.79
+baseline. Known-gap summary synchronized to that verified baseline.
+
+New report confirms no-table offset cases exercise earlier parser branches,
+not the later defensive zero-table arms. Added exact reachability evidence in
+TODO rather than another duplicate test or forced metadata mutation.
+
+# Local validation-branch and deferred-alarm follow-up - 2026-10-22
+
+Previous turn delivered nine scenarios; this turn extends an existing case,
+rather than adding one alias per branch. Renamed the plugin registration test
+for its broader metadata scope: nine malformed declarations independently reject
+(missing load/restore/save, invalid public type, missing value/getter, missing
+description/group name, self-parent group). Every rejection leaves both settings
+and the group undiscoverable, invokes no provider callbacks and preserves data.
+Corrected registration then exposes group/description and ordered values.
+
+One new full-boot scenario raises a second alarm through public system_raise_alarm
+while E-stop is active, releases the input, sends reset and serial unlock/G-code.
+The pending alarm survives warm reset, the first unlock reports it and still
+blocks G91; a second explicit unlock returns to idle. No internal pending-alarm
+flags are assigned. No motor motion occurs; all physical coordinates stay0.
+This exercises previously uncovered system_raise_alarm/disable_lock branches.
+
+Grouped ASan/UBSan +strict passes2/2,0 exceptions (build-asan/batch72-guard-alarm.xml
+and strict.log).4,116 registrations expected; last complete local gate is4,115
+before this follow-up. CORE clean/latest checked68eba79. No new source variant,
+source edit, allowance or percentage claim. Keep local until a useful batch.
+
+Hosted39792966993 source job passed; GCC/Clang/coverage confirmed live at last
+check. Do not restart or dispatch a duplicate. Latest fully successful measured
+baseline remains39788587225, exact2847aae/68eba79,97.25% lines/86.79% branches.
+
+# Nine-scenario public API/parser delivery - 2026-10-22
+
+4,115 registered tests pass complete ASan/UBSan66s:4,100 clean,15 documented
+reproductions,0 failed/skipped. Build/test/strict all0 in
+build-asan/batch72-nine-scenarios-gate.json; delivery XML/strict.log retain detail.
+Nine additions beyond published2847aae are all ordinary passing cases, with no
+new exceptions. The earlier five parser/compensation cases are listed below.
+
+Four additional public-API scenarios pass grouped/strict (batch72-public-gaps.xml):
+- Directory query's owned-buffer size rejection and malloc failure preserve
+  caller storage/errno and allow correct current-directory retry.
+- Missing plugin value storage rejects the whole settings owner; corrected
+  registration exposes both settings and reports their values in order.
+- A setting write during a real queued cycle preserves calibration and the
+  original80step physical cut.
+- Existing legacy help API respects its supplied command count and preformatted
+  text; zero-count call adds no output.
+
+Rejected the attempted null-value N/A listing candidate: public registration
+forbids that descriptor. Its real validation boundary is tested instead. Added
+source-backed known-gap/TODO evidence without bypassing registration. Existing
+legacy corrupt-version recovery cases were found, not duplicated; their
+uncovered report-call counter discrepancy is separately recorded for attribution
+review. CORE remains clean68eba79. No new host variant or source exclusion.
+
+Hosted39788587225 is now FULLY successful: source/GCC/Clang/coverage/diagnosis.
+Exact2847aae/68eba79 lock/filter verified. Measured17,198/17,684 lines97.25%,
+11,937/13,754 branches86.79%. Compared with the same-source prior checkpoint,
++13 lines/+9 branches, unchanged denominators. ReadMe badges now point here.
+The nine additions have no hosted coverage measurement yet. Push this combined
+boundary on existing PR26 and dispatch one exact-head68eba79 run; keep draft
+until its full matrix completes. No redundant helper/full local rerun.
+
+# Same-source measured coverage improvement - 2026-10-22
+
+Hosted39788587225 coverage and Clang jobs terminal success; GCC remains live
+at last authoritative check. Downloaded coverage artifact source lock verified:
+harness2847aaef7522a9d6c5dc53f4c809f0bc9ab64615 / CORE68eba7906ba60d66c8b55c4adc90cd5e85b5a828 /
+filter core C+headers. All coverage stages exit0.4,106 executed:4,091 clean,
+15 documented reproductions,0 failed/skipped.
+
+Measured17,198/17,684 lines97.25%,11,937/13,754 branches86.79%. Compared with
+successful39779207602 at the SAME source/filter/configuration denominators,
+13 additional lines and9 branches are covered (approximately+0.074/+0.065
+percentage points). Newly covered lines: gcode2428/2429 and4812-4838 selections,
+motion_control793/795 native unsupported stub, and vfs259 path-allocation
+fallback.486 measured lines remain uncovered. No exclusions or adjusted totals.
+Raw coverage/report/lock/gaps saved in build-asan/hosted39788587225/.
+
+Five newer local scenario cases below are not part of these metrics and have
+only grouped focused validation. No duplicate hosted run. Keep badges on the
+last FULL-matrix successful checkpoint until GCC/diagnosis are terminal too.
+
+# Five reachable parser-gap scenarios validated locally - 2026-10-22
+
+Coverage-driven authoring resumes from exact68eba79 report39779207602, with
+existing-case checks before each candidate. Five new scenario files (4,111
+registrations) pass grouped ASan/UBSan and strict reporting,5 clean/0 exceptions,
+0.4s runtime: build-asan/batch72-parser-gaps.xml and strict.log.
+
+- No-table G43/G43.2 rejection preserves active dynamic Z offset and queued cut.
+- Read-only material provider assignment rejects through the parser, preserves
+  both provider/queued feed, and the following two cuts finish at160steps.
+- Failed computed O-label expression preserves root scope and queued80step cut.
+- Canned-cycle compensation conflict and active-compensation work-system switch
+  reject without changing modal/callback state; cancelling allows valid retry.
+- Static cutter radius uses the fitted tool both with omitted D and D0. Fitted
+  tool is declared using M61 in execution mode with mandatory tool notification
+  installed, then check mode validates extension configuration. Initial missing
+  callback/check-mode fixture mistakes were corrected, not labelled CORE bugs.
+
+Existing negative coordinate-index regression was found and not duplicated.
+No CORE edits, forced private state, new configuration, source exclusions or
+known allowances. These five are outside the last full/hosted checkpoint and
+have no measured coverage gain yet. Accumulate on this branch; no per-module
+full suite/push/CI. Published2847aae is under exact hosted39788587225; source job
+passed and runtime jobs were confirmed live, with no duplicate dispatch.
+
+# Combined parser/state coverage delivery - 2026-10-22
+
+Resume coverage-driven unit testing: inspect uncovered executable paths, select
+supported public inputs and assert observable behavior. Real failures become
+known regressions; incomplete/unreachable implementation remains explicit in
+KNOWN_BUGS' gap table, without fake tests or adjusted coverage totals.
+
+Four accumulated cases beyond validated97bb6aa now total4,106 registrations:
+wrong-directory unlink on allocation failure, trailing comment overriding a
+validation error, direct compensation restore ignoring extension refusal, and
+unsupported native G33.1 returning success with parser-only displacement.
+The last specifically exercises previously uncovered parser/native-stub paths
+using the existing working encoder/stepper fixture; no tapping geometry added.
+Each has a correct assertion, narrow WILL_FAIL and dated evidence/cleanup.
+No CORE edits, source exclusions or sanitizer suppression.
+
+Full4,105-case ASan/UBSan gate before the final G33.1 addition passes63s:
+4,091 clean,14 documented reproductions,0 failed/skipped. Build/test/strict all0
+in build-asan/batch72-three-bugs-gate.json; XML and strict.log retain detail.
+Final G33.1 case +two real synchronized-motion controls pass focused/strict:
+2 clean,1 documented reproduction (batch72-tapping-final.xml). The final case
+fails correct unsupported-status assertion after observing parser Z2 vs physical
+Z1; later preservation/retry assertions are unvalidated until that fix. No
+redundant unchanged full suite/helper run; next complete gate is hosted.
+
+Latest successful hosted baseline39779207602 remains exact97bb6aa/68eba79,
+all five jobs green,97.18% lines/86.72% branches. Current additions have no new
+coverage measurement yet. Deliver together on existing PR26 and dispatch one
+updated-head/source checkpoint. PR remains draft pending that exact run.
+
+# Explicit known-gap placeholders - 2026-10-22
+
+User requested visible placeholders for unfinished/inaccessible coverage regions.
+KNOWN_BUGS.md now has a linked known-coverage-gaps table: wall homing, native
+rigid tapping, disabled open-drain/timezone settings, stale settings metadata,
+atomic scheduler fallback and inaccessible broadcast override arms. Each records
+status, exact68eba79 source evidence and the condition for executable testing.
+ReadMe Known issues links it. Existing real public rejection tests remain.
+No synthetic WILL_FAIL tests, source exclusions, adjusted denominator or inflated
+case count. Raw successful baseline remains97.18%/86.72% with499 uncovered lines;
+not all499 are classified unavailable. Runtime source/tests unchanged in this
+inventory-only commit, so no redundant build/full suite/hosted dispatch.
+
+# Verified hosted checkpoint39779207602 - 2026-10-22
+
+All five jobs terminal success: source, GCC, Clang, coverage, CI diagnosis.
+Exact published harness97bb6aa5b379732701e117ed5caa73b7d1a40d5c / clean CORE
+68eba7906ba60d66c8b55c4adc90cd5e85b5a828 / filter core C+headers verified
+against downloaded source lock.4,102 registrations:4,091 clean,11 documented
+expected failures,0 skipped/unexpected failures. Coverage17,185/17,684 lines
+97.18%;11,928/13,754 branches86.72%. ReadMe badges now reference this successful
+baseline; no comparable-source gain claim. PR26 body updated with exact evidence.
+Do not merge automatically. Current two local bug commits remain outside that
+head and need a future combined delivery; goal remains active and incomplete.
+
+# Local material-comment bug and verified coverage report - 2026-10-22
+
+Previous turn made progress: committed wrong-directory unlink reproduction.
+This group adds a second concrete public bug, not duplicate confidence tests:
+normalization overwrites a plugin comment error with a later successful plain
+comment. A rejected material-selection comment followed by a contour note
+accepts G20/G91 motion and advances parser X from1 to51.8mm. Correct rejection,
+modal, queue-capacity and80-step assertions reuse the existing shared fixture;
+status fails before preservation assertions run. Narrow named WILL_FAIL,
+dated KNOWN_BUGS cause/proposal/cleanup. CORE untouched.4,104 registrations.
+
+Grouped follow-up ASan/UBSan and strict reporting:3 clean controls,2 known
+reproductions,0 failures (batch72-bug-followup.xml /strict.log). Format case
+separately confirms doubled separator. Do not rerun the full unchanged suite
+or push a tiny checkpoint while the published run is still finishing.
+
+Hosted39779207602 exact97bb6aa/68eba79 source-lock verified. Source, Clang and
+coverage jobs are terminal success; GCC remains live at last authoritative
+check. Coverage artifact stages fetch/tooling/configure/build/test/classify/
+coverage all exit0,4,102 tests:4,091 clean,11 known,0 failed/skipped. New measured
+baseline17,185/17,684 lines97.18%;11,928/13,754 branches86.72%,499 uncovered
+lines. No like-for-like gain claim against older different-source reports.
+Raw artifact/lock/report/gaps saved at build-asan/hosted39779207602/.
+Badges/PR readiness await the complete matrix. New grbllib atomic-selection
+fallback reachability evidence is in TODO; no exclusions or forced interrupts.
+
+# Current local file-safety follow-up - 2026-10-22
+
+Published97bb6aa is under hosted39779207602, authoritatively in progress at
+last check. Source job passed; downloaded source-lock artifact confirms exact
+harness97bb6aa / clean Terje68eba79 / core C+header filter. GCC, Clang and
+coverage remain live; do not dispatch a duplicate or claim terminal success.
+
+Local follow-up adds one bug regression (4,103 registrations), not another
+confidence case. A size-specific temporary path malloc failure during public
+relative unlink in `/store/jobs` dispatches `part.nc` and reports success,
+removing a different same-named root file. Valid frontend-only provider and
+normal retry to `/jobs/part.nc` establish the fault; final unrelated-file
+preservation assertion remains correct. One narrow WILL_FAIL; dated KNOWN_BUGS
+cause/proposal/cleanup. No CORE edits or sanitizer exemption. Raw evidence:
+build-asan/batch72-unlink-oom-raw.xml.
+
+Existing current-drive format case now uses a valid callback-free frontend
+directory provider and records backend routing. On68eba79 it reaches backend
+as `//new.nc`: mount cache's trailing slash is doubled by parse_path. Updated
+the existing known entry rather than adding a duplicate test. Grouped focused
+ASan/UBSan +strict passes both expected reproductions (batch72-vfs-safety.xml).
+Prior full4,102 gate remains the last cumulative gate; no redundant full run
+or hosted dispatch for this one-case follow-up. Accumulate useful work here.
+
+# Current batch72 bug-hunting delivery - 2026-10-22
+
+CORE is clean detached68eba7906ba60d66c8b55c4adc90cd5e85b5a828. No firmware
+edits. Prior checkpoint below is historical. Branch coverage-batch-72 retains
+five accumulated local follow-ups plus this source-compatibility/bug group.
+
+- Prioritize plausible public bug paths, reuse existing regressions, and avoid
+  confidence-only additions. One shared-header rebuild, grouped affected run,
+  one full pre-push sanitizer gate. No new source coverage claimed yet.
+- All4,102 current registrations now build/run; zero unavailable. Full
+  ASan/UBSan147s:4,091 clean,10 known reproductions,1 existing alarm-upload
+  failure. Evidence: build-asan/batch72-core68-delivery.xml and strict.log.
+  The upload contract remains unsettled; its correct assertion now has one
+  documented named WILL_FAIL per requested nonblocking handling. Focused final
+  classification XML/strict log records upload and combined message regression.
+- All41 cutter cases pass again after upstream's flag-field fix. Scheduler
+  cancellation and five ordinary directory/root regressions pass; their
+  allowances removed. The invalid chdir-without-getcwd provider is now rejected
+  at public mount; adapted regression checks rejection and corrected retry,
+  retaining repeated-directory and relative-unlink assertions. Removed both old
+  fatal manifests/wrappers; remaining failures use no sanitizer exemptions.
+  Linux device allowance removed with the common validation fix, pending hosted
+  Linux confirmation. Local fs_device passes; do not call hosted checks green.
+- Fallback frontend-only getcwd still loses its directory. Format relative path
+  assertion and two hidden-mount navigation assumptions still fail. Preserve
+  named exceptions and distinguish unresolved hidden-navigation policy in TODO.
+- Default backend's old direct-call metadata assumptions changed upstream.
+  Existing root/missing tests now use public stat and check metadata/status;
+  no promise is imposed on failed output buffers. Retired callback-free child
+  metadata fallback case because that implementation was removed, not replaced
+  by forced NULL-callback invocation. Evidence and scope recorded in TODO.
+- New combined public parser-error probe confirms zero messages released across
+  unsupported G999, negative feed and unused Q. Expected errors, prior queued
+  cut and80-step endpoint all pass before correct ownership assertion fails.
+  One named WILL_FAIL, expanded existing message-leak entry, no suppression.
+- Latest hosted report remains failing39762025374 at19bb4ab/fab8d1c, PARTIAL
+  97.05% lines/86.67% branches. Changed source/config denominators prevent a
+  defensible gain claim. Keep successful96.60/85.54 badges unchanged until an
+  exact updated-head/source hosted report exists. PR26 remains draft.
+
+# Current batch72 verification checkpoint - 2026-10-22
+
+The full supported CORE coverage goal is active and unproven. Highest priority:
+obvious bugs and uncovered reachable paths, not extra confidence cases or test
+counts. Batch source review/authoring/builds; focused runs resolve uncertainty.
+One cumulative gate and hosted checkpoint per substantial delivery. CORE belongs
+to Terje and remains untouched.
+
+- Branch coverage-batch-72; published PR26 is draft at19bb4ab. Local follow-ups
+  are accumulated, not yet pushed.4,102 registered cases /100 beyond merged
+  upstream; these counts do not establish coverage progress.
+- Clean CORE and latest checked Terje master remain
+  fab8d1c248990f53f13a444018fbb3ee353061dd.
+- Latest exact-source hosted39762025374 is terminal FAILURE at19bb4ab/fab8d1c.
+  Source/helpers passed. Each runtime job attempted4,094 registrations:4,022
+  clean,10 known,58 unavailable and4 failures (alarm contract, Linux /dev
+  rejection and two documented crashes reported differently). No live job awaits.
+- Hosted PARTIAL measurement:17,065/17,583 lines97.05%;11,818/13,635 branches
+  86.67%.518 measured executable lines remain uncovered. This is not a passing
+  baseline or like-for-like gain from the96.60/85.54 successful badge baseline;
+  source/configuration denominators differ. Badges unchanged. Exact source lock,
+  HTML/XML, compiler reports and fresh gaps.json: build-asan/hosted39762025374/.
+- Current configuration recovery:17 generic existing cases were unnecessarily
+  coupled to cutter compensation. Four pre-execution cases moved to lathe_ngc;
+  five geometry cases moved to ngc_tools and eight generic G-code table cases now
+  link the existing host_core_ngc_tools with LATHE_UVW_OPTION=1. No duplicate cases
+  or source exclusions. All28 affected geometry/offset/reload/M6/parameter tests
+  pass ASan/UBSan and strict1.67s: batch72-tool-config.xml /strict.log /build.log.
+  The remaining41 cutter tests genuinely require CUTTER_COMP_ENABLE and remain
+  registered/unavailable due to CORE's stale ccomp_off field references.
+- Concrete local bug regressions: MPG pull-up ordering (two named WILL_FAILs),
+  active macro WHILE allocation error leaving its file current at EOF (one), and
+  plugin rejection losing its CORE message (one). Correct assertions retained;
+  dated source/cleanup evidence in KNOWN_BUGS.md. No new sanitizer suppression.
+  Four relocated hook controls +message regression pass5/5 strict0.52s, with
+  observed orphan reclaimed only in probe teardown: batch72-plugin-hook.xml.
+  WHILE regression/control pass2/2 strict0.29s: batch72-while-allocation.xml;
+  MPG regressions/control pass3/3 strict0.35s: batch72-mpg-pull.xml. Raw failure
+  XMLs retain the actual ownership/pull-up evidence.
+- Three local macro-loader memory recovery cases use actual file reads, parser
+  execution and EOF after retry. Filename growth, sub-record and callee-argument
+  failures preserve sender, parent#1=99, scope and close ownership. Three +two
+  existing controls pass5/5 strict0.82s: batch72-macro-loader.xml /strict.log.
+- Linux diagnostic follow-up: /dev rejection gets one Linux-only WILL_FAIL;
+  GCC/Clang null-call reports match only exact captured source/frame or PC-zero
+  harness caller chains. Changed/additional faults and fixes remain red.71 helper
+  checks pass6.695s; four captured Linux crash outputs replay and actual Windows
+  crash checks pass2/2 strict0.54s. Evidence: batch72-linux-diagnostic-python.log
+  and batch72-mpg-linux-repair.xml. No unchanged helper rerun is needed.
+- Last cumulative local gate preceded the17 relocations and message regression:
+  4,043 buildable cases (4,101 registered minus58),4,027 clean,15 known,one
+  unsettled alarm-upload contract failure. Build failed only host_core_cutter;
+  CTest/strict remain red. Evidence: batch72-recovery-delivery.xml and related
+  build/test/strict logs. Preserve this scope; do not claim the newer configuration
+  has a whole-suite or hosted pass. Do not repeat full gates after each small edit.
+- Next: review remaining fresh-map regions for concrete bug hypotheses, retaining
+  maintainer TODOs and unreachable guards. Accumulate a meaningful group before
+  the next combined validation/push. Current config has41 unavailable cases and
+  4,061 buildable registrations, not yet cumulatively gated. No new percentage
+  is claimed until a matching source/configuration report exists. PR27 remains
+  independent draft reporting repair, integrated into this branch ind58f2bc.
+
+Historical entries below may describe old branches, completed runs or superseded pauses.
+
+# Live CI measurement recovery - 2026-10-20
+
+The coverage workflow previously skipped gcovr whenever tests failed, preventing
+fresh gap guidance. An isolated fix is pushed on ci-partial-coverage at eb746fe,
+based on upstream/master3b16ba3; it contains no coverage batch tests or CORE edits.
+57 Python checks pass. Hosted run 39369581523 is in_progress at last query:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/39369581523
+Poll that existing handle; do not redispatch. Verify it emits labelled PARTIAL
+HTML/XML, retains failed CI and skips changed-code assessment after failed tests.
+Do not call it ready or create its PR before hosted evidence is inspected.
+The raw counters are investigation data, never a new passing coverage baseline.
+Core stays clean7a6a432 and the98 documented crashes remain unsuppressed.
+
+Back on coverage-batch-72; its25 new cases comprise22 hosted-verified at05806c8
+and three later local snapshot cases atad3ed49. PR24 remains open/unmerged.
+Continue independent tests here while CI runs. Do not duplicate PR24 in a new
+master-target PR. The separate CI branch can be reviewed independently of24.
+
+Named-label parser follow-up: four new cases PASS ASan/UBSan. Allocation
+failure/retry and label reuse under memory pressure pass0.31s; unterminated and
+overlong label rejection/recovery pass0.31s. The rejection cases execute an
+already queued cut to its exact motor endpoint, then accept a corrected named
+conditional and assignment. No VFS workaround, source patch or exception.
+Evidence: build-asan/batch72-label-results.xml and batch72-label-rejection-results.xml,
+../batch72-label-tests.log and ../batch72-label-rejection-tests.log.
+Batch72 now29 additions:22 verified hosted at05806c8 plus7 later local cases.
+Registered total4,031. No updated full-suite/hosted claim for those7. Continue
+supported gaps; await the existing isolated CI run for fresh partial measurements.
+
+Fresh partial-coverage guided group: four cases PASS ASan/UBSan0.36s.
+Negative G10 P preserves the queued cut, modal state and saved coordinates;
+inverse-time canned drilling rejects then accepts a G94 retry; rotary A words
+in an eight-axis canned cycle reject without pulses, then linear drilling works;
+YZ cutter-comp activation rejects before the plugin and accepts a G17 retry.
+The first cutter assertion expected the later IllegalPlane guard; source review
+shows the earlier common check returns CutterCompConflict. The test follows
+that public contract. Do not force the redundant later guard for coverage.
+Evidence: build-asan/batch72-public-validation-results.xml and
+../batch72-public-validation-tests.log. Batch72 now33 new cases:22 previously
+hosted plus11 later local cases. Registered total4,035. No CORE or exception change.
+
+Isolated CI coverage job39369581523 has completed with its expected failed test
+stage but SUCCESSFUL coverage collection. Artifact contains HTML/XML; HTML title
+is "Partial core coverage - tests failed". Classification retains98 failures and
+coverage_partial warning, suppressing changed-code assessment. Summary step ran
+successfully with COVERAGE_COMPLETE=false (job log retained). Remaining compiler
+and diagnosis status must still be verified before CI PR readiness. Current gap
+map: ../ci-partial-coverage-core.gaps.json, explicitly partial. Do not promote its
+percentages to a passing baseline. The CI branch predates batches71/72.
+
+Isolated partial-coverage CI repair is now PR25 (open, non-draft):
+https://github.com/grblHAL/Unit_tests/pull/25 . Hosted39369581523 is terminal;
+all builds pass, GCC/Clang each reproduce only98 known strutils.c:393 failures.
+Coverage collection succeeds despite failed tests, produces labelled partial
+HTML/XML, records coverage_partial and withholds changed-code assessment.
+Summary step succeeds with COVERAGE_COMPLETE=false.57 Python checks pass.
+No CORE or exception change. Do not merge either PR24 or25.
+Use ../ci-partial-coverage-core.gaps.json for current-source investigation only;
+it is based on upstream/master before batches71/72, so discount already covered
+paths from our new cases. VFS/macro gaps may be downstream of the core crash.
+Continue batch72 tests on this branch. No new hosted/full-suite claim for the11
+local post05806c8 cases; local total4,035,72 additions33. No repeated CI dispatch.
+
+# Current batch72 continuation - refreshed 2026-10-20
+
+Goal active after usage reset. Reuse coverage-batch-72; do not proliferate branches.
+Core freshly fetched remains clean/unmodified Terje7a6a432. PR24 is open,
+unmerged, for the25-case71 batch. Never merge it or modify CORE.
+
+Hosted72 run39341429819 is terminal failure. Source/build stages pass; GCC and
+Clang each run4,024 cases:3,923 clean passes,3 known reproductions,98 failures,
+0 skips. All22 additions at pushed05806c8 pass in both compilers. Every sanitizer
+case reports the same documented strutils.c:393 NULL-base access. No coverage
+percentage was produced. Artifacts: ../batch72-hosted-{results,report}-core-*.zip.
+Do not rerun that unchanged checkpoint or treat its source fault as a test fix.
+
+Three additional local snapshot cases PASS ASan/UBSan0.36s: M70 allocation
+failure leaves parser state intact and permits retry; replacing an existing save
+reuses storage under memory pressure; a failed local M73 preserves the caller's
+snapshot and permits later restore. Public parser/modal-scope APIs plus existing
+malloc failure fixture; linker wrapping is narrow to these three cases. No new
+bug/exception. Registered total4,027. Evidence: build-asan/batch72-snapshot-results.xml
+and ../batch72-snapshot-tests.log. These three are NOT in hosted05806c8 evidence.
+Keep authoring supported gaps before the next single pre-push full gate. PR72
+must not duplicate PR24 changes while24 remains unmerged.
+
+# Active continuation batch72 - 2026-10-20
+
+Branch coverage-batch-72 continues from pushed coverage-batch-71 at5133033.
+Do not duplicate batch71's PR or include unfinished72 work in its readiness claim.
+Batch71 hosted run39339402897 was confirmed in_progress against clean Terje
+7a6a432; check the existing run, never dispatch repeated unchanged validation.
+Local71 full gate:4,002 build;3,901 clean passes,3 known reproductions,98
+strict sanitizer failures all at documented strutils.c:393; all25 new cases pass.
+No CORE modifications, broad allowances or new coverage percentage claims.
+
+First72 group: four real homing workflows PASS ASan/UBSan in0.39s. Equal
+per-axis rates retain a combined XY cycle; distinct seek-only or locate-only
+rates split axes; noncontiguous XZ homing leaves Y completely unmoved. Verify
+physical endpoints, pulse counts, limit re-enabling and completion callback.
+Evidence: build-asan/batch72-homing-results.xml and ../batch72-homing-tests.log.
+Registered total4,006. Keep adding practical groups before the next full gate.
+Terje alone fixes source defects. Goal active; hourly recovery remains configured.
+
+Batch72 second group: four delta nonlinear jog cases pass ASan/UBSan0.40s.
+Check positive/negative Y and diagonal XY/XYZ clipping preserves the requested
+line, produces finite motor coordinates and passes the public travel checker.
+One CSS-to-rapid lathe workflow passes: queued radial cut drains to its exact
+endpoint before the new rapid is queued; CSS mode remains active and the rapid
+reaches its exact motor endpoint. No fixed-RPM convention is assumed for G0.
+A second draft assuming two consecutive CSS cuts remain queued was discarded:
+the parser can synchronize them; it is not a core bug. No allowance added.
+Evidence: build-asan/batch72-delta-results.xml and batch72-css-results.xml,
+../batch72-delta-tests.log and ../batch72-css-tests.log. Nine new72 cases pass;
+registered total4,011. No full rerun until a substantial delivery boundary.
+
+Batch72 third group: five cases PASS ASan/UBSan0.43s. A real probe and
+$TLR establish a tool reference in each fixed X/Y/Z configuration. Public homing
+notifications preserve it for unrelated axes and invalidate it for the configured
+axis, regardless of active plane, with the expected report flag. Two public
+$HELP COMMANDS cases enumerate separate registered plugin groups exactly once
+and refresh optional command help availability without invoking commands.
+Evidence: build-asan/batch72-reference-help-results.xml and
+../batch72-reference-help-tests.log. Batch72 now14 new passing cases;
+registered total4,016. No CORE change, known bug or allowance added.
+
+Batch72 fourth group: two public startup upload boundary cases PASS
+ASan/UBSan0.31s. Oversized normalized input returns Overflow before changing
+saved program or parser distance mode; a long valid pipe-separated program
+round-trips intact and preserves slot1. Evidence:
+build-asan/batch72-startup-results.xml and ../batch72-startup-tests.log.
+Batch72 now16 new passing core cases; registered total4,018.
+
+Hosted71 coverage artifact is terminal failure; GCC/Clang were still running at
+last query. Exact source-lock confirms clean Terje7a6a432. All25 additions pass
+in hosted coverage; full counts match local:3,901 clean,3 known,98 failed,0
+skips. All98 JUnit failures carry SEGFAULT. Coverage was NOT produced; do not
+claim a new percentage. Downloaded artifacts and extracted XML are in ../batch71-
+hosted-coverage*. No new dispatch is needed.
+
+Reporting repair for72: ci_report ignored JUnit's failure message when captured
+stdout/stderr contained only whitespace. Retain SEGFAULT instead of saying
+no diagnostic was emitted. Classification remains failed/known_changed; never
+call a crash a fixed regression. Regression test plus changed helper checks:
+14 CI-report and11 sanitizer-report checks PASS. Set TEMP/TMP to a workspace
+folder for Python helper tests; the default sandbox temp folder rejected child
+writes. Reclassifying the real coverage artifact now reports98 SEGFAULT findings.
+No CORE modification or diagnostic exception is involved.
+
+Batch72 fifth group: two protected-probe status workflows PASS
+ASan/UBSan0.30s. Register a real watchable/latchable probe, enable protection via
+$65=32, forward its actual queued report flags, and verify the protection marker
+is removed on disconnect/probing and restored on reconnect/return to idle guard.
+The initial draft used the generic report helper's empty flags; correcting the
+caller to pass pending stream flags fixed the fixture. No core bug or exception.
+Evidence: build-asan/batch72-probe-report-results.xml and
+../batch72-probe-report-tests.log. Batch72 now18 new passing core cases;
+registered total4,020. CI-report repair also has25 passing Python checks.
+GCC hosted71 is terminal failure solely from98 documented strutils.c:393
+NULL-base sanitizer cases; all25 new71 tests pass. Clang remains pending until
+rechecked. Never imply the source suite is green or fabricate coverage output.
+
+Batch71 delivery complete: PR24 is OPEN, non-draft:
+https://github.com/grblHAL/Unit_tests/pull/24 . Hosted39339402897 is terminal
+failure. Source selection/all builds pass; GCC and Clang each confirm3,901
+clean passes,3 known reproductions,98 source sanitizer failures,0 skips. Every
+new71 case passes in all jobs. Coverage is unavailable, not a percentage claim.
+PR explicitly documents the unchanged core fault and has no source patches.
+Do not merge PR24. Batch72 is based on71; avoid a cumulative duplicate PR before
+24 merges. Continue tests on72 and push at the next coherent boundary.
+
+Batch72 sixth group: normal all-off follows its configured PWM stop ramp,
+reset all-off stops immediately without ramp delay, and two enabled PWM spindles
+each ramp monotonically to zero. Three cases PASS ASan/UBSan0.34s.
+Secondary PWM unsupported inversion case PASS0.23s. Registration trims that
+option from public metadata, so its public validation returns OutOfRange before
+the private setter's Disabled guard. Do not invoke the private setter to force
+coverage; retain the supported public rejection and normal enable/direction path.
+Evidence: build-asan/batch72-stop-results.xml and batch72-secondary-invert-results.xml.
+Batch72 now22 new core cases pass; registered total4,024; reporting checks25 pass.
+Next: one full local pre-push gate for72, not repeated focused/checker runs.
+
+Batch72 full pre-push gate completed: all4,024 targets build. Full
+ASan/UBSan run61s:3,923 clean passes,3 known reproductions,98 strict failures,
+0 skips. All22 additions pass. The exact set of98 sanitizer cases is identical
+to71, each at documented strutils.c:393 NULL-base access. No new failing case,
+exception or CORE change. Raw CTest96 still differs from strict98 due two
+inherited expected-failure labels.25 changed reporting checks pass.
+Evidence: ../batch72-full-build.log, build-asan/batch72-full-results.xml,
+../batch72-full-summary.md and ../batch72-validation.json.
+Push72 and dispatch one hosted check against clean7a6a432; no repeated run of
+unchanged source. PR24 is open for71. Avoid duplicating its changes in a new
+master-target PR until24 merges. Continue independent work while72 CI runs.
+
 # Active coverage batch71 - 2026-10-20
 
 Goal ACTIVE: meaningful full supported core line/branch coverage. The hourly
@@ -4415,3 +6162,315 @@ Coverage16,895/17,634 lines95.81%;11,527/13,648 branches84.46%.
 Artifacts beside checkout; README snapshots refreshed to thisverifiedrun.
 Hosted54 run39176480077 still live. Earlier50-52 failures are notrerun/relabeled;
 53 cumulative checkpoint validates their fixes. PR20 remains open/frozen40.
+
+CoreXY manual referencing: two normal-boot sender workflows PASS ASan/UBSan
+0.30s. Public settings enable manual homing with empty automatic cycles; $H
+zeros all Cartesian/motor coordinates, while $HX preserves Y/Z and updates
+the coupled A/B motor coordinates. The host rejects any pulse or wakeup, so
+manual referencing is verified without motion. Evidence:
+build-asan/batch72-corexy-manual-results.xml and ../batch72-corexy-manual-tests.log.
+Batch72 now35 new cases:22 hosted at05806c8 plus13 later local cases.
+Registered total4,037. No new full-suite/hosted claim or CORE/exception changes.
+
+
+Mixed CoreXY referencing: automatic Z switch homing plus manual XY completes
+from normal boot through $H/$G. The test verifies real Z pulses and switch
+pulloff, zero XY pulses, all axes homed, zero parser/motor origins and idle
+without an alarm. PASS ASan/UBSan0.28s, evidence:
+build-asan/batch72-mixed-results.xml. Batch72 now36 new cases, total4,038;
+22 hosted plus14 later local. No new full-suite claim or CORE change.
+
+
+Probe synchronization reset workflow PASS ASan/UBSan0.25s: queue a real cut,
+request probing and send realtime reset after ten actual X pulses while the
+probe waits for preceding motion. Verify interrupted motion, one driver reset,
+GCProbe_Abort and no probe-start/completion callbacks or active probe monitor.
+Fixture supplies mandatory coolant shutdown and driver reset callbacks; initial
+missing-callback crashes were fixture errors, not CORE defects. Evidence:
+build-asan/batch72-probe-reset-results.xml. Batch72 adds37, total4,039:
+22 hosted and15 later local. No full-suite rerun, CORE change or allowance.
+
+
+Active probe reset also PASS: a realtime reset after ten physical pulses aborts
+before contact, invokes driver reset once, marks position lost and never reports
+a successful probe/completion. Shared reset fixture now serves both timing cases.
+Both PASS ASan/UBSan0.32s (batch72-active-probe-results.xml). Batch72 adds38,
+registered4,040, with22 hosted plus16 local. One full gate now running in
+../batch72-next-full-{build,tests}.log, tool session29505. Poll that handle; do
+not restart. Fresh API: PR24 and25 remain open/unmerged; fetched clean Terje
+core still7a6a432. Do not duplicate PR24 in a master-target coverage PR.
+
+
+Batch72 second delivery gate is terminal: all4,040 targets build; full ASan/UBSan
+129.52s gives3,939 clean passes,3 known reproductions and98 strict sanitizer
+failures. Raw CTest96 differs because two inherited WILL_FAIL labels invert
+crashes. Exact sanitizer case set matches prior checkpoint: zero additions or
+removals; no failing case without sanitizer output. All38 batch72 cases pass.
+Evidence: build-asan/batch72-next-full-results.xml, ../batch72-next-validation.json,
+../batch72-next-full-summary.md and ../batch72-next-full-{build,tests}.log.
+Push this checkpoint and dispatch one hosted check against clean7a6a432.
+PR24/25 remain open; do not duplicate unmerged71 changes in a new master PR.
+
+
+Spindle-address group: three sender-command cases PASS ASan/UBSan0.40s.
+With primary M3/5000 and secondary M4/7000 running, reject M51P0$-1,
+M5$-2 and disabled M5$2 without any hardware output callback, direction or
+RPM change. A valid M5$1 afterward still stops only the secondary spindle.
+Evidence: build-asan/batch72-address-results.xml and ../batch72-address-build.log.
+Batch72 now41 additions, total4,043. These three are local-only after the
+4,040-case full gate and hosted checkpoint539278b. Existing hosted run:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/39371716116
+Do not dispatch unchanged validation or claim these three are hosted-verified.
+No CORE changes, new exceptions or defect claims.
+
+Acceleration profile guard: fractional G187.1 rejection preserves a previously
+queued G187P2 cut, modal units/distance and selected acceleration. The following
+ordinary move still plans at the same factor; both execute to160 physical pulses.
+PASS ASan/UBSan0.26s, build-asan/batch72-profile-results.xml. This exercises the
+previously uncovered fractional G187 guard through normal parser input.
+Batch72 now42 additions, registered4,044; four are local-only after539278b.
+Hosted39371716116 remains genuinely in_progress (source success; GCC/Clang/
+coverage running). Do not restart or claim its result before terminal evidence.
+
+Repeated drilling reset group: three workflows PASS ASan/UBSan0.40s.
+A sender realtime reset interrupts G91 G81 L20 during initial clearance,
+first-hole XY positioning or first drill feed. Real pulses verify that no
+following phase/hole runs, the driver resets once, position is marked lost,
+and motor/software positions remain at the reset snapshot. No speculative
+alarm severity or restart policy assertion. Evidence:
+build-asan/batch72-drill-reset-results.xml and ../batch72-drill-reset-build.log.
+Batch72 now45 additions, total4,047; seven are local-only after hosted539278b.
+No CORE modifications, known-bug changes, exception or full rerun.
+
+Drill-reset follow-up adds two PASS cases: reset during G81 retract prevents
+positioning for the next hole; reset during G83 drilling discards later pecks
+and holes. The existing three cases also pass after shared fixture extension:
+5/5 ASan/UBSan0.48s. Evidence: build-asan/batch72-drill-followup-results.xml.
+Batch72 adds47, total4,049; nine local-only beyond hosted539278b. No new full
+suite, hosted or coverage claim; source remains unmodified. Next work should
+move to another supported gap rather than proliferating reset phase aliases.
+
+Two sender-facing metadata cases PASS ASan/UBSan0.29s. Public resolution help
+switches A between steps/degree and steps/millimeter as rotary configuration
+changes, preserving linear X help. Actual settings iteration invokes the bound
+stepper spindle unit hook for each axis, with step/rev only on A and normal
+step/mm elsewhere; public description lookup reaches the spindle hook too.
+The inherited callback-only fixture used a long placeholder unit; this integration
+case instead supplies ordinary step/mm units fitting the existing core unit buffer.
+No overflow issue is classified from that artificial placeholder. Evidence:
+build-asan/batch72-metadata-results.xml. Batch72 adds49, total4,051; eleven
+local-only after hosted539278b. No CORE changes, exception or full rerun.
+
+Secondary-stepper reset chain PASS ASan/UBSan0.26s. Three registered motors
+emit actual pulses; public mc_reset stops all before invoking the prior plugin
+hook. Subsequent polling emits no pulses and reports zero speed. Repeated reset
+while EXEC_RESET remains pending does not call the hook again. This covers the
+third motor registration/list traversal and chained reset callback through the
+public reset entry rather than directly invoking the installed callback.
+Evidence: build-asan/batch72-stepper-reset-results.xml. Batch72 adds50,
+registered4,052; twelve local-only after hosted539278b. CORE unmodified.
+Hosted39371716116 last verified live: source success, coverage failed, GCC/Clang
+running. Poll that exact run at next useful boundary, never redispatch unchanged.
+
+Integrated pending PR25 reporting as a dependency for the next fresh coverage
+checkpoint, preserving its independent review branch/PR. Merge retains current
+AGENTS/PROGRESS and combines both CI-report fixes.58 Python helpers PASS6.808s.
+No source changes or allowances. Next hosted run can now emit PARTIAL HTML/XML
+while remaining red for documented CORE crashes; changed-code assessment stays
+withheld on failed execution. This is not new passing coverage evidence.
+
+Integrated batch72 checkpoint: all4,052 targets build; full sanitizer/strict
+62.67s gives3,951 clean passes,3 known reproductions and98 source sanitizer
+failures, identical case set to prior hosted/local checkpoints. All50 additions
+pass; zero new/removed sanitizer cases and no failure without sanitizer output.
+58 helpers pass. Evidence: build-asan/batch72-integrated-full-results.xml,
+../batch72-integrated-validation.json and ../batch72-integrated-full-summary.md.
+Hosted539278b evidence is now fully inspected: all38 additions pass both compilers;
+source/harness locks verified; sole error location strutils.c:393. No firmware edit.
+Push this50-case checkpoint and dispatch once to obtain fresh PARTIAL coverage.
+
+Backlash restore group: two cases PASS ASan/UBSan0.30s. Public default restore
+on a started driver clears cached take-up before the next real move; pulse and
+physical/logical positions match the restored steps/mm with no compensation.
+Coordinate-only restore retains the existing .1mm compensation:88 physical
+pulses versus80 logical steps. These test settings_restore, not a reload API.
+Evidence: build-asan/batch72-backlash-restore-results.xml. Batch72 adds52,
+total4,054; latest two local-only after c9941ca. No CORE or exception changes.
+Hosted integrated checkpoint is39373002337 at c9941ca (4,052 cases). Poll that
+existing handle at the next useful boundary; do not dispatch unchanged validation.
+
+Driver ganged-axis hook chaining: two cases PASS in normal/asymmetric auto-square
+builds. A driver advertises an independently paired/auto-squared X axis before
+kinematics registration. Public get_ganged queries preserve that X and add the
+kinematics Y pair; Y is auto-squared only in its corresponding build. Both query
+modes reach the original driver hook exactly once. The shared fixture gains an
+optional pre-registration driver hook; all34 cases across both affected modules
+PASS ASan/UBSan1.77s. Evidence: build-asan/batch72-ganged-hook-results.xml.
+Batch72 adds54, total4,056; latest four local-only after c9941ca. No source or
+exception changes. Next full gate remains deferred until a substantial boundary.
+
+Auto-square driver-disable chaining PASS: original driver receives the exact Y/B
+request and the subsequent all-motors re-enable request. Pulses suppress only
+the secondary motor before re-enable, then restore the complete mask. Optional
+pre-registration fixture callback leaves other cases unchanged. All35 affected
+asymmetric ganging/auto-square cases PASS ASan/UBSan1.26s, evidence:
+build-asan/batch72-disable-hook-results.xml and ../batch72-disable-hook-tests.log.
+Batch72 adds55, total4,057; latest five local-only after c9941ca. No source,
+known-bug or exception changes. Keep building a substantial group before another
+full gate/push; current hosted run39373002337 must not be restarted unchanged.
+
+Delayed plugin retry lifecycle: two cases PASS ASan/UBSan0.52s. A due event
+callback cancels another pending retry during task processing while unrelated
+due work still runs in order. A second case replaces that retry with a deadline
+relative to current time, verifies it does not run early, then runs exactly once.
+No private scheduler calls or simulated interrupt races; public task APIs and
+controlled host ticks only. Evidence: build-asan/batch72-task-retry-results.xml.
+Batch72 adds57, total4,059; latest seven local-only after c9941ca. Existing
+standalone deletion/order tests were inspected first to avoid duplicate cases.
+No CORE/exception changes. Hosted39373002337 last checked live with source-lock
+and source-report artifacts only; await its fresh coverage, do not redispatch.
+
+Builtin parameter macro read-only-write guard PASS ASan/UBSan0.27s. G65P3
+cannot overwrite read-only position parameter5420; its value and caller Q scope
+remain intact, call level unwinds and the failed return flag is clear. A following
+write to writable global100 succeeds. Evidence:
+build-asan/batch72-param-write-results.xml. Batch72 adds58, total4,060; latest
+eight local-only after c9941ca. No source or exception changes. Hosted39373002337
+was checked live this turn: all compiler/coverage jobs still running, no coverage
+artifact published yet. Continue supported gaps without restarting that run.
+
+No-tool-table builtin macro control PASS ASan/UBSan0.26s. Normal table-free
+configuration rejects a G65P2 offset query, unwinds call scope, preserves caller
+Q and clears the failed-return marker. A following writable-parameter macro works.
+No fabricated tool pointer, source modification or expected-failure allowance.
+Evidence: build-asan/batch72-no-tool-table-results.xml. Batch72 adds59,
+registered4,061; latest nine local-only after c9941ca. Continue pending fresh
+coverage39373002337 before selecting duplicates from the old map.
+
+Fresh integrated coverage artifact is available from live run39373002337, harness
+c9941ca and clean Terje7a6a432. HTML explicitly titled "Partial core coverage -
+tests failed". Coverage JUnit has4,052 cases and98 SEGFAULT failures, exact same
+case set as the documented core fault. GCC/Clang terminal results are still
+pending; do not call the run complete. Partial investigation counters only:
+16,916/17,645 lines and11,644/13,696 branches (NOT a passing baseline).
+Relative to the earlier same-source partial artifact this records49 more covered
+lines and80 more covered branches. Fresh map:
+../batch72-integrated-coverage-core.gaps.json. It includes50 additions but not
+later local cases. Use this map instead of the older ci-partial map.
+
+Two full-queue drilling reset cases PASS, alongside all five affected existing
+cases (7/7 ASan/UBSan0.44s). Sender queues ordinary short X moves, then G81
+blocks waiting for planner room; reset interrupts preceding X motion before
+any drill clearance/positioning or Z pulse. Positive-R and below-current-R
+controls cover the distinct entry paths without private calls or forced abort
+state. Evidence: build-asan/batch72-full-queue-results.xml. Batch72 adds61,
+total4,063; latest eleven local-only after c9941ca. CORE/allowances unchanged.
+
+Three additional buffered-drill reset controls PASS with all seven affected
+existing cases (10/10 ASan/UBSan0.52s). Ordinary X cuts occupy the planner;
+G81 then waits for room for its R-plane approach, feed or retract. Reset during
+preceding X motion stops at the driver snapshot without any Z pulse, including
+when the drill feed was already queued before retract enqueue blocked. Tests
+use public queue availability and valid G-code, not private entry calls or
+forced abort flags. Targeted paths come from the fresh partial gap map; no
+new line-coverage claim until the next measured checkpoint.
+Evidence: build-asan/batch72-drill-enqueue-results.xml. Batch72 adds64,
+registered4,066; latest14 local-only after c9941ca. CORE/allowances unchanged.
+
+
+### 2026-10-22 - asymmetric boot homing authoring
+
+Added two public full-boot $H workflows with real asymmetric Y/A motor pulses.
+Clear switches home independently to Y=80/A=160; X/Z remain stationary.
+Engaged switches expose initial pull-off using a primary-only motor lock:
+secondary receives no pulses and homing raises alarm8. Correct assertion retained
+as exact WILL_FAIL/known_bug with source cause and removal guide in KNOWN_BUGS.
+Four boot_square cases pass classification in0.43s:3 clean,1 expected failure.
+Raw evidence square-engaged-raw.xml; classified square-engaged-classified.xml.
+No CORE changes or sanitizer allowance. Local authoring group awaits the next
+substantial cumulative full gate/push. No coverage gain claimed for this group.
+
+
+### 2026-10-22 - asymmetric boot homing cumulative gate
+
+Five new scenarios now cover initially clear/engaged switches, positive/negative
+motor alignment trim, and public reset during final trim. Reset raises alarm6
+and leaves both homed flags clear; physical travel and unrelated motors checked.
+Full ASan/UBSan build/test/strict gates all0:4,165 cases in73.21s,4,148 clean,
+17 exact expected failures,0 failed/skipped. Logs batch72-square-homing-*.
+One new confirmed primary-only initial pull-off lock defect; no CORE changes
+or sanitizer diagnostic allowances. Fresh origin master remains clean68eba79.
+Previous pushed4c0c021 coverage artifact source/harness/filter locks match:
+17,313/17,684 lines97.90%,12,121/13,754 branches88.13%,371 raw uncovered.
+All seven coverage stage exits0; GCC/Clang still running at inspection, so this
+is a coverage-job result rather than a new fully-green snapshot badge.
+
+
+### 2026-10-22 - macro returns and short RTCP paths authored
+
+Four cases: nested G65 O-word RETURN unwinds live IF frames through a plugin
+return callback, preserves each caller argument, returns values13/17 and skips
+both file tails; orphan named SUB rejects while retaining caller-owned file and
+allows next assignment; short rotary move off-center emits one exact segment;
+zero-linear-distance C90 exposes lost rotary endpoint, exact WILL_FAIL documented.
+A mismatched named-file SUB protocol proposal timed out15.03s; retained outside
+registration with TODO evidence pending error/stream ownership isolation.
+No CORE changes. Cumulative sanitizer gate follows before next push.
+
+
+### 2026-10-22 - macro/RTCP cumulative delivery gate
+
+Full build/ASan/UBSan/strict summary all0:4,169 cases in69.07s,4,151 clean,
+18 exact expected failures,0 unexpected failures/skipped. RTCP raw output
+confirms requestedC90/emittedC0; no sanitizer diagnostic allowance. Four new
+cases and the unregistered malformed-header proposal are retained distinctly.
+All five individual hosted jobs for39831104507 at4c0c021 are terminalsuccess.
+Both downloaded locks verify68eba79/source filter/core scope, all7 coverage
+stages0,4,160total/4,144clean/16known. Report17,313/17,68497.90% lines and
+12,121/13,75488.13% branches; badges/known-gap snapshot updated,371 raw gaps.
+Newer homing run39833149909 at3c3f1d9 remainslive; no new coverage attributed
+to this macro/RTCP batch before its exact hosted report. CORE remains clean.
+
+
+### 2026-10-22 - flow error ownership and public rejection batch
+
+Three new cases total4,172. Malformed named SUB timeout isolated to frame/sub
+cleanup before named-file error reporting: bounded correct file-closure assertion
+fails after safely releasing observed orphan, exact WILL_FAIL/known_bug and
+source cause/removal guide added. Existing valid named CALL control now checks
+its matching SUB header. Original full-protocol proposal remains unregistered
+until upstream fixes ownership, replacing the previous uncertain TODO account.
+Two grouped parser controls reject negative output/input ports, invalid wait
+mode, and G70/71/72 axis-command conflicts without disturbing queued80-pulse cut;
+registered output and input commands work afterwards. No CORE changes.
+Full ASan/UBSan build/test/strict all0:4,172 in59.82s,4,153 clean,19 known,
+0 unexpected/skipped. No sanitizer diagnostic allowance. Fresh core master
+still68eba79 and clean. Logs batch72-flow-ownership-io-*.
+Hosted39833149909 at3c3f1d9 now has all5 individual jobs terminalsuccess;
+both artifact source/harness/filter locks and7 coverage stage exits verified.
+17,317/17,684 lines97.92%,12,124/13,754 branches88.15%,367 raw uncovered.
+New covered lines machine_limits206/524/527,motion_control1181. README/known-gap
+snapshot updated. Newer0522e4e run39834732774 stilllive at inspection; current
+ownership/I/O batch needs its own exact-head hosted validation before readiness.
+
+
+### 2026-10-22 - real G76 interruption batch
+
+Five new registered encoder/physical-motor workflows total4,177: sender STOP
+during first synchronized cut cancels remaining passes and unread G1Z-5, stops
+spindle and permits next sender move; RESET during cut immediately stops pulses,
+marks position lost and prevents later passes; idle reset before entry taper,
+after queued entry taper and after queued main cut prevents following stages
+without falsely marking position lost. Exact radial/axial steps, encoder starts,
+spindle/coolant shutdown and reset callbacks checked via normal realtime APIs.
+Shared thread_reset_motion fixture installs mandatory coolant/reset callbacks;
+initial missing-callback ASan fault was a fixture defect and was repaired.
+No CORE defect/exception/sanitizer allowance added. Full build/ASan/UBSan/strict
+all0:4,177 in59.96s,4,158 clean,19 known,0 failed/skipped. Logs
+batch72-thread-interruptions-*. Fresh CORE master remains clean68eba79.
+All5 individual jobs for39834732774 at0522e4e now terminalsuccess; both downloaded
+source/harness/filter locks and7 coverage stage exits0 verified.4,169 cases,
+4,151clean/18known.17,323/17,684 lines97.96%,12,131/13,754 branches88.20%,
+361 raw uncovered. New lines RTCP308/363,flow657/773/774/779. Badges and known-gap
+snapshot updated. Ownership/I/O run39835932809 remainslive at inspection;
+thread group needs its own exact-head hosted report before coverage attribution.

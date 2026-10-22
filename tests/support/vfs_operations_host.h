@@ -18,6 +18,13 @@ static int operation_unlink(const char *path) { capture_path(path); strcpy(unlin
 static int operation_mkdir(const char *path) { capture_path(path); mkdir_calls++; return operation_result; }
 static int operation_rmdir(const char *path) { capture_path(path); rmdir_calls++; return operation_result; }
 static int operation_chdir(const char *path) { capture_path(path); chdir_calls++; if(operation_result == 0) strcpy(backend_directory, path); return operation_result; }
+static char *operation_getcwd(char *buffer, size_t size)
+{
+    static char snapshot[256];
+    (void)buffer; (void)size;
+    strcpy(snapshot, backend_directory);
+    return snapshot;
+}
 static int operation_stat(const char *path, vfs_stat_t *st)
 { capture_path(path); stat_calls++; st->st_mode.directory = stat_directory; st->st_size = 123; return stat_result; }
 static int operation_chmod(const char *path, vfs_st_mode_t attr, vfs_st_mode_t mask)
@@ -26,7 +33,7 @@ static int operation_utime(const char *path, struct tm *time)
 { capture_path(path); captured_time = *time; return operation_result; }
 static vfs_t operation_fs = {.fs_name = "store", .fopen = operation_open, .fclose = operation_close,
  .funlink = operation_unlink, .fmkdir = operation_mkdir, .frmdir = operation_rmdir,
- .fchdir = operation_chdir, .fstat = operation_stat, .fchmod = operation_chmod, .futime = operation_utime};
+ .fchdir = operation_chdir, .fgetcwd = operation_getcwd, .fstat = operation_stat, .fchmod = operation_chmod, .futime = operation_utime};
 static void operation_changed(const vfs_t *fs) { CHECK(fs == &operation_fs); change_calls++; }
 static inline void prepare_operations(vfs_st_mode_t mode)
 { CHECK(vfs_mount(NULL, "/store", &operation_fs, mode)); vfs.on_fs_changed = operation_changed; }

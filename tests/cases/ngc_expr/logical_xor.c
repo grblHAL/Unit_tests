@@ -12,5 +12,7 @@ int main(void)
     engine_parser_prepare();
     char expression0[] = "[1XOR1]"; NEAR(eval(expression0), 0);
     char expression1[] = "[1XOR0]"; NEAR(eval(expression1), 1);
+    char expression2[] = "[0XOR0]"; NEAR(eval(expression2), 0);
+    char expression3[] = "[0XOR-2]"; NEAR(eval(expression3), 1);
     return EXIT_SUCCESS;
 }

@@ -13,7 +13,7 @@ int main(void)
     CHECK(cutter_block("G41.1D6") == Status_OK);
     CHECK(cutter_block("T2M6") == Status_CutterCompConflict);
     CHECK(gc_state.tool->tool_id == current_tool);
-    CHECK(suspend_calls == 0 && !gc_state.tool_change);
+    CHECK(suspend_calls == 0 && !HOST_PARSER_FLAGS.tool_change);
     CHECK(cutter_enable_calls == 1 && plan_get_current_block() == NULL);
     return EXIT_SUCCESS;
 }

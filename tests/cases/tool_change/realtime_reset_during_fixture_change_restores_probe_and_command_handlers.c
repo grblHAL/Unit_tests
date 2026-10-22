@@ -8,7 +8,7 @@ int main(void)
     unsigned pulses = axis_pulses[Z_AXIS];
     CHECK(protocol_enqueue_realtime_command(CMD_RESET));
     CHECK(!protocol_exec_rt_system());
-    CHECK(!gc_state.tool_change);
+    CHECK(!HOST_PARSER_FLAGS.tool_change);
     CHECK(reset_calls == 1);
     CHECK(setter_disable_calls > 0);
     CHECK(hal.probe.get_state().probe_id == Probe_Default);

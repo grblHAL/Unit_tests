@@ -10,11 +10,11 @@ import unittest
 SCRIPTS = Path(__file__).resolve().parent
 
 class SuiteReportingTests(unittest.TestCase):
-    def run_report(self, stage, warning=False, failure=False, known=False, partial=False):
+    def run_report(self, stage, warning=False, failure=False, known=False, partial=False, headers=False):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             (root / "scripts").mkdir()
-            for name in ("summary.py", "run_suite.py"):
+            for name in ("summary.py", "run_suite.py", "known_crash.py"):
                 shutil.copyfile(SCRIPTS / name, root / "scripts" / name)
             (root / "build").mkdir()
             (root / "plugin-diagnostics").mkdir()
@@ -30,7 +30,12 @@ class SuiteReportingTests(unittest.TestCase):
             (root / "plugins/example_plugin/new_file.c").write_text("/* uninstrumented */")
             (root / "core").mkdir()
             (root / "core/unrelated.c").write_text("/* excluded */")
-            (root / "coverage.xml").write_text('<coverage><packages><package><classes><class filename="plugins/example_plugin/code.c" line-rate="1" branch-rate="1"/></classes></package></packages></coverage>')
+            classes = '<class filename="plugins/example_plugin/code.c" line-rate="1" branch-rate="1"/>'
+            if headers:
+                (root / "plugins/example_plugin/inline.h").write_text("static inline int value(int n) { return n ? 1 : 0; }")
+                (root / "plugins/example_plugin/declarations.h").write_text("int value(int n);")
+                classes += '<class filename="plugins/example_plugin/inline.h" line-rate="0.5" branch-rate="0.25"/>'
+            (root / "coverage.xml").write_text('<coverage><packages><package><classes>' + classes + '</classes></package></packages></coverage>')
             env = os.environ.copy()
             env.pop("GITHUB_STEP_SUMMARY", None)
             env.pop("GITHUB_ACTIONS", None)
@@ -53,7 +58,7 @@ class SuiteReportingTests(unittest.TestCase):
     def test_partial_coverage_is_explicitly_not_a_passing_baseline(self):
         result = self.run_report("coverage-summary", partial=True)
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("Partial coverage: tests failed", result.stdout)
+        self.assertIn("Partial coverage: build or tests failed", result.stdout)
         self.assertIn("incomplete execution", result.stdout)
         self.assertIn("do not establish a passing baseline", result.stdout)
         self.assertIn("plugins/example_plugin/code.c", result.stdout)
@@ -63,6 +68,18 @@ class SuiteReportingTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("1 of 2 source files instrumented", result.stdout)
         self.assertIn("plugins/example_plugin/code.c", result.stdout)
+        self.assertNotIn("unrelated.c", result.stdout)
+
+    def test_header_rows_and_missing_headers_share_the_source_inventory(self):
+        result = self.run_report("coverage-summary", headers=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("2 of 4 source files instrumented", result.stdout)
+        header = next(line for line in result.stdout.splitlines() if "| plugins/example_plugin/inline.h |" in line)
+        self.assertIn("50.0% | 25.0%", header)
+        declarations = next(line for line in result.stdout.splitlines() if "| plugins/example_plugin/declarations.h |" in line)
+        self.assertIn("Not instrumented", declarations)
+        self.assertIn("2 files are absent", result.stdout)
+        self.assertIn("1 measured files have uncovered executable lines", result.stdout)
         self.assertNotIn("unrelated.c", result.stdout)
 
     def test_known_failure_links_correct_harness_and_cleanup_guidance(self):

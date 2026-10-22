@@ -6,6 +6,8 @@ int main(void)
     prepare_multi_spindle();
     CHECK(spindle_get_default() == 0);
     CHECK(spindle_is_enabled(0));
+    CHECK(spindle_is_enabled(-1));
+    CHECK(!spindle_is_enabled(-2));
     CHECK(spindle_config_calls[0] == 1);
     CHECK(spindle_select(0));
     CHECK(spindle_config_calls[0] == 1);

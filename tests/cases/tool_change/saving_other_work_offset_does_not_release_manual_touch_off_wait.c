@@ -9,7 +9,7 @@ int main(void)
     grbl.on_toolchange_ack();
     CHECK(tool_stream_handler(CMD_CYCLE_START));
     engine_execute_tasks(STATE_TOOL_CHANGE);
-    CHECK(gc_state.tool_change && manual_tool_changed_calls == 0);
+    CHECK(HOST_PARSER_FLAGS.tool_change && manual_tool_changed_calls == 0);
     CHECK(state_get() == STATE_TOOL_CHANGE);
     CHECK(axis_pulses[Z_AXIS] == 0);
     tool_wco_block("G10L2P1Z0");
@@ -17,7 +17,7 @@ int main(void)
     CHECK(tool_stream_handler(CMD_CYCLE_START));
     engine_execute_tasks(STATE_TOOL_CHANGE);
     CHECK(protocol_execute_realtime());
-    CHECK(!gc_state.tool_change && manual_tool_changed_calls == 1);
+    CHECK(!HOST_PARSER_FLAGS.tool_change && manual_tool_changed_calls == 1);
     CHECK(gc_state.tool->tool_id == 3 && tool_stream_handler == original_enqueue);
     return EXIT_SUCCESS;
 }

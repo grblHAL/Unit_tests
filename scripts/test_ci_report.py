@@ -51,6 +51,19 @@ class DiagnosisTests(unittest.TestCase):
         link = source_link(dict(file="plugins/example/code.c", line=7), lock)
         self.assertIn("fork/plugin/blob/" + "b"*40 + "/code.c#L7", link)
 
+    def test_empty_process_output_keeps_junit_crash_message_for_known_case(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            path = root / "results.xml"
+            path.write_text('<testsuite><testcase name="vfs.case"><failure message="SEGFAULT"/>'
+                            '<properties><property name="cmake_labels" value="known_bug"/></properties>'
+                            '<system-out/><system-err>  </system-err></testcase></testsuite>')
+            findings, counts = test_findings(path, root)
+            self.assertEqual(counts["failed"], 1)
+            self.assertEqual(counts["known"], 0)
+            self.assertEqual(findings[0]["kind"], "known_changed")
+            self.assertEqual(findings[0]["message"], "SEGFAULT")
+
     def test_known_changed_report_does_not_assert_fix(self):
         text = render([dict(job="gcc", findings=[dict(kind="known_changed", name="module.case", message="Different fault", severity="error")])], {})
         self.assertIn("it may be a fixed regression", text)
@@ -107,6 +120,24 @@ class DiagnosisTests(unittest.TestCase):
             self.assertEqual(partial[0]["severity"], "warning")
             self.assertIn("execution is incomplete", partial[0]["message"])
             self.assertNotIn("coverage_unavailable", [item["kind"] for item in report["findings"]])
+
+    def test_failed_build_with_passing_available_tests_withholds_changed_coverage(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "build").mkdir()
+            (root / "build/results.xml").write_text('<testsuite><testcase name="available"/></testsuite>')
+            (root / "coverage.xml").write_text('<coverage><packages/></coverage>')
+            (root / "source-lock.json").write_text(json.dumps(dict(sources=[])))
+            (root / "report-coverage.json").write_text(json.dumps(dict(job="coverage", findings=[], stages=[dict(stage="build", exit_code=1, log="build.log")])))
+            (root / "build.log").write_text('source.c:7:1: error: known source fault')
+            env = os.environ.copy()
+            env.pop("GITHUB_STEP_SUMMARY", None)
+            result = subprocess.run([sys.executable, str(SCRIPTS / "ci_report.py"), "--job", "coverage"], cwd=root, env=env, capture_output=True, text=True)
+            self.assertNotEqual(result.returncode, 0, result.stderr)
+            report = json.loads((root / "report-coverage.json").read_text())
+            self.assertEqual(report["counts"]["clean"], 1)
+            self.assertEqual(len([x for x in report["findings"] if x["kind"] == "coverage_partial"]), 1)
+            self.assertNotIn("coverage_baseline", [x["kind"] for x in report["findings"]])
 
     def test_aggregate_never_passes_missing_compiler_report(self):
         with tempfile.TemporaryDirectory() as d:

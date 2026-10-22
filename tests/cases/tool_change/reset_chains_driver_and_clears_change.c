@@ -4,10 +4,10 @@
 int main(void)
 {
     prepare_tool_change();
-    gc_state.tool_change = true;
+    HOST_PARSER_FLAGS.tool_change = true;
     hal.driver_reset();
     CHECK(reset_calls == 1);
-    CHECK(!gc_state.tool_change);
+    CHECK(!HOST_PARSER_FLAGS.tool_change);
     CHECK(engine_irq_depth == 0);
     return EXIT_SUCCESS;
 }

@@ -8,7 +8,7 @@ int main(void)
     CHECK(gc_execute_block(change) == Status_OK);
     resume_manual_change();
     CHECK(protocol_execute_realtime());
-    CHECK(!gc_state.tool_change);
+    CHECK(!HOST_PARSER_FLAGS.tool_change);
     CHECK(gc_state.tool->tool_id == 3);
     CHECK(manual_tool_changed_calls == 1 && manual_finished_tool == 3);
     CHECK(tool_stream_handler == original_enqueue);

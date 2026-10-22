@@ -1,4 +1,5 @@
 """Render CTest JUnit results and Cobertura coverage into GitHub job summaries."""
+from known_crash import matches_known_crash
 import argparse
 import html
 import json
@@ -47,6 +48,10 @@ else:
             expected_diagnostic = any(p.get("name") == "cmake_labels" and "known_sanitizer_bug" in p.get("value", "").split(";") for p in case.findall("./properties/property"))
             diagnostics = []
             output = "\n".join(case.findtext(tag, "") for tag in ("system-out", "system-err"))
+            fatal = any(p.get("name") == "cmake_labels" and "known_crash" in p.get("value", "").split(";") for p in case.findall("./properties/property"))
+            expected_diagnostic = expected_diagnostic or fatal
+            if fatal and matches_known_crash(case.get("name"), output, manifest):
+                continue
             for line in output.splitlines():
                 if "runtime error:" not in line and "ERROR: AddressSanitizer" not in line:
                     continue
@@ -75,7 +80,7 @@ else:
                     and not any(c.find(tag) is not None for tag in ("failure", "error", "skipped"))
                     and c.get("sanitizer_status") is None for c in cases)
         skipped = sum(c.find("skipped") is not None for c in cases)
-        lines = [f"## {args.suite_name} test results", f"Tests labelled `known_bug` are expected failures confirming documented defects; see {args.diagnostics_directory.as_posix()}/KNOWN_BUGS.md.", f"**{len(cases) - failed - skipped - known - len(known_diagnostics)} clean passes · {len(known_diagnostics)} passed with known sanitizer diagnostics · {known} known regressions reproduced · {failed} failed · {skipped} skipped**", "", "| Test | Result | Seconds |", "|---|---|---:|"]
+        lines = [f"## {args.suite_name} test results", f"Tests labelled `known_bug` are expected failures confirming documented defects (known crashes do not validate assertions after the fault); see {args.diagnostics_directory.as_posix()}/KNOWN_BUGS.md.", f"**{len(cases) - failed - skipped - known - len(known_diagnostics)} clean passes · {len(known_diagnostics)} passed with known sanitizer diagnostics · {known} known regressions reproduced · {failed} failed · {skipped} skipped**", "", "| Test | Result | Seconds |", "|---|---|---:|"]
         affected = [case for case in cases if case.find("failure") is not None or case.find("error") is not None or case.get("sanitizer_status") in ("failed", "missing")]
         if affected:
             guidance = ["", "### Failure guidance", ""]
@@ -120,16 +125,16 @@ else:
             print(f"::warning title=Known sanitizer diagnostics::{len(known_diagnostics)} tests passed assertions but reproduced diagnostics documented in {args.diagnostics_directory.as_posix()}/KNOWN_BUGS.md; review its known_sanitizer_diagnostics.json when updating sources.")
     else:
         measured = {entry.get("filename", "").replace("\\", "/"): entry for entry in root.iter("class")}
-        inventory = sorted(path.as_posix() for path in args.source_directory.rglob("*.c"))
-        lines = [f"## {args.suite_name} coverage", f"**{len(measured)} of {len(inventory)} source files instrumented**", "The remaining files are visible below; percentages apply to this build configuration.", "", "| Module | Line coverage | Lines | Branches |", "|---|---|---:|---:|"]
+        inventory = sorted(path.as_posix() for path in args.source_directory.rglob("*") if path.is_file() and path.suffix in {".c", ".h"})
+        lines = [f"## {args.suite_name} coverage", f"**{len(measured)} of {len(inventory)} source files instrumented**", "The inventory includes C sources and headers; percentages apply to measured executable code in this build configuration.", "", "| Module | Line coverage | Lines | Branches |", "|---|---|---:|---:|"]
         if os.environ.get("COVERAGE_COMPLETE") == "false":
-            lines[1:1] = ["**Partial coverage: tests failed.** These measurements describe incomplete execution; they do not establish a passing baseline or prove that uncovered code has no tests.", ""]
+            lines[1:1] = ["**Partial coverage: build or tests failed.** These measurements describe incomplete execution; they do not establish a passing baseline or prove that uncovered code has no tests.", ""]
         missing = [name for name in inventory if name not in measured]
         uncovered = [name for name in inventory if name in measured and float(measured[name].get("line-rate", "0")) < 1]
         if missing or uncovered:
-            lines[3:3] = ["", "### Coverage guidance", "", f"{len(missing)} files are absent from this coverage configuration; {len(uncovered)} measured files have uncovered executable lines.", "For new or changed code, inspect annotated HTML coverage and add meaningful tests for uncovered behavior and error paths. If a source file is absent, check its CMake inclusion, feature flags and coverage filter before concluding it lacks tests. Register new modules/plugin suites and their representative host fixtures/configurations.", "Coverage gaps alone do not establish that code is newly added or has no tests; that requires a source diff against a specified baseline. These gaps are reported for review, not automatically waived or treated as proof of correctness.", ""]
+            lines[3:3] = ["", "### Coverage guidance", "", f"{len(missing)} files are absent from this coverage configuration; {len(uncovered)} measured files have uncovered executable lines.", "For new or changed code, inspect annotated HTML coverage and add meaningful tests for uncovered behavior and error paths. If a source file is absent, check its CMake inclusion, feature flags and coverage filter before concluding it lacks tests. Uninstrumented headers may contain declarations only. Register new modules/plugin suites and their representative host fixtures/configurations.", "Coverage gaps alone do not establish that code is newly added or has no tests; that requires a source diff against a specified baseline. These gaps are reported for review, not automatically waived or treated as proof of correctness.", ""]
         for filename in inventory:
-            if entry := measured.get(filename):
+            if (entry := measured.get(filename)) is not None:
                 rate = float(entry.get("line-rate", "0"))
                 filled = round(rate * 10)
                 bar = "🟩" * filled + "⬜" * (10 - filled)

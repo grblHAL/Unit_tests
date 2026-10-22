@@ -16,5 +16,7 @@ int main(void)
     coord_data_t cartesian = {.x = target[0], .y = target[1], .z = target[2]}, motors;
     kinematics.transform_from_cartesian(&motors, &cartesian);
     CHECK(isfinite(motors.x) && isfinite(motors.y) && isfinite(motors.z));
+    CHECK(grbl.check_travel_limits(cartesian.values, (axes_signals_t){.mask = 7}, true, &sys.work_envelope));
+    CHECK(grbl.check_travel_limits(motors.values, (axes_signals_t){.mask = 7}, false, &sys.work_envelope));
     return EXIT_SUCCESS;
 }

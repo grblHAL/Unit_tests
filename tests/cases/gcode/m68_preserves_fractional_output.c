@@ -3,6 +3,8 @@
 #include "check.h"
 int main(void)
 {
+    analog_pins[Port_Output][1].cap.pwm = true;
+    analog_pins[Port_Output][1].mode.pwm = true;
     prepare_analog_motion();
     CHECK(io_block("M68E1Q1.25") == Status_OK);
     CHECK(analog_output_calls == 1 && analog_output_port == 1);

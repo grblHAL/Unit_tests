@@ -1,4 +1,5 @@
 """Structured, concise findings shared by stage capture and the final CI report."""
+from known_crash import matches_known_crash
 import argparse
 import html
 import json
@@ -74,7 +75,9 @@ def test_findings(path, diagnostics):
             counts["skipped"] += 1
             continue
         unexpected = []
-        if error is None:
+        fatal = any(p.get("name") == "cmake_labels" and "known_crash" in p.get("value", "").split(";") for p in case.findall("./properties/property"))
+        expected_diagnostic = expected_diagnostic or fatal
+        if error is None and not (fatal and matches_known_crash(name, output, manifest)):
             for line in output.splitlines():
                 if "runtime error:" not in line and "ERROR: AddressSanitizer" not in line:
                     continue
@@ -84,7 +87,7 @@ def test_findings(path, diagnostics):
                     unexpected.append(line)
         missing_diagnostic = expected_diagnostic and error is None and not any("runtime error:" in line or "ERROR: AddressSanitizer" in line for line in output.splitlines())
         if error is not None or unexpected or missing_diagnostic:
-            text = "Known sanitizer diagnostic no longer reproduced; see known bugs, it may be a fixed regression. Review the label, scoped manifest and resolved entry." if missing_diagnostic else "\n".join(unexpected) if unexpected else output or error.get("message", "") + "\n" + "".join(error.itertext())
+            text = "Known sanitizer diagnostic no longer reproduced; see known bugs, it may be a fixed regression. Review the label, scoped manifest and resolved entry." if missing_diagnostic else "\n".join(unexpected) if unexpected else (output if output.strip() else error.get("message", "") + "\n" + "".join(error.itertext()))
             if error is not None and "timeout" in error.get("message", "").lower():
                 text = "Test timed out: " + error.get("message")
             kind = "known_changed" if known or expected_diagnostic else "sanitizer" if unexpected or "AddressSanitizer" in text else "test"
@@ -210,11 +213,11 @@ def main():
         if args.job == "coverage":
             from changed_coverage import assess
             failed_execution = report.get("counts", {}).get("failed", 0) > 0 or any(
-                stage["stage"] in ("test", "classify") and stage["exit_code"]
+                stage["stage"] in ("build", "test", "classify") and stage["exit_code"]
                 for stage in report.get("stages", []))
             if Path("coverage.xml").exists() and failed_execution:
                 report["findings"].append(finding("coverage_partial", "Partial coverage",
-                    "Tests failed; annotated coverage is available for gap investigation, but execution is incomplete. Fix failures before judging changed-code coverage.", severity="warning"))
+                    "Build or tests failed; annotated coverage is available for gap investigation, but execution is incomplete. Fix failures before judging changed-code coverage.", severity="warning"))
             else:
                 report["findings"].extend(assess(lock, Path("coverage.xml")))
         path.write_text(json.dumps(report, indent=2) + "\n")

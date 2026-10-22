@@ -8,6 +8,7 @@ int main(void)
     CHECK(flow_command(static_macro_label, "CALL[12][34]") == Status_OK);
     CHECK(hal.stream.file != NULL);
     CHECK(ngc_call_level() == 1);
+    CHECK(flow_command(static_macro_label, "SUB") == Status_OK);
     float value;
     CHECK(ngc_param_get(1, &value));
     NEAR(value, 12);

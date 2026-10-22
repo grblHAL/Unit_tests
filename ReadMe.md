@@ -1,8 +1,8 @@
 # Unit tests for the grblHAL core
 
 [![Core tests](https://github.com/grblHAL/Unit_tests/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/grblHAL/Unit_tests/actions/workflows/tests.yml)
-[![Core line coverage: 96.60%](https://img.shields.io/badge/core_lines-96.60%25-brightgreen)](https://github.com/petervanderwalt/Unit_tests/actions/runs/39288629614)
-[![Core branch coverage: 85.54%](https://img.shields.io/badge/core_branches-85.54%25-green)](https://github.com/petervanderwalt/Unit_tests/actions/runs/39288629614)
+[![Core line coverage: 97.96%](https://img.shields.io/badge/core_lines-97.96%25-brightgreen)](https://github.com/petervanderwalt/Unit_tests/actions/runs/39834732774)
+[![Core branch coverage: 88.20%](https://img.shields.io/badge/core_branches-88.20%25-green)](https://github.com/petervanderwalt/Unit_tests/actions/runs/39834732774)
 
 Coverage badges show a verified successful report, not a live measurement of
 every source revision. Click either percentage for its run and coverage artifact.
@@ -17,7 +17,13 @@ and appears individually in CTest and GitHub Actions. Shared mocks live in
 
 ## Known issues
 
-[Pending core features](tests/TODO.md) lists functionality not fully added yet.
+[Known coverage gaps](tests/KNOWN_BUGS.md#known-coverage-gaps) explicitly tracks
+unimplemented and unreachable regions, their source evidence and what would make
+them testable. They remain uncovered in the measured totals; placeholder failures
+do not count as code coverage.
+
+[Pending core features](tests/TODO.md) contains the detailed implementation and
+contract questions.
 
 [Known core defects](tests/KNOWN_BUGS.md) lists each confirmed defect and the date
 it was marked known, with suggested core fixes and validation/exception-removal
@@ -28,6 +34,14 @@ Recovering sanitizer errors are also checked: the narrow
 [known diagnostic manifest](tests/known_sanitizer_diagnostics.json) links to the
 defect and removal instructions. Affected assertion passes are shown separately;
 unrecognized sanitizer diagnostics fail the reporting step.
+Fatal ASan regressions may use a named `known_crash` wrapper with exact test,
+source line, top frame and fault matching. For GCC NULL calls that omit the CORE
+frame, the inventory instead requires PC zero and the exact captured harness
+caller chain. They appear as known reproductions;
+assertions after the crash did not run. The wrapper retains full process output
+in `build/known-crash-<test>.log`. Fixes, changed/additional faults and runner
+errors fail and require exception review. Non-sanitizer builds retain direct tests.
+
 Feature compile regressions also check configurations where a known upstream
 build defect prevents runtime tests.
 
@@ -121,12 +135,14 @@ instructions: it may be a fixed regression, but a different crash is not a fix.
 Setup/build failures are reported even when tests never execute. Missing reports
 and failed jobs cannot produce a successful diagnosis.
 
-When the coverage build succeeds but tests fail, download the annotated HTML/XML
+After a successful configure, independent build targets and all registered tests
+are attempted even if some targets fail to build. Unbuilt tests remain explicit
+failures; no registrations or source regions are excluded. Download annotated HTML/XML
 from the coverage artifact to investigate remaining gaps. Its HTML title and job
 summary mark the data as **partial coverage**: crashed or aborted tests may not
 flush their counters or reach later assertions. The run stays failed. Partial
 results are not a passing baseline, and changed-code coverage assessment waits
-for a successful test run. Fix the reported failures before drawing conclusions
+for a successful build and test run. Fix the reported failures before drawing conclusions
 about newly added code without tests.
 
 Changed-code coverage is a **warning**, not a required coverage threshold. A source
@@ -506,10 +522,6 @@ For authoritative totals, use the hosted Linux coverage job. LLVM on Windows can
 omit profile files at long build paths even when tests pass. If measuring locally,
 verify that executed test objects produce `.gcda` files before trusting totals.
 
-For authoritative totals, use the hosted Linux coverage job. LLVM on Windows can
-omit profile files at long build paths even when tests pass. If measuring locally,
-verify that executed test objects produce `.gcda` files before trusting totals.
-
 Open `coverage.html` to inspect uncovered lines and branches. For a fresh measurement,
 use a new build directory so old execution counts cannot carry over.
 
@@ -526,6 +538,8 @@ compile checks remain. The `separate` function
 merge mode retains functions compiled at different locations under feature guards. Other feature combinations
 still need tests. A green suite or a covered module does not establish full coverage;
 use the source-by-source coverage table to choose the next behavior to test.
+The table inventories both `.c` and `.h` files; uninstrumented headers may
+contain declarations only.
 
 ## Add tests incrementally
 

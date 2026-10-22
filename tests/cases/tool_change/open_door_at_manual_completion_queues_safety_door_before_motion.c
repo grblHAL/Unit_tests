@@ -14,7 +14,7 @@ int main(void)
     tool_wco_block("G10L2P1Z0");
     tool_door_open = true;
     acknowledge_and_start_tool_change();
-    CHECK(!gc_state.tool_change);
+    CHECK(!HOST_PARSER_FLAGS.tool_change);
     // Observe door gating after servicing realtime; no specific queued-flag implementation is required.
     CHECK(protocol_exec_rt_system());
     CHECK(state_get() == STATE_SAFETY_DOOR);
@@ -28,7 +28,7 @@ int main(void)
     for(unsigned service = 0; service < 100 && state_get() != STATE_IDLE; service++)
         CHECK(protocol_exec_rt_system());
     CHECK(state_get() == STATE_IDLE);
-    fprintf(stderr, "resumed tool=%u notifications=%u pending=%u\n", (unsigned)gc_state.tool->tool_id, manual_tool_changed_calls, (unsigned)gc_state.tool_change);
+    fprintf(stderr, "resumed tool=%u notifications=%u pending=%u\n", (unsigned)gc_state.tool->tool_id, manual_tool_changed_calls, (unsigned)HOST_PARSER_FLAGS.tool_change);
     CHECK(gc_state.tool->tool_id == 3 && manual_tool_changed_calls == 1);
     CHECK(axis_pulses[X_AXIS] == 0 && axis_pulses[Z_AXIS] == 0);
     return EXIT_SUCCESS;

@@ -7,7 +7,7 @@ int main(void)
 {
     prepare_protocol();
     state_set(STATE_IDLE);
-    gc_state.file_run = true;
+    HOST_PARSER_FLAGS.file_run = true;
     gc_state.modal.program_flow = ProgramFlow_Running;
     char jog[] = "$J=G91X1F100", command[] = "G20";
     CHECK(!protocol_enqueue_gcode(jog));

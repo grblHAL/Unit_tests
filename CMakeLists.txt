@@ -21,6 +21,10 @@ file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/core/core_handlers.h" HOST_TOOL_PERSIS
 if(HOST_TOOL_PERSIST_DECLARATION)
   list(APPEND HOST_API_DEFINITIONS HOST_TOOL_PERSIST_API=1)
 endif()
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/core/gcode.h" HOST_PARSER_FLAGS_DECLARATION REGEX "parser_state_flags_t flags;")
+if(HOST_PARSER_FLAGS_DECLARATION)
+  list(APPEND HOST_API_DEFINITIONS HOST_PARSER_FLAGS_API=1)
+endif()
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/core/config.h" HOST_PARAMETERS_FORCED_ON REGEX "^#ifdef NGC_PARAMETERS_ENABLE")
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/core/strutils.h" HOST_STRSET_DECLARATION REGEX "^char [*]strset")
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/core/stream_json.h" HOST_JSON_CLOSE_DECLARATION REGEX "^bool json_close")
@@ -71,7 +75,7 @@ if(NOT MSVC)
   add_host_core(host_core_nvs_debug DEBUG=1 N_TOOLS=4)
   add_host_core(host_core_nvs_debug_eight DEBUG=1 N_TOOLS=4 N_AXIS=8)
   add_host_core(host_core_cutter CUTTER_COMP_ENABLE=1 LATHE_UVW_OPTION=1 NGC_EXPRESSIONS_ENABLE=1 N_TOOLS=4)
-  add_host_core(host_core_ngc_tools N_TOOLS=4 NGC_EXPRESSIONS_ENABLE=1)
+  add_host_core(host_core_ngc_tools N_TOOLS=4 NGC_EXPRESSIONS_ENABLE=1 LATHE_UVW_OPTION=1)
   add_host_core(host_core_pid PID_LOG=8)
   add_host_core(host_core_compat1 COMPATIBILITY_LEVEL=1)
   add_host_core(host_core_compat2 COMPATIBILITY_LEVEL=2)
@@ -125,7 +129,7 @@ function(add_core_test name module source)
     elseif(name MATCHES "^(gcode\\.g51_g50_g92_combined|gcode\\.g51_g50_scaling|gcode\\.g51_g50_scaling_with_work_offset|gcode\\.g53_g51_g50_scaling)$")
       target_link_libraries(test_${name} PRIVATE host_core_fanuc_scaling)
     elseif(name MATCHES "^(gcode\\.g10_l0_tool_reload|gcode\\.g10_l10_tool_offset_calculation|gcode\\.g10_l11_tool_orientation|gcode\\.g10_l11_tool_orientation_full|gcode\\.g10_l1_l10_tool_compensation|gcode\\.g43_g44_tool_length_offset_h_word|gcode\\.m6_tool_change_with_reload|gcode\\.t_word_tool_selection)$")
-      target_link_libraries(test_${name} PRIVATE host_core_cutter)
+      target_link_libraries(test_${name} PRIVATE host_core_ngc_tools)
     elseif(module STREQUAL "tool_axis_x")
       target_link_libraries(test_${name} PRIVATE host_core_tool_x)
     elseif(module STREQUAL "tool_axis_y")
@@ -247,7 +251,12 @@ function(add_core_test name module source)
   if(name MATCHES "^strutils\\.strset_failed_")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=realloc -Wl,--wrap=free)
   endif()
-  if(HOST_STRSET_DECLARATION AND name MATCHES "^vfs\\.current_directory_(allocation|reallocation)_failure_falls_back_to_root$")
+  if(name STREQUAL "settings.plugin_description_allocation_failure_preserves_metadata_and_allows_retry")
+    target_link_options(test_${name} PRIVATE -Wl,--wrap=realloc)
+  endif()
+  if(HOST_STRSET_DECLARATION AND (name STREQUAL "vfs.current_directory_allocation_failure_falls_back_to_root"
+    OR name STREQUAL "vfs.current_directory_reallocation_failure_preserves_previous_directory_and_retries"
+    OR name STREQUAL "vfs.current_directory_allocation_and_backend_rollback_failure_selects_root"))
     target_compile_definitions(test_${name} PRIVATE HOST_STRSET_API=1)
   endif()
   if(module STREQUAL "strutils")
@@ -319,12 +328,15 @@ function(add_core_test name module source)
   if(name STREQUAL "encoders.registration_allocation_failure_preserves_count_and_allows_retry"
     OR name STREQUAL "report.pins_report_survives_sort_allocation_failure"
     OR name STREQUAL "report.uart_report_survives_sort_allocation_failure"
-    OR name STREQUAL "ngc_params.virtual_registration_allocation_failure_preserves_existing_list")
+    OR name STREQUAL "ngc_params.virtual_registration_allocation_failure_preserves_existing_list"
+    OR name MATCHES "^ngc_params\\.m7[03]_snapshot_")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc)
   endif()
   if(name STREQUAL "ngc_params.string_growth_allocation_failure_preserves_neighbors_and_allows_retry"
     OR name STREQUAL "ngc_params.string_insert_allocation_failure_preserves_existing_values"
-    OR name STREQUAL "ngc_params.string_name_allocation_failure_reports_zero_and_allows_retry")
+    OR name STREQUAL "ngc_params.string_name_allocation_failure_reports_zero_and_allows_retry"
+    OR name STREQUAL "ngc_params.named_label_allocation_failure_allows_conditional_retry"
+    OR name STREQUAL "ngc_params.named_label_reuse_needs_no_reallocation_under_memory_pressure")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=realloc)
   endif()
   if(name STREQUAL "nvs_buffer.buffer_allocation_failure_can_retry_without_changing_storage_handlers"
@@ -332,14 +344,17 @@ function(add_core_test name module source)
     OR name STREQUAL "nvs_buffer.initialization_without_buffer_reports_startup_warning")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc)
   endif()
-  if(name STREQUAL "vfs.current_directory_reallocation_failure_falls_back_to_root")
+  if(name STREQUAL "vfs.current_directory_reallocation_failure_preserves_previous_directory_and_retries")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=free)
   endif()
-  if(name STREQUAL "vfs.current_directory_reallocation_failure_falls_back_to_root"
+  if(name STREQUAL "vfs.current_directory_reallocation_failure_preserves_previous_directory_and_retries"
     OR name STREQUAL "vfs.current_directory_allocation_failure_falls_back_to_root"
+    OR name STREQUAL "vfs.current_directory_allocation_and_backend_rollback_failure_selects_root"
     OR name STREQUAL "vfs.drive_iterator_allocation_failure_can_retry"
     OR name STREQUAL "vfs.mount_allocation_failure_reports_failure_without_notification"
-    OR name STREQUAL "vfs.mount_retry_after_allocation_failure_registers_one_backend")
+    OR name STREQUAL "vfs.mount_retry_after_allocation_failure_registers_one_backend"
+    OR name STREQUAL "vfs.relative_unlink_path_allocation_failure_preserves_other_directory_and_retries"
+    OR name STREQUAL "vfs.getcwd_size_and_allocation_failures_preserve_caller_buffer_and_allow_retry")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=realloc)
   endif()
   if(name MATCHES "^motion_control\\.thread_plan_")
@@ -350,6 +365,23 @@ function(add_core_test name module source)
   endif()
   if(name MATCHES "^fs_ram\\.allocation_failure_")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=realloc -Wl,--wrap=free)
+  endif()
+  if(name STREQUAL "lathe_ngc.pre_execute_rejection_releases_core_message_and_preserves_queued_motion"
+      OR name STREQUAL "lathe_ngc.parser_rejection_releases_message_and_preserves_queued_motion"
+      OR name STREQUAL "ngc_params.g66_allocation_failure_preserves_queued_cut_and_allows_retry")
+    target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=free)
+  endif()
+  if(name STREQUAL "ngc_long_names.long_macro_filename_allocation_failure_preserves_sender_and_retries")
+    target_link_options(test_${name} PRIVATE -Wl,--wrap=realloc)
+  endif()
+  if(name STREQUAL "ngc_flowctrl.named_macro_argument_allocation_failure_restores_caller_and_retries"
+      OR name STREQUAL "ngc_flowctrl.macro_while_expression_allocation_failure_returns_to_sender_and_retries"
+      OR name STREQUAL "ngc_flowctrl.macro_while_expression_normal_completion_returns_to_sender_and_reopens")
+    target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc)
+  endif()
+  if(name STREQUAL "ngc_flowctrl.named_macro_record_allocation_failure_closes_file_and_allows_retry"
+    OR name STREQUAL "ngc_flowctrl.numeric_sub_record_allocation_failure_preserves_file_and_allows_retry")
+    target_link_options(test_${name} PRIVATE -Wl,--wrap=calloc)
   endif()
   add_test(NAME ${name} COMMAND test_${name})
   set_tests_properties(${name} PROPERTIES TIMEOUT 15)

@@ -7,7 +7,7 @@ int main(void)
     sys.homed.mask = 0;
     char change[] = "T3M6";
     CHECK(gc_execute_block(change) == Status_HomingRequired);
-    CHECK(!gc_state.tool_change && state_get() == STATE_IDLE);
+    CHECK(!HOST_PARSER_FLAGS.tool_change && state_get() == STATE_IDLE);
     CHECK(plan_get_current_block() == NULL && wake_calls == 0);
     return EXIT_SUCCESS;
 }

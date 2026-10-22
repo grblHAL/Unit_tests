@@ -7,11 +7,11 @@ int main(void)
     start_manual_change();
     grbl.on_toolchange_ack();
     CHECK(workpiece_touch_off() == Status_OK);
-    CHECK(sys.flags.probe_succeeded && gc_state.tool_change);
+    CHECK(sys.flags.probe_succeeded && HOST_PARSER_FLAGS.tool_change);
     CHECK(setter_enable_calls > 0);
     CHECK(tool_stream_handler(CMD_CYCLE_START));
     engine_execute_tasks(STATE_TOOL_CHANGE);
-    CHECK(!gc_state.tool_change);
+    CHECK(!HOST_PARSER_FLAGS.tool_change);
     CHECK(setter_disable_calls > 0);
     CHECK(hal.probe.get_state().probe_id == Probe_Default);
     CHECK(tool_stream_handler == original_enqueue);

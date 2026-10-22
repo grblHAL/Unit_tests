@@ -13,7 +13,7 @@ int main(void)
     CHECK(memcmp(before, axis_pulses, sizeof(before)) == 0);
     CHECK(physical_position[X_AXIS] == 320 && physical_position[Y_AXIS] == 400);
     CHECK(physical_position[Z_AXIS] == -40);
-    CHECK(gc_state.tool_change && !sys.flags.probe_succeeded);
+    CHECK(HOST_PARSER_FLAGS.tool_change && !sys.flags.probe_succeeded);
     CHECK(plan_get_current_block() == NULL);
     return EXIT_SUCCESS;
 }

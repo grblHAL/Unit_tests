@@ -27,7 +27,7 @@ static status_code_t m6_driver_change(parser_state_t *parser)
     m6_change_calls++;
     if(m6_expect_named_message) CHECK(strstr(engine_output, "[MSG:End mill]" ASCII_EOL) != NULL);
     if(m6_wait_for_ack && m6_driver_status == Status_OK) {
-        gc_state.tool_change = true;
+        HOST_PARSER_FLAGS.tool_change = true;
         state_set(STATE_TOOL_CHANGE);
     }
     return m6_driver_status;

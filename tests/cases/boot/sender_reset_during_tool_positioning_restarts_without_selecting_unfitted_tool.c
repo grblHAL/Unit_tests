@@ -7,7 +7,7 @@ int main(void)
     CHECK(boot_tool_resets_after_restart == boot_tool_resets_before_change + 1);
     CHECK(boot_setup_calls == 1 && boot_release_calls == 1);
     CHECK(boot_reads == strlen(boot_program));
-    CHECK(!gc_state.tool_change);
+    CHECK(!HOST_PARSER_FLAGS.tool_change);
     CHECK(boot_tool_reset_z >= -40 && boot_tool_reset_z < 0);
     CHECK(sys.position[X_AXIS] == -160 && sys.position[Y_AXIS] == -240);
     CHECK(plan_get_current_block() == NULL);
