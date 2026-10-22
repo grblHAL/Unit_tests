@@ -35,14 +35,15 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Reviewed:** 2026-10-22, clean Terje `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39807024328)
-measures 17,258/17,684 lines (97.59%) and 12,021/13,754 branches (87.40%).
-The 426 uncovered lines include the following known gaps; this table does not
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39808684184)
+measures 17,268/17,684 lines (97.65%) and 12,032/13,754 branches (87.48%).
+The 416 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable.
 
 | Region | Status and evidence | What makes it testable |
 |---|---|---|
 | VFS lookup/rename residual guards | Three unreachable lines: lookup always returns cwd/root; cross-mount rename rejects before its second notification. [Source audit](TODO.md#verified-residual-guards-vfs-lookuprename-and-virtual-parameter-root). | Upstream changes lookup or cross-mount rename semantics. |
+| G84 helper flag guards | Six false arms are unreachable: both private helper call sites pass every flag enabled. [Caller audit](TODO.md#g84-private-override-helper-flag-guards). | A supported caller uses partial flags. Saved disabled-policy behavior is separately tested. |
 | Tab-setting datatype default | All declared public datatypes are handled; Int8/Int16 normalize to Integer. [Source audit](TODO.md#tab-setting-metadata-default-datatype-arm). | A new valid datatype reaches the formatter. |
 | Virtual-parameter empty-list registration | Built-in `_value`/`_value_returned` nodes keep the list nonempty. [Source audit](TODO.md#verified-residual-guards-vfs-lookuprename-and-virtual-parameter-root). | A supported lifecycle permits an empty list. |
 | Wall-plotter homing helpers | Unimplemented public workflow. [home_machine](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/kinematics/wall_plotter.c#L301) warns and returns false; [existing rejection test](cases/wall_plotter/unsupported_homing_reports_warning.c) passes. The report has 56 uncovered helper lines. | Implement public homing and define its reference/endpoint contract; then test actual motion through that entry point. |
@@ -339,3 +340,25 @@ the next supported move. Confirm the intended macro fallback separately. Remove
 this exception/entry once the stub path correctly rejects under sanitizers. If
 native tapping is implemented upstream, replace the unsupported-stub expectation
 with its agreed execution test and remove the native-feature gap entry as well.
+
+## M72 misses saved feed/rapid percentages when enable flags are unchanged
+
+**Confirmed:** 2026-10-22, clean CORE `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
+[Regression](cases/ngc_params/m72_restores_override_percentages_when_enable_flags_are_unchanged.c)
+saves80% feed/50% rapid with M70, changes them through public plan_feed_override
+to65%/25%, then executes M72. Both modal/runtime override-enable flags remain
+unchanged. M72 returns success but leaves65%/25%, instead of restoring80%/50%.
+The snapshot is released before the correct failing percentage assertion.
+Raw ASan/UBSan evidence: build-asan/modal-percentage-raw.xml.
+
+[Action selection](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/gcode.c#L583)
+sets M9 only when override-control flags differ. Both the direct restore and
+parser M72 percentage restoration are gated on M9 (gcode.c606-607/4382-4385),
+so percentage-only changes are skipped. Existing flag-change controls pass;
+scoped direct restore also passes while retaining its parent snapshot.
+
+**Suggested fix for Terje (not applied):** include saved/current feed and rapid
+percentage differences when selecting restoration work, preserving enable policy
+and planner update semantics. Keep this correct regression, remove its exact
+WILL_FAIL/known_bug block and this entry once upstream passes under sanitizers.
+One new named allowance; no sanitizer suppression or CORE modification.

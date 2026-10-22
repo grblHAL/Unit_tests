@@ -1,3 +1,51 @@
+# Modal/G84 policy batch cumulative gate - 2026-10-22
+
+Full4,134-case ASan/UBSan build/test/strict passes(all0):4,118 clean,16 documented
+reproductions,no unexpected failures/skips. Evidence:build-asan/batch72-modal-
+policy-gate.json,delivery XML/log,strict log. New G84 pre-disabled-control case,
+scoped direct-restore ownership extension and isolated M72 percentage-only bug
+regression all included. New allowance is one exact known_bug/WILL_FAIL; correct
+80/50 assertion retained after actual65/25 result, snapshot cleaned before failure.
+No CORE edits or sanitizer suppressions. Six private constant-flag false arms
+source-audited without exclusions. Clean upstream68eba79 unchanged. Deliver group.
+
+All five individual39808684184 jobs terminal success at0f2406d/68eba79. Locked
+coverage17,268/17,684 lines97.65%,12,032/13,754 branches87.48%,4,131 tests/4,116
+clean/15 known/no failures/skips. Badges/gap summary now this fully green report,
+416 raw executable lines uncovered. Newer39810197175 source passed, remaining
+jobs live; this latest modal group needs its own exact-head report.
+
+# G84 helper flag branch audit - 2026-10-22
+
+Verified all call sites of static override_disable/override_restore:one each,
+constant all-enabled flags. Six false guard arms atgcode174/180/185/198/205/208
+are unreachable under current callers, documented in TODO/coverage-gap table.
+Do not confuse these with saved disabled-policy branches199/210, covered by the
+new real G84 control test. Raw denominator/CORE/assertions unchanged. Existing
+M72 percentage-only defect remains isolated exactWILL_FAIL; continue independent
+work. No full objective/coverage completion claim.
+
+# Confirmed modal percentage-only restore defect - 2026-10-22
+
+New correct M70/M72 regression: saved80/50, changed65/25 with unchanged enable
+flags, M72 returnsOK but leaves65/25. Raw sanitizer assertion failure retained;
+exact WILL_FAIL/known_bug and dated source-cause/fix/removal entry added. Snapshot
+freed before failing assertion; no diagnostic allowance/CORE edit. Existing
+root/scoped direct restore now also verifies separate snapshot ownership using
+legal flag-change restoration; passes focused. Two-case raw result1 pass/1 real
+failure0.34s. Total4,134,16 known allowances now. Continue independent work.
+
+# G84 retains preexisting disabled override policies - 2026-10-22
+
+New supported tapping scenario passes ASan/UBSan0.28s. Public M49 thenM53P0
+establish disabled spindle/feed overrides and hold beforeG84Z-1R0P0. After actual
+160 Z pulses/retract to0 and spindle forward1000, both modal/runtime policies
+remain disabled; subsequentG80/M48/M53P1 reenables controls. Existing canned
+spindle fixture reused, no source/private-state changes or allowances. Initial
+combinedM49M53 fixture block violated modal grouping; corrected to legal blocks.
+Targets missing restored-disabled branches gcode199/210, not duplicate enabled
+restore behavior. Total4,133 cases; keep local for cumulative parser batch.
+
 # Settings branch batch cumulative gate - 2026-10-22
 
 Full4,132-case ASan/UBSan build/test/strict passes(all0):4,117 clean plus15

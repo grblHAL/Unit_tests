@@ -63,3 +63,7 @@ endif()
 if(TEST spindle_sync.unsupported_rigid_tapping_preserves_position_and_next_supported_sync_move)
   set_tests_properties(spindle_sync.unsupported_rigid_tapping_preserves_position_and_next_supported_sync_move PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+if(TEST ngc_params.m72_restores_override_percentages_when_enable_flags_are_unchanged)
+  set_tests_properties(ngc_params.m72_restores_override_percentages_when_enable_flags_are_unchanged PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

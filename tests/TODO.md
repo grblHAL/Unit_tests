@@ -881,3 +881,15 @@ report.c1916-1952 explicitly handles every remaining valid type. Reaching defaul
 would require an out-of-enum metadata value. Do not register malformed metadata
 or call a private printer merely to cover it. Keep both lines in raw coverage;
 revisit when a new valid setting datatype is introduced.
+
+## G84 private override-helper flag guards
+
+2026-10-22, CORE68eba7906ba60d66c8b55c4adc90cd5e85b5a828. Static helpers
+in gcode.c override_disable/override_restore have one call site each, at4908 and
+4915. Both pass the same constant flags:feed_hold=On,feed_rates=On,spindle_rpm=On.
+Thus false arms at174/180/185 and198/205/208 cannot run through current supported
+parser workflows. The enable/disable field names alias the same flag storage.
+Do not export/call private helpers or pass fabricated flags to cover these arms.
+The separate saved-policy branches199/210 are reachable and have a real G84
+pre-disabled-controls scenario, including actual retract pulses and reenabling.
+Retain raw branch counts; revisit if upstream adds a caller with partial flags.
