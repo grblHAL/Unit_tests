@@ -17,7 +17,13 @@ and appears individually in CTest and GitHub Actions. Shared mocks live in
 
 ## Known issues
 
-[Pending core features](tests/TODO.md) lists functionality not fully added yet.
+[Known coverage gaps](tests/KNOWN_BUGS.md#known-coverage-gaps) explicitly tracks
+unimplemented and unreachable regions, their source evidence and what would make
+them testable. They remain uncovered in the measured totals; placeholder failures
+do not count as code coverage.
+
+[Pending core features](tests/TODO.md) contains the detailed implementation and
+contract questions.
 
 [Known core defects](tests/KNOWN_BUGS.md) lists each confirmed defect and the date
 it was marked known, with suggested core fixes and validation/exception-removal

@@ -1,4 +1,4 @@
-# Confirmed core defects
+# Known CORE issues and coverage gaps
 
 When updating the tested core, run the regressions before removing exceptions.
 For a fixed defect, keep its regression test and remove its CMake `WILL_FAIL` and
@@ -25,6 +25,36 @@ Storage-write failure handling is a **low-priority maintainer TODO**, documented
 in [storage write-failure policy](TODO.md#storage-write-failure-policy), including
 its observations, existing test exceptions and cleanup links. It is not a
 settled requirement to retry physical writes a specific number of times.
+
+## Known coverage gaps
+
+These are tracked placeholders for missing or inaccessible implementation, not
+executable bug reproductions. They are **known uncovered**, not covered code.
+They do not create synthetic CTest failures, increase test counts, exclude source
+or change the coverage denominator. Existing public rejection tests still run.
+`WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
+
+**Reviewed:** 2026-10-22, clean Terje `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39779207602)
+measures 17,185/17,684 lines (97.18%) and 11,928/13,754 branches (86.72%).
+The 499 uncovered lines include the following known gaps; this table does not
+claim that every remaining line is unavailable.
+
+| Region | Status and evidence | What makes it testable |
+|---|---|---|
+| Wall-plotter homing helpers | Unimplemented public workflow. [home_machine](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/kinematics/wall_plotter.c#L301) warns and returns false; [existing rejection test](cases/wall_plotter/unsupported_homing_reports_warning.c) passes. The report has 56 uncovered helper lines. | Implement public homing and define its reference/endpoint contract; then test actual motion through that entry point. |
+| Native rigid tapping and its downstream execution | Unimplemented extension. [mc_rigid_tapping](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/motion_control.c#L793) is a weak TBC stub returning unsupported. | Supply a supported implementation, then validate encoder/spindle synchronization, reversal and physical endpoint. |
+| Auxiliary open-drain setting handlers | Inaccessible setting. [Public registration](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/ioports.c#L1449) is commented out; [existing setting-disabled test](cases/ioports/open_drain_setting_is_not_exposed.c) passes. | Expose the setting upstream; test public write/readback, persistence and driver effect. |
+| Timezone setting availability | Inaccessible setting. [Registration](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/settings.c#L2494) is commented out. | Expose it upstream and define accepted units/range before public setting tests. |
+| Stale setting getters/availability and closed-loop group arms | Unreachable through current registry: registered getters bypass the old cases, some settings have no availability callback, and the closed-loop group is not registered. See [detailed registry audit](TODO.md#remaining-coverage-unexposed-settings-and-parser-branches). | Update the registry or remove obsolete implementation upstream. Test the public behavior if exposed; never install a fake registry entry to hit a private case. |
+| Delayed-task fallback search | Defensive/unreachable under supported single-core IRQ masking: task_get_due returns the selected head with IRQs still masked. See [atomic-selection audit](TODO.md#delayed-task-fallback-after-atomic-selection-68eba79). | Reassess if the selection/concurrency contract changes; retain the passing public interrupt/cancellation regressions. |
+| M48/M49/M51 broadcast override arms | Unreachable through current parser addressing rules; ordinary blocks reject the unused/invalid dollar selector before these arms. See [parser audit](TODO.md#remaining-coverage-unexposed-settings-and-parser-branches). | Define and expose broadcast syntax upstream, then test observable output of every enabled spindle. |
+
+Pending contract questions, including G70-G72 execution/reporting and G76 main
+taper, remain in [TODO.md](TODO.md). They cannot become asserted failures until
+the required behavior is settled. Move a gap to an executable regression when
+it becomes publicly reachable, or to a confirmed defect entry when a supported
+workflow demonstrably fails. Retain raw coverage throughout.
 
 ## Using the suggested fixes
 

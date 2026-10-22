@@ -1,3 +1,16 @@
+# Explicit known-gap placeholders - 2026-10-22
+
+User requested visible placeholders for unfinished/inaccessible coverage regions.
+KNOWN_BUGS.md now has a linked known-coverage-gaps table: wall homing, native
+rigid tapping, disabled open-drain/timezone settings, stale settings metadata,
+atomic scheduler fallback and inaccessible broadcast override arms. Each records
+status, exact68eba79 source evidence and the condition for executable testing.
+ReadMe Known issues links it. Existing real public rejection tests remain.
+No synthetic WILL_FAIL tests, source exclusions, adjusted denominator or inflated
+case count. Raw successful baseline remains97.18%/86.72% with499 uncovered lines;
+not all499 are classified unavailable. Runtime source/tests unchanged in this
+inventory-only commit, so no redundant build/full suite/hosted dispatch.
+
 # Verified hosted checkpoint39779207602 - 2026-10-22
 
 All five jobs terminal success: source, GCC, Clang, coverage, CI diagnosis.
