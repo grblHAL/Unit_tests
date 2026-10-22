@@ -82,6 +82,14 @@ Its format/remount and displayed-directory assertions pass; relative stat fails.
 This regression has a named `WILL_FAIL` / `known_bug` allowance in
 [known_bugs.cmake](known_bugs.cmake); remove it when relative routing is fixed.
 
+**Reconfirmed on68eba79:** the cache now stores the mount path `/store/`
+with its trailing separator. parse_path appends another separator for a relative
+file, so the backend receives `//new.nc` rather than `/new.nc`. The fixture now
+uses valid frontend-only directories (neither chdir nor getcwd callback), records
+the routed name, and asserts it after stat. Evidence: batch72-format-routing.xml
+and its strict summary. The earlier `/` cache fault is fixed, but normalization
+still fails; keep the existing exception until the backend path is correct.
+
 **Suggested fix for Terje (not applied):** keep frontend absolute directory and
 selected mount consistent when resetting the formatted drive to its root.
 Retain the relative backend operation assertion and remove this entry once it
@@ -193,3 +201,28 @@ Per requested nonblocking failure handling, retain the correct assertions and
 one named WILL_FAIL while Terje confirms the contract. No sanitizer allowance.
 Remove it when the agreed public upload workflow passes; see TODO's closing
 serial demarcation entry. Full evidence: batch72-core68-delivery.xml.
+
+## Path allocation failure can unlink a same-named file in another directory
+
+**Confirmed:** 2026-10-22, clean Terje68eba7906ba60d66c8b55c4adc90cd5e85b5a828.
+[vfs.c parse_path](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/vfs.c#L227-L265)
+falls back to copying the unnormalized input when its temporary path malloc
+fails. A valid frontend-only provider (no chdir/getcwd callbacks) is mounted at
+`/store`; public chdir sets `/store/jobs`. Public unlink of `part.nc` should
+reach `/jobs/part.nc`, but the allocation-failure path instead invokes the backend
+with `part.nc`, reports success, and can remove the same-named root file.
+
+**Regression:** [wrong-directory unlink under memory pressure](cases/vfs/relative_unlink_path_allocation_failure_preserves_other_directory_and_retries.c).
+The registered backend models two distinct files. One size-specific malloc
+failure is enabled only around the public unlink. The wrong root-file removal
+is recorded, then normal retry demonstrably reaches `/jobs/part.nc` and removes
+the intended job file. The final correct unrelated-file-preservation assertion
+fails. One named WILL_FAIL/known_bug; no sanitizer allowance. Raw evidence:
+batch72-unlink-oom-raw.xml. This is deterministic host driver injection, not a
+claim of reproduction on a physical controller.
+
+**Suggested fix for Terje (not applied):** propagate path-normalization allocation
+failure to public operations without dispatching an unnormalized destructive
+request, or preserve correct absolute routing without allocation. Keep the
+unrelated-file and retry assertions; remove the allowance/entry once clean
+source preserves both directory identity and normal retry under sanitizers.

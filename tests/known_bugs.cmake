@@ -47,3 +47,7 @@ endif()
 if(TEST boot.alarm_locked_settings_upload_demarcates_batch_and_keeps_motion_blocked)
   set_tests_properties(boot.alarm_locked_settings_upload_demarcates_batch_and_keeps_motion_blocked PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+if(TEST vfs.relative_unlink_path_allocation_failure_preserves_other_directory_and_retries)
+  set_tests_properties(vfs.relative_unlink_path_allocation_failure_preserves_other_directory_and_retries PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

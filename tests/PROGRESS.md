@@ -1,3 +1,27 @@
+# Current local file-safety follow-up - 2026-10-22
+
+Published97bb6aa is under hosted39779207602, authoritatively in progress at
+last check. Source job passed; downloaded source-lock artifact confirms exact
+harness97bb6aa / clean Terje68eba79 / core C+header filter. GCC, Clang and
+coverage remain live; do not dispatch a duplicate or claim terminal success.
+
+Local follow-up adds one bug regression (4,103 registrations), not another
+confidence case. A size-specific temporary path malloc failure during public
+relative unlink in `/store/jobs` dispatches `part.nc` and reports success,
+removing a different same-named root file. Valid frontend-only provider and
+normal retry to `/jobs/part.nc` establish the fault; final unrelated-file
+preservation assertion remains correct. One narrow WILL_FAIL; dated KNOWN_BUGS
+cause/proposal/cleanup. No CORE edits or sanitizer exemption. Raw evidence:
+build-asan/batch72-unlink-oom-raw.xml.
+
+Existing current-drive format case now uses a valid callback-free frontend
+directory provider and records backend routing. On68eba79 it reaches backend
+as `//new.nc`: mount cache's trailing slash is doubled by parse_path. Updated
+the existing known entry rather than adding a duplicate test. Grouped focused
+ASan/UBSan +strict passes both expected reproductions (batch72-vfs-safety.xml).
+Prior full4,102 gate remains the last cumulative gate; no redundant full run
+or hosted dispatch for this one-case follow-up. Accumulate useful work here.
+
 # Current batch72 bug-hunting delivery - 2026-10-22
 
 CORE is clean detached68eba7906ba60d66c8b55c4adc90cd5e85b5a828. No firmware
