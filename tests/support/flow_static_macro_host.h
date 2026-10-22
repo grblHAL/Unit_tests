@@ -2,12 +2,14 @@
 #include "support/flow_file_host.h"
 #include "report.h"
 static ngc_string_id_t static_macro_label;
+static void (*static_macro_on_open)(void);
 static char static_macro_path[128] = "/fixture.macro";
 static vfs_file_t *open_static_macro(const char *name, const char *mode)
 {
     if(strcmp(name, static_macro_path) || strcmp(mode, "r"))
         return NULL;
     file_position = 0;
+    if(static_macro_on_open) static_macro_on_open();
     return &fixture_file;
 }
 static int stat_static_macro(const char *name, vfs_stat_t *st)

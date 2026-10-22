@@ -4,7 +4,7 @@ Full supported CORE line/branch coverage remains ACTIVE and unproven. Confirmed
 CORE defects are expected regressions, not reasons to stop independent coverage.
 This checkpoint supersedes historical snapshots.
 
-- Local branch coverage-batch-72, draft PR26; 4,096 registered cases /94 additions
+- Local branch coverage-batch-72, draft PR26; 4,099 registered cases /97 additions
   beyond merged upstream. No CORE changes or PR merges.
 - Local next-group checkpoint: five new public virtual-feed/motion cases pass
   ASan/UBSan and strict summary in0.48s. Tests exercise the exact
@@ -18,6 +18,20 @@ This checkpoint supersedes historical snapshots.
 - Old PARTIAL map reviewed for the next group: top settings candidates overlap
   current capability/MPG/homing/description tests or documented unexposed metadata
   paths. Do not treat that old map as proof of absent tests or current gain.
+- Added local macro-loader recovery group: three new realistic parser/file cases
+  cover long-name filename growth, subroutine-record allocation after redirect
+  creation, and callee-argument installation. Actual file reads execute G21 and
+  reach emitted EOF after each successful retry. Correct OOM status, caller#1=99,
+  read handler, call level and close counts are preserved across rejection/retry.
+  All three plus existing normal/long-name controls pass ASan/UBSan and strict
+  summary5/5 in0.82s. No new allowances or CORE changes.
+  Evidence: batch72-macro-loader-build.log, batch72-macro-loader.xml /strict.log.
+  Argument failure is armed at the backend-open boundary, not before filename
+  routing; an initial wrong injection assumption was a fixture error, not a CORE
+  bug. The shared static backend's optional open observer defaults to NULL;
+  existing controls were rebuilt/tested in both normal and long-name variants.
+  These three cases and the prior MPG/diagnostic follow-up remain local until
+  the next coherent cumulative delivery boundary; do not claim hosted coverage.
 - New local group (not yet pushed or included in a whole-suite gate): two MPG
   input-order regressions expose an unreachable pull-up branch. Valid driver
   functions/capabilities are installed before registration; first input gets None,
