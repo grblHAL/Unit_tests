@@ -497,3 +497,59 @@ pressure, normal retarget, stop cancellation and configured ramp timing.
 The exact test has WILL_FAIL/known_bug in [known_bugs.cmake](known_bugs.cmake).
 Keep its correct output/timing assertions; remove that block and this entry when
 upstream passes under sanitizers. No sanitizer exception or CORE edit applies.
+
+## RAM upload truncation keeps previously buffered commands
+
+**Confirmed:** 2026-10-22, clean Terje CORE `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
+[Regression](cases/fs_ram/truncate_pending_upload_discards_old_bytes_before_replacement.c)
+opens a writable RAM job, writes `G1X99`, successfully truncates to zero, then
+writes replacement `G1X1` and closes it. A fresh reader gets both commands
+(11 bytes) instead of only the replacement (5 bytes). All operations use public
+VFS APIs, valid handles and ordinary writable-file lifetime. No execution of the
+stale motion is needed to prove that the stored job is wrong.
+
+[fs_truncate](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/fs_ram.c#L237-L249)
+clears committed data/position/length but leaves the pending txbuf length and
+cursor untouched. A small upload has no committed data yet, so the operation
+returns success without discarding any buffered bytes. Closing the writer later
+flushes the old and replacement commands together. Raw evidence:
+`build-asan/batch73-file-resources-raw.xml`.
+
+**Suggested fix for Terje (not applied):** on successful truncate-to-zero, clear
+pending txbuf length and reset its cursor to the buffer start as well as clearing
+committed data. Verify pending-only and committed-plus-pending uploads, rewrite,
+close/readback and existing allocation-failure recovery under sanitizers.
+
+The exact regression has WILL_FAIL/known_bug in [known_bugs.cmake](known_bugs.cmake).
+Retain its correct replacement-content assertions; remove that block and this
+entry once upstream passes. No sanitizer allowance or CORE edit applies.
+
+## Failed I/O bank allocation publishes nonexistent ports and reports success
+
+**Confirmed:** 2026-10-22, clean Terje CORE `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
+[Digital expansion regression](cases/ioports/allocation_failure_digital_bank_preserves_counts_and_allows_retry.c)
+starts with two registered inputs/outputs and rejects the new bank's single
+calloc. ioports_add_digital returns true and raises both counts to three even
+though the provider was not allocated. The [first analog bank regression](cases/ioports/allocation_failure_first_analog_bank_preserves_counts_and_allows_retry.c)
+likewise returns true and publishes one input/output without an analog provider.
+Both verify the original digital ports still work before the correct failure
+assertion. No nonexistent port is dereferenced, so no crash suppression is needed.
+Raw evidence: `build-asan/batch73-bank-allocation-raw.xml`.
+
+[Digital registration](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/ioports.c#L1096-L1128)
+and [analog registration](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/ioports.c#L1061-L1093)
+publish counts, maps and bus metadata in _ioports_add before insert_ports calloc.
+When allocation fails, neither rolls that state back nor changes the true result.
+This also makes a later retry accumulate another set of phantom ports.
+
+**Suggested fix for Terje (not applied):** make provider allocation and public
+port publication transactional: reserve the provider before committing maps and
+counts, report failure on allocation errors, and release any unused allocation.
+Preserve earlier providers, logical routing and settings metadata. Test successful
+retry for first and appended banks as well as ordinary I/O ownership/remapping.
+
+Both exact cases have WILL_FAIL/known_bug in [known_bugs.cmake](known_bugs.cmake).
+Keep the correct failure/count/retry assertions. The retry assertions currently
+follow the first failing success-result assertion and are not yet validated.
+Remove both blocks and this entry once upstream passes under sanitizers.
+No CORE edit or sanitizer diagnostic allowance applies.

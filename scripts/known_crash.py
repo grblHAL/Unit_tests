@@ -16,7 +16,9 @@ def matches_known_crash(name, output, manifest):
         if item.get("kind") != "fatal_asan" or item.get("test") != name:
             continue
         source = re.escape(item["source"]).replace("/", r"[/\\]")
-        location = source + r":(?:" + "|".join(map(str, item["lines"])) + r"):\d+\b"
+        source_line = source + r":(?:" + "|".join(map(str, item["lines"])) + r")"
+        location = source_line + r":\d+\b"
+        asan_location = source_line + r"(?::\d+)?\b"
         runtime = [line for line in output.splitlines() if "runtime error:" in line]
         ubsan = item.get("preceding_ubsan_pattern")
         if runtime and not (ubsan and len(runtime) == 1 and re.fullmatch(
@@ -40,8 +42,8 @@ def matches_known_crash(name, output, manifest):
                    for index, frame in enumerate(frames, 1)):
                 return True
         if (re.search(r"ERROR: AddressSanitizer: " + item["message_pattern"] + r"\b", errors[0])
-                and re.search(r"SUMMARY: AddressSanitizer: " + item["message_pattern"] + r" .*" + location + r" in " + re.escape(item["function"]) + r"\b", summaries[0])
-                and re.search(r"#0 .* in " + re.escape(item["function"]) + r" .*" + location, output)):
+                and re.search(r"SUMMARY: AddressSanitizer: " + item["message_pattern"] + r" .*" + asan_location + r" in " + re.escape(item["function"]) + r"\b", summaries[0])
+                and re.search(r"#0 .* in " + re.escape(item["function"]) + r" .*" + asan_location, output)):
             return True
     return False
 

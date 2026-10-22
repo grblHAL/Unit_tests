@@ -5,7 +5,7 @@
 int main(void)
 {
     vfs_t child = {.fs_name = "fixture"};
-    CHECK(vfs_mount(NULL, "/fixture", &child, (vfs_st_mode_t){0}));
+    CHECK(vfs_mount(NULL, "/fixture/", &child, (vfs_st_mode_t){0}));
     vfs_dir_t *dir = vfs_opendir("/");
     CHECK(dir != NULL);
     vfs_dirent_t *entry = vfs_readdir(dir);

@@ -1,37 +1,52 @@
-# CURRENT CHECKPOINT - batch73 cumulative gate - 2026-10-22
+# CURRENT CHECKPOINT - batch73 recovery gate - 2026-10-22
 
-coverage-batch-73 starts from merged upstream46fc7a6 (PR26); merged PR27's
-reporting dependency d58f2bc is already an ancestor. All pending local batch72
-changes preserved. CORE fetched clean/latest68eba7906ba60d66c8b55c4adc90cd5e85b5a828.
+coverage-batch-73 tracksorigin/coverage-batch-73; pushed35abd4e is draftPR28:
+https://github.com/grblHAL/Unit_tests/pull/28. All local follow-ups preserved.
+CORE remains clean68eba7906ba60d66c8b55c4adc90cd5e85b5a828, freshfetch unchanged.
 
-Eight new cases across macro arguments, expression operands, registered G84
-interruptions, polling-only expansion IRQ rejection and spindle-ramp recovery;
-existing real-boot delta cut now validates live Cartesian feed reporting via
-public$10=8 while preserving its98-step symmetric endpoints. Full ASan/UBSan
-build/test/strict all0:4,185 cases in134.66s,4,164 clean,21 known reproductions,
-0 failed/skipped.72 Python helpers pass6.976s. Logs build-asan/batch73-full-*.
+Hosted39852077540 at35abd4e is completed/failure. GCC's exact G65 global-buffer-
+overflow was rejected only because its ASan top frame/summary omit columns.
+Actual source774,ngc_flowctrl,index-1 UBSan and fault type match. Local matcher
+now accepts optional ASan columns while retaining exact source/line/function/
+fault and required UBSan location.10 matcher checks pass0.457s,including changed
+source,line,function and unrelated diagnostic rejection; real GCC artifact matches.
+The original hosted JUnit remains failed and must not be called green. A new
+exact-head hosted check is required after the combined follow-up delivery.
 
-Two confirmed defects retain correct assertions and dated KNOWN_BUGS entries:
-direct G65 O-word RETURN underflows flow stack (one exact fatal matcher plus
-WILL_FAIL); exhausted scheduler fallback leaves stale spindle ramp state
-(one exact assertion WILL_FAIL). Nested IF-frame and normal ramp controls pass.
-No CORE edits or blanket diagnostic allowances. Direct G65 return also passes
-the non-sanitizer Clang check0.05s (build-clang/batch73-return-nosan.xml); its
-ASan/UBSan fault remains visible only in sanitizer builds. Unknown macro-provider fixture
-assumption corrected: built-in handler always installs; no private/null handler
-forcing added. TODO records that unreachable rejection arm.
+That run's complete coverage job passed all7 stages; artifacts12458771355/
+12458008457 verify35abd4e/68eba79/corefilter.4,185 cases,4,165clean/20known/0/0
+(non-sanitizer G65 return passes).17,340/17,684 lines and12,164/13,754 branches:
++10lines/+22branches vs91938f1,none lost. Newlines gcode1737/1798/1799/1801/1803,
+ioports834,motion_control593/625,spindle_control636,stepper1464. Overall matrix
+failure means badges remain on earlier successful39837233097:98.00%/88.28%.
 
-Prior run39837233097 at91938f1 now has all5 individual jobs terminalsuccess.
-Artifacts12452336318/12451966627 lock68eba79/91938f1/corefilter; all7 coverage
-stages0,4,177total/4,158clean/19known/0failed/0skipped.17,330/17,684 lines98.00%,
-12,142/13,754 branches88.28%: +7lines/+11branches vs0522e4e.354 raw gaps.
-README/known-gap snapshot updated to this verified baseline. Batch73 gain awaits
-one exact-head hosted run after delivery; no new push/PR/dispatch yet.
+Eight additional local cases now register4,193 overall. Focused groups validate:
+RAM handle-allocation recovery; nested leaf without local status callback;
+root-directory calloc failure/retry and existing trailing-slash mount listing;
+partial RTU exception/normal/wrong-device headers followed by valid reply;
+interrupt-only input refusing reads without consuming neighboring input.
+RTU fixture now waits the mandatory post-reply silence before asserting idle.
 
-Next: commit/push this coherent group,
-open the authorized next PR and dispatch one hosted checkpoint against68eba79.
-Continue independent supported gaps while it runs; do not repeat unchanged full
-gates or helpers. Goal remains active; completion is unproven.
+Two additional confirmed CORE defects have dated KNOWN_BUGS entries and three
+exact WILL_FAIL labels: truncate-to-zero keeps pending RAM upload commands;
+failed digital/analog provider calloc reports success and publishes phantom
+ports. Correct content/count/retry assertions retained. Existing neighbors work
+before bank failure assertions; no nonexistent port is dereferenced. No CORE edit
+or new sanitizer suppression. Latest focused bank classification0.29s passes as
+2 known reproductions. Logs build-asan/batch73-file-*,batch73-bank-allocation-*,
+batch73-driver-recovery-* andbatch73-partial-rtu-repair-*.
+
+Prior full gate at35abd4e:4,185 in134.66s,4,164clean/21known/0failed/0skipped;
+72 helpers passed. Recovery cumulative gate passes4,193 in134.46s:
+4,169clean/24known/0failed/0skipped; build/CTest/strict exits0.73 Python helpers
+pass6.700s. Exact evidence build-asan/batch73-recovery-gate.json and matching
+build/test/summary/helper logs. No repeated full gate is needed for this head.
+Delivering one combined resource/recovery/classifier checkpoint toPR28, then
+one hosted run against68eba79. Do not merge. Completion is unproven.
+
+Recovery heartbeat found goal UI status blocked despite available independent
+work; concrete validation resumed. Goal status cannot be reactivated through
+the exposed update_goal tool. Keep respecting explicit user pauses/usage limits.
 
 # Flow-control error cumulative gate and confirmed backlash wait gain - 2026-10-22
 

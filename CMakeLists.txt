@@ -351,6 +351,7 @@ function(add_core_test name module source)
     OR name STREQUAL "vfs.current_directory_allocation_failure_falls_back_to_root"
     OR name STREQUAL "vfs.current_directory_allocation_and_backend_rollback_failure_selects_root"
     OR name STREQUAL "vfs.drive_iterator_allocation_failure_can_retry"
+    OR name STREQUAL "vfs.root_directory_allocation_failure_preserves_storage_and_allows_retry"
     OR name STREQUAL "vfs.mount_allocation_failure_reports_failure_without_notification"
     OR name STREQUAL "vfs.mount_retry_after_allocation_failure_registers_one_backend"
     OR name STREQUAL "vfs.relative_unlink_path_allocation_failure_preserves_other_directory_and_retries"
@@ -360,7 +361,7 @@ function(add_core_test name module source)
   if(name MATCHES "^motion_control\\.thread_plan_")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=plan_buffer_line)
   endif()
-  if(name MATCHES "^(stream_file|fs_embedded)\\.allocation_failure_")
+  if(name MATCHES "^(stream_file|fs_embedded|ioports)\\.allocation_failure_")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=free)
   endif()
   if(name MATCHES "^fs_ram\\.allocation_failure_")

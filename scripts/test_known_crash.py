@@ -105,6 +105,18 @@ SUMMARY: AddressSanitizer: SEGV (<unknown module>)
             self.assertFalse(matches_known_crash(NAME, output, manifest), output)
         self.assertFalse(matches_known_crash(NAME, runtime + summary + OUTPUT, MANIFEST))
 
+    def test_gcc_asan_frames_can_omit_column_with_exact_ubsan_source(self):
+        runtime = "/repo/core/vfs.c:509:20: runtime error: index -1 out of bounds for type 'entry_t [20]'\n"
+        manifest = [dict(MANIFEST[0], preceding_ubsan_pattern=r"index -1 out of bounds for type 'entry_t ?\[20\]'")]
+        output = runtime + OUTPUT.replace(":509:20", ":509")
+        self.assertTrue(matches_known_crash(NAME, output, manifest))
+        for changed in [output.replace(":509 in", ":510 in"),
+                        output.replace(":509:20: runtime", ":510:20: runtime"),
+                        output.replace("vfs.c", "other.c"),
+                        output.replace("in vfs_chdir", "in other_function"),
+                        output + "other.c:1:1: runtime error: overflow"]:
+            self.assertFalse(matches_known_crash(NAME, changed, manifest), changed)
+
     def test_runner_error_is_not_an_expected_failure(self):
         result = subprocess.run([sys.executable, str(SCRIPTS / "known_crash.py"), NAME,
                                  "missing-inventory.json", "missing-executable"], capture_output=True)
