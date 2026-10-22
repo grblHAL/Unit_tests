@@ -7,6 +7,12 @@ int main(void)
     memset(first + 7, 'a', 110); first[117] = 0;
     memset(second + 7, 'b', 120); second[127] = 0;
     CHECK(vfs_chdir(first) == 0);
+    rejected_size = strlen(first) + 1;
+    reject_malloc = 1;
+    unsigned previous_changes = chdir_calls;
+    CHECK(vfs_chdir(second) == -1 && malloc_failures == 1);
+    CHECK(vfs_errno == ENOMEM && chdir_calls == previous_changes);
+    CHECK(strcmp(backend_directory, first + 6) == 0);
     rejected_size = strlen(second) + 1;
 #ifdef HOST_STRSET_API
     rejected_size++; /* strset reserves capacity plus its terminator. */

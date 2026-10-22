@@ -1,3 +1,60 @@
+# API-boundary batch cumulative gate - 2026-10-22
+
+Full4,127-case ASan/UBSan build/test/strict gate passes, all exit0,15 known
+reproductions and no new allowances. Evidence: build-asan/batch72-api-boundaries-
+gate.json, delivery XML/log and strict log. Four new cases/two expanded scenarios
+cover VFS allocation+failed rollback/root safety/retry, null spindle replacement,
+default selector bounds, expansion-bank input/output persistence and root-format
+failure/fallback/remount. No CORE edits or source exclusions. Root-format case
+focused passes0.30s; full gate includes all accumulated local work.
+
+Previous hosted39801089848 coverage locks verified5205e56/68eba79/filter,
+all coverage stages0,4,123 total/4,108 clean/15 known/no failures/skips.
+17,236/17,684 lines97.47%,11,988/13,754 branches87.16% (+14/+12 same-source).
+New lines:gcode4182-4183/4253-4254;motion_control927/950-951/953-954/956;
+state_machine807;vfs870/873-874. GCC/Clang live; do not claim full hosted success.
+
+# Expansion-bank configuration persistence - 2026-10-22
+
+New realistic multi-bank settings scenario passes focused ASan/UBSan0.28s.
+Public pin lookup selects bank1/local1 (global3) for input/output. Save inversion,
+pull-down and open-drain, verify global bit3 plus preserved primary bit0 in live
+settings and checksummed NVS; clear the expansion configuration and verify only
+bit0 remains persisted. No output/event callbacks emitted. Existing multi-bank
+fixture reused; no new variant or private-state forcing. Covers settings-save
+bank-list traversal absent from first-bank tests. Total4,126 cases; three new
+cases/two extended scenarios local since5205e56, no new exceptions/CORE edits.
+
+Current hosted39801089848 individual jobs confirm source success; coverage,
+GCC and Clang in progress. That run is for5205e56/68eba79, not these local cases.
+
+# Dummy spindle replacement and default selector - 2026-10-22
+
+New startup registration case installs the public null placeholder, replaces it
+with a real registered basic driver before activation, then verifies one listed
+driver, preserved name, default selection, real callbacks and repeated selection.
+Use normal registration-before-activation order; replacing an already active
+spindle was not assumed to be a supported hot-swap contract. Existing multi-
+spindle selection case now checks documented-1 default alias and invalid-2 guard
+without another duplicate scenario. Grouped ASan/UBSan2/2 passes0.32s.
+Total4,125 cases, no new expected failures or CORE changes. Current local batch
+contains two new cases and two expanded scenarios since pushed5205e56; keep
+building the coherent API-boundary batch before full gate/push.
+
+# Directory allocation and rollback boundaries - 2026-10-22
+
+One new VFS case and one expanded existing scenario pass grouped ASan/UBSan2/2
+in0.31s. Initial saved-cwd malloc rejection returns ENOMEM without backend change;
+existing reallocation recovery assertions remain. New double-failure scenario
+accepts backend chdir, rejects cache growth, then rejects backend rollback: EIO,
+root fallback, no relative unlink to the affected backend, followed by successful
+long-directory retry and correctly routed unlink. Uses existing allocation fixture;
+new target added to its exact wrapping/strset compatibility lists. Initial missing
+compatibility define was a fixture error, corrected before classification.
+Registered total4,124, no new allowances/CORE edits. Keep local for next batch.
+Previous full gate/push5205e56 has4,123 cases; run39801089848 was dispatched
+for that exact head, not these new local changes.
+
 # Parking/tool/storage recovery batch full gate - 2026-10-22
 
 Full4,123-case ASan/UBSan build/test/strict gate passes (all exit0), retaining15

@@ -255,7 +255,8 @@ function(add_core_test name module source)
     target_link_options(test_${name} PRIVATE -Wl,--wrap=realloc)
   endif()
   if(HOST_STRSET_DECLARATION AND (name STREQUAL "vfs.current_directory_allocation_failure_falls_back_to_root"
-    OR name STREQUAL "vfs.current_directory_reallocation_failure_preserves_previous_directory_and_retries"))
+    OR name STREQUAL "vfs.current_directory_reallocation_failure_preserves_previous_directory_and_retries"
+    OR name STREQUAL "vfs.current_directory_allocation_and_backend_rollback_failure_selects_root"))
     target_compile_definitions(test_${name} PRIVATE HOST_STRSET_API=1)
   endif()
   if(module STREQUAL "strutils")
@@ -348,6 +349,7 @@ function(add_core_test name module source)
   endif()
   if(name STREQUAL "vfs.current_directory_reallocation_failure_preserves_previous_directory_and_retries"
     OR name STREQUAL "vfs.current_directory_allocation_failure_falls_back_to_root"
+    OR name STREQUAL "vfs.current_directory_allocation_and_backend_rollback_failure_selects_root"
     OR name STREQUAL "vfs.drive_iterator_allocation_failure_can_retry"
     OR name STREQUAL "vfs.mount_allocation_failure_reports_failure_without_notification"
     OR name STREQUAL "vfs.mount_retry_after_allocation_failure_registers_one_backend"
