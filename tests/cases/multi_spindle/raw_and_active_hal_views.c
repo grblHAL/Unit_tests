@@ -9,5 +9,10 @@ int main(void)
     CHECK(spindle_enable(1) == 1);
     CHECK(spindle_get_hal(1, SpindleHAL_Active) == spindle_get(1));
     CHECK(spindle_get_hal(3, SpindleHAL_Configured) == NULL);
+    CHECK(spindle_get_hal(-1, SpindleHAL_Configured) == NULL);
+    CHECK(spindle_get_hal(-1, SpindleHAL_Raw) == NULL);
+    CHECK(spindle_get_hal(-1, SpindleHAL_Active) == NULL);
+    CHECK(spindle_get_hal(3, SpindleHAL_Active) == NULL);
+    CHECK(spindle_get_hal(0, SpindleHAL_Active) == spindle_get(0));
     return EXIT_SUCCESS;
 }

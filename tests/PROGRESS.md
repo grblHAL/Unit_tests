@@ -1,3 +1,42 @@
+# Spindle API cumulative validation - 2026-10-22
+
+Full4,137-case ASan/UBSan gate passes57.98s:4,121 clean and16 documented
+expected failures; no failures/skips. Build/test/strict exits all0 in
+build-asan/batch72-spindle-api-gate.json. Includes complete three-driver enumeration
+with unclaimed callback return and current-driver identity, identifier boundaries,
+empty enumeration/capabilities, configuration refusal/retry and raw/configured
+capability isolation. CORE remains clean; no new allowances. Hosted gain pending.
+
+# Spindle capability views and empty enumeration - 2026-10-22
+
+Extended configuration recovery to have the actual config callback advertise
+runtime direction support: configured aggregate and enabled driver reflect it,
+raw registration aggregate and original driver remain unchanged. Extended empty
+registry case with a valid callback that must never run, plus zero raw/configured
+capabilities. Focused ASan/UBSan2/2 passes0.37s. Total4,137; no allowances or
+CORE changes. Local spindle group remains pending cumulative gate and hosted gain.
+
+# Spindle identifier boundary controls - 2026-10-22
+
+Extended existing multi-spindle cases with negative and upper-bound enable IDs,
+negative name/raw/configured lookups, and missing active lookups. Rejections
+preserve default spindle and configuration counts, leave other slots disabled;
+valid active lookup still resolves the selected driver. Focused ASan/UBSan2/2
+passes0.33s. No new allowances or CORE edits; count remains4,137. Together with
+configuration-refusal retry, this local spindle group awaits cumulative validation.
+
+# Spindle configuration refusal and activation retry - 2026-10-22
+
+New public registration/selection case passes ASan/UBSan0.27s. Registered real
+basic driver rejects firstconfig:selectfalse,slot disabled,getNULL,default-2,
+no selected callback. Provider recovery/retry configures again,activates once,
+preserves real callbacks;repeat selection does not reconfigure/notify again.
+Targets spindle_control104 failure and249 disabled-default branches. Uses engine
+fixture with tiny local driver; unrelated listing fixture had a non-inline unused
+setup warning,so avoided that fixture without weakening compiler flags or editing
+shared infrastructure. Total4,137 cases,no new allowances/CORE edits. Local
+spindle batch begins here; cumulative gate/hosted gain remain pending.
+
 # I/O claim/search capability batch cumulative gate - 2026-10-22
 
 Full4,136-case ASan/UBSan build/test/strict passes(all0):4,120 clean,16 known
