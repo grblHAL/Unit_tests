@@ -1,3 +1,69 @@
+# Parser/list/stream cumulative delivery gate - 2026-10-22
+
+Full4,127-case ASan/UBSan build/test/strict gate passes(all0),4,112 clean plus15
+known reproductions,0 failures/skips. Logs/XML/JSON:build-asan/batch72-parser-
+stream-*. Four existing scenarios extended for G51/G50 lathe UVW geometry,
+undefined subroutine callback after valid registration, absent/repeated string
+parameter deletion, and disabled-base serial fallback after network disconnect.
+No new executable or allowance; CORE clean68eba79 and upstream unchanged.
+Residual four-line reachability proof included in TODO/KNOWN_BUGS without
+changing raw coverage. Deliver together on existing branch/PR26.
+
+Hosted39802929753 exactba111a2/68eba79 coverage/report locks/filter verified,
+all stages0:17,245/17,684 lines97.52%,11,999/13,754 branches87.24%,+9/+11
+same-source.4,127/4,112 clean/15 known/no failed/skipped. New lines:ioports1220/
+1262,spindle_control154/445,vfs467/498-500/871. Individual GCC/Clang endpoints
+still running; retain older fully green badge checkpoint until all finish.
+
+# Lathe UVW scaling and cancellation - 2026-10-22
+
+Expanded existing UVW absolute-mode scenario through public G51/G1/G50 blocks.
+Starting10/24/36, scale2/2/4 plusU4V2W3 yields14/28/48 (U remains diameter
+increment); G50 then identical increments yield16/30/51. G90 remains active.
+Focused ASan/UBSan1/1 passes0.29s. Targets previously missing gcode2819 UVW
+scaling with existing LATHE_UVW_OPTION fixture; check-mode parser geometry only,
+no claim of additional physical motor coverage. Registered count stays4,127,
+no CORE edits or new allowances. Current local batch has four extended scenarios
+(stream fallback, callback miss, string deletion miss, UVW scaling) plus residual
+reachability evidence; cumulative full gate remains for the next delivery boundary.
+
+# Macro and string-list missing-entry boundaries - 2026-10-22
+
+Two existing scenarios expanded, grouped ASan/UBSan2/2 passes0.34s. A failed
+callback registration for undefined label999 traverses populated subroutine list
+without invoking/replacing the valid label10 callback; subsequent real call/return
+still restores parameter scope and invokes it once successfully. String deletion
+of absent999 traverses all three entries, preserves exact values, then middle
+removal/repeated removal preserves neighbors. Existing return/cleanup assertions
+retained. Registered count unchanged4,127; no redundant new executable, CORE
+change or allowance. Covers populated-list miss paths in ngc_flowctrl340 and
+ngc_params1077; hosted attribution awaits the next cumulative batch report.
+
+# Base serial fallback and fully green hosted checkpoint - 2026-10-22
+
+Expanded existing network-disconnect scenario: base serial broadcast explicitly
+disabled while network client stays active, verified network-only output, then
+network disconnect restores base serial connected state and sole output route.
+Existing callback-count/output assertions retained. Focused ASan/UBSan1/1 passes
+0.28s, no new exception or CORE edits; registered count unchanged4,127.
+
+All five individual hosted39801089848 job endpoints now terminal success for
+5205e56/68eba79:source,coverage,GCC,Clang,diagnosis. Earlier downloaded source-
+locked coverage/report artifacts verify17,236/17,684 lines97.47% and
+11,988/13,754 branches87.16%,4,123 tests/4,108 clean/15 known/no failures/skips.
+ReadMe badges/gap summary refreshed to that fully green checkpoint,448 raw
+uncovered lines. Current ba111a2 run39802929753:source succeeded, compilers
+running,coverage queued; do not claim current-head green or local-test coverage.
+
+# Residual guard reachability audit - 2026-10-22
+
+Verified four residual lines are unreachable under current public contracts:
+vfs474/774 null-mount fallback, vfs410 second rename notification, ngc_params942
+empty virtual list. Added source reasoning to TODO/KNOWN_BUGS gap table. Raw
+coverage and correct assertions unchanged; no fake tests or private-state forcing.
+Existing lookup/rename/provider tests retain reachable behavior. CORE unchanged.
+TODO has legacy non-UTF8 bytes; appended ASCII without transcoding existing text.
+
 # API-boundary batch cumulative gate - 2026-10-22
 
 Full4,127-case ASan/UBSan build/test/strict gate passes, all exit0,15 known

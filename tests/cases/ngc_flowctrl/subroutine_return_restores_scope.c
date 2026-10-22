@@ -19,6 +19,8 @@ int main(void)
     CHECK(ngc_flowctrl_on_endsub_callback(10, sub_finished));
     CHECK(flow_command(10, "ENDSUB") == Status_OK);
     CHECK(!flow_skip);
+    CHECK(!ngc_flowctrl_on_endsub_callback(999, sub_finished));
+    CHECK(sub_callbacks == 0);
     file_position = 9;
     CHECK(flow_command(10, "CALL[12]") == Status_OK);
     CHECK(file_position == 2);

@@ -837,3 +837,24 @@ offset plus queued80step cut; it does not cover those later defensive lines.
 Do not change table capacity from a callback mid-block or forge the private
 modal block merely to reach them. Keep raw coverage and revisit if parsing or
 the table-lifetime contract changes.
+
+## Verified residual guards: VFS lookup/rename and virtual-parameter root
+
+2026-10-22, CORE68eba7906ba60d66c8b55c4adc90cd5e85b5a828, compared with
+source-locked hosted39801089848. These four lines remain in raw coverage.
+
+- get_mount (vfs.c265-289) returns cwdmount for relative paths, and an existing
+  mount or &root for absolute paths. Public unmount selects root/null filesystem;
+  no public API removes root. Thus null-mount arms vfs_chdir474 and
+  vfs_get_drive774 cannot run for valid path pointers.
+- vfs_rename403 only permits backend success for equal source/destination mounts.
+  Its later second-mount notification410 requires different mounts, contradicting
+  that guard. Existing cross-mount rejection and same-mount notification tests
+  exercise the meaningful contract.
+- ngc_params.c169-171 initializes the virtual list with built-in _value and
+  _value_returned nodes. No public API clears it; registration appends nodes.
+  The empty-list assignment942 is unreachable. Existing multi-provider tests
+  exercise append and lookup.
+
+Do not force private state or create fake WILL_FAIL placeholders. Revisit these
+source-proven guards if upstream lookup, rename or parameter lifecycle changes.
