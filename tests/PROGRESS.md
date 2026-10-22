@@ -1,5 +1,15 @@
 # Current batch72 verification checkpoint - 2026-10-22
 
+User correction: confirmed ordinary CORE assertion defects are expected failures,
+not reasons to stop coverage work. Eight directory-validation/root-routing
+regressions now have narrow WILL_FAIL/known_bug allowances linked from KNOWN_BUGS.
+Correct assertions remain. Sanitizer crashes, compilation errors and the unsettled
+alarm-upload contract remain separately visible. Focused ASan/UBSan CTest confirms
+all eight expected failures in0.53s; strict summary passes with eight known
+reproductions. No source/assertion changes or redundant full-suite rerun.
+Evidence: batch72-expected-failures.xml and related configure/strict logs.
+
+
 The full-supported CORE line/branch objective remains ACTIVE and unproven.
 This checkpoint supersedes historical snapshots; do not substitute test counts
 or partial reports for completion evidence.

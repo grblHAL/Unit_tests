@@ -87,7 +87,10 @@ so ordinary directory-growth controls cannot return to root.
 **Regressions:** [regular-file rejection](cases/vfs/chdir_without_backend_handler_rejects_regular_file.c),
 [long-directory root return](cases/vfs/long_current_directory_allocates_and_resolves_relative_stat.c)
 and [growth root return](cases/vfs/current_directory_growth_preserves_relative_path_resolution.c).
-Keep their correct assertions. No expected-failure or sanitizer allowance is added.
+Keep their correct assertions. These three regressions and the four existing
+fs_embedded/fs_ram missing or hidden directory rejection regressions have named
+`WILL_FAIL` / `known_bug` allowances in [known_bugs.cmake](known_bugs.cmake).
+Remove all seven allowances when directory validation and root routing are fixed.
 
 **Suggested fix for Terje (not applied):** reject failed stat or a successful
 non-directory result, and make the built-in root stat resolve `/` correctly.
@@ -120,7 +123,8 @@ relative `new.nc` stat returns failure instead of reaching `/store`'s backend.
 **Regression:** [current-drive format and relative stat](cases/vfs_integration/formatting_current_drive_resets_removed_subdirectory_to_drive_root.c).
 The fixture now supplies the stat callback required before changing directory.
 Its format/remount and displayed-directory assertions pass; relative stat fails.
-No expected-failure or sanitizer allowance is added.
+This regression has a named `WILL_FAIL` / `known_bug` allowance in
+[known_bugs.cmake](known_bugs.cmake); remove it when relative routing is fixed.
 
 **Suggested fix for Terje (not applied):** keep frontend absolute directory and
 selected mount consistent when resetting the formatted drive to its root.
