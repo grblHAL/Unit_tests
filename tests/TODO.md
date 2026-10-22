@@ -252,22 +252,21 @@ production change or source exclusion was added for this observation.
 
 ## Coverage inventory: inline/header implementations
 
-**Recorded:** 2026-10-15, test branch coverage-batch-10, core Terje 683589b.
+**Rechecked:** 2026-10-22. The current core coverage_filter and README gcovr
+example already include both .c and .h files. Archived PARTIAL run39373002337
+(c9941ca/CORE7a6a432) measures six headers, including rgb.h and stepper2.h.
+The previous .c-only scope note was stale.
 
-The core suite's coverage_filter in [ci/suites.json](../ci/suites.json) and
-README local gcovr example include only core .c files. Current percentages
-therefore do not account for executable inline/header bodies such as
-stepper2.h profile functions, even when tests exercise them. This is a reporting
-scope limitation, not evidence that those bodies are tested completely.
+The detailed summary now inventories C sources and headers together, so measured
+header line/branch gaps are visible and its file count uses the same file types.
+Uninstrumented headers may contain only declarations; their absence is not proof
+of missing executable tests. No coverage filters, XML metrics or runtime cases
+were changed by this reporting repair. The archived report remains PARTIAL.
 
-Keep this separate from the test batch's CI changes. A CI reporting follow-up
-should include instrumented core headers and inventory supported conditional
-code/inline bodies that are not emitted in the chosen builds. Retain the
-source-file inventory and meaningful behavior assertions; do not exclude
-uncovered code or equate 100% of the existing .c report with full core coverage.
-An independent local header-inclusive measurement can guide further test work
-without changing manual triggers or reusable callers.
-
+Full-supported coverage still requires reviewing executable inline bodies and
+conditional code that are not emitted in the tested configurations. Retain them
+in the source inventory; never equate a green suite or a covered file with full
+CORE line/branch coverage.
 
 ## Hide pullup-disable settings for protected board inputs
 
@@ -329,12 +328,11 @@ C:/Users/User/Documents/Codex/p12/rgb-mask. This is a host profiler/path issue,
 not nine untested RGB helpers or new core faults. Earlier local header totals
 may have the same limitation and must not be treated as authoritative.
 
-Keep the header-inclusive Linux CI reporting change separate from this test
-batch. Inventory executable header bodies, verify profile collection and emitted
-configuration scope, and use hosted Linux results for authoritative percentages.
-Do not suppress gcovr errors, exclude real code or call 100% of the current
-.c-only report full core coverage. A short source/build path may help local LLVM
-collection, but verify actual profile files before trusting the resulting total.
+Header filters are already inclusive; the reporting-only inventory correction
+is separate from the runtime test batch. It does not repair Windows profile-path
+collection. Use hosted Linux results for authoritative totals and keep failed-run
+measurements explicitly PARTIAL. Never suppress gcovr errors or exclude real code
+to claim full CORE coverage.
 
 
 ## Compatibility-level coordinate availability documentation

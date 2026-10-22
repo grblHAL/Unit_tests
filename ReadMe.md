@@ -506,10 +506,6 @@ For authoritative totals, use the hosted Linux coverage job. LLVM on Windows can
 omit profile files at long build paths even when tests pass. If measuring locally,
 verify that executed test objects produce `.gcda` files before trusting totals.
 
-For authoritative totals, use the hosted Linux coverage job. LLVM on Windows can
-omit profile files at long build paths even when tests pass. If measuring locally,
-verify that executed test objects produce `.gcda` files before trusting totals.
-
 Open `coverage.html` to inspect uncovered lines and branches. For a fresh measurement,
 use a new build directory so old execution counts cannot carry over.
 
@@ -526,6 +522,8 @@ compile checks remain. The `separate` function
 merge mode retains functions compiled at different locations under feature guards. Other feature combinations
 still need tests. A green suite or a covered module does not establish full coverage;
 use the source-by-source coverage table to choose the next behavior to test.
+The table inventories both `.c` and `.h` files; uninstrumented headers may
+contain declarations only.
 
 ## Add tests incrementally
 

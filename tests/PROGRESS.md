@@ -1,3 +1,32 @@
+# Coverage header-inventory reporting checkpoint - 2026-10-22
+
+This reporting-only feature branch coverage-header-inventory is based on merged
+upstream/master4d73b8b. Runtime work remains preserved/pushed on coverage-batch-72,
+draft PR26 at28ab350; its source faults and incomplete validation remain unchanged.
+The persistent full-supported-coverage goal is ACTIVE.
+
+- Current suite filter already includes core .c/.h files. The archived PARTIAL
+  c9941ca/CORE7a6a432 report measures58 files, including six headers, while the
+  old summary counted only52 .c files and hid all header rows (58 of52).
+- Summary inventory now includes52 C sources and62 headers (114 files), displays
+  all six measured header rows and includes header branch gaps in its guidance.
+  Declaration-only headers can legitimately be uninstrumented; absence is not
+  automatically a missing test. An XML row is present even when it has no children.
+- Regression first reproduced the wrong2-of2 count; the corrected fixture reports
+  2-of4 with measured inline-header rates and an uninstrumented declaration header.
+  All58 Python helper checks PASS in5.390s. No repeated C sanitizer gate is needed:
+  this branch changes only reporting/tests/docs, with no firmware, CMake or CI trigger changes.
+- Real archived artifact was re-rendered with COVERAGE_COMPLETE=false: all six
+  headers display their original rates; status remains PARTIAL and XML totals
+  are unchanged. Evidence: build-asan/header-inventory-python-tests.log and
+  header-inventory-review/summary.md, validation.json and coverage.xml.
+  This is report validation, NOT a new coverage measurement or passing baseline.
+- Updated stale header-scope TODO notes and retained the Windows LLVM long-path
+  collection caveat. Next: deliver this reporting correction independently, then
+  return to coverage-batch-72 for supported runtime gaps and clean Terje updates.
+
+Historical checkpoint follows; it is not current branch/source readiness evidence.
+
 # Active coverage batch71 - 2026-10-20
 
 Goal ACTIVE: meaningful full supported core line/branch coverage. The hourly
