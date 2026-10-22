@@ -4,8 +4,21 @@ Full supported CORE line/branch coverage remains ACTIVE and unproven. Confirmed
 CORE defects are expected regressions, not reasons to stop independent coverage.
 This checkpoint supersedes historical snapshots.
 
-- Branch coverage-batch-72, draft PR26; 4,089 registered cases /87 additions
+- Branch coverage-batch-72, draft PR26; 4,094 registered cases /92 additions
   beyond merged upstream. No CORE changes or PR merges.
+- Local next-group checkpoint: five new public virtual-feed/motion cases pass
+  ASan/UBSan and strict summary in0.48s. Tests exercise the exact
+  F#<_hal[plasmac.cut-feed-rate]> expression via a registered virtual provider,
+  queued feed snapshots, missing/negative provider recovery, G20/G21 conversion,
+  and comment-driven same-block update followed by modal-feed retention. Actual
+  motor endpoints are160/240/334 steps. The fixture models public provider/hook
+  ownership; it does not implement or claim plasma material files or M190.
+  Evidence: batch72-live-feed-build.log, batch72-live-feed.xml and strict.log.
+  These five cases are outside the previous cumulative gate and not yet pushed.
+  Keep authoring coherent groups here before the next substantial delivery gate.
+- Old PARTIAL map reviewed for the next group: top settings candidates overlap
+  current capability/MPG/homing/description tests or documented unexposed metadata
+  paths. Do not treat that old map as proof of absent tests or current gain.
 - Clean CORE and freshly checked Terje master remain
   fab8d1c248990f53f13a444018fbb3ee353061dd.
 - Eight confirmed directory validation/root-routing assertion failures now have
