@@ -1,3 +1,39 @@
+# Toolsetter/physical controls cumulative gate - 2026-10-22
+
+Full4,151-case ASan/UBSan suite passes57.73s:4,135 clean,16 known,0 failures
+or skips. Build/test/strict all0 in batch72-tool-controls-gate.json. Includes reset
+before setterZ and physical-cycle-start automatic/G30 paths with duplicatepresses.
+No new allowances/CORE edits. Local group awaits delivery/hosted gain.
+
+Prior1582c74 coverage39823116932: artifacts12444694343/12444988901 locks exact
+1582c74411155d104664d0afd96e54af7826b0ed/source68eba79/corefilter; all report
+stages0,4,145/4,129clean/16known/0/0.17,293/17,684lines97.79%,
+12,102/13,754branches87.99%:+3lines/+5branches versus59b8f60.
+New ngc_params1011 andtool_change200/531. GCC/Clang remain running; published
+snapshot stays green97.77/87.95. Currentfac105e run39823928447 also running.
+
+# Physical cycle-start tool workflows - 2026-10-22
+
+Two new actual HAL control-callback cases cover physical cycle-start while automatic
+toolsetter waits and manualG30 return-to-fixture waits. Send duplicate press before
+foreground execution; no immediate pulses. Automatic probe establishes reference,
+restores originalXYZ and probe/command handlers; subsequent normal realtime service
+emits one tool-change completion. G30 return reachesfixture1,1,-2 while retaining
+manual-change wait and no completion. Targets tool_change364/368 control path,
+complementing existing serial-resume tests. Built together,focused sanitizer2/2
+passes0.32s. Initial completion assertion preceded required realtime transition;
+serviced public transition before asserting. Total4,151,no allowances/CORE edits.
+Grouped with pending toolsetterZ reset for cumulative gate.
+
+# Reset before toolsetter Z approach - 2026-10-22
+
+New Manual_G59_3 case observes normal queued toolsetterXY target via public planner
+and sends actual reset before nextZ submission. Driver change returnsReset,one
+reset/positioncallback,no XYZ pulses or completed tool notification; physical
+160/240/-80 retained and latest queued targetZ stays0 rather thanapproach-2.
+Targets tool_change204. Focused sanitizer passes0.27s. Total4,149,no allowances
+or CORE changes. Pending next cumulative group validation/hosted measurement.
+
 # Tool-change queue reset cumulative gate - 2026-10-22
 
 Full4,148-case ASan/UBSan suite passes57.49s:4,132 clean,16 known,0 failures
