@@ -1,3 +1,38 @@
+# CURRENT CHECKPOINT - batch73 cumulative gate - 2026-10-22
+
+coverage-batch-73 starts from merged upstream46fc7a6 (PR26); merged PR27's
+reporting dependency d58f2bc is already an ancestor. All pending local batch72
+changes preserved. CORE fetched clean/latest68eba7906ba60d66c8b55c4adc90cd5e85b5a828.
+
+Eight new cases across macro arguments, expression operands, registered G84
+interruptions, polling-only expansion IRQ rejection and spindle-ramp recovery;
+existing real-boot delta cut now validates live Cartesian feed reporting via
+public$10=8 while preserving its98-step symmetric endpoints. Full ASan/UBSan
+build/test/strict all0:4,185 cases in134.66s,4,164 clean,21 known reproductions,
+0 failed/skipped.72 Python helpers pass6.976s. Logs build-asan/batch73-full-*.
+
+Two confirmed defects retain correct assertions and dated KNOWN_BUGS entries:
+direct G65 O-word RETURN underflows flow stack (one exact fatal matcher plus
+WILL_FAIL); exhausted scheduler fallback leaves stale spindle ramp state
+(one exact assertion WILL_FAIL). Nested IF-frame and normal ramp controls pass.
+No CORE edits or blanket diagnostic allowances. Direct G65 return also passes
+the non-sanitizer Clang check0.05s (build-clang/batch73-return-nosan.xml); its
+ASan/UBSan fault remains visible only in sanitizer builds. Unknown macro-provider fixture
+assumption corrected: built-in handler always installs; no private/null handler
+forcing added. TODO records that unreachable rejection arm.
+
+Prior run39837233097 at91938f1 now has all5 individual jobs terminalsuccess.
+Artifacts12452336318/12451966627 lock68eba79/91938f1/corefilter; all7 coverage
+stages0,4,177total/4,158clean/19known/0failed/0skipped.17,330/17,684 lines98.00%,
+12,142/13,754 branches88.28%: +7lines/+11branches vs0522e4e.354 raw gaps.
+README/known-gap snapshot updated to this verified baseline. Batch73 gain awaits
+one exact-head hosted run after delivery; no new push/PR/dispatch yet.
+
+Next: commit/push this coherent group,
+open the authorized next PR and dispatch one hosted checkpoint against68eba79.
+Continue independent supported gaps while it runs; do not repeat unchanged full
+gates or helpers. Goal remains active; completion is unproven.
+
 # Flow-control error cumulative gate and confirmed backlash wait gain - 2026-10-22
 
 Full4,160-case ASan/UBSan passes82.19s:4,144 clean,16 known,0 failures/skips.
@@ -6474,3 +6509,19 @@ source/harness/filter locks and7 coverage stage exits0 verified.4,169 cases,
 361 raw uncovered. New lines RTCP308/363,flow657/773/774/779. Badges and known-gap
 snapshot updated. Ownership/I/O run39835932809 remainslive at inspection;
 thread group needs its own exact-head hosted report before coverage attribution.
+
+
+### 2026-10-22 - batching correction and direct G65 return authoring
+
+User rejects repeated 3-5-case full gates/hosted dispatches. Local AGENTS now
+requires substantial cross-module authoring before cumulative delivery; never
+full gate/push/dispatch just because a goal turn ends. Continue independent
+work while CI runs; no repeated status polling. Three hosted runs/hour is a
+ceiling, not a cadence. No artificial500-case quota or covered-case duplication.
+Current direct G65 RETURN regression exposes real stack[-1] atflow774 with
+UBSan then fatal ASan. Existing IF-frame return control passes. Shared loader
+extracted without behavior changes; exact fatal inventory/runner handles this
+combined diagnostic and rejects unrelated errors.9 matcher helper tests pass
+0.519s; focused direct expected-crash plus IF-frame control pass0.48s.
+Known-bug cause and exception removal guide recorded. This is local authoring
+work, not a new full-suite/hosted checkpoint; no dispatch or coverage claim.

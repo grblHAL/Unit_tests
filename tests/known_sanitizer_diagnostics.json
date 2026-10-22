@@ -1,1 +1,13 @@
-[]
+[
+  {
+    "kind": "fatal_asan",
+    "test": "ngc_params.direct_g65_o_word_return_restores_callers_without_flow_frames",
+    "source": "core/ngc_flowctrl.c",
+    "lines": [
+      774
+    ],
+    "function": "ngc_flowctrl",
+    "message_pattern": "global-buffer-overflow",
+    "preceding_ubsan_pattern": "index -1 out of bounds for type 'ngc_stack_entry_t ?\\[20\\]'"
+  }
+]

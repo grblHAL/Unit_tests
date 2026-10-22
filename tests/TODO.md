@@ -958,3 +958,14 @@ Bounded registered WILL_FAIL and source cause now live in KNOWN_BUGS.md under
 "Flow syntax errors orphan an active named macro file". The full-protocol
 proposal remains unregistered until upstream ownership cleanup is fixed; then
 promote it to check sender recovery without relying on a timeout allowance.
+
+## Macro-provider-absent rejection arms after normal parser initialization
+
+**Reviewed:** 2026-10-22, clean68eba79. ngc_params_init installs onMacroExecute
+at ngc_params.c1411 during normal parser initialization, even without a plugin.
+Thus gcode.c1747's absent-provider G67 arm is not reached by simply omitting
+an external macro loader. Do not clear the installed handler just to cover it.
+G65/G66 unsupported-fraction rejection is independently reachable with a valid
+registered provider and has a queued-motion/retry case. Revisit provider absence
+if an upstream-supported configuration or lifecycle stops installing the built-in
+handler; disabling NGC parameters is no longer supported by the selected source.

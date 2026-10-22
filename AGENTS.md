@@ -1,3 +1,21 @@
+# Validation batching correction - 2026-10-22
+
+User correction: repeated hosted runs for 3-5 new cases waste time. This policy
+supersedes earlier checkpoint habits and automatic end-of-turn delivery notes.
+
+- Continue authoring across multiple remaining supported regions before delivery.
+- Do not run a full local suite, push or dispatch hosted CI merely because a
+  goal turn ends or a small module is finished. Keep accumulating local work.
+- Use source review during authoring; focused execution only resolves uncertain
+  behavior, failures, or changes to shared reporting/fixture infrastructure.
+- One full sanitizer/strict gate and one hosted run at a substantial cumulative
+  delivery boundary. Three hosted runs per hour is an absolute ceiling, not a
+  target; normally run substantially fewer. Do not dispatch redundant heads.
+- While hosted jobs run, continue independent test authoring. Do not wait or
+  repeatedly poll them. Refresh their results at the next useful checkpoint.
+- Do not manufacture 500 cases or duplicate covered behavior to meet a quota.
+  Optimize newly exercised supported paths and bugs found per validation cycle.
+
 # Repository working instructions
 
 ## Objective and ownership

@@ -90,6 +90,20 @@ SUMMARY: AddressSanitizer: SEGV (<unknown module>)
             self.assertFalse(matches_known_crash(NAME, output.replace(before, after), manifest))
         self.assertFalse(matches_known_crash("other.case", output, manifest))
         self.assertFalse(matches_known_crash(NAME, output + "ERROR: AddressSanitizer: heap-use-after-free", manifest))
+        self.assertFalse(matches_known_crash(NAME, output + "other.c:1:1: runtime error: overflow", manifest))
+
+    def test_recorded_ubsan_prelude_requires_exact_index_source_and_line(self):
+        runtime = "/repo/core/vfs.c:509:20: runtime error: index -1 out of bounds for type 'entry_t[20]'\n"
+        summary = "SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /repo/core/vfs.c:509:20 \n"
+        manifest = [dict(MANIFEST[0], preceding_ubsan_pattern=r"index -1 out of bounds for type 'entry_t\[20\]'")]
+        self.assertTrue(matches_known_crash(NAME, runtime + summary + OUTPUT, manifest))
+        self.assertTrue(matches_known_crash(NAME, runtime + OUTPUT, manifest))
+        for output in [OUTPUT, runtime + runtime + OUTPUT, runtime.replace("-1", "-2") + OUTPUT,
+                       runtime.replace("509", "510") + OUTPUT, runtime.replace("vfs.c", "other.c") + OUTPUT,
+                       runtime + summary.replace("509", "510") + OUTPUT, runtime + summary + summary + OUTPUT,
+                       runtime + OUTPUT + "other.c:1:1: runtime error: overflow"]:
+            self.assertFalse(matches_known_crash(NAME, output, manifest), output)
+        self.assertFalse(matches_known_crash(NAME, runtime + summary + OUTPUT, MANIFEST))
 
     def test_runner_error_is_not_an_expected_failure(self):
         result = subprocess.run([sys.executable, str(SCRIPTS / "known_crash.py"), NAME,

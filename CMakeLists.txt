@@ -383,7 +383,14 @@ function(add_core_test name module source)
     OR name STREQUAL "ngc_flowctrl.numeric_sub_record_allocation_failure_preserves_file_and_allows_retry")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=calloc)
   endif()
-  add_test(NAME ${name} COMMAND test_${name})
+  if(ENABLE_SANITIZERS AND name STREQUAL "ngc_params.direct_g65_o_word_return_restores_callers_without_flow_frames")
+    find_package(Python3 REQUIRED COMPONENTS Interpreter)
+    add_test(NAME ${name} COMMAND ${Python3_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/scripts/known_crash.py ${name}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/known_sanitizer_diagnostics.json $<TARGET_FILE:test_${name}>)
+  else()
+    add_test(NAME ${name} COMMAND test_${name})
+  endif()
   set_tests_properties(${name} PROPERTIES TIMEOUT 15)
 endfunction()
 

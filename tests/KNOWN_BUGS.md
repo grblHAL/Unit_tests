@@ -35,9 +35,9 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Reviewed:** 2026-10-22, clean Terje `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39834732774)
-measures 17,323/17,684 lines (97.96%) and 12,131/13,754 branches (88.20%).
-The 361 uncovered lines include the following known gaps; this table does not
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39837233097)
+measures 17,330/17,684 lines (98.00%) and 12,142/13,754 branches (88.28%).
+The 354 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable.
 
 | Region | Status and evidence | What makes it testable |
@@ -440,3 +440,60 @@ frames. Validate nested files, parameter restoration, and sender recovery. Keep
 the bounded regression; remove this exact WILL_FAIL/known_bug block and entry
 when upstream passes, then promote the full-protocol proposal if it terminates
 with the intended error. No CORE edits or sanitizer diagnostic allowance.
+
+## Direct G65 O-word RETURN reads before the flow stack
+
+**Confirmed:** 2026-10-22, clean CORE `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
+[Regression](cases/ngc_params/direct_g65_o_word_return_restores_callers_without_flow_frames.c)
+runs nested real RAM-file G65 macros through a plugin execute/return callback.
+Each macro uses direct O-word RETURN without a surrounding IF/loop. The first
+return reports index-1 out of bounds and fatal global-buffer-overflow in
+[ngc_flowctrl.c:774](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/ngc_flowctrl.c#L774), before the callback or subsequent scope/endpoint assertions.
+The existing nested IF-frame return control passes with the same shared loader.
+Raw evidence: `build-asan/direct-g65-return-raw.xml`.
+
+The G65 return arm reads `stack[stack_idx].file` even when stack_idx is-1.
+No flow frame is required for a G65 callback-owned file. The installed stream
+still identifies the current macro, but this arm reads outside the stack array.
+
+**Suggested fix for Terje (not applied):** guard the empty flow stack and unwind
+only actual frames belonging to the current macro file before calling its
+return callback. Preserve return values, parent arguments and unread-tail skips.
+Keep the complete regression and its IF-frame control.
+
+Sanitizer builds use the existing fatal diagnostic runner with one exact named
+WILL_FAIL/known_crash registration. The inventory requires both the index-1
+UBSan diagnostic at this line and ASan global-buffer-overflow with ngc_flowctrl
+as top frame at the same line. Extra/changed diagnostics or a successful fixed
+executable make the exception fail. Non-sanitizer builds run the direct case.
+Remove its wrapper registration, exact manifest entry, WILL_FAIL/known_crash
+block and this entry once upstream passes under sanitizers. Assertions after
+the current crash did not execute; no CORE source or sanitizer instrumentation
+was disabled or changed.
+
+## Spindle override task-pool fallback leaves stale ramp state
+
+**Confirmed:** 2026-10-22, clean Terje CORE `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
+[Regression](cases/spindle_control/full_task_pool_override_fallback_allows_later_ramped_retarget.c)
+starts a registered PWM spindle at 6000 RPM with a 500 ms ramp, fills the public
+scheduler with future plugin tasks, then requests 150 percent override. The
+unschedulable ramp correctly falls back immediately to 9000 RPM. After releasing
+the plugin tasks, requesting 100 percent should ramp from the actual 9000 RPM
+output back to 6000 RPM. Instead it immediately writes 6000 RPM.
+
+`spindle_ramp_override` sets `ramp->delay` and `ramp->rpm` before scheduling.
+When `task_add_delayed` fails in [spindle_ramp_override](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/spindle_control.c#L623-L639), the ordinary fallback
+updates the hardware but leaves delay nonzero and the ramp RPM at 6000. The next
+request treats that stale value as an active ramp, computes a zero change and
+falls back immediately again. No private state is written by the test; pool
+pressure and release use task_add_delayed/task_delete. Raw evidence:
+`build-asan/batch73-ramp-pressure-raw.xml`, failed assertion at the second request.
+
+**Suggested fix for Terje (not applied):** clear the pending-ramp marker when
+scheduling fails so a later request starts from the current overridden RPM.
+Keep immediate fallback and the registered spindle enabled. Validate task-pool
+pressure, normal retarget, stop cancellation and configured ramp timing.
+
+The exact test has WILL_FAIL/known_bug in [known_bugs.cmake](known_bugs.cmake).
+Keep its correct output/timing assertions; remove that block and this entry when
+upstream passes under sanitizers. No sanitizer exception or CORE edit applies.

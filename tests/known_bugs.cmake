@@ -79,3 +79,11 @@ endif()
 if(TEST ngc_flowctrl.named_macro_flow_syntax_error_closes_file_before_status_returns)
   set_tests_properties(ngc_flowctrl.named_macro_flow_syntax_error_closes_file_before_status_returns PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+if(ENABLE_SANITIZERS AND TEST ngc_params.direct_g65_o_word_return_restores_callers_without_flow_frames)
+  set_tests_properties(ngc_params.direct_g65_o_word_return_restores_callers_without_flow_frames PROPERTIES WILL_FAIL TRUE LABELS "known_bug;known_crash")
+endif()
+
+if(TEST spindle_control.full_task_pool_override_fallback_allows_later_ramped_retarget)
+  set_tests_properties(spindle_control.full_task_pool_override_fallback_allows_later_ramped_retarget PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
