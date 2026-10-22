@@ -58,7 +58,7 @@ class SuiteReportingTests(unittest.TestCase):
     def test_partial_coverage_is_explicitly_not_a_passing_baseline(self):
         result = self.run_report("coverage-summary", partial=True)
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("Partial coverage: tests failed", result.stdout)
+        self.assertIn("Partial coverage: build or tests failed", result.stdout)
         self.assertIn("incomplete execution", result.stdout)
         self.assertIn("do not establish a passing baseline", result.stdout)
         self.assertIn("plugins/example_plugin/code.c", result.stdout)

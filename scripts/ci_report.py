@@ -213,11 +213,11 @@ def main():
         if args.job == "coverage":
             from changed_coverage import assess
             failed_execution = report.get("counts", {}).get("failed", 0) > 0 or any(
-                stage["stage"] in ("test", "classify") and stage["exit_code"]
+                stage["stage"] in ("build", "test", "classify") and stage["exit_code"]
                 for stage in report.get("stages", []))
             if Path("coverage.xml").exists() and failed_execution:
                 report["findings"].append(finding("coverage_partial", "Partial coverage",
-                    "Tests failed; annotated coverage is available for gap investigation, but execution is incomplete. Fix failures before judging changed-code coverage.", severity="warning"))
+                    "Build or tests failed; annotated coverage is available for gap investigation, but execution is incomplete. Fix failures before judging changed-code coverage.", severity="warning"))
             else:
                 report["findings"].extend(assess(lock, Path("coverage.xml")))
         path.write_text(json.dumps(report, indent=2) + "\n")

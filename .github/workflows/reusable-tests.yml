@@ -109,12 +109,14 @@ jobs:
       - name: Fetch locked sources
         run: python scripts/report_stage.py --job "${{ matrix.compiler }}" --stage fetch -- python scripts/prepare_sources.py
       - name: Configure
+        id: test_configure
         env:
           COMPILER: ${{ matrix.compiler }}
         run: python scripts/report_stage.py --job "$COMPILER" --stage configure -- python scripts/configure_suite.py --mode sanitizers --compiler "$COMPILER"
       - name: Build
-        run: python scripts/report_stage.py --job "${{ matrix.compiler }}" --stage build -- cmake --build build --parallel 2
+        run: python scripts/report_stage.py --job "${{ matrix.compiler }}" --stage build -- python scripts/build_suite.py
       - name: Test
+        if: always() && !cancelled() && steps.test_configure.outcome == 'success'
         run: python scripts/report_stage.py --job "${{ matrix.compiler }}" --stage test -- python scripts/run_suite.py test
       - name: Classify individual results and sanitizer diagnostics
         if: always()
@@ -155,10 +157,12 @@ jobs:
       - name: Fetch locked sources
         run: python scripts/report_stage.py --job coverage --stage fetch -- python scripts/prepare_sources.py
       - run: python scripts/report_stage.py --job coverage --stage tooling -- pip install gcovr==8.4
-      - run: python scripts/report_stage.py --job coverage --stage configure -- python scripts/configure_suite.py --mode coverage --compiler gcc
+      - id: coverage_configure
+        run: python scripts/report_stage.py --job coverage --stage configure -- python scripts/configure_suite.py --mode coverage --compiler gcc
       - id: coverage_build
-        run: python scripts/report_stage.py --job coverage --stage build -- cmake --build build --parallel 2
+        run: python scripts/report_stage.py --job coverage --stage build -- python scripts/build_suite.py
       - id: coverage_tests
+        if: always() && !cancelled() && steps.coverage_configure.outcome == 'success'
         run: python scripts/report_stage.py --job coverage --stage test -- python scripts/run_suite.py test
       - name: Classify coverage test results
         id: coverage_classify
@@ -166,9 +170,9 @@ jobs:
         run: python scripts/report_stage.py --job coverage --stage classify -- python scripts/run_suite.py summary
       - name: Report coverage
         id: coverage_report
-        if: always() && !cancelled() && steps.coverage_build.outcome == 'success'
+        if: always() && !cancelled() && steps.coverage_configure.outcome == 'success' && steps.coverage_tests.outcome != 'skipped'
         env:
-          COVERAGE_TITLE: ${{ steps.coverage_tests.outcome == 'success' && steps.coverage_classify.outcome == 'success' && 'Core coverage' || 'Partial core coverage - tests failed' }}
+          COVERAGE_TITLE: ${{ steps.coverage_build.outcome == 'success' && steps.coverage_tests.outcome == 'success' && steps.coverage_classify.outcome == 'success' && 'Core coverage' || 'Partial core coverage - build or tests failed' }}
           COVERAGE_FILTER: ${{ needs.source.outputs.coverage_filter }}
         run: python scripts/report_stage.py --job coverage --stage coverage -- gcovr --merge-mode-functions=separate --root . --filter "$COVERAGE_FILTER" --html-details coverage.html --html-title "$COVERAGE_TITLE" --xml coverage.xml --print-summary
       - name: Collect concise coverage diagnostics
@@ -185,7 +189,7 @@ jobs:
       - name: Summarize collected coverage
         if: always() && !cancelled() && steps.coverage_report.outcome == 'success'
         env:
-          COVERAGE_COMPLETE: ${{ steps.coverage_tests.outcome == 'success' && steps.coverage_classify.outcome == 'success' }}
+          COVERAGE_COMPLETE: ${{ steps.coverage_build.outcome == 'success' && steps.coverage_tests.outcome == 'success' && steps.coverage_classify.outcome == 'success' }}
         run: python scripts/run_suite.py coverage-summary
       - uses: actions/upload-artifact@v7
         if: always()

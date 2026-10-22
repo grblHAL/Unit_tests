@@ -128,7 +128,7 @@ else:
         inventory = sorted(path.as_posix() for path in args.source_directory.rglob("*") if path.is_file() and path.suffix in {".c", ".h"})
         lines = [f"## {args.suite_name} coverage", f"**{len(measured)} of {len(inventory)} source files instrumented**", "The inventory includes C sources and headers; percentages apply to measured executable code in this build configuration.", "", "| Module | Line coverage | Lines | Branches |", "|---|---|---:|---:|"]
         if os.environ.get("COVERAGE_COMPLETE") == "false":
-            lines[1:1] = ["**Partial coverage: tests failed.** These measurements describe incomplete execution; they do not establish a passing baseline or prove that uncovered code has no tests.", ""]
+            lines[1:1] = ["**Partial coverage: build or tests failed.** These measurements describe incomplete execution; they do not establish a passing baseline or prove that uncovered code has no tests.", ""]
         missing = [name for name in inventory if name not in measured]
         uncovered = [name for name in inventory if name in measured and float(measured[name].get("line-rate", "0")) < 1]
         if missing or uncovered:

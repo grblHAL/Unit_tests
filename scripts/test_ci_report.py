@@ -121,6 +121,24 @@ class DiagnosisTests(unittest.TestCase):
             self.assertIn("execution is incomplete", partial[0]["message"])
             self.assertNotIn("coverage_unavailable", [item["kind"] for item in report["findings"]])
 
+    def test_failed_build_with_passing_available_tests_withholds_changed_coverage(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "build").mkdir()
+            (root / "build/results.xml").write_text('<testsuite><testcase name="available"/></testsuite>')
+            (root / "coverage.xml").write_text('<coverage><packages/></coverage>')
+            (root / "source-lock.json").write_text(json.dumps(dict(sources=[])))
+            (root / "report-coverage.json").write_text(json.dumps(dict(job="coverage", findings=[], stages=[dict(stage="build", exit_code=1, log="build.log")])))
+            (root / "build.log").write_text('source.c:7:1: error: known source fault')
+            env = os.environ.copy()
+            env.pop("GITHUB_STEP_SUMMARY", None)
+            result = subprocess.run([sys.executable, str(SCRIPTS / "ci_report.py"), "--job", "coverage"], cwd=root, env=env, capture_output=True, text=True)
+            self.assertNotEqual(result.returncode, 0, result.stderr)
+            report = json.loads((root / "report-coverage.json").read_text())
+            self.assertEqual(report["counts"]["clean"], 1)
+            self.assertEqual(len([x for x in report["findings"] if x["kind"] == "coverage_partial"]), 1)
+            self.assertNotIn("coverage_baseline", [x["kind"] for x in report["findings"]])
+
     def test_aggregate_never_passes_missing_compiler_report(self):
         with tempfile.TemporaryDirectory() as d:
             p=Path(d); (p/'reports').mkdir()

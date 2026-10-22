@@ -14,8 +14,7 @@ This checkpoint supersedes historical snapshots.
   motor endpoints are160/240/334 steps. The fixture models public provider/hook
   ownership; it does not implement or claim plasma material files or M190.
   Evidence: batch72-live-feed-build.log, batch72-live-feed.xml and strict.log.
-  These five cases are outside the previous cumulative gate and not yet pushed.
-  Keep authoring coherent groups here before the next substantial delivery gate.
+  These five cases now pass in the cumulative gate described below.
 - Old PARTIAL map reviewed for the next group: top settings candidates overlap
   current capability/MPG/homing/description tests or documented unexposed metadata
   paths. Do not treat that old map as proof of absent tests or current gain.
@@ -35,12 +34,25 @@ This checkpoint supersedes historical snapshots.
   diagnostic, wrong test/frame/location, extra error, fixed executable and runner
   failure checks. Evidence: batch72-known-crash-python.log. Both actual wrapped
   regressions and strict summary pass in0.66s: batch72-known-crash.xml.
-- One cumulative buildable ASan/UBSan gate after shared-reporting changes ran
-  4,031 cases in102.57s:4,018 clean passes,12 known reproductions,1 failure.
-  CTest8 /strict1, not green. Only remaining failure is the alarm-upload closing
-  demarcation after rejected G91, whose contract is in TODO. Do not classify an
-  unsettled contract as a confirmed bug just to make CI green.
-  Evidence: batch72-known-defects-gate.xml, gate.log and gate-strict.log.
+- New cumulative buildable ASan/UBSan gate ran4,036 cases in133.61s:
+  4,023 clean passes,12 known reproductions,1 unsettled alarm-contract failure.
+  CTest8 /strict1, not green. All five new feed workflows pass. The58 unavailable
+  cutter cases remain registered and are explicitly withheld from local execution.
+  Evidence: batch72-partial-build-gate.xml, gate.log, gate-strict.log and
+  batch72-partial-build-validation.json. No unchanged full rerun is needed.
+- Pipeline repair: native Make/Ninja keep-going builds preserve failure status,
+  then all registered hosted tests run after successful configure. Missing binaries
+  remain explicit unavailable test results. Current all-target local rebuild
+  completed every independent target and failed only host_core_cutter gcode.c.
+  Evidence: batch72-keep-going-build.log. No source, registration or filter exclusion.
+- Shared pipeline helpers69/69 PASS in6.529s, including an actual mini-project
+  proving a failed target stays red while another target builds and its test runs.
+  Build failure also withholds changed-code coverage even if available tests pass.
+  Hosted HTML/XML and summaries remain PARTIAL after build OR test failure.
+  Manual-only and reusable triggers parsed/verified; no continue-on-error added.
+  Evidence: batch72-partial-build-python.log. Next hosted run validates Linux
+  GCC/Clang diagnostics and supplies a current partial gap map while CORE faults
+  remain separately visible. This does not establish full supported coverage.
 - The58 cutter-linked cases remain registered but unavailable: CORE gcode.c
   still uses removed direct ccomp_off fields at2920/3364/3373/5036. No firmware
   patch, skipped registration or stale cutter binary is counted as validation.
