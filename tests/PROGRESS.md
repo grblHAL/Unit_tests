@@ -1,148 +1,64 @@
 # Current batch72 verification checkpoint - 2026-10-22
 
-Full supported CORE line/branch coverage remains ACTIVE and unproven. Confirmed
-CORE defects are expected regressions, not reasons to stop independent coverage.
-This checkpoint supersedes historical snapshots.
+The full supported CORE coverage goal is active and unproven. Highest priority:
+obvious bugs and uncovered reachable paths, not extra confidence cases or test
+counts. Batch source review/authoring/builds; focused runs resolve uncertainty.
+One cumulative gate and hosted checkpoint per substantial delivery. CORE belongs
+to Terje and remains untouched.
 
-- Local branch coverage-batch-72, draft PR26; 4,102 registered cases /100 additions
-  beyond merged upstream. No CORE changes or PR merges.
-- Local next-group checkpoint: five new public virtual-feed/motion cases pass
-  ASan/UBSan and strict summary in0.48s. Tests exercise the exact
-  F#<_hal[plasmac.cut-feed-rate]> expression via a registered virtual provider,
-  queued feed snapshots, missing/negative provider recovery, G20/G21 conversion,
-  and comment-driven same-block update followed by modal-feed retention. Actual
-  motor endpoints are160/240/334 steps. The fixture models public provider/hook
-  ownership; it does not implement or claim plasma material files or M190.
-  Evidence: batch72-live-feed-build.log, batch72-live-feed.xml and strict.log.
-  These five cases now pass in the cumulative gate described below.
-- Old PARTIAL map reviewed for the next group: top settings candidates overlap
-  current capability/MPG/homing/description tests or documented unexposed metadata
-  paths. Do not treat that old map as proof of absent tests or current gain.
-- User steering: optimize for obvious bugs and uncovered reachable paths, not
-  extra confidence cases or test-count growth. Author substantial groups before
-  a combined build; focused execution only resolves uncertain behavior. Report
-  source-matched line/branch deltas rather than treating raw case counts as gain.
-- Existing cumulative recovery gate completed before the latest hook changes:
-  4,043 buildable ASan/UBSan cases,4,027 clean,15 known,1 unsettled alarm-contract
-  failure. Build failed only the known cutter target; strict remains red. Evidence:
-  batch72-recovery-delivery.xml /delivery.log /delivery-strict.log and build.log.
-  This gate is recorded, not repeated for every subsequent small authoring group.
-- Concrete hook ownership bug confirmed: a rejected MSG block loses its CORE
-  allocation although the prior cut completes80 motor steps and modal state is
-  preserved. Correct free-count assertion is a named WILL_FAIL with a dated
-  KNOWN_BUGS entry. Probe teardown reclaims the orphan after observing CORE's
-  zero frees; no sanitizer suppression or firmware patch.
-- Four existing generic pre-execution hook tests moved from cutter_comp to the
-  working lathe_ngc configuration and use a generic motion fixture. Assertions
-  remain; no duplicate scenarios added. Those four plus the new ownership case
-  pass ASan/UBSan/strict5/5 in0.52s (four clean,one known). Evidence:
-  batch72-plugin-hook.xml /strict.log; raw failure is batch72-plugin-hook-raw.xml.
-  The hook itself is now executable despite cutter failure, reducing unavailable
-  registrations from58 to54. These changes are local, outside the last cumulative
-  and hosted gates; no new coverage percentage is claimed.
-- Added paired real-protocol WHILE allocation tests. No-fault macro/sender
-  reopening control passes; injected loop-expression allocation failure leaves
-  the named file current at actual EOF after flow metadata was cleared. An EOF
-  ownership observer replaces a timeout with a direct correct assertion. One
-  narrow WILL_FAIL/known_bug and dated KNOWN_BUGS entry retain full sender retry,
-  parent scope and tail-skipping expectations. Focused ASan/UBSan2/2 +strict
-  pass0.29s: batch72-while-allocation.xml. Raw failure/control evidence is in
-  batch72-while-allocation-raw.xml. CORE untouched; no sanitizer allowance added.
-- Seven local cases now accumulate beyond hosted19bb4ab: two MPG regressions,
-  three loader recovery controls, one WHILE regression and its normal control.
-  Next is one cumulative pre-push sanitizer/strict gate, with the same58 known
-  unavailable cutter cases recorded separately, then a useful combined delivery.
-  No repeated unchanged Python helper gate or tiny per-case hosted runs.
-- Added local macro-loader recovery group: three new realistic parser/file cases
-  cover long-name filename growth, subroutine-record allocation after redirect
-  creation, and callee-argument installation. Actual file reads execute G21 and
-  reach emitted EOF after each successful retry. Correct OOM status, caller#1=99,
-  read handler, call level and close counts are preserved across rejection/retry.
-  All three plus existing normal/long-name controls pass ASan/UBSan and strict
-  summary5/5 in0.82s. No new allowances or CORE changes.
-  Evidence: batch72-macro-loader-build.log, batch72-macro-loader.xml /strict.log.
-  Argument failure is armed at the backend-open boundary, not before filename
-  routing; an initial wrong injection assumption was a fixture error, not a CORE
-  bug. The shared static backend's optional open observer defaults to NULL;
-  existing controls were rebuilt/tested in both normal and long-name variants.
-  These three cases and the prior MPG/diagnostic follow-up remain local until
-  the next coherent cumulative delivery boundary; do not claim hosted coverage.
-- New local group (not yet pushed or included in a whole-suite gate): two MPG
-  input-order regressions expose an unreachable pull-up branch. Valid driver
-  functions/capabilities are installed before registration; first input gets None,
-  while another order inherits a neighbor's pull-down. Correct assertions are
-  retained as named WILL_FAIL known bugs. Existing up-neighbor control passes.
-  Focused ASan/UBSan3/3 +strict pass0.35s: batch72-mpg-pull.xml; raw evidence
-  records the two actual assertion failures in batch72-mpg-pull-raw.xml.
-- Current-source hosted39762025374 is terminal FAILURE at delivered19bb4ab and
-  COREfab8d1c. Exact source/header scope verified from artifact. All three runtime
-  jobs attempted4,094 registrations:4,022 clean,10 known,58 unavailable cutter
-  cases,4 failures (alarm contract, Linux /dev rejection, two documented crashes).
-  The source/helper job passed. No live job is still awaited or restarted.
-- Fresh PARTIAL coverage:17,065/17,583 lines97.05%;11,818/13,635 branches86.67%.
-  Builds/tests failed, denominator differs from old reports, and post-crash paths
-  did not run. This is NOT a passing baseline or proven comparable coverage gain.
-  Badges unchanged. Evidence under build-asan/hosted39762025374/ includes XML,
-  HTML, compiler results, source locks, diagnosis and the fresh gaps.json.
-- Linux /dev rejection is the documented failed-stat validation fault; add its
-  narrow Linux-only WILL_FAIL while retaining Windows's currently passing result.
-  GCC/Clang crash reports now match only their captured exact source or PC-zero
-  caller chains. Changed/additional faults and fixed executables stay red.
-  All71 Python checks pass6.695s; all four captured Linux crash outputs replay;
-  actual Windows2/2 crash checks plus strict pass0.54s. Evidence:
-  batch72-linux-diagnostic-python.log and batch72-mpg-linux-repair.xml/strict.log.
-  These are focused repairs, not a new hosted or complete runtime gate.
-- Next source review uses the fresh map: gcode102 missing lines (discount cutter
-  unavailability), settings73, wall_plotter56 (unimplemented homing), ioports38
-  (includes the now-confirmed guarded MPG defect), ngc_flowctrl17. Existing tests
-  and documented unexposed/private paths must still be checked before authoring.
-- Clean CORE and freshly checked Terje master remain
+- Branch coverage-batch-72; published PR26 is draft at19bb4ab. Local follow-ups
+  are accumulated, not yet pushed.4,102 registered cases /100 beyond merged
+  upstream; these counts do not establish coverage progress.
+- Clean CORE and latest checked Terje master remain
   fab8d1c248990f53f13a444018fbb3ee353061dd.
-- Eight confirmed directory validation/root-routing assertion failures now have
-  named WILL_FAIL/known_bug allowances. Focused8/8 expected reproductions pass
-  ASan/UBSan and strict reporting in0.53s; correct assertions remain.
-- Two documented fatal regressions now use exact-diagnostic WILL_FAIL wrappers:
-  vfs repeated optional-getcwd change (vfs.c509, vfs_chdir) and IRQ cancellation
-  of selected due task (grbllib.c595, task_execute). Matching requires the named
-  test, source line, top frame and ASan access-violation; extra sanitizer errors,
-  changed faults, fixes or runner failures remain red. Full raw process logs are
-  retained and included in existing hosted artifacts. Post-crash assertions did
-  not run; this is known-defect reproduction, not validation of those paths.
-- Shared diagnostic reporting helpers65/65 PASS in5.829s, including changed/missing
-  diagnostic, wrong test/frame/location, extra error, fixed executable and runner
-  failure checks. Evidence: batch72-known-crash-python.log. Both actual wrapped
-  regressions and strict summary pass in0.66s: batch72-known-crash.xml.
-- New cumulative buildable ASan/UBSan gate ran4,036 cases in133.61s:
-  4,023 clean passes,12 known reproductions,1 unsettled alarm-contract failure.
-  CTest8 /strict1, not green. All five new feed workflows pass. The58 unavailable
-  cutter cases remain registered and are explicitly withheld from local execution.
-  Evidence: batch72-partial-build-gate.xml, gate.log, gate-strict.log and
-  batch72-partial-build-validation.json. No unchanged full rerun is needed.
-- Pipeline repair: native Make/Ninja keep-going builds preserve failure status,
-  then all registered hosted tests run after successful configure. Missing binaries
-  remain explicit unavailable test results. Current all-target local rebuild
-  completed every independent target and failed only host_core_cutter gcode.c.
-  Evidence: batch72-keep-going-build.log. No source, registration or filter exclusion.
-- Shared pipeline helpers69/69 PASS in6.529s, including an actual mini-project
-  proving a failed target stays red while another target builds and its test runs.
-  Build failure also withholds changed-code coverage even if available tests pass.
-  Hosted HTML/XML and summaries remain PARTIAL after build OR test failure.
-  Manual-only and reusable triggers parsed/verified; no continue-on-error added.
-  Evidence: batch72-partial-build-python.log. Next hosted run validates Linux
-  GCC/Clang diagnostics and supplies a current partial gap map while CORE faults
-  remain separately visible. This does not establish full supported coverage.
-- The58 cutter-linked cases remain registered but unavailable: CORE gcode.c
-  still uses removed direct ccomp_off fields at2920/3364/3373/5036. No firmware
-  patch, skipped registration or stale cutter binary is counted as validation.
-- Independent reporting PR27 remains draft at135e8f5 and is integrated ind58f2bc.
-  Header inventory correctly lists58 measured files /114 C-header files from
-  archived PARTIAL data, including six measured headers, without changing counters.
-- Next: keep independent supported coverage work moving. Revisit the unsettled
-  alarm contract and clean-source cutter build separately; do not suppress all
-  crashes, force private branches or patch CORE. Before claiming full completion,
-  every supported configuration and post-crash path needs actual successful
-  execution plus exact-head Linux GCC/Clang/coverage evidence. Known wrappers
-  must be removed when fixed; retain their direct correct regression assertions.
+- Latest exact-source hosted39762025374 is terminal FAILURE at19bb4ab/fab8d1c.
+  Source/helpers passed. Each runtime job attempted4,094 registrations:4,022
+  clean,10 known,58 unavailable and4 failures (alarm contract, Linux /dev
+  rejection and two documented crashes reported differently). No live job awaits.
+- Hosted PARTIAL measurement:17,065/17,583 lines97.05%;11,818/13,635 branches
+  86.67%.518 measured executable lines remain uncovered. This is not a passing
+  baseline or like-for-like gain from the96.60/85.54 successful badge baseline;
+  source/configuration denominators differ. Badges unchanged. Exact source lock,
+  HTML/XML, compiler reports and fresh gaps.json: build-asan/hosted39762025374/.
+- Current configuration recovery:17 generic existing cases were unnecessarily
+  coupled to cutter compensation. Four pre-execution cases moved to lathe_ngc;
+  five geometry cases moved to ngc_tools and eight generic G-code table cases now
+  link the existing host_core_ngc_tools with LATHE_UVW_OPTION=1. No duplicate cases
+  or source exclusions. All28 affected geometry/offset/reload/M6/parameter tests
+  pass ASan/UBSan and strict1.67s: batch72-tool-config.xml /strict.log /build.log.
+  The remaining41 cutter tests genuinely require CUTTER_COMP_ENABLE and remain
+  registered/unavailable due to CORE's stale ccomp_off field references.
+- Concrete local bug regressions: MPG pull-up ordering (two named WILL_FAILs),
+  active macro WHILE allocation error leaving its file current at EOF (one), and
+  plugin rejection losing its CORE message (one). Correct assertions retained;
+  dated source/cleanup evidence in KNOWN_BUGS.md. No new sanitizer suppression.
+  Four relocated hook controls +message regression pass5/5 strict0.52s, with
+  observed orphan reclaimed only in probe teardown: batch72-plugin-hook.xml.
+  WHILE regression/control pass2/2 strict0.29s: batch72-while-allocation.xml;
+  MPG regressions/control pass3/3 strict0.35s: batch72-mpg-pull.xml. Raw failure
+  XMLs retain the actual ownership/pull-up evidence.
+- Three local macro-loader memory recovery cases use actual file reads, parser
+  execution and EOF after retry. Filename growth, sub-record and callee-argument
+  failures preserve sender, parent#1=99, scope and close ownership. Three +two
+  existing controls pass5/5 strict0.82s: batch72-macro-loader.xml /strict.log.
+- Linux diagnostic follow-up: /dev rejection gets one Linux-only WILL_FAIL;
+  GCC/Clang null-call reports match only exact captured source/frame or PC-zero
+  harness caller chains. Changed/additional faults and fixes remain red.71 helper
+  checks pass6.695s; four captured Linux crash outputs replay and actual Windows
+  crash checks pass2/2 strict0.54s. Evidence: batch72-linux-diagnostic-python.log
+  and batch72-mpg-linux-repair.xml. No unchanged helper rerun is needed.
+- Last cumulative local gate preceded the17 relocations and message regression:
+  4,043 buildable cases (4,101 registered minus58),4,027 clean,15 known,one
+  unsettled alarm-upload contract failure. Build failed only host_core_cutter;
+  CTest/strict remain red. Evidence: batch72-recovery-delivery.xml and related
+  build/test/strict logs. Preserve this scope; do not claim the newer configuration
+  has a whole-suite or hosted pass. Do not repeat full gates after each small edit.
+- Next: review remaining fresh-map regions for concrete bug hypotheses, retaining
+  maintainer TODOs and unreachable guards. Accumulate a meaningful group before
+  the next combined validation/push. Current config has41 unavailable cases and
+  4,061 buildable registrations, not yet cumulatively gated. No new percentage
+  is claimed until a matching source/configuration report exists. PR27 remains
+  independent draft reporting repair, integrated into this branch ind58f2bc.
 
 Historical entries below may describe old branches, completed runs or superseded pauses.
 
