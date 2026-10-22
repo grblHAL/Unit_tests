@@ -9,5 +9,11 @@ int main(void)
     CHECK(sys.rt_exec_state & EXEC_STOP);
     CHECK(sys.alarm_pending == Alarm_ProbeProtect);
     CHECK(axis_pulses[X_AXIS] == 0);
+    CHECK(!protocol_exec_rt_system());
+    CHECK(state_get() == STATE_ALARM && sys.alarm == Alarm_ProbeProtect);
+    CHECK(sys.alarm_pending == Alarm_None);
+    CHECK(plan_get_current_block() == NULL);
+    CHECK(axis_pulses[X_AXIS] == 0 && sys.position[X_AXIS] == 0);
+    CHECK(strstr(engine_output, "ALARM:13") != NULL);
     return EXIT_SUCCESS;
 }

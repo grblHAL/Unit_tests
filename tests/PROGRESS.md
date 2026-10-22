@@ -1,3 +1,46 @@
+# Resource/stop cumulative gate and fully green coverage - 2026-10-22
+
+Full4,145-case ASan/UBSan suite passes59.85s:4,129 clean,16 known,0 failures
+or skips. Build/test/strict all0 in batch72-resource-stop-gate.json. String third
+entry growth, actual probe protection stop completion and reset before toolsetter
+traverse validated together. No new allowances/CORE edits; local delivery pending.
+
+Allfive individual jobs on39820646831 terminalsuccess at7270deb. Downloaded
+12444129239/12445625277; both locks exact7270deb8fb6bc43910c0f09fef7eb66b821d7356,
+source68eba79/core filter; all report stages0,4,141/4,125clean/16known/0/0.
+17,289/17,684 lines97.77%,12,096/13,754branches87.95%:+9lines/+7branches
+versus prior published964457f. Newfs_embedded257,gcode2431,planner807,
+report848/849,stepper2 149/150/191/192.395 raw lines remain. README/known
+snapshot updated. Newer59b8f60 run39821728933 remains running.
+
+# Toolsetter position callback reset prevents traverse - 2026-10-22
+
+New real Manual_G59_3 tool-change case installs positioning callback that sends
+normal realtime reset before go_toolsetter submits XY. Driver change returnsReset,
+sys.abort set,tool-change flag clears,one position callback/driver reset,no completed
+tool notification and no XYZ pulses; physical160,240,-80 unchanged. Initial
+assumption Z home already executed was corrected: go_linear_home queues it, then
+position callback runs before queue synchronization. Targets tool_change200/531.
+Focused sanitizer passes. Total4,145,no allowances/CORE edits. Cumulative gate pending.
+
+# Later string parameter growth retains list ownership - 2026-10-22
+
+New public string API case stores four entries, grows third from5 to240chars,
+checks both predecessors and successor unchanged, deletes/reinserts third and
+checks every entry before cleanup. Uses actual allocator; relocation-specific
+branch gain is measured later, not forced by private list manipulation. Targets
+remaining ngc_params1011 traversal when growth relocates. Focused sanitizer passes
+0.28s. Total4,144,no allowances/CORE edits; grouped with probe stop completion.
+
+# Probe protection stop completes through public realtime service - 2026-10-22
+
+Extended existing unexpected probe IRQ case beyond request flags: execute normal
+realtime stop, verify cancellation returnfalse, actual Alarm_ProbeProtect with
+pending alarm cleared, empty planner,no pulses/position change and ALARM:13 output.
+Source protocol551-592 confirms cancellation returnfalse is expected, not a
+continuable service return. Focused sanitizer passes0.26s. No new case/allowance
+or CORE edit; no unmeasured state-machine branch gain claimed. Local group starts.
+
 # Probe/backlash reset cumulative gate - 2026-10-22
 
 Full4,143-case ASan/UBSan suite passes, build/test/strict all0 recorded in
