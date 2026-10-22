@@ -1,3 +1,36 @@
+# Tool-change queue reset cumulative gate - 2026-10-22
+
+Full4,148-case ASan/UBSan suite passes57.49s:4,132 clean,16 known,0 failures
+or skips. Build/test/strict all0 in batch72-tool-queue-reset-gate.json. Initial
+retract and G30XY/finalZ reset boundaries validated as group. No new allowances
+or CORE changes. Local head awaits delivery/hosted gain.
+
+Allfive jobs on39821728933 at59b8f60 terminalsuccess. Coverage/report artifacts
+12445023812/12445896104 both exact59b8f600d2157444e4353c8409992620318ae918,
+source68eba79/corefilter; all stages0,4,143/4,127clean/16known/0/0.
+17,290/17,684lines97.77%,12,097/13,754branches87.95%:+1line/+1branch
+versus7270deb (motion_control1064). Backlash reset scenario did not cover163;
+retain this remaining gap without claiming gain.394 raw uncovered lines remain.
+Published snapshot links/counts refreshed.1582c74 hosted run39823116932 running.
+
+# G30 intermediate queue reset controls - 2026-10-22
+
+Two new manual-change cases send actual reset after initial retract is queued
+(beforeXY traverse) and afterXY is queued(before finalZ approach). Shared small
+fixture observes public planner target to select event boundary; no static/private
+state changes. Both driver changes returnReset,one reset,noXYZ pulses or completed
+tool notification,physical160/240/-80 retained; latest queued target remains prior
+stage atZ0. Targets tool_change517/524. Built together,focused sanitizer2/2 passes
+0.33s. Total4,148,no allowances/CORE edits. Grouped with initial retract reset.
+
+# Reset before initial manual-tool retract - 2026-10-22
+
+New real manual change case sends public reset on initial motion service poll.
+Driver change returnsReset,one reset callback,no pending tool-change or completed
+notification,empty planner and zeroXYZ pulses; physical160,240,-80 unchanged.
+Targets tool_change177/506. Focused sanitizer passes0.28s. Total4,146,no
+allowances/CORE edits. This begins next cumulative tool-change error batch.
+
 # Resource/stop cumulative gate and fully green coverage - 2026-10-22
 
 Full4,145-case ASan/UBSan suite passes59.85s:4,129 clean,16 known,0 failures
