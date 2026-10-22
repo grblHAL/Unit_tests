@@ -1,3 +1,26 @@
+# Motion recovery cumulative gate and prior batch coverage - 2026-10-22
+
+Full4,138 ASan/UBSan passes58.58s; build/test/strict all0 recorded in
+batch72-motion-recovery-gate.json.4,122 clean,16 known,0 failed/skipped.
+CORE unchanged; no new allowances. Rapid callback refusal/retry, queued arc
+recovery and missing-setting value handling validated together.
+
+Prior head d89ca53 coverage run39816875087 completed coverage/source, while GCC
+and Clang remain running. Artifacts12442099474/12443365993 locks verified to
+harnessd89ca535a8b9c16f91370fbaf48cdae532bb3a3b/source68eba79/core filter;
+all stage exits0,counts4,138/4,122/16/0/0.17,277/17,684 lines97.70%,
+12,085/13,754 branches87.87%:+8lines/+18branches versus green1049a01.
+New lines encoders46,modbus249,nuts_bolts278/279/305/306,strutils114/115.
+Do not call whole hosted run green or advance badges before compiler/diagnosis.
+
+# Missing setting lookup/value boundary - 2026-10-22
+
+Extended existing unknown-setting rejection with actual public detail lookup
+returningNULL and setting_get_value(NULL,0) returningNULL before failed store.
+No notifications remain asserted. Focused sanitizer passes; targets settings1926
+without synthetic registered metadata. No new case/allowance/CORE change.
+Pending cumulative gate with motion callback recovery group.
+
 # Custom M-code reader guard audit - 2026-10-22
 
 Existing normal-required-value and plugin-valueless tests already cover contracts.
