@@ -858,3 +858,15 @@ source-locked hosted39801089848. These four lines remain in raw coverage.
 
 Do not force private state or create fake WILL_FAIL placeholders. Revisit these
 source-proven guards if upstream lookup, rename or parameter lifecycle changes.
+
+## Zero per-axis locate rate: define completion coordinates before asserting
+
+2026-10-22, CORE68eba7906ba60d66c8b55c4adc90cd5e85b5a828. Axis homing-feed
+metadata has no nonzero minimum; get_homing_rate returns that value. A zero rate
+after a successful seek/pulloff clears the axis from cycle at machine_limits502.
+The final limits_set_machine_positions(cycle,true) therefore omits it, while the
+previous homed mask is still merged into sys.homed. Clarify whether zero disables
+locating while retaining the seek reference, disables homing for that axis, or
+must be rejected by settings. Do not invent final machine coordinates or force a
+private homing phase to cover this branch. Existing zero-seek/locate-count tests
+cover their established contracts. This is a source concern, not a reproduced bug.

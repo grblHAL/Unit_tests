@@ -1,3 +1,85 @@
+# Limits/homing/delta cumulative gate - 2026-10-22
+
+Full4,131-case ASan/UBSan build/test/strict passes(all0)61.76s:4,116 clean plus15
+known reproductions,no failed/skipped. Evidence:build-asan/batch72-limits-delta-
+gate.json,delivery XML/log,strict log. Two new cases/three extensions cover driver
+homing-rate rejection/retry with actual pulses, short delta segment validation/
+endpoint, unhomed travel guard, rotary-excluded IRQ handling, and nonlinear delta
+clip validation in both coordinate domains. No CORE changes/new allowances.
+Clean upstream68eba79 unchanged. Zero-locate reference contract remains TODO,
+not a fabricated expected failure. Deliver coherent group on existingPR26.
+
+Hosted39807024328 coverage/report locks verifiedd0b2f90/68eba79/filter; stages0,
+4,129/4,114 clean/15 known/no failed/skipped.17,258/17,684 lines97.59%,
+12,021/13,754 branches87.40%,+9/+15 same source. New lines:modbus_rtu239-240/
+242-244/273/509/529,report2898. GCC/Clang still running at latest check;
+current limit/delta group requires its own exact-head hosted report.
+
+# Nonlinear clipped delta target accepted in both coordinate domains - 2026-10-22
+
+Extended existing positive-X nonlinear jog clip case: finite inverse alone is
+insufficient, so check the resulting Cartesian endpoint and converted motor
+coordinates through grbl.check_travel_limits with all XYZ homed. Both accepted,
+ASan/UBSan1/1 passes0.26s. Reuses real clipping/transform/limit callbacks; no
+private geometry edits or new allowance. Targets fallback motor-coordinate
+validation after cuboid fast path; exact new coverage awaits hosted report.
+Count unchanged4,131. Current local batch two new cases/three extensions across
+limits, driver homing recovery and delta geometry is ready for cumulative gate.
+CORE unchanged; no claim of completed full supported objective.
+
+# Delta short-move validation and endpoint - 2026-10-22
+
+New delta public-kinematics scenario passes ASan/UBSan0.26s:0.01mm X move at
+Z-300 starts unvalidated, becomes accepted, returns exactly one finite positive-
+feed segment, reconstructs XYZ endpoint within0.001mm through quantized motor
+coordinates. Existing delta fixture/conversion precision convention reused.
+Targets delta236-237 successful validation and259-260 unsegmented short-move
+path. No internal state edits/CORE changes or new allowances. Total4,131 cases;
+local batch now two new cases/two expanded limit/homing scenarios. Full gate
+remains for cumulative delivery. This validates kinematics, not physical hardware.
+
+# Driver-provided homing rate unavailable/retry - 2026-10-22
+
+New supported provider-boundary case passes ASan/UBSan0.27s. Driver feedrate
+callback returns0 for initial Y seek while normal global X seek remains valid.
+Public mc_homing_cycle returnsUnhandled, restoresIDLE, reports failed completion,
+no homed bits/pulses. After normal realtime poll/provider recovery,$HY succeeds:
+Y physical110/reference-10,150 pulses,other axes untouched,successful callback.
+Existing homing fixture reused, no private phase forcing/CORE edits/allowances.
+Targets machine_limits312; total4,130 cases. Unlike pending zero-locate policy,
+this rejection occurs before any seek motion. Local batch one new/two expanded
+limit/homing scenarios; cumulative gate still pending.
+
+All five individual jobs39804789709 now terminal success for b473a27/68eba79.
+Verified locked coverage17,249/17,684 lines97.54%,12,006/13,754 branches87.29%,
+4,127/4,112 clean/15 known/no failed/skipped. Badges/known-gap summary refreshed
+435 raw uncovered lines. Newer39807024328 source passed,coverage/compilers live.
+
+# Excluded rotary-limit interrupt boundary - 2026-10-22
+
+Extended existing8-axis rotary hard-limit setting case beyond metadata: invoke
+public limit IRQ handler with empty signal and excluded rotary min/max mask40.
+Verify last-event snapshot, state, realtime flags/alarm and abort flag unchanged,
+while enabled nonrotary mask215 and driver enable remain. Focused ASan/UBSan
+1/1 passes0.27s after adding the required state_machine declaration include.
+Targets machine_limits93-94 via valid registered settings, no source edits or
+private-state injection. Existing hard-limit reset tests retain enabled-axis
+positive coverage. Count remains4,129, no new allowances. Two local limit cases
+now extend existing scenarios since publishedd0b2f90; batch full gate deferred.
+
+# Unhomed travel-limit boundary - 2026-10-22
+
+Extended partial-homing clipping test with initial unhomed calls, both endpoint-
+only and positioned travel API. All target coordinates and caller position remain
+unchanged; existing homed-X-only clipping assertions remain. Focused ASan/UBSan
+1/1 passes0.31s. Targets machine_limits842 through supported installed callback,
+no new fixture/CORE edits/allowances. Count remains4,129; keep local for batch.
+
+Zero locate feed rate after successful search has ambiguous reference semantics:
+source clears cycle axis before final reference assignment but merges previous
+homed mask. Recorded exact concern in TODO rather than inventing expected final
+coordinates or registering an unsupported failure. No runtime defect claimed.
+
 # Modbus/startup batch full validation - 2026-10-22
 
 Full4,129-case ASan/UBSan build/test/strict passes(all0):4,114 clean plus15
