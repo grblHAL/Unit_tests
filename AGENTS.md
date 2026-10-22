@@ -13,6 +13,14 @@ Terje alone fixes CORE: never modify, commit, push or open PRs for firmware.
 - Commit related batches; the old commit-per-test rule was revoked.
 - Use practical public parser/realtime/driver workflows, valid startup and
   observable results. Maintain separate cases and useful shared fixtures.
+- Prioritize obvious bugs and uncovered reachable paths. Do not add extra tests
+  merely for confidence in already-covered behavior or to inflate test counts.
+  Check existing fixtures/configurations first; relocate generic cases out of a
+  broken feature build when a valid supported configuration exercises the same
+  contract. Batch source review/authoring across substantial executable regions;
+  use focused runs for uncertain behavior and one cumulative delivery gate.
+  Report source-matched covered-line/branch deltas at substantial checkpoints;
+  case counts alone are not evidence of coverage progress.
 - Author substantial groups; focused checks while authoring, one full local
   sanitizer/strict gate and one hosted check per useful delivery boundary.
   Do not repeatedly rerun unchanged checks, generators or hosted jobs.

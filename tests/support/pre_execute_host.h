@@ -1,5 +1,5 @@
 #pragma once
-#include "support/cutter_parser_host.h"
+#include "support/motion_program_host.h"
 #include "state_machine.h"
 
 static unsigned pre_execute_calls;
@@ -22,8 +22,16 @@ static status_code_t observe_pre_execute(modal_groups_t *commands, parser_state_
 }
 static inline void prepare_pre_execute(void)
 {
-    prepare_cutter_parser();
+    prepare_motion_program();
     settings.arc_tolerance = .02f;
     grbl.on_pre_gcode_execute = observe_pre_execute;
     state_set(STATE_IDLE);
+}
+
+static inline status_code_t pre_execute_block(const char *text)
+{
+    char block[128];
+    CHECK(strlen(text) < sizeof(block));
+    strcpy(block, text);
+    return gc_execute_block(block);
 }

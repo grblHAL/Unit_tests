@@ -4,7 +4,7 @@ Full supported CORE line/branch coverage remains ACTIVE and unproven. Confirmed
 CORE defects are expected regressions, not reasons to stop independent coverage.
 This checkpoint supersedes historical snapshots.
 
-- Local branch coverage-batch-72, draft PR26; 4,101 registered cases /99 additions
+- Local branch coverage-batch-72, draft PR26; 4,102 registered cases /100 additions
   beyond merged upstream. No CORE changes or PR merges.
 - Local next-group checkpoint: five new public virtual-feed/motion cases pass
   ASan/UBSan and strict summary in0.48s. Tests exercise the exact
@@ -18,6 +18,28 @@ This checkpoint supersedes historical snapshots.
 - Old PARTIAL map reviewed for the next group: top settings candidates overlap
   current capability/MPG/homing/description tests or documented unexposed metadata
   paths. Do not treat that old map as proof of absent tests or current gain.
+- User steering: optimize for obvious bugs and uncovered reachable paths, not
+  extra confidence cases or test-count growth. Author substantial groups before
+  a combined build; focused execution only resolves uncertain behavior. Report
+  source-matched line/branch deltas rather than treating raw case counts as gain.
+- Existing cumulative recovery gate completed before the latest hook changes:
+  4,043 buildable ASan/UBSan cases,4,027 clean,15 known,1 unsettled alarm-contract
+  failure. Build failed only the known cutter target; strict remains red. Evidence:
+  batch72-recovery-delivery.xml /delivery.log /delivery-strict.log and build.log.
+  This gate is recorded, not repeated for every subsequent small authoring group.
+- Concrete hook ownership bug confirmed: a rejected MSG block loses its CORE
+  allocation although the prior cut completes80 motor steps and modal state is
+  preserved. Correct free-count assertion is a named WILL_FAIL with a dated
+  KNOWN_BUGS entry. Probe teardown reclaims the orphan after observing CORE's
+  zero frees; no sanitizer suppression or firmware patch.
+- Four existing generic pre-execution hook tests moved from cutter_comp to the
+  working lathe_ngc configuration and use a generic motion fixture. Assertions
+  remain; no duplicate scenarios added. Those four plus the new ownership case
+  pass ASan/UBSan/strict5/5 in0.52s (four clean,one known). Evidence:
+  batch72-plugin-hook.xml /strict.log; raw failure is batch72-plugin-hook-raw.xml.
+  The hook itself is now executable despite cutter failure, reducing unavailable
+  registrations from58 to54. These changes are local, outside the last cumulative
+  and hosted gates; no new coverage percentage is claimed.
 - Added paired real-protocol WHILE allocation tests. No-fault macro/sender
   reopening control passes; injected loop-expression allocation failure leaves
   the named file current at actual EOF after flow metadata was cleared. An EOF

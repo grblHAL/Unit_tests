@@ -70,3 +70,7 @@ endif()
 if(TEST ngc_flowctrl.macro_while_expression_allocation_failure_returns_to_sender_and_retries)
   set_tests_properties(ngc_flowctrl.macro_while_expression_allocation_failure_returns_to_sender_and_retries PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+if(TEST lathe_ngc.pre_execute_rejection_releases_core_message_and_preserves_queued_motion)
+  set_tests_properties(lathe_ngc.pre_execute_rejection_releases_core_message_and_preserves_queued_motion PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

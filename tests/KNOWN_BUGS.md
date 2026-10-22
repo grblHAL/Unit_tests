@@ -249,3 +249,30 @@ redirect unwinding with flow reset before discarding the metadata needed by the
 error/EOF handlers, preserving parent error propagation. Keep the regression and
 control, remove its allowance and this entry when clean source passes both plus
 related macro-loader/scope tests under sanitizers.
+
+## Pre-execution plugin rejection loses a CORE-allocated message
+
+**Confirmed:** 2026-10-22, clean Terje fab8d1c248990f53f13a444018fbb3ee353061dd.
+A normal MSG comment allocates a message before the public on_pre_gcode_execute
+hook. [gcode.c3983-3984](https://github.com/terjeio/grblHAL_core/blob/fab8d1c248990f53f13a444018fbb3ee353061dd/gcode.c#L3983-L3984)
+returns the plugin status directly. The message has not reached planner ownership,
+and the hook API receives no message pointer. A rejected block therefore loses
+its allocated message while correctly preserving previously queued motion.
+
+**Regression:** [message ownership after rejection](cases/lathe_ngc/pre_execute_rejection_releases_core_message_and_preserves_queued_motion.c).
+The supported LATHE_UVW_OPTION/NGC expression build executes the shared hook
+without the currently broken cutter configuration. One tracked allocation is
+observed around the rejected block; after the prior cut finishes at80 motor
+steps, CORE has freed zero messages. Probe teardown reclaims only the observed
+orphan after recording the result, avoiding a secondary leak diagnostic without
+suppressing sanitizers or changing the failing ownership assertion.
+
+Four existing generic hook tests were relocated from cutter_comp to lathe_ngc
+and use a generic motion fixture, preserving their assertions instead of adding
+duplicates. They pass unhandled, consumed and rejected-block controls. Raw
+ASan/UBSan evidence: batch72-plugin-hook-raw.xml. One named WILL_FAIL/known_bug
+allowance is in known_bugs.cmake. **Suggested fix for Terje (not applied):**
+release a still-owned message on the hook's early-return path, and preserve
+normal parser error cleanup. Retain the regression/controls; remove its allowance
+and this entry when clean source frees the message and passes related parser,
+planner and message-ownership sanitizer tests.
