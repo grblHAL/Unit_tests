@@ -6452,3 +6452,25 @@ both artifact source/harness/filter locks and7 coverage stage exits verified.
 New covered lines machine_limits206/524/527,motion_control1181. README/known-gap
 snapshot updated. Newer0522e4e run39834732774 stilllive at inspection; current
 ownership/I/O batch needs its own exact-head hosted validation before readiness.
+
+
+### 2026-10-22 - real G76 interruption batch
+
+Five new registered encoder/physical-motor workflows total4,177: sender STOP
+during first synchronized cut cancels remaining passes and unread G1Z-5, stops
+spindle and permits next sender move; RESET during cut immediately stops pulses,
+marks position lost and prevents later passes; idle reset before entry taper,
+after queued entry taper and after queued main cut prevents following stages
+without falsely marking position lost. Exact radial/axial steps, encoder starts,
+spindle/coolant shutdown and reset callbacks checked via normal realtime APIs.
+Shared thread_reset_motion fixture installs mandatory coolant/reset callbacks;
+initial missing-callback ASan fault was a fixture defect and was repaired.
+No CORE defect/exception/sanitizer allowance added. Full build/ASan/UBSan/strict
+all0:4,177 in59.96s,4,158 clean,19 known,0 failed/skipped. Logs
+batch72-thread-interruptions-*. Fresh CORE master remains clean68eba79.
+All5 individual jobs for39834732774 at0522e4e now terminalsuccess; both downloaded
+source/harness/filter locks and7 coverage stage exits0 verified.4,169 cases,
+4,151clean/18known.17,323/17,684 lines97.96%,12,131/13,754 branches88.20%,
+361 raw uncovered. New lines RTCP308/363,flow657/773/774/779. Badges and known-gap
+snapshot updated. Ownership/I/O run39835932809 remainslive at inspection;
+thread group needs its own exact-head hosted report before coverage attribution.
