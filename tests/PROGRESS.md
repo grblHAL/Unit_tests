@@ -1,3 +1,37 @@
+# Homing refusal/backlash wait cumulative gate - 2026-10-22
+
+Full4,156-case ASan/UBSan passes74.17s:4,140 clean,16 known,0 failures/skips.
+Build/test/strict all0 in batch72-homing-refusal-gate.json. Later-axis driverrefusal
+with earlieraxis retained,publicretry and refined firstpoll backlash reset validated
+together. No new allowances/CORE edits. CORE remote still68eba79 andclean.
+
+Allfive individual jobs on39824927291 at6a8d34f nowterminalsuccess. Prior locked
+artifacts rechecked:17,300/17,684lines97.83%,12,111/13,754branches88.05%,
+384 raw uncovered lines. UpdatedREADME/known snapshot.277db12 run39826209629
+coverage/source success,compilerspending;2b0cc0c run39826891832 running. Current
+localgroup delivery/hosted gainpending. Sender homing status question retainedTODO.
+
+# Backlash full-queue abort event boundary refinement - 2026-10-22
+
+Existing reset scenario now uses long100mm leading cut and requests actual reset
+on first service poll,processed at compensation-space wait. Source/trace review:
+cycle-start transfers first planner block to stepper,freeing slot even for long
+move; secondpoll reset was too late and allowed compensation append. Firstpoll
+reset processes before transfer,returnsAborted,keeps exact previous lastblock
+(no compensation append),no pulses/physical movement,onecallback. Focused sanitizer
+passes0.32s. Targets motion_control163; measured gain stillpending. No new cases,
+allowances or CORE edits. Grouped with split-rate provider failure for cumulative gate.
+
+# Later split-rate homing provider refusal and recovery - 2026-10-22
+
+New public homing API case requests configuredXYZ with unequal rates; X completes
+110pulses/homedX,driver refusesY seek rate,API returnsUnhandled and failure callback;
+YZ emit0,queueempty,Idle/noabort. Provider recovery and public$HY succeeds with
+150Ypulses,homedXY;Xunchanged,Zneverstarted. Targets machine_limits587. Focused
+sanitizer passes0.35s. Initial$H return expectation corrected after source review:
+system.go_home deliberately mapsUnhandled toOK,so direct exportedhomingAPI used
+for status assertion. No new defect/allowance claimed. Total4,156,CORE unchanged.
+
 # Y/Z autosquare cumulative gate - 2026-10-22
 
 Full4,155-case ASan/UBSan suite passes71.20s:4,139 clean,16 known,0 failures

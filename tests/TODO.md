@@ -939,3 +939,14 @@ Existing close_restores_input checks the handoff and file close count. No suppor
 file workflow identified that leaves this reader installed without a file. Keep raw
 coverage; do not reinstall a detached reader or clear its file solely for coverage.
 Revisit if a plugin-supported stream replacement workflow establishes reachability.
+
+
+## Homing driver refusal and sender status mapping - 2026-10-22
+
+CORE68eba79 system.go_home maps Status_Unhandled to Status_OK. A registered
+homing feedrate provider returning0 for laterY in split-rate XYZ homing leaves
+X homed, Y/Z unmoved, calls completion(false), and returns Unhandled from
+mc_homing_cycle, yet $H returnsOK without alarm. Confirm intended driver-provider
+contract and sender-visible error policy before claiming a core defect or selecting
+a different status. Passing API regression preserves partial-homing and retry
+behavior in split_rate_homing_stops_after_later_driver_refusal_and_allows_retry.
