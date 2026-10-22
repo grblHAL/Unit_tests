@@ -18,6 +18,15 @@ goal is ACTIVE in the current chat. Passing checkpoints do not complete it.
   build-asan/batch72-settings-recovery.xml. No exceptions or shared-header changes.
   Local total4,077 /75 additions; four locally validated cases beyond PR26's head.
   Settings metadata reachability audit in TODO avoids forcing dormant dispatches.
+- Local sleep-parking group: four ASan/UBSan cases pass0.37s, including manual
+  idle $SLP, timed completed-hold sleep, timed open-door sleep after parking, and
+  cycle start during fast sleep retract. Existing timer/parking fixtures drive
+  real motor steps; coolant-off callbacks require the actual parking height,
+  X never resumes, and already parked motion is not repeated. No exceptions.
+  Evidence: build-asan/batch72-sleep-parking.xml and its build log. This exercises
+  the public sleep/parking and interrupted-resume paths left in the partial map.
+  Current local total4,081 /79 additions: eight focused-validated cases beyond
+  PR26's4,073/71 checkpoint. No new full-suite or hosted/coverage claim.
 - Branch coverage-batch-72 preserves all eight original unpushed commits.
   Reconciled upstream/master4d73b8b (merged PR24/25) in28083db; no duplicate
   merged dependency changes remain. Existing handoff edits were preserved inda34ddf.
