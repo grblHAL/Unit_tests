@@ -12,6 +12,12 @@ coverage goal remains ACTIVE; a passing test group or draft PR is not completion
   cumulative/hosted checkpoint. No new exceptions or percentage claim. The only
   CORE fault-axis caller is range-guarded; TODO records that remaining fallback
   reachability without forcing unrelated pin values. RGB-clear remains deferred.
+- Reporting dependency135e8f5 is now integrated into coverage-batch-72; PR27
+  remains an independent draft against upstream. Runtime PROGRESS/TODO evidence
+  was preserved while resolving documentation-only merge conflicts. The current
+  summary now displays header rows; CI triggers, source filters and XML metrics
+  are unchanged. Integrated Python helpers59/59 PASS in5.481s; evidence
+  build-asan/batch72-integrated-reporting-tests.log.
 - Separate reporting draft PR27 is pushed/attached:
   https://github.com/grblHAL/Unit_tests/pull/27, coverage-header-inventory135e8f5.
   Live filter already includes .h files, but the existing summary hides them and
@@ -19,7 +25,8 @@ coverage goal remains ACTIVE; a passing test group or draft PR is not completion
   rows with no XML children, and clarifies declaration-only headers. All58 helper
   tests pass5.390s; archived-PARTIAL output shows six header rows /58 of114 files
   without changing metrics or status. Runtime work remains on coverage-batch-72;
-  PR27 is not merged/integrated here, and no new runtime validation is claimed.
+  PR27 is not merged upstream; its dependency is integrated here. No new
+  runtime validation is claimed by this reporting-only merge.
   Evidence: build-asan/header-inventory-python-tests.log and
   header-inventory-review/summary.md, validation.json. Reconcile PR27 before the
   next useful hosted report; do not redo the stale .c-only-filter TODO.

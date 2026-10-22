@@ -238,23 +238,21 @@ production change or source exclusion was added for this observation.
 
 ## Coverage inventory: inline/header implementations
 
-**Rechecked:** 2026-10-22. The core coverage_filter and README gcovr example
-already include .c and .h files. Archived PARTIAL c9941ca/CORE7a6a432 measures
-six headers, including rgb.h and stepper2.h; the former .c-only scope note was stale.
+**Rechecked:** 2026-10-22. The current core coverage_filter and README gcovr
+example already include both .c and .h files. Archived PARTIAL run39373002337
+(c9941ca/CORE7a6a432) measures six headers, including rgb.h and stepper2.h.
+The previous .c-only scope note was stale.
 
-The current runtime branch's detailed summary still inventories only .c files,
-hiding those header rows and reporting58 measured files against52 C sources.
-Independent reporting PR27 fixes this on coverage-header-inventory135e8f5:
-https://github.com/grblHAL/Unit_tests/pull/27. All58 helper checks pass; an
-archived-PARTIAL re-render shows all six header rows and58 of114 C/header files,
-with original XML metrics and PARTIAL status unchanged. This is not a fresh
-coverage measurement. Until that fix is merged/integrated, inspect Cobertura
-XML/HTML for header gaps rather than trusting the incomplete summary inventory.
+The detailed summary now inventories C sources and headers together, so measured
+header line/branch gaps are visible and its file count uses the same file types.
+Uninstrumented headers may contain only declarations; their absence is not proof
+of missing executable tests. No coverage filters, XML metrics or runtime cases
+were changed by this reporting repair. The archived report remains PARTIAL.
 
-Uninstrumented headers may contain only declarations. Full-supported coverage
-still requires checking executable inline bodies and conditional code not emitted
-in the tested configurations; do not exclude them or equate covered files with
-complete CORE line/branch coverage.
+Full-supported coverage still requires reviewing executable inline bodies and
+conditional code that are not emitted in the tested configurations. Retain them
+in the source inventory; never equate a green suite or a covered file with full
+CORE line/branch coverage.
 
 ## Hide pullup-disable settings for protected board inputs
 
@@ -316,11 +314,11 @@ C:/Users/User/Documents/Codex/p12/rgb-mask. This is a host profiler/path issue,
 not nine untested RGB helpers or new core faults. Earlier local header totals
 may have the same limitation and must not be treated as authoritative.
 
-The header filter is already inclusive. Reporting PR27 corrects the detailed
-inventory independently of the runtime test batch; it does not fix Windows
-profile-path collection. Use hosted Linux results for authoritative totals and
-keep failed-execution measurements PARTIAL. Do not suppress gcovr errors or
-exclude real code to claim full CORE coverage.
+Header filters are already inclusive; the reporting-only inventory correction
+is separate from the runtime test batch. It does not repair Windows profile-path
+collection. Use hosted Linux results for authoritative totals and keep failed-run
+measurements explicitly PARTIAL. Never suppress gcovr errors or exclude real code
+to claim full CORE coverage.
 
 
 ## Compatibility-level coordinate availability documentation
