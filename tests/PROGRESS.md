@@ -1,3 +1,35 @@
+# Eight-scenario recovery/validation delivery - 2026-10-22
+
+Complete4,120-case ASan/UBSan gate passes62s:4,105 clean,15 documented
+reproductions,0 failed/skipped. Build/test/strict all0 in
+build-asan/batch72-eight-boundaries-gate.json; delivery XML/strict.log retain detail.
+Five added tests and three extended scenarios beyond publishedec17fcb; no new
+allowances, host variants, source exclusions or CORE edits.
+
+Previously local work now included: metadata registration's nine invalid-input
+boundaries and corrected retry; deferred alarm across E-stop/reset/two unlocks;
+G66 allocation failure/queued-cut retry; public substitution/comment null guards.
+This final group extends unknown-group availability lookup and expression-enabled
+malformed-block rejection, preserving scope/queue and following160step endpoint.
+
+Two new legacy compatibility2/10 checksum cases reuse the existing boot recovery
+fixture. They verify a valid changed saved record, damage only its CRC while
+keeping the version valid, and check defaults, sender error/query output and
+repaired persistent checksum. Four old/new fault controls plus the group lookup
+pass5/5; parser/basic guard group passes7/7 strict. The earlier counter question
+is resolved: version repair occurs in NVS buffering before settings_init, whereas
+CRC damage reaches the later recovery branch. No attribution bug is claimed.
+
+Hosted39792966993 is FULLY successful at ec17fcbb838f1a17054eccf2b6049e34122292ed /
+CORE68eba7906ba60d66c8b55c4adc90cd5e85b5a828, exact lock/filter verified.
+Individual job endpoints confirm source/coverage/Clang/GCC/diagnosis terminal
+success; listing responses had stale states.4,115 executed,4,100 clean,15 known,
+0 failed/skipped. Measured17,214/17,684 lines97.34%,11,958/13,754 branches86.94%,
+470 uncovered lines. Same-source prior delta+16 lines/+21 branches. Badges and
+known-gap summary now point to this fully verified baseline. Current additions
+have no hosted measurement yet. Push once on PR26 and dispatch one exact-head
+68eba79 checkpoint; retain draft until its complete matrix passes.
+
 # Local macro-allocation and public null-guard follow-up - 2026-10-22
 
 The previous turn expanded registration guards and added deferred-alarm boot

@@ -808,16 +808,22 @@ Further registration branch coverage can extend the same scenario for missing
 persistence/getter callbacks and invalid group/description metadata, rather than
 adding duplicate aliases for each boolean guard.
 
-## Legacy recovery report counter needs attribution review before more tests
+## Legacy version repair and checksum repair are separate startup paths
 
-Exact68eba79 coverage39788587225 reports settings.c3783 as0 hits, but existing
-boot_compat_2 and boot_compat_10 unrecognized-version tests already exercise
-persisted-version rejection, restoration, error reporting and sender readback.
-Both pass in its full results. Do not add another equivalent startup test to
-chase that counter. Investigate per-configuration gcov attribution/collection
-and the legacy harness's nonlocal exit before asserting what the0 represents.
-Keep the raw counter and successful runtime evidence separate; no exclusion or
-coverage adjustment is justified by this discrepancy.
+**Resolved source distinction:** 2026-10-22, clean68eba79. The existing legacy
+unrecognized-version tests exercise nvs_buffer_init's early repair when byte0
+does not match SETTINGS_VERSION. That restores the record before settings_init
+reads it, so it cannot cover the later settings.c3783 recovery report call.
+This is not evidence of a gcov attribution error.
+
+New boot_compat_2/boot_compat_10 checksum cases instead store a valid changed
+calibration and valid version marker, verify the good record, corrupt one CRC
+byte and verify checksum rejection. The normal boot then restores defaults,
+reports the read failure and setting values, and persists a valid repaired
+record. Shared fixture reuses the existing version-repair assertions; both old
+and new fault types pass grouped sanitizers/strict. No private settings call or
+alternate implementation is used. The next hosted report must establish the
+measured line gain; current source review alone is not a percentage claim.
 
 
 ## Tool-table absence guards implied by earlier parsing
