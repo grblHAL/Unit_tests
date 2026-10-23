@@ -1,5 +1,5 @@
 #include "fs_embedded.h"
-#include "check.h"
+#include "support/mount_result_host.h"
 #include <string.h>
 static const embedded_file_t first = {.name = "first", .size = 5, .data = {'a','b','c','d','e'}};
 static const embedded_file_t *files[] = {&first, NULL};
@@ -9,13 +9,13 @@ static const embedded_file_t last = {.name = "last", .size = 1, .data = {'q'}};
 static const embedded_file_t *final_files[] = {&last, NULL};
 int main(void)
 {
-    fs_embedded_mount(files);
+    CHECK_MOUNT_RESULT(fs_embedded_mount(files), true);
     vfs_file_t *file = vfs_open("/embedded/first", "r");
     CHECK(file != NULL);
     char data[6] = {0};
     CHECK(vfs_read(data, 1, 2, file) == 2 && memcmp(data, "ab", 2) == 0);
-    fs_embedded_mount(more);
-    fs_embedded_mount(final_files);
+    CHECK_MOUNT_RESULT(fs_embedded_mount(more), true);
+    CHECK_MOUNT_RESULT(fs_embedded_mount(final_files), true);
     vfs_dir_t *dir = vfs_opendir("/embedded");
     CHECK(dir != NULL);
     vfs_dirent_t *entry = vfs_readdir(dir);

@@ -1,3 +1,124 @@
+# Combined RAM/spindle/delta delivery gate passed - 2026-10-23
+
+Full4,336 ASan/UBSan cases pass with strict summary:4,317 clean/19 documented
+regressions reproduced/0 failed/skipped and no recovering sanitizer allowances.
+Evidence: batch74-ram-spindle-delta-delivery-{results.xml,tests.log,summary.log}.
+No second full run was needed. Eighty reporting helper checks already passed
+on the final Python changes, including the requested visible workflow summary.
+CORE remains unmodified51b58594. All five new cases and four strengthened API
+cases are included. Exact fatal matchers preserve two correct RAM shrink
+regressions; ordinary next-upload recovery passes. Targeted profiles demonstrate
+ten missing baseline lines, but global coverage remains the prior hosted result.
+
+Commit/push this coherent cross-module batch on74, then request one hosted run
+pinned to51b58594 after duplicate/rate checks. Never restart or duplicate an
+accepted/live exact-head run. New workflow Results summary will display coverage
+and clean/known/failure counts; no PR merge or CORE patch is authorized.
+
+# Cross-module supported-gap batch ready for delivery gate - 2026-10-23
+
+Added a normal fine +/-1% spindle override scenario using registered paired PWM
+providers, native public0.5s delay and M3S6000->M3S1000 job commands. Both changes
+immediately reach1010/1000RPM without stale delayed writes or secondary-spindle
+output. No scheduler saturation, fabricated callback timing or active-pointer
+mutation. Sanitizer case passes0.28s, batch74-fine-override-results.xml.
+Public delay was configured before M3, respecting setting writes shutting down
+spindles;0.1s was correctly rejected as below the public minimum, not a CORE bug.
+
+A real-boot/homing delta scenario sets public cuboid flags2, validates an interior
+point, rejects +X/-Y points outside the configured cuboid, then accepts the
+interior again with unchanged actual motor counters/position. No forced homed
+bits. Sanitizer case passes0.30s, batch74-delta-cuboid-results.xml.
+Isolated non-sanitized profiles confirm spindle_control636 and delta599; source,
+case hashes and baseline39986380812 are recorded in
+batch74-spindle-delta-line-proof.json. With eight RAM lines, ten baseline raw
+gaps now have direct local runtime evidence; no aggregate percentage inferred.
+
+Accumulated batch: five new cases across RAM/spindle/delta plus four strengthened
+mount/settings cases and the exact memory-diagnostic reporting change. Eighty
+reporting helpers pass, including compact fatal output and aggregate visible
+coverage/failed-test summaries. One combined full sanitizer/strict pre-push gate
+now validates the shared reporting change and this cross-module batch. No source
+edits or repeated full run per individual case. Existing hosted39986380812 is
+terminal success; its98.39/90.35 remains the measured global baseline.
+
+# Complete new RAM shrink branches covered locally - 2026-10-23
+
+Added one ordinary low-memory shrink/recovery scenario using the existing scoped
+realloc fixture: shrink returns-1, handle closes cleanly, consumed job is removed,
+and the next upload reads back byte-for-byte with correct EOF. No data-retention
+policy is imposed on the failed shrink. Sanitizer case passes0.30s; evidence
+batch74-ram-shrink-recovery-results.xml. Isolated non-sanitized profiling also
+passes and reaches261/262/263, complementing the five lines from the two correct
+prefix regressions. All eight baseline missing RAM-file lines now have direct
+local workflow evidence in batch74-ram-prefix-line-proof.json; no global gain is
+claimed until a future coherent batch is hosted.
+
+Current-source routing review also accounts three unregistered/TBA Modbus
+diagnostics lines and two dormant null-spindle RPM callback lines, without
+private calls, invalid IDs or removing code from coverage. Full-source inventory
+retains those lines and keeps historical audits separate.
+
+This local group has three new RAM cases plus four strengthened mount/settings
+cases and tested exact-diagnostic reporting. Keep it local while accumulating
+further work; no full gate/push/hosted run for these three cases alone.
+CORE remains clean51b58594; prior hosted39986380812 remains fully successful.
+
+# Exact-source coverage measured; independent RAM routes validated - 2026-10-23
+
+Hosted39986380812 is fully successful: source/GCC/Clang/coverage/diagnosis all
+terminal success at2dc0101/CORE51b58594, matching locks and all seven stages0.
+17,454/17,740 lines98.39%;12,490/13,824 outcomes90.35%;4,331 cases4,315 clean,
+16 known,0 failed/skipped. README/KNOWN_BUGS snapshots refreshed only after this
+whole-run success. Full raw inventory now accounts286 lines/1,334 outcomes.
+Historical CORE50f audits are explicitly separate; source changes move lines and
+denominator, so no old/new line-number-set gain claim is made.
+
+Two local RAM shrink routes now share correct prefix/lifetime assertions:
+committed file and pending upload. Both exact sanitizer wrappers and strict
+summary pass0.44s (batch74-ram-prefix-pair-results.xml); correct assertions after
+the fatal read cannot execute. Isolated unsanitized coverage proof confirms five
+currently missing lines247/256/257/258/259 execute; each executable exits1 at
+retained-prefix assertion. Exact case/helper hashes and source/report pins:
+build-asan/batch74-ram-prefix-line-proof.json. No new aggregate percentage claim.
+
+A prospective normal-mode M6 jog-cancel variant was withdrawn as duplicate:
+boot.cancelled_manual_tool_jog_returns_to_wait_then_completes_acknowledged_change
+already exercises that public cancellation transition. The exploratory fake UART
+also lacked its mandatory cancel_read_buffer callback; its fault is not a CORE
+bug. Remaining state-machine line502 is deferred-alarm emission, not the
+already-covered return-to-tool-wait branch. Do not add duplicate cancellation
+cases or force a pending alarm merely to cover it. All existing tests retained.
+CMake registrations regenerated after withdrawal:4,333 current cases, no stale
+exploratory registration. Continue a substantial cross-module batch; no new
+hosted dispatch/full local gate.
+
+# RAM retained-prefix regression and public return contracts - 2026-10-23
+
+One new ordinary RAM upload/shrink/seek/read regression confirms a five-byte
+ASan overread in fs_read184 after fs_truncate256 on clean CORE51b58594. Correct
+assertions retained with one exact named WILL_FAIL/known_crash wrapper and dated
+KNOWN_BUGS entry; no CORE edits. Unsanitized coverage build independently exits1
+at the retained-prefix memcmp assertion, not a fixture or startup failure.
+Raw/classified XML: batch74-ram-shrink-{raw,known}-results.xml; classified strict
+summary passes with one known reproduction, zero unexpected failures/skips.
+The matcher requires exact memcpy caller and allocation frames; compact output
+retains them within CTest limits and full raw output remains in the log.
+Changed reporting helper tests77 pass (batch74-ram-shrink-reporting-tests.log).
+
+Strengthened three existing mount/retry lifecycle cases for new bool results;
+source detection retains older void-API compatibility. Extended existing $60
+persistence test to all four new action values. All four affected sanitizer
+cases pass0.35s in batch74-mount-actions-results.xml; no duplicate cases added.
+These local changes are after pushed2dc0101; keep accumulating a substantial
+cross-module batch before another full gate/push/hosted checkpoint.
+
+Hosted39986380812 coverage job passed at exact2dc0101/CORE51b locks, all seven
+report stages0,4,331 cases=4,315 clean/16 known/0failed/skipped. GCC/Clang still
+running when inspected; whole run is not yet verified successful. Artifacts
+fetched for next-work ranking; no README badge refresh or old-source line-number
+gain comparison. Coverage denominator changed with upstream source.
+
 # Source51b delivery validation complete - 2026-10-23
 
 All three scoped fixture repairs pass sanitizer execution0.40s and strict summary

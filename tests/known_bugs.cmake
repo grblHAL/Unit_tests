@@ -117,3 +117,18 @@ endif()
 if(TEST multi_spindle.broadcast_spindle_start_with_m48_restores_both_speed_overrides)
   set_tests_properties(multi_spindle.broadcast_spindle_start_with_m48_restores_both_speed_overrides PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Ordinary nonzero RAM-file shrink loses its allocation base, CORE51b58594.
+if(TEST fs_ram.truncate_committed_file_to_nonzero_length_preserves_prefix)
+  set_tests_properties(fs_ram.truncate_committed_file_to_nonzero_length_preserves_prefix PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+  if(ENABLE_SANITIZERS)
+    set_tests_properties(fs_ram.truncate_committed_file_to_nonzero_length_preserves_prefix PROPERTIES LABELS "known_bug;known_crash")
+  endif()
+endif()
+
+if(TEST fs_ram.truncate_pending_upload_to_shorter_nonzero_length_preserves_prefix)
+  set_tests_properties(fs_ram.truncate_pending_upload_to_shorter_nonzero_length_preserves_prefix PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+  if(ENABLE_SANITIZERS)
+    set_tests_properties(fs_ram.truncate_pending_upload_to_shorter_nonzero_length_preserves_prefix PROPERTIES LABELS "known_bug;known_crash")
+  endif()
+endif()

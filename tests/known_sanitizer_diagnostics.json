@@ -1,1 +1,38 @@
-[]
+[
+  {
+    "kind": "fatal_asan",
+    "test": "fs_ram.truncate_committed_file_to_nonzero_length_preserves_prefix",
+    "source": "core/fs_ram.c",
+    "lines": [
+      184
+    ],
+    "function": "fs_read",
+    "message_pattern": "heap-buffer-overflow",
+    "interceptor": "memcpy",
+    "allocation_frames": [
+      {
+        "source": "core/fs_ram.c",
+        "line": 256,
+        "function": "fs_truncate"
+      }
+    ]
+  },
+  {
+    "kind": "fatal_asan",
+    "test": "fs_ram.truncate_pending_upload_to_shorter_nonzero_length_preserves_prefix",
+    "source": "core/fs_ram.c",
+    "lines": [
+      184
+    ],
+    "function": "fs_read",
+    "message_pattern": "heap-buffer-overflow",
+    "interceptor": "memcpy",
+    "allocation_frames": [
+      {
+        "source": "core/fs_ram.c",
+        "line": 256,
+        "function": "fs_truncate"
+      }
+    ]
+  }
+]

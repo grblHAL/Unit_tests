@@ -26,6 +26,38 @@ in [storage write-failure policy](TODO.md#storage-write-failure-policy), includi
 its observations, existing test exceptions and cleanup links. It is not a
 settled requirement to retry physical writes a specific number of times.
 
+## RAM nonzero truncate loses the retained file allocation
+
+Confirmed2026-10-23 on clean CORE `51b58594ce467e9c4b103fb93d1ca121e43cd15c`.
+An ordinary public VFS sequence uploads `G1X1\nG1X2\n`, closes/reopens the file,
+shrinks it to five bytes, confirms the reported size, seeks to zero and reads the
+retained prefix. Shrink succeeds and size is correct, but the read starts just
+past the five-byte allocation. ASan reports a five-byte heap-buffer-overread in
+`fs_read` at `core/fs_ram.c:184`, allocated by `fs_truncate` at256.
+
+Regression: [retained-prefix workflow](cases/fs_ram/truncate_committed_file_to_nonzero_length_preserves_prefix.c).
+The [pending-upload variant](cases/fs_ram/truncate_pending_upload_to_shorter_nonzero_length_preserves_prefix.c)
+shrinks before closing the write handle, covering the normal pending-buffer flush
+branch as well as committed-file shrink. Each case has its own exact allowance.
+Correct prefix, EOF, close and consumed-file assertions remain; the fatal
+sanitizer reproduction cannot execute assertions after the read. Two named
+WILL_FAIL allowances and sanitizer-only known_crash wrappers accept only this memcpy
+read-overrun, exact CORE caller/source line and shrink allocation frame.
+Other faults, changed frames, missing diagnostics and a repaired executable
+remain failures requiring allowance cleanup. Raw evidence:
+`build-asan/batch74-ram-shrink-raw-results.xml`; classified evidence:
+`build-asan/batch74-ram-shrink-known-results.xml`.
+
+Cause: the shrink branch first retains the realloc base, then overwrites both
+`data` and `pos` with `data + length` at258. Subsequent public seek/read uses that
+one-past-end pointer as the allocation base. No private state or invalid handle
+is injected. This does not claim executed motion or a sender-specific effect.
+
+Suggested repair for Terje: retain the allocation base and keep cursor/remaining
+length coherent after shrink. Remove this entry, named allowance, diagnostic
+manifest entry and wrapper registration when the unchanged sanitizer regression
+passes. CORE has not been edited.
+
 ## Combined broadcast M48 leaves both spindle speed overrides disabled
 
 **Confirmed:** 2026-10-23, clean CORE `50f38659db7b22f4689f3654df2d110d992bcc95`.
@@ -112,10 +144,10 @@ They do not create synthetic CTest failures, increase test counts, exclude sourc
 or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
-**Reviewed:** 2026-10-23, clean Terje `50f38659db7b22f4689f3654df2d110d992bcc95`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39977472030)
-measures 17,426/17,714 lines (98.37%) and 12,466/13,800 branches (90.33%).
-The 288 uncovered lines include the following known gaps; this table does not
+**Measured:** 2026-10-23, clean Terje `51b58594ce467e9c4b103fb93d1ca121e43cd15c`.
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39986380812)
+measures 17,454/17,740 lines (98.39%) and 12,490/13,824 branches (90.35%).
+The 286 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable. See the complete measured
 [line/branch inventory](COVERAGE_GAPS.md) before selecting the next workflow.
 

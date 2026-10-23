@@ -1,83 +1,88 @@
 # Remaining raw CORE coverage
 
-Measured report: [run39977472030](https://github.com/petervanderwalt/Unit_tests/actions/runs/39977472030),
-harness `c9952eaacba40e69374a15a5071a273ad8336969`, CORE
-`50f38659db7b22f4689f3654df2d110d992bcc95`, filter `core/.*\.[ch]$`.
-Coverage job passed with matching source locks and all seven stages successful.
-All five hosted jobs completed successfully, including GCC, Clang and CI
-diagnosis. Whole-run terminal success was verified before refreshing badges.
+Measured report: [run39986380812](https://github.com/petervanderwalt/Unit_tests/actions/runs/39986380812),
+harness `2dc01011f6ea69101f574f6dfb38a5d6e4dc1319`, CORE `51b58594ce467e9c4b103fb93d1ca121e43cd15c`,
+filter `core/.*\.[ch]$`. Both source locks match; all seven coverage stages exit0.
+All five hosted jobs completed successfully, including GCC, Clang and diagnosis.
 
-17,426/17,714 lines and12,466/13,800 branch outcomes were covered. The table
-accounts for all288uncovered executable lines and1,334uncovered branch outcomes.
-A branch outcome can be missing on an otherwise covered line; `none` therefore
-does not mean full coverage. Counts include compiler-emitted conditions.
+17,454/17,740 lines (**98.39%**) and12,490/13,824 branch outcomes (**90.35%**)
+were covered. This table accounts for all286 raw missing lines and1,334 missing
+outcomes. Branch outcomes can be missing on otherwise covered lines.
+4,331 hosted cases:4,315 clean passes/16 known regressions/0failed/skipped.
 
-Working source is now upstream CORE51b58594 (2026-10-23). This measured table
-remains pinned to CORE50f38659 until a new matching hosted report exists. New
-source changes require renewed execution; old reachability audits are historical.
+Upstream changed source and the denominator since CORE50f. Do not count shifted
+line numbers as newly exercised code or attribute every count increase to tests.
+The delivered normal M6/door, spindle broadcast and program-end action workflows
+are included. New local RAM shrink and strengthened mount/persistence assertions
+are not included in this measured head. Three local RAM shrink scenarios exercise all eight baseline missing RAM lines:
+committed and buffered prefix reads reach247/256-259 before the known fault,
+and a failed shrink allocation with successful next upload reaches261-263.
+Isolated profiles and exact hashes are in batch74-ram-prefix-line-proof.json;
+this is not a new aggregate measurement.
 
-This is an inventory, not a claim that remaining code is unreachable. Use
-[TODO](TODO.md) for source/contract audits and [KNOWN_BUGS](KNOWN_BUGS.md) for
-correct regression assertions and exact failure allowances. Do not remove source
-from the denominator, inject private state, or add duplicate tests to clear rows.
-Check those notes and existing cases before authoring a public workflow.
-
-The measured six-case batch gained7 lines and9 branch outcomes relative to
-39969171772, with no lost lines. All five hosted jobs passed;4,326 registered
-cases yielded4,297 clean passes/29 known regressions/0 failures or skips.
-Four new local cases cover combined M48/M49 broadcasts and Normal M6 pause/
-resume, including its open-door completion interlock. M49/M6 pass; M48 has a correct documented expected failure. Isolated
-Windows profiles confirm10 previously missing lines execute. These cases are
-not included in this measured head or the global percentage.
+This inventory does not claim the remaining code is unreachable. Use [TODO](TODO.md)
+and [KNOWN_BUGS](KNOWN_BUGS.md) with current source contracts before authoring.
+Keep real code in the denominator; do not inject private states or invalid enums.
+Historical source audits below remain explicitly pinned to their older source.
 
 | Source | Uncovered lines | Missing branch outcomes | Exact executable line numbers |
 |---|---:|---:|---|
-| [core/crossbar.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/crossbar.c) | 0 | 1 | none |
-| [core/crossbar.h](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/crossbar.h) | 0 | 3 | none |
-| [core/fs_device.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/fs_device.c) | 3 | 7 | 59, 190, 192 |
-| [core/fs_embedded.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/fs_embedded.c) | 4 | 4 | 133, 135, 138, 140 |
-| [core/fs_ram.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/fs_ram.c) | 0 | 11 | none |
-| [core/gcode.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/gcode.c) | 38 | 220 | 325-326, 573, 1045, 1357-1358, 1489, 2180, 2689, 2691-2692, 2702, 2704-2705, 2718, 2720-2721, 2736-2737, 2888, 2977, 2989, 3055, 3472-3474, 3606-3607, 3919, 4260, 4291-4294, 4850, 4852, 4964-4965 |
-| [core/grbllib.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/grbllib.c) | 14 | 37 | 92, 95, 140, 144-147, 149-150, 590-594 |
-| [core/ioports.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/ioports.c) | 28 | 145 | 782, 1187, 1283-1284, 1377, 1379, 1381, 1383, 1386-1390, 1393-1394, 1396, 1398-1399, 1401, 1403-1404, 1428-1430, 1432-1433, 1550-1551 |
-| [core/kinematics/asymmetric_ganging.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/kinematics/asymmetric_ganging.c) | 1 | 4 | 254 |
-| [core/kinematics/delta.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/kinematics/delta.c) | 10 | 46 | 173, 287-288, 343, 586-587, 592, 599, 610, 673 |
-| [core/kinematics/polar.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/kinematics/polar.c) | 4 | 3 | 212, 214, 232, 234 |
-| [core/kinematics/rtcp_ac.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/kinematics/rtcp_ac.c) | 0 | 3 | none |
-| [core/kinematics/wall_plotter.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/kinematics/wall_plotter.c) | 56 | 28 | 208, 213-214, 216-227, 229, 234, 237, 239-240, 242-255, 257, 260, 262, 264-280, 283-284 |
-| [core/machine_limits.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/machine_limits.c) | 2 | 21 | 269, 502 |
-| [core/modbus.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/modbus.c) | 3 | 6 | 231-233 |
-| [core/modbus_rtu.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/modbus_rtu.c) | 3 | 41 | 241, 359-360 |
-| [core/motion_control.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/motion_control.c) | 3 | 30 | 690, 715, 1122 |
-| [core/my_plugin.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/my_plugin.c) | 2 | 0 | 26, 29 |
-| [core/ngc_expr.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/ngc_expr.c) | 11 | 13 | 115-116, 189-190, 250, 252, 292-293, 337-338, 341 |
-| [core/ngc_flowctrl.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/ngc_flowctrl.c) | 2 | 59 | 811-812 |
-| [core/ngc_params.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/ngc_params.c) | 4 | 65 | 772-773, 942, 1247 |
-| [core/nuts_bolts.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/nuts_bolts.c) | 0 | 3 | none |
-| [core/nvs_buffer.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/nvs_buffer.c) | 3 | 11 | 366, 391-392 |
-| [core/planner.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/planner.c) | 0 | 1 | none |
-| [core/probe.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/probe.c) | 0 | 2 | none |
-| [core/protocol.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/protocol.c) | 1 | 45 | 185 |
-| [core/regex.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/regex.c) | 0 | 1 | none |
-| [core/report.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/report.c) | 5 | 82 | 450-452, 1955-1956 |
-| [core/settings.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/settings.c) | 58 | 130 | 701, 703, 780-781, 839, 925, 928, 1012, 1056, 1140-1141, 1198-1199, 1340, 1350, 1506-1507, 1568, 1576, 1583, 1590, 1593-1595, 1651-1652, 1692-1693, 1899-1900, 1958-1959, 2024-2025, 2173-2175, 2177-2179, 2190-2192, 2194-2196, 2237-2239, 2245-2246, 2955, 2957, 3474-3475, 3623-3625 |
-| [core/sleep.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/sleep.c) | 0 | 2 | none |
-| [core/spindle_control.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/spindle_control.c) | 8 | 43 | 499, 503, 636, 1160-1161, 1172, 1215-1216 |
-| [core/state_machine.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/state_machine.c) | 12 | 44 | 157, 449, 502, 524-527, 614-615, 658-659, 819 |
-| [core/stepper.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/stepper.c) | 1 | 13 | 1093 |
-| [core/stepper2.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/stepper2.c) | 0 | 12 | none |
-| [core/stream.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/stream.c) | 3 | 47 | 275, 368, 614 |
-| [core/stream_file.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/stream_file.c) | 1 | 9 | 72 |
-| [core/strutils.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/strutils.c) | 0 | 15 | none |
-| [core/system.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/system.c) | 2 | 36 | 466, 468 |
-| [core/tool_change.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/tool_change.c) | 2 | 46 | 435-436 |
-| [core/utf8.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/utf8.c) | 0 | 1 | none |
-| [core/vfs.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/vfs.c) | 4 | 44 | 272, 415, 482, 779 |
-| **Total** | **288** | **1334** | |
+| [core/crossbar.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/crossbar.c) | 0 | 1 | none |
+| [core/crossbar.h](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/crossbar.h) | 0 | 3 | none |
+| [core/fs_device.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/fs_device.c) | 3 | 7 | 59, 190, 192 |
+| [core/fs_embedded.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/fs_embedded.c) | 4 | 5 | 133, 135, 138, 140 |
+| [core/fs_ram.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/fs_ram.c) | 8 | 17 | 247, 256-259, 261-263 |
+| [core/gcode.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/gcode.c) | 28 | 214 | 325-326, 573, 1043, 1367-1368, 1499, 2190, 2728, 2730-2731, 2746-2747, 2898, 2987, 2999, 3065, 3482-3484, 3616-3617, 3929, 4270, 4861, 4863, 4975-4976 |
+| [core/grbllib.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/grbllib.c) | 14 | 37 | 92, 95, 140, 144-147, 149-150, 590-594 |
+| [core/ioports.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/ioports.c) | 28 | 146 | 782, 1195, 1291-1292, 1385, 1387, 1389, 1391, 1394-1398, 1401-1402, 1404, 1406-1407, 1409, 1411-1412, 1436-1438, 1440-1441, 1558-1559 |
+| [core/kinematics/asymmetric_ganging.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/kinematics/asymmetric_ganging.c) | 1 | 4 | 254 |
+| [core/kinematics/delta.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/kinematics/delta.c) | 10 | 46 | 173, 287-288, 343, 586-587, 592, 599, 610, 673 |
+| [core/kinematics/polar.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/kinematics/polar.c) | 4 | 3 | 212, 214, 232, 234 |
+| [core/kinematics/rtcp_ac.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/kinematics/rtcp_ac.c) | 0 | 3 | none |
+| [core/kinematics/wall_plotter.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/kinematics/wall_plotter.c) | 56 | 28 | 208, 213-214, 216-227, 229, 234, 237, 239-240, 242-255, 257, 260, 262, 264-280, 283-284 |
+| [core/machine_limits.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/machine_limits.c) | 2 | 20 | 269, 502 |
+| [core/modbus.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/modbus.c) | 3 | 6 | 231-233 |
+| [core/modbus_rtu.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/modbus_rtu.c) | 3 | 41 | 241, 360-361 |
+| [core/motion_control.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/motion_control.c) | 3 | 29 | 690, 715, 1122 |
+| [core/my_plugin.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/my_plugin.c) | 2 | 0 | 26, 29 |
+| [core/ngc_expr.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/ngc_expr.c) | 11 | 13 | 115-116, 189-190, 250, 252, 292-293, 337-338, 341 |
+| [core/ngc_flowctrl.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/ngc_flowctrl.c) | 2 | 60 | 816-817 |
+| [core/ngc_params.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/ngc_params.c) | 4 | 65 | 772-773, 942, 1247 |
+| [core/nuts_bolts.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/nuts_bolts.c) | 0 | 3 | none |
+| [core/nvs_buffer.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/nvs_buffer.c) | 3 | 11 | 366, 391-392 |
+| [core/planner.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/planner.c) | 0 | 1 | none |
+| [core/probe.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/probe.c) | 0 | 2 | none |
+| [core/protocol.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/protocol.c) | 1 | 45 | 185 |
+| [core/regex.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/regex.c) | 0 | 1 | none |
+| [core/report.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/report.c) | 5 | 82 | 450-452, 1955-1956 |
+| [core/settings.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/settings.c) | 58 | 130 | 701, 703, 780-781, 839, 925, 928, 1012, 1056, 1140-1141, 1199-1200, 1341, 1351, 1507-1508, 1569, 1577, 1584, 1591, 1594-1596, 1652-1653, 1693-1694, 1901-1902, 1960-1961, 2026-2027, 2175-2177, 2179-2181, 2192-2194, 2196-2198, 2239-2241, 2247-2248, 2957, 2959, 3476-3477, 3625-3627 |
+| [core/sleep.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/sleep.c) | 0 | 2 | none |
+| [core/spindle_control.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/spindle_control.c) | 8 | 43 | 499, 503, 636, 1160-1161, 1172, 1215-1216 |
+| [core/state_machine.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/state_machine.c) | 12 | 44 | 157, 449, 502, 524-527, 614-615, 658-659, 819 |
+| [core/stepper.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/stepper.c) | 1 | 13 | 1093 |
+| [core/stepper2.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/stepper2.c) | 0 | 12 | none |
+| [core/stream.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/stream.c) | 3 | 47 | 277, 370, 615 |
+| [core/stream_file.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/stream_file.c) | 1 | 9 | 73 |
+| [core/strutils.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/strutils.c) | 0 | 15 | none |
+| [core/system.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/system.c) | 2 | 35 | 466, 468 |
+| [core/tool_change.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/tool_change.c) | 2 | 46 | 435-436 |
+| [core/utf8.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/utf8.c) | 0 | 1 | none |
+| [core/vfs.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/vfs.c) | 4 | 44 | 272, 415, 482, 779 |
 
-## Reviewed I/O residual lines
+## Current-source dormant dispatch review
 
-Against this exact report, all28 missing ioports.c lines are accounted below.
+Reviewed CORE51b58594 against the raw table above; these five lines remain in the
+denominator. This is native caller evidence, not a claim about arbitrary plugins.
+
+| Current source lines | Count | Native routing evidence |
+|---|---:|---|
+|modbus.c231-233|3|The high-level command table leaves diagnostics function8 unregistered (`function=0`). rx_packet requires a nonzero registered function before its switch, so its TBA diagnostics case cannot run through that native dispatch. Do not inject private callbacks or pretend the TBA operation is implemented.|
+|spindle_control.c499,503|2|The null spindle supplies both get_pwm and update_pwm. Override routing chooses that pair before update_rpm, and stepper segment dispatch likewise prefers update_pwm. The dormant null_update_rpm body only discards arguments and has no output to assert. Do not clear registered pointers solely to call it.|
+
+## Historical CORE50f I/O review
+
+Against historical run39977472030 (CORE50f38659), all28 missing ioports.c lines were accounted below.
+These old line numbers are not the current CORE51b inventory.
 These classifications do not remove lines from coverage or claim all missing
 branch outcomes explained.
 
@@ -92,11 +97,12 @@ branch outcomes explained.
 
 ## Source-reviewed residual subset - 2026-10-23
 
-This subset accounts for237 of the288 raw missing lines in the measured report
-above. Counts are checked against that XML, not estimated from source ranges.
-It does not classify the remaining51 lines or prove supported-scope completion.
-The measured batch reached seven previously unclassified lines. The new local
-broadcast cases still require a later hosted measurement.
+The historical CORE50f report39977472030 had237 of288 raw missing lines reviewed.
+This table preserves those source-specific audits; it is not a recount of the
+new CORE51b report above. Current lines moved and some reviewed reachable lines
+are now covered. Revalidate changed source before treating any old audit as a
+current reachability proof. No source exclusions or supported-scope completion
+claim follows from this historical subset.
 
 | Source / measured missing lines | Count | Classification and next action |
 |---|---:|---|

@@ -1,12 +1,9 @@
-# New upstream RAM nonzero-truncate candidate - 2026-10-23
+# RAM nonzero truncation confirmed - 2026-10-23
 
-CORE51b58594 rewrote RAM truncation. Next ordinary public workflow to check:
-upload a multi-line file, close it, reopen, truncate to a nonzero shorter length,
-seek/read the retained prefix, then close. The new shrink branch assigns both
-`data` and `pos` to `data + length`; review ownership and prefix readability with
-this public lifecycle. This is an unverified candidate, not a confirmed defect
-or failure allowance. Existing zero-truncate and upload replacement regressions
-pass on this revision. Do not patch CORE or force internal file pointers.
+The ordinary upload/shrink/seek/read candidate is now reproduced and tracked in
+[KNOWN_BUGS](KNOWN_BUGS.md#ram-nonzero-truncate-loses-the-retained-file-allocation).
+Its correct public workflow remains registered with one narrow failure allowance;
+continue independent coverage work. Zero-truncate/replacement controls still pass.
 
 # Pending core features and maintainer follow-ups
 

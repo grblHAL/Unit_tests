@@ -1,4 +1,6 @@
 import json
+import io
+from contextlib import redirect_stdout
 from pathlib import Path
 import subprocess
 import sys
@@ -138,6 +140,56 @@ SUMMARY: AddressSanitizer: SEGV (<unknown module>)
                         output.replace("in vfs_chdir", "in other_function"),
                         output + "other.c:1:1: runtime error: overflow"]:
             self.assertFalse(matches_known_crash(NAME, changed, manifest), changed)
+
+    def test_memcpy_overread_requires_exact_core_caller_and_allocation(self):
+        manifest = [dict(kind="fatal_asan", test=NAME, source="core/fs_ram.c", lines=[184],
+                         function="fs_read", message_pattern="heap-buffer-overflow", interceptor="memcpy",
+                         allocation_frames=[dict(source="core/fs_ram.c", line=256, function="fs_truncate")])]
+        output = """ERROR: AddressSanitizer: heap-buffer-overflow on address 0x123
+    #0 0x123 in __asan_memcpy /runtime/asan.cpp:65:3
+    #1 0x234 in fs_read /repo/core/fs_ram.c:184:9
+allocated by thread T0 here:
+    #0 0x345 in realloc /runtime/asan.cpp:117:3
+    #1 0x456 in fs_truncate /repo/core/fs_ram.c:256:24
+SUMMARY: AddressSanitizer: heap-buffer-overflow /repo/core/fs_ram.c:184:9 in fs_read
+"""
+        self.assertTrue(matches_known_crash(NAME, output, manifest))
+        linux = output.replace("__asan_memcpy", "__interceptor_memcpy").replace(
+            "/repo/core/fs_ram.c:184:9 in fs_read", "/runtime/asan.cpp:65 in __interceptor_memcpy")
+        self.assertTrue(matches_known_crash(NAME, linux, manifest))
+        self.assertTrue(matches_known_crash(NAME, output.replace("/", "\\"), manifest))
+        for before, after in [("184", "185"), ("256", "257"), ("fs_read", "other_read"),
+                              ("fs_truncate", "other_alloc"), ("__asan_memcpy", "memmove"),
+                              ("fs_ram.c", "other.c"), ("#1 0x234", "#2 0x234"),
+                              ("heap-buffer-overflow", "heap-use-after-free")]:
+            self.assertFalse(matches_known_crash(NAME, output.replace(before, after), manifest))
+        self.assertFalse(matches_known_crash("other.case", output, manifest))
+        self.assertFalse(matches_known_crash(NAME, output + output, manifest))
+        self.assertFalse(matches_known_crash(NAME, output + "ERROR: LeakSanitizer: leak", manifest))
+
+    def test_memcpy_runner_output_retains_match_under_ctest_output_limit(self):
+        name = "fs_ram.truncate_committed_file_to_nonzero_length_preserves_prefix"
+        manifest = [dict(kind="fatal_asan", test=name, source="core/fs_ram.c", lines=[184],
+                         function="fs_read", message_pattern="heap-buffer-overflow", interceptor="memcpy",
+                         allocation_frames=[dict(source="core/fs_ram.c", line=256, function="fs_truncate")])]
+        output = """ERROR: AddressSanitizer: heap-buffer-overflow on address 0x123
+    #0 0x123 in __asan_memcpy /runtime/asan.cpp:65:3
+    #1 0x234 in fs_read /repo/core/fs_ram.c:184:9
+allocated by thread T0 here:
+    #0 0x345 in realloc /runtime/asan.cpp:117:3
+    #1 0x456 in fs_truncate /repo/core/fs_ram.c:256:24
+SUMMARY: AddressSanitizer: heap-buffer-overflow /repo/core/fs_ram.c:184:9 in fs_read
+""".replace("/repo", "/very-long-checkout-path" * 20)
+        captured = io.StringIO()
+        with patch("sys.argv", ["runner", name, "inventory", "executable"]), \
+                patch("known_crash.Path.read_text", return_value=json.dumps(manifest)), \
+                patch("known_crash.Path.write_text"), \
+                patch("known_crash.subprocess.run", return_value=subprocess.CompletedProcess([], 1, output)), \
+                redirect_stdout(captured):
+            self.assertEqual(main(), 1)
+        compact = captured.getvalue()
+        self.assertLess(len(compact), 1024)
+        self.assertTrue(matches_known_crash(name, compact, manifest))
 
     def test_runner_error_is_not_an_expected_failure(self):
         result = subprocess.run([sys.executable, str(SCRIPTS / "known_crash.py"), NAME,
