@@ -61,9 +61,9 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Reviewed:** 2026-10-23, clean Terje `50f38659db7b22f4689f3654df2d110d992bcc95`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39932438179)
-measures 17,400/17,714 lines (98.23%) and 12,312/13,800 branches (89.22%).
-The 314 uncovered lines include the following known gaps; this table does not
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39936164446)
+measures 17,402/17,714 lines (98.24%) and 12,319/13,800 branches (89.27%).
+The 312 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable. See the complete measured
 [line/branch inventory](COVERAGE_GAPS.md) before selecting the next workflow.
 
@@ -563,3 +563,25 @@ Proposed repair for Terje: return NULL when the search exhausts without a matchi
 label/file, retaining matching-label behavior and the existing error path. No
 CORE edits. After repair retain this bounded regression, remove its allowance,
 and validate normal numeric subroutine definitions/calls and file recovery.
+
+## Rejected auxiliary reverse nudge changes the running motor direction
+
+**Confirmed2026-10-23, clean CORE50f38659db7b22f4689f3654df2d110d992bcc95.**
+[Public auxiliary motor regression](cases/stepper2/rejected_reverse_nudge_preserves_running_finite_move.c)
+accepts a20step forward move, emits its first forward pulse, then requests a
+one-step reverse nudge at the same speed. The nudge returns false (documented as
+command not accepted), without immediately emitting a step. The next driver
+pulse nevertheless has the reverse direction bit. The correct forward-direction
+assertion fails deterministically on pulse2; endpoint preservation assertions
+remain after it and are not reached. No private motor state or IRQ race is used.
+Raw evidence: build-asan/batch74-stepper-reject-raw-results.xml.
+
+`st2_motor_move` writes motor->dir and calls the speed/step-profile mutators before
+its one-step busy check (stepper2.c350-366). Returning false does not undo those
+changes. One exact WILL_FAIL preserves the correct direction/endpoint assertions;
+no sanitizer, timeout or broader failure allowance. Normal completed forward/
+reverse finite motion remains an independent passing control.
+
+Suggested repair for Terje: decide whether the nudge can be accepted before
+changing the active direction/profile, or preserve the accepted move when
+rejecting. Retain the test and remove its allowance once it passes. CORE unchanged.

@@ -140,3 +140,8 @@ endif()
 if(TEST ngc_flowctrl.file_subroutine_with_mismatched_endsub_rejects_before_body_and_restores_sender)
   set_tests_properties(ngc_flowctrl.file_subroutine_with_mismatched_endsub_rejects_before_body_and_restores_sender PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Rejected auxiliary one-step request changes running direction, CORE50f3865.
+if(TEST stepper2.rejected_reverse_nudge_preserves_running_finite_move)
+  set_tests_properties(stepper2.rejected_reverse_nudge_preserves_running_finite_move PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

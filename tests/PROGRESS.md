@@ -1,3 +1,102 @@
+# Driver/PID/JSON cumulative delivery validated - 2026-10-23
+
+Four new cases and two extended scenarios pass the full4,268-case ASan/UBSan
+gate72.26s and strict summary:4,241clean/27known/0unexpected/0skipped. Evidence
+batch74-driver-json-pid-delivery-{results.xml,tests.log,summary.log}. Batch covers
+small PID corrections/reset, JSON writer budget/recovery and malformed-prefix
+recovery, auxiliary motor allocation failure/retry, rejected reverse nudge, and
+unbound-to-bound spindle settings updates. One new exact WILL_FAIL records the
+wrong-direction output; later endpoint assertions remain unvalidated. Only its
+allocation companion gets the existing calloc wrapper; no shared fixture changes.
+
+Previous hosted39936164446 at614c036 now completed/success. Its verified98.24%/
+89.27% measurement remains the latest until this batch's exact report exists.
+No source exclusions, diagnostic waivers, CORE edits, merges or redundant helper
+runs. Gap inventory's completed-run note updated; raw counts remain source-matched.
+
+# Measured flow/jog checkpoint, Clang still running - 2026-10-23
+
+Coverage job39936164446 at exact harness614c036 / CORE50f3865 passes all7stages,
+matching both source/filter locks.4,264cases:4,240clean/24known/0failed/skipped.
+Measured17,402/17,714lines98.24%,12,319/13,800branches89.27%; relative to
+39932438179 this is2new lines(gcode.c2427,ngc_flowctrl.c687),7new outcomes,
+0lost lines.312raw lines/1,481outcomes remain. Evidence hosted39936164446/
+comparison39932438179.json. Badges/raw-gap snapshot and complete inventory updated.
+Source/GCC/coverage passed; Clang still in_progress at inspection. This is not an
+overall hosted success claim. Pending PID/JSON/auxiliary motor work is unmeasured.
+
+# Auxiliary spindle unbound notification and resolution update - 2026-10-23
+
+Extended the existing A-axis pulse-routing test. A settings notification after
+public spindle-motor creation but before public binding calls the previous hook
+without pulses or starting the unbound motor. After st2_motor_bind_spindle,60RPM
+maps to200steps/s; a public A-axis resolution setting changes that to400steps/s,
+with the notification chained once and still no stray pulses. An accepted
+single step then reaches only physical axisA and position1. Fresh ASan/UBSan
+1/1pass0.30s; batch74-unbound-spindle-results.xml. Targets stepper2.c114's valid
+unbound branch. No forced bound flags, new case registration, allowance or CORE
+edit. Keep with the pending cross-module driver/PID/JSON batch before full gate.
+
+# Auxiliary motor allocation failure and retry - 2026-10-23
+
+One public motor workflow starts20forward steps, emits a step, then fails only
+the allocation while adding a second motor. NULL result preserves the settings
+hook and first accepted move, which finishes at20pulses/position20. Retrying the
+second motor succeeds and a5step reverse move finishes independently, total25
+pulses with the first position unchanged. Uses the existing calloc_failure_host;
+one exact test target gets --wrap=calloc, fault enabled only during motor init.
+No new allocation framework, CORE edit or allowance. Fresh build and focused
+ASan/UBSan3/3pass0.44s with completed-reversal and concurrent-finite controls;
+batch74-stepper-allocation-results.xml. Targets stepper2.c259 allocation rejection.
+Keep with the pending PID/JSON/motor batch before cumulative delivery validation.
+
+# Malformed JSON prefix and next-response callback - 2026-10-23
+
+Extended the existing missing-colon parser case instead of adding a duplicate:
+plain non-JSON text and an unquoted object key produce no callback, then a valid
+status response returns the exact string tag/value and caller context. Preserves
+original missing-colon assertions. Targets the two root-prefix outcomes in
+stream_json.c264 using public inputs. Fresh ASan/UBSan1/1pass0.36s;
+batch74-json-parse-recovery-results.xml and successful build log. No allowance,
+parser feature assumptions or CORE changes. Keep with pending writer/PID/motor
+batch; no full gate or hosted dispatch for this extension.
+
+# JSON zero-depth budget and clean next response - 2026-10-23
+
+New public writer scenario starts with an explicit max_levels0 budget, rejects
+string/int/real fields and container operations without emitting bytes, and ends
+as exact{}. A subsequent writer with budget2 emits a normal tagged response and
+nested count, verifying fresh separator/depth state and exact output. Only the
+fixture's captured output is cleared between responses; opaque writer state is
+never accessed. Fresh build and ASan/UBSan1/1pass0.43s; batch74-json-budget-results.xml.
+Targets the remaining public writer rejection arms in stream_json.c. No new bug
+claim, allowance, private-state injection or CORE edit. Keep with PID and auxiliary
+motor work for the next substantial batch; measured gain remains pending.
+
+# Rejected auxiliary nudge reverses active output - 2026-10-23
+
+New public stepper2 scenario accepts20forward steps, services one pulse, then
+requests a reverse single step at the same speed while busy. Returnfalse means
+not accepted, but next actual driver output is reverse: raw direction0/pulse1,
+direction1/pulse2; correct forward-direction assertion fails in0.29s. Public API
+doc and source mutation-before-rejection identify the cause. No private state,
+concurrent callback injection, or synthetic timing window. One narrow WILL_FAIL
+and dated KNOWN_BUGS entry; endpoint assertions remain unvalidated after the fault.
+Raw batch74-stepper-reject-raw-results.xml. No CORE edit; continue independent work.
+
+# PID feedback settling inside configured limits - 2026-10-23
+
+Added a separate pid case through existing automatic standalone registration;
+no CMake change or host-core variant. A1000unit setpoint with approaching,
+slightly overshooting and settled feedback produces exact small positive/negative
+corrections with P/I/D and nonzero clipping limits enabled. Reset preserves the
+configuration but clears accumulated/history corrections at the setpoint.
+Targets the two remaining pid.c85/98 unsaturated lower-bound outcomes; this is a
+public helper test, not a claim of spindle/controller integration (CORE does not
+call this utility). Fresh ASan/UBSan2/2pass0.33s with the original PID suite,
+batch74-pid-settling-results.xml. No allowance/CORE edit. Keep local for the next
+cross-module batch; coverage gain awaits measurement, no new hosted dispatch.
+
 # Flow/jog/thread/probe/RAM cumulative delivery - 2026-10-23
 
 Four new cases and two strengthened existing workflows pass the full4,264-case

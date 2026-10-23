@@ -314,6 +314,7 @@ function(add_core_test name module source)
   if(name STREQUAL "report.alarm_catalog_allocation_failure_retains_every_registered_entry"
     OR name STREQUAL "report.error_catalog_allocation_failure_retains_every_registered_entry"
     OR name STREQUAL "stream_json.start_allocation_failure_preserves_output_and_allows_retry"
+    OR name STREQUAL "stepper2.allocation_failure_adding_motor_preserves_running_motor_and_allows_retry"
     OR name STREQUAL "report.group_metadata_fallback_keeps_visible_settings"
     OR name STREQUAL "report.setting_group_fallback_lists_available_groups"
     OR name MATCHES "^report\\.all_settings_sort_allocation_failure_")
