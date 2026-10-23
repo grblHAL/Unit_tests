@@ -1064,3 +1064,13 @@ tables. Keep these raw uncovered; no source/branch exclusion is introduced.
 Public control wiring still had a reachable clear-inversion arm: the new assigned
 FeedHold workflow now toggles both polarity and pull mode through real settings
 stores, preserving debounce and the neighboring input. No private mask forcing.
+
+## Port-setting capability mask semantics - 2026-10-23
+
+CORE50f3865 ioports.c `_set_value` accepts any overlapping requested capability
+bit, whereas `_claim` and the free-port search require the full requested mask.
+Current core secondary-PWM selectors request one capability bit. Before adding
+an expected failure for a compound filter, establish a supported plugin requiring
+that exact combination and confirm the setter's intended any/all semantics.
+Do not present this source-level discrepancy as a confirmed controller defect.
+Registered single-capability, claim-ownership and singleton-bank controls remain.

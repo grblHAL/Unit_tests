@@ -88,6 +88,7 @@ static inline void prepare_ram_protocol(void)
 static inline void run_ram_macro_protocol(const char *main_program, const char *sub_program, const char *leaf_program)
 {
     prepare_ram_protocol();
+    if(ram_prepare_assets) ram_prepare_assets();
     nested_create_file("/ram/main", main_program);
     nested_create_file("/ram/sub", sub_program);
     nested_create_file("/ram/leaf", leaf_program);

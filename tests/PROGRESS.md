@@ -1,3 +1,53 @@
+# Assigned input ownership and real macro recovery batch - 2026-10-23
+
+LOCAL beyond e29e27e: four new cases plus three expanded existing scenarios,
+4,249 registered. Registered fault/probe inputs now use ioport_set_function;
+ordinary aux inversion changes leave their physical configuration untouched,
+while their dedicated inversion settings still update them. Probe registration
+and get_state verify polarity too. A one-output board selects/claims its dust
+relay through public configuration helpers, refuses a nonexistent next port and
+continues routing that claimed relay's on/off writes to its original pin.
+All I/O plus affected existing RAM/named macro controls pass204/204 ASan/UBSan
+and strict summary in3.38s (199clean/5existing known/0unexpected/0skipped).
+Evidence batch74-input-plugin-macro-{results.xml,tests.log,summary.log}.
+
+The small shared RAM motion fixture now serves the two upgraded scoped G66
+cases and a new nested M73 unit-restoration job. Real child files switch into
+inch/incremental then metric/absolute modes, restore their callers and complete
+the following parent relative cut with exactly160X/160Y pulses. Arguments99/5/7
+remain in the correct scopes. The existing nested parser-error regression now
+also executes its accepted child moves and the sender recovery cut: after a $G
+query clears the sender error latch, final travel is160X/80Y pulses. Original
+three-file error propagation, tail suppression and caller restoration assertions
+remain. No new defect claim from a missing recovery-query fixture assumption.
+
+All four affected real-motion macro jobs pass0.62s plus strict summary, evidence
+batch74-nested-error-motion-{results.xml,summary.log}. No new exceptions, CORE
+changes, full suite or hosted dispatch. Keep this cumulative group for its next
+useful delivery boundary. An uncertain compound-capability setter contract is
+recorded in TODO without registering a speculative failure.
+
+# Active real-file modal-macro motion follow-up - 2026-10-23
+
+Operator/arc cumulative checkpoint e29e27e is pushed and hosted run39922349935
+is in_progress at that exact head. It follows the full4,245-case64.33s sanitizer
+and strict gate. No repeated hosted checkpoint or PR merge. Last locked measured
+coverage remains73c12ba98.22%/89.00%; no newer gain is claimed.
+
+LOCAL follow-up upgrades two existing scoped G66/G65 real-file cases from parser
+position checks to actual emitted motor steps. Reuses the RAM fixture's optional
+setup hook, preserving existing default setup for all other callers. Registered
+stepper callbacks service real nested files; a public dwell synchronizes completion
+before sender exit. Both rapid and linear jobs emit exactly240Xsteps and end at
+X3 with no Y/Z motion, no file errors, normal EOF status at all three depths,
+restored scopes and one outer modal callback. Original parameter/file ownership
+assertions remain. No new registered case or exception; total remains4,245.
+
+Affected36-case ASan/UBSan and strict summary passes1.41s:35clean/1existing
+missing-ENDSUB regression/0unexpected/0skipped. Evidence batch74-nested-motion-
+fixtures-{results.xml,tests.log,summary.log}. No new full gate for two fixture
+upgrades; retain this work for the next substantial batch. CORE unchanged.
+
 # Cumulative operator/arc delivery gate - 2026-10-23
 
 Full4,245-case ASan/UBSan plus strict summary passes64.33s on the operator/arc
