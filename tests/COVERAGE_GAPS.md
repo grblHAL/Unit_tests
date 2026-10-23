@@ -1,19 +1,19 @@
 # Remaining raw CORE coverage
 
-Verified report: [run40018600731](https://github.com/petervanderwalt/Unit_tests/actions/runs/40018600731),
-harness `1ec72ce541dcae207c6c22197310f562b14821d1`, CORE `2e165a1ac4c74be8e68971972c6577775d856b05`,
+Verified report: [run40021882976](https://github.com/petervanderwalt/Unit_tests/actions/runs/40021882976),
+harness `8b13bc70eaf96040eeda5137be27620074776bc7`, CORE `2e165a1ac4c74be8e68971972c6577775d856b05`,
 filter `core/.*\.[ch]$`. Both artifact locks match, all seven coverage stages
 exit0, and all five source/GCC/Clang/coverage/Results summary jobs succeeded.
 
-17,479/17,756 lines (**98.44%**) and12,520/13,834 branch outcomes (**90.50%**)
-were covered. This table accounts for277 raw missing lines and1,314 missing
-outcomes. Coverage job:4,346 cases,4,333 clean/13 known/0 failed/skipped.
+17,479/17,756 lines (**98.44%**) and12,528/13,834 branch outcomes (**90.56%**)
+were covered. This table accounts for277 raw missing lines and1,306 missing
+outcomes. Coverage job:4,352 cases,4,338 clean/14 known/0 failed/skipped.
 
-Against same-source40015747959: no lost line coverage; all six newly compiled
-multi-auxiliary delta lines execute. Branch outcomes covered increase10 while
-six new outcomes enter the denominator. The new five-axis mixed/reversal jobs,
-reporting and optional Modbus reset cases are included. Subsequent local VFS
-regressions/recovery cases and optional Modbus busy assertion are not included.
+Against same-source40018600731: eight additional covered branch outcomes,
+unchanged denominator and no lost covered lines. Gains are modbus69,
+modbus_rtu160 and vfs638/698/827/829/875/912. New storage/UART recovery cases
+and the correct stale-filename regression are included. Subsequent local
+stream handoff/UART-release and web-settings extensions are not included.
 
 Raw coverage does not establish correctness or reachability. See [TODO](TODO.md)
 and [KNOWN_BUGS](KNOWN_BUGS.md) before selecting workflows. Historical audits
@@ -35,8 +35,8 @@ remain pinned to their stated revisions; no source exclusions were added.
 | [core/kinematics/rtcp_ac.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/kinematics/rtcp_ac.c) | 0 | 3 | none |
 | [core/kinematics/wall_plotter.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/kinematics/wall_plotter.c) | 56 | 28 | 208, 213-214, 216-227, 229, 234, 237, 239-240, 242-255, 257, 260, 262, 264-280, 283-284 |
 | [core/machine_limits.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/machine_limits.c) | 2 | 20 | 269, 502 |
-| [core/modbus.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/modbus.c) | 3 | 5 | 231-233 |
-| [core/modbus_rtu.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/modbus_rtu.c) | 3 | 41 | 241, 360-361 |
+| [core/modbus.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/modbus.c) | 3 | 4 | 231-233 |
+| [core/modbus_rtu.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/modbus_rtu.c) | 3 | 40 | 241, 360-361 |
 | [core/motion_control.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/motion_control.c) | 3 | 29 | 690, 715, 1122 |
 | [core/my_plugin.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/my_plugin.c) | 2 | 0 | 26, 29 |
 | [core/ngc_expr.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/ngc_expr.c) | 11 | 13 | 115-116, 189-190, 250, 252, 292-293, 337-338, 341 |
@@ -61,7 +61,7 @@ remain pinned to their stated revisions; no source exclusions were added.
 | [core/system.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/system.c) | 2 | 35 | 466, 468 |
 | [core/tool_change.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/tool_change.c) | 2 | 46 | 435-436 |
 | [core/utf8.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/utf8.c) | 0 | 1 | none |
-| [core/vfs.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/vfs.c) | 4 | 44 | 272, 415, 482, 779 |
+| [core/vfs.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/vfs.c) | 4 | 38 | 272, 415, 482, 779 |
 
 ## Native setting reporting guard review — 2026-10-23
 

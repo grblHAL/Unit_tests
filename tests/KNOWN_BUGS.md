@@ -119,8 +119,8 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Measured:** 2026-10-23, clean Terje `2e165a1ac4c74be8e68971972c6577775d856b05`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40018600731)
-measures 17,479/17,756 lines (98.44%) and 12,520/13,834 branches (90.50%).
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40021882976)
+measures 17,479/17,756 lines (98.44%) and 12,528/13,834 branches (90.56%).
 The 277 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable. See the complete measured
 [line/branch inventory](COVERAGE_GAPS.md) before selecting the next workflow.

@@ -1,3 +1,172 @@
+# Stream/settings/tool-storage cumulative gate passed - 2026-10-23
+
+Full4356-case ASan/UBSan gate passes67.64s; strict summary4341clean/15known/
+0failed/0skipped, no recovering sanitizer diagnostics. Evidence prefix
+batch74-stream-settings-tools-delivery-{build.log,tests.log,results.xml,summary.log}.
+Clean CORE2e165a1 unchanged. Four new cases plus three strengthened existing
+cases cover serial transmit-count handoff, Telnet from disconnected serial,
+WebSocket/Bluetooth reconnect availability, optional UART receive-disable,
+web password replacement length, and non-tool NVS sync preserving tools.
+Local isolated profiles verify stream391/397/403/409/558, settings3507 and
+nvs_buffer371 supported outcomes. No new exception or denominator configuration.
+
+README now distinguishes parameter-disabled cases on older supporting CORE
+from omitted cases when current CORE forces parameters on. No unsupported
+configuration is claimed executed. Refreshed measured snapshots still refer
+to fully green8b13bc7/40021882976, not current unmeasured authoring. Deliver this
+coherent three-module batch; one hosted checkpoint after duplicate/hourly-limit
+checks. Full meaningful supported coverage remains active, not completed.
+
+# Buffered ordinary update with persistent tool configuration - 2026-10-23
+
+Added tool_table.buffered_build_information_update_preserves_tool_records in
+the existing N_TOOLS=4 host variant. Persist tool1 radius2.5/Xoffset1.25, sync,
+then call public settings_write_build_info and sync only that dirty region.
+Exactlyone additional physical write targets build info; persisted text CRC
+reads correctly and tool identity/radius/offset remain unchanged. No tool-data
+dirty bits or extra tool writes. ASan/UBSan passes0.07s. Targets nvs_buffer.c371
+false outcome when a real non-tool update occurs in a tool-enabled build.
+No forced dirty flags, new core variant, helper change, exception or CORE edit.
+Keep with local stream/settings batch for its cumulative validation boundary.
+
+# Fully verified storage/UART checkpoint and local optional-RX proof - 2026-10-23
+
+Allfive jobs of exact8b13bc7/CORE2e165a1 run40021882976 now terminalsuccess,
+including GCC/Clang and Results summary. Verified source/filter locks, seven
+stages0 and4352coverage cases4338clean/14known/0failed/skip. Refreshed badges,
+KNOWN_BUGS measured snapshot and complete inventory:17479/17756 lines98.44%,
+12528/13834 outcomes90.56%;277raw missing lines/1306outcomes. Exact same-source
++8outcomes/no lost lines already proven. No new run merely for these docs.
+
+Local UART-without-disable_rx coverage binary exits0; optional-uart-proof74
+shows stream.c558 optional callback absent on both close/reclaim cycles. This
+is newly executed local next-batch coverage, not part of the measured report.
+Keep local stream/settings changes separate until cumulative gate/delivery.
+No CORE edits, new exceptions, duplicate hosted job or worker.
+
+# Optional UART receive-disable callback - 2026-10-23
+
+Added uart_without_receive_disable_can_be_closed_and_reclaimed with a driver-
+owned stream copy configured before public registration. It omits disable_rx
+but provides normal claim/release/handler callbacks. Open115200, verify live
+handler, close/release, reclaim9600, verify handler and close again: exact
+claim/release totals and no receive-disable calls. All driver flags change
+through fixture driver callbacks; no CORE stream mutation. ASan/UBSan passes
+0.08s. Targets stream.c558's omitted optional callback. No shared helper change,
+exception, source edit, aggregate claim or new hosted/full gate. Keep with the
+existing stream/settings improvements for next substantial batch delivery.
+
+# Storage/RTU coverage job gains eight branches - 2026-10-23
+
+Exact8b13bc7/CORE2e165a1 coverage job40021882976 passed; both source/filter
+locks and allseven stages0 verified.4352cases4338clean/14known/0failed/skipped.
+Measured17479/17756 lines98.44%,12528/13834 outcomes90.56%;277raw missing
+lines/1306missing outcomes. Same-source comparison against40018600731 has
+zero lost covered lines and exactly+1covered outcome at modbus69,modbus_rtu160,
+vfs638/698/827/829/875/912 (total8, unchanged denominator). Saved comparison
+JSON. GCC/Clang still live at lastcheck; do not update successful-run badges
+or call overall checkpoint green yet. This validates the prior local proofs.
+
+Current local password test coverage binary exits0, settings.c3507 allsix
+condition outcomes executed: web/nonweb, same/different length, equal/different
+placeholder text. Evidence password-length-proof74. This and stream handoff
+improvements remain NEXT-batch work, outside measured8b13bc7. No duplicate run,
+CORE edit, exception or premature aggregate claim for local changes.
+
+# Existing web password update case covers longer value - 2026-10-23
+
+Extended existing plugin_password_store_rejects_web_placeholder_without_overwriting_saved_value
+with a valid10-character replacement while webui_connected is true. Existing
+8-character replacement and exact PASSWORD_MASK rejection remain. Assert new
+value saved/notified, reads masked over web, original label unchanged, rejected
+placeholder preserves the final value, and serial readback returns final value.
+Save/change totals advance from2 to3 because of one actual accepted update.
+ASan/UBSan passes0.08s. Targets settings.c3507's web-connected/different-length
+outcome; original same-length non-placeholder was already covered and not
+re-added. No new test count, dependency, CORE edit, exception or aggregate claim.
+Keep with local stream cases for the next cross-module delivery batch.
+
+# Bluetooth branch proof and PR scope check - 2026-10-23
+
+Isolated Bluetooth coverage binary exits0. bluetooth-reconnect-proof74 shows
+stream.c409 both prior-console outcomes once, complementing local391/397/403
+proofs. Keep the stream batch local; no full gate or aggregate update yet.
+
+Read-only PR inventory confirms onlyPR28 is open, non-draft, frozen on
+coverage-batch-73 a9f355c35717006f497754d1acc421cf5b141670. Do not merge or
+change its head, nor create another cumulative master-targeted PR duplicating
+its unmerged scope. Authorized successor74 continues with pushed8b13bc7 and
+local stream improvements; preserve the existing review boundary. Exact-head
+hosted40021882976 remains live with source green and compiler/coverage jobs
+running at last check. No duplicate job or new worker; continue independent
+supported-coverage work while it runs.
+
+# Network handoff proofs and Bluetooth existing-case extension - 2026-10-23
+
+Grouped isolated coverage runs of local Telnet/WebSocket cases exit0. Evidence
+network-reconnect-proof74 shows Telnet397 disconnected-console path executed
+and WebSocket403 both availability outcomes once. Existing baseline already
+covers connected Telnet. No aggregate percentage update from these profiles.
+
+Extended existing Bluetooth welcome case, preserving original welcome and
+connected-console announcement, then reconnecting after driver-reported serial
+disconnection. Bluetooth still welcomes its client and broadcasts status there
+without writing to serial; clean disconnect after serial recovery. Targets the
+separate stream.c409 handler. ASan/UBSan passes0.09s; no new case count, private
+state mutation, CORE edit or exception. Keep all stream changes local for the
+next substantial cross-module batch. Exact8b13bc7 hosted40021882976 was still
+live on last refresh; no duplicate checkpoint/full-suite run or fresh coverage
+claim. Continue independent supported workflows while it runs.
+
+# Existing WebSocket welcome case extended to reconnect - 2026-10-23
+
+Retained the original connected-console announcement and new-client welcome
+assertions, then extended the same case: disconnect WebSocket, let serial driver
+report disconnected, reconnect WebSocket through public stream_connect. New
+client still receives firmware welcome, disconnected serial receives nothing,
+broadcast routes only to live client, and clean disconnect works after serial
+returns. ASan/UBSan passes0.10s. Targets stream.c403's prior-console-down outcome;
+no extra case count, CORE edits, private connection mutation or exception.
+
+Exact8b13bc7 hosted40021882976 was last verified live with source successful and
+GCC/Clang/coverage running. This existing-case extension and the two new local
+serial/Telnet workflows are outside that head. Accumulate next substantial
+batch; no duplicate hosted dispatch or fresh aggregate percentage claimed.
+
+# Serial-counter proof and disconnected-serial Telnet handoff - 2026-10-23
+
+Isolated stream-tx-counter-proof74 coverage binary exits0; stream.c391 takes
+both outcomes once (new counted driver plus fallback during normal cleanup).
+This confirms a missing branch in the prior report without fixed-count polling
+or an invented callback timing window.
+
+Added telnet_handoff_from_disconnected_serial_preserves_live_output: driver
+reports base serial disconnected, public stream_connect accepts live Telnet,
+no announcement is sent to the disconnected endpoint, replies/broadcast go
+only to Telnet, and reconnection/disconnect restores serial output. Base
+identity and realtime command handler remain correct. ASan/UBSan passes0.08s.
+Targets stream.c397's disconnected prior-console outcome. No private list
+mutation, CORE edit, exception or new full/hosted run. Both stream cases stay
+local for the next batch, outside active exact8b13bc7 run40021882976.
+
+# Hosted handle and serial driver transmit-count path - 2026-10-23
+
+Single exact8b13bc70eaf96040eeda5137be27620074776bc7/CORE2e165a1 dispatch
+accepted after duplicate/hourly checks (two prior runs in rolling hour). Actual
+run40021882976 is in_progress:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/40021882976
+Handle saved in batch74-8b13bc7-hosted-handle.json; do not redispatch or poll
+unchanged state repeatedly. Continue independent authoring while it runs.
+
+The no-transmit-count fallback was already covered by existing serial tests.
+Added the complementary driver-provided count path: register serial callback
+before public network-to-serial stream_connect, observe drained-count query,
+no fixed100ms fallback delay, correct active serial announcement and subsequent
+output routing, then clean disconnect. Focused ASan/UBSan passes0.08s. Targets
+stream.c391's other outcome; no private connection mutation or arbitrary timing
+window. This new case is local for the NEXT batch, outside40021882976. No CORE
+edit, exception, new aggregate claim or additional full/hosted gate.
+
 # Storage/RTU cumulative gate passed - 2026-10-23
 
 Full4352-case ASan/UBSan gate passes77.01s on clean CORE2e165a1. Strict
