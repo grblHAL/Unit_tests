@@ -20,5 +20,9 @@ int main(void)
     CHECK(strnistr(text, "def", 8) == text + 3);
     const char *restart = "abxabc";
     CHECK(strnistr(restart, "ABC", 3) == restart + 3);
+    const char *labels = "Spindle {rpx} {RPM}";
+    CHECK(strnistr(labels, "{rpm}", 5) == labels + 14);
+    CHECK(strnistr(labels, "{RPM} suffix", 5) == labels + 14);
+    CHECK(strnistr(labels, "{rPm]", 5) == NULL);
     return EXIT_SUCCESS;
 }

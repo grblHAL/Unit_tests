@@ -1567,3 +1567,40 @@ Do not classify hypothetical nested-parent names or routing as a confirmed
 CORE defect without a supported provider contract. Existing immediate-child,
 hidden-mount and direct-path cases remain the coverage basis. No new test or
 exception added merely to exercise the same lines with an invented hierarchy.
+
+
+## Bound stepper spindle rotary-option transition needs provider contract - 2026-10-23
+
+Reviewed exact CORE2e165a1 and current metadata tests. stepper2.c220 installs
+unit/description wrappers only when cfg_as_rotary is false at bind time.
+Both wrappers recheck that flag at130/168. Existing tests cover native binding
+with either initial option, bound/unbound axes, previous providers present or
+absent and real settings iteration. A later flag change could reach additional
+wrapper outcomes, but current CORE only declares Setting_StepperSpindle_Options
+677 in settings.h and its settings field. Full native-source search finds no
+registered descriptor or setter for this option, only the three stepper2 reads.
+Establish the actual stepper-spindle plugin's supported setting/rebind lifecycle
+before requiring a mid-binding metadata transition. Do not mutate the field
+after binding solely to hit branches or register a speculative defect. This
+bounded native-provider finding does not claim the transition impossible for
+external plugins. Retain raw outcomes and existing initialization controls.
+
+
+## Connection lookup terminal fallback has no normal selected-stream caller - 2026-10-24
+
+Reviewed exact CORE2e165a1 stream.c connection_is_up callers388/397/403/409.
+In the serial arm, stream_select has already inserted a successful candidate
+through add_connection before connection_is_up examines it. A disconnected
+selection uses a retained predecessor, not the removed connection. Thus a
+serial descriptor without is_connected still has a matching registered entry.
+The network arms inspect hal.stream; successful stream selection normalizes
+its optional is_connected pointer to a non-NULL base/default callback before
+returning. Their ordinary selected-stream path therefore takes the direct
+callback return instead of falling through an exhausted lookup list.
+
+The missing terminal return at277 remains in the raw denominator. This is
+bounded evidence for completed native stream registration/selection, not proof
+about plugins that mutate a selected stream's identity or clear callbacks later.
+Do not remove a live callback or forge an unmatched descriptor to exercise this
+private fallback. Existing real disconnected-console/reconnect, USB callback
+absence, network handoff and pendant restore cases remain the controls.

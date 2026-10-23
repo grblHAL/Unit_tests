@@ -1,3 +1,159 @@
+# Search/report/rotary cumulative delivery gate passed - 2026-10-24
+
+Two new cases and four strengthened existing cases cover literal punctuation
+search/restart, analog-only unclaimed-port catalogs, legacy probe full/extended
+reports, real rotary homing followed by an unlimited-axis jog, and primary
+hard-limit IRQ behavior with rotary exclusions enabled. Existing configurations
+and callbacks reused; no CORE/shared fixture edits, exceptions or exclusions.
+
+Full build and ASan/UBSan4364-case gate passed76.85s; strict summary0:
+4348clean,16known,0recovering diagnostics,0failed/skipped. Evidence
+batch74-search-report-rotary-delivery-{build.log,tests.log,results.xml,summary.log}
+in build-asan. Fresh CORE fetch unchangedclean2e165a1. Isolated profiles show
+new supported outcomes; hosted aggregate gain remains unmeasured. Current
+badges/snapshot are exact fully green5f3e17f/run40029656398, not this new batch.
+PR28 remains open/frozena9f355c; no overlapping PR or merge. Keep full goal
+active after delivery and continue independent work while hosted checks run.
+
+# Remaining stream lookup fallback reviewed - 2026-10-24
+
+Traced all four native connection_is_up call sites. Serial candidate insertion
+precedes lookup; disconnect selects a retained predecessor. Network handoff
+queries the selected hal.stream, whose callback is normalized on successful
+selection. Recorded bounded native-caller TODO for terminal fallback277; no
+live callback clearing, mismatched private identity or speculative defect test.
+Existing next-batch string/report/homing/limit work remains local and validated
+by isolated proofs. No CORE edit, duplicate CI, full suite or percentage gain
+claimed from this review. Current fully green checkpoint remains40029656398.
+
+# Hard-limit positive control under rotary exclusion - 2026-10-24
+
+Extended existing eight_axis.hard_limits_skip_only_configured_rotary_axes_when_requested.
+Retain public rotary/hard-limit setting, rejected/ignored rotary events and all
+unchanged-state assertions. Then issue a real X limit interrupt under the same
+mask: last event becomes X, EXEC_RESET is requested, Alarm_HardLimit is queued
+and idle position remains trusted. Added mandatory driver control reader and
+explicit public idle precondition (shared parser fixture starts in check mode).
+ASan/UBSan passes0.07s; isolated rotary-limit-control-proof74 shows both
+mask-gate outcomes at machine_limits93, previously1/2. No CORE/shared fixture
+edit, allowance, extra case or new full/hosted run. Keep in cross-module local
+search/report/motion successor batch, outside fully green5f3e17f.
+
+# Exact5f3e17f checkpoint fully verified - 2026-10-24
+
+Run40029656398 completed success, all five source/GCC/Clang/coverage/Results
+summary jobs terminalsuccess. Exact harness5f3e17fd7fc5a4722e9a9ff1a05d682d88dc5e37,
+CORE2e165a1ac4c74be8e68971972c6577775d856b05 and filter locks already
+verified in both artifacts; exactly seven coverage stages all0.4362hosted
+cases4347clean/15known/0failed/skipped.17479/17756lines98.44%,
+12551/13834outcomes90.73%, net+15outcomes/no lost lines on same source.
+Refreshed README badges and current gap/known-bug snapshot, keeping old audits
+pinned. Current local string/analog catalog/legacy probe/unlimited rotary jog
+work remains outside this head and needs cumulative validation. No duplicate
+CI dispatch or merge; full supported objective remains active.
+
+# Real homed unlimited rotary-axis jog - 2026-10-24
+
+Added boot_eight.homed_rotary_axis_without_travel_limit_accepts_jog. Configure
+A as rotary, travel0, A-only homing cycle and jog-soft-limits enabled; actual
+serial $HA then $J=G91A20F100 emits230 homing pulses plus exactly1600 jog
+pulses. Physical endpoint1790, system1590steps and parser19.875 agree with
+the homing reference. Other axes emit no pulses; sender reports no errors.
+No forced homed bits or private limits call. Fixture now observes actual jog
+start/finish before allowing EOF exit and services jog timer interrupts. Initial
+all-axis homing lock correctly rejected jog; initial premature EOF generated
+reset alarm. Both were fixture mistakes, not CORE defects. Normal bounded
+polling guards retained; ASan/UBSan passes0.07s. Isolated
+unlimited-rotary-jog-proof74 records machine_limits864 homed travel0 skip.
+No CORE/shared fixture edit, exception or new full/hosted run; next-batch case
+remains outside pushed5f3e17f.
+
+# Current residual inventory refreshed from exact coverage job - 2026-10-24
+
+Recomputed every per-source missing outcome count from40029656398 XML; totals
+277raw missing lines/1283outcomes agree with17756-17479 and13834-12551.
+Updated COVERAGE_GAPS top/table to exact5f3e17f/CORE2e165a1 measurement, with
+explicit overall/GCC pending status; preserved historical pinned audit sections.
+One live status refresh: source, Clang and coverage terminalsuccess; GCC still
+in_progress. No badge change, duplicate dispatch or claim of full overall pass.
+Existing local successor search/catalog/probe cases remain outside this report.
+
+# Legacy probe full-status compatibility - 2026-10-24
+
+Extended existing realtime_probe_trigger_is_reported_as_pin_state. Preserve
+normal query assertion, then issue full status with a legacy driver callback
+and no registered multi-probe inputs. Triggered probe reports exactly P; after
+release a held control input reports exactly H, with no stale I/J/K markers.
+Acquired multi-probe flag stays false. ASan/UBSan passes0.07s, no CORE/helper
+edit or exception. Isolated legacy-probe-full-proof74 records current1443
+branch outcomes; full status evaluates the inner unacquired-provider arm.
+Added subsequent extended query as well: exact H marker remains and acquired
+stays false. Fresh legacy-probe-extended-proof74 verifies the missing outer
+1443 extended-and-unacquired false outcome (branch5 taken1). Initial full-only
+profile bypassed that outer condition; it was not evidence of this new outcome.
+Keep with local string-search and analog-only ownership cases for cumulative
+validation, outside pushed5f3e17f. No full gate/hosted dispatch for this case.
+
+# Exact pushed checkpoint coverage job verified - 2026-10-24
+
+Existing run40029656398 coverage artifacts downloaded for exact harness
+5f3e17fd7fc5a4722e9a9ff1a05d682d88dc5e37 and CORE
+2e165a1ac4c74be8e68971972c6577775d856b05. Both source locks and
+core/.*\.[ch]$ filter match; exactly seven stages all exit0. Coverage job
+counts4362:4347clean,15known,0failed/skipped. Measured17479/17756 lines
+98.44%,12551/13834 outcomes90.73%. Against same-source40024613962, net+15
+covered outcomes with identical denominator and no newly lost/covered lines.
+Coverage result is verified; overall run still in_progress at inspection.
+Do not call all jobs green or refresh success badges until terminal compiler
+and Results summary checks. No duplicate dispatch. Later local string-search
+and analog-only catalog cases are outside this pushed head/report.
+
+# Analog-only bank build report tracks public plugin claims - 2026-10-23
+
+Added report.build_info_tracks_analog_only_bank_as_plugin_claims_ports. Real
+analog driver registration advertises AUX IO0,0,2,2; claiming each physical
+input through ioport_claim changes report to0,0,0,2; claiming both outputs
+removes AUX IO entirely. No analog output or PWM configuration occurs during
+reporting/claiming. Reused existing analog driver callbacks and build-info
+initialization. Initial fixture omitted required ATC reader and retried physical
+port0 twice; repaired to existing build fixture and physical ports0/1. Neither
+was a CORE defect; no exception/assertion weakening. ASan/UBSan passes0.08s.
+Isolated analog-catalog-proof74 covers6/8 outcomes at report1193 versus5/8
+hosted40024613962, proving at least one new outcome; exact union awaits hosted
+aggregation. Keep with local search cases for substantial next batch. No CORE
+edit, full suite or new hosted dispatch.
+
+# Independent motor metadata contract review while CI runs - 2026-10-23
+
+Actual run40029656398 remains in_progress on exact5f3e17f: source success,
+coverage/GCC/Clang live. No duplicate run or restart. Continued source/case
+review of secondary motor metadata; existing tests already cover initial rotary
+option, axis mappings and optional prior providers. Remaining runtime rotary
+transition lacks a native registered option setter: only enum/field and three
+stepper2 reads exist in current CORE. Recorded bounded plugin-contract TODO
+instead of changing private state to force wrapper conditions. Existing local
+string-search improvements remain next-batch work with conservative minimum
+nine source-matched additional outcomes. No CORE edits or new test allowance.
+
+# Literal punctuation in public string search - 2026-10-23
+
+Extended existing bounded and unbounded case-insensitive search cases with
+Spindle {rpx} {RPM} labels. Literal braces survive case folding, wrong closing
+punctuation does not match, a partial-match restart finds the second label,
+and bounded matching stops at the requested five-byte prefix. Prior assertions
+remain. Both ASan/UBSan cases pass0.09s each, no CORE/helper change or new case.
+
+Separate isolated profiles in label-search-proof74 exercise10/10 outcomes at
+strutils68,104,113 and9/10 at76. Exact old hosted40024613962 had8/10,7/10,
+7/10 and8/10 respectively: at least nine additional previously missing outcomes
+are now exercised. Old XML lacks per-outcome identities, so do not claim an
+exact union count for76 until hosted aggregation. No percentage/badge change.
+
+Pushed cumulative checkpoint5f3e17fd7fc5a4722e9a9ff1a05d682d88dc5e37 has
+actual hosted handle40029656398, queued when captured; never duplicate it.
+These new string cases are local successor work, outside that measured head.
+Full supported objective remains active.
+
 # Provider/pendant/spindle/RTU/device cumulative gate passed - 2026-10-23
 
 Six new cases and five strengthened existing cases span zero-port providers,
