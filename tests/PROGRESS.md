@@ -1,3 +1,29 @@
+# Cumulative public-workflow delivery gate - 2026-10-23
+
+The seven-workflow group eb168ca passes the full4,239-case ASan/UBSan gate in
+162.27s and strict summary:4,217clean/22documented regressions/0unexpected/
+0skipped. Evidence build-asan/batch74-public-workflows-delivery-{results.xml,
+tests.log,summary.log}. No new exceptions; CORE remains clean50f3865.
+This checkpoint includes operator wiring, guarded named-file scans, inch-mode
+selected probing, no-spindle commands, calibration removal, coolant modal timing
+and PRINT allocation recovery. Reporting helpers are unchanged; no redundant
+full helper rerun. Push one cumulative hosted checkpoint, then continue authoring.
+Coverage badges below describe verified824e516, not this new group.
+
+# Verified correction checkpoint coverage - 2026-10-23
+
+Run39914617515 at824e516/core50f3865 is fully successful across source, GCC,
+Clang, coverage and diagnosis. Both downloaded source locks agree; all seven
+coverage stages exit0. Coverage classifier4,232total/4,212clean/20known/0failed/
+0skipped. Measured17,397/17,714 lines98.21% and12,277/13,800 outcomes88.96%.
+Net change from39908773015 is+11 lines/+27 outcomes; the withdrawn synthetic
+scheduler saturation test legitimately loses spindle_control.c636. Raw covered
+line comparison is build-asan/hosted39914617515/comparison39908773015.json.
+317 raw uncovered lines remain; no exclusions or adjusted denominators.
+README badges/gap snapshot now use this verified checkpoint. The seven local
+workflows below are not part of this measurement. Fresh upstream fetch still
+50f38659db7b22f4689f3654df2d110d992bcc95; CORE working tree remains unchanged.
+
 # Public wiring, scan and probing follow-up - 2026-10-23
 
 Seven new LOCAL workflows beyond824e516, current registered count4,239:
