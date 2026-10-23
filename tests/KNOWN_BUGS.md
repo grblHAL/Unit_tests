@@ -26,6 +26,32 @@ in [storage write-failure policy](TODO.md#storage-write-failure-policy), includi
 its observations, existing test exceptions and cleanup links. It is not a
 settled requirement to retry physical writes a specific number of times.
 
+## Stopped-spindle rigid tapping enters macro fallback after synchronization fails
+
+**Confirmed:** 2026-10-23, clean CORE `50f38659db7b22f4689f3654df2d110d992bcc95`.
+With an actual registered encoder spindle, M5 followed by G33.1Z-1K1I2 fails
+synchronization with Status_GcodeSpindleNotRunning (41). The G33.1 execution
+path nevertheless tests only whether status differs from UnsupportedCommand,
+pushes a call scope, and calls macro331. An unhandled provider changes the
+result to Status_GcodeValueOutOfRange (39), losing the original error.
+
+[Regression](cases/spindle_sync/stopped_spindle_rejects_rigid_tapping_without_calling_macro_fallback.c)
+uses public parser commands, real encoder/stepper observers, and a normal macro
+provider returning Unhandled. The running-spindle control correctly returns the
+current weak implementation's UnsupportedCommand without calling that provider.
+The stopped command must preserve error41 and must not invoke a macro after
+failed synchronization. No motion, queue, encoder reset, override leak or call
+scope leak was observed; do not claim an executed macro body or unsafe motion.
+Raw evidence: build-asan/batch74-stopped-tapping-raw-results.xml: status39,
+expected41, provider called1. All preceding no-motion/restoration assertions pass.
+
+Source: [init_sync_motion](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/gcode.c#L1058)
+and [G33.1 execution](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/gcode.c#L4841).
+Preserve initialization failures before considering any native/macro continuation;
+maintain the separate unsupported-native-tapping contract. One exact named
+WILL_FAIL in known_bugs.cmake; no sanitizer allowance or CORE edit. When fixed,
+retain this regression and remove its expected-failure properties and this entry.
+
 ## Lathe roughing checks the previous plane when a block selects a new plane
 
 **Confirmed:** 2026-10-23, clean Terje `50f38659db7b22f4689f3654df2d110d992bcc95`
@@ -61,8 +87,8 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Reviewed:** 2026-10-23, clean Terje `50f38659db7b22f4689f3654df2d110d992bcc95`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39961338202)
-measures 17,419/17,714 lines (98.33%) and 12,441/13,800 branches (90.15%).
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39969171772)
+measures 17,419/17,714 lines (98.33%) and 12,457/13,800 branches (90.27%).
 The 295 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable. See the complete measured
 [line/branch inventory](COVERAGE_GAPS.md) before selecting the next workflow.

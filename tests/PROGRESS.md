@@ -1,3 +1,45 @@
+# Automatic sleep, threading cancellation and residual audit checkpoint - 2026-10-23
+
+Measured hosted39969171772 is fully successful at b2cf02d/CORE50f38659: source,
+GCC, Clang, coverage and diagnosis all passed; both source/filter locks match and
+all seven report stages exit0. Hosted4,320=4,292 clean/28 known/0 failed/skipped.
+17,419/17,714 lines98.33%,12,457/13,800 outcomes90.27%; zero new/lost lines and
+16 new outcomes versus39961338202. README/KNOWN_BUGS snapshot refreshed only after
+whole-run success. Raw remaining295 lines/1,343 outcomes; no exclusions.
+
+Four new local cases and one strengthened case after that measured head:
+- Held G76: first cut completes at Z-1, four held polls preserve every motor
+  counter, public reset stops spindle/driver and prevents the second cut.
+  Three affected sanitizer cases pass0.40s, batch74-held-thread-reset-results.xml.
+- Automatic boot sleep: public $62=1/M8 reaches idle timeout through the actual
+  protocol loop and shuts down coolant/motors. Companion driver RX arrival
+  cancels the timeout, executes $G/M9/$62=0 and remains awake beyond old expiry.
+  Both pass0.34s, batch74-sleep-sender-recovery-results.xml; shutdown controls
+  passed3/3 in0.37s, batch74-idle-sleep-protocol-results.xml. Targets protocol354.
+- Stopped G33.1: running/native-unsupported control skips macro provider; M5 then
+  tapping loses init error41 and calls macro331, returning39. Correct rejection
+  assertions retained in one named WILL_FAIL/detailed KNOWN_BUGS entry. No motion,
+  queue, encoder reset, override/scope leak observed; no executed-body claim.
+  Raw batch74-stopped-tapping-raw-results.xml; three affected cases pass0.47s,
+  batch74-stopped-tapping-known-results.xml. Its output verifies final expected
+  assertion, not an earlier control failure. Targets real gcode4849-4857 error
+  continuation; weak native support does not make that path unreachable.
+- Existing check-mode comment case now executes full G91(MSG,...) and verifies
+  modal update without queue, owned message, output or plugin callback. Two
+  affected cases pass0.32s, batch74-full-parser-dry-run-results.xml.
+
+Local total4,324,31 known. No CORE edit or new sanitizer allowance. Full cumulative
+sanitizer/strict and hosted gates are pending the next substantial pre-push batch;
+unchanged reporting helpers were not rerun. No merge or duplicate hosted dispatch.
+
+COVERAGE_GAPS/TODO now source-review154 of295 raw missing lines;141 remain
+unclassified. Exact subsets checked against hosted XML: unsupported homing,
+validated/private dispatch guards, disabled/unrouted settings, integer-width I/O,
+NVS counter/allocation invariants and backend lifecycle. Pending contracts stay
+explicit; VFS NULL-path fallbacks272/779 are not declared unreachable. Fresh
+CORE origin/master fetch remains clean50f38659. Audits are not measured line gain
+or supported-scope completion. Continue realistic cross-module work.
+
 # Public discovery batch full gate passed - 2026-10-23
 
 All4,320 registered ASan/UBSan tests pass in201.64s, including30 documented

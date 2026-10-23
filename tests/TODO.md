@@ -1229,3 +1229,147 @@ tests verify no driver/tool change; normal M6 message tests verify prompt output
 Do not toggle check mode from a synchronizing callback solely to cover this
 line. Keep it in the raw denominator; this is a source guard audit, not a
 new confirmed defect or an exclusion.
+
+## Built-in parameter macro outer read failure cannot occur for literal local4 - 2026-10-23
+
+CORE50f3865 ngc_params.c1235 calls ngc_param_get with constant local parameter4,
+not the user-selected source index. ngc_param_get388-412 returns true for every
+valid writable index even if no node exists, supplying0 in that case. Thus the
+outer else1247 is not reached by a public G65P3 call; source/destination errors
+are tested by the registered zero/readonly index controls. Keep this raw line
+without injecting a replacement getter or corrupting the parameter table.
+
+## Polar homing residuals have no public homing implementation - 2026-10-23
+
+CORE50f3865 polar_init installs limits hooks at274-276, then sets
+home_machine to polar_homing_cycle at281. That handler249-254 only reports
+"Homing is not implemented!" and returns false. The measured missing lines
+212,214,232,234 belong to the unused axis-mask/empty-position hooks. Existing
+polar.unsupported_homing_reports_warning_without_moving_axes verifies the
+public rejection and unchanged step counters. Keep these4 lines raw; adding
+direct hook invocations solely to improve the percentage would not test a
+supported controller homing workflow.
+
+## Buffered NVS warning equality is skipped by an even retry counter - 2026-10-23
+
+CORE50f3865 nvs_buffer_sync_physical starts its static unsigned retries at0.
+In the memcpy_to_nvs path each still-dirty synchronization increments it once
+at388 and again in the comparison at390. The comparison therefore sees only
+even values, including after unsigned wrap, and cannot equal5. The alternate
+flash path sets4 and decrements to0 before returning; it cannot introduce an
+odd starting value for the buffered path. Consequently391-392 are raw gaps
+that repeated ordinary buffered failures cannot cover. Existing payload/version/
+coordinate retry-and-recovery tests retain their correct persistence assertions.
+
+This is source reachability evidence only. It does not impose a five-attempt
+warning policy or add a new confirmed defect/expected failure while that policy
+remains unresolved. Do not spend tests cycling failures to reach the equality,
+mutate the private retry counter, or exclude these lines from coverage.
+
+## Parser check-mode message cleanup is preempted by normal normalization - 2026-10-23
+
+CORE50f3865 gc_execute_block snapshots STATE_CHECK_MODE at1289, clears any old
+message at1292-1294 and calls gc_normalize_block at1297. Normalization's comment
+handling gate1125 skips both message allocation and plugin comment callbacks
+while state is CHECK_MODE. No asynchronous service runs between that snapshot
+and normalization. The message-and-check-mode cleanup1357-1358 therefore has
+no ordinary input reaching it. The existing dry-run comment case now also
+executes G91(MSG,Change tool) through the full public parser, checking modal
+update, no queue, no output, no message ownership and no plugin callbacks.
+Do not prefill parser-owned message state or change modes from a callback to
+reach this defensive cleanup. Retain both raw uncovered lines.
+
+## Sync-motion initialization encoder guard repeats public validation - 2026-10-23
+
+CORE50f3865 init_sync_motion1044-1045 rejects a missing get_data callback.
+Public synchronized-motion validation already rejects it at3404 (G33/G33.1)
+and3417 (G76), before execution reaches initialization. Its only execution
+callers are the G33, G33.1 and G76 cases at4821/4841/4869; G84 does not call
+this helper. Do not remove get_data after validating a block solely to reach the
+second guard. Retain1045 as a raw gap; revisit if a supported execution caller
+can initialize sync motion without the earlier validation.
+
+## Counted public settings guards and unused availability cases - 2026-10-23
+
+Rechecked CORE50f3865 registration entries against measured settings.c gaps.
+The15 lines2173-2175,2177-2179,2190-2192,2194-2196,2237-2239 are availability
+handlers for door spindle/coolant delays, autoreport interval, timezone and MPG
+autoreport interval. The four implemented descriptors register NULL availability;
+timezone's descriptor is commented out. MPG baud rate is different: its
+availability callback is registered and must not be grouped with these15 lines.
+
+Nine setter rejection lines839,1012,1056,1340,1350,1568,1576,1583,1590 repeat
+registration/capability gates: ganged direction, probe pullup, E-Stop unlock,
+manual tool options/distance, backlash build support, autosquare and per-axis
+homing rates. The disabled-backlash descriptor is compiled out; the others are
+hidden by their registered availability checks before the setter. The existing
+public per-axis mode-switch test explicitly verifies disabled metadata/store
+rejection without notification after returning to shared rates.
+
+PWM bounds925/928 are preceded by Format_XBitfield validation: the descriptor
+contains four labels for one spindle and five otherwise, matching the setter's
+15/31 maximum. validate_int rejects larger values before the setter. Mode's
+default1140-1141 likewise follows a three-label Format_RadioButtons descriptor
+(Normal/Laser/Lathe), rejecting out-of-range values before set_mode. Do not call
+private setters or alter registered descriptors to reach these four lines.
+
+These28 lines remain raw uncovered. This does not classify all58 settings gaps;
+the other30 lines retain their individual review status. No CORE change,
+source exclusion, invented enum, or new defect allowance.
+
+## Counted protocol/backend residuals after public-sleep coverage - 2026-10-23
+
+Rechecked CORE50f3865 against report39969171772. Modbus diagnostics231-233 is
+explicitly TBA; cmds[8].function is0 and rx_packet223 requires a nonzero function
+before switching. Public command lookup also requires that property. Keep these
+three unimplemented lines raw; do not fabricate an accepted diagnostics provider.
+
+VFS rename415's second-mount notification contradicts the preceding successful
+same-mount condition. Chdir482's null-mount arm follows successful parse_path;
+get_mount returns cwdmount, an existing mount, or root for every nonnull path.
+These two lines retain the existing lookup/rename proof at current source.
+Do not group get_mount272 or vfs_get_drive779 with those two: a public NULL-path
+call can reach their defensive fallback, but no supported caller/NULL meaning
+has been established. They remain unclassified rather than being called
+unreachable for all public inputs.
+
+The two ngc_flowctrl default lines811-812, virtual-parameter empty-root942,
+file-reader no-file72 and unused HELP wrapper466/468 retain their earlier
+command-set, built-in-root, reader-restoration and HELP-prefix-routing proofs.
+Counts checked against the exact current XML; source lines remain included.
+No new test, exception or CORE edit for these already preempted paths.
+
+## G33.1 continuation is reachable through a real initialization error - 2026-10-23
+
+Do not classify gcode4849-4857 as wholly unreachable merely because the weak
+mc_rigid_tapping returns UnsupportedCommand. A normal M5 then G33.1 with an
+encoder causes init_sync_motion to return SpindleNotRunning first; the later
+status!=UnsupportedCommand condition enters the macro continuation on that error.
+The correct stopped-spindle regression is registered and documented in KNOWN_BUGS.
+Running-spindle weak/native support remains a separate unimplemented feature.
+No substitute tapping geometry or forced private status was introduced.
+
+## Secondary PWM and parser repeated validation: counted guards - 2026-10-23
+
+CORE50f3865 spindle_control1160-1161 is preempted by registration1471-1473:
+unsupported PWM inversion is removed from the public bitfield before stores.
+Existing secondary_pwm_rejects_signal_inversion_not_supported_by_driver verifies
+value4 rejects before change notification, while supported on/direction bits3
+still store correctly. PWM options1172 repeats the public five-bit limit; the
+existing invalid-options case rejects33 without changing configuration.
+The private get_int default1215-1216 has only its two registered setting IDs,
+SpindlePWMOptions1 and SpindleInvertMask1, both handled explicitly.
+
+Parser gcode2888 is preceded by the same YZ+active-compensation check at2754-2755.
+The existing YZ-enable/XY-retry control verifies Conflict before the cutter plugin
+is called. G10's missing-P/L guard3055 is inside values.l>0; values initialize0,
+and assigning positive L also sets words.l. An omitted L cannot enter that
+branch. Neither path needs invalid parser locals to test its public rejection.
+
+The NGC-only post-reader NaN guard1489 retains its earlier reader proof: failed
+ngc_read_real_value returns before it, and the deliberate valueless-word NaN is
+excluded by this guard. Keep that line raw without introducing an invalid enum.
+
+These eight exact missing lines remain in the denominator. They are separate
+from the newly demonstrated reachable G33.1 initialization-error continuation;
+no blanket claim that tapping continuation is unreachable is justified.

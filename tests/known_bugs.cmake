@@ -160,3 +160,8 @@ endif()
 if(TEST ioports.free_port_counts_refresh_when_expansion_registers_after_discovery_query)
   set_tests_properties(ioports.free_port_counts_refresh_when_expansion_registers_after_discovery_query PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Failed rigid-tapping synchronization enters the macro fallback, CORE50f3865.
+if(TEST spindle_sync.stopped_spindle_rejects_rigid_tapping_without_calling_macro_fallback)
+  set_tests_properties(spindle_sync.stopped_spindle_rejects_rigid_tapping_without_calling_macro_fallback PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
