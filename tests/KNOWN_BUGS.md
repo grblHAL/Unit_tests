@@ -35,9 +35,9 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Reviewed:** 2026-10-23, clean Terje `50f38659db7b22f4689f3654df2d110d992bcc95`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39900281002)
-measures 17,369/17,714 lines (98.05%) and 12,215/13,800 branches (88.51%).
-The 345 uncovered lines include the following known gaps; this table does not
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39903031655)
+measures 17,375/17,714 lines (98.09%) and 12,235/13,800 branches (88.66%).
+The 339 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable.
 
 | Region | Status and evidence | What makes it testable |
@@ -454,3 +454,26 @@ Confirmed 2026-10-23 on CORE `50f38659db7b22f4689f3654df2d110d992bcc95`. Public 
 Regression: `system.startup_comment_rejection_preserves_saved_line_and_allows_retry`. Correct assertions require the error, preservation of saved G90 and successful later retry. They remain after the fault and are not reached today. The accepting-plugin companion passes. Raw evidence: `build-asan/batch73-startup-comment-raw.xml`. One exact crash wrapper checks function/source and UBSan line1154 plus the null-store diagnostic. Uninstrumented builds require the exact callback-stage marker and SIGSEGV/access-violation exit, rejecting ordinary assertions, successful fixes and unrelated output. Windows ASan may omit source line information; its preceding UBSan location remains mandatory.
 
 Proposed upstream fix: guard the optional message output before clearing it on comment rejection. Remove the named exception, wrapper registration and manifest entry once the unchanged test passes under instrumented and ordinary builds. No CORE changes.
+
+## Large analog PWM request wraps to minimum duty with 16-bit fast integers
+
+Confirmed 2026-10-23 on clean CORE `50f38659db7b22f4689f3654df2d110d992bcc95`,
+Windows LLVM/MinGW with `sizeof(uint_fast16_t) == 2`. Public PWM precomputation
+at 10 MHz / 1 kHz gives period10000, input range10..110, duty1000..9000.
+A request828 should clamp to9000, matching the ordinary upper-clamp contract.
+Instead `ioports_compute_pwm_value` casts the scaled65440, adds minimum1000,
+then narrows66440 to904 before clamping (`ioports.c:1181`). The resulting
+underflow comparison returns minimum1000, turning an over-range request into
+low output. The float conversion65440 fits16bits; only defined unsigned
+assignment wrapping is involved, and ASan/UBSan emits no diagnostic.
+
+Regression: `ioports.pwm_large_request_clamps_before_minimum_duty_addition_can_wrap`.
+Raw evidence `build-asan/batch74-pwm-wrap-raw.xml` records width2/result1000.
+Keep the correct9000 assertion. One exact WILL_FAIL applies only when a CMake
+compile check proves `UINT_FAST16_MAX == 65535`; wider integer hosts retain an
+ordinary test. No sanitizer allowance or source exclusion is used.
+
+Proposed upstream fix: compare/clamp the scaled floating value including minimum
+duty before narrowing it, or bound it in a sufficiently wide intermediate.
+After repair retain the test and remove its scoped exception and type check.
+CORE is unchanged.

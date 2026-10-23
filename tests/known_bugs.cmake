@@ -166,3 +166,16 @@ if(TEST system.startup_comment_rejection_preserves_saved_line_and_allows_retry)
     set_tests_properties(system.startup_comment_rejection_preserves_saved_line_and_allows_retry PROPERTIES LABELS "known_bug;known_crash")
   endif()
 endif()
+
+if(TEST ioports.pwm_large_request_clamps_before_minimum_duty_addition_can_wrap)
+  include(CheckCSourceCompiles)
+  check_c_source_compiles("#include <stdint.h>
+#if UINT_FAST16_MAX != 65535
+#error This target does not use a 16-bit uint_fast16_t
+#endif
+int main(void) { return 0; }" HOST_UINT_FAST16_IS_16_BITS)
+  if(HOST_UINT_FAST16_IS_16_BITS)
+    set_tests_properties(ioports.pwm_large_request_clamps_before_minimum_duty_addition_can_wrap
+      PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+  endif()
+endif()

@@ -1,3 +1,123 @@
+# PWM narrow-host ordinary-build confirmation and local checkpoint - 2026-10-23
+
+Ordinary Clang raw execution also records fastintegerwidth2, result1000 versus
+correct9000 and assertion exit1; no sanitizer dependence. Instrumented and
+ordinary configure both prove narrow type and apply only the named allowance.
+Ordinary CTest classification passes0.08s; raw artifact
+build-asan/batch74-pwm-ordinary-raw.json plus ordinary-results.xml. Wider-host
+ordinary assertion remains pending next cumulative hosted delivery.
+Six local follow-ups beyond afdc32b are checkpointed as a coherent group across
+UART ownership, initial driver levels, fine-feed hold, G95 rejection,12channel
+I/O and PWM defect.4,214 registered; no CORE edits. Eight-module prior delivery
+is fully verified39903031655; badge refresh shares that evidence. No repeated
+full gate or hostedrun for this localcheckpoint. Continue substantial work.
+
+# Narrow-integer PWM wrap regression - 2026-10-23
+
+Sixth local follow-up confirms a real PWM conversion defect on16-bit
+uint_fast16_t: legal scaled65440 plus minimum1000 narrows to904, then returns
+minimum1000 for over-range request828 rather than expectedmaximum9000.
+10MHz/1kHz precomputed duty range1000..9000; conversion itself fits16bits,
+no sanitizer diagnostic. Correct assertion retained. One exact WILL_FAIL gated
+by compiler proof UINT_FAST16_MAX==65535; wider hosts keep ordinary assertion.
+Dated KNOWN_BUGS sourcecause/fix/removal entry added. Regression and existing
+upper-clamp control classify2/2 in0.30s, strict summary passes. Evidence
+build-asan/batch74-pwm-wrap-{raw.xml,results.xml,summary.log}.4,214 total;
+45 expected local regressions now, with44 for wider-integer hosted configurations.
+Wider-host execution still awaits the next substantial delivery checkpoint.
+No CORE edits, diagnostic allowance or extra hostedrun. Continue independent work.
+
+# Batch74 fully verified hosted checkpoint - 2026-10-23
+
+Run39903031655 at afdc32b / clean50f3865: source,GCC,Clang,coverage,diagnosis
+allterminalsuccess. Coverage and reporting source/harness/filter locks verified;
+all7 stages0;4,208cases4,164clean44known0failed0skipped.17,375/17,714lines98.09%
+and12,235/13,800branches88.66%. Same-source gain versus39900281002:6lines,
+20branches, no covered-line loss. Badges and known-gap snapshot refreshed to
+successful exactrun;339 raw linesremain. Five additional local cases (4,213total)
+are not included in this measurement. Do not claim goalcomplete or launch CI
+for badge-only edits. Keep substantial cross-module expansion on74; PR28 remains
+separate at its verifiedhead. No CORE edits or merges.
+
+# Twelve-channel I/O registration/remap/claim workflow - 2026-10-23
+
+Fifth local follow-up registers a real12-input/12-output driver and verifies
+P9/P10/P11 labels, high-index input/output remaps, sampled physical channels,
+and exclusive plugin ownership after remapping. Claim consumes physical aux0
+and returns its mapped number; plugin output reaches physical0 while remaining
+G-code indexes reach11 and10 without aliasing. Initial virtual-number claim
+expectation corrected against ioport_claim's documented aux-number contract.
+Remap refreshes displaced slot description only; no unagreed destination-label
+policy is asserted. Initial registered names and explicit plugin name remain
+checked. ASan/UBSan passes0.06s;4,213 total. Evidence
+build-asan/batch74-twelve-port-results.xml. Targets double-digit pnum offsets and
+map/claim interaction without private state. No new allowances or CORE edits.
+Hosted74 GCC passes; Clang remains live at lastcheck. Keep5 localcases grouped.
+
+# Batch74 source-matched coverage gain - 2026-10-23
+
+Hosted39903031655 coverage job terminalsuccess at afdc32b /50f3865. Coverage
+and reporting artifact locks match selected harness/source/filter; all7 stages0,
+4,208 cases:4,164 clean,44 known,0unexpected,0skip. Source-match comparison to
+39900281002 (same50f3865, identical17,714line/13,800branch denominators):
+17,375 covered lines98.09% and12,235 covered branches88.66%; +6lines/+20branches,
+no previously covered lines lost. Raw339lines remain. Explicit per-line diff
+saved build-asan/hosted39903031655/comparison39900281002.json.
+Sourcejob also passes; GCC/Clang stilllive at last check, so overall checkpoint
+and badge update remain pending. Do not dispatch again or claim compiler jobs
+passed. Four additional local scenarios remain outside this report. Continue
+supported work on74; PR28 unchanged, no CORE edits or merges.
+
+# Encoderless G95 rejects without losing a two-spindle cut - 2026-10-23
+
+Fourth local follow-up after afdc32b selects each of two real registered
+encoderless spindle drivers via G95F0.2$1/$0. Both reject unsupported; G94/feed100,
+independent3000/7000RPM directions, driver output counts and queued planner head
+remain unchanged. Subsequent actual stepper execution completes exactly1,600X
+pulses with no Y/Zsteps and idleempty queue. No fake feedback capability or
+post-registration callback mutation. ASan/UBSan passes0.06s;4,212 cases now.
+Evidence build-asan/batch74-g95-spindle-results.xml. Targets G95 single-spindle
+selection and error-path preservation. Keep4 local workflows grouped outside
+hosted afdc32b; no new exceptions, CORE edits or hosted dispatch.
+
+# Fine-feed partial-block hold with parking enabled - 2026-10-23
+
+Third local follow-up after afdc32b uses public parking setting and two queued
+1mm feed blocks at0.5mm/min. Waits for a real first motor pulse, then feedholds
+before the first endpoint. Four held service polls preserve stopped position;
+resume completes exact160Xsteps with no Y/Zsteps, idleempty planner and no
+abort. This targets stepper's sub-step hold termination/partial-block retention
+with parking enabled; no parking/private planner flags are set by the test.
+ASan/UBSan passes0.07s;4,211 total. Evidence
+build-asan/batch74-fine-hold-results.xml. Coverage gain remains unmeasured until
+next substantial checkpoint. Hosted74head still excludes these3 localcases;
+no new exception, CORE edit or extra hostedrun.
+
+# Driver initial stepper output levels - 2026-10-23
+
+Second local follow-up beyond afdc32b calls public st_get_enable_out from the
+real boot driver_setup callback after public $4=5 persistence and CORE settings
+load. Confirms all-disabled startup levels respect mixed XYZpolarity when
+idle-lock and permanently-energized masks are0; sender query agrees, boot exits
+Idle with no queued motion/errors. Explicit driver API use matches stepper.c's
+caller contract. Does not bless the separately unfinished energize-policy TODO.
+ASan/UBSan passes0.07s;4,210 registered. Targets previously uncovered public
+stepper initial-enable function. Evidence build-asan/batch74-driver-enable-results.xml.
+No new allowance/CORE edits. Two local scenarios remain outside hosted74head;
+keep accumulating cross-module work while39903031655 runs.
+
+# Independent UART provider lifetime - 2026-10-23
+
+Continued same74 while hosted39903031655 runs at afdc32b. New scenario uses
+two separately registered UART providers and independent claim/release/handler
+callbacks. Closing second searches past first, leaves first claim/RX/handler
+unchanged; reclaiming second then closing first preserves second claim/handler.
+Both finally release exactly through their own driver callbacks. No registered
+metadata mutation or private stream pointer manipulation. ASan/UBSan passes
+0.07s;4,209 total,one local case beyond dispatchedhead. Evidence
+build-asan/batch74-provider-close-results.xml. No new exception or CORE edit.
+Keep extending cross-module group; no extra gate/hosted dispatch for thiscase.
+
 # Batch74 cumulative delivery passed - 2026-10-23
 
 One cumulative4,208-case ASan/UBSan gate passes132.18s:4,164 clean,44 known,
