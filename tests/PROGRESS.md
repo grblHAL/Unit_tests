@@ -1,3 +1,136 @@
+# Boot/pendant/I/O cumulative delivery gate passed - 2026-10-24
+
+Five new scenarios and three extensions pass the full4378-case ASan/UBSan gate
+in58.27s. Strict summary:4361clean/1exact recovering UBSan/16known regressions/
+0unexpected failed/skipped. Includes physical probe connection without toggle,
+spindle-only automatic sleep, pendant allocation recovery and receive-only alarm
+handover, output discovery after input-only registration, blank-line handling,
+optional registration observer absence and UART identity capability isolation.
+No new defect allowance/shared fixture/CORE changes. Unchanged reporting helpers
+were not rerun. Current measured hosted80db252 remains98.45%/91.07%; this
+successor batch awaits its own source-matched hosted measurement. Preserve the
+unrelated empty-diff legacy-registration status entry outside the commit.
+
+# 80db252 hosted checkpoint fully green - 2026-10-24
+
+Run40039209481 is terminalsuccess on exact80db252/CORE2e165a1. All five
+source/GCC/Clang/coverage/Results summary jobs passed; both source/filter locks
+and exactly seven coverage stages0 verified. Updated success badges and current
+snapshot to98.45%lines/91.07%branches (17480/17756,12598/13834). Corrected the
+stale277 missing-line note to276 and kept NULL-path VFS contracts unclassified,
+separate from the two bounded native routing guards. No exclusions or CORE edit.
+Local successor boot/stream/I/O batch is separate and its cumulative gate is
+running; this successful checkpoint does not complete the full coverage goal.
+
+# Output configuration discovers bank added after input-only registration - 2026-10-24
+
+Added an I/O initialization-order scenario using public digital bank registration.
+Register input-only hardware, query output configuration and require zero ports/
+no callbacks. Add the actual output bank, retry discovery, claim an expansion
+relay and drive its original physical pin on/off. Input availability stays2 and
+one output remains unclaimed. No private count/mapping mutation. Targets
+ioports_cfg549's zero-availability arm followed by successful discovery.
+
+Grouped ASan/UBSan execution passes this and the previously authored registered
+UART identity isolation extension (2/2,0.09s test time). The latter rejects
+capability lookup for another transport/instance without claiming resources,
+then retains normal registered claim/close controls. No new exception, CORE or
+shared-fixture edit. Five new cases/three extensions now accumulate across
+boot/probe/sleep/stream/I/O since80db252; cumulative coverage remains pending.
+
+# 80db252 measured gain verified; Clang still running - 2026-10-24
+
+Existing run40039209481 source/GCC/coverage passed, Clang in progress. GCC's
+exact known diagnostic classification now passes. Both artifact source locks
+match80db252/CORE2e165a1/filter; exactly seven coverage stages exit0.4373hosted:
+4358clean/15known/0failed/skipped.17480/17756lines98.45%,12598/13834outcomes91.07%.
+Same-source comparison againsta432 adds12outcomes with identical covered-line
+sets. Refreshed inventory:276raw missing lines/1236outcomes. Success badges
+stay pinned to prior fully green run; no completion/readiness claim.
+
+Local successor boot probe/spindle sleep and pendant buffering/registration/
+receive-only/capability tests remain separate from this measurement. No duplicate
+run, full gate, CORE change or merge. Continue cross-module authoring.
+
+# Receive-only pendant takes/returns control while alarm remains locked - 2026-10-24
+
+Added public homing-required alarm -> receive-only pendant enable/disable
+workflow. Require input handover/reset and RX ownership changes, primary writer
+preserved throughout, no pendant output and alarm unchanged. Public alarm API
+sets the state; no flags/private pointers are forced. Grouped ASan/UBSan check
+passes this case and the pending no-observer registration/description extension
+(2/2,0.09s test time). Targets stream803/837 and740 respectively.
+
+Source-reviewed existing registered-UART flag lookup extension: same instance on
+Bluetooth and different Serial instance both return zero capabilities without
+claim/release calls, then retain all original claim/close assertions. This new
+extension awaits grouped execution; no earlier pass is attributed to it. Keep
+all successor work together; no full/hosted run or CORE edit/new allowance.
+
+# Pendant connection allocation failure preserves primary and allows retry - 2026-10-24
+
+Added a registered pendant failure/retry scenario using existing exact stream
+allocator instrumentation. Reject its one connection-node allocation, require
+false/no registration notification and intact primary read/write/broadcast. Retry
+registers once; both broadcasts work and a foreground modal query is directed
+to the pendant without changing primary output or taking control. ASan/UBSan
+passes0.07s. Targets stream.c751's rejected connection arm; no new wrapper,
+configuration, exception or CORE/shared fixture edit.
+
+Also source-reviewed the existing receive-only UART description case with its
+optional on_mpg_registered observer absent before registration; require the pin
+description and primary reader while notification count stays zero (stream740).
+This small extension awaits grouped build/execution at the next batch boundary;
+do not claim the earlier focused pass covered it. No full/hosted run started.
+
+# Pendant blank lines acknowledge without replaying a prior query - 2026-10-24
+
+Extended mpg_buffered_commands_wait_for_response after its existing $13/$G
+queries. Two separate empty LF lines each wait for foreground processing and
+produce exactly one ok with no stale modal/setting output. A subsequent $13
+query still returns its exact value/ack, primary input remains selected and MPG
+control stays off. Covers ordinary empty-input and repeated-same-EOL behavior
+in stream.c651/702 while preserving response-before-next-command ordering.
+Focused ASan/UBSan passes0.06s. No new case/exception, shared fixture or CORE
+edit. Aggregate gain awaits the cumulative report; keep with probe and spindle
+sleep successor work rather than dispatching another small hosted checkpoint.
+
+# Registered spindle alone triggers automatic sleep and switches off - 2026-10-24
+
+Added a full boot public $62=1/M3S5000 scenario with the existing registered
+spindle fixture, no coolant and idle-lock255. Advance the scheduler only after
+normal M3 output is observed; require native STATE_SLEEP, spindle off, motors
+disabled, no coolant activation/error and no planner motion. Uses normal driver
+registration/selection and protocol loop; no modal state assignment. Focused
+ASan/UBSan passes0.07s. Targets sleep.c78's spindle-powered condition, distinct
+from existing coolant-only timeouts. No aggregate gain claimed until measurement.
+Keep with physical-probe successor work while80db252's hosted checkpoint runs;
+no new full gate, hosted dispatch, exception or CORE/shared fixture change.
+
+# Residual planner RPM-refresh ownership reviewed - 2026-10-24
+
+Reviewed the one measured planner outcome still missing on CORE2e165a1:
+changed-RPM refresh finding an empty planner. Native scheduling uses a live block;
+completion cancels the callback before block discard, idle/reset cancels pending
+tasks, and reset has no foreground task execution between planner/stepper reset.
+Recorded bounded exact-source evidence in TODO, keeping the outcome included and
+external getter/plugin behavior unclaimed. No private orphan-block test, source
+exclusion or completion claim. Local physical-probe connection case remains
+validated successor work; prior80db252 hosted handle stays40039209481.
+
+# Physical probe connection input without optional toggle callback - 2026-10-24
+
+Added a full grbl_enter boot case for the documented HAL optional callback.
+Driver setup reports probe connection directly from its physical control input
+and has no connected_toggle handler. Actual disconnect/reconnect control IRQs
+queue and execute normal foreground connection events; driver state follows the
+physical input, no alarm/abort is introduced, and subsequent G91 parses normally.
+No live handler is removed or probe private state forced. ASan/UBSan passes0.06s.
+This targets probe_connected_event235's missing optional-handler arm through its
+native system.c caller. Aggregate gain awaits cumulative measurement, not claimed
+from source alone. Keep successor work separate from pushed80db252/live hosted
+40039209481; no new full gate or hosted dispatch for this individual case.
+
 # Cumulative NVS/probe/tool-change sanitizer gate passed - 2026-10-24
 
 Six new tool-change workflows plus existing NVS allocation cleanup/reuse and

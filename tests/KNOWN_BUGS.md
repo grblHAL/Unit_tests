@@ -176,16 +176,16 @@ They do not create synthetic CTest failures, increase test counts, exclude sourc
 or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
-**Measured:** 2026-10-23, clean Terje `2e165a1ac4c74be8e68971972c6577775d856b05`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40034582551)
-measures 17,480/17,756 lines (98.45%) and 12,579/13,834 branches (90.93%).
-The 277 uncovered lines include the following known gaps; this table does not
+**Measured:** 2026-10-24, clean Terje `2e165a1ac4c74be8e68971972c6577775d856b05`.
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40039209481)
+measures 17,480/17,756 lines (98.45%) and 12,598/13,834 branches (91.07%).
+The 276 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable. See the complete measured
 [line/branch inventory](COVERAGE_GAPS.md) before selecting the next workflow.
 
 | Region | Status and evidence | What makes it testable |
 |---|---|---|
-| VFS lookup/rename residual guards | Three unreachable lines: lookup always returns cwd/root; cross-mount rename rejects before its second notification. [Source audit](TODO.md#verified-residual-guards-vfs-lookuprename-and-virtual-parameter-root). | Upstream changes lookup or cross-mount rename semantics. |
+| VFS lookup/rename residual guards | Two native routing guards: valid chdir lookup returns cwd/root; cross-mount rename rejects before its second notification. Separate NULL-path fallbacks remain unclassified. [Source audit](TODO.md#verified-residual-guards-vfs-lookuprename-and-virtual-parameter-root). | Upstream changes lookup or cross-mount rename semantics. |
 | G84 helper flag guards | Six false arms are unreachable: both private helper call sites pass every flag enabled. [Caller audit](TODO.md#g84-private-override-helper-flag-guards). | A supported caller uses partial flags. Saved disabled-policy behavior is separately tested. |
 | Tab-setting datatype default | All declared public datatypes are handled; Int8/Int16 normalize to Integer. [Source audit](TODO.md#tab-setting-metadata-default-datatype-arm). | A new valid datatype reaches the formatter. |
 | Virtual-parameter empty-list registration | Built-in `_value`/`_value_returned` nodes keep the list nonempty. [Source audit](TODO.md#verified-residual-guards-vfs-lookuprename-and-virtual-parameter-root). | A supported lifecycle permits an empty list. |

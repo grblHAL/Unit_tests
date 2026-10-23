@@ -1604,3 +1604,25 @@ about plugins that mutate a selected stream's identity or clear callbacks later.
 Do not remove a live callback or forge an unmatched descriptor to exercise this
 private fallback. Existing real disconnected-console/reconnect, USB callback
 absence, network handoff and pendant restore cases remain the controls.
+
+
+## RPM refresh empty-planner fallback ownership - 2026-10-24
+
+Reviewed exact CORE2e165a1. The sole missing planner.c742 outcome is the
+false return of plan_update_velocity_profile_parameters after a changed RPM.
+The public plan_sync_velocity callback receives a planner-block pointer from
+stepper.c909 only after plan_get_current_block/system-motion lookup returned
+nonnull. Its unchanged-RPM arm requeues that same pointer at planner.c745.
+Native preparation cancels all pending plan_sync_velocity tasks at stepper.c1431
+when a units-per-revolution block completes, before discarding that block at1449.
+st_go_idle cancels the tasks at264, and st_reset begins by calling st_go_idle
+at738. Native reset paths call st_reset after plan_reset, with no task execution
+between those adjacent calls (grbllib485-486 and protocol595-596).
+
+These are bounded native ownership/call-order facts, not a guarantee about
+arbitrary plugins calling plan_sync_velocity with a retired block, driver getter
+side effects or an unproven interrupt mutation. Existing measured-RPM changes,
+G95 hold/resume and synchronized motion/reset controls retain their scope.
+Keep the missing outcome in the raw denominator. Do not directly invoke this
+callback with a saved block after clearing its planner solely for coverage.
+Revisit if native scheduling, block retirement or getter contracts change.

@@ -8,6 +8,12 @@ int main(void)
     stream_register_streams(&absent_provider);
     io_stream_flags_t flags = stream_get_flags(uart_device);
     CHECK(flags.claimable && flags.can_set_baud && !flags.claimed);
+    io_stream_t other_transport = uart_device, other_instance = uart_device;
+    other_transport.type = StreamType_Bluetooth;
+    other_instance.instance = 2;
+    CHECK(stream_get_flags(other_transport).value == 0);
+    CHECK(stream_get_flags(other_instance).value == 0);
+    CHECK(claim_calls == 0 && release_calls == 0);
     CHECK(stream_open_instance(1, 115200, auxiliary_handler, NULL) == &uart_device);
     CHECK(stream_get_flags(uart_device).claimed);
     stream_register_streams(&absent_provider);

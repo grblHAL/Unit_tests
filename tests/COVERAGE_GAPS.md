@@ -1,19 +1,18 @@
 # Remaining raw CORE coverage
 
-Measured coverage: [run40036375055](https://github.com/petervanderwalt/Unit_tests/actions/runs/40036375055),
-harness `a432e12e868638392a3dac6961e5be559538f093`, CORE `2e165a1ac4c74be8e68971972c6577775d856b05`,
+Measured coverage: [run40039209481](https://github.com/petervanderwalt/Unit_tests/actions/runs/40039209481),
+harness `80db2520146ae8273c799d67cec242d0796f0f59`, CORE `2e165a1ac4c74be8e68971972c6577775d856b05`,
 filter `core/.*\.[ch]$`. Both artifact locks match and exactly seven coverage
-stages exit0. Source, Clang and coverage jobs passed. GCC tests passed but
-classification failed on its unsigned-long diagnostic spelling; the exact matcher
-repair is local. This measurement is not an all-jobs success claim.
+stages exit0. All five source/GCC/Clang/coverage/Results summary jobs passed.
 
-17,480/17,756 lines (**98.45%**) and12,586/13,834 branch outcomes (**90.98%**)
-were covered:276 raw missing lines and1,248 missing outcomes. Coverage job:
-4,367 cases,4,352 clean/15 known/0 failed/skipped. Against same-source40034582551:
-seven additional branch outcomes, unchanged line coverage and no lost lines.
+17,480/17,756 lines (**98.45%**) and12,598/13,834 branch outcomes (**91.07%**)
+were covered:276 raw missing lines and1,236 missing outcomes. Coverage job:
+4,373 cases,4,358 clean/15 known/0 failed/skipped. Against same-source40036375055:
+twelve additional branch outcomes, unchanged covered-line set and denominator.
+The GCC compiler-spelling diagnostic repair passed its hosted classification.
 
-Success badges remain pinned to fully green40034582551 (98.45%/90.93%). Local
-NVS allocation/reuse and probe IRQ-disable recovery extensions are not included.
+Success badges now show this fully green98.45%/91.07% checkpoint. Local
+physical-probe, spindle sleep and subsequent pendant extensions are not included.
 
 Raw coverage does not establish correctness or reachability. See [TODO](TODO.md)
 and [KNOWN_BUGS](KNOWN_BUGS.md) before selecting workflows. Historical audits
@@ -43,9 +42,9 @@ remain pinned to their stated revisions; no source exclusions were added.
 | [core/ngc_flowctrl.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/ngc_flowctrl.c) | 2 | 60 | 816-817 |
 | [core/ngc_params.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/ngc_params.c) | 4 | 44 | 772-773, 942, 1247 |
 | [core/nuts_bolts.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/nuts_bolts.c) | 0 | 1 | none |
-| [core/nvs_buffer.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/nvs_buffer.c) | 3 | 9 | 366, 391-392 |
+| [core/nvs_buffer.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/nvs_buffer.c) | 3 | 7 | 366, 391-392 |
 | [core/planner.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/planner.c) | 0 | 1 | none |
-| [core/probe.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/probe.c) | 0 | 2 | none |
+| [core/probe.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/probe.c) | 0 | 1 | none |
 | [core/protocol.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/protocol.c) | 1 | 45 | 185 |
 | [core/regex.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/regex.c) | 0 | 0 | none |
 | [core/report.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/report.c) | 5 | 76 | 450-452, 1955-1956 |
@@ -59,7 +58,7 @@ remain pinned to their stated revisions; no source exclusions were added.
 | [core/stream_file.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/stream_file.c) | 1 | 9 | 73 |
 | [core/strutils.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/strutils.c) | 0 | 5 | none |
 | [core/system.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/system.c) | 2 | 35 | 466, 468 |
-| [core/tool_change.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/tool_change.c) | 2 | 46 | 435-436 |
+| [core/tool_change.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/tool_change.c) | 2 | 37 | 435-436 |
 | [core/utf8.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/utf8.c) | 0 | 1 | none |
 | [core/vfs.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/vfs.c) | 4 | 38 | 272, 415, 482, 779 |
 
