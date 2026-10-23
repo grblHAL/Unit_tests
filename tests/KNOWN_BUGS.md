@@ -28,6 +28,11 @@ settled requirement to retry physical writes a specific number of times.
 
 ## Absent-axis inch conversion shifts by the unavailable axis marker
 
+2026-10-24 reporting correction: GCC names the same unsigned-long type
+`long unsigned int`; the exact diagnostic matcher accepts both compiler
+spellings. Case, source line177, shift255 and integer widths remain constrained.
+The regression assertions and defect classification are unchanged.
+
 Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
 The normal named parameter registry exposes `_abs_w` and `_w` even when W is not
 configured. In an eight-axis build, both getters correctly supply a zero value
@@ -172,8 +177,8 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Measured:** 2026-10-23, clean Terje `2e165a1ac4c74be8e68971972c6577775d856b05`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40032608243)
-measures 17,479/17,756 lines (98.44%) and 12,567/13,834 branches (90.84%).
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40034582551)
+measures 17,480/17,756 lines (98.45%) and 12,579/13,834 branches (90.93%).
 The 277 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable. See the complete measured
 [line/branch inventory](COVERAGE_GAPS.md) before selecting the next workflow.

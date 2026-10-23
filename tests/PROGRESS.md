@@ -1,3 +1,141 @@
+# Cumulative NVS/probe/tool-change sanitizer gate passed - 2026-10-24
+
+Six new tool-change workflows plus existing NVS allocation cleanup/reuse and
+probe IRQ-disable recovery extensions pass the full4373-case ASan/UBSan gate
+in58.37s. Strict summary passes with one exact recovering UBSan and16 known
+regressions; no unexpected failures/skips. CORE2e165a1 remains clean.
+
+Existing hosted a432e12 run40036375055 is terminal failure: source/Clang/coverage
+passed, GCC test stage passed but classification rejected its same absent-W
+shift255 diagnostic because GCC spells the type 'long unsigned int'. The old
+matcher accepted only 'unsigned long'. Expand only that exact type alternative;
+retain exact case/source177/exponent255/32-or64-bit constraints and correct
+assertions. Thirteen affected reporting tests pass2.072s, including actual GCC
+spelling and rejection of another source/line/exponent. No C rebuild/full gate
+needed after this manifest-only reporting repair. Six new cases remain locally
+validated, not included in the98.45%/90.98% measured a432 coverage checkpoint.
+
+# Z-only manual tool change skips configured G30 traverse - 2026-10-24
+
+Added a supported manual mode scenario using the existing fixture's ordinary
+Z-only homing state. Enable G30 change position at X4/Y5/Z-0.5 and require the
+full-XYZ homing guard to skip that traverse: zero XY pulses, Z retracts80steps
+to home, planner empties and tool remains pending/uncompleted. Acknowledge the
+change and verify handler installation at that event. Initial test expected the
+handler before acknowledgement; corrected the fixture ordering, not CORE.
+Focused ASan/UBSan passes0.07s. The source target is tool_change497's full-homing
+condition; no aggregate coverage gain claimed before cumulative measurement.
+Six new tool-change cases now accumulate with NVS/probe recovery extensions.
+No new exception, CORE edit, full gate or hosted dispatch.
+
+# Automatic contact reset and deep-plate retract scenarios - 2026-10-24
+
+Added two distinct existing-fixture workflows. Automatic toolsetter reset after
+first contact prevents retract/second pass and reference establishment, restores
+the hand probe and stream/control handlers and never completes/restarts the job.
+A normal manual touch-off with plate at -6mm establishes its measured dynamic
+offset and retracts4mm, remaining below home rather than taking the home clamp.
+Both focused ASan/UBSan checks pass0.14s total. Fresh touch-group-proof74 has
+separate automatic-reset/deep-plate profiles for tool_change326/331 and644/647.
+No CORE/shared fixture changes, new allowances, full gate or hosted dispatch.
+Five new tool-change cases now accumulate with NVS/probe recovery changes.
+
+# Reset after first workpiece touch-off prevents retract and second probe - 2026-10-24
+
+Added public $TPW/reset scenario with existing motion and probe fixtures. Chain
+the tool-change completion observer after first successful contact, enqueue real
+CMD_RESET and require no subsequent Z pulse or second probe. Reset chains once,
+clears pending tool change, restores stream/control handlers, leaves XY fixed
+and never marks the tool complete or requests cycle start. No IRQ timing or
+private state assignment. ASan/UBSan passes0.07s. Fresh touch-reset-proof74
+records rejected retract and short-circuited second probe at tool_change633/639.
+No new exception or CORE edit; accumulate with NVS/probe/contact-loss scenarios.
+No full gate or hosted dispatch for this individual addition.
+
+# Automatic toolsetter second-pass contact loss cleans up without reference - 2026-10-24
+
+Added the automatic counterpart through actual cycle-start, registered toolsetter
+selection and motion. First contact succeeds; the public completion observer
+removes contact for the slow second pass. Require ProbeFailContact, no reference
+or dynamic offset, restored hand probe/control/stream handlers, empty planner
+and no cycle-start. The observer remains installed. ASan/UBSan passes0.05s;
+fresh auto-second-contact-loss-proof74 records the second-probe result and
+reference-gate evidence at tool_change331/334; the reference notification at338
+remains unexecuted in this failure scenario. No new allowance or CORE edit.
+Keep with manual second-contact, NVS and probe recovery for cumulative delivery;
+no full-suite or hosted run just for this addition.
+
+# Workpiece touch-off loses contact on slow second pass - 2026-10-24
+
+Added a public $TPW scenario using the existing motion/probe fixture. The first
+contact succeeds; a chained public completion observer removes the plate before
+retraction/slow probing. The second pass reaches its travel without contact,
+returns ToolError and prompts retry. Tool-change suspension remains installed,
+no cycle-start is requested, XY stays fixed and the planner drains. Preserve the
+existing tool-change observer; no private state or CORE edit. Focused ASan/UBSan
+passes0.07s; fresh second-contact-loss-proof74 records tool_change639/650
+branch evidence. No defect allowance, full gate or hosted dispatch. Accumulate
+with NVS and probe IRQ recovery before cumulative validation.
+
+# a432e12 completed coverage measurement; GCC remains live - 2026-10-24
+
+Inspected existing run40036375055: source/Clang/coverage passed, GCC in progress.
+Downloaded both coverage artifacts, verified exact harness a432e12/CORE2e165a1/
+core filter and exactly seven stages exit0. Coverage4367:4352clean/15known/
+0failed/skipped.17480/17756 lines98.45%,12586/13834 outcomes90.98%.
+Same-source comparison adds seven outcomes; no added/lost lines. Refreshed raw
+remaining inventory to276 lines/1248 outcomes. Success badges stay on the prior
+fully green checkpoint. Local NVS/probe extensions remain separate, no duplicate
+hosted run or full-suite gate. The full supported-coverage goal remains active.
+
+# Probe disconnect IRQ rejection and recovery - 2026-10-24
+
+Extended the existing public protection connection scenario: reject driver IRQ
+removal, retain reported armed/guarded state while disconnected, reconnect with
+registration restored, then successfully disconnect and clear the guard. No
+private state assignment or timing assumption. Focused ASan/UBSan passes0.06s.
+Fresh probe-disable-recovery-proof74 records both driver-result outcomes at
+probe.c57 (counts1/2); the unguarded short-circuit is absent in this isolated
+scenario. Hosted baseline has three of four outcomes; exact aggregate gain
+awaits cumulative measurement. No new defect, allowance, CORE edit, full gate
+or hosted dispatch. Keep with cumulative NVS work.
+
+# Existing buffered allocation preserves saved information without reallocating - 2026-10-24
+
+Further extended existing NVS allocation recovery case after successful retry.
+Write build information through settings API, arm the existing allocator rejection
+fixture, call nvs_buffer_alloc again and require success with rejection still
+unused. Readback validates saved information; normal final cleanup retained.
+No private pointer assignment or double-free. ASan/UBSan passes0.05s. Fresh
+nvs-allocation-reuse-proof74 shows both outcomes at229 (existing allocation)
+and243 (unallocated cleanup from previous extension). No CORE/shared fixture
+edit, new case/allowance/full gate or hosted dispatch. Keep with successor work.
+
+# Buffered NVS cleanup after failed allocation and successful retry - 2026-10-24
+
+Extended existing buffer_allocation_failure_can_retry_without_changing_storage_handlers.
+After one ordinary allocation failure, call public nvs_buffer_free while no
+buffer exists, verify physical type/handlers/get_physical remain unchanged,
+then retain existing successful allocation/emulation initialization and final
+allocated cleanup. Native grbllib exit518 calls cleanup unconditionally, so
+this models valid failed-allocation cleanup rather than double-free or private
+pointer mutation. ASan/UBSan passes0.07s; fresh unallocated-nvs-cleanup-proof74
+executes both nvs_buffer243 outcomes, previously1/2. No CORE/helper edit,
+new case/exception/full gate or hosted run. Current measured fully-green
+f6da420 remains98.45%lines/90.93%branches; this is local successor work.
+
+# Exactf6da420 hosted checkpoint fully verified - 2026-10-24
+
+Run40034582551 terminalsuccess, all five source/GCC/Clang/coverage/Results
+summary jobs success on exactf6da420/CORE2e165a1. Both locks/filter and exactly
+seven stages0 verified.4365hosted:4350clean/15known/0failed/skipped.
+17480/17756lines98.45%,12579/13834outcomes90.93%; +1line/+12outcomes
+and no lost lines on same source. Regenerated per-source missing counts and
+line lists:276raw lines/1255outcomes; refreshed success badges/current snapshot.
+New covered motion_control1122 is real parking-abort recovery. Newer a432e12
+run40036375055 is separate; never attribute its changes to this result. Full
+supported-coverage goal remains active; no CORE edit, merge or duplicate run.
+
 # Named/probe/homing cumulative delivery gate passed - 2026-10-24
 
 Two new cases and six extended cases cover public absent-axis named/G92

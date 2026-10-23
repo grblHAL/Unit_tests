@@ -41,6 +41,6 @@
     "lines": [
       177
     ],
-    "message_pattern": "shift exponent 255 is too large for (32|64)-bit type 'unsigned long'"
+    "message_pattern": "shift exponent 255 is too large for (32|64)-bit type '(unsigned long|long unsigned int)'"
   }
 ]
