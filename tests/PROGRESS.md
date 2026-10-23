@@ -1,3 +1,43 @@
+# Public wiring, scan and probing follow-up - 2026-10-23
+
+Seven new LOCAL workflows beyond824e516, current registered count4,239:
+- Registered auxiliary input is assigned FeedHold using ioport_set_function.
+  Public control inversion/pullup settings toggle inverted/pulldown then restore
+  normal/pullup wiring, preserving debounce, assignment and the other aux input.
+  This exercises the real setter/driver-notification path and clear-inversion arm.
+- Named file with guarded ERROR is scanned before executing two valid calls.
+  The diagnostic remains inactive, arguments accumulate once per call, and caller
+  local99 is restored. No immediate-execution or implicit-EOF assumption.
+- Inch/incremental G38.2 selects toolsetter, measures real motor contact, restores
+  previously selected Probe2 and retains inch/incremental/feed modes. Incremental
+  retract then metric/absolute return reach their physical endpoints.
+- No-spindle board uses CORE's automatic null fallback for ordinary M3/M4/M5 and
+  150/100 percent overrides; enabled/direction/stopped states remain coherent.
+
+- Public calibration settings produce a below-minimum PWM request; driver
+  conversion clamps to minimum for normal/PID output and keeps zero RPM off.
+  Clearing the calibration setting restores ordinary linear output and capability.
+- M70/M72 saves/restores both off and running coolant. Restoring off skips the
+  configured100ms startup wait; restarting saved flood waits100ms; unchanged
+  repeated restore adds no driver write or delay.
+- PRINT substitution fails only its exact11-byte result allocation. It returns
+  no owned message, suppresses the comment event, preserves parameter7.5 and
+  successfully formats/frees the next message. Wrapper is scoped to this case.
+
+Grouped ASan/UBSan and strict-summary validation now passes141/141 in17.79s,
+including all affected expression/calibration/coolant controls. Evidence:
+build-asan/batch74-calibration-coolant-message-{results.xml,summary.log}.
+No new known exceptions. This is an affected-module gate, not a full suite.
+
+Earlier grouped three-case ASan/UBSan evidence batch74-wiring-probe-scan-results.xml passes
+1.13s; null-board scenario batch74-null-program-results.xml passes0.15s.
+Initial wiring fixture omitted mandatory control reader; corrected the fixture.
+Protocol CMD_EXIT intentionally sets abort, so named-file assertions use returned
+status, restored scope, no error output and alarm state rather than a post-exit
+!abort assumption. No new CORE defect or expected-failure allowance.
+No new full local gate, hosted dispatch or coverage-gain claim for these seven.
+They remain on batch74 for the next substantial cumulative delivery.
+
 # Maintainer contract corrections - 2026-10-23
 
 Terje clarified named files must scan through a matching ENDSUB before executing.

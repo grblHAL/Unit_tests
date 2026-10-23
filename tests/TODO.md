@@ -1049,3 +1049,18 @@ Public API reachability alone does not establish an ordinary controller workflow
 The unregistered proposal is `proposals/full_task_pool_override_fallback_allows_later_ramped_retarget.c`.
 Only reconsider after demonstrating a supported plugin workload and accounting
 for the existing ramp-task deletion/replacement slot. No CORE change is requested.
+
+## Public setting dispatch guards in residual coverage - 2026-10-23
+
+Audit against clean CORE50f3865 and report39908773015: settings.c839,1012,
+1056,1340/1350 and1568/1576/1583 are defensive setter rejection paths behind
+setting_get_details/is_setting_available capability checks. Normal public stores
+reject unavailable settings before those setters execute. Do not obtain a detail
+then remove driver capabilities, or invoke its private callback, solely to cover
+the second guard. Existing unavailable-setting tests retain the public outcome.
+The get/set callback default arms likewise require IDs absent from their routing
+tables. Keep these raw uncovered; no source/branch exclusion is introduced.
+
+Public control wiring still had a reachable clear-inversion arm: the new assigned
+FeedHold workflow now toggles both polarity and pull mode through real settings
+stores, preserving debounce and the neighboring input. No private mask forcing.
