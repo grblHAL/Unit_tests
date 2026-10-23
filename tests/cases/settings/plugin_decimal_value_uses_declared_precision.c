@@ -5,8 +5,13 @@ int main(void)
 {
     engine_prepare();
     float stored = 12.375f;
-    const setting_detail_t setting = {.id=(setting_id_t)1001, .type=Setting_NonCore, .datatype=Format_Decimal, .format="0.000", .value=&stored};
+    setting_detail_t setting = {.id=(setting_id_t)1001, .type=Setting_NonCore, .datatype=Format_Decimal, .format="0.000", .value=&stored};
     CHECK(strcmp(setting_get_value(&setting, 0), "12.375") == 0);
+    const char *default_formats[] = {NULL, "0"};
+    for(unsigned i = 0; i < sizeof(default_formats) / sizeof(default_formats[0]); i++) {
+        setting.format = default_formats[i];
+        CHECK(strcmp(setting_get_value(&setting, 0), "12.4") == 0);
+    }
     NEAR(setting_get_float_value(&setting, 0), 12.375f);
     return EXIT_SUCCESS;
 }

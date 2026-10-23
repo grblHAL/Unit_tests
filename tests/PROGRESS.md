@@ -1,3 +1,175 @@
+# Cumulative mixed-workflow delivery gate - 2026-10-23
+
+One cumulative full ASan/UBSan gate passes4,301 cases in66.27s; strict summary
+reports4,274clean/27known/0unexpected/0skipped. Both fatal known regressions
+remain exact-wrapped; no new allowance or changed reporting helper. Evidence
+build-asan/batch74-mixed-workflows-delivery-{build,tests,summary}.log and results.xml.
+
+Batch adds four distinct public workflows (CSS/RPM mode restoration, unrelated
+I/O setting notification, normal-spindle-only broadcast motion) and strengthens
+existing integer/date/string, message ownership, eight-axis metadata and public
+setting store/readback cases. Existing assertions remain. No duplicate case
+aliases or CORE changes. Shared paired-PWM fixture defaults are unchanged.
+
+Fresh CORE origin/master still50f38659db7b22f4689f3654df2d110d992bcc95, clean.
+Harness origin/upstream fetched; PR28 remains open/unmerged at frozena9f355c.
+Do not merge or extend it. Keep successor coverage-batch-74 for this delivery.
+ReadMe/KNOWN_BUGS/COVERAGE_GAPS use fully successful39950801187 evidence;
+this new batch requires its own matching hosted report before a gain claim.
+
+Next: commit/push cumulative changes, request exactly one source-pinned hosted
+run after checking the hourly ceiling and exact-head duplicates, then continue
+independent supported gap work while it runs. Full coverage remains unproven.
+
+# Optional decimal precision and registered setting readback - 2026-10-23
+
+Strengthened existing direct and function-backed decimal getter cases. Both
+retain explicit three-decimal formatting and raw numeric readback, then cover
+NULL format and a format with no decimal point:12.375 renders12.4 through the
+helper's default precision. Function-backed checks preserve offset1003 and
+exact callback count4. Targets settings.c1908/1910. Fresh ASan/UBSan2/2pass0.49s,
+batch74-decimal-defaults-results.xml.
+
+Registered password-store case now accepts an actual eight-character password
+from the web UI (same length as PASSWORD_MASK), verifies saved data and masked
+readback, rejects the literal mask without another save/change, and verifies
+serial readback after disconnecting the web UI. Existing non-mask-length store
+remains. Reset-action case now checks selective5 and public stores/readbacks
+for0/15, plus all four retention flags and exactly three change callbacks.
+Targets settings.c3505's same-length non-placeholder outcome and inverted
+readback bits1877-1879. Seven affected password/reset tests pass fresh
+ASan/UBSan0.58s, batch74-settings-readback-results.xml.
+
+Source audit found validate_pulse_width is an unconditional Status_OK stub on
+CORE50f3865; its complete rejection logic is commented out. Added exact TODO
+rather than manufacturing high-frequency rejection failures. Existing pulse
+minimum and file-end driver-rate sanity controls remain intact. No new cases,
+exceptions, dependencies, CORE edits or hosted run. Registration4,301 and
+measured98.29%lines/89.74%branches remain unchanged until a cumulative gate.
+
+# Marker-message cleanup and spindle-axis metadata isolation - 2026-10-23
+
+Extended the existing gcode motion-comment ownership test with a normal
+%(MSG,Program header) marker followed by G90 and a closing %. The same tracked
+allocator verifies the header allocation has been released on the next block;
+existing queued-motion/reset ownership assertions remain. This reaches the
+public pending-message cleanup at gcode.c1293-1294 without assigning parser
+state or adding another alias test. Current gc_at_exit already frees rejected
+messages, so the existing parser-error control remains passing. Focused2/2
+ASan/UBSan0.41s, batch74-marker-message-results.xml.
+
+Extended the existing eight-axis spindle description case to request X-axis
+steps, maximum rate, acceleration and travel after binding only A as a spindle.
+All descriptions still come from the original provider; bound A descriptions
+retain spindle-specific units. Targets the ordinary unbound-axis outcomes at
+stepper2.c176/181/187. Five affected metadata/iterator cases pass fresh
+ASan/UBSan0.48s, batch74-stepper-metadata-results.xml. Existing cross-module
+metadata cases checked first; no new case count, callbacks or firmware edits.
+
+Registration remains4,301. No new known defect/allowance. No full gate or hosted
+run for this small group; accumulate with the pending cross-module batch.
+Measured coverage remains39950801187,98.29%lines/89.74%branches. These additions
+are local and unmeasured. Full supported coverage is still unproven.
+
+# Mixed-machine broadcast motion and helper boundaries - 2026-10-23
+
+New normal-only-enabled broadcast workflow uses the existing paired PWM fixture
+with its registered laser left unused from startup. Global laser mode remains
+valid: settings.c1131-1132 checks registered configured capabilities through
+spindle_get_caps(false), which includes that registered laser. Broadcast M3/M5
+must find no enabled laser, preserve the normal spindle's programmed6000RPM,
+produce constant600/1000PWM throughout800actual X pulses to10mm, leave Y/Z and
+unused laser untouched, then stop output. Targets gcode.c134-135 and the
+no-enabled-laser branch, without changing CORE or private parser state.
+
+The shared fixture's optional secondary-enable flag defaults true. Nine affected
+paired PWM/broadcast/restore/ramp cases pass fresh ASan/UBSan0.63s, evidence
+batch74-broadcast-motion-results.xml. Initial assertion incorrectly observed
+set_state RPM rather than ramped PWM; replaced with actual emitted PWM and
+programmed RPM checks. Initial synchronized stop exposed missing stepper
+callbacks in this planner-only fixture, repaired using existing motor observer;
+no CORE defect or allowance claimed.
+
+Existing integer rejection case now checks both overflow conditions with
+4294967296 and4294967300, retaining cursor/output on rejection. Timestamp case
+rejects malformed separators at each field and retains valid recovery. Existing
+substring cases now cover mismatch/restart, partial needle at end and needle
+termination before a larger bound. Eleven helper cases pass in
+batch74-helper-broadcast-results.xml; that earlier combined report also contains
+the subsequently repaired broadcast fixture failure, superseded by the9/9above.
+Existing crossbar AB mapping already has an eight-axis test; no duplicate added.
+
+Registration4,301: four new local workflows beyond pushed9dbcf3c plus strengthened
+existing boundaries. No new exception, CORE change, full gate, push or hosted
+run. Keep accumulating a substantial cross-module batch. Measured coverage
+remains98.29%lines/89.74%branches on39950801187, excluding this local work.
+
+# Integer zero boundaries and latest measured branch checkpoint - 2026-10-23
+
+Existing read_uint_valid now checks literal0 and a zero-padded field starting at
+nonzero parser offset (X00012Y), including exact value and consumed delimiter
+position. Original signed-positive/maximum controls remain. Fresh ASan/UBSan
+integer group5/5pass0.44s, batch74-uint-zero-results.xml. Targets nuts_bolts.c222
+leading-zero outcome; no new cases, exceptions or CORE changes. Registration
+stays4,300; keep local with CSS/port/normalization work for the next batch.
+
+Hosted39950801187 exact9dbcf3c/core50f/filter locks match; coverage/report all
+seven stages pass. Hosted4,297:4,272clean/25known/0fail/0skip. Measured
+17,411/17,714lines98.29% and12,384/13,800outcomes89.74%: +12outcomes, no line
+changes or losses. Complete residual table now303lines/1,416outcomes. Terminal
+status at refresh: completed/success. Badges updated only if completed/success.
+Pending local tests are excluded from the new measurement; no fresh hosted run.
+
+# Public unrelated I/O setting notification and complete line triage - 2026-10-23
+
+New unrelated_setting_notification_preserves_pin_configuration_and_port_availability
+stores actual X steps/mm100 then forwards that valid unrelated setting ID to
+public ioport_setting_changed, as a generic driver notification can. No input/
+output configuration callback runs; invert/pull/open-drain masks and unclaimed
+port counts stay unchanged, while calibration remains100. Targets reachable
+ioports.c1566-1567. Fresh affected ASan/UBSan3/3pass0.35s, evidence
+batch74-unrelated-port-setting-results.xml. No invalid IDs/private callbacks,
+new allowance or CORE edit. Registration now4,300; keep local for next batch.
+
+COVERAGE_GAPS now accounts for all30 remaining I/O executable lines at the
+measured report:18 disabled open-drain,6 unrouted private defaults,2 impossible
+control masks,2 newly targeted public notifications,1 platform-dependent known
+PWM wrap path and1 unresolved provider route. Source-set assertion verifies the
+classification exactly covers the measured line set without overlap. All remain
+in the denominator; missing branch outcomes are not declared fully classified.
+
+# Runtime CSS/RPM snapshot modes verified and late guard explained - 2026-10-23
+
+Two new M70/M72 controls use the real registered VFD/stepper fixture at X40.
+Save G96S100D900, switch to G97S300, restore, then radial cut toX20: driver speed
+rises with decreasing radius and ends at100000/(2*pi*20). Opposite mode save
+restores G97S300 after G96 and holds300RPM during every pulse of the radial cut.
+Both finish exactX1600steps/X1600newpulses, noY/Z motion/alarm/abort. Named modes
+match actual behavior; snapshots are released afterward. No new allowances.
+Fresh ASan/UBSan2/2pass0.46s, batch74-css-mode-restore-results.xml. Registration
+now4,299; keep with local normalization upgrade for the next substantial batch.
+
+Source audit explains why gcode.c573 stays uncovered despite correct mode
+restoration: rpm_mode is inside the spindle prefix copied earlier at507-516;
+by572 it cannot differ. Exact proof/revisit conditions in TODO. Tests deliberately
+avoid the unresolved repeated-G96 S/D snapshot policy. CORE unchanged; no source
+exclusion or new coverage percentage claimed.
+
+# Compact/empty normalization added to existing case - 2026-10-23
+
+Strengthened nuts_bolts.uppercase_compaction with compact lowercase G-code and
+an already-empty string. Returned storage remains the caller's buffer and text
+is correctly uppercased/terminated without requiring space compaction. Existing
+spaced/whitespace-only controls remain. Targets nuts_bolts.c445's no-compaction
+outcome. Fresh ASan/UBSan1/1pass0.28s, batch74-normalization-results.xml. No extra
+case count, fixture/CORE edit or allowance. Registration remains4,297.
+
+Reviewed deferred hold-alarm candidate before authoring: existing actual
+active_probe_disconnect_decelerates_and_reports_alarm_before_reset already
+asserts real IRQ-driven deceleration, protection alarm, stable motor position
+and sender reset. No duplicate case added. Keep normalization local for the
+next substantial batch; do not rerun full suite or dispatch hosted for it.
+
 # Spindle/storage batch passed cumulative validation - 2026-10-23
 
 Six new workflows and two strengthened date cases pass the full4,297-test

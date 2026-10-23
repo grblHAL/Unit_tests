@@ -16,5 +16,9 @@ int main(void)
     const char *overlap = "aaab";
     CHECK(strnistr(overlap, "AAB", 3) == overlap + 1);
     CHECK(strnistr(overlap, "AAX", 3) == NULL);
+    CHECK(strnistr(text, "DEFG", 4) == NULL);
+    CHECK(strnistr(text, "def", 8) == text + 3);
+    const char *restart = "abxabc";
+    CHECK(strnistr(restart, "ABC", 3) == restart + 3);
     return EXIT_SUCCESS;
 }

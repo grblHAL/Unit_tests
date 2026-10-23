@@ -1188,3 +1188,34 @@ oversized-request/small-retry and driver-payload retry tests cover valid use.
 Do not write after failed allocation or mutate driver_area/dirty flags to cover
 this fallback. It remains raw uncovered; reconsider if a supported area-release
 API can shrink a previously dirty driver area before physical synchronization.
+
+
+## Late CSS mode restore assignment is preempted by spindle prefix copy - 2026-10-23
+
+CORE50f3865 gcode.h527-534 places rpm_mode before the final hal member of
+spindle_t. get_state_restore_commands first compares/copies every spindle prefix
+through offsetof(spindle_t,hal) at gcode.c507-516. If rpm_mode differs, that copy
+already restores it. No intervening statement changes spindle mode before the
+later G96/G97 comparison at572, so its assignment573 cannot execute for ordinary
+snapshots. If the prefix matches, rpm_mode already matches as well. Keep this
+line in raw coverage; do not corrupt modal arrays or interpose a private callback.
+
+New ordinary registered-VFD controls prove M70/M72 restores CSS/RPM mode before
+real radial cuts: restored CSS ramps to the expected radius-dependent endpoint
+speed; restored G97 keeps300RPM through every motor pulse. These tests do not
+change CSS S/D between two G96 commands and do not resolve the separate CSS
+surface-speed/RPM-cap snapshot ownership policy. Revisit the dead late assignment
+if spindle layout, prefix copying or restore ordering changes upstream.
+
+
+## Step-frequency validation remains disabled - 2026-10-23
+
+CORE50f3865 settings.c787-796 validate_pulse_width has its complete frequency/
+pulse-width rejection expression commented out and unconditionally returns
+Status_OK. Consequently the failure outcomes in set_pulse_width808/810 and
+set_axis_setting1521/1535 cannot execute through public setting stores on this
+source. Retain these raw missing outcomes. Existing driver-minimum pulse tests
+exercise a separate registered validation rule, and file-end max-step-rate
+sanity checks remain real supported controls. Do not invent a rejection contract
+or turn the commented expression into a test expectation; revisit when upstream
+enables validation.
