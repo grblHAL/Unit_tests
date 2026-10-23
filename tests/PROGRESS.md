@@ -1,3 +1,130 @@
+# Supported planner/peripheral batch passed full validation - 2026-10-23
+
+Eight new cases and one duplicate deletion pass the full4,291-case ASan/UBSan
+gate153.51s and strict summary:4,264clean/27known/0unexpected/0skipped.
+Evidence batch74-supported-config-delivery-{results.xml,tests.log,summary.log}.
+The run stayed active and progressed during longer observations; no restart or
+second full gate. No unchanged reporting-helper rerun. Fresh CORE remains clean
+50f3865, matching fetched origin/master; no source/exception/denominator edits.
+
+Batch combines documented nonzero junction floor with ordinary corner control,
+alarm-cancelled sleep timer, toolsetter-first primary registration, primary
+connection event scope and three passthrough prerequisite failures. Removed one
+new duplicate no-table rejection alias, retaining the older stronger dynamic-
+offset/queued-cut case. Build wiring adds only the supported junction-floor host
+variant. Previous hosted947fa2e all five jobs succeeded; badges/inventory remain
+its verified98.29line/89.60branch until this cumulative head is measured.
+Deliver this coherent batch on74; full goal remains incomplete and active.
+
+# Passthrough prerequisites preserve console and coprocessor state - 2026-10-23
+
+Three new board/console scenarios independently reject passthrough when reset
+pin is absent, USB line-state events are unavailable, or console is Bluetooth.
+The missing-reset wiring is declared before registration; no registered pin
+metadata is mutated to force a guard. USB/UART handlers remain untouched, no
+binary data or receive cancellation occurs, and running startup tasks still
+leaves copro boot/reset outputs unchanged. Existing missing-boot and non-USB
+serial controls retained. Fresh ASan/UBSan5/5pass0.62s, evidence
+batch74-passthru-prerequisites-results.xml. Targets all three residual outcomes
+at stream_passthru.c136/160/161. No CORE change or new allowance.
+Registration now4,291: eight new cases and one duplicate removal since947fa2e.
+One cumulative pre-delivery gate is running; no claim of its result yet.
+
+# Primary connection event scope and hosted completion verified - 2026-10-23
+
+New primary_connection_events_preserve_selected_toolsetter_connection_and_input
+uses three registered probes. Primary connected/disconnected notifications leave
+the selected toolsetter connected, primary events work when primary is selected,
+and toolsetter input remains independent after switching. Targets probe.c241's
+nonprimary selection outcome. Fresh ASan/UBSan2/2pass0.36s with existing driver-
+capability/primary-event control; batch74-probe-connection-scope-results.xml.
+No new allowance or CORE change. Registration now4,288; five new local cases,
+one removed duplicate, pending cumulative validation including the new variant.
+
+Hosted39945588754 exact947fa2e completed/success, all five jobs verified (source,
+coverage, GCC, Clang, diagnosis). Locked98.29%line/89.60%branch badges and known-
+gap snapshot refreshed;303raw lines/1,435outcomes remain. The pending local
+probe/sleep/junction-floor work is not counted in that measurement. No fresh
+full gate or hosted dispatch for this small local addition; continue batching.
+
+# Toolsetter-first board registers primary as default - 2026-10-23
+
+New probe.primary_registered_after_toolsetter_becomes_default_and_preserves_independent_inputs
+registers a real toolsetter input before the primary input. Toolsetter is active
+initially; adding Probe_Default correctly replaces the default selection, retains
+both capabilities and routes primary/toolsetter reads independently. Aggregate
+reads preserve selection and explicit switches still follow the correct physical
+input. Targets probe.c206's nonfirst default registration outcome. No private
+state changes, invalid enum, new exception or CORE edit.
+Fresh ASan/UBSan3/3pass0.41s with prior aggregate-selection and toolsetter/secondary
+controls, batch74-probe-order-results.xml. Registration now4,287. Retain with
+pending documented junction-floor variant, alarm-sleep cancellation and duplicate
+cleanup for the next substantial gate. Latest measured98.29/89.60 still947fa2e.
+
+# Documented nonzero junction-speed configuration validated - 2026-10-23
+
+Added host_core_junction_floor with MINIMUM_JUNCTION_SPEED=5.0f, a documented
+config.h314-324 option intended for machines that cannot dwell at corners.
+This option needs its own compile configuration; ordinary builds keep default0.
+Two public G-code/stepper cases reuse existing motion fixtures and public axis
+acceleration stores. Near reversal uses the configured squared junction floor25
+and starts from rest; right-angle control retains its computed junction speed
+above25. Physical endpoints/pulses are exact: X0/Y1 with X160/Y1pulses and
+X80/Y80 with X80/Y80pulses. Targets planner.c643's previously missing floor arm.
+Fresh ASan/UBSan2/2pass0.44s, batch74-junction-floor-results.xml. No CORE edit,
+private variable forcing or allowance. Registration now4,286 including pending
+sleep-alarm case and duplicate removal. Shared build wiring change must be in
+the next cumulative gate; do not infer all variants validated from these2cases.
+Measured98.29line/89.60branch remains947fa2e, excluding this local configuration.
+
+# Cumulative measured six-line gain verified - 2026-10-23
+
+Hosted39945588754 exact947fa2e/core50f/filter locks match and all seven coverage
+report stages pass. Hosted4,284cases:4,259clean/25known/0fail/0skip. Measured
+17,411/17,714lines98.29% and12,365/13,800outcomes89.60%: +6lines/+18outcomes
+against39940715358, no lost lines. Exact gained gcode.c1765,2472-2473,3085,
+4871,4989. Source-set comparison saved under hosted39945588754; complete gap
+inventory refreshed to303raw lines/1,435outcomes. No claim of universal reachability.
+
+Overall run still in_progress at artifact retrieval; previous fully successful
+badges remain until completion. Local pending sleep-alarm scenario and duplicate
+removal are not represented by this report. Table-rejection duplicate did not
+cover2977/2989, consistent with corrected source audit. No new hosted dispatch.
+
+# Driver alarm cancels idle sleep timeout without late request - 2026-10-23
+
+New sleep.pending_driver_alarm_cancels_sleep_timeout_without_late_sleep_request
+uses actual M8 coolant activation and public system_set_exec_alarm(MotorFault)
+from the normal realtime provider during idle sleep wait. Alarm remains pending
+for normal protocol handling, input space stays100, no step pulses occur and
+EXEC_SLEEP is absent both immediately and after advancing past the cancelled
+timeout. Targets sleep.c47's pending-alarm outcome, distinct from reset and new
+input. The test isolates timer cancellation; it does not claim to execute motor
+fault shutdown itself. No private flags, task saturation or new allowance.
+Fresh ASan/UBSan cancellation group3/3pass0.37s, batch74-sleep-alarm-results.xml.
+Registration4,284 again: one new case replaces the removed duplicate in count,
+not behavior. Retained stronger table-offset case separately passed1/1 in0.48s,
+batch74-table-dedup-results.xml. No cumulative gate for these small local edits.
+Latest pushed947fa2e and hosted39945588754 remain the checkpoint under test.
+
+# Duplicate table-rejection case removed and target claim corrected - 2026-10-23
+
+Removed the newer motion_control.table_tool_offsets_without_table_preserve_existing_cut_and_offsets.
+The existing gcode.unavailable_table_offsets_preserve_dynamic_offset_and_queued_cut
+already tests both G43/G43.2 rejection with stronger active-dynamic-offset
+preservation and exact queued80-pulse completion. It is retained unchanged.
+The new alias duplicated that coverage and does not improve the objective.
+
+Earlier batch notes targeting gcode.c2977/2989 were too optimistic: current
+50f3865 parser selects G43/G43.2 modes only with a nonzero table, so ordinary
+no-table commands reject before those later guards. The existing TODO audit
+was correct. No callback-time table mutation or fake test will cover them.
+Deletion removes one duplicate executable; registration now4,283. No production
+source, existing assertion or known-failure allowance changed. Keep cleanup for
+the next coherent delivery rather than dispatching a separate hosted run.
+Latest pushed947fa2e remains locally validated4,284; hosted39945588754 for that
+exact head was verified in_progress. Do not report cleanup as new coverage.
+
 # Cross-module recovery batch passed cumulative sanitizer gate - 2026-10-23
 
 Five new workflows plus three strengthened existing helpers pass the full

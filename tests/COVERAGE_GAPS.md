@@ -1,14 +1,14 @@
 # Remaining raw CORE coverage
 
-Measured report: [run39940715358](https://github.com/petervanderwalt/Unit_tests/actions/runs/39940715358),
-harness `63965a01be23bf2ce308d17b482ca4baa46dd329`, CORE
+Measured report: [run39945588754](https://github.com/petervanderwalt/Unit_tests/actions/runs/39945588754),
+harness `947fa2ef7c3277dea262d59d38361b88f16ce78f`, CORE
 `50f38659db7b22f4689f3654df2d110d992bcc95`, filter `core/.*\.[ch]$`.
 Coverage job passed with matching source locks and all seven stages successful.
-The overall hosted run subsequently completed successfully, including GCC and
-Clang; this status was verified before updating the successful-run badges.
+The overall hosted run subsequently completed successfully; all five jobs,
+including GCC and Clang, were verified before refreshing the badges.
 
-17,405/17,714 lines and12,347/13,800 branch outcomes were covered. The table
-accounts for all309uncovered executable lines and1,453uncovered branch outcomes.
+17,411/17,714 lines and12,365/13,800 branch outcomes were covered. The table
+accounts for all303uncovered executable lines and1,435uncovered branch outcomes.
 A branch outcome can be missing on an otherwise covered line; `none` therefore
 does not mean full coverage. Counts include compiler-emitted conditions.
 
@@ -18,11 +18,13 @@ correct regression assertions and exact failure allowances. Do not remove source
 from the denominator, inject private state, or add duplicate tests to clear rows.
 Check those notes and existing cases before authoring a public workflow.
 
-Local unmeasured additions cover named spindle direction through M4/M5/M3,
-heap-only filename allocation failure/retry, and output inversion with an
-optional pin configuration callback absent. Additional local configuration tests
-cover missing macro/tool-table services, disabled rotation and a nonexistent second
-spindle address. Do not attribute their coverage to this measured head.
+Local unmeasured work adds pending-alarm sleep cancellation, a documented
+nonzero MINIMUM_JUNCTION_SPEED configuration, toolsetter-first primary-probe
+registration and removes a duplicate tool-table
+rejection case. The stronger existing dynamic-offset
+rejection remains. Both tool-table late guards remain uncovered because their
+early parser capability checks reject first; see [the audit](TODO.md#tool-table-absence-guards-implied-by-earlier-parsing).
+Do not attribute local changes to this measured head.
 
 | Source | Uncovered lines | Missing branch outcomes | Exact executable line numbers |
 |---|---:|---:|---|
@@ -31,9 +33,9 @@ spindle address. Do not attribute their coverage to this measured head.
 | [core/fs_device.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/fs_device.c) | 3 | 7 | 59, 190, 192 |
 | [core/fs_embedded.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/fs_embedded.c) | 4 | 4 | 133, 135, 138, 140 |
 | [core/fs_ram.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/fs_ram.c) | 0 | 12 | none |
-| [core/gcode.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/gcode.c) | 52 | 243 | 134-135, 325-326, 573, 1045, 1293-1294, 1357-1358, 1489, 1765, 2180, 2472-2473, 2689, 2691-2692, 2702, 2704-2705, 2718, 2720-2721, 2736-2737, 2888, 2977, 2989, 3055, 3085, 3472-3474, 3606-3607, 3919, 4260, 4291-4294, 4849-4850, 4852, 4854, 4856-4857, 4871, 4964-4965, 4989 |
+| [core/gcode.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/gcode.c) | 46 | 234 | 134-135, 325-326, 573, 1045, 1293-1294, 1357-1358, 1489, 2180, 2689, 2691-2692, 2702, 2704-2705, 2718, 2720-2721, 2736-2737, 2888, 2977, 2989, 3055, 3472-3474, 3606-3607, 3919, 4260, 4291-4294, 4849-4850, 4852, 4854, 4856-4857, 4964-4965 |
 | [core/grbllib.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/grbllib.c) | 14 | 37 | 92, 95, 140, 144-147, 149-150, 590-594 |
-| [core/ioports.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/ioports.c) | 30 | 150 | 782, 1187, 1283-1284, 1377, 1379, 1381, 1383, 1386-1390, 1393-1394, 1396, 1398-1399, 1401, 1403-1404, 1428-1430, 1432-1433, 1550-1551, 1566-1567 |
+| [core/ioports.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/ioports.c) | 30 | 149 | 782, 1187, 1283-1284, 1377, 1379, 1381, 1383, 1386-1390, 1393-1394, 1396, 1398-1399, 1401, 1403-1404, 1428-1430, 1432-1433, 1550-1551, 1566-1567 |
 | [core/kinematics/asymmetric_ganging.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/kinematics/asymmetric_ganging.c) | 1 | 4 | 254 |
 | [core/kinematics/delta.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/kinematics/delta.c) | 11 | 48 | 173, 287-288, 343, 586-587, 592, 599, 610, 653, 673 |
 | [core/kinematics/polar.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/kinematics/polar.c) | 4 | 3 | 212, 214, 232, 234 |
@@ -46,7 +48,7 @@ spindle address. Do not attribute their coverage to this measured head.
 | [core/my_plugin.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/my_plugin.c) | 2 | 0 | 26, 29 |
 | [core/ngc_expr.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/ngc_expr.c) | 11 | 13 | 115-116, 189-190, 250, 252, 292-293, 337-338, 341 |
 | [core/ngc_flowctrl.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/ngc_flowctrl.c) | 2 | 59 | 811-812 |
-| [core/ngc_params.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/ngc_params.c) | 4 | 66 | 772-773, 942, 1247 |
+| [core/ngc_params.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/ngc_params.c) | 4 | 65 | 772-773, 942, 1247 |
 | [core/nuts_bolts.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/nuts_bolts.c) | 0 | 16 | none |
 | [core/nvs_buffer.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/nvs_buffer.c) | 3 | 11 | 366, 391-392 |
 | [core/planner.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/planner.c) | 0 | 2 | none |
@@ -63,9 +65,9 @@ spindle address. Do not attribute their coverage to this measured head.
 | [core/stream.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/stream.c) | 3 | 47 | 275, 368, 614 |
 | [core/stream_file.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/stream_file.c) | 1 | 10 | 72 |
 | [core/stream_passthru.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/stream_passthru.c) | 0 | 3 | none |
-| [core/strutils.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/strutils.c) | 0 | 24 | none |
+| [core/strutils.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/strutils.c) | 0 | 17 | none |
 | [core/system.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/system.c) | 2 | 42 | 466, 468 |
 | [core/tool_change.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/tool_change.c) | 2 | 46 | 435-436 |
 | [core/utf8.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/utf8.c) | 0 | 1 | none |
 | [core/vfs.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/vfs.c) | 4 | 44 | 272, 415, 482, 779 |
-| **Total** | **309** | **1453** | |
+| **Total** | **303** | **1435** | |
