@@ -11,6 +11,10 @@ int main(void)
     CHECK(ioports_cfg(&port_configuration, Port_Digital, Port_Output) == &port_configuration);
     CHECK(port_configuration.n_ports == 0 && port_configuration.handle == NULL);
     CHECK(port_configuration.get_next == NULL && port_configuration.claim == NULL);
+    uint8_t unavailable = 0;
+    CHECK(ioport_claim(Port_Digital, Port_Output, &unavailable, "Expansion relay") == NULL);
+    CHECK(unavailable == IOPORT_UNASSIGNED);
+    CHECK(ioports_unclaimed(Port_Digital, Port_Input) == 2 && output_calls == 0);
 
     static io_ports_data_t output_data = {.out.n_ports = 2};
     static io_digital_t outputs = {.ports = &output_data, .get_pin_info = pin_info,

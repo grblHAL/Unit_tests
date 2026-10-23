@@ -177,8 +177,8 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Measured:** 2026-10-24, clean Terje `2e165a1ac4c74be8e68971972c6577775d856b05`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40039209481)
-measures 17,480/17,756 lines (98.45%) and 12,598/13,834 branches (91.07%).
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40041178250)
+measures 17,480/17,756 lines (98.45%) and 12,611/13,834 branches (91.16%).
 The 276 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable. See the complete measured
 [line/branch inventory](COVERAGE_GAPS.md) before selecting the next workflow.
@@ -432,3 +432,29 @@ Suggested repair for Terje: return NULL immediately when path allocation fails
 all regression/retry assertions; remove the single exact WILL_FAIL/known_bug
 block and this entry once the unchanged case passes. No CORE edit or sanitizer
 allowance is included.
+
+
+## Read-only RTC write reports success without setting the clock
+
+Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
+A driver advertises RTC capability, implements `get_datetime`, and omits
+`set_datetime`, which `hal.h` explicitly declares optional. `$RTC` reads the
+clock successfully. `$RTC=2026-10-25T01:02:03` then returns `Status_OK` even
+though the driver cannot perform the requested write; the next query retains
+its original readable time. This is an incorrect acknowledgement, not a claim
+about motion or time corruption.
+
+[Regression](cases/system/readonly_rtc_rejects_write_and_preserves_readable_time.c)
+retains before/after query controls and requires a non-success write status.
+Raw ASan/UBSan evidence: `build-asan/batch74-readonly-rtc-raw-results.xml`:
+`Read-only RTC write status=0; unchanged clock remains readable`. No sanitizer
+diagnostic is emitted. Only this exact case has `WILL_FAIL`/`known_bug`.
+
+`rtc_action` initializes its return to success when RTC capability is present
+(`system.c:816`), then executes writes only if the optional setter exists at821.
+Its missing-setter arm leaves that success untouched. The existing no-capability,
+failed-read and rejected-write paths return `Status_InvalidStatement` instead.
+Suggested upstream repair: reject a write when `set_datetime` is absent, while
+preserving read-only queries. Retain the correct rejection and query assertions;
+remove this entry and its single exact expected-failure block after repair.
+No CORE edit, broad exception or sanitizer allowance is included.

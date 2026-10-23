@@ -23,5 +23,15 @@ int main(void)
     CHECK(send_blocking_request(0));
     CHECK(tx_calls == 2 && rx_calls == 1 && exceptions == 0 && timeouts == 1);
     CHECK(reply.adu[3] == 0x12 && reply.adu[4] == 0x34);
+    reply_on_transmission = 0;
+    callbacks.retries = 2;
+    callbacks.retry_delay = 5;
+    grbl.on_execute_realtime = service_two_timer_ticks;
+    CHECK(!modbus_send(&message, &callbacks, true));
+    CHECK(tx_calls == 5 && rx_calls == 1 && exceptions == 0 && timeouts == 2);
+    reply_on_transmission = 6;
+    CHECK(send_blocking_request(0));
+    CHECK(tx_calls == 6 && rx_calls == 2 && exceptions == 0 && timeouts == 2);
+    CHECK(reply.adu[3] == 0x12 && reply.adu[4] == 0x34);
     return EXIT_SUCCESS;
 }

@@ -129,3 +129,9 @@ if(ENABLE_SANITIZERS AND TEST eight_axis.absent_named_w_position_in_inches_retur
   set_tests_properties(eight_axis.absent_named_w_position_in_inches_returns_zero
     PROPERTIES LABELS known_sanitizer_bug)
 endif()
+
+# Confirmed on CORE2e165a1, 2026-10-24: read-only RTC writes return success.
+if(TEST system.readonly_rtc_rejects_write_and_preserves_readable_time)
+  set_tests_properties(system.readonly_rtc_rejects_write_and_preserves_readable_time
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

@@ -1,3 +1,118 @@
+# RTC/backlash/RTU/I/O cumulative gate passed - 2026-10-24
+
+Three new cases/five extensions pass the full4381-case ASan/UBSan gate58.16s.
+Strict summary:4363clean/1exact recovering UBSan/17documented regressions/
+0unexpected failed/skipped. Correct read-only RTC write rejection is retained
+in one exact expected failure; no sanitizer allowance added. Includes actual
+homing-direction/backlash pulses, repeated unlock startup safety, normal RTU
+write without observer, dedicated timeout retries, native no-group help, absent
+output claim/retry and empty descriptor fallback. CORE unchangedclean2e165a1.
+No unchanged helper reruns or repeated full gate. Deliver this coherent batch;
+its coverage awaits a new source-matched checkpoint, prior fully green6d566e0
+remains98.45%lines/91.16%branches. Full supported-coverage goal remains active.
+
+# 6d566e0 hosted checkpoint fully verified - 2026-10-24
+
+Run40041178250 terminalsuccess, all five source/GCC/Clang/coverage/Results
+summary jobs success on exact6d566e0/CORE2e165a1/filter. Both locks and exactly
+seven stages0 verified.4378hosted:4363clean/15known/0failed/skipped.
+17480/17756lines98.45%,12611/13834outcomes91.16%; +13outcomes with identical
+covered-line set against80db252. Updated success badges/current snapshot and
+remaining inventory276lines/1223outcomes. New local RTC/backlash/RTU/I/O batch
+is separate; its cumulative gate is running. Full goal remains active; no CORE
+edit, merge or duplicate hosted dispatch.
+
+# Source-reviewed help traversal of native Modbus settings without groups - 2026-10-24
+
+Extend the initialized RTU option-report case with public $HELP missingdevice.
+The actual native Modbus settings provider registers settings but no separate
+group metadata. Require exact N/A output with transport still up and no frame
+transmission; retain the original option observer/plugin identification checks.
+Targets report396's absent provider-groups condition through real registration,
+not a fabricated metadata pointer. Source-reviewed only; awaits grouped execution.
+No new case, wrapper, exception, shared fixture, CORE edit or full/hosted run.
+
+# Confirmed read-only RTC write acknowledgement defect, nonblocking - 2026-10-24
+
+New public-command regression uses a valid RTC-capable driver with documented
+optional setter absent and working getter. Both before/after $RTC queries return
+the original time, but $RTC=<different time> returns0/Status_OK. Keep the correct
+non-success assertion; raw ASan/UBSan check fails only there, no diagnostic.
+Exact WILL_FAIL/known_bug added for this one case, dated KNOWN_BUGS entry links
+source/cause and removal guide. Focused labelled check and strict summary pass:
+1known regression/0unexpected failures/skips,0.05s test time. No CORE edits or
+sanitizer allowance. Total expected regressions becomes17 (previous16).
+
+Continue independent work: current batch has three new cases/four extensions
+across RTC/system, real boot/backlash, Modbus and I/O. Aggregate source coverage
+and cumulative gate remain pending; this defect does not block the goal.
+
+# Reversed homing direction initializes real backlash take-up - 2026-10-24
+
+Added actual boot/serial $23=1 then $160=0.1, negative1mm and positive1mm X job.
+Require176 motor pulses (160 travel plus two8-step take-ups), physical/logical
+origin restored, parser X0 and no Y/Z pulses. Public setting writes initialize
+compensation using the reversed homing direction; no private direction bits or
+planner state forced. Targets motion_control59's opposite initialization arm.
+
+Grouped ASan/UBSan passes this and the pending repeated-$X startup safety
+extension (2/2,0.13s test time). Stored G91 remains unexecuted after both unlocks,
+controller idle/G90 with no errors. Current batch: two new cases and four
+extensions across I/O/RTU/boot/backlash. No new allowances, CORE/shared fixture
+edits, full gate or hosted dispatch. Aggregate gain awaits cumulative coverage.
+
+# Source-reviewed repeated unlock preserves blocked startup program - 2026-10-24
+
+Extend existing forced-initial-alarm full-boot control with stored startup G91
+and two consecutive $X commands before $G. Require idle/unlocked, unchanged G90
+mode and no command errors. The first unlock must not execute stored startup;
+the repeated idle unlock likewise remains harmless. Targets system451's idle
+arm through normal serial commands. Source-reviewed only; awaits grouped
+execution with the current I/O/RTU batch. No new case, exception, fixture or
+CORE change, full or hosted run.
+
+# Blocking register write succeeds without optional reply observer - 2026-10-24
+
+Added normal Modbus function6 register10/value0x1234 write, with an exception
+handler but no on_rx_packet observer. UART fixture echoes the actual transmitted
+eight-byte frame including generated CRC. Blocking send returns success with no
+observer/exception calls, then the next ordinary read delivers its expected
+payload. Uses existing blocking scheduler and public modbus_send; no private
+packet/state mutation. ASan/UBSan passes0.07s. Targets modbus_rtu302's absent
+reply-observer arm. Keep with the I/O and dedicated-timeout retry extensions;
+no new exception, shared fixture/CORE edit, full or hosted run.
+
+# Dedicated RTU timeout survives retry exhaustion and next reply recovers - 2026-10-24
+
+Extended the existing dedicated-timeout scenario after its original timeout/
+success controls. Two configured retries produce three unanswered transmissions;
+only the dedicated timeout callback fires once at final exhaustion, with no
+exception callback or fabricated reply. A later complete reply succeeds with
+correct payload. This reaches final-retry callback restoration at modbus_rtu312
+using normal modbus_send, scheduler and UART fixture, not private packet state.
+
+Grouped ASan/UBSan check passes all three current extensions (0.19s test time):
+RTU retry recovery, absent-output-bank claim followed by registration/retry, and
+empty saved-description capability selection. No new case, allowance, shared
+fixture or CORE change. Keep accumulating across modules before a full/hosted
+gate; measured coverage remains the prior locked report, not these extensions.
+
+# Source-reviewed absent-bank claim retry and empty description fallback - 2026-10-24
+
+Extend the existing input-only -> output expansion discovery case: attempt a
+public output claim before the bank exists, require NULL/unassigned with input
+availability and driver outputs unchanged, then retain normal registration/
+discovery/claim/output success. This exercises get_info's absent ports path
+through ioport_claim rather than private entry points (ioports270/272).
+
+Extend the saved-description fallback case with an empty string: PWM capability
+filter still selects physical0; no filter selects highest free physical1. Both
+remain unclaimed. Targets _get_next515's empty-but-nonnull descriptor condition.
+These two small source-reviewed extensions await grouped build/execution; no
+claim that the previous full4378 gate includes them. No new case, wrapper,
+exception, CORE edit, full or hosted run. Existing6d566e0 hosted40041178250 was
+verified live with source passed and GCC/Clang/coverage running at resume.
+
 # Boot/pendant/I/O cumulative delivery gate passed - 2026-10-24
 
 Five new scenarios and three extensions pass the full4378-case ASan/UBSan gate
