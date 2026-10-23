@@ -61,10 +61,11 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Reviewed:** 2026-10-23, clean Terje `50f38659db7b22f4689f3654df2d110d992bcc95`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39927192936)
-measures 17,399/17,714 lines (98.22%) and 12,299/13,800 branches (89.12%).
-The 315 uncovered lines include the following known gaps; this table does not
-claim that every remaining line is unavailable.
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39932438179)
+measures 17,400/17,714 lines (98.23%) and 12,312/13,800 branches (89.22%).
+The 314 uncovered lines include the following known gaps; this table does not
+claim that every remaining line is unavailable. See the complete measured
+[line/branch inventory](COVERAGE_GAPS.md) before selecting the next workflow.
 
 | Region | Status and evidence | What makes it testable |
 |---|---|---|
@@ -450,10 +451,25 @@ ready1/period0/min0/max0. Later assertions require a valid1kHz configuration to
 recover normal PWM; they are not reached while this defect remains. Existing
 ordinary precompute/midpoint controls cover that valid configuration separately.
 
-Proposed upstream fix: reject a nonpositive or unrepresentable timer period and
-any computed duty range with no usable span before reporting success. Keep
-valid on/off fallback semantics. Remove the named allowance and retain regression
-once fixed. CORE is unchanged.
+**Maintainer discussion,2026-10-23:** this is an invalid-request rejection test,
+not a request for hardware to generate2MHz from a1MHz timer. The retained
+assertion only requires false for a computed zero-tick period, matching the
+helper's documented no-range result. It does not prescribe a minimum of100 or
+1,000ticks, nor require support at every other frequency. Minimum useful duty
+resolution and low-frequency timer/prescaler selection remain driver/API policy.
+Existing50Hz servo controls must remain supported with a suitable timer clock.
+
+**Further maintainer confirmation,2026-10-23:** impossible and unreasonable
+periods will be rejected. Retain the rejection assertion. The exact additional
+reasonable-period limits are maintainer policy, not thresholds invented by this
+suite. Fresh upstream fetch still resolves to50f3865, matching the reproduced
+zero-tick result; remove the allowance when the unchanged regression passes on
+the updated implementation, rather than treating this statement as test evidence.
+
+Proposed narrow repair for Terje: reject a computed zero-tick period before
+reporting success. Any broader frequency/resolution limits need a separate
+agreed contract. Preserve the driver's existing on/off fallback. Remove the named
+allowance once the unchanged rejection assertion passes. CORE is unchanged.
 
 ## Named file without matching ENDSUB returns success after prescan
 
@@ -525,3 +541,25 @@ Proposed upstream fix: include both endpoints in the bounding rectangle, using
 min for the non-extremum lower-Y bound and max for the upper-Y bound. Verify all
 planes, directions and crossed extrema. Retain the regressions and remove only
 their two allowances after repair. CORE is unchanged.
+
+## Mismatched numeric ENDSUB accepts another subroutine's record
+
+**Confirmed2026-10-23, clean CORE50f38659db7b22f4689f3654df2d110d992bcc95.**
+[Real-file regression](cases/ngc_flowctrl/file_subroutine_with_mismatched_endsub_rejects_before_body_and_restores_sender.c)
+streams `O10SUB`, a skipped body assignment, then `O20ENDSUB` and a tail
+assignment. Label20 has never been defined. Expected syntax-error termination
+instead returns success and executes the tail: status0/body0/tail7. The correct
+syntax-error, suppressed-tail and restored-sender assertions remain. One exact
+WILL_FAIL; no sanitizer or timeout allowance. Raw evidence:
+build-asan/batch74-endsub-mismatch-raw-results.xml.
+
+`sub_get` in ngc_flowctrl.c249-260 returns the final list node on a failed
+label/file match rather than NULL. The ENDSUB handler therefore takes that
+unrelated record instead of its explicit syntax-error arm at687. A version with
+a subsequent CALL timed out; that consequence is not used as the regression's
+acceptance condition and is not separately classified as a confirmed hang cause.
+
+Proposed repair for Terje: return NULL when the search exhausts without a matching
+label/file, retaining matching-label behavior and the existing error path. No
+CORE edits. After repair retain this bounded regression, remove its allowance,
+and validate normal numeric subroutine definitions/calls and file recovery.

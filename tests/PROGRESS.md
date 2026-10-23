@@ -1,3 +1,126 @@
+# Flow/jog/thread/probe/RAM cumulative delivery - 2026-10-23
+
+Four new cases and two strengthened existing workflows pass the full4,264-case
+ASan/UBSan gate70.06s and strict summary:4,238clean/26documented regressions/
+0unexpected/0skipped. Evidence batch74-flow-jog-hold-delivery-{results.xml,
+tests.log,summary.log}. One new exact expected failure records mismatched numeric
+ENDSUB; the orphan terminator control passes through the missing error path.
+Other work covers explicit jog feed, G76 inter-pass hold/resume, probe bounce/
+re-arming, and empty/populated RAM reset with payload readback.
+
+Post-gate review corrected the bounce model to issue only rising-edge callbacks:
+release changes the input without invoking the rising-edge handler. Fresh build,
+affected case and strict summary pass0.28s; batch74-probe-rising-bounce evidence.
+No shared infrastructure or CORE change; no repeated full gate required. The
+measured coverage remains7073ca1 until a new exact-source report exists. No source
+exclusions, weakened defect assertions, script changes or redundant helper runs.
+
+# Previous checkpoint fully verified - 2026-10-23
+
+Run39932438179 at7073ca1 is now completed/success: source, GCC, Clang, coverage
+and CI diagnosis all passed. Existing source-locked98.23%line/89.22%branch
+measurement stands. Updated the complete gap inventory's earlier GCC-pending
+note. No new hosted run dispatched during authoring.
+
+# Reset mixed empty and populated RAM uploads - 2026-10-23
+
+Extended populated_reset_clears_files_and_allows_reuse without adding a case:
+close a normal5byte upload and an empty upload, verify storage counts only the
+payload, reset through the installed driver hook, and require both names gone.
+A fresh upload is then reopened and its exact payload read back. Exercises
+fs_ram.c335's null-data cleanup and a multi-node reset through normal operations.
+Fresh build and ASan/UBSan2/2pass0.34s with the unchanged empty-reset control;
+batch74-ram-reset-results.xml. No allowances, forced handles or CORE changes.
+Keep with pending probe, threading, jog and file-flow work before cumulative gate.
+
+# Orphan ENDSUB passing control - 2026-10-23
+
+A real file with O20ENDSUB and no registered subroutine rejects with syntax error,
+suppresses its tail, preserves parent parameter99 and restores the sender query.
+This exercises the previously uncovered ngc_flowctrl.c687 error arm with an empty
+sub list, distinguishing it from the mismatched-label lookup defect. Pair passes
+ASan/UBSan0.34s:1clean control/1documented expected failure, evidence
+batch74-endsub-pair-results.xml. No additional allowance.
+
+The first control run exposed an incorrect post-helper !sys.abort assertion:
+ram_sender_read exits through CMD_EXIT, which intentionally calls mc_reset.
+Removed that host-exit assumption from both new cases; syntax error, suppressed
+body/tail, restored sender and idle/no-alarm checks remain unchanged. The mismatch
+case still fails first at the correct status assertion; later checks are not yet
+validated on current CORE. Keep additions together for the next batch gate.
+
+# Bounded mismatched ENDSUB regression - 2026-10-23
+
+Real RAM-file `O10SUB ... O20ENDSUB` accepts an undefined terminator label and
+executes the tail. Bounded reproduction prints status0/body0/tail7 and fails the
+correct syntax-error assertion in0.26s; batch74-endsub-mismatch-raw-results.xml.
+Source lookup sub_get returns its last node on a miss. One exact WILL_FAIL with
+dated KNOWN_BUGS evidence; no diagnostic/timeout allowance or CORE edit. The
+initial candidate including a later CALL timed out and was reduced before
+classification; that timeout is not accepted as evidence of assertion success.
+Keep with the pending cross-module batch and continue independent work.
+
+# Jog requires its own feed after program feed selection - 2026-10-23
+
+New public command workflow selects G90/G1/F120, then rejects `$J=G91X1` with
+Status_GcodeUndefinedFeedRate. Driver remains asleep, queue empty, all actual
+motor counters/pulses unchanged; program feed120 and absolute mode are retained.
+Retry `$J=G91X1F100` emits exactly80X pulses and returns idle without changing
+program feed/mode. Fresh ASan/UBSan1/1pass0.33s; batch74-jog-feed-results.xml and
+successful build log. Targets measured uncovered gcode.c2427 through the ordinary
+system jog command. No new exception or CORE edit. Keep with probe bounce/G76
+hold for the next substantial batch; no full or hosted run for this addition.
+
+# Completed coverage job measurement, GCC still active - 2026-10-23
+
+Hosted39932438179 coverage job completed successfully at exact harness7073ca1 /
+CORE50f38659db7b22f4689f3654df2d110d992bcc95. Both source locks/filter agree,
+all7coverage stages exit0,4,260cases:4,237clean/23known/0failed/skipped.
+Measured17,400/17,714lines98.23%,12,312/13,800branches89.22%. Compared with
+39927192936:1new line(tool_change.c512),13branch outcomes,0lost lines;314raw
+lines remain. Evidence hosted39932438179/comparison39927192936.json. Badges and
+raw-gap snapshot updated. Source and Clang jobs passed; GCC still in_progress
+at inspection, so this is not an overall hosted-success claim. Uncommitted probe
+bounce and G76 hold work are outside the measured head.
+
+Compatibility saved-mode candidate reached earlier parser rejection because
+legacy startup removes stream suspension. Withdrawn unfinished cases and
+recorded the source guard in TODO; no forced handler or speculative allowance.
+
+# PWM contract clarification - 2026-10-23
+
+Narrowed the zero-tick bug's proposed repair and recorded Terje's resolution
+question separately. Existing regression only expects rejection when clock/PWM
+frequency truncates to zero ticks; it does not demand2MHz output or choose a
+100/1,000tick cutoff. Preserved correct assertion and its existing narrow allowance.
+Documented low-frequency servo period/prescaler constraints and preserved50Hz
+controls. No code/CORE edits or redundant test run for this documentation change.
+
+# Multipass G76 feed-hold/resume - 2026-10-23
+
+One new realistic encoder-driven G76 workflow requests public feed hold20pulses
+into its first synchronized cut. That cut reaches its endpoint; the hold completes
+before a second encoder reset/pass. Four held polls preserve all motor positions
+and pulse counts while the spindle stays on. Public cycle start completes the
+remaining thread with the same560X/240Z pulses and exact clearance endpoint as
+the ordinary control; saved override flags are restored and pending hold clears.
+Fresh ASan/UBSan1/1pass0.29s, batch74-g76-hold-results.xml and successful build log.
+No allowance, private state injection or CORE edit. Keep this new case with the
+probe-bounce extension for the next cross-module batch; no full/hosted rerun.
+
+# Probe bounce and consecutive-cycle latch - 2026-10-23
+
+Extended the existing irq_latches_contact_until_probe_cycle_ends case without
+adding another registration. Four physical contact/release cycles preserve the
+first contact latch and probing history without dispatching idle control signals.
+Ending the cycle disarms the IRQ; a second configured cycle clears prior history
+and latches a fresh contact. Fresh build and ASan/UBSan1/1pass0.29s; evidence
+batch74-probe-bounce-results.xml. Targets probe.c40's repeated-contact outcome.
+No new allowances or CORE changes. Keep this with the next substantial batch.
+
+Pushed checkpoint7073ca1 has live hosted run39932438179, observed in_progress;
+no duplicate dispatch. Fresh upstream fetch still matches pinned CORE50f3865.
+
 # Hidden-file contract clarification and cumulative gate - 2026-10-23
 
 Terje clarified hidden entries are accessed through full paths, plans to block

@@ -1089,3 +1089,36 @@ The correct jog/no-motion candidate is retained unregistered in
 [proposals](proposals/delta_auxiliary_jog_after_homing_requires_supported_homing_fixture.c).
 Do not set sys.homed manually to bypass this precondition. Existing ordinary
 four-axis delta motion regression and XYZ homing controls remain registered.
+
+## PWM resolution and low-frequency range policy - 2026-10-23
+
+Terje confirms impossible and unreasonable periods will be rejected. The exact
+minimum useful period remains to be specified;100 or1,000timer ticks were discussed
+rather than accepting any frequency that produces a nonzero period. Those correspond
+to about1% or0.1% duty steps respectively; no threshold is agreed or asserted by
+the tests. The existing2MHz/1MHz regression only rejects zero computed ticks;
+it does not request impossible output or define a practical PWM operating range.
+
+Keep practical low-frequency servo support separate:50Hz at a1MHz timer clock
+needs20,000ticks and fits a16bit period. At20MHz it needs400,000ticks, requiring
+a lower timer clock/prescaler or a wider period representation. The helper is
+passed the timer clock; board drivers must supply the clock actually selected.
+Preserve existing50Hz normal/inverted/disabled-output controls. Before adding
+threshold tests, agree which layer selects prescalers, what minimum resolution
+it promises, and whether the rule differs for servo and general PWM outputs.
+No CORE edits or new expected-failure thresholds.
+
+## Legacy boot cannot enter manual fixture-mode handler - 2026-10-23
+
+CORE50f3865 grbllib.c320-322 explicitly clears hal.stream.suspend_read after
+driver_init when COMPATIBILITY_LEVEL>0. Normal tc_init therefore leaves the
+manual tool-change handler uninstalled. A valid persisted mode2/3 record from
+compatibility0 is retained, but ordinary serial T3M6 rejects earlier with error20;
+the candidate did not reach tool_change.c435-436. Evidence:
+build-asan/batch74-saved-tool-mode-diagnostic-results.xml (mode2 retained,
+handler0, error20, subsequent setting/status queries succeed). The unfinished
+candidate cases were withdrawn, not marked as firmware failures. Do not reinstall
+suspend_read after startup's explicit removal solely to cover these guards.
+Existing public mode-setting rejection controls remain. Revisit if legacy startup
+advertises supported manual stream suspension or the maintainer defines a real
+board/plugin lifecycle that installs it later.

@@ -135,3 +135,8 @@ endif()
 if(TEST fs_embedded.hidden_file_in_visible_mount_requires_full_path_after_chdir)
   set_tests_properties(fs_embedded.hidden_file_in_visible_mount_requires_full_path_after_chdir PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Mismatched numeric ENDSUB accepts the last registered sub, CORE50f3865.
+if(TEST ngc_flowctrl.file_subroutine_with_mismatched_endsub_rejects_before_body_and_restores_sender)
+  set_tests_properties(ngc_flowctrl.file_subroutine_with_mismatched_endsub_rejects_before_body_and_restores_sender PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
