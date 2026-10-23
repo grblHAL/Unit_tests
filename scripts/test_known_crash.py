@@ -68,6 +68,28 @@ class KnownCrashTests(unittest.TestCase):
                     patch("known_crash.subprocess.run", return_value=subprocess.CompletedProcess([], code, output)):
                 self.assertEqual(main(), expected)
 
+    def test_missing_asan_line_requires_exact_ubsan_and_recorded_function(self):
+        prelude = "/repo/core/vfs.c:509:20: runtime error: null store\n"
+        output = OUTPUT.replace(":509:20", "")
+        manifest = [dict(MANIFEST[0], asan_line_optional=True, preceding_ubsan_pattern="null store")]
+        self.assertTrue(matches_known_crash(NAME, prelude + output, manifest))
+        for text in [output, prelude.replace("509", "510") + output,
+                     prelude + output.replace("vfs_chdir", "other"),
+                     prelude + OUTPUT.replace("509", "510"),
+                     prelude + output + "other.c:1:2: runtime error: overflow"]:
+            self.assertFalse(matches_known_crash(NAME, text, manifest))
+
+    def test_unsanitized_fault_requires_exact_marker_and_fault_exit(self):
+        manifest = [dict(MANIFEST[0], unsanitized_marker="reached callback", unsanitized_exit_codes=[-11])]
+        for code, output, expected in [(-11, "reached callback\n", 1), (0, "reached callback", 0),
+                                       (1, "reached callback", 0), (-11, "other callback", 0),
+                                       (-11, "reached callback\nassertion failed", 0)]:
+            with self.subTest(code=code, output=output), patch("sys.argv", ["runner", NAME, "inventory", "executable"]), \
+                    patch("known_crash.Path.read_text", return_value=json.dumps(manifest)), \
+                    patch("known_crash.Path.write_text"), patch("builtins.print"), \
+                    patch("known_crash.subprocess.run", return_value=subprocess.CompletedProcess([], code, output)):
+                self.assertEqual(main(), expected)
+
     def test_linux_core_segv_requires_the_same_source_and_frame(self):
         manifest = [dict(MANIFEST[0], message_pattern="(?:access-violation|SEGV)")]
         self.assertTrue(matches_known_crash(NAME, OUTPUT.replace("access-violation", "SEGV"), manifest))

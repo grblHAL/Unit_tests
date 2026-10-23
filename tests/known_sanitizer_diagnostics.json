@@ -1,13 +1,20 @@
 [
   {
     "kind": "fatal_asan",
-    "test": "ngc_params.direct_g65_o_word_return_restores_callers_without_flow_frames",
-    "source": "core/ngc_flowctrl.c",
+    "test": "system.startup_comment_rejection_preserves_saved_line_and_allows_retry",
+    "source": "core/gcode.c",
     "lines": [
-      774
+      1154
     ],
-    "function": "ngc_flowctrl",
-    "message_pattern": "global-buffer-overflow",
-    "preceding_ubsan_pattern": "index -1 out of bounds for type 'ngc_stack_entry_t ?\\[20\\]'"
+    "function": "gc_normalize_block",
+    "message_pattern": "(?:access-violation|SEGV)",
+    "preceding_ubsan_pattern": "store to null pointer of type 'char \\*'",
+    "asan_line_optional": true,
+    "unsanitized_marker": "startup-comment-rejection: returning plugin error",
+    "unsanitized_exit_codes": [
+      -11,
+      3221225477,
+      -1073741819
+    ]
   }
 ]
