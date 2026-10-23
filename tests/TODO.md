@@ -1122,3 +1122,16 @@ suspend_read after startup's explicit removal solely to cover these guards.
 Existing public mode-setting rejection controls remain. Revisit if legacy startup
 advertises supported manual stream suspension or the maintainer defines a real
 board/plugin lifecycle that installs it later.
+
+
+## Probe no-axis rejection guard reachability - 2026-10-23
+
+On CORE50f3865 public G38.2F100 returns Status_OK with no axis target. This is
+modal-only selection, not an actual probe cycle. gcode.c3368 validates motion
+only for AxisCommand_MotionMode; the no-axis block does not enter that path,
+so the later no-axis probe guard at3919 is not reached by this ordinary input.
+An exploratory expected-rejection assertion was withdrawn, not WILL_FAIL-ed.
+Existing G38.2X0F100 invalid-target/recovery control passes with the same real
+probe fixture. Keep the raw line in coverage; do not force parser axis_command
+or misclassify normal modal selection as a probe safety defect. Revisit only
+if another supported public axis-command path reaches the guard without axes.

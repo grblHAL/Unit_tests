@@ -1,3 +1,80 @@
+# Configuration/recovery batch cumulative gate passed - 2026-10-23
+
+Seven new cases pass the full4,279-test ASan/UBSan gate64.17s and strict summary:
+4,252clean/27known/0unexpected/0skipped. Evidence
+batch74-config-recovery-delivery-{results.xml,tests.log,summary.log}. New final
+pair covers unsupported G10L2R rotation without changing saved G54/queued cut,
+and a nonexistent second spindle address without changing actual running driver
+output, followed by valid primary reversal/stop. Focused pair2/2pass0.32s.
+Targets gcode.c3085/2472-2473; earlier batch cases target1765/2977/2989,
+ngc_params.c639 and heap-only strset failure branches. No new exception, shared
+fixture modification or CORE change. Fresh core fetch still clean50f3865.
+
+Hosted39940715358 exact63965a0 is now completed/success. Measured badges and
+known-gap snapshot updated to98.26%line/89.47%branch from that report, not these
+seven local additions. No unchanged reporting helper rerun or tiny hosted run.
+Deliver this coherent checkpoint on74; full supported coverage remains incomplete.
+
+# Missing optional macro/tool-table services preserve real cuts - 2026-10-23
+
+Two additional public workflows pass fresh ASan/UBSan. With the optional macro
+provider absent, G67 rejects UnsupportedCommand, preserves the queued80-step cut,
+keeps scope level0 and leaves no modal macro. Without a configured tool table,
+G43H1 and G43.2H1 both reject UnsupportedCommand without changing offsets or
+planner occupancy; the original cut reaches its exact endpoint. Existing
+no-provider M98/no-table G10 fixtures establish these supported configurations.
+Targets gcode.c1765/2977/2989. No new allowance or CORE change.
+Evidence batch74-g67-provider-results.xml1/1pass0.27s and
+batch74-no-tooltable-results.xml1/1pass0.30s. Five local cases now4,277registered;
+retain for the next substantial cumulative gate, no hosted dispatch this turn.
+
+A proposed G38.2F100 no-axis rejection failed with Status_OK and was withdrawn
+rather than labelled a defect. Source axis_command gating allows modal-only
+selection without a target; see TODO. Raw exploratory result remains in
+batch74-probe-noaxis-results.xml; only the pre-existing current-position
+rejection control passed in that exploratory pair. No new probe test registered.
+
+# Measured checkpoint and optional output configuration - 2026-10-23
+
+Hosted39940715358 exact63965a0/core50f/filter locks match; all seven coverage
+report stages pass. Hosted4,272cases:4,247clean/25known/0fail/0skip. Measured
+17,405/17,714lines98.26% and12,347/13,800outcomes89.47%: +3lines/+12outcomes,
+no lost lines against39938331513. Gains ioports.c435 and stream.c412-413.
+Overall run still active at retrieval; README successful-run badges unchanged.
+COVERAGE_GAPS refreshed from exact XML, all309raw lines/1,453outcomes accounted.
+
+New optional-output-config scenario changes output inversion3->0 with one pin
+lacking its optional config callback; the other pin updates twice, saved mask
+tracks both requests and input configuration is untouched. Fresh ASan/UBSan1/1
+passes0.30s, batch74-output-config-results.xml. No allowance/CORE change.
+Three local additions now4,275registered, retained for substantial next batch.
+
+# Heap-only filename allocation failure and retry - 2026-10-23
+
+Added strutils.strset_failed_heap_only_allocation_clears_ownership_and_allows_retry.
+Public strset starts with a nulled string, rejects the first allocation cleanly,
+then accepts the filename. A later rejected growth frees the owned allocation
+exactly once, clears pointer/capacity without a static fallback, and accepts the
+next filename on retry. Uses existing scoped realloc/free wrapping and CMake
+registration; no shared fixture, allowance or CORE change. Targets previously
+missing strutils.c401-402 no-base outcomes and the first-allocation failure arm.
+Fresh ASan/UBSan allocation-failure group3/3pass0.37s, evidence
+batch74-string-retry-results.xml. Registration now4,274; keep with the pending
+registered-spindle parameter case for a substantial next delivery.
+Hosted39940715358 for63965a0 was verified in_progress; coverage artifacts were
+not available yet. No duplicate run dispatched and no new percentage claimed.
+
+# Named spindle direction through registered driver output - 2026-10-23
+
+New ordinary M4S200/M5/M3S100 workflow uses the enabled registered encoder spindle
+rather than the older check-mode-only parameter fixture. Named spindle_on/cw
+match actual driver on/direction and feedback RPM through reversal, stop and
+clockwise restart. Axis counters remain at their setup position with zero new
+pulses and no planner blocks. Targets ngc_params.c639's counterclockwise outcome.
+Fresh ASan/UBSan1/1pass0.29s; batch74-spindle-parameter-results.xml. No allowance,
+removed required callback or CORE edit. Keep local for the next cross-module
+batch; the latest pushed checkpoint remains63965a0.
+
 # Stream/I/O/macro/driver cumulative delivery validated - 2026-10-23
 
 Four new cases and two strengthened existing scenarios pass the full4,272-case
