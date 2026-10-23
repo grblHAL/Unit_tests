@@ -1,3 +1,51 @@
+# Operator hold policy and arc-envelope endpoint batch - 2026-10-23
+
+LOCAL beyond pushed73c12ba: six new cases plus seven expanded existing cases,
+4,245 registered. This cumulative group preserves the earlier two operator-start
+controls: repeated starts do not disturb an active cut; start cannot wake completed
+sleep before reset. Three additional registered-driver hold controls use public
+HoldActions6: dynamic laser stays at zero PWM without a new spindle-state write;
+constant laser reduces to zero then restores on cycle start; an M5 dry cut never
+starts its spindle during hold/resume and accepts a later explicit M3.
+
+Independent sampled arc geometry now includes endpoints15/45/75 degrees within
+each quadrant, both directions, four limiting walls and XY/ZX/YZ planes. Original
+45-degree/full-circle combinations remain. These controls isolate arc extrema
+with valid endpoints; out-of-envelope endpoint handling has separate real G-code
+regressions. All six expanded geometry controls pass.
+
+Confirmed exact radius5 arc endpoint defect on clean CORE50f3865: CW from
+(-6,-0.5) to(-13,+0.5) emits Y+40steps with no alarm; CCW from(-6,-49.5) to
+(-13,-50.5) emits Y-4040steps with no alarm despite a -50..0mm envelope.
+Both starts are reached by G0; tests execute real parser/planner/stepper motion.
+Non-extremum Y bounding min/max are reversed in machine_limits.c785-795, and
+accepted arc segments bypass further soft checks. Correct alarm/no-arc-step
+assertions remain in two exact WILL_FAIL cases; dated KNOWN_BUGS entry includes
+source cause, independent controls and cleanup instructions. No sanitizer waiver.
+
+Grouped ASan/UBSan plus strict summary:13cases/11ordinary/2documented defects/
+0unexpected/0skipped in0.68s. Evidence batch74-operator-arc-classified-results.xml
+and summary.log. Raw invalid-endpoint traces are batch74-arc-endpoint-raw-results.xml
+and batch74-lower-arc-endpoint-raw-results.xml. No CORE edit or new hosted dispatch.
+Next cumulative full gate must include this group before delivery. Prior73c12ba
+hosted run39919635378 remains the one existing checkpoint to verify separately.
+
+# Active operator-start follow-up - 2026-10-23
+
+Seven-workflow cumulative checkpoint73c12ba is pushed on coverage-batch-74.
+One hosted run39919635378 is in_progress at this exact head; no terminal success
+is inferred. Last fully locked measurement824e516 remains98.21%/88.96%.
+
+New LOCAL follow-up: one case plus one expanded existing boot case,4,240
+registered. Cycle start after16 emitted pulses and again during the following
+relative block preserves the same planner owner, continuous1680Xpulses and one
+driver wake, with no hold or position loss. Completed-sleep observer now requests
+cycle start after receiving Sleep status and observes four stable sleeping turns:
+outputs disabled, no position changes; original reset/warm parser/lock assertions
+remain. Both pass ASan/UBSan0.30s, batch74-running-sleep-start-results.xml.
+No new exception, full gate or hosted run for these local changes. Keep authoring
+on the same batch; do not edit CORE or merge PR28.
+
 # Cumulative public-workflow delivery gate - 2026-10-23
 
 The seven-workflow group eb168ca passes the full4,239-case ASan/UBSan gate in

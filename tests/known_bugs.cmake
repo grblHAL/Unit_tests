@@ -120,3 +120,13 @@ if(ENABLE_SANITIZERS AND TEST ngc_flowctrl.continue_to_missing_loop_label_report
   set_tests_properties(ngc_flowctrl.continue_to_missing_loop_label_reports_syntax_without_reading_past_stack
     PROPERTIES WILL_FAIL TRUE LABELS "known_bug;known_crash")
 endif()
+
+# Arc bounding box omits a Y endpoint when no Y extremum is crossed (2026-10-23).
+if(TEST motion_control.clockwise_arc_rejects_endpoint_above_y_limit_before_emitting_steps)
+  set_tests_properties(motion_control.clockwise_arc_rejects_endpoint_above_y_limit_before_emitting_steps
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+if(TEST motion_control.counterclockwise_arc_rejects_endpoint_below_y_limit_before_emitting_steps)
+  set_tests_properties(motion_control.counterclockwise_arc_rejects_endpoint_below_y_limit_before_emitting_steps
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

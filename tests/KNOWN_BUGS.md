@@ -470,3 +470,37 @@ Raw evidence: `build-asan/batch74-continue-missing-raw.xml`. Assertions after th
 fatal read cannot execute until repaired. Ordinary builds retain the ordinary test.
 Proposed upstream fix: validate stack index before each target-label comparison;
 retain the regression and remove the sanitizer allowance after repair. CORE is unchanged.
+
+## Arc bounding box can omit an out-of-range Y endpoint
+
+Confirmed 2026-10-23 on clean CORE `50f38659db7b22f4689f3654df2d110d992bcc95`.
+The real parser, arc segment generator, planner and stepper accept these exact
+radius5 arcs with XYZ soft limits enabled and a homed envelope of -50..0mm:
+
+- From X-6 Y-0.5, `G2X-13Y0.5I-4J-3F100` emits an endpoint at Y+0.5mm
+  (motor counter+40), without a soft-limit alarm.
+- From X-6 Y-49.5, `G3X-13Y-50.5I-4J3F100` emits an endpoint at Y-50.5mm
+  (motor counter-4040), without a soft-limit alarm.
+
+Both starts are reached through ordinary G0 commands. The 3-4-5 geometry is exact;
+this is not a radius-roundoff or private-state injection reproduction. The host
+fixture supplies the normal homed soft-limit envelope and observes actual steps.
+
+In `machine_limits.c:785-795`, the non-extremum lower-Y bound uses max of the
+endpoints, while the upper-Y bound uses min. This can exclude the offending end.
+`mc_arc` marks the accepted arc target validated/valid; its segments then bypass
+individual soft-limit checks in `mc_line`, so the final out-of-range move executes.
+
+Correct regressions retain Alarm_SoftLimit and no arc-step assertions:
+`motion_control.clockwise_arc_rejects_endpoint_above_y_limit_before_emitting_steps`
+and `motion_control.counterclockwise_arc_rejects_endpoint_below_y_limit_before_emitting_steps`.
+Each has one exact WILL_FAIL/known_bug, with no sanitizer diagnostic allowance.
+Raw evidence: `build-asan/batch74-arc-endpoint-raw-results.xml` and
+`build-asan/batch74-lower-arc-endpoint-raw-results.xml`. Six existing independent
+sampled-geometry cases now also cover short same-quadrant arcs with valid endpoints
+and remain ordinary passing controls; their original full-circle cases remain.
+
+Proposed upstream fix: include both endpoints in the bounding rectangle, using
+min for the non-extremum lower-Y bound and max for the upper-Y bound. Verify all
+planes, directions and crossed extrema. Retain the regressions and remove only
+their two allowances after repair. CORE is unchanged.
