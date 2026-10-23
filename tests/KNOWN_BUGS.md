@@ -26,6 +26,32 @@ in [storage write-failure policy](TODO.md#storage-write-failure-policy), includi
 its observations, existing test exceptions and cleanup links. It is not a
 settled requirement to retry physical writes a specific number of times.
 
+## Combined broadcast M48 leaves both spindle speed overrides disabled
+
+**Confirmed:** 2026-10-23, clean CORE `50f38659db7b22f4689f3654df2d110d992bcc95`.
+Normal same-block spindle/override commands expose the broadcast path:
+M3M49$-1 starts both enabled spindles and disables their overrides correctly.
+M3M48$-1 is also accepted, reenables feed override, but leaves both spindle speed
+overrides disabled. Programmed3000/7000RPM at110/120% should become3300/8400;
+actual driver outputs remain3000/7000, with both disable flags set. Stored
+percentages remain110/120; the third registered but unenabled driver is untouched.
+
+[Correct regression](cases/multi_spindle/broadcast_spindle_start_with_m48_restores_both_speed_overrides.c)
+uses registered drivers and public parser/override APIs. It verifies broadcast
+start/direction, unchanged percentages and no unused-driver calls before the
+correct enable/output assertions. [M49 control](cases/multi_spindle/broadcast_spindle_start_with_m49_disables_both_speed_overrides.c)
+passes and also reenables only the secondary through public M51P1$1.
+Existing standalone M48 positive controls remain ordinary passing tests.
+Raw evidence: build-asan/batch74-broadcast-override-raw-results.xml.
+
+Cause: [M48 broadcast loop](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/gcode.c#L2689)
+sets spindle_rpm_disable bits with bit_true; the single-spindle branch clears
+them with bit_false. Preserve broadcast selection while clearing the requested
+disable bits. One exact named WILL_FAIL in known_bugs.cmake; no sanitizer
+allowance or CORE edit. When fixed, retain the regression, remove its exception
+and delete this entry. This is an ordinary accepted command combination, not a
+saturated scheduler or timing-window proposal.
+
 ## Stopped-spindle rigid tapping enters macro fallback after synchronization fails
 
 **Confirmed:** 2026-10-23, clean CORE `50f38659db7b22f4689f3654df2d110d992bcc95`.
@@ -87,9 +113,9 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Reviewed:** 2026-10-23, clean Terje `50f38659db7b22f4689f3654df2d110d992bcc95`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39969171772)
-measures 17,419/17,714 lines (98.33%) and 12,457/13,800 branches (90.27%).
-The 295 uncovered lines include the following known gaps; this table does not
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39977472030)
+measures 17,426/17,714 lines (98.37%) and 12,466/13,800 branches (90.33%).
+The 288 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable. See the complete measured
 [line/branch inventory](COVERAGE_GAPS.md) before selecting the next workflow.
 
@@ -151,21 +177,13 @@ retain the correct assertion and control, then delete this entry once fixed.
 when no backend callback exists; prefix only a backend-local path.
 
 
-## Hidden embedded mounts must reject CWD navigation
+## Hidden files in a visible mount remain accessible by relative path
 
-**Maintainer contract clarified 2026-10-23:** hidden mounts and files are for
-components that registered them; hidden files are accessed by full path only.
-Terje plans to block CWD into hidden mounts. This resolves the earlier navigation
-policy question; it does not introduce a caller-identity authorization API.
-
-The existing [hidden-only directory](cases/fs_embedded/hidden_only_directory_has_no_visible_entries.c)
-and [visible registration](cases/fs_embedded/visible_registration_reveals_previously_hidden_mount.c)
-regressions retain their two narrow WILL_FAIL allowances: hidden-only CWD must
-reject, while adding a visible asset makes ordinary navigation available.
-The [explicit-path hidden read](cases/fs_embedded/hidden_file_remains_readable_by_explicit_path.c)
-remains a passing control. CORE50f3865 still permits CWD into the hidden mount.
-Remove each allowance when its unchanged rejection assertion passes; preserve
-full-path reads and hidden-entry listing suppression. No CORE change applied.
+**Maintainer contract clarified 2026-10-23:** hidden files require a full path.
+CORE51b58594 now rejects CWD into hidden mounts; the two unchanged directory
+regressions pass under sanitizers and their allowances were removed. Explicit
+full-path reads remain passing controls. The separate mixed-mount file issue
+below remains outstanding; no caller-identity API is assumed.
 
 **Full-path-only file reproduction,2026-10-23, CORE50f3865:**
 [Hidden file in a visible mount](cases/fs_embedded/hidden_file_in_visible_mount_requires_full_path_after_chdir.c)
@@ -221,28 +239,6 @@ Preserve successful restore/disable behavior. Remove this allowance and entry
 once clean source passes the refusal, M72 control and accepted retry under
 sanitizers.
 
-## M72 misses saved feed/rapid percentages when enable flags are unchanged
-
-**Confirmed:** 2026-10-22, clean CORE `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
-[Regression](cases/ngc_params/m72_restores_override_percentages_when_enable_flags_are_unchanged.c)
-saves80% feed/50% rapid with M70, changes them through public plan_feed_override
-to65%/25%, then executes M72. Both modal/runtime override-enable flags remain
-unchanged. M72 returns success but leaves65%/25%, instead of restoring80%/50%.
-The snapshot is released before the correct failing percentage assertion.
-Raw ASan/UBSan evidence: build-asan/modal-percentage-raw.xml.
-
-[Action selection](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/gcode.c#L583)
-sets M9 only when override-control flags differ. Both the direct restore and
-parser M72 percentage restoration are gated on M9 (gcode.c606-607/4382-4385),
-so percentage-only changes are skipped. Existing flag-change controls pass;
-scoped direct restore also passes while retaining its parent snapshot.
-
-**Suggested fix for Terje (not applied):** include saved/current feed and rapid
-percentage differences when selecting restoration work, preserving enable policy
-and planner update semantics. Keep this correct regression, remove its exact
-WILL_FAIL/known_bug block and this entry once upstream passes under sanitizers.
-One new named allowance; no sanitizer suppression or CORE modification.
-
 ## Asymmetric auto-squaring initial pull-off leaves the secondary motor on its switch
 
 **Confirmed:** 2026-10-22, clean CORE `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
@@ -290,61 +286,6 @@ zero-linear-distance rotary motion, including both rotary axes and subsequent
 moves. Keep the correct regression and remove this exact WILL_FAIL/known_bug
 block and entry after upstream passes. No CORE changes or sanitizer allowance.
 
-## Flow syntax errors orphan an active named macro file
-
-**Confirmed:** 2026-10-22, clean CORE `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
-[Bounded regression](cases/ngc_flowctrl/named_macro_flow_syntax_error_closes_file_before_status_returns.c)
-opens a real named macro with CALL, encounters a SUB with a different named
-label, then reports the returned FlowControlSyntaxError through the installed
-status handler. The local argument scope returns to its caller, but the macro
-file and redirected reader remain installed. The test captures this ownership
-failure, releases the orphan for cleanup, then retains the correct assertion
-that the error handler should have closed it. Raw evidence:
-`build-asan/macro-flow-error-raw.xml` (closed_on_error assertion).
-The valid same-label SUB header is covered by the existing successful CALL/EOF
-control. Generic parser-error cleanup remains separately tested.
-
-`ngc_flowctrl.c:789-790` clears all sub records and flow frames on this syntax
-error before the installed `onNamedSubError` sees it. That handler only closes
-named files through a surviving frame/sub lookup (lines395-419), so it can no
-longer identify the redirected file. Its EOF handler has the same frame guard.
-The full-protocol malformed-header reproduction is retained as an unregistered
-[proposal](proposals/named_macro_wrong_sub_header_unwinds_scope_and_skips_both_tails.c):
-it reaches a repeat-EOF timeout15.03s rather than returning to the sender.
-
-**Suggested fix for Terje (not applied):** preserve ownership until named-file
-error unwinding completes, or close the corresponding files while clearing the
-frames. Validate nested files, parameter restoration, and sender recovery. Keep
-the bounded regression; remove this exact WILL_FAIL/known_bug block and entry
-when upstream passes, then promote the full-protocol proposal if it terminates
-with the intended error. No CORE edits or sanitizer diagnostic allowance.
-
-## RAM upload truncation keeps previously buffered commands
-
-**Confirmed:** 2026-10-22, clean Terje CORE `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
-[Regression](cases/fs_ram/truncate_pending_upload_discards_old_bytes_before_replacement.c)
-opens a writable RAM job, writes `G1X99`, successfully truncates to zero, then
-writes replacement `G1X1` and closes it. A fresh reader gets both commands
-(11 bytes) instead of only the replacement (5 bytes). All operations use public
-VFS APIs, valid handles and ordinary writable-file lifetime. No execution of the
-stale motion is needed to prove that the stored job is wrong.
-
-[fs_truncate](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/fs_ram.c#L237-L249)
-clears committed data/position/length but leaves the pending txbuf length and
-cursor untouched. A small upload has no committed data yet, so the operation
-returns success without discarding any buffered bytes. Closing the writer later
-flushes the old and replacement commands together. Raw evidence:
-`build-asan/batch73-file-resources-raw.xml`.
-
-**Suggested fix for Terje (not applied):** on successful truncate-to-zero, clear
-pending txbuf length and reset its cursor to the buffer start as well as clearing
-committed data. Verify pending-only and committed-plus-pending uploads, rewrite,
-close/readback and existing allocation-failure recovery under sanitizers.
-
-The exact regression has WILL_FAIL/known_bug in [known_bugs.cmake](known_bugs.cmake).
-Retain its correct replacement-content assertions; remove that block and this
-entry once upstream passes. No sanitizer allowance or CORE edit applies.
-
 ## Failed I/O bank allocation publishes nonexistent ports and reports success
 
 **Confirmed:** 2026-10-22, clean Terje CORE `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
@@ -375,35 +316,6 @@ follow the first failing success-result assertion and are not yet validated.
 Remove both blocks and this entry once upstream passes under sanitizers.
 No CORE edit or sanitizer diagnostic allowance applies.
 
-## Full asynchronous RTU queue silently drops accepted requests
-
-**Confirmed:** 2026-10-23, clean Terje CORE `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
-[Regression](cases/modbus_rtu/full_async_queue_reports_backpressure_and_preserves_accepted_requests.c)
-submits an ordinary burst of valid asynchronous reads before polling. All16
-modbus_send calls return true, but the registered RTU transport sends only7
-requests and delivers only7 successful replies; no rejection or exception is
-reported for the other9. The bounded driver then polls1000ms, well past all
-reply/silence deadlines, so no accepted transaction remains merely pending.
-Raw evidence: `build-asan/batch73-rtu-backpressure-raw.xml`.
-
-[Queue admission](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/modbus_rtu.c#L329-L336)
-skips add_message when the ring is full but still returns !block, which is true
-for asynchronous callers. This turns queue exhaustion into reported success
-without a transmitted request or completion callback. Existing upper-level
-Modbus code treats a false transport result as rejection, so success cannot
-communicate backpressure to a driver trying to retry.
-
-**Suggested fix for Terje (not applied):** return false when asynchronous queue
-admission fails, preserving already queued requests and callback ownership.
-Validate a burst, ordered successful replies, explicit rejection on exhaustion
-and retry after draining; retain abort/flush and blocking-transaction controls.
-
-The exact case has WILL_FAIL/known_bug in [known_bugs.cmake](known_bugs.cmake).
-Keep the accepted-versus-completed assertion and the subsequent backpressure/
-retry assertions (currently not reached after the first failure). Remove its
-block and this entry when upstream passes under sanitizers. No CORE edit,
-timeout allowance or sanitizer diagnostic suppression applies.
-
 ## Delta auxiliary-axis command advances parser but emits no motor steps
 
 **Confirmed:** 2026-10-23, clean Terje CORE `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
@@ -430,14 +342,6 @@ Retain its correct80-step/endpoint assertion and the passing XYZ control; remove
 the block and this entry when upstream passes. No CORE edits or sanitizer allowance.
 Delta source is unchanged in newly fetched50f3865; latest-source runtime recheck pending.
 
-## Rejected startup-line comment stores through a null message pointer
-
-Confirmed 2026-10-23 on CORE `50f38659db7b22f4689f3654df2d110d992bcc95`. Public `$N0=G91(Keep Case)` with a registered comment callback returning `Status_UserException` reaches `system.c:775`, which deliberately passes NULL for the optional message output. The new rejection cleanup in `gc_normalize_block`, `gcode.c:1154`, unconditionally writes `*message = NULL`, causing a null store instead of returning the plugin error.
-
-Regression: `system.startup_comment_rejection_preserves_saved_line_and_allows_retry`. Correct assertions require the error, preservation of saved G90 and successful later retry. They remain after the fault and are not reached today. The accepting-plugin companion passes. Raw evidence: `build-asan/batch73-startup-comment-raw.xml`. One exact crash wrapper checks function/source and UBSan line1154 plus the null-store diagnostic. Uninstrumented builds require the exact callback-stage marker and SIGSEGV/access-violation exit, rejecting ordinary assertions, successful fixes and unrelated output. Windows ASan may omit source line information; its preceding UBSan location remains mandatory.
-
-Proposed upstream fix: guard the optional message output before clearing it on comment rejection. Remove the named exception, wrapper registration and manifest entry once the unchanged test passes under instrumented and ordinary builds. No CORE changes.
-
 ## Large analog PWM request wraps to minimum duty with 16-bit fast integers
 
 Confirmed 2026-10-23 on clean CORE `50f38659db7b22f4689f3654df2d110d992bcc95`,
@@ -460,135 +364,6 @@ Proposed upstream fix: compare/clamp the scaled floating value including minimum
 duty before narrowing it, or bound it in a sufficiently wide intermediate.
 After repair retain the test and remove its scoped exception and type check.
 CORE is unchanged.
-
-## PWM precomputation reports success for a zero-tick period
-
-Confirmed 2026-10-23 on clean CORE `50f38659db7b22f4689f3654df2d110d992bcc95`.
-`ioports_precompute_pwm_values` documents false when no PWM range is possible,
-so the driver can fall back to on/off control. At timer clock1MHz, requested
-frequency2MHz and otherwise valid input/duty ranges, it instead returns true
-with period0, minimum0 and maximum0. `ioports.c:1152` truncates clock/frequency
-to zero, while the return at1166 checks only the analog input range.
-
-Regression: `ioports.pwm_frequency_above_timer_clock_reports_no_range_and_allows_valid_retry`.
-Correct `!ready` assertion is retained with one named WILL_FAIL, no sanitizer
-allowance. Evidence `build-asan/batch74-pwm-frequency-raw.xml` records
-ready1/period0/min0/max0. Later assertions require a valid1kHz configuration to
-recover normal PWM; they are not reached while this defect remains. Existing
-ordinary precompute/midpoint controls cover that valid configuration separately.
-
-**Maintainer discussion,2026-10-23:** this is an invalid-request rejection test,
-not a request for hardware to generate2MHz from a1MHz timer. The retained
-assertion only requires false for a computed zero-tick period, matching the
-helper's documented no-range result. It does not prescribe a minimum of100 or
-1,000ticks, nor require support at every other frequency. Minimum useful duty
-resolution and low-frequency timer/prescaler selection remain driver/API policy.
-Existing50Hz servo controls must remain supported with a suitable timer clock.
-
-**Further maintainer confirmation,2026-10-23:** impossible and unreasonable
-periods will be rejected. Retain the rejection assertion. The exact additional
-reasonable-period limits are maintainer policy, not thresholds invented by this
-suite. Fresh upstream fetch still resolves to50f3865, matching the reproduced
-zero-tick result; remove the allowance when the unchanged regression passes on
-the updated implementation, rather than treating this statement as test evidence.
-
-Proposed narrow repair for Terje: reject a computed zero-tick period before
-reporting success. Any broader frequency/resolution limits need a separate
-agreed contract. Preserve the driver's existing on/off fallback. Remove the named
-allowance once the unchanged rejection assertion passes. CORE is unchanged.
-
-## Named file without matching ENDSUB returns success after prescan
-
-Confirmed 2026-10-23 on clean CORE `50f38659db7b22f4689f3654df2d110d992bcc95`.
-Maintainer clarification requires scanning a named file for its matching ENDSUB
-before executing the body, and rejecting the file when that terminator is absent.
-The body is correctly suppressed during this scan. However, `onNamedSubEOF` in
-`ngc_flowctrl.c` closes/unwinds the file and returns the incoming successful status
-without rejecting the missing terminator.
-
-Regression: `ngc_flowctrl.named_file_without_end_sub_rejects_without_executing_body`.
-It retains the required flow-control syntax error, no body side effects and no
-caller continuation after rejection. One exact WILL_FAIL records the missing
-error; no sanitizer allowance is needed. Raw evidence is
-`build-asan/named-prescan-contract-results.xml`.
-
-Proposed upstream fix: diagnose EOF while the named-file prescan still awaits its
-matching ENDSUB, preserving the existing scan-before-execution behavior. Do not
-execute the body on the first pass. Retain the test and remove its allowance
-when rejection is implemented. CORE is unchanged.
-
-## CONTINUE to an absent loop label reads before the flow stack
-
-Confirmed 2026-10-23 on clean CORE `50f38659db7b22f4689f3654df2d110d992bcc95`.
-Inside O10 WHILE, O99 CONTINUE exhausts the stack while searching for its target.
-`ngc_flowctrl.c:628` compares the next label before checking whether stack_pull
-has left a valid stack index, reading stack[-1]. ASan reports a global buffer
-read overflow, preceded by UBSan index -1, instead of a flow-control syntax error.
-
-Regression: `ngc_flowctrl.continue_to_missing_loop_label_reports_syntax_without_reading_past_stack`.
-Correct syntax-error and untouched-body assertions remain. Sanitized builds use
-one exact fatal-diagnostic wrapper, source line/function and preceding UBSan
-matched in `tests/known_sanitizer_diagnostics.json`; no other fault is accepted.
-Raw evidence: `build-asan/batch74-continue-missing-raw.xml`. Assertions after the
-fatal read cannot execute until repaired. Ordinary builds retain the ordinary test.
-Proposed upstream fix: validate stack index before each target-label comparison;
-retain the regression and remove the sanitizer allowance after repair. CORE is unchanged.
-
-## Arc bounding box can omit an out-of-range Y endpoint
-
-Confirmed 2026-10-23 on clean CORE `50f38659db7b22f4689f3654df2d110d992bcc95`.
-The real parser, arc segment generator, planner and stepper accept these exact
-radius5 arcs with XYZ soft limits enabled and a homed envelope of -50..0mm:
-
-- From X-6 Y-0.5, `G2X-13Y0.5I-4J-3F100` emits an endpoint at Y+0.5mm
-  (motor counter+40), without a soft-limit alarm.
-- From X-6 Y-49.5, `G3X-13Y-50.5I-4J3F100` emits an endpoint at Y-50.5mm
-  (motor counter-4040), without a soft-limit alarm.
-
-Both starts are reached through ordinary G0 commands. The 3-4-5 geometry is exact;
-this is not a radius-roundoff or private-state injection reproduction. The host
-fixture supplies the normal homed soft-limit envelope and observes actual steps.
-
-In `machine_limits.c:785-795`, the non-extremum lower-Y bound uses max of the
-endpoints, while the upper-Y bound uses min. This can exclude the offending end.
-`mc_arc` marks the accepted arc target validated/valid; its segments then bypass
-individual soft-limit checks in `mc_line`, so the final out-of-range move executes.
-
-Correct regressions retain Alarm_SoftLimit and no arc-step assertions:
-`motion_control.clockwise_arc_rejects_endpoint_above_y_limit_before_emitting_steps`
-and `motion_control.counterclockwise_arc_rejects_endpoint_below_y_limit_before_emitting_steps`.
-Each has one exact WILL_FAIL/known_bug, with no sanitizer diagnostic allowance.
-Raw evidence: `build-asan/batch74-arc-endpoint-raw-results.xml` and
-`build-asan/batch74-lower-arc-endpoint-raw-results.xml`. Six existing independent
-sampled-geometry cases now also cover short same-quadrant arcs with valid endpoints
-and remain ordinary passing controls; their original full-circle cases remain.
-
-Proposed upstream fix: include both endpoints in the bounding rectangle, using
-min for the non-extremum lower-Y bound and max for the upper-Y bound. Verify all
-planes, directions and crossed extrema. Retain the regressions and remove only
-their two allowances after repair. CORE is unchanged.
-
-## Mismatched numeric ENDSUB accepts another subroutine's record
-
-**Confirmed2026-10-23, clean CORE50f38659db7b22f4689f3654df2d110d992bcc95.**
-[Real-file regression](cases/ngc_flowctrl/file_subroutine_with_mismatched_endsub_rejects_before_body_and_restores_sender.c)
-streams `O10SUB`, a skipped body assignment, then `O20ENDSUB` and a tail
-assignment. Label20 has never been defined. Expected syntax-error termination
-instead returns success and executes the tail: status0/body0/tail7. The correct
-syntax-error, suppressed-tail and restored-sender assertions remain. One exact
-WILL_FAIL; no sanitizer or timeout allowance. Raw evidence:
-build-asan/batch74-endsub-mismatch-raw-results.xml.
-
-`sub_get` in ngc_flowctrl.c249-260 returns the final list node on a failed
-label/file match rather than NULL. The ENDSUB handler therefore takes that
-unrelated record instead of its explicit syntax-error arm at687. A version with
-a subsequent CALL timed out; that consequence is not used as the regression's
-acceptance condition and is not separately classified as a confirmed hang cause.
-
-Proposed repair for Terje: return NULL when the search exhausts without a matching
-label/file, retaining matching-label behavior and the existing error path. No
-CORE edits. After repair retain this bounded regression, remove its allowance,
-and validate normal numeric subroutine definitions/calls and file recovery.
 
 ## Rejected auxiliary reverse nudge changes the running motor direction
 
@@ -644,58 +419,3 @@ successful parse, preserving prior errors. Also avoid reading an uninitialized
 output slot in the full-expression evaluator. Remove the named allowance when
 the unchanged deterministic regression passes, retaining all error assertions.
 CORE is unchanged.
-
-
-## Unterminated last file command reuses the preceding line number
-
-Confirmed2026-10-23 on clean CORE `50f38659db7b22f4689f3654df2d110d992bcc95`.
-For a file containing `G90\nG91` without a final newline, both commands execute
-successfully, but the second command is assigned line1 again rather than line2.
-Physical CR/LF increments `stream_file.c:60`; the EOF branch at67-69 synthesizes
-a final LF without that increment. A newline-terminated control advances the
-counter normally. This is a diagnostic line-number discrepancy, not skipped
-motion or a failed final command.
-
-Regression: `stream_file.unterminated_last_command_receives_next_line_number_before_eof`.
-First command line1 and successful G91 execution are checked, EOF and close
-complete, then the correct final-line2 assertion fails with actual1. One exact
-named WILL_FAIL/known_bug; no sanitizer allowance. Evidence:
-`build-asan/batch74-file-eof-number-raw-results.xml`.
-
-The separate prior-line-number-hook workflow uses terminated commands to verify
-implicit1/explicit42/implicit43 and sender77 after close. It retains per-phase
-observer assertions without inventing an exactly-once callback promise: parser
-assignment can visit the hook more than once.
-
-Proposed repair for Terje: count a real pending command completed by the
-synthesized final LF consistently with a physical LF, retaining empty-file and
-CRLF behavior. Remove the named allowance when the unchanged final-line2
-assertion passes. CORE is unchanged.
-
-
-## Expansion registration leaves previously queried free-port counts stale
-
-Confirmed2026-10-23 on clean CORE `50f38659db7b22f4689f3654df2d110d992bcc95`.
-During public startup registration, a native bank exposes two digital inputs/
-outputs. After discovery queries cache those free counts, successfully adding a
-two-channel expansion updates total available counts to four but
-`ioports_unclaimed` still reports two inputs and two outputs. Native and new
-expansion output routes work, proving the ports exist and registration succeeded.
-No motor state, private ownership flags or interrupt timing is manufactured.
-
-Regression: `ioports.free_port_counts_refresh_when_expansion_registers_after_discovery_query`.
-All initial/updated total counts and both output routing controls pass before
-the correct four-free-ports assertion fails. One named WILL_FAIL/known_bug;
-no sanitizer allowance. Raw evidence:
-`build-asan/batch74-expansion-count-cache-raw-results.xml`, inputs2/outputs2,
-expected4each.
-
-`add_ports` invalidates `count` at `ioports.c:931` but leaves the cached `free`
-value unchanged. `ioports_unclaimed` at189-203 recalculates only when `free`
-is-1. This is a stale discovery count after accepted registration, not lost
-outputs or a failure to route them. Digital input/output behavior is reproduced;
-no broader hardware or analog failure is claimed.
-
-Proposed repair for Terje: invalidate the free-count cache alongside total count
-when a nonempty bank is registered. Remove the named allowance when the unchanged
-free-count assertion passes, preserving count and routing controls. CORE unchanged.

@@ -1,3 +1,13 @@
+# New upstream RAM nonzero-truncate candidate - 2026-10-23
+
+CORE51b58594 rewrote RAM truncation. Next ordinary public workflow to check:
+upload a multi-line file, close it, reopen, truncate to a nonzero shorter length,
+seek/read the retained prefix, then close. The new shrink branch assigns both
+`data` and `pos` to `data + length`; review ownership and prefix readability with
+this public lifecycle. This is an unverified candidate, not a confirmed defect
+or failure allowance. Existing zero-truncate and upload replacement regressions
+pass on this revision. Do not patch CORE or force internal file pointers.
+
 # Pending core features and maintainer follow-ups
 
 Pending implementation and design questions are separate from confirmed defects.
@@ -526,11 +536,11 @@ Sources: [slot getter](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15f
 - `ioports.c`: the `Settings_IoPort_OD_Enable` setting registration is commented
   out. Existing ordinary tests verify that setting writes are disabled. Do not
   invoke its private setter to cover its dormant configuration/getter cases.
-- `gcode.c`: M48/M49 branches for `spindle_id == -1` are not reached by normal
-  override blocks: `is_single_spindle_block()` does not address a spindle for
-  those commands, and the remaining dollar word is rejected. M51 explicitly
-  requires one spindle. Keep default/per-spindle workflow tests; do not forge
-  parser state to execute the dormant all-spindle loops.
+- `gcode.c` correction2026-10-23: standalone M48/M49 do not consume a broadcast
+  selector, but accepted M3M48$-1 and M3M49$-1 do. The earlier audit missed this
+  normal combined-modal block. Runtime tests now cover both; M48's wrong disable
+  bits have a correct named regression in KNOWN_BUGS. M51 still requires one
+  spindle. Do not carry the old standalone-only proof over to combined commands.
 
 These are reachability observations, not confirmed firmware defects or requests
 for new features. Keep them in the reported denominator; revisit if the public
@@ -1373,3 +1383,162 @@ excluded by this guard. Keep that line raw without introducing an invalid enum.
 These eight exact missing lines remain in the denominator. They are separate
 from the newly demonstrated reachable G33.1 initialization-error continuation;
 no blanket claim that tapping continuation is unreachable is justified.
+
+## Remaining settings defaults: routing sets, types and no-table stub - 2026-10-23
+
+CORE50f3865 registration/case comparison (preprocessor alternatives retained)
+checks set/get_axis_mask18 IDs each, set_homing_feedrates2, set_float4,
+set_axis_setting9, get_float18, get_int38 and is_setting_available52. All have
+explicit cases except get_int's deprecated SpindlePWMBehaviour. Its descriptor
+availability is constant false; the store's compatibility bypass3562 selects
+its setter only. Do not invoke its hidden getter to claim a controller workflow.
+Evidence: build-asan/batch74-settings-routing-audit.json, including that exception.
+
+The19 missing routing/default lines are701/703,780-781,1198-1199,1506-1507,
+1593-1595,1651-1652,1692-1693,1899-1900,2245-2246. Axis offsets normalize to
+registered base IDs; no registry callback routes a different valid ID here.
+The formatted direct-value default1958-1959 follows explicit handling of every
+setting_datatype_t member. Integer validation default3474-3475 likewise has no
+remaining valid datatype: Decimal/String/Password/IPv4 are dispatched separately
+by setting_validate_me, and every integer/list/mask type has a case.
+
+The integer direct-value getter fallback2024-2025 is distinct: calling it with
+valid noninteger metadata is possible. Current CORE callers in ngc_expr766 and
+ngc_params1219 check the type first; spindle_get_num350 reads registered selector
+settings. No supported plugin caller requiring this mismatch is established.
+This is caller-scope evidence, not a claim the public helper cannot return0 for
+a deliberate mismatch. Keep the existing function-callback mismatch control.
+
+With N_TOOLS=0, settings_set_tool_data2955/2957 is an intentional success/no-op
+stub. Public G10 L1/L10/L11 rejects no-table use during validation before the
+only current CORE set_tool execution call4077. No persistence feature is supplied
+by invoking that no-op directly; retain the two raw lines as a no-table stub.
+
+Finally, direct-value storage default3623-3625 is not universally unreachable for
+valid enum values: Format_IPv4 is readable as a direct buffer, but the store only
+copies String/Password and otherwise requires a function provider for IPv4.
+Current provider tests use a registered setter for network-library validation.
+Establish an actual supported direct-buffer IPv4 provider and its write contract
+before demanding copying or registering a defect. Keep these three lines pending;
+do not invent malformed enums or a fake network provider to force the fallback.
+
+All58 measured settings lines are now individually grouped, including this
+explicitly pending provider question. This is a source audit, not a coverage gain
+or proof of overall supported-scope completion. All remain in the denominator.
+
+## Counted parser alphabet, named IDs and spindle broadcast guards - 2026-10-23
+
+CORE50f3865 gcode parameter selector1977-2180 covers every A-Z/$ character after
+outer G/M dispatch; unsupported axes still have explicit rejection cases. Earlier
+letter validation rejects other characters. Named read-only registry has63 IDs,
+each handled by ngc_named_param_get_by_id. Evidence:
+build-asan/batch74-parser-routing-audit.json. Defaults gcode2180 and
+ngc_params772-773 therefore need inputs outside their accepted dispatch sets.
+
+Correction after actual same-block tests: six M48/M49 broadcast lines2689/
+2691-2692,2702/2704-2705 are reachable through M3M48$-1 and M3M49$-1, even
+though standalone override commands do not consume that selector. M49 passes;
+M48 wrongly retains disabled speed overrides and now has a correct named
+regression. The three M51 lines2718/2720-2721 remain behind a required single
+selector, including when M3 shares the block. Do not label the six demonstrated
+lines unreachable or retain the older standalone-only proof for them.
+
+## Normal M6 stream pause is a reachable no-handler workflow - 2026-10-23
+
+CORE50f3865 tc_init550-566 deliberately clears hal.tool.change for mode0
+(Normal/ToolChange_Disabled), while a normal UART can still supply suspend_read.
+M6 parsing accepts that combination and gcode4291-4294 performs the plain
+stream-suspended tool-change pause. Do not confuse mode0 with manual touch-off
+modes, which install a tool.change handler, or compatibility builds that explicitly
+remove stream suspension. No handler was nulled after initialization in this test.
+
+New full-boot case uses public $341=0, G0X1, T3M6, waits four stable polls,
+delivers real driver CMD_TOOL_ACK, waits four more, then CMD_CYCLE_START. The
+next G1X2 completes with tool3 selected, stream/handler restored, exact160 X
+pulses and no Y/Z movement. Native stream_rx_suspend implements the backup and
+handoff; sender gates prevent later job lines from arriving before resume.
+Sanitizer pass0.30s: batch74-normal-m6-stream-results.xml. Targeted local profile
+confirms all four raw lines4291-4294 execute; the companion broadcast cases hit
+2689/2691-2692 and2702/2704-2705. Evidence:
+build-asan/batch74-broadcast-normal-m6-line-proof.json (10 unique lines, source
+hashes, worktree status and expected exit code recorded). Global totals await
+hosted measurement of this later batch; no CORE edits or new M6 allowance.
+
+Normal M6 door-interlock companion (2026-10-23): the UART/control fixture now
+checks completion with the door open. The tool is selected and stream restored,
+but the next motion stays at80 X pulses for four open-door polls and four more
+after physical closure. A second cycle start permits160-pulse completion. Both
+normal/resume cases pass grouped sanitizers0.37s. Shared fixture preserves the
+original no-door assertions; no private state or new expected failure.
+
+## Native motion, canned and override dispatch defaults - 2026-10-23
+
+CORE50f3865/header mapping check confirms all28 non-None motion_mode_t values
+have execution cases; MotionMode_None is excluded by the enclosing guard4720.
+Conditional lathe parsing/execution use the same feature guards. The eight G-code
+values that set canned_cycle_active (73,81-86,89) exactly match the eight canned
+initialization cases. All six override_mode_t values likewise have cases; the
+M-word parser only assigns48/49/50/51/53/56 before enabling its override group.
+Evidence: build-asan/batch74-native-dispatch-audit.json, including values/cases.
+
+Thus native command parsing does not reach defaults gcode2736-2737,3606-3607,
+4964-4965. Do not inject invalid modal/override state or invent a new canned
+command to cover them. These six raw lines remain included. This is narrower
+than the corrected spindle broadcast audit: real accepted same-block commands
+still reach the explicit M48/M49 cases and are tested separately.
+
+## Native backend stubs and startup residuals counted - 2026-10-23
+
+CORE50f3865 fs_device.opendir always returns NULL; vfs_opendir only creates its
+wrapper after backend success. Thus no valid public device directory reaches
+fs_closedir190/192. Embedded unlink/dirop133/135/138/140 only return-1; the native
+mount is hidden/read-only and mount_modifiable rejects both before dispatch.
+A public owner could change mount flags, so these four are unsupported native
+write operations, not a claim of impossibility under every owner reconfiguration.
+No actual writable embedded-owner contract is established; no forced handle or
+private callback is warranted just to visit a fixed rejection stub.
+
+Scheduler fallback grbllib590-594 retains the atomic-selection proof: task_get_due
+returns tasks.delayed with IRQs masked, and no callback intervenes before the
+identity comparison. Rechecked current source; do not violate IRQ masking.
+Detailed incompatible-driver diagnostic140/144-147/149-150 remains filtered from
+failed startup, which retains report_warning only. Its reporting policy is still
+a maintainer question, as in the earlier failed-startup audit; do not call its
+private formatter or add a new expected-failure demand for diagnostic wording.
+
+Weak board_ports_init92/95 and my_plugin_init26/29 are empty default hooks.
+The host substitutes driver_init and omits driver-owned expander/plugin init;
+these functions have no observable action to assert. Record this harness/no-op
+scope limit, not a proof that production boards cannot call them. Leave all four
+raw, without inflating coverage with direct empty-hook calls.
+
+Device registration's unmatched stream-type case59 needs a real claimable,
+modbus-ready non-Serial/Bluetooth provider before its node naming can be tested.
+Current native serial/Bluetooth tests already exercise supported names/claims.
+Do not invent a Telnet/WebSocket transport merely to trigger that default.
+
+## Reporting and restore fallbacks: current caller limits - 2026-10-23
+
+Rechecked CORE50f3865. report450-452's N/A branch requires a NULL setting value;
+settings_register rejects such plugin descriptors before linking them. Existing
+invalid-metadata/retry/reporting tests cover the public result. This registration
+proof does not claim every possible native/global descriptor is validated by that
+API; do not turn it into a universal metadata proof or mutate a linked descriptor.
+Tab metadata1955-1956 retains its valid-datatype mapping proof: all external types
+have cases, while Int8/Int16 normalize to Integer. No invented enum is needed.
+
+Hold snapshot state_machine157 calls gc_spindle_get with loop indices
+N_SYS_SPINDLE-1 down to0. Current gc_spindle_get returns the corresponding modal
+array address for each nonnegative index (or slot0 for the single-spindle build),
+so its outer NULL result arm does not run. Optional disabled drivers are represented
+by a nonnull spindle object with hal=NULL; existing primary-only hold tests cover
+that distinct path. Do not replace the getter or use an out-of-range index.
+
+Restore flag819 retains the handler-order proof: state_restore installs
+state_await_resumed before calling state_restore_conditions; a door event while
+restoring therefore reaches the new handler, and the flag is false after return.
+The existing door-reopen/output-restoration workflow checks the real sequence.
+Likewise stream614's zero-report callback cannot follow public Report_ClearAll:
+report_add_realtime returns immediately after clearing primary flags. Explicit
+observer-clear fanout is a separate unresolved contract; no callback is called
+with fabricated flags to cover it. All eight raw lines remain included.

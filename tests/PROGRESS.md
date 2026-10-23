@@ -1,3 +1,104 @@
+# Source51b delivery validation complete - 2026-10-23
+
+All three scoped fixture repairs pass sanitizer execution0.40s and strict summary
+(batch74-core51b-fixture-repair-results.xml). Combined with the initial4,331
+source51b gate142.82s, no unexpected failure remains unresolved. Preserve initial
+full XML and repair XML; do not describe the initial full run as entirely green.
+Five new workflow cases since c9952ea cover normal tool-change/door interlock,
+accepted spindle broadcast overrides and all independent M2/M30 action policies.
+Fifteen resolved regression allowances removed;17 remain on this Windows build.
+No CORE edits, source exclusions, repeated full gate or unchanged helper reruns.
+Next delivery: cumulative branch74 checkpoint, one CORE51b-pinned hosted run.
+Last measured coverage stays98.37% lines/90.33% outcomes on historical CORE50f.
+
+# Latest-source full gate and scoped fixture repairs - 2026-10-23
+
+CORE51b58594 full4,331 gate finished142.82s:4,328 passed, three ordinary fixture
+failures;17 known regressions reproduced, no fatal diagnostic allowances.
+Maximum-length named CALL control used premature EOF instead of executing its
+valid registered file; it now reads the real SUB/body/ENDSUB stream through the
+existing parser helper, preserving file/scope closure and parent argument checks.
+Two long-CWD cases passed their path/stat assertions then tried to chdir into
+hidden placeholder root during cleanup. They now use the existing public unmount
+cleanup, which restores root automatically, preserving all target assertions.
+Only these three local cases changed after the full gate; no second unchanged
+full gate is warranted. Build and rerun affected cases, retain both XML reports
+as combined evidence, then deliver for one exact-source hosted validation.
+
+# Fifteen upstream fixes and new program-end workflow - 2026-10-23
+
+CORE51b58594 direct sanitizer execution confirms fifteen unchanged regressions
+now return0; cumulative exact list in batch74-core51b-confirmed-fixes.json.
+Removed all fifteen corresponding WILL_FAIL allowances and resolved entries.
+Both fatal diagnostic allowances are gone; manifest is empty and tests now run
+directly. Remaining expected failures stay narrowly registered, including M48.
+
+New public $60 scenario passes all four action combinations with both M2/M30,
+readback, independent feed/rapid restore and G54/G55 offset behavior. Existing
+multi-spindle shutdown cases retain G54 policy explicitly under the new bitfield.
+The older named CALL argument control omitted the required first-pass ENDSUB;
+it now completes prescan and reenters SUB before checking execution/arguments,
+then checks successful EOF (OK or Handled), file closure and local-scope restoration.
+Both prescan completion and the updated successful EOF return contract apply.
+
+Affected run364 in7.73s isolated four newly obsolete allowances plus that fixture
+sequence; subsequent focused cleanup execution and complete-source gate pending.
+No new coverage percentage or hosted success claimed; CORE clean and unedited.
+
+# Eleven upstream regressions verified fixed - 2026-10-23
+
+CORE51b58594 affected-module run351 cases in23.31s identified eleven obsolete
+allowances and one EOF callback return-contract change. All eleven unchanged
+sanitizer executables independently returned0; exact list/evidence stored in
+build-asan/batch74-core51b-confirmed-fixes.json. Removed their named WILL_FAIL
+blocks, resolved KNOWN_BUGS sections and the fixed CONTINUE fatal matcher/wrapper;
+correct assertions remain ordinary tests. Hidden-mount CWD is fixed; the separate
+relative hidden-file access in a visible mount remains documented/expected-fail.
+Existing named-macro callback control now accepts Status_Handled as well as OK,
+matching upstream EOF handling; file closure and local-scope checks remain.
+Shared-source initial rebuild succeeded; new scenario and fixture changes still
+need the incremental rebuild/affected execution before the next complete gate.
+
+# Upstream source update and completed prior-source gate - 2026-10-23
+
+Existing batch74-broadcast-toolchange-delivery gate finished:4,330 tests in
+152.61s, strict summary4,298 clean/32 known/0 failed/skipped. CORE50f38659 stayed
+unchanged throughout. Four new local cases include normal M6 sender suspension,
+physical door close/second-start interlock and accepted M48/M49 broadcasts.
+
+Fetched and selected clean upstream CORE51b58594ce467e9c4b103fb93d1ca121e43cd15c
+without production edits. Shared-source sanitizer rebuild is running; previous
+coverage98.37/90.33 remains explicitly the historical CORE50f measurement.
+New public $60 bitfield has independent restore-overrides/restore-G54 choices;
+added one scenario covering all four values with M2 and M30, selected offsets,
+setting readback and retained/restored feed/rapid percentages. Source detection
+keeps this scenario unavailable on older CORE APIs. Not yet validated.
+Existing multi-spindle program-end fixture now requests G54 restoration explicitly
+when $60 is a bitfield, preserving its prior coordinate assertions while varying
+override policy. Older Boolean-setting CORE revisions keep their prior inputs.
+Do not remove resolved-bug allowances based only on source diff: execute them
+against the rebuilt source first. No new hosted dispatch or PR merge.
+
+# Accepted combined spindle broadcasts correct the old override audit - 2026-10-23
+
+Two new public same-block cases: M3M49$-1 correctly disables both independent
+speed overrides, keeps110/120% stored and permits secondary-only reenable.
+M3M48$-1 accepts broadcast start and reenables feed override, but incorrectly
+keeps both speed overrides disabled: actual3000/7000 vs required3300/8400RPM.
+Correct regression has one exact WILL_FAIL and dated KNOWN_BUGS entry, no
+sanitizer allowance or CORE change. Four affected sanitizer cases pass0.44s,
+batch74-broadcast-override-known-results.xml, including existing standalone
+controls. Raw batch74-broadcast-override-raw-results.xml; known output checked
+to confirm the intended final assertion rather than an earlier fixture failure.
+
+The old reachability proof considered standalone commands and missed a normal
+same-block M3. Corrected both historical and latest TODO statements and the
+inventory: six M48/M49 lines are reachable; only three M51 broadcast lines remain
+behind its single-selector guard. They remain raw until a hosted measurement.
+Local4,328 registered/32 known. Keep this new group in the next substantial batch;
+no repeated full gate or hosted dispatch. Pushed c9952ea run39977472030 remains
+the existing validation handle; never fold these new cases into its claimed head.
+
 # Automatic sleep, threading cancellation and residual audit checkpoint - 2026-10-23
 
 Measured hosted39969171772 is fully successful at b2cf02d/CORE50f38659: source,
@@ -60,8 +161,14 @@ Evidence: batch74-sleep-delta-thread-delivery-results.xml and matching tests/
 summary logs under build-asan. No CORE edit. Unchanged reporting helpers were
 not rerun. Hosted validation for this delivery is pending; no merge authorized.
 
-COVERAGE_GAPS/TODO now source-review154 of295 raw missing lines;141 remain
-unclassified. Exact subsets checked against hosted XML: unsupported homing,
+COVERAGE_GAPS/TODO now source-review196 of295 raw missing lines;99 remain
+unclassified. All58 settings residuals have explicit groups; typed-getter mismatch
+and direct-buffer IPv4 remain caller/provider contract questions, not impossible
+inputs or new defects. Registration/case audit checks eight callbacks and explicitly
+excepts permanently hidden deprecated $7. Evidence:
+build-asan/batch74-settings-routing-audit.json. Parser alphabet/all63 named IDs
+and public override addressing also checked (batch74-parser-routing-audit.json);
+no invalid-enum/forced-selector tests added. Exact subsets checked against hosted XML: unsupported homing,
 validated/private dispatch guards, disabled/unrouted settings, integer-width I/O,
 NVS counter/allocation invariants and backend lifecycle. Pending contracts stay
 explicit; VFS NULL-path fallbacks272/779 are not declared unreachable. Fresh

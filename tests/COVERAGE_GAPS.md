@@ -1,16 +1,20 @@
 # Remaining raw CORE coverage
 
-Measured report: [run39969171772](https://github.com/petervanderwalt/Unit_tests/actions/runs/39969171772),
-harness `b2cf02dc30af60c9358b7a0015e081d0230f5f54`, CORE
+Measured report: [run39977472030](https://github.com/petervanderwalt/Unit_tests/actions/runs/39977472030),
+harness `c9952eaacba40e69374a15a5071a273ad8336969`, CORE
 `50f38659db7b22f4689f3654df2d110d992bcc95`, filter `core/.*\.[ch]$`.
 Coverage job passed with matching source locks and all seven stages successful.
 All five hosted jobs completed successfully, including GCC, Clang and CI
 diagnosis. Whole-run terminal success was verified before refreshing badges.
 
-17,419/17,714 lines and12,457/13,800 branch outcomes were covered. The table
-accounts for all295uncovered executable lines and1,343uncovered branch outcomes.
+17,426/17,714 lines and12,466/13,800 branch outcomes were covered. The table
+accounts for all288uncovered executable lines and1,334uncovered branch outcomes.
 A branch outcome can be missing on an otherwise covered line; `none` therefore
 does not mean full coverage. Counts include compiler-emitted conditions.
+
+Working source is now upstream CORE51b58594 (2026-10-23). This measured table
+remains pinned to CORE50f38659 until a new matching hosted report exists. New
+source changes require renewed execution; old reachability audits are historical.
 
 This is an inventory, not a claim that remaining code is unreachable. Use
 [TODO](TODO.md) for source/contract audits and [KNOWN_BUGS](KNOWN_BUGS.md) for
@@ -18,18 +22,13 @@ correct regression assertions and exact failure allowances. Do not remove source
 from the denominator, inject private state, or add duplicate tests to clear rows.
 Check those notes and existing cases before authoring a public workflow.
 
-The measured eight-workflow batch gained16 branch outcomes and no lines relative
-to39961338202; no prior covered line was lost. The held G76 reset/approach E-stop, stopped-spindle G33.1 regression, real-homed fine-resolution
-delta jog and two automatic-sleep boot workflows are
-local after this head and unmeasured. The sleep cases target protocol354 via
-public $62 stores and real idle polling, including new-input cancellation.
-G33.1 initialization failure reaches its macro continuation despite the weak
-native implementation being unavailable; see the dated KNOWN_BUGS entry. Local targeted
-Windows profiles confirm protocol354, gcode4849/4854/4856/4857, delta653 and motion_control718 execute. This
-is positive line evidence only, not an updated global percentage; hosted Linux
-measurement for this checkpoint is pending. The held reset adds no raw line in
-that profile check. Source audits below retain unsupported
-and unreachable code in the raw denominator.
+The measured six-case batch gained7 lines and9 branch outcomes relative to
+39969171772, with no lost lines. All five hosted jobs passed;4,326 registered
+cases yielded4,297 clean passes/29 known regressions/0 failures or skips.
+Four new local cases cover combined M48/M49 broadcasts and Normal M6 pause/
+resume, including its open-door completion interlock. M49/M6 pass; M48 has a correct documented expected failure. Isolated
+Windows profiles confirm10 previously missing lines execute. These cases are
+not included in this measured head or the global percentage.
 
 | Source | Uncovered lines | Missing branch outcomes | Exact executable line numbers |
 |---|---:|---:|---|
@@ -38,18 +37,18 @@ and unreachable code in the raw denominator.
 | [core/fs_device.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/fs_device.c) | 3 | 7 | 59, 190, 192 |
 | [core/fs_embedded.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/fs_embedded.c) | 4 | 4 | 133, 135, 138, 140 |
 | [core/fs_ram.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/fs_ram.c) | 0 | 11 | none |
-| [core/gcode.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/gcode.c) | 42 | 223 | 325-326, 573, 1045, 1357-1358, 1489, 2180, 2689, 2691-2692, 2702, 2704-2705, 2718, 2720-2721, 2736-2737, 2888, 2977, 2989, 3055, 3472-3474, 3606-3607, 3919, 4260, 4291-4294, 4849-4850, 4852, 4854, 4856-4857, 4964-4965 |
+| [core/gcode.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/gcode.c) | 38 | 220 | 325-326, 573, 1045, 1357-1358, 1489, 2180, 2689, 2691-2692, 2702, 2704-2705, 2718, 2720-2721, 2736-2737, 2888, 2977, 2989, 3055, 3472-3474, 3606-3607, 3919, 4260, 4291-4294, 4850, 4852, 4964-4965 |
 | [core/grbllib.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/grbllib.c) | 14 | 37 | 92, 95, 140, 144-147, 149-150, 590-594 |
 | [core/ioports.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/ioports.c) | 28 | 145 | 782, 1187, 1283-1284, 1377, 1379, 1381, 1383, 1386-1390, 1393-1394, 1396, 1398-1399, 1401, 1403-1404, 1428-1430, 1432-1433, 1550-1551 |
 | [core/kinematics/asymmetric_ganging.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/kinematics/asymmetric_ganging.c) | 1 | 4 | 254 |
-| [core/kinematics/delta.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/kinematics/delta.c) | 11 | 48 | 173, 287-288, 343, 586-587, 592, 599, 610, 653, 673 |
+| [core/kinematics/delta.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/kinematics/delta.c) | 10 | 46 | 173, 287-288, 343, 586-587, 592, 599, 610, 673 |
 | [core/kinematics/polar.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/kinematics/polar.c) | 4 | 3 | 212, 214, 232, 234 |
 | [core/kinematics/rtcp_ac.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/kinematics/rtcp_ac.c) | 0 | 3 | none |
 | [core/kinematics/wall_plotter.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/kinematics/wall_plotter.c) | 56 | 28 | 208, 213-214, 216-227, 229, 234, 237, 239-240, 242-255, 257, 260, 262, 264-280, 283-284 |
 | [core/machine_limits.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/machine_limits.c) | 2 | 21 | 269, 502 |
 | [core/modbus.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/modbus.c) | 3 | 6 | 231-233 |
 | [core/modbus_rtu.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/modbus_rtu.c) | 3 | 41 | 241, 359-360 |
-| [core/motion_control.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/motion_control.c) | 4 | 31 | 690, 715, 718, 1122 |
+| [core/motion_control.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/motion_control.c) | 3 | 30 | 690, 715, 1122 |
 | [core/my_plugin.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/my_plugin.c) | 2 | 0 | 26, 29 |
 | [core/ngc_expr.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/ngc_expr.c) | 11 | 13 | 115-116, 189-190, 250, 252, 292-293, 337-338, 341 |
 | [core/ngc_flowctrl.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/ngc_flowctrl.c) | 2 | 59 | 811-812 |
@@ -58,14 +57,14 @@ and unreachable code in the raw denominator.
 | [core/nvs_buffer.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/nvs_buffer.c) | 3 | 11 | 366, 391-392 |
 | [core/planner.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/planner.c) | 0 | 1 | none |
 | [core/probe.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/probe.c) | 0 | 2 | none |
-| [core/protocol.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/protocol.c) | 2 | 46 | 185, 354 |
+| [core/protocol.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/protocol.c) | 1 | 45 | 185 |
 | [core/regex.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/regex.c) | 0 | 1 | none |
 | [core/report.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/report.c) | 5 | 82 | 450-452, 1955-1956 |
 | [core/settings.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/settings.c) | 58 | 130 | 701, 703, 780-781, 839, 925, 928, 1012, 1056, 1140-1141, 1198-1199, 1340, 1350, 1506-1507, 1568, 1576, 1583, 1590, 1593-1595, 1651-1652, 1692-1693, 1899-1900, 1958-1959, 2024-2025, 2173-2175, 2177-2179, 2190-2192, 2194-2196, 2237-2239, 2245-2246, 2955, 2957, 3474-3475, 3623-3625 |
-| [core/sleep.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/sleep.c) | 0 | 3 | none |
+| [core/sleep.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/sleep.c) | 0 | 2 | none |
 | [core/spindle_control.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/spindle_control.c) | 8 | 43 | 499, 503, 636, 1160-1161, 1172, 1215-1216 |
 | [core/state_machine.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/state_machine.c) | 12 | 44 | 157, 449, 502, 524-527, 614-615, 658-659, 819 |
-| [core/stepper.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/stepper.c) | 1 | 14 | 1093 |
+| [core/stepper.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/stepper.c) | 1 | 13 | 1093 |
 | [core/stepper2.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/stepper2.c) | 0 | 12 | none |
 | [core/stream.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/stream.c) | 3 | 47 | 275, 368, 614 |
 | [core/stream_file.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/stream_file.c) | 1 | 9 | 72 |
@@ -74,7 +73,7 @@ and unreachable code in the raw denominator.
 | [core/tool_change.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/tool_change.c) | 2 | 46 | 435-436 |
 | [core/utf8.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/utf8.c) | 0 | 1 | none |
 | [core/vfs.c](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/vfs.c) | 4 | 44 | 272, 415, 482, 779 |
-| **Total** | **295** | **1343** | |
+| **Total** | **288** | **1334** | |
 
 ## Reviewed I/O residual lines
 
@@ -93,11 +92,11 @@ branch outcomes explained.
 
 ## Source-reviewed residual subset - 2026-10-23
 
-This subset accounts for154 of the295 raw missing lines in the measured report
+This subset accounts for237 of the288 raw missing lines in the measured report
 above. Counts are checked against that XML, not estimated from source ranges.
-It does not classify the remaining141 lines or prove supported-scope completion.
-The local held-thread reset case targets another ordinary cancellation path;
-its gain requires a later hosted report.
+It does not classify the remaining51 lines or prove supported-scope completion.
+The measured batch reached seven previously unclassified lines. The new local
+broadcast cases still require a later hosted measurement.
 
 | Source / measured missing lines | Count | Classification and next action |
 |---|---:|---|
@@ -121,4 +120,20 @@ its gain requires a later hosted report.
 |System HELP466,468|2|HELP prefix dispatch bypasses this command-table wrapper. Existing public help tests exercise the actual handler; see current audit and TODO.|
 |Secondary spindle1160-1161,1172,1215-1216|5|Public capability/value validation precedes setters; both registered getter IDs have cases. Existing public rejection controls verify preserved configuration. See [audit](TODO.md#secondary-pwm-and-parser-repeated-validation-counted-guards---2026-10-23).|
 |G-code2888,3055,1489|3|Earlier cutter-plane validation, positive-L word presence and finite-value reading preempt these later guards. See same audit.|
-|**Reviewed subset**|**154**|All remain in the raw denominator; no source exclusions or fabricated scenarios.|
+|Settings routed callback defaults|19|Every registered callback ID has a case, except permanently hidden deprecated $7's getter; its legacy store bypass does not call that getter. See [routing/type audit](TODO.md#remaining-settings-defaults-routing-sets-types-and-no-table-stub---2026-10-23).|
+|Settings1958-1959,3474-3475|4|Formatted-value and integer-validation switches cover every applicable valid datatype; no malformed metadata tests. See same audit.|
+|Settings2024-2025|2|Noninteger direct-value integer reads are possible, but current CORE callers check types/selectors first. A real external mismatch caller remains unestablished, not declared impossible. See same audit.|
+|Settings2955,2957|2|No-table success/no-op persistence stub; public G10 tool edits reject earlier. See same audit.|
+|Settings3623-3625|3|Direct-buffer IPv4 write representation needs an actual provider/contract; function-provider writes already have tests. Not declared unreachable for every valid enum or a confirmed defect. See same audit.|
+|G-code2180 and named parameter772-773|3|Complete accepted letter set and all63 named registry IDs have handlers. See [mapping audit](TODO.md#counted-parser-alphabet-named-ids-and-spindle-broadcast-guards---2026-10-23).|
+|G-code override broadcast loops|9|Six M48/M49 lines are reachable through accepted same-block M3M48$-1/M3M49$-1; local runtime cases demonstrate this, including the documented M48 defect. Only three M51 lines remain behind its single-selector requirement. The former standalone-only audit was incorrect for combined commands; see same audit.|
+|G-code Normal M6 pause4291-4294|4|Mode0 clears the automatic handler while a real UART retains stream suspension. Full boot/ack/cycle-start case and local profile demonstrate reachability. See [workflow audit](TODO.md#normal-m6-stream-pause-is-a-reachable-no-handler-workflow---2026-10-23).|
+|G-code native dispatch defaults2736-2737,3606-3607,4964-4965|6|Every native motion/override enum and all eight parsed canned cycles have handlers; None is excluded by the execution guard. See [mapping audit](TODO.md#native-motion-canned-and-override-dispatch-defaults---2026-10-23).|
+|Device closedir190,192 and embedded modification stubs133,135,138,140|6|Device opendir cannot supply a valid handle. Embedded mounts are natively hidden/read-only; changing owner flags could reach fixed rejection stubs but no writable-owner contract is established. See [scope audit](TODO.md#native-backend-stubs-and-startup-residuals-counted---2026-10-23).|
+|Scheduler interior removal590-594|5|Due-task selection retains IRQ masking until the head identity check; no supported intervening mutation. See same audit and the earlier atomic-selection proof.|
+|Detailed driver diagnostic140,144-147,149-150|7|Failed-startup filtering discards this task; detail-versus-generic policy remains unresolved. Private formatter is not invoked for coverage. See same audit.|
+|Weak empty hooks:grbllib92,95/my_plugin26,29|4|Driver-owned initialization is replaced by the host; default hooks have no action to assert. Harness/no-op scope limit, not a claim production cannot call them. See same audit.|
+|Device transport default59|1|A real claimable/modbus-ready non-UART provider needs an established naming contract. Serial/Bluetooth controls remain; no fake transport. See same audit.|
+|Report450-452 and1955-1956|5|Plugin registration rejects NULL values; no universal native/global-table proof is claimed. Tab formatting handles valid external types. See [caller audit](TODO.md#reporting-and-restore-fallbacks-current-caller-limits---2026-10-23).|
+|State157,819 and stream614|3|In-range spindle lookup is nonnull, restore changes handler before setting the flag, and ClearAll returns before report observers. Pending observer-clear policy stays separate; see same audit.|
+|**Reviewed subset**|**237**|All remain in the raw denominator; no source exclusions or fabricated scenarios.|

@@ -11,8 +11,7 @@ int main(void)
     strcat(call, name); strcat(call, ">CALL[12]");
     CHECK(gc_execute_block(call) == Status_OK);
     CHECK(hal.stream.file != NULL && ngc_call_level() == 1);
-    vfs_file_t *file = hal.stream.file;
-    CHECK(grbl.on_file_end(file, Status_OK) == Status_OK);
+    execute_static_macro_file();
     CHECK(hal.stream.file == NULL && ngc_call_level() == 0 && file_closes == 1);
     float value;
     CHECK(ngc_param_get(1, &value)); NEAR(value, 99);
