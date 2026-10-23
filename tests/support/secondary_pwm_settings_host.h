@@ -5,6 +5,7 @@
 static spindle1_pwm_settings_t *secondary_pwm_settings;
 static setting_details_t *secondary_pwm_owner;
 static unsigned secondary_pwm_changes, primary_pwm_changes;
+static bool secondary_pwm_no_change_callback;
 static void secondary_pwm_changed(spindle1_pwm_settings_t *current)
 {
     CHECK(current == secondary_pwm_settings);
@@ -29,7 +30,7 @@ static inline void prepare_secondary_pwm_settings_with_cap(bool ports, spindle_c
     secondary_pwm_settings = spindle1_settings_add(ports);
     CHECK(secondary_pwm_settings != NULL);
     grbl.on_settings_changed = primary_pwm_changed;
-    spindle1_settings_register(cap, secondary_pwm_changed);
+    spindle1_settings_register(cap, secondary_pwm_no_change_callback ? NULL : secondary_pwm_changed);
     CHECK(setting_get_details(Setting_SpindleInvertMask1, &secondary_pwm_owner) != NULL);
     CHECK(secondary_pwm_owner != NULL);
     secondary_pwm_owner->restore();

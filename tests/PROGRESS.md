@@ -1,3 +1,138 @@
+# Spindle/storage batch passed cumulative validation - 2026-10-23
+
+Six new workflows and two strengthened date cases pass the full4,297-test
+ASan/UBSan gate65.11s and strict summary:4,270clean/27known/0unexpected/0skip.
+Evidence batch74-spindle-storage-delivery-{results.xml,tests.log,summary.log}.
+One full pre-delivery gate only; affected fixture groups were checked during
+authoring. No unchanged reporting-helper rerun, new failure allowance, source
+exclusion or CORE edit. Fresh core fetch remains clean50f3865.
+
+Batch combines RAM remount/reset lifecycle, optional secondary settings callback,
+primary-only spindle state query, PWM ignore-delay settings/reconfiguration,
+zero-tolerance feedback policy, one-shot G65P6 actual timing and independent date
+range/no-Z/recovery checks. Shared setup options retain previous fixture defaults.
+Previous hosted155e149 is fully successful with verified98.29line/89.65branch;
+new batch coverage must await its own exact-source cumulative hosted report.
+Deliver on74 and keep the full goal active; passing this checkpoint is not full
+supported coverage completion.
+
+# Built-in one-shot spindle wait macro exercised with actual timing - 2026-10-23
+
+New builtin_spindle_delay_macro_skips_one_wait_then_restores_feedback_waiting
+runs G65P6 through the NGC parser with a registered at-speed driver. M3S6000
+starts without waiting or querying feedback; suppression is consumed. M4S6000
+then waits400ms and reads feedback twice before notification, proving the next
+command uses ordinary waiting. Macro scope returns0, speed/direction match the
+driver and no alarm/abort occurs. Targets spindle_control.c817 using its public
+command source rather than setting the runtime flag in a fixture.
+Fresh ASan/UBSan2/2pass0.30s with the existing macro flag control, evidence
+batch74-macro-spindle-wait-results.xml. Registration now4,297. No new allowance
+or CORE change; one cumulative gate is running for this whole local batch.
+
+Previous hosted39948391327 exact155e149 now completed/success in all five jobs.
+Badges/known-gap snapshot updated to its measured98.29line/89.65branch, with
+303raw lines and1,428missing outcomes. Fresh core fetch remains clean50f3865.
+This does not attribute pending local changes to that hosted measurement.
+
+# Zero at-speed tolerance uses delay without feedback polling - 2026-10-23
+
+New zero_feedback_tolerance_uses_start_delay_without_polling_supported_feedback
+registers an at-speed-capable driver with the documented disabled tolerance0.
+M3S6000 waits the normal500ms, does not poll readiness (driver would report
+ready only after2000ms), and notifies once; M5 stops and notifies without a new
+wait or feedback read. No alarm/abort. Targets spindle_control.c823's tolerance
+outcome independently of missing capability and torch bypass.
+Existing ready fixture gains a default1 tolerance option applied before driver
+registration; no active spindle_get fields are changed. Affected feedback/start/
+stop/query group10/10 passes ASan/UBSan0.73s, evidence
+batch74-zero-feedback-tolerance-results.xml. No CORE change or new allowance.
+Registration now4,296. Keep with pending cross-module recovery/settings changes
+for the next cumulative gate, not a full or hosted run for this individual case.
+
+# Running-spindle query handles unused enabled-slot capacity - 2026-10-23
+
+New any_on_with_only_primary_enabled_skips_unused_slots_without_output_changes
+uses the existing registered multi-spindle fixture with only primary enabled;
+secondary slot is genuinely unavailable, not disabled by pointer mutation.
+spindle_is_on returns false/true/false through actual M3S5000/M5 driver output,
+queries add no output callbacks and unused registered drivers receive no output.
+Targets spindle_control.c958's NULL unused-slot outcome. Existing secondary-only
+and all-off controls retained. Fresh ASan/UBSan3/3pass0.35s, evidence
+batch74-primary-only-query-results.xml. No fixture/CORE/allowance changes.
+Registration now4,295; keep with pending RAM, optional secondary callback, PWM
+wait and date-parser work for the next substantial cross-module checkpoint.
+No full/hosted run or new coverage percentage for this local addition.
+
+# Supported-configuration branch gain measured - 2026-10-23
+
+Hosted39948391327 exact155e149/core50f/filter source locks match; all seven
+coverage/report stages passed. Hosted4,291cases:4,266clean/25known/0fail/0skip.
+Measured17,411/17,714lines98.29% and12,372/13,800outcomes89.65%: seven extra
+branch outcomes, no line changes or losses against39945588754. This matches the
+configuration-oriented batch, not a new line-coverage claim. Full gap accounting
+refreshed to303raw executable lines/1,428missing branch outcomes.
+Overall run remains active at retrieval; successful-run badges retain the prior
+fully successful run. Pending numeric/RAM/secondary/PWM changes are unmeasured.
+No additional hosted dispatch, full gate or source exclusion for this update.
+
+# Public PWM ignore-delay option changes actual start timing - 2026-10-23
+
+New multi_spindle.pwm_ignore_delay_setting_bypasses_start_wait_and_disabling_restores_it
+uses a registered normal-mode PWM driver. Public on-delay0.5s/options17 plus
+public spindle_update_caps configuration refresh enables ignore_delays; M3S500
+updates CW output immediately with no elapsed ticks. Public options1 clears the
+option; after the same driver refresh M4S500 waits exactly500ms and preserves
+commanded speed/direction. M5 stops output, no alarm/abort. No edits to active
+spindle_get structures or forced internal wait flags. Targets spindle_control.c818.
+Fresh ASan/UBSan2/2pass0.32s with existing options-storage control, evidence
+batch74-pwm-ignore-delay-results.xml. Initial0.4s fixture setup correctly failed
+validation; corrected to the documented0.5s minimum and existing multi-spindle
+build exposing option bit16. Not a CORE defect or expected-failure allowance.
+Registration now4,294. Keep with RAM remount, optional secondary callback and
+date boundary upgrades for the next substantial cumulative gate. CORE unchanged.
+
+# Secondary settings work without optional notification callback - 2026-10-23
+
+New secondary_pwm_without_change_callback_preserves_primary_hook_and_setting_storage
+registers the settings provider with NULL on_changed from the start. Public PWM
+frequency storage/readback/reload works, the secondary callback is never invoked,
+and the primary driver hook remains installed and receives a global spindle
+change once. Targets spindle_control.c1348/1460's optional-callback outcomes.
+The existing fixture gains a default-false setup option, not a callback removed
+after registration; all existing callback-present cases keep their setup.
+Fresh affected secondary-PWM ASan/UBSan group21/21pass1.20s, evidence
+batch74-secondary-optional-callback-results.xml. No CORE or exception changes.
+Registration now4,293. Retain with RAM remount and numeric boundary upgrades for
+the next substantial cumulative gate; no new hosted request for this addition.
+Hosted39948391327 exact155e149 was verified active with artifacts not yet ready.
+
+# Repeat RAM mount preserves files and wraps driver reset once - 2026-10-23
+
+New fs_ram.repeated_mount_preserves_uploaded_file_and_installs_reset_wrapper_only_once
+uploads a real RAM job, calls mount again and verifies file metadata/storage
+usage and the original reset wrapper remain. Reset invokes the real driver
+callback once and removes the job; remount plus another reset invokes it only
+once more, and a new upload still works. Full paths respect hidden-mount policy.
+No active/open file is invalidated or private state edited. Targets fs_ram.c431's
+already-mounted outcome; prior empty/populated reset controls remain distinct.
+Fresh ASan/UBSan3/3pass0.38s, batch74-ram-remount-results.xml. No new allowance,
+shared fixture or CORE change. Registration now4,292. Retain with the date-parser
+upgrades for the next substantial batch; no full gate/hosted run for one case.
+Latest measured98.29line/89.60branch still947fa2e; hosted155e149 pending.
+
+# Date parser independent range checks and recovery strengthened - 2026-10-23
+
+Existing datetime_valid now verifies every field for both explicitly supported
+seconds terminators (Z and string end). Existing datetime_rejected adds independent
+upper-year, zero-month, zero-day, minute60 and second60 failures, followed by a
+valid midnight parse to prove static parser state recovers. Original invalid
+leap/day/hour/old-year/text cases remain. Targets missing nuts_bolts.c397/402/
+407/417 outcomes; no new executable, allowance or CORE change.
+Fresh ASan/UBSan date group3/3pass0.41s, batch74-datetime-range-results.xml.
+Registration stays4,291. Keep these local upgrades for the next substantial
+batch, no full gate or hosted dispatch for this addition. Latest delivered
+155e149 has the completed local full gate; its measured coverage remains pending.
+
 # Supported planner/peripheral batch passed full validation - 2026-10-23
 
 Eight new cases and one duplicate deletion pass the full4,291-case ASan/UBSan
