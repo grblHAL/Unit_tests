@@ -61,9 +61,9 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Reviewed:** 2026-10-23, clean Terje `50f38659db7b22f4689f3654df2d110d992bcc95`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39950801187)
-measures 17,411/17,714 lines (98.29%) and 12,384/13,800 branches (89.74%).
-The 303 uncovered lines include the following known gaps; this table does not
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39955235052)
+measures 17,417/17,714 lines (98.32%) and 12,411/13,800 branches (89.93%).
+The 297 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable. See the complete measured
 [line/branch inventory](COVERAGE_GAPS.md) before selecting the next workflow.
 
@@ -585,3 +585,36 @@ reverse finite motion remains an independent passing control.
 Suggested repair for Terje: decide whether the nudge can be accepted before
 changing the active direction/profile, or preserve the accepted move when
 rejecting. Retain the test and remove its allowance once it passes. CORE unchanged.
+
+
+## Expression reader replaces a unary-name error using stale output
+
+Confirmed2026-10-23 on clean CORE `50f38659db7b22f4689f3654df2d110d992bcc95`.
+Public `ngc_read_real_value` correctly rejects `AX[1]` with
+`Status_ExpressionUknownOp` (71) when its output initially contains zero, but
+returns `Status_ExpressionInvalidResult` (76) when that same output parameter
+initially contains NaN. The parser never computed a result for the invalid
+name. `ngc_expr.c:823-826` nevertheless reads the output after the failed parse
+and overwrites the original error. An output parameter's previous value must
+not select the error for malformed input.
+
+Regression: `ngc_expr.unary_name_error_is_preserved_with_nonfinite_output_sentinel`.
+The ordinary zero-output control passes before the correct unknown-operation
+assertion fails for NaN. Exactly one named WILL_FAIL/known_bug; no sanitizer
+allowance or diagnostic suppression. Raw evidence:
+`build-asan/batch74-unary-sentinel-raw-results.xml`, status76/expected71.
+
+The full-expression evaluator declares an uninitialized `values` array at886
+and passes its first slot to this reader at897. A malformed-name status can
+therefore depend on stack contents. The existing complete-expression test
+`malformed_unary_operation_names_are_rejected` failed in the4,311-case gate
+and isolated rerun, then passed after adding per-input diagnostics changed its
+stack layout. All ten correct unknown-operation assertions remain. Diagnostic
+instrumentation is not a CORE fix or proof this intermittent path is resolved.
+No accepted invalid motion or expression result is claimed.
+
+Proposed repair for Terje: perform result-finiteness checks only after a
+successful parse, preserving prior errors. Also avoid reading an uninitialized
+output slot in the full-expression evaluator. Remove the named allowance when
+the unchanged deterministic regression passes, retaining all error assertions.
+CORE is unchanged.

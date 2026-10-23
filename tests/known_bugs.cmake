@@ -145,3 +145,8 @@ endif()
 if(TEST stepper2.rejected_reverse_nudge_preserves_running_finite_move)
   set_tests_properties(stepper2.rejected_reverse_nudge_preserves_running_finite_move PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Error classification reads the stale output after parse failure, CORE50f3865.
+if(TEST ngc_expr.unary_name_error_is_preserved_with_nonfinite_output_sentinel)
+  set_tests_properties(ngc_expr.unary_name_error_is_preserved_with_nonfinite_output_sentinel PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

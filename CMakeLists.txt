@@ -376,7 +376,8 @@ function(add_core_test name module source)
   endif()
   if(name STREQUAL "lathe_ngc.pre_execute_rejection_releases_core_message_and_preserves_queued_motion"
       OR name STREQUAL "lathe_ngc.parser_rejection_releases_message_and_preserves_queued_motion"
-      OR name STREQUAL "ngc_params.g66_allocation_failure_preserves_queued_cut_and_allows_retry")
+      OR name STREQUAL "ngc_params.g66_allocation_failure_preserves_queued_cut_and_allows_retry"
+      OR name STREQUAL "multi_spindle.spindle_listing_allocation_failure_preserves_enabled_catalog_and_allows_retry")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=free)
   endif()
   if(name STREQUAL "ngc_long_names.long_macro_filename_allocation_failure_preserves_sender_and_retries")

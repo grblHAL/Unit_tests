@@ -1,3 +1,202 @@
+# Driver/report/recovery cumulative gate passed - 2026-10-23
+
+Confirmed repeat full ASan/UBSan gate passes4,312 in174.20s. Strict summary:
+4,284clean/28known/0unexpected/0skipped, no recovering sanitizer allowances.
+Evidence batch74-driver-report-recovery-confirmed-{tests,summary}.log and
+results.xml. Repeat was warranted by the first gate's genuinely intermittent
+CORE expression-error classification; diagnostic assertions remain intact and
+one deterministic regression is narrowly expected/documented. No CORE fix.
+
+This cumulative delivery adds ten supported workflows plus that confirmed
+parser-error regression, and strengthens existing dwell, digital-config and
+optional-hook cases. Nine modules, no duplicate aliases. Existing ioports
+fixture return controls default true; allocator wrapping is one named test.
+New known regression reproduces before allowance; two existing fatal wrappers
+remain unchanged. Seventy-five reporting helpers are unchanged, not rerun.
+
+Fresh CORE origin/master50f3865 clean, harness remotes fetched. Latest measured
+successful report remains39955235052/48c9190 at98.32lines/89.93branches; this
+checkpoint needs a separate exact-head report before attributing gain. PR28
+remains frozen/unmerged. Commit/push current74 batch, request one hosted run
+with duplicate/hourly safeguards, then keep independent coverage work moving.
+
+# Confirmed unary error-status defect during cumulative gate - 2026-10-23
+
+First4,311-case cumulative gate completed179.81s with one unexpected existing
+malformed-unary-name failure, not a stopped process. Isolated original test
+failed again. Source50f3865 ngc_read_real_value823-826 checks output finiteness
+after a failed parse; ngc_eval_expression passes uninitialized values[0]. Adding
+per-input diagnostics changed stack layout and all ten original correct error
+assertions passed, but is not a CORE fix. Preserve that caveat in KNOWN_BUGS.
+
+New deterministic public ngc_read_real_value regression verifies ordinary zero
+output returns unknown-operation71, then retains the same assertion with a NaN
+output sentinel: actual76. One exact named WILL_FAIL/known_bug, dated source/
+raw evidence/removal instructions in KNOWN_BUGS. No sanitizer allowance, CORE
+edit or accepted-invalid-motion claim. Affected3/3pass0.51s with exactly one
+known reproduction, batch74-unary-known-results.xml. Total now4,312.
+
+Repeated cumulative gate is justified by this unexpected failure and remaining
+stack-dependent path uncertainty, rather than by the added case count. It is
+running as batch74-driver-report-recovery-confirmed; retain its process handle.
+Do not claim a passing full gate or new coverage until terminal evidence exists.
+Independent driver/report work is retained; the confirmed defect is not a
+blocker to the broader supported coverage goal.
+
+# Catalog allocation fallback and auxiliary timer reset - 2026-10-23
+
+New spindle-listing allocation failure/retry case uses the existing tracked
+allocator only around public report_spindles. With two enabled and one unused
+registered drivers, failed sorting allocation still reports every correct
+machine-format entry via direct enumeration. No driver reconfiguration/output
+occurs. Retry reports identical entries and frees its allocation. Narrow named
+CMake wrapper registration only; five affected listings pass ASan/UBSan0.46s,
+batch74-spindle-catalog-fallback-results.xml. Targets report.c2879 fallback.
+
+New auxiliary-motor timer case starts real driver timer, emits three observed
+steps, issues public mc_reset, then delivers the next interrupt from the still
+running timer. It emits no extra pulse, preserves last auxiliary position,
+reports zero speed and stops the timer without restarting it. No event after a
+stopped timer is fabricated. Five timer/reset controls pass sanitizer0.50s,
+batch74-aux-timer-reset-results.xml. Targets stepper2.c435 idle-before-tick arm.
+
+Ten new local workflows plus five strengthened cases now total4,311. Full
+cumulative sanitizer/strict gate is running in the existing process; preserve
+its handle and do not restart from an observation timeout. CORE fresh fetch
+remains clean50f3865; origin/upstream fetched. Next delivery needs the terminal
+local result and exact-head hosted check. Verified coverage remains48c9190,
+98.32%lines/89.93%branches; this ten-case group is unmeasured.
+
+# Digital configuration failures and optional override hooks - 2026-10-23
+
+Strengthened existing digital input/output configuration cases with driver
+failure followed by retry. Both propagate false, preserve unclaimed counts and
+other-pin call counts, then succeed with the same requested flags. Shared
+ioports_settings fixture adds two callback-result controls defaulting true;
+existing callback observations and behavior remain unchanged. Ten affected
+configuration/settings-load controls pass fresh ASan/UBSan0.99s,
+batch74-digital-config-recovery-results.xml. Targets ioports.c654/667 outcomes.
+
+Existing unknown spindle/coolant override cases now first run without the
+optional plugin hook: queues drain, percentages/output stay unchanged. They
+then retain original forwarding checks with a registered hook and execute a
+standard fine spindle increment/flood toggle, proving subsequent commands work
+and the unknown hook is not called for recognized commands. Four affected
+sanitizer controls pass0.55s, batch74-optional-override-hook-results.xml. Targets
+protocol.c724/764's optional-hook absence. Uses existing public extension queues;
+no synthetic private enum, timing window, new duplicate case or CORE changes.
+
+Registration stays4,309. Eight new local workflows plus strengthened G82,
+digital configuration and optional override cases accumulate after measured
+48c9190. No new failure allowance, full local gate, push or hosted run for this
+group. Current verified coverage remains98.32%lines/89.93%branches; these local
+changes are unmeasured. Continue supported gaps toward full coverage.
+
+# Measured mixed-workflow gain and independent report cases - 2026-10-23
+
+Hosted39955235052 completed/success at48c91904d5be3930eb910f2bb84148d27c8d6b5f.
+All five jobs successful. Both source locks match CORE50f3865 and the exact
+core/.*\.[ch]$ filter; all seven coverage stages0. Hosted4,301:4,276clean,
+25known,0failed/0skipped. Compared with39950801187 on the same denominator:
+17,417/17,714lines98.32%,12,411/13,800outcomes89.93%; +6lines/+27outcomes,
+no lost lines. Gained gcode134-135/1293-1294 and ioports1566-1567. Badges and
+KNOWN_BUGS snapshot refreshed only after terminal success. Complete residual
+inventory regenerated/asserted297rawlines/1,389missingoutcomes,41sources.
+I/O reviewed-line accounting reduced30->28 after its public notification gain.
+
+Continued authoring while hosted jobs ran. New mixed extended-probe report
+workflow registers all three real probe inputs, seeds cached state by a full
+report, independently asserts/releases toolsetter and primary, and checks a
+stable poll emits no repeat edge. Held feed-hold input keeps the pin field
+present; no cached probe-state assignment. Exact H/HJ/H/Hj/HI/Hi fields checked.
+Three affected ASan/UBSan cases pass0.54s, batch74-mixed-probe-report-results.xml.
+Targets report1447 unchanged-state and1450/1454/1458 conditional outcomes.
+
+New real-motion line-number report workflow publicly stores $10=4, queues
+N42X1/N43X2, verifies queued head42 wins over parser43, executes160actual X
+pulses, verifies drained fallback43, then unnumbered G90 suppresses Ln field.
+No fabricated position or line state. Two affected sanitizer cases pass0.43s,
+batch74-motion-line-report-results.xml; targets report1354/1355.
+
+Local total4,309: eight new cases after measured48c9190, plus strengthened G82.
+These tests remain uncommitted/unmeasured for the next substantial batch. No
+new known failure, CORE edit, repeated full gate or hosted dispatch. Goal stays
+active;297rawlines/1,389outcomes still require coverage or supported-scope proof.
+
+# Sender modal reporting and manual-reference status - 2026-10-23
+
+New tool-table workflow saves tools2/3 with XYZ offsets(1,2,3)/(4,5,6), runs
+G43H2 then G43.2H3 and G49 through the public parser, and queries modal output
+after each. Checks ordinary G43 versus additive G43.2 without a spurious G43.1,
+exact summed offsets(5,7,9), then G49/zero offsets. Existing inch drilling jobs
+now query G20/G98 or G20/G99 after completion. Four affected sanitizer cases
+pass0.46s, batch74-modal-tool-report-results.xml. Targets report.c809/810/813.
+
+New manual-homing sender-status workflow publicly stores $22=41 and clears all
+homing-cycle settings, executes actual X1/Y2/Z3 motion, queries incomplete H:0,
+executes $H and queries complete H:1. No single-axis suffix is advertised. All
+axes become referenced; logical position is zero while hardware stays at the
+previous80/160/240steps, with no extra pulses/wakeup or limit enable. No private
+homed-state assignment. Three manual-homing controls pass fresh ASan/UBSan0.39s,
+batch74-manual-homing-report-results.xml. Targets report.c1581/1582/1584's valid
+manual configuration with no switch-driven homing axes.
+
+Registration4,307, six new cases beyond pushed48c9190 plus strengthened G82.
+No new exception, shared fixture change, CORE edit or full/hosted gate. All this
+work remains local and is excluded from the running4,301-case hosted checkpoint.
+Keep accumulating the next cross-module group. Latest measured report remains
+39950801187 at9dbcf3c; source-pinned39955235052 was last verified live, not failed.
+
+# Inch peck drilling and inherited dwell - 2026-10-23
+
+Two new public motor workflows cover inch conversion in canned cycles. Absolute
+G83 uses G98 from0.25in clearance, R0.125in, Q0.1in and depth-0.125in. Checks
+converted2.54mm pecks/3.175mm R, clipped-254step bottom and508step clearance;
+next X-only hole reuses modal Q/R/Z. Two holes emit7,516Zpulses and1,524Xpulses.
+Incremental G73 uses0.127mm chip-break setting with inch program R/Q/depth,
+three initial holes plus two continuing without Q/R/Z. Checks1.27mm pecks,
+0.635mm R, common-203step bottom and51step return;2,791Z/1,270Xpulses. No Y
+pulses, alarm or abort. Fresh inch/control group5/5pass0.48s; completed modal
+continuations2/2pass0.37s, batch74-inch-peck-continuation-results.xml. Targets
+gcode.c3542/3599 inch conversions and3601's modal-cycle continuation outcome.
+
+Existing G82 motor case now drills a second X-only hole without P/R/Z, retaining
+0.1s dwell and depth:320totalZpulses,80Xpulses, exactly200ms. G82 controls2/2pass
+0.33s, batch74-modal-dwell-results.xml. Targets gcode.c3583's continuation arm.
+No new fixture, duplicate aliases, exceptions or CORE changes.
+
+Total4,305 registered locally, four new cases since pushed48c9190 (two reset,
+two inch drilling), plus the strengthened existing G82 case. No full suite or
+hosted run for this small group. Hosted39955235052 remains live at exact48c9190:
+source successful, GCC/Clang/coverage in_progress at last authoritative check.
+Continue independent coverage; retain measured39950801187 badges until the
+new run completes and its source/filter/harness locks and report are verified.
+
+# Post-delivery G76 retract reset controls - 2026-10-23
+
+Pushed cumulative48c91904d5be3930eb910f2bb84148d27c8d6b5f on
+coverage-batch-74 after full4,301-case66.27s sanitizer/strict gate. Exact-source
+hosted39955235052 is in_progress at verification; source pinned50f3865. One
+dispatch only, after duplicate/hourly checks (two earlier runs in rolling hour).
+No PR created or merged; PR28 remains frozen/unmerged. No coverage gain claimed.
+
+Continued independent work with two real G76 encoder/motor reset cases. After
+the first cut, reset when retract is queued prevents reposition/another pass:
+position X680/Z-80 steps, pulses X120/Z80, one encoder start. After last cut,
+reset prevents final radial retract: X640/Z-80, pulses X400/Z240, two encoder
+starts. Both stop/reset callbacks and spindle/coolant shutdown execute once;
+position is retained because axes are stopped, and no later service emits steps.
+Uses the existing thread_reset_motion public realtime command/driver observer,
+without private state or fixture changes. Targets motion_control.c772/779.
+
+Initial expected X coordinates omitted the G76 I peak offset. Diagnostics and
+source review corrected first-pass8.5mm/final8mm cutting radii and exact path
+pulse totals; not classified as CORE failures. Fresh affected ASan/UBSan2/2pass
+0.39s, batch74-thread-retract-repair-results.xml. No new allowance. These two
+cases are local/uncommitted, total4,303, excluded from the running4,301-case
+hosted checkpoint. Accumulate next substantial cross-module group; no new full
+local gate or hosted dispatch for this pair. Goal remains active.
+
 # Cumulative mixed-workflow delivery gate - 2026-10-23
 
 One cumulative full ASan/UBSan gate passes4,301 cases in66.27s; strict summary
