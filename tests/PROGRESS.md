@@ -7,7 +7,15 @@ all seven report stages exit0. Hosted4,320=4,292 clean/28 known/0 failed/skipped
 16 new outcomes versus39961338202. README/KNOWN_BUGS snapshot refreshed only after
 whole-run success. Raw remaining295 lines/1,343 outcomes; no exclusions.
 
-Four new local cases and one strengthened case after that measured head:
+Targeted Windows coverage proof (not aggregate coverage): five selected targets,
+isolated short GCOV_PREFIX/STRIP99 paths. Profiles confirm seven unique formerly
+missing lines: protocol354, gcode4849/4854/4856/4857, delta653 and motion_control718.
+The held post-cut reset adds no raw line. Evidence includes case SHA256 hashes
+and explicit uncommitted-worktree status at collection in
+build-asan/batch74-targeted-line-proof.json; raw profiles/logs in line-proof74.
+Overall percentages remain the hosted measurement until this batch is measured.
+
+Six new local cases and one strengthened case after that measured head:
 - Held G76: first cut completes at Z-1, four held polls preserve every motor
   counter, public reset stops spindle/driver and prevents the second cut.
   Three affected sanitizer cases pass0.40s, batch74-held-thread-reset-results.xml.
@@ -24,13 +32,33 @@ Four new local cases and one strengthened case after that measured head:
   batch74-stopped-tapping-known-results.xml. Its output verifies final expected
   assertion, not an earlier control failure. Targets real gcode4849-4857 error
   continuation; weak native support does not make that path unreachable.
+- Delta fine-resolution jog: public XYZ2000step/rad settings, $20=1/$40=1,
+  real XYZ homing, G0Z-300 and sender Idle wait before $J=G91X1000F100. Actual
+  endpoint clips to X222.323/Y~-0.001/Z~-300.01, retains direction, passes public
+  travel validation and matches parser/quantized joint position. No forced homed
+  state. Two affected sanitizer cases pass0.35s,
+  batch74-delta-fine-jog-final-results.xml. Targeted local profile confirms delta653
+  executes once; line-proof74/delta-jog and batch74-targeted-line-proof.json.
+  Initial invalid sequencing correctly rejected a jog while G0 was running;
+  missing $40 also correctly rejected instead of clipping. Both fixture issues
+  were corrected, with no defect exception. Abort/no-alarm checked before the
+  deliberate fixture EXIT. No CORE edit or new allowance.
+- Held G76 approach E-stop: actual control IRQ after four stable held polls,
+  spindle/coolant/driver shutdown, four E-stop polls, physical release plus public
+  reset; no encoder synchronization/cut or subsequent pulses. Abort/Alarm_EStop
+  remains latched after reset. Two affected sanitizer cases pass0.37s,
+  batch74-thread-approach-estop-results.xml. Local profile confirms motion_control
+  718 once (line-proof74/approach-estop); the earlier post-cut phase added no line
+  and was replaced during authoring, not retained as a duplicate case.
 - Existing check-mode comment case now executes full G91(MSG,...) and verifies
   modal update without queue, owned message, output or plugin callback. Two
   affected cases pass0.32s, batch74-full-parser-dry-run-results.xml.
 
-Local total4,324,31 known. No CORE edit or new sanitizer allowance. Full cumulative
-sanitizer/strict and hosted gates are pending the next substantial pre-push batch;
-unchanged reporting helpers were not rerun. No merge or duplicate hosted dispatch.
+Full cumulative ASan/UBSan gate passes4,326 in161.97s:4,295 clean/31 known,
+0 failed/skipped and no recovering sanitizer allowance. Strict summary passes.
+Evidence: batch74-sleep-delta-thread-delivery-results.xml and matching tests/
+summary logs under build-asan. No CORE edit. Unchanged reporting helpers were
+not rerun. Hosted validation for this delivery is pending; no merge authorized.
 
 COVERAGE_GAPS/TODO now source-review154 of295 raw missing lines;141 remain
 unclassified. Exact subsets checked against hosted XML: unsupported homing,

@@ -19,11 +19,16 @@ from the denominator, inject private state, or add duplicate tests to clear rows
 Check those notes and existing cases before authoring a public workflow.
 
 The measured eight-workflow batch gained16 branch outcomes and no lines relative
-to39961338202; no prior covered line was lost. The held G76 reset, stopped-spindle G33.1 regression and two automatic-sleep boot workflows are
+to39961338202; no prior covered line was lost. The held G76 reset/approach E-stop, stopped-spindle G33.1 regression, real-homed fine-resolution
+delta jog and two automatic-sleep boot workflows are
 local after this head and unmeasured. The sleep cases target protocol354 via
 public $62 stores and real idle polling, including new-input cancellation.
 G33.1 initialization failure reaches its macro continuation despite the weak
-native implementation being unavailable; see the dated KNOWN_BUGS entry. Source audits below retain unsupported
+native implementation being unavailable; see the dated KNOWN_BUGS entry. Local targeted
+Windows profiles confirm protocol354, gcode4849/4854/4856/4857, delta653 and motion_control718 execute. This
+is positive line evidence only, not an updated global percentage; hosted Linux
+measurement for this checkpoint is pending. The held reset adds no raw line in
+that profile check. Source audits below retain unsupported
 and unreachable code in the raw denominator.
 
 | Source | Uncovered lines | Missing branch outcomes | Exact executable line numbers |
