@@ -1,3 +1,136 @@
+# Named/probe/homing cumulative delivery gate passed - 2026-10-24
+
+Two new cases and six extended cases cover public absent-axis named/G92
+queries, captured probe coordinate-record recovery, legacy multi-probe optional
+helper absence, real manual-homing named status, named-variable allocation
+recovery and the confirmed eight-axis absent-W conversion UB. Reused existing
+configurations/fixtures; added one exact malloc wrapper target, one exact
+san-only label/diagnostic manifest entry and dated KNOWN_BUGS. Correct value
+assertions retained; no CORE/shared fixture edit or broad suppression.
+
+Full build and ASan/UBSan4367 passes140.63s. Strict summary passes:
+4350clean/1exact known recovering diagnostic/16known regressions/0failed/skipped.
+Evidence batch74-named-probe-homing-delivery-{build.log,tests.log,results.xml,summary.log}
+in build-asan. Unchanged Python reporting helper suite not rerun. CORE clean2e165a1.
+
+Previous pushedf6da420 coverage job40034582551 verifies17480/17756lines98.45%,
+12579/13834outcomes90.93%, +1line/+12outcomes/no lost lines versusbc84ad2.
+New line is motion_control1122, parking abort return from the real coolant-delay
+RESET workflow. Clang still live at last refresh: retain fully-greenbc84ad2
+badges and do not claim terminal success. Current new batch needs its own
+exact-head hosted validation at an allowed checkpoint; full goal stays active.
+
+# Exactf6da420 coverage job verified, compiler completion pending - 2026-10-24
+
+Run40034582551 coverage artifacts now available: exactf6da4204fd226b105b743a5f36f16b00db77d086/
+CORE2e165a1 and filter locks verified; exactly seven stages all0.4365hosted
+cases4350clean/15known/0failed/skipped.17480/17756lines98.45%,
+12579/13834outcomes90.93%, same-source+1line/+12outcomes and no lost covered
+lines versus40032608243. Source/coverage/GCC passed; Clang still live, so
+keep overall-success badges pinned to fully greenbc84ad2. No duplicate run.
+Current local named/probe/homing/allocator batch and exact absent-axis UBSan
+regression are outside this measured head; their cumulative local gate is live
+in process session33195. Do not restart on observation timeouts.
+
+# Named-variable allocation recovery preserves existing values - 2026-10-24
+
+Added named_allocation_failure_preserves_existing_value_and_allows_retry.
+Public named setter creates _kept12.5; one scoped malloc rejection prevents
+_pending creation while existing value stays unchanged. Lookup confirms failed
+name absent. Updating _kept13.5 under the same allocator pressure succeeds
+without another malloc; restoring allocator allows _pending42 and preserves
+_kept13.5. Reused malloc_failure_host with one exact target wrapper addition.
+ASan/UBSan passes0.05s. Fresh named-allocation-recovery-proof74 shows all four
+ngc_params902 outcomes versus previous3/4. No CORE/shared fixture edit, new
+exception or full/hosted dispatch. Keep with the independent successor batch
+including correct absent-W sanitizer regression and real homing/probe queries.
+
+# Manual-homing public named parameters with no switch cycle - 2026-10-24
+
+Extended existing real manual_homing_status_uses_all_axes_when_no_switch_cycle_is_configured.
+Public homing mode41, empty switch-cycle settings, actual move and $H remain
+unchanged. Before/after homing now query _homed_state and _homed_axes through
+normal named lookup in addition to existing |H status-field assertions. They
+agree on0 before and1/allaxes after; actual pulse counts, positions and no
+homing driver motion assertions retained. ASan/UBSan passes0.07s. Fresh
+manual-homed-parameters-proof74 verifies manual-mode OR arm at ngc_params753
+with zero switch mask/no single-axis flag, previously missing. No forced homed
+bits, CORE/helper edit, new case/allowance or full/hosted dispatch. Keep with
+local named/probe/G92 and eight-axis sanitizer regression successor batch.
+
+# Legacy multiple-probe driver without optional individual-state helper - 2026-10-24
+
+Extended existing named_probe_parameters_report_unavailable_capabilities. HAL
+documents is_triggered as optional. Retain primary/absent-provider controls;
+legacy selector now supports default/probe2/toolsetter and shared current-state
+reader reports selected identity/contact. Advertise secondary capabilities with
+that functioning selector, select each through HAL, and verify _active_probe
+tracks selection while _probe2_state/_toolsetter_state return-1 without optional
+individual-state helper. No malformed advertised-only provider or removed live
+callback. ASan/UBSan passes0.07s. Fresh legacy-multiple-probe-proof74 records
+missing helper short circuits at ngc_params741/745. No CORE/shared fixture edit,
+new exception/case/full gate or hosted dispatch. Continue local successor work.
+
+Existing40034582551 verified live jobs: source success; Clang120690895139 and
+GCC120690895267 building, coverage120690895250 testing. Missing artifacts
+were premature observation, not terminal failure; no duplicate/restart.
+
+# Confirmed absent-W inch-conversion UBSan defect - 2026-10-24
+
+New eight_axis.absent_named_w_position_in_inches_returns_zero uses actual
+N_AXIS8, G21/G20 and unconditional native _abs_w/_w names. Metric and inch
+zero assertions pass, but inch conversion at ngc_params177 shifts by255
+(the absent-axis map marker) in the rotary-mask check. Raw ASan/UBSan output
+reproduces exact shift exponent255/32-bit unsigned-long diagnostic, no assertion
+failure. No invalid enum, axis-map forcing or private call. Dated KNOWN_BUGS
+entry describes source cause, bounded observed consequence and upstream cleanup.
+
+Added only this test's sanitizer-only known_sanitizer_bug label and exact
+source177/message manifest entry (32/64-bit native unsigned-long widths).
+Affected CTest passes0.11s; strict summary0: one passed with known sanitizer
+diagnostic,0failed/skipped. Correct numerical assertions retained, no WILL_FAIL
+or blanket crash suppression. Fixed diagnostics require removing this exact
+allowance. No CORE/shared fixture edits or full/hosted run; continue independent
+coverage work. Existing pushedf6da420/40034582551 stays separate.
+
+# G92 absent-axis numbered query - 2026-10-24
+
+Extended existing G92 apply/suspend/restore case with public A5214/W5219
+queries on the real three-axis configuration. Both return0 while the restored
+X offset remains covered by original8 assertion. ASan/UBSan passes0.08s;
+fresh absent-g92-axis-proof74 executes both outcomes at ngc_params344,
+previously1/2. No private state added, CORE/helper edit, new case or allowance.
+Current successor named/probe/G92 changes remain outside f6da420. Single
+refresh of existing40034582551 confirmed in_progress but coverage artifacts
+not yet published; fetch helper stopped on missing lock, not a firmware/CI
+failure. Do not restart or duplicate the live run. No new full/hosted gate.
+
+# Named absent-axis positions and corrected registry assumption - 2026-10-24
+
+Source inventory confirms current ngc_named_ro_param registers _abs_a through
+_abs_w unconditionally, and by-ID dispatch handles each valid entry. Earlier
+progress wording that called these names conditionally registered was wrong;
+corrected that sentence. Extended existing metric/inch absolute-position cases
+through ordinary name lookup: absent A/W return0 while real X remains25.4mm
+or1inch. No invented names, enum forcing or axis-map mutation. Both ASan/UBSan
+pass0.06/0.07s. Same-source named-absent-axis-proof74 records both outcomes
+at ngc_params193, previously1/2: one new supported outcome. No CORE/helper
+edit, exception, extra cases or full/hosted run. Keep with captured-probe
+recovery as successor work outside pushedf6da420.
+
+# Captured probe parameter recovers inactive coordinate record - 2026-10-24
+
+Extended existing numbered_probe_coordinates_read_original_inactive_work_system.
+Read captured G55 probe position while G54 active, corrupt stored G55 via the
+NVS byte API, and require public5061 to return0 on the failed coordinate read.
+Capture ID/800-step position and active G54 offset1 remain unchanged. Readback
+validates repaired G55 zero record; next query returns machine10 relative to
+that repaired zero, not active G54. Rewriting saved G55 offset4 restores probe
+result6. Original assertion retained. ASan/UBSan passes0.07s; isolated
+probe-coordinate-recovery-proof74 records ngc_params211 read-error arm,
+previously missing. No CORE/helper edit, new allowance or new case. Keep as
+successor work outside pushedf6da420/queued40034582551; no full/hosted run.
+
 # Parameter/storage/realtime-reset cumulative gate passed - 2026-10-24
 
 One new safety-door coolant-delay RESET case and seven strengthened existing
@@ -54,8 +187,8 @@ and after G20. Both supported numbered IDs return zero without indexing an
 absent physical axis. No invented named registry entries, axis-map changes or
 private enum calls. ASan/UBSan passes0.07s. Fresh absent-axis-position-proof74
 shows both ngc_params200 outcomes (previous1/2): numbered work_position calls
-_relative_pos for all nine exposed slots, unlike conditionally registered named
-absolute-position providers. No CORE/helper edit, allowance or full/hosted run;
+_relative_pos for all nine exposed slots, the named registry is also unconditional in current CORE; its absent-axis
+absolute fallback is covered by the subsequent named-parameter extension. No CORE/helper edit, allowance or full/hosted run;
 keep with local I/O/regex/reset/numeric successor batch.
 
 # Exactbc84ad2 coverage job and startup separator compaction - 2026-10-24

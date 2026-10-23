@@ -123,3 +123,9 @@ endif()
 if(TEST fs_device.open_allocation_failure_releases_device_for_retry)
   set_tests_properties(fs_device.open_allocation_failure_releases_device_for_retry PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Exact recovering UBSan diagnostic only; value assertions remain correct.
+if(ENABLE_SANITIZERS AND TEST eight_axis.absent_named_w_position_in_inches_returns_zero)
+  set_tests_properties(eight_axis.absent_named_w_position_in_inches_returns_zero
+    PROPERTIES LABELS known_sanitizer_bug)
+endif()

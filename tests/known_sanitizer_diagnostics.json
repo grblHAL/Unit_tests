@@ -34,5 +34,13 @@
         "function": "fs_truncate"
       }
     ]
+  },
+  {
+    "test": "eight_axis.absent_named_w_position_in_inches_returns_zero",
+    "source": "core/ngc_params.c",
+    "lines": [
+      177
+    ],
+    "message_pattern": "shift exponent 255 is too large for (32|64)-bit type 'unsigned long'"
   }
 ]

@@ -1,6 +1,11 @@
 #include "support/homing_command_host.h"
+#include "ngc_params.h"
 static void check_manual_homed_report(bool complete)
 {
+    char state_name[] = "_homed_state", axes_name[] = "_homed_axes";
+    float value;
+    CHECK(ngc_named_param_get(state_name, &value)); NEAR(value, complete ? 1 : 0);
+    CHECK(ngc_named_param_get(axes_name, &value)); NEAR(value, complete ? AXES_BITMASK : 0);
     status_report_tracking_t tracking = {.flags = {.homed = true}};
     engine_output[0] = '\0';
     report_realtime_status(hal.stream.write, &tracking);

@@ -26,6 +26,35 @@ in [storage write-failure policy](TODO.md#storage-write-failure-policy), includi
 its observations, existing test exceptions and cleanup links. It is not a
 settled requirement to retry physical writes a specific number of times.
 
+## Absent-axis inch conversion shifts by the unavailable axis marker
+
+Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
+The normal named parameter registry exposes `_abs_w` and `_w` even when W is not
+configured. In an eight-axis build, both getters correctly supply a zero value
+for absent W, but inch conversion still checks the rotary mask with axis255.
+UBSan reports `shift exponent 255 is too large for 32-bit type 'unsigned long'`
+at [ngc_params.c177](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/ngc_params.c#L177).
+This is undefined behavior; the reproduction's numerical assertions still pass.
+No wrong coordinate or motion result is claimed from this diagnostic alone.
+
+[Regression](cases/eight_axis/absent_named_w_position_in_inches_returns_zero.c)
+uses ordinary G21/G20 and named lookups on the existing eight-axis configuration.
+Metric absent-W controls and both inch-mode zero assertions remain. No invalid
+enum, forged axis map or private function is used. Three-axis conversion lacks
+the rotary-mask operation and its existing controls remain ordinary passing tests.
+
+One sanitizer-only `known_sanitizer_bug` label and exact
+[manifest](known_sanitizer_diagnostics.json) entry accept only this test, source
+line177 and shift255 message, allowing the platform's 32/64-bit unsigned-long
+width. Unrelated diagnostics or failed assertions remain failures. If the
+diagnostic disappears, strict reporting requires exception cleanup. No WILL_FAIL
+is applied because the numerical assertions are correct and currently pass.
+
+Suggested maintainer fix: return zero for an unavailable axis before calling
+conversion, or validate the axis before the rotary bit shift. CORE is unchanged.
+After the upstream fix, remove this case's manifest entry and sanitizer label;
+retain the ordinary metric/inch named-lookup assertions.
+
 ## Device open allocation failure leaves the UART reserved
 
 Confirmed 2026-10-23 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
