@@ -1556,3 +1556,14 @@ Retain existing passing M6 dry-run and comment controls. Do not inject
 parser-owned messages or toggle modes from callbacks just to reach4314.
 This is a native-routing review, not proof about arbitrary external mutation;
 retain the raw denominator and recheck after ownership changes.
+
+## Nested mount listing contract not established - 2026-10-23
+
+CORE2e165a1 native mount callers register only/dev,/embedded,/ram. The public
+mount interface accepts a path, but no nested-parent lookup/listing contract
+was established from native callers. vfs_opendir533-535 selects descendants by
+prefix; readdir565-567 derives the synthetic name from the whole mount path.
+Do not classify hypothetical nested-parent names or routing as a confirmed
+CORE defect without a supported provider contract. Existing immediate-child,
+hidden-mount and direct-path cases remain the coverage basis. No new test or
+exception added merely to exercise the same lines with an invented hierarchy.

@@ -26,6 +26,30 @@ in [storage write-failure policy](TODO.md#storage-write-failure-policy), includi
 its observations, existing test exceptions and cleanup links. It is not a
 settled requirement to retry physical writes a specific number of times.
 
+## Device open allocation failure leaves the UART reserved
+
+Confirmed 2026-10-23 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
+A registered UART is claimed normally, then the file-wrapper calloc fails during
+public `vfs_open("/dev/uart2", "w")`. Open returns NULL, but retry after allocator
+recovery also returns NULL without reclaiming or returning a usable file. A
+separate registered UART still opens, writes and closes normally. This is a
+failed-open resource reservation, not a communication failure on other devices.
+
+[Regression](cases/fs_device/open_allocation_failure_releases_device_for_retry.c)
+injects exactly one scoped calloc failure and retains the correct non-NULL retry
+assertion. Raw ASan/UBSan execution reaches that final assertion without any
+sanitizer diagnostic; earlier allocation-count, claim-count and independent UART
+controls pass. One exact WILL_FAIL/known_bug allowance is registered in
+[known_bugs.cmake](known_bugs.cmake); no diagnostic suppression is needed.
+
+Cause: [fs_device.c116-122](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/fs_device.c#L116-L122)
+sets `state.passthru` before allocating the returned file. On allocation failure
+that reservation remains set, so the next open rejects at117. There is no returned
+file for the caller to close and release. Suggested maintainer fix: reserve only
+after successful allocation, or roll back the reservation when allocation fails.
+CORE is unchanged here. Once corrected upstream, remove this one allowance and
+retain the passing retry and independent-device assertions.
+
 ## RAM nonzero truncate loses the retained file allocation
 
 Confirmed2026-10-23 on clean CORE `51b58594ce467e9c4b103fb93d1ca121e43cd15c`.
@@ -119,8 +143,8 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Measured:** 2026-10-23, clean Terje `2e165a1ac4c74be8e68971972c6577775d856b05`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40021882976)
-measures 17,479/17,756 lines (98.44%) and 12,528/13,834 branches (90.56%).
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40024613962)
+measures 17,479/17,756 lines (98.44%) and 12,536/13,834 branches (90.62%).
 The 277 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable. See the complete measured
 [line/branch inventory](COVERAGE_GAPS.md) before selecting the next workflow.

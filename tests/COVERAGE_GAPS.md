@@ -1,19 +1,19 @@
 # Remaining raw CORE coverage
 
-Verified report: [run40021882976](https://github.com/petervanderwalt/Unit_tests/actions/runs/40021882976),
-harness `8b13bc70eaf96040eeda5137be27620074776bc7`, CORE `2e165a1ac4c74be8e68971972c6577775d856b05`,
+Verified report: [run40024613962](https://github.com/petervanderwalt/Unit_tests/actions/runs/40024613962),
+harness `35bcc9a2e540c4bd28bbbd5bc88672c21d5568d8`, CORE `2e165a1ac4c74be8e68971972c6577775d856b05`,
 filter `core/.*\.[ch]$`. Both artifact locks match, all seven coverage stages
 exit0, and all five source/GCC/Clang/coverage/Results summary jobs succeeded.
 
-17,479/17,756 lines (**98.44%**) and12,528/13,834 branch outcomes (**90.56%**)
-were covered. This table accounts for277 raw missing lines and1,306 missing
-outcomes. Coverage job:4,352 cases,4,338 clean/14 known/0 failed/skipped.
+17,479/17,756 lines (**98.44%**) and12,536/13,834 branch outcomes (**90.62%**)
+were covered. This table accounts for277 raw missing lines and1,298 missing
+outcomes. Coverage job:4,356 cases,4,342 clean/14 known/0 failed/skipped.
 
-Against same-source40018600731: eight additional covered branch outcomes,
-unchanged denominator and no lost covered lines. Gains are modbus69,
-modbus_rtu160 and vfs638/698/827/829/875/912. New storage/UART recovery cases
-and the correct stale-filename regression are included. Subsequent local
-stream handoff/UART-release and web-settings extensions are not included.
+Against same-source40021882976: eight additional covered branch outcomes,
+unchanged denominator and no lost covered lines. Stream handoffs, optional
+UART release, web-setting replacement lengths and independent tool/build-info
+synchronization are included. Subsequent local zero-port-provider and pendant
+observer/handoff cases are not included.
 
 Raw coverage does not establish correctness or reachability. See [TODO](TODO.md)
 and [KNOWN_BUGS](KNOWN_BUGS.md) before selecting workflows. Historical audits
@@ -43,19 +43,19 @@ remain pinned to their stated revisions; no source exclusions were added.
 | [core/ngc_flowctrl.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/ngc_flowctrl.c) | 2 | 60 | 816-817 |
 | [core/ngc_params.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/ngc_params.c) | 4 | 58 | 772-773, 942, 1247 |
 | [core/nuts_bolts.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/nuts_bolts.c) | 0 | 3 | none |
-| [core/nvs_buffer.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/nvs_buffer.c) | 3 | 11 | 366, 391-392 |
+| [core/nvs_buffer.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/nvs_buffer.c) | 3 | 9 | 366, 391-392 |
 | [core/planner.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/planner.c) | 0 | 1 | none |
 | [core/probe.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/probe.c) | 0 | 2 | none |
 | [core/protocol.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/protocol.c) | 1 | 45 | 185 |
 | [core/regex.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/regex.c) | 0 | 1 | none |
 | [core/report.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/report.c) | 5 | 79 | 450-452, 1955-1956 |
-| [core/settings.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/settings.c) | 58 | 130 | 701, 703, 780-781, 839, 925, 928, 1012, 1056, 1140-1141, 1199-1200, 1341, 1351, 1507-1508, 1569, 1577, 1584, 1591, 1594-1596, 1652-1653, 1693-1694, 1901-1902, 1960-1961, 2026-2027, 2175-2177, 2179-2181, 2192-2194, 2196-2198, 2239-2241, 2247-2248, 2957, 2959, 3476-3477, 3625-3627 |
+| [core/settings.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/settings.c) | 58 | 129 | 701, 703, 780-781, 839, 925, 928, 1012, 1056, 1140-1141, 1199-1200, 1341, 1351, 1507-1508, 1569, 1577, 1584, 1591, 1594-1596, 1652-1653, 1693-1694, 1901-1902, 1960-1961, 2026-2027, 2175-2177, 2179-2181, 2192-2194, 2196-2198, 2239-2241, 2247-2248, 2957, 2959, 3476-3477, 3625-3627 |
 | [core/sleep.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/sleep.c) | 0 | 2 | none |
 | [core/spindle_control.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/spindle_control.c) | 7 | 41 | 499, 503, 1160-1161, 1172, 1215-1216 |
 | [core/state_machine.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/state_machine.c) | 12 | 44 | 157, 449, 502, 524-527, 614-615, 658-659, 819 |
 | [core/stepper.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/stepper.c) | 1 | 13 | 1093 |
 | [core/stepper2.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/stepper2.c) | 0 | 11 | none |
-| [core/stream.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/stream.c) | 3 | 47 | 277, 370, 615 |
+| [core/stream.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/stream.c) | 3 | 42 | 277, 370, 615 |
 | [core/stream_file.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/stream_file.c) | 1 | 9 | 73 |
 | [core/strutils.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/strutils.c) | 0 | 15 | none |
 | [core/system.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/system.c) | 2 | 35 | 466, 468 |
@@ -158,3 +158,48 @@ claim follows from this historical subset.
 |Report450-452 and1955-1956|5|Plugin registration rejects NULL values; no universal native/global-table proof is claimed. Tab formatting handles valid external types. See [caller audit](TODO.md#reporting-and-restore-fallbacks-current-caller-limits---2026-10-23).|
 |State157,819 and stream614|3|In-range spindle lookup is nonnull, restore changes handler before setting the flag, and ClearAll returns before report observers. Pending observer-clear policy stays separate; see same audit.|
 |**Reviewed subset**|**237**|All remain in the raw denominator; no source exclusions or fabricated scenarios.|
+
+
+## UTF-8 encoder range guard review - 2026-10-23
+
+Exact CORE `2e165a1ac4c74be8e68971972c6577775d856b05`, verified
+run40024613962: utf8.c139 has one missing outcome, the false side of
+`length <= 4`. Line121 returns before conversion for every code point above
+0x10FFFF. For remaining inputs the loop shifts six bits per continuation
+byte: at the maximum, successive first-byte values are 0x43FF, 0x10F and
+0x4, with masks 0x1F, 0xF and 0x7. It therefore stops at length4. Smaller
+accepted values stop no later; ASCII uses length1. An independent exhaustive
+integer check of all 1,114,112 accepted numeric inputs confirmed maximum4.
+Existing ASCII, two/three/four-byte boundary and out-of-range cases remain.
+No invalid input can reach the missing outcome past the earlier rejection;
+no test, source edit or coverage exclusion was added. The raw missing
+outcome remains counted, separately explained rather than treated as a
+supported workflow gap.
+
+
+## RAM filesystem residual ownership guards - 2026-10-23
+
+Exact CORE `2e165a1ac4c74be8e68971972c6577775d856b05` and verified
+run40024613962 contain no uncovered RAM filesystem lines and eleven missing
+branch outcomes. Compared every partial branch in the artifact with the native
+allocation, open/close, unlink and VFS wrapper paths:
+
+| Source line | Missing outcomes | Native invariant |
+|---|---:|---|
+|103|1|New ram_file_t comes from calloc; its txbuf.s is necessarily NULL before initialization.|
+|140|2|Open rejects an existing nonzero refs count before incrementing. Close sees refs1 and decrements to0; pathname unlink requires refs0. Neither native caller supplies refs greater than1, so the retained-reference result cannot occur.|
+|146|1|Non-head unlink receives a member found in the same live list. Its predecessor is reached before a NULL next link.|
+|148|1|The predecessor starts at the nonempty list head and only advances while next is non-NULL.|
+|153|1|The unlink result is already true on both native call paths described above.|
+|200|1|Every successfully opened file has a non-NULL ram_file_t handle; allocation failure frees the wrapper instead of returning it.|
+|229|1|The same successful-open ownership invariant applies to seek.|
+|241|1|The same successful-open ownership invariant applies to truncate.|
+|268|1|The return's rfile test cannot be false for a valid opened file. Truncate success and length-mismatch failure remain exercised.|
+|332|1|VFS closedir dereferences dir before backend dispatch; a valid opened directory is required. Calling this private backend with NULL is not a public workflow.|
+
+Counts sum to eleven, matching the exact artifact. These are bounded native
+caller/ownership findings, not proof about forged handles, stale handles after
+reset, or unsupported concurrent mutation. No fabricated handles, source edits
+or exclusions were introduced. The separately confirmed nonzero-truncate
+allocation bug retains its correct regression and narrow allowance; this audit
+does not classify its failure as acceptable behavior.

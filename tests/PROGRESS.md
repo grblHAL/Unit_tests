@@ -1,3 +1,242 @@
+# Provider/pendant/spindle/RTU/device cumulative gate passed - 2026-10-23
+
+Six new cases and five strengthened existing cases span zero-port providers,
+pendant modal/report hooks and input/output handoff, spindle registration
+capacity/retry, asynchronous CRC/timeout recovery, sender statistics resets,
+device registration allocation recovery, drained reads and failed-open recovery.
+Reused host configurations/fixtures; only two exact calloc wrapper targets added.
+One new confirmed failed-open reservation regression retains correct assertion
+with a narrow WILL_FAIL and dated KNOWN_BUGS evidence. No CORE changes.
+
+Full build and cumulative ASan/UBSan gate passed4362 in69.17s. Strict summary
+passed:4346clean,16known,0recovering diagnostics,0failed/skipped. Evidence:
+batch74-provider-rtu-device-delivery-{build.log,tests.log,results.xml,summary.log}
+in build-asan. No unchanged Python helper rerun. Fresh CORE fetch remains
+2e165a1ac4c74be8e68971972c6577775d856b05, clean. Exact source-matched isolated
+profiles record the intended new outcomes; hosted gain still unmeasured.
+Latest complete report40024613962 remains98.44%lines/90.62%branches.
+Full supported-coverage objective remains active after this delivery checkpoint.
+
+# Confirmed device failed-open reservation leak - 2026-10-23
+
+Public device open claims UART2, then one scoped file-wrapper calloc failure
+returns NULL. Allocation recovery cannot reopen UART2: passthru was set before
+allocation and remains reserved. Separate UART3 opens/writes/closes correctly;
+exact allocation/claim counts and final correct retry assertion establish cause.
+Raw ASan/UBSan reaches final retry != NULL failure with no sanitizer diagnostic.
+Added dated KNOWN_BUGS explanation/fix/removal guidance and one exact WILL_FAIL
+known_bug allowance. Three-case affected group passes with that one expected
+failure,0.32s total. Isolated device-open-recovery-proof74 confirms both
+allocation outcomes at122 and exact raw failure; adds one missing outcome
+versus hosted40024613962. Initial proof referred to127; corrected against
+the actual generated profile before recording this result. No CORE edit or
+blanket suppression. Defect is nonblocking; cumulative provider/pendant/
+spindle/RTU/device batch still needs its one full delivery gate.
+
+# Device registration recovery and drained UART read - 2026-10-23
+
+Added fs_device.registration_allocation_failure_preserves_existing_uart_and_allows_retry:
+one scoped calloc failure rejects a second device without claiming it; existing
+UART still opens/writes/closes; retry registers the new UART and it opens/writes/
+closes normally. Reused calloc_failure_host and added only this exact target
+to its link wrapper list. Extended existing read_byte_count with an extra read
+after draining the UART: returns0, does not call the driver reader again, and
+preserves the destination sentinel. Both ASan/UBSan cases pass0.05s each.
+Grouped isolated device-lifecycle-proof74 shows both outcomes at fs_device47
+and150, two missing outcomes versus hosted40024613962. No CORE/shared fixture
+edit or new exception. Keep with local pendant/spindle/RTU batch; no repeated
+full gate or hosted run. Current whole-objective completion remains unproven.
+
+# Sender statistics lowercase reset - 2026-10-23
+
+Extended existing statistics_reset_reports_then_clears_counters with a second
+real RTU transaction that receives a bad CRC, followed by $MODBUSSTATS=r.
+The lowercase command reports TX1/CRC1 before clearing; a subsequent query
+reports both0. Original uppercase success/reset controls retained. Public sender
+dispatch preserves argument case, so this exercises a distinct supported path.
+ASan/UBSan passes0.07s; isolated rtu-stats-reset-proof74 verifies the lowercase
+condition at547, missing from exact hosted40024613962. No CORE/helper changes,
+new case, exception, full suite or hosted dispatch. Keep cumulative local batch.
+
+# RTU unobserved error recovery coverage - 2026-10-23
+
+Added corrupt_crc_without_exception_observer_releases_bus_for_next_reply.
+Two ordinary received frames independently corrupt low/high CRC bytes; no
+optional exception callback is installed. Neither reaches the packet observer,
+sender statistics show two CRC errors and zero timeouts, and a following
+valid reply completes with exact payload. ASan/UBSan passes0.05s. Isolated
+rtu-crc-optional-proof74 shows all four comparison outcomes at214 and absent
+exception observer at218: two additional outcomes versus hosted40024613962.
+
+Extended existing callback-free transaction case with an actual missing reply
+between its successful unobserved and observed requests. Normal scheduler ticks
+expire the timeout, bus becomes idle, no callbacks fire, and the following
+valid observed reply succeeds. ASan/UBSan passes0.07s; isolated
+rtu-unobserved-timeout-proof74 confirms line182 executes its missing absent
+timeout-hook outcome. Existing successful lifecycle assertions retained; count
+updated from two to three actual requests. No CORE/shared fixture edits or
+new allowances, no full gate/hosted dispatch. Keep with provider/pendant/spindle
+registration work for cumulative delivery; hosted percentages remain unchanged.
+
+# Spindle name rejection/retry adds supported settings outcome - 2026-10-23
+
+Added multi_spindle.oversized_driver_name_rejects_registration_without_consuming_id.
+Public driver registration rejects a 100-character name without consuming ID1
+or altering the primary registration. A shorter retry receives ID1; public
+selector metadata is exactly primary,secondary and both driver configs activate
+successfully. ASan/UBSan passes0.08s. Isolated spindle-name-proof74 executes
+settings.c3701 both ways (two accepted, one rejected), covering the missing
+capacity-rejection outcome. Proof initially assumed LLVM branch numbering in
+the opposite order; corrected to verify both positive counts without assigning
+meaning to branch numbering. Executable assertions establish acceptance/rejection.
+No CORE/helper edit or allowance; no full/hosted run for this small addition.
+Keep with local provider/pendant cases for the next cumulative batch. Hosted
+percentages remain98.44% lines/90.62% branches pending a complete report.
+
+# RAM residual ownership audit - 2026-10-23
+
+Matched all ten partial RAM source branches against exact40024613962 XML:
+eleven missing outcomes, zero missing lines. Traced allocation/open ownership,
+refs-limited close/unlink, predecessor membership and directory wrapper contracts.
+Recorded each count and native invariant in COVERAGE_GAPS, retaining all raw
+outcomes. No malformed-handle tests, CORE edits or exclusions. Existing
+nonzero-truncate defect regression remains intact. This resolves the next
+selection decision: further RAM case padding cannot reach these guards through
+valid native handles; move to another supported module. No full gate/hosted run.
+
+# UTF-8 remaining outcome audited - 2026-10-23
+
+Confirmed exact hosted utf8.c139 false outcome remains missing. Earlier
+range rejection bounds the conversion to four bytes; independent exhaustive
+integer check across all 0x110000 accepted numeric inputs confirms maximum4.
+Recorded source proof in COVERAGE_GAPS; retained raw denominator and existing
+boundary/rejection tests. No CORE edit or manufactured test. Current local
+provider/pendant cases remain outside measured98.44%/90.62% head. Continue
+independent supported gaps before cumulative validation.
+
+# Stream/settings/tool checkpoint fully verified - 2026-10-23
+
+Run40024613962 terminalsuccess with allfive source/GCC/Clang/coverage/Results
+summary jobs green on exact35bcc9a/CORE2e165a1. Locks/filter and seven stages0
+verified.4356coverage cases4342clean/14known/0failed/skipped. Refreshed badges
+and inventories to17479/17756 lines98.44%,12536/13834 outcomes90.62%;277raw
+missing lines/1298outcomes. Same-source old/new hit inventories verify no lost
+covered lines and net+8outcomes with unchanged denominator. No new run for docs.
+
+Local zero-port-provider extension, actual parser-to-pendant default observer
+case and optional primary RX handoff remain outside this measured head. Keep
+accumulating independent supported modules before the next full/hosted gate.
+Source review of settings group discovery found a NULL-settings-table guard;
+no ordinary native zero-setting metadata-only provider contract established,
+so do not invent one just to hit that guard. No new exception or CORE edit.
+Full supported line/branch objective remains active, not achieved by this run.
+
+# Pendant optional-hook proof; I/O candidate withdrawn - 2026-10-23
+
+Two public pendant coverage binaries exit0. Isolated mpg-optional-hooks-proof74
+shows absent prior modal observer631 and registration observer774, plus absent
+primary receive-disable on enable831/disable851. Actual parser reports and
+input/output handoff assertions pass. Keep these local next-batch outcomes
+separate from current measured/hosted35bcc9a.
+
+Investigated optional unlabelled I/O lookup. Legacy fixture does not advertise
+explicit claiming, required by ioports_enumerate; added numeric lookup assertion
+therefore tested an unsupported fixture capability. Withdrew only this turn's
+extension, restoring exact HEAD source and rebuilding the original passing
+case. No assertion weakened or known-bug allowance added. Modern adapter's
+setter veneer also assumes a callback; no malformed modern driver test added.
+Continue reachable supported gaps without unrelated fixture machinery. CORE
+unchanged; no repeated full gate or duplicate hosted run.
+
+# Pendant handoff with optional primary receive-disable absent - 2026-10-23
+
+Added mpg_handoff_without_primary_receive_disable_restores_input_and_output.
+Prepare driver-owned primary UART without disable_rx before public registration;
+register normal bidirectional pendant, enable MPG, verify pendant owns input
+and receives replies while serial receives nothing, disable MPG and verify
+original reader and sender output restored. Public mode flags agree throughout.
+No callback removed from an active stream and no private MPG state set.
+ASan/UBSan passes0.07s. Targets stream.c831/851 absent optional primary hook;
+registration also has no optional plugin observer by default. No CORE/helper
+edit, exception or new full/hosted run. Keep with the local provider/modal tests
+for a substantial batch. Exact35bcc9a hosted40024613962 last verified live
+with source/coverage successful and GCC/Clang running; do not duplicate it.
+
+# Public mount review avoids unsupported defect claim - 2026-10-23
+
+Reviewed remaining listing/routing candidate against actual native mount
+callers: only/dev,/embedded,/ram in CORE. Nested-parent contract not established;
+recorded bounded TODO evidence instead of adding a speculative WILL_FAIL or
+assuming arbitrary external hierarchy semantics. Existing supported hidden/
+immediate-child and direct-path tests remain intact. No CORE edit/exclusion.
+Local zero-port/pendant authoring remains active; continue independent supported
+gaps rather than padding duplicate directory tests. Latest measured snapshot
+remains fully green8b13bc7/40021882976, with35bcc9a coverage job verified and
+its full compiler checkpoint pending at last check.
+
+# Latest coverage job and default pendant observer configuration - 2026-10-23
+
+Exact35bcc9a/CORE2e165a1 coverage job40024613962 passed; both source/filter
+locks and exactlyseven stages0 verified.4356cases4342clean/14known/0failed/skip.
+Measured17479/17756 lines98.44%,12536/13834 outcomes90.62% (net+8outcomes,
+unchanged denominator against prior40021882976). GCC/Clang still live at last
+check; no overall-green claim or successful-run badge refresh yet.
+
+Local default pendant modal case now also configures the optional plugin
+on_mpg_registered observer absent BEFORE public registration. Fixture observer
+is optional, not a required driver callback. Public registration succeeds and
+installs modal handling; all original G20/G21 realtime output and unchanged-
+report suppression assertions remain. No observer calls expected in this board
+configuration; existing separate tests retain positive observer checks. ASan/
+UBSan passes0.06s. Targets stream.c774 in the same coherent default-no-observer
+workflow; no extra test count, CORE/private stream edit, exception or full gate.
+Keep these local changes distinct from measured35bcc9a head.
+
+# Grouped provider/pendant branch proof - 2026-10-23
+
+Both updated coverage binaries exit0 with isolated provider-pendant-proof74
+profiles. stream.c110 records normal nonempty and ignored zero-port provider
+outcomes (1/2executions respectively); stream.c631 absent prior modal observer
+executes on both actual G20/G21 realtime notifications. This confirms the two
+missing supported outcomes locally. Existing tests cover present observers;
+no callback is removed after registration to force a path. No aggregate claim.
+
+Exact35bcc9a hosted40024613962 verified still live with source green and GCC,
+Clang,coverage running. Keep its checkpoint separate from the local provider/
+pendant authoring. No duplicate run, full-suite gate, CORE edit or new exception.
+Continue other supported modules for a substantial cross-module delivery.
+
+# Pendant modal reporting without a previous observer - 2026-10-23
+
+Added mpg_parser_reports_modal_changes_without_previous_observer. Existing
+fixture's default modal observer is NULL (asserted, not cleared). Public
+Setting_StatusReportMask512 enables parser reports, public pendant registration
+installs its handler, G20 plus realtime status emits correct pendant GC modes.
+An unchanged next report emits no duplicate modal update; G21 restores metric
+report content. EXEC_GCODE_REPORT behavior checked through public clear helper.
+ASan/UBSan passes0.08s. Targets stream.c631 default absent prior observer through
+normal reporting rather than invoking its private wrapper. No CORE/helper edit,
+exception or full/hosted run. Keep with the local zero-port provider extension.
+Exact35bcc9a hosted40024613962 remains independently active at last verified
+state; no new aggregate percentage claimed for local authoring.
+
+# Hosted handle and zero-port provider capability control - 2026-10-23
+
+Single exact35bcc9a2e540c4bd28bbbd5bc88672c21d5568d8/CORE2e165a1 hosted
+checkpoint accepted after duplicate/hourly checks (two prior runs). Actual
+run40024613962 is in_progress:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/40024613962
+Saved batch74-35bcc9a-hosted-handle.json. Do not redispatch or create workers.
+
+Extended existing flags_reflect_registered_uart_capabilities: normally register
+an optional provider with zero ports before UART claim and again while claimed.
+Public flags/handler remain intact, close releases actual registered UART once,
+and capability flags remain available afterward. ASan/UBSan passes0.07s.
+Targets stream.c110's ignored empty-provider outcome without private registration
+state or extra test-count padding. Local for next batch, outside40024613962;
+no CORE edit, exception, aggregate claim or new full gate. Continue independent
+supported coverage while hosted jobs run.
+
 # Stream/settings/tool-storage cumulative gate passed - 2026-10-23
 
 Full4356-case ASan/UBSan gate passes67.64s; strict summary4341clean/15known/

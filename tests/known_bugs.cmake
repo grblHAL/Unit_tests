@@ -118,3 +118,8 @@ if(TEST vfs.locate_allocation_failure_does_not_return_previous_job_and_allows_re
   set_tests_properties(vfs.locate_allocation_failure_does_not_return_previous_job_and_allows_retry
     PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Confirmed on CORE2e165a1, 2026-10-23: failed file allocation retains passthru.
+if(TEST fs_device.open_allocation_failure_releases_device_for_retry)
+  set_tests_properties(fs_device.open_allocation_failure_releases_device_for_retry PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

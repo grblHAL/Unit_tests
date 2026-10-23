@@ -404,7 +404,9 @@ function(add_core_test name module source)
     target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc)
   endif()
   if(name STREQUAL "ngc_flowctrl.named_macro_record_allocation_failure_closes_file_and_allows_retry"
-    OR name STREQUAL "ngc_flowctrl.numeric_sub_record_allocation_failure_preserves_file_and_allows_retry")
+    OR name STREQUAL "ngc_flowctrl.numeric_sub_record_allocation_failure_preserves_file_and_allows_retry"
+    OR name STREQUAL "fs_device.registration_allocation_failure_preserves_existing_uart_and_allows_retry"
+    OR name STREQUAL "fs_device.open_allocation_failure_releases_device_for_retry")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=calloc)
   endif()
   if(HOST_FS_MOUNT_RESULT_DECLARATION AND name IN_LIST HOST_MOUNT_RESULT_CASES)
