@@ -989,3 +989,20 @@ that only resets state to Silent does not itself release `is_blocking`; polling
 through a synthetic timeout would not establish a supported cancellation contract.
 Existing abort reset and active nonabort reset controls remain valid. This is a
 contract/reachability audit, not an allowance or source exclusion.
+
+## Report-clear observer fallback is bypassed by the public dispatcher
+
+Reviewed 2026-10-23, clean CORE `50f38659db7b22f4689f3654df2d110d992bcc95`,
+source-locked report39900281002. `report_add_realtime(Report_ClearAll)` clears
+the primary stream flags and returns immediately (report.c3003-3005). Its later
+observer condition `flags.value || report == Report_ClearAll` at3032 therefore
+cannot take the ClearAll alternative. Likewise MPG's zero-flags clearing arm
+(stream.c614) is not reached through this public dispatch. Ordinary primary and
+pendant status-consumption tests preserve independent pending flag sets; the
+existing realtime_flags_clear test covers the observable primary clear behavior.
+
+Confirm whether explicit clear is intended to fan out to report observers before
+registering a pendant-clear regression. Do not call the chained callback with
+zero manually or mutate its private pending state merely to cover the arm. The
+lines/outcomes remain in raw coverage. This is a reachability/contract note, not
+a confirmed defect or a test allowance.

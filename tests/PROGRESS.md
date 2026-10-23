@@ -1,3 +1,53 @@
+# Batch74 cumulative delivery passed - 2026-10-23
+
+One cumulative4,208-case ASan/UBSan gate passes132.18s:4,164 clean,44 known,
+0unexpected,0skipped. Build/CTest/strict summary all0; session8092 completed.
+Evidence build-asan/batch74-delivery-{results.xml,gate.json,summary.log}.
+Includes eight new cross-module workflows and expanded realtime-byte scenario;
+no new exceptions. Reporting scripts unchanged from75/75 validated sourcehead.
+CORE clean50f38659db7b22f4689f3654df2d110d992bcc95. Commit/push same74 and
+one hosted checkpoint for source-matched coverage delta against39900281002.
+PR28 remains ready/frozen a9f355c; do not merge or create duplicate cumulative
+PR while it remains open. Full supported coverage still incomplete.
+
+# Batch74 cumulative gate in progress - 2026-10-23
+
+Authorized successor coverage-batch-74 retains local checkpoint6a0c872 plus
+eighth settings-reload scenario and reachability notes. PR28 stays ready/frozen
+at hosted a9f355c. Probe reload now covers absent toolsetter, absent secondary,
+both absent and missing select callback before capable-driver recovery.
+One cumulative4,208-case ASan/UBSan/strict gate is running in unified exec
+session8092; build passed and actual CTest log observed progressing past575.
+Do not start another gate if observation expires; poll8092 or inspect
+build-asan/batch74-delivery-{tests.log,results.xml,gate.json,summary.log}.
+CORE clean50f38659db7b22f4689f3654df2d110d992bcc95. After success commit/push
+this cross-module batch and dispatch one exact-source hosted checkpoint; no
+new PR needed while28 remains open. Full coverage remains unproven.
+
+# Probe capability filtering preserves saved preferences - 2026-10-23
+
+Eighth local new scenario stores public probing flags24 with both selection
+capabilities, then reloads settings under supported driver capability/callback
+combinations. Runtime disables missing secondary probe while retaining toolsetter;
+physical NVS retains both saved choices. Missing selection callback disables
+both runtime flags. Restoring capable driver and callback recovers saved24;
+reload never actively switches probes. Uses registered host NVS/settings APIs,
+not private sanity_check. ASan/UBSan passes0.07s;4,208 cases now. Targets
+settings2292/2293 capability and callback short-circuit outcomes. Evidence
+build-asan/batch73-probe-reload-results.xml. No new allowances or CORE edits.
+Previous seven-case checkpoint6a0c872 remains local; continue cumulative batch.
+
+# Realtime report clear contract audit - 2026-10-23
+
+Continued from clean6a0c872. Exact source reportClearAll returns immediately
+before observer notification; the later explicit ClearAll condition and MPG
+zero-flags callback arm cannot run through public report_add_realtime. Existing
+primary clear and independent pendant consumption tests remain correct.
+Recorded source/line evidence and maintainer fan-out contract question inTODO;
+no private callback invocation, invented assertion, allowance or source exclusion.
+Seven new cases plus expanded protocol scenario remain local;4,207 registered.
+No extra gate/hosted run. Continue supported remaining branch workflows.
+
 # Coherent local workflow checkpoint - 2026-10-23
 
 Seven new cases plus one expanded protocol scenario are checkpointed together:
