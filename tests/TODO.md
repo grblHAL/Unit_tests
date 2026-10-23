@@ -804,9 +804,9 @@ whole-owner rejection (neither setting is discoverable), corrected registration
 and ordered reporting of both valid values. Do not mutate already registered
 metadata or bypass settings_register to claim that fallback covered. Raw source
 coverage retains the lines; no global-table reachability claim is made here.
-Further registration branch coverage can extend the same scenario for missing
-persistence/getter callbacks and invalid group/description metadata, rather than
-adding duplicate aliases for each boolean guard.
+The existing `invalid_plugin_metadata_rejects_owner_and_allows_corrected_registration`
+scenario now also covers missing persistence/getter callbacks and invalid type,
+group and description metadata. Do not add duplicate aliases for these guards.
 
 ## Legacy version repair and checksum repair are separate startup paths
 
@@ -969,3 +969,23 @@ G65/G66 unsupported-fraction rejection is independently reachable with a valid
 registered provider and has a queued-motion/retry case. Revisit provider absence
 if an upstream-supported configuration or lifecycle stops installing the built-in
 handler; disabling NGC parameters is no longer supported by the selected source.
+
+## RTU timeout-state residual and reset-in-retry contract - 2026-10-23
+
+Reviewed clean CORE `50f38659db7b22f4689f3654df2d110d992bcc95` against the
+previous exact-source report's RTU residuals. `ModBus_TimeoutException` is assigned
+only in the synchronous AwaitReply timeout arm: asynchronous timeouts instead
+set Silent and clear packet immediately (modbus_rtu.c175-195). The later
+`case ModBus_TimeoutException` test of `packet->async` therefore cannot be true
+under the supported transport transitions. Existing async timeout and blocking
+timeout/retry scenarios exercise their observable behavior. Retain the raw line;
+do not change packet flags during a callback to cover it.
+
+The reset-in-Retry fallback (modbus_rtu.c358-361) is different: it requires a
+non-aborting reset while a synchronous retry owner is active. Before registering
+a retry-cancellation assertion, confirm whether driver reset is permitted to
+cancel such a blocking transaction independently of protocol abort. A callback
+that only resets state to Silent does not itself release `is_blocking`; polling
+through a synthetic timeout would not establish a supported cancellation contract.
+Existing abort reset and active nonabort reset controls remain valid. This is a
+contract/reachability audit, not an allowance or source exclusion.

@@ -1,3 +1,145 @@
+# Coherent local workflow checkpoint - 2026-10-23
+
+Seven new cases plus one expanded protocol scenario are checkpointed together:
+driver PID settings registration, MPG boot status, persisted legacy polarity,
+nonreleasable UART ownership, multi-spindle broadcast notifications, nested
+rapid G66scope and reduced-RPM/manual-stop hold behavior. Each uncertain path
+was resolved by source contract review and focused ASan/UBSan evidence recorded
+below.4,207 registered;44 expected regressions unchanged. No shared infrastructure
+or CORE edits. Reporting helpers unchanged since75/75 verified a9f355c gate.
+No extra full gate/hosted run for this local checkpoint; next substantial push
+must include one cumulative sanitizer/strict gate. PR28 stays ready/frozen at
+verified a9f355c. New-source badge evidence remains39900281002, not local cases.
+Further I/O allocation exploration duplicates the existing digital expansion
+first-allocation regression; no extra alias was added. Continue branch work.
+
+# Extended realtime plugin dispatch boundaries - 2026-10-23
+
+Extended the existing consumed-control-byte test rather than adding aliases.
+Plugin receives0x01/0x1f/0xaf/0xbf exactly once each, covering control-range
+and reserved extended-command bounds with signed-char-safe comparisons.
+Printable G-code bytes and serial delete bypass the unknown-command callback;
+no realtime motion/reset flags appear. Existing retain-control companion passes.
+ASan/UBSan2/2 passes0.28s. No case-count inflation:4,207 registered remain,
+seven new local cases plus this expanded protocol scenario. Evidence
+build-asan/batch73-plugin-byte-range-results.xml. No new exceptions/CORE edits.
+Keep cumulative validation and delivery at the next substantial boundary.
+
+# Reduced-RPM hold followed by manual spindle stop - 2026-10-23
+
+Seventh local scenario configures public Setting_HoldActions=4 before motion
+on the registered PWM spindle. Real feed hold reaches configured minimum RPM;
+manual stop during completed hold stops output without motor movement. Resume
+with restore disabled completes exact1,600-Xstep cut while hardware and modal
+spindle stayoff, power0 and stopoverride clears. Initial retained-S expectation
+was corrected against explicit gc_spindle_off semantics (gcode885 clears modal
+spindle fields); no invented preservation contract or defect was recorded.
+ASan/UBSan passes0.09s;4,207 total cases. Evidence
+build-asan/batch73-reduced-hold-stop-results.xml. No shared fixture changes,
+new allowance, CORE edit or hostedrun. Keep this coherent cumulative batchlocal.
+
+# Nested rapid modal-macro scope - 2026-10-23
+
+Sixth local follow-up adds real redirected RAM G65files with nested G0 moves.
+Outer G66 stays dormant in both deeper local scopes and triggers once after
+returning to the parent rapid, then G67 clears it. Existing public macro loader
+owns/releases asynchronous call scopes; no private stack mutation. Check-mode
+parser positions/scope/arguments and restored sender reader are asserted; no
+motor execution is claimed. Rapid and existing feed controls pass ASan/UBSan
+2/2 in0.31s.4,206 total registered. Targets gcode4766 call-level mismatch, not
+the unresolved G66 arc contract. Evidence
+build-asan/batch73-rapid-macro-scope-results.xml. No new allowance or CORE edit.
+Keep six local scenarios grouped; PR28 remains exact-hosted-ready at a9f355c.
+
+# Broadcast driver-notification workflow - 2026-10-23
+
+Fifth local case after a9f355c exercises public M5/M3/M4 broadcasts with two
+registered enabled spindles at independent3000/7000RPM and an unused third.
+Plugin hook sees correct driver/mode/speed once per addressed command;
+repeated stopped broadcast notifies without extra driver writes, primary-only
+start followed by broadcast preserves mixed-state notification ownership, and
+reversal updates both observable outputs. Changed states notify through
+spindle_set_state_synced; unchanged states use parser fallback at gcode4331.
+Scenario passes ASan/UBSan0.07s.4,205 cases now. Evidence
+build-asan/batch73-broadcast-hook-results.xml. No new allowances or CORE edits;
+keep accumulating supported branch workflows before a full/hosted gate.
+
+# Driver UART lifetime and branch-gap ranking - 2026-10-23
+
+Ranked exact39900281002 branch inventory:1,585 uncovered outcomes across
+1,214 partly covered executable lines plus fully unexecuted regions. Reusable
+ranked evidence build-asan/hosted39900281002/remaining-branches.json avoids
+rescanning reports. Prioritize supported lifetime/driver/error workflows; merged
+inlined outcomes and unimplemented extension paths are not a case quota.
+Fourth local follow-up: driver advertises claimable UART with no releasecallback;
+public open succeeds, repeated close refuses without disabling RX or releasing
+claim, handler remains usable and second claim is rejected. No runtime callback
+mutation, no synthetic source state. ASan/UBSan passes0.05s;4,204 total cases.
+Evidence build-asan/batch73-nonreleasable-uart-results.xml. Existing owned-file
+release-failure/retry controls remain separate. Keep this cross-module batchlocal;
+no repeated full gate or hostedrun. PR28 remains ready at verified a9f355c.
+
+# Exact latest-source hosted result - 2026-10-23
+
+Run39900281002 at a9f355c / CORE50f3865: source,GCC,Clang,coverage,diagnosis
+allterminalsuccess. Three artifact source/harness/filter locks verified; all7
+coverage stages exit0,4,200 cases:4,156 clean,44 known,0fail,0skip.
+17,369/17,714 lines98.05%;12,215/13,800 branches88.51%;345 raw linesremain.
+Different source from prior68eba79: do not describe net+29lines/+38branches as
+a same-source test gain. Badges and gap snapshot refreshed. PR28 exacthostedhead
+can be ready without merging. Three further local scenarios stay outsidehead.
+Evidence build-asan/hosted39900281002/{coverage-core,report-core-coverage,source-lock-core}.
+Full meaningful supported coverage remains incomplete; rank this report next.
+
+# Residual transport and registry audit - 2026-10-23
+
+Inspected hosted39900281002: source successful, GCC/Clang/coverage stilllive;
+no coverage artifact yet. Preserved3 local passing scenarios (4,203total).
+Source audit confirms async timeout cannot enter the synchronous timeout-state
+async fallback; documented exact transitions rather than manipulating flags.
+Reset during synchronous retry remains a driver cancellation contract question,
+separate from ordinary abort/active-reset tests. Corrected stale TODO advice:
+invalid plugin metadata scenario already exercises missing lifecycle/getter,
+invalid type, null descriptor/group and self-parent rejection before recovery.
+No duplicate cases or extra CI. Updated TODO evidence keeps these residuals
+visible in the denominator; full supported coverage remains unproven.
+
+# Persisted legacy stepper-enable boot/reset workflow - 2026-10-23
+
+Third local follow-up after a9f355c: legacy10 driver initialization uses the
+public settings writer to persist $4=0, verifies physical NVSall-axis inversion,
+then performs full settings initialization, sender query, softreset and query.
+Both queries retain0, all-axis polarity remains loaded, parser returns metric
+absolute and no sender errors occur. ASan/UBSan case passes0.05s;4,203 cases.
+Targets settings_init compatibility normalization with a legitimately persisted
+nonzero mask, no forged private state. No new exception. Evidence
+build-asan/batch73-legacy-polarity-results.xml. Keep3 local scenarios grouped
+for later substantial checkpoint; hosted39900281002 remains live at a9f355c.
+
+# Registered MPG boot status workflow - 2026-10-23
+
+Continued independent authoring while hosted39900281002 runs. New real boot
+registers a UART MPG receiver via stream_mpg_register, advertises driver MPG
+capability, and verifies one initial Idle/WPos status, normal $G/ok response,
+no errors, primary reader ownership and disabled MPGmode. Default status policy
+is work coordinates; initial MPos expectation corrected after inspecting output.
+ASan/UBSan scenario passes;4,202 registered now,2 local cases beyond hostedhead.
+No defect/allowance. Targets grbllib startup capability-triggered status path.
+Evidence build-asan/batch73-mpg-boot-results.xml. Preserve cumulative batching.
+
+# Registered closed-loop driver settings - 2026-10-23
+
+Hosted39900281002 at a9f355c against50f3865 is confirmed live: sourcepasses,
+GCC/Clang/coverage inprogress. No repeated dispatch. Continued locally with
+a registered driver settings group and gain setting, supplied load/restore/save
+callbacks, capability availability off/on/off, public gain write/persistence,
+and unaffected spindle parent visibility. Initial group-only fixture omitted
+mandatory lifecycle callbacks; corrected registry contract, no corebug claimed.
+New scenario passes ASan/UBSan0.06s;4,201 cases now. Targets previously
+uncovered settings_is_group_available closed-loop driver branch through public
+registration. No new exceptions. Keep local until a substantial batch boundary.
+Evidence build-asan/batch73-pid-group-results.xml. CORE clean50f3865.
+
 # Batch73 latest-source delivery gate - 2026-10-23
 
 Cumulative4,200-case ASan/UBSan gate passes137.36s:4,156 ordinary passes,
