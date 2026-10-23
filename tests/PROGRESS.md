@@ -1,3 +1,43 @@
+# Batch74 second cumulative delivery gate passed - 2026-10-23
+
+Session43857 completed: build,CTest,strict summary all0.4,215 cases pass133.27s,
+4,169 ordinary and46 documented local expected failures;0unexpected/0skipped.
+Includes7 new workflows since fullygreen afdc32b and two precise PWM issues.
+Narrow PWM allowance is compile-width gated; wider hosts retain ordinary test.
+CORE remains clean50f3865; reporting scripts unchanged since75/75 helper gate.
+Evidence build-asan/batch74-cumulative-{results.xml,gate.json,summary.log}.
+Commit remaining zero-period regression/docs and push same74 for one hosted
+source-matched checkpoint. Previous39903031655 verifies98.09/88.66 before
+these7cases. No duplicate PR while28 remains open; never merge or edit CORE.
+Full supported coverage remains incomplete; continue after dispatch.
+
+# Batch74 seven-scenario cumulative gate running - 2026-10-23
+
+One cumulative4,215-case ASan/UBSan/strict gate started on current74 after the
+seven new workflows since afdc32b, including narrow PWM wrap and zero-period
+failure regressions. Build0; unified exec session43857 is live. Inspect that
+handle and build-asan/batch74-cumulative-{tests.log,results.xml,gate.json,summary.log}
+before any retry. Do not restart merely because a wait times out.
+Expected narrow-host46 known regressions, no new diagnostic allowances. CORE
+remains clean50f3865. On success commit remaining PWM/sourceevidence group,
+push same74 and dispatch one source-matched hostedcheckpoint. Prior exacthead
+afdc32b fullygreen39903031655 remains verified98.09/88.66; later cases are not
+included in that figure. PR28 remains separate and unmerged. Goal incomplete.
+
+# Zero-tick PWM range detection regression - 2026-10-23
+
+Fresh upstream fetch leaves clean CORE50f3865 unchanged. Seventh follow-up
+after afdc32b confirms public precompute reports success for2MHz PWM on1MHz
+clock:period/min/max all0, contrary to its documented false/no-range fallback.
+Correct !ready assertion retained with one exact WILL_FAIL and dated KNOWN_BUGS
+source/fix/removal evidence. No sanitizer diagnostic. Regression and ordinary
+precompute/midpoint controls classify3/3 in0.31s; strict summary passes. Later
+valid-frequency retry assertions remain after failure and are not claimed run.
+Evidence build-asan/batch74-pwm-frequency-{raw.xml,results.xml,summary.log}.
+4,215 registered;46 known on narrow local host,45 on wider hosts if reproduced.
+Existing six-case checkpoint978ba50 remains local. No CORE changes or hostedrun;
+continue independent supported coverage, then one substantial cumulative gate.
+
 # PWM narrow-host ordinary-build confirmation and local checkpoint - 2026-10-23
 
 Ordinary Clang raw execution also records fastintegerwidth2, result1000 versus

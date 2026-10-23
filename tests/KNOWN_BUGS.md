@@ -477,3 +477,24 @@ Proposed upstream fix: compare/clamp the scaled floating value including minimum
 duty before narrowing it, or bound it in a sufficiently wide intermediate.
 After repair retain the test and remove its scoped exception and type check.
 CORE is unchanged.
+
+## PWM precomputation reports success for a zero-tick period
+
+Confirmed 2026-10-23 on clean CORE `50f38659db7b22f4689f3654df2d110d992bcc95`.
+`ioports_precompute_pwm_values` documents false when no PWM range is possible,
+so the driver can fall back to on/off control. At timer clock1MHz, requested
+frequency2MHz and otherwise valid input/duty ranges, it instead returns true
+with period0, minimum0 and maximum0. `ioports.c:1152` truncates clock/frequency
+to zero, while the return at1166 checks only the analog input range.
+
+Regression: `ioports.pwm_frequency_above_timer_clock_reports_no_range_and_allows_valid_retry`.
+Correct `!ready` assertion is retained with one named WILL_FAIL, no sanitizer
+allowance. Evidence `build-asan/batch74-pwm-frequency-raw.xml` records
+ready1/period0/min0/max0. Later assertions require a valid1kHz configuration to
+recover normal PWM; they are not reached while this defect remains. Existing
+ordinary precompute/midpoint controls cover that valid configuration separately.
+
+Proposed upstream fix: reject a nonpositive or unrepresentable timer period and
+any computed duty range with no usable span before reporting success. Keep
+valid on/off fallback semantics. Remove the named allowance and retain regression
+once fixed. CORE is unchanged.

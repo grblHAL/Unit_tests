@@ -179,3 +179,8 @@ int main(void) { return 0; }" HOST_UINT_FAST16_IS_16_BITS)
       PROPERTIES WILL_FAIL TRUE LABELS known_bug)
   endif()
 endif()
+
+if(TEST ioports.pwm_frequency_above_timer_clock_reports_no_range_and_allows_valid_retry)
+  set_tests_properties(ioports.pwm_frequency_above_timer_clock_reports_no_range_and_allows_valid_retry
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
