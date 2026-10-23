@@ -1006,3 +1006,46 @@ registering a pendant-clear regression. Do not call the chained callback with
 zero manually or mutate its private pending state merely to cover the arm. The
 lines/outcomes remain in raw coverage. This is a reachability/contract note, not
 a confirmed defect or a test allowance.
+
+
+## Parking restore restart flag and callback handler ordering
+
+**Reviewed:** 2026-10-23, clean CORE50f38659db7b22f4689f3654df2d110d992bcc95.
+The uncovered `park.flags.restoring` true arm in state_restore (state_machine.c
+818-819) cannot run through the present public event dispatcher. The flag is
+set only inside state_restore_conditions (95), whose only caller (837) first
+sets stateHandler=state_await_resumed (834). A door interrupt processed during
+that callback therefore reaches state_await_resumed's restart_retract, not the
+old state_restore handler. After the call returns, restoring is false again.
+Do not invoke the private old handler or mutate the flag to hit this arm.
+
+Existing real door-during-spindle-output workflow now also closes/resumes a
+second time, completes the original X/Z endpoint and verifies restored spindle
+and coolant. Its original repark/no-cut assertions remain. Revisit the raw
+branch only if upstream changes handler ordering or restore callback dispatch;
+no source exclusion or expected-failure allowance applies.
+
+
+## Named file prescan before execution - maintainer contract 2026-10-23
+
+Terje clarified: scan a named file first to establish a matching ENDSUB. Do not
+execute body statements on the first pass; fail without executing the body if
+that terminator is absent. The earlier KNOWN_BUGS proposal to enable execution
+immediately after opening was wrong and has been withdrawn.
+
+Valid shared named-file fixtures now contain explicit matching SUB/ENDSUB pairs.
+Direct lifecycle tests distinguish the first ENDSUB (rewind, scope still active)
+from executed RETURN/ENDSUB (close and restore caller). Validate skipped first-
+pass side effects, one execution after validation, missing-terminator rejection,
+and normal nested/reopen/error cleanup. Do not classify deliberate prescan as a
+CORE defect. Old implicit-EOF success assumptions need contract correction.
+
+## Scheduler saturation stress proposal - maintainer review 2026-10-23
+
+Withdraw the spindle full-task-pool scenario from registered coverage and the
+confirmed-defect list. It deliberately fills every slot with synthetic future
+plugin tasks; no real plugin workload or applicable timing window was established.
+Public API reachability alone does not establish an ordinary controller workflow.
+The unregistered proposal is `proposals/full_task_pool_override_fallback_allows_later_ramped_retarget.c`.
+Only reconsider after demonstrating a supported plugin workload and accounting
+for the existing ramp-task deletion/replacement slot. No CORE change is requested.

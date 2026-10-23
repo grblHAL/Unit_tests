@@ -1,3 +1,86 @@
+# Maintainer contract corrections - 2026-10-23
+
+Terje clarified named files must scan through a matching ENDSUB before executing.
+With valid SUB/ENDSUB fixtures and distinct scan/execution passes, 27 obsolete
+expected failures were removed. The incorrect named-CALL defect and immediate
+execution proposal were withdrawn. New controls observe no scan-time body effects
+and exactly one later execution. A separate missing-ENDSUB regression retains
+syntax-error/no-body/no-caller-tail assertions with one narrow expected failure:
+current CORE skips the body but reports success at EOF. CORE remains unchanged.
+
+The synthetic full scheduler pool override case is now an unregistered proposal;
+its confirmed-defect entry and allowance are removed. No real plugin workload or
+applicable scheduling window was established; public reachability is insufficient.
+
+CONTINUE to a missing numeric loop label reproduces stack[-1] at CORE line628.
+One exact sanitizer diagnostic wrapper records that fault; ordinary Clang passes.
+Earlier independent workflow additions remain part of this cumulative batch.
+Validation: one 4,233-case ASan/UBSan gate completed in299.45s, exposing four
+allocation/EOF fixtures still consuming the old headerless body. Corrected those
+fixtures to consume the valid file through both passes; all41 affected cases pass
+in0.94s. Full gate plus affected repair, excluding the withdrawn stress test and
+replacing the renamed EOF case, gives4,232 cases with zero unexpected failures.
+Evidence: build-asan/named-correction-{delivery,repair,effective}-results.xml.
+The effective XML combines those two runs explicitly; it is not a second full run.
+Ordinary Clang missing-loop-label control passes0.23s. Hosted coverage for these
+new changes has not been measured.
+
+# Active encoder, label and probe-alarm follow-up - 2026-10-23
+
+Delivered branch74 head c4e04619ce9f991e8c30c608731b64a1a3df33ba has one
+hosted run39908773015, now fully green across all five jobs at that exact head.
+Both coverage artifact source locks agree with clean CORE50f3865. All seven
+coverage stages exit0; classifier4225total/4178clean/47known/0failed/0skipped.
+Measured17,386/17,714 lines98.15% and12,250/13,800 branch outcomes88.77%.
+Against exact-source39905420870: +7 lines/+8 outcomes, no lost covered lines.
+Gained gcode3165/3968/3970, machine_limits544, protocol145/146/160. Evidence:
+build-asan/hosted39908773015/comparison39905420870.json and both locked artifacts.
+Badges/gap snapshot refreshed;328 raw uncovered lines remain. PR28 frozen.
+No coverage gain is claimed for newer local work below.
+
+Current LOCAL work beyond c4e0461:
+- Expanded incomplete-threading case rejects negative P/J/K with unchanged
+  spindle/motors/planner, preserves the original80-pulse recovery assertions,
+  then completes real G76 encoder passes: cumulativeX640/Z240 pulses and physical
+  X880/Z-80. ASan/UBSan0.30s, batch74-thread-negative-results.xml.
+- New fractional O-label scenario rejects SUB/CALL labels with fractional values,
+  retains call level0, original planner head/capacity, modal/feed state and
+  unstarted motors, then accepts a corrected sender move and reaches160Xpulses.
+- Extended door-reopen-during-spindle-restore case retains its original parked,
+  accessories-off/no-resumed-cut assertions, then closes/resumes again and
+  completes exact original X/Z endpoint with spindle5000RPM/coolant restored.
+  Both pass grouped ASan/UBSan0.39s, batch74-label-parking-results.xml.
+- New actual registered-probe disconnect starts motion, raises real control IRQ
+  after16steps, requests hold/protection alarm, decelerates below80step endpoint,
+  reports Alarm13 and holds the physical position across four alarm polls until
+  a public reset aborts the probe. Reset-capable existing fixture supplies mandatory
+  coolant/driver-reset callbacks; initial omitted-callback crash was a fixture
+  mistake and has no diagnostic exception. ASan/UBSan0.30s,
+  batch74-probe-disconnect-results.xml. No new known defect or allowance.
+
+- New multi-spindle jog scenario rejects $J=G92 before motion, then jogs80steps
+  using the last selected registered secondary spindle, preserving primary3000/
+  secondary7000 outputs, originalG90/feed250 state and primary output writes.
+  ASan/UBSan0.31s, batch74-multi-jog-results.xml. Initial primary-selection
+  assumption was corrected to the public last-selected-spindle contract.
+- New stopped-PWM dry run applies110% override after16real steps, completes
+ 1600steps with output continuously0, then explicitM3S500 starts at550. No
+  implicit spindle activation. ASan/UBSan0.37s, batch74-dry-spindle-results.xml.
+- New numeric-file WHILE allocation failure injects only sizeof("[1]")=4
+  allocation after a public runtime comment. OutOfMemory leaves #100=0, closes
+  the stream, and a reopened valid loop runs twice to#100=2. No named-subroutine
+  path or exception. ASan/UBSan0.28s, batch74-numeric-while-results.xml. The
+  fixture must run in Idle: check mode intentionally suppresses its arming
+  comment. CMake adds wrapping only for this exact executable.
+
+TODO records a source-proven unreachable parking-restoring true arm: the caller
+changes the handler before entering the only function that sets the flag. The
+real door/recovery workflow remains tested; raw coverage stays unchanged.
+These changes remain grouped locally; no full gate or hosted run for this small
+follow-up. The39908773015 report was read once for this batch and ranked the new jog and
+stopped-spindle paths; continue its remaining supported gaps at the next checkpoint. CORE stays
+clean50f3865; meaningful full supported coverage remains incomplete/goal active.
+
 # Cumulative startup/lathe/storage delivery gate - 2026-10-23
 
 Branch coverage-batch-74 accumulates10 new cases and2 expanded workflows beyond

@@ -16,5 +16,16 @@
       3221225477,
       -1073741819
     ]
+  },
+  {
+    "kind": "fatal_asan",
+    "test": "ngc_flowctrl.continue_to_missing_loop_label_reports_syntax_without_reading_past_stack",
+    "source": "core/ngc_flowctrl.c",
+    "lines": [
+      628
+    ],
+    "function": "ngc_flowctrl",
+    "message_pattern": "global-buffer-overflow",
+    "preceding_ubsan_pattern": "index -1 out of bounds for type 'ngc_stack_entry_t ?\\[20\\]'"
   }
 ]

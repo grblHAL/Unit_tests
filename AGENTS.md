@@ -388,3 +388,12 @@ only for explicit documented expectations; clean them up when the chosen contrac
 is implemented. Keep small case files and validate substantial batches.
 
 The user's request to resume revokes the earlier overnight pause instruction.
+
+
+## Named macro contract - 2026-10-23 maintainer clarification
+
+Named macro files must be scanned for a matching ENDSUB before execution.
+First-pass body statements must not execute. Missing ENDSUB must reject without
+executing the body. Use valid SUB/ENDSUB file fixtures and distinguish prescan
+rewind from executed RETURN/ENDSUB cleanup. Do not propose enabling body execution
+on CALL's first pass or restoring the old implicit-EOF fixture behavior.

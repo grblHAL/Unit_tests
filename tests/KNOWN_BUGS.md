@@ -61,9 +61,9 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Reviewed:** 2026-10-23, clean Terje `50f38659db7b22f4689f3654df2d110d992bcc95`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39905420870)
-measures 17,379/17,714 lines (98.11%) and 12,242/13,800 branches (88.71%).
-The 335 uncovered lines include the following known gaps; this table does not
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39908773015)
+measures 17,386/17,714 lines (98.15%) and 12,250/13,800 branches (88.77%).
+The 328 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable.
 
 | Region | Status and evidence | What makes it testable |
@@ -78,6 +78,7 @@ claim that every remaining line is unavailable.
 | Timezone setting availability | Inaccessible setting. [Registration](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/settings.c#L2494) is commented out. | Expose it upstream and define accepted units/range before public setting tests. |
 | Stale setting getters/availability and closed-loop group arms | Unreachable through current registry: registered getters bypass the old cases, some settings have no availability callback, and the closed-loop group is not registered. See [detailed registry audit](TODO.md#remaining-coverage-unexposed-settings-and-parser-branches). | Update the registry or remove obsolete implementation upstream. Test the public behavior if exposed; never install a fake registry entry to hit a private case. |
 | Plugin-induced N/A setting listing | Public registration rejects a null value pointer before linking the provider. See [registration/listing audit](TODO.md#settings-list-na-fallback-cannot-be-reached-by-a-valid-plugin-descriptor). The actual rejection and corrected retry have an executable test. | Reassess if public descriptor rules change; do not corrupt registered metadata to enter the fallback. |
+| Parking restore restart flag | The only setter of restoring runs after the handler changes to state_await_resumed; door events use its restart path. [Handler audit](TODO.md#parking-restore-restart-flag-and-callback-handler-ordering). | Upstream changes restore/event handler ordering. Real repark and second-resume completion remain tested. |
 | Delayed-task fallback search | Defensive/unreachable under supported single-core IRQ masking: task_get_due returns the selected head with IRQs still masked. See [atomic-selection audit](TODO.md#delayed-task-fallback-after-atomic-selection-68eba79). | Reassess if the selection/concurrency contract changes; retain the passing public interrupt/cancellation regressions. |
 | Post-reader NaN rejection | Expression reader rejects NaN before this guard; explicit valueless-word NaN is excluded by its M-code type condition (gcode.c1470-1471). See [reader audit](TODO.md#parser-post-reader-nan-guard-audit---2026-10-22). | Revisit if reader or valueless-word contract changes; retain raw coverage. |
 | M6 check-mode message cleanup | Nested check-mode branch is enclosed by a guard excluding check mode, with no intervening callback or assignment (gcode.c4231-4238). See [guard audit](TODO.md#m6-check-mode-message-cleanup-guard-audit---2026-10-22). | Revisit after upstream changes the guard or ownership; retain raw coverage. |
@@ -130,36 +131,6 @@ Terje 68eba7906ba60d66c8b55c4adc90cd5e85b5a828. Their named allowances remain
 pending confirmation of whether hidden mount metadata controls navigation or
 only listing. Ordinary file rejection and root-return regressions now pass;
 their allowances were removed. See TODO for the policy distinction.
-
-## Active macro flow error clears scope metadata before closing its file
-
-**Confirmed:** 2026-10-22, clean Terje fab8d1c248990f53f13a444018fbb3ee353061dd.
-A real embedded named macro enters a WHILE block after a comment arms one malloc
-failure. Failure retaining the loop expression returns FlowControlOutOfMemory.
-[ngc_flowctrl.c789-791](https://github.com/terjeio/grblHAL_core/blob/fab8d1c248990f53f13a444018fbb3ee353061dd/ngc_flowctrl.c#L789-L791)
-calls ngc_flowctrl_init, clearing subroutine records and stack frames before the
-redirect's error/EOF callbacks finish. onNamedSubError and onNamedSubEOF require
-that metadata to unwind/close. At actual EOF the named file remains current,
-so the protocol repeatedly consumes EOF instead of returning to the sender.
-
-**Regression:** [WHILE allocation recovery](cases/ngc_flowctrl/macro_while_expression_allocation_failure_returns_to_sender_and_retries.c).
-**Control:** [normal completion and sender reopen](cases/ngc_flowctrl/macro_while_expression_normal_completion_returns_to_sender_and_reopens.c).
-The shared fixture runs actual RAM/embedded file streams through protocol_main_loop;
-a public comment callback arms one allocation failure immediately before WHILE.
-A global EOF observer runs after the CORE named-sub EOF handler and checks that
-its owned file is no longer current. This makes the fault an immediate ordinary
-assertion, rather than relying on a timeout. Sender query/retry, parent#1=99 and
-skipped caller tail assertions remain for validating a fix. With injection off,
-the same fixture completes both calls, counts four loop iterations and restores
-the caller. No synthetic EOF, private queue manipulation or firmware patch.
-
-Raw ASan/UBSan evidence: batch72-while-allocation-raw.xml (failure plus passing
-control). One named WILL_FAIL/known_bug allowance is in known_bugs.cmake; no new
-sanitizer allowance. **Suggested fix for Terje (not applied):** coordinate named
-redirect unwinding with flow reset before discarding the metadata needed by the
-error/EOF handlers, preserving parent error propagation. Keep the regression and
-control, remove its allowance and this entry when clean source passes both plus
-related macro-loader/scope tests under sanitizers.
 
 ## Alarm-rejected block prevents closing settings-upload demarcation
 
@@ -300,33 +271,6 @@ the bounded regression; remove this exact WILL_FAIL/known_bug block and entry
 when upstream passes, then promote the full-protocol proposal if it terminates
 with the intended error. No CORE edits or sanitizer diagnostic allowance.
 
-## Spindle override task-pool fallback leaves stale ramp state
-
-**Confirmed:** 2026-10-22, clean Terje CORE `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
-[Regression](cases/spindle_control/full_task_pool_override_fallback_allows_later_ramped_retarget.c)
-starts a registered PWM spindle at 6000 RPM with a 500 ms ramp, fills the public
-scheduler with future plugin tasks, then requests 150 percent override. The
-unschedulable ramp correctly falls back immediately to 9000 RPM. After releasing
-the plugin tasks, requesting 100 percent should ramp from the actual 9000 RPM
-output back to 6000 RPM. Instead it immediately writes 6000 RPM.
-
-`spindle_ramp_override` sets `ramp->delay` and `ramp->rpm` before scheduling.
-When `task_add_delayed` fails in [spindle_ramp_override](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/spindle_control.c#L623-L639), the ordinary fallback
-updates the hardware but leaves delay nonzero and the ramp RPM at 6000. The next
-request treats that stale value as an active ramp, computes a zero change and
-falls back immediately again. No private state is written by the test; pool
-pressure and release use task_add_delayed/task_delete. Raw evidence:
-`build-asan/batch73-ramp-pressure-raw.xml`, failed assertion at the second request.
-
-**Suggested fix for Terje (not applied):** clear the pending-ramp marker when
-scheduling fails so a later request starts from the current overridden RPM.
-Keep immediate fallback and the registered spindle enabled. Validate task-pool
-pressure, normal retarget, stop cancellation and configured ramp timing.
-
-The exact test has WILL_FAIL/known_bug in [known_bugs.cmake](known_bugs.cmake).
-Keep its correct output/timing assertions; remove that block and this entry when
-upstream passes under sanitizers. No sanitizer exception or CORE edit applies.
-
 ## RAM upload truncation keeps previously buffered commands
 
 **Confirmed:** 2026-10-22, clean Terje CORE `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
@@ -438,41 +382,6 @@ Retain its correct80-step/endpoint assertion and the passing XYZ control; remove
 the block and this entry when upstream passes. No CORE edits or sanitizer allowance.
 Delta source is unchanged in newly fetched50f3865; latest-source runtime recheck pending.
 
-## Named file CALL skips its body and fails to restore caller scope
-
-Confirmed 2026-10-23 on clean CORE `50f38659db7b22f4689f3654df2d110d992bcc95`, after passing on `68eba79`. The new `NGCFlowCtrl_Call` path sets `skip_sub = o_label > NGC_MAX_PARAM_ID` after repositioning the opened named file. Ordinary body statements and RETURN are consequently skipped; EOF can leave the call frame active. The real RAM/embedded protocol fixtures observe missing assignments, missing modal changes, or incorrect error/scope restoration. Existing direct file lifecycle controls also fail to close the named file. No fixture or assertion was weakened.
-
-Exact affected regressions (26 individually scoped WILL_FAIL entries):
-
-- `ngc_flowctrl.embedded_named_loop_reopens_child_file_and_preserves_parent_arguments`
-- `ngc_flowctrl.embedded_named_macro_can_be_reopened_for_independent_calls`
-- `ngc_flowctrl.embedded_named_macro_empty_file_restores_scope_and_resumes_caller`
-- `ngc_flowctrl.embedded_named_macro_eof_restores_real_ram_caller_and_local_argument`
-- `ngc_flowctrl.embedded_named_macro_m71_disarms_automatic_modal_restore`
-- `ngc_flowctrl.embedded_named_macro_m73_restores_modals_on_real_file_eof`
-- `ngc_flowctrl.embedded_named_macro_message_is_visible_before_caller_completion`
-- `ngc_flowctrl.embedded_named_macro_nested_files_restore_each_local_scope`
-- `ngc_flowctrl.embedded_named_macro_nested_m73_restores_each_file_modal_scope`
-- `ngc_flowctrl.embedded_named_macro_nested_parser_error_unwinds_both_file_scopes`
-- `ngc_flowctrl.embedded_named_macro_parser_error_unwinds_and_suppresses_callers_tail`
-- `ngc_flowctrl.embedded_named_macro_return_value_skips_tail_and_restores_caller`
-- `ngc_flowctrl.embedded_named_recursion_can_be_called_again_after_complete_unwind`
-- `ngc_flowctrl.embedded_named_recursion_restores_each_callers_local_argument`
-- `ngc_flowctrl.embedded_named_recursion_returns_to_numeric_subroutine_scope`
-- `ngc_flowctrl.embedded_named_recursive_m73_restores_each_modal_frame`
-- `ngc_flowctrl.embedded_named_recursive_parser_error_unwinds_all_file_scopes`
-- `ngc_flowctrl.embedded_named_recursive_return_preserves_outer_return_value`
-- `ngc_flowctrl.macro_while_expression_normal_completion_returns_to_sender_and_reopens`
-- `ngc_flowctrl.named_macro_end_sub_preserves_subroutine_callback_lifetime`
-- `ngc_flowctrl.named_macro_return_closes_file_and_restores_caller_scope`
-- `ngc_flowctrl.named_macro_return_preserves_subroutine_callback_lifetime`
-- `ngc_long_names.long_named_macro_parser_call_and_return_restore_caller_scope`
-- `ngc_params.named_macro_parser_error_restores_call_level_for_sender`
-- `ngc_params.named_macro_return_restores_parser_visible_call_level`
-- `ngc_params.recursive_named_macro_uses_call_level_to_bound_recursion`
-
-Evidence: `build-asan/batch73-latest-full-results.xml` (full 4,196-case ASan/UBSan gate). Proposed upstream repair: enter a named file body with execution enabled and unwind its own call frame on EOF/RETURN; preserve numeric SUB scanning semantics. Remove each allowance only after its unchanged executable passes, including nested/error/reopen controls. CORE is untouched.
-
 ## Rejected startup-line comment stores through a null message pointer
 
 Confirmed 2026-10-23 on CORE `50f38659db7b22f4689f3654df2d110d992bcc95`. Public `$N0=G91(Keep Case)` with a registered comment callback returning `Status_UserException` reaches `system.c:775`, which deliberately passes NULL for the optional message output. The new rejection cleanup in `gc_normalize_block`, `gcode.c:1154`, unconditionally writes `*message = NULL`, causing a null store instead of returning the plugin error.
@@ -524,3 +433,40 @@ Proposed upstream fix: reject a nonpositive or unrepresentable timer period and
 any computed duty range with no usable span before reporting success. Keep
 valid on/off fallback semantics. Remove the named allowance and retain regression
 once fixed. CORE is unchanged.
+
+## Named file without matching ENDSUB returns success after prescan
+
+Confirmed 2026-10-23 on clean CORE `50f38659db7b22f4689f3654df2d110d992bcc95`.
+Maintainer clarification requires scanning a named file for its matching ENDSUB
+before executing the body, and rejecting the file when that terminator is absent.
+The body is correctly suppressed during this scan. However, `onNamedSubEOF` in
+`ngc_flowctrl.c` closes/unwinds the file and returns the incoming successful status
+without rejecting the missing terminator.
+
+Regression: `ngc_flowctrl.named_file_without_end_sub_rejects_without_executing_body`.
+It retains the required flow-control syntax error, no body side effects and no
+caller continuation after rejection. One exact WILL_FAIL records the missing
+error; no sanitizer allowance is needed. Raw evidence is
+`build-asan/named-prescan-contract-results.xml`.
+
+Proposed upstream fix: diagnose EOF while the named-file prescan still awaits its
+matching ENDSUB, preserving the existing scan-before-execution behavior. Do not
+execute the body on the first pass. Retain the test and remove its allowance
+when rejection is implemented. CORE is unchanged.
+
+## CONTINUE to an absent loop label reads before the flow stack
+
+Confirmed 2026-10-23 on clean CORE `50f38659db7b22f4689f3654df2d110d992bcc95`.
+Inside O10 WHILE, O99 CONTINUE exhausts the stack while searching for its target.
+`ngc_flowctrl.c:628` compares the next label before checking whether stack_pull
+has left a valid stack index, reading stack[-1]. ASan reports a global buffer
+read overflow, preceded by UBSan index -1, instead of a flow-control syntax error.
+
+Regression: `ngc_flowctrl.continue_to_missing_loop_label_reports_syntax_without_reading_past_stack`.
+Correct syntax-error and untouched-body assertions remain. Sanitized builds use
+one exact fatal-diagnostic wrapper, source line/function and preceding UBSan
+matched in `tests/known_sanitizer_diagnostics.json`; no other fault is accepted.
+Raw evidence: `build-asan/batch74-continue-missing-raw.xml`. Assertions after the
+fatal read cannot execute until repaired. Ordinary builds retain the ordinary test.
+Proposed upstream fix: validate stack index before each target-label comparison;
+retain the regression and remove the sanitizer allowance after repair. CORE is unchanged.

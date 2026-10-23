@@ -380,14 +380,16 @@ function(add_core_test name module source)
   endif()
   if(name STREQUAL "ngc_flowctrl.named_macro_argument_allocation_failure_restores_caller_and_retries"
       OR name STREQUAL "ngc_flowctrl.macro_while_expression_allocation_failure_returns_to_sender_and_retries"
-      OR name STREQUAL "ngc_flowctrl.macro_while_expression_normal_completion_returns_to_sender_and_reopens")
+      OR name STREQUAL "ngc_flowctrl.macro_while_expression_normal_completion_returns_to_sender_and_reopens"
+      OR name STREQUAL "ngc_flowctrl.numeric_while_allocation_failure_closes_stream_and_accepts_retry")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc)
   endif()
   if(name STREQUAL "ngc_flowctrl.named_macro_record_allocation_failure_closes_file_and_allows_retry"
     OR name STREQUAL "ngc_flowctrl.numeric_sub_record_allocation_failure_preserves_file_and_allows_retry")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=calloc)
   endif()
-  if(name STREQUAL "system.startup_comment_rejection_preserves_saved_line_and_allows_retry")
+  if(name STREQUAL "system.startup_comment_rejection_preserves_saved_line_and_allows_retry"
+      OR (ENABLE_SANITIZERS AND name STREQUAL "ngc_flowctrl.continue_to_missing_loop_label_reports_syntax_without_reading_past_stack"))
     find_package(Python3 REQUIRED COMPONENTS Interpreter)
     add_test(NAME ${name} COMMAND "${Python3_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/scripts/known_crash.py"
       "${name}" "${CMAKE_SOURCE_DIR}/tests/known_sanitizer_diagnostics.json" "$<TARGET_FILE:test_${name}>")

@@ -5,6 +5,9 @@ int main(void)
     prepare_named_macro();
     CHECK(ngc_param_set(1, 99));
     CHECK(flow_command(named_macro_label, "CALL[12]") == Status_OK);
+    CHECK(flow_skip);
+    CHECK(flow_command(named_macro_label, "ENDSUB") == Status_OK);
+    CHECK(!flow_skip && hal.stream.file != NULL && ngc_call_level() == 1);
     CHECK(flow_command(named_macro_label, "RETURN[7]") == Status_OK);
     CHECK(hal.stream.file == NULL);
     CHECK(hal.stream.read == stream_get_null);
