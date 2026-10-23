@@ -5,7 +5,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
-from ci_report import build_failure, merge_reports, render, source_link, test_findings
+from ci_report import build_failure, coverage_totals, merge_reports, render, source_link, test_findings
 
 SCRIPTS = Path(__file__).resolve().parent
 
@@ -148,6 +148,65 @@ class DiagnosisTests(unittest.TestCase):
             result=subprocess.run([sys.executable,str(SCRIPTS/'ci_report.py'),'--aggregate'],cwd=d,env=env,capture_output=True,text=True)
             self.assertNotEqual(result.returncode,0)
             self.assertIn('no diagnostic artifact',result.stdout)
+
+    def test_coverage_and_job_totals_are_visible_without_expanding_details(self):
+        coverage = {"lines-covered": 17454, "lines-valid": 17740,
+                    "branches-covered": 12490, "branches-valid": 13824, "complete": True}
+        counts = dict(total=4331, clean=4315, known=16, failed=0, skipped=0)
+        text = render([dict(job="coverage", coverage=coverage, counts=counts, findings=[])], {}, {})
+        visible = text.split("<details>", 1)[0]
+        for expected in ["Lines: 98.39%", "Branches: 90.35%", "17,454 / 17,740", "286",
+                         "12,490 / 13,824", "1,334", "4,331", "4,315", "Known defects", "Failed"]:
+            self.assertIn(expected, visible)
+        self.assertIn("do not add their totals together", visible)
+        self.assertNotIn("Partial coverage", text)
+
+    def test_missing_and_partial_coverage_cannot_look_like_complete_results(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "coverage.xml"
+            for data in ["<coverage/>", '<coverage lines-covered="2" lines-valid="1" branches-covered="0" branches-valid="0"/>',
+                         "invalid xml"]:
+                path.write_text(data)
+                self.assertIsNone(coverage_totals(path, True))
+            path.write_text('<coverage lines-covered="1" lines-valid="2" branches-covered="0" branches-valid="0"/>')
+            totals = coverage_totals(path, False)
+            text = render([dict(job="coverage", coverage=totals, findings=[])], {}, {})
+            self.assertIn("Partial coverage", text)
+            self.assertIn("Lines: 50.00%", text)
+            self.assertIn("Branches: N/A", text)
+            missing = render([dict(job="coverage", findings=[])], {}, {})
+            self.assertIn("Coverage unavailable", missing)
+            self.assertNotIn("0.00%", missing)
+
+    def test_collected_coverage_survives_artifact_aggregation_and_step_summary(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "build").mkdir()
+            (root / "build/results.xml").write_text('<testsuite><testcase name="normal.job"/></testsuite>')
+            (root / "coverage.xml").write_text('<coverage lines-covered="9" lines-valid="10" branches-covered="3" branches-valid="4"><packages/></coverage>')
+            (root / "source-lock.json").write_text(json.dumps(dict(sources=[])))
+            stages = [dict(stage=name, exit_code=0, log="unused") for name in
+                      ("fetch", "tooling", "configure", "build", "test", "classify", "coverage")]
+            (root / "report-coverage.json").write_text(json.dumps(dict(job="coverage", stages=stages, findings=[])))
+            env = os.environ.copy()
+            env.pop("GITHUB_STEP_SUMMARY", None)
+            env.pop("GITHUB_ACTIONS", None)
+            collected = subprocess.run([sys.executable, str(SCRIPTS / "ci_report.py"), "--job", "coverage"],
+                                       cwd=root, env=env, capture_output=True, text=True)
+            self.assertEqual(collected.returncode, 0, collected.stderr)
+            report = json.loads((root / "report-coverage.json").read_text())
+            self.assertTrue(report["coverage"]["complete"])
+            (root / "reports").mkdir()
+            (root / "reports/report-coverage.json").write_text(json.dumps(report))
+            env["NEEDS_JSON"] = json.dumps(dict(coverage=dict(result="success")))
+            env["GITHUB_STEP_SUMMARY"] = str(root / "summary.md")
+            aggregate = subprocess.run([sys.executable, str(SCRIPTS / "ci_report.py"), "--aggregate"],
+                                       cwd=root, env=env, capture_output=True, text=True)
+            self.assertEqual(aggregate.returncode, 0, aggregate.stderr)
+            summary = (root / "summary.md").read_text(encoding="utf-8")
+            self.assertIn("Lines: 90.00%", summary)
+            self.assertIn("Branches: 75.00%", summary)
+            self.assertIn("| coverage | 1 | 1 | 0 | 0 | 0 |", summary)
 
 if __name__=='__main__':
     unittest.main()

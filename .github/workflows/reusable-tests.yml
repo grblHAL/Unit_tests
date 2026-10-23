@@ -202,7 +202,7 @@ jobs:
             build/Testing/Temporary/LastTest.log
             build/known-crash-*.log
   diagnosis:
-    name: CI diagnosis
+    name: Results summary
     if: always()
     needs: [source, test, coverage]
     runs-on: ubuntu-latest
@@ -226,7 +226,7 @@ jobs:
         run: |
           echo "## Why this run failed" >> "$GITHUB_STEP_SUMMARY"
           echo "The test harness could not be checked out. Verify harness repository/ref and access; tests and diagnostic collection could not run." >> "$GITHUB_STEP_SUMMARY"
-      - name: Why this run failed
+      - name: Coverage and test results
         if: always() && steps.report_checkout.outcome == 'success'
         env:
           NEEDS_JSON: ${{ toJSON(needs) }}
