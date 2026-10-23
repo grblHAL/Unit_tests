@@ -61,8 +61,8 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Reviewed:** 2026-10-23, clean Terje `50f38659db7b22f4689f3654df2d110d992bcc95`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39922349935)
-measures 17,399/17,714 lines (98.22%) and 12,290/13,800 branches (89.06%).
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39927192936)
+measures 17,399/17,714 lines (98.22%) and 12,299/13,800 branches (89.12%).
 The 315 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable.
 
@@ -124,13 +124,34 @@ retain the correct assertion and control, then delete this entry once fixed.
 when no backend callback exists; prefix only a backend-local path.
 
 
-## Hidden embedded mount directory policy remains unresolved
+## Hidden embedded mounts must reject CWD navigation
 
-Two existing hidden-only mount cases still expect chdir rejection on clean
-Terje 68eba7906ba60d66c8b55c4adc90cd5e85b5a828. Their named allowances remain
-pending confirmation of whether hidden mount metadata controls navigation or
-only listing. Ordinary file rejection and root-return regressions now pass;
-their allowances were removed. See TODO for the policy distinction.
+**Maintainer contract clarified 2026-10-23:** hidden mounts and files are for
+components that registered them; hidden files are accessed by full path only.
+Terje plans to block CWD into hidden mounts. This resolves the earlier navigation
+policy question; it does not introduce a caller-identity authorization API.
+
+The existing [hidden-only directory](cases/fs_embedded/hidden_only_directory_has_no_visible_entries.c)
+and [visible registration](cases/fs_embedded/visible_registration_reveals_previously_hidden_mount.c)
+regressions retain their two narrow WILL_FAIL allowances: hidden-only CWD must
+reject, while adding a visible asset makes ordinary navigation available.
+The [explicit-path hidden read](cases/fs_embedded/hidden_file_remains_readable_by_explicit_path.c)
+remains a passing control. CORE50f3865 still permits CWD into the hidden mount.
+Remove each allowance when its unchanged rejection assertion passes; preserve
+full-path reads and hidden-entry listing suppression. No CORE change applied.
+
+**Full-path-only file reproduction,2026-10-23, CORE50f3865:**
+[Hidden file in a visible mount](cases/fs_embedded/hidden_file_in_visible_mount_requires_full_path_after_chdir.c)
+registers one visible and one hidden asset, changes into the legitimately visible
+mount, confirms a relative visible-file read and full-path hidden-file read, then
+opens the hidden file by relative name. That last open wrongly succeeds under
+the clarified full-path-only contract. One exact WILL_FAIL retains the rejection
+assertion; no sanitizer allowance. Raw evidence:
+build-asan/batch74-hidden-path-raw-results.xml. Merely blocking CWD into hidden
+mounts will not address this mixed visible/hidden mount case. Preserve ordinary
+relative visible access and explicit hidden access when fixing it; remove the
+allowance once the unchanged test passes. No caller-identity API is assumed.
+
 
 ## Alarm-rejected block prevents closing settings-upload demarcation
 

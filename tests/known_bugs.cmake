@@ -130,3 +130,8 @@ if(TEST motion_control.counterclockwise_arc_rejects_endpoint_below_y_limit_befor
   set_tests_properties(motion_control.counterclockwise_arc_rejects_endpoint_below_y_limit_before_emitting_steps
     PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Maintainer full-path-only hidden-file contract,2026-10-23, CORE50f3865.
+if(TEST fs_embedded.hidden_file_in_visible_mount_requires_full_path_after_chdir)
+  set_tests_properties(fs_embedded.hidden_file_in_visible_mount_requires_full_path_after_chdir PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

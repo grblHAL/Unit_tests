@@ -564,16 +564,23 @@ motion as a correctly tapered thread to improve a coverage percentage.
 
 ## Settings coverage: obsolete private dispatch cases
 
-**Reviewed 2026-10-19, Terje 16c7dff3aa9614322cfc2b47a2109cc9196ccca4.**
+**Reviewed 2026-10-23, Terje 50f38659db7b22f4689f3654df2d110d992bcc95.**
 `Setting_HomingDirMask` and `Setting_SteppersEnergize` register `get_axis_mask`,
 so their older cases inside private `get_int` are not reachable through the
 registered settings API. Their public setting/query behavior already has tests.
-Likewise the safety-door delay settings have no availability callback, automatic
-and MPG report intervals register no availability callback, and the timezone
-setting registration is commented out. Those corresponding cases inside private
-`is_setting_available` cannot be reached through these current registrations.
-Do not replace registry entries or invoke static handlers to cover these obsolete
-paths. Leave them visible in coverage; revisit if core registrations change.
+DoorSpindleOnDelay, DoorCoolantOnDelay, AutoReportInterval and MPG report
+interval descriptors register no availability callback; TimeZoneOffset is
+commented out. Their private `is_setting_available` cases remain unrouted.
+Do not replace registry entries or invoke static handlers to cover these paths.
+Keep them visible in the raw denominator; revisit if registrations change.
+
+Existing public motor-hold write/read/persistence tests remain; malformed integer
+rejection also verifies driver and stored-state preservation followed by a
+successful retry. Description allocation recovery uses the registered plugin query.
+DoorOptions does register its availability callback: public-store controls cover
+parking with and without a board-provided door input, including reload. A
+registered at-speed VFD reaches SpindleAtSpeedTolerance availability without a
+separate encoder. These supported paths do not make the unrouted cases reachable.
 
 ## Bare G38 command: confirm whether modal-only selection is intentional
 
@@ -704,22 +711,6 @@ Keep these defensive/unemitted paths in raw reporting; revisit if public dispatc
 changes. This is reachability evidence, not a request to remove source lines.
 
 
-## Settings dispatch cases not wired by public metadata
-
-**Reviewed:** 2026-10-22, clean Terje fab8d1c. The saved partial map lists
-settings.c2181-2187 and2198-2204 in is_setting_available. DoorSpindleOnDelay,
-DoorCoolantOnDelay and AutoReportInterval registrations pass NULL for
-is_available, so ordinary queries do not call those switch cases. TimeZoneOffset
-registration is commented out. The get_int SteppersEnergize case at1789-1791
-is also unused: the registered setting routes reads to get_axis_mask instead.
-
-Do not call private setters/getters with unrelated IDs or replace metadata just
-to enter these cases. Keep them in the raw source denominator and revisit if
-registrations change. Existing public motor-hold write/read/persistence tests
-remain; malformed integer rejection now also verifies driver and stored-state
-preservation followed by a successful retry. Description allocation recovery
-is tested through the ordinary registered plugin query.
-
 
 ## Fault-axis inline fallback is guarded at the CORE caller
 
@@ -746,10 +737,19 @@ the old direct-default-backend child-stat test: its callback-free child was
 never a usable provider for public stat, which requires fstat. Do not call a
 missing child callback just to cover the removed fallback. No CORE edits.
 
-Hidden embedded mount navigation is a separate maintainer contract question:
-68eba79 allows chdir while all embedded entries are hidden. Existing directory
-listing assertions pass; two old rejection assertions remain named expected
-failures pending confirmation whether hidden means invisible or inaccessible.
+**Maintainer clarification 2026-10-23:** hidden mounts/files belong to the
+components that added them; hidden files require full paths. Terje plans to
+block CWD into hidden mounts. The two existing hidden-CWD rejection allowances
+therefore retain their intended assertions; the policy is no longer unresolved.
+Full-path hidden reads and listing suppression remain required passing controls.
+See KNOWN_BUGS for the existing CWD regressions.
+
+Mount registration should return true on success. At pinned CORE50f3865,
+`vfs_mount()` already returns a success boolean and existing cases assert it;
+`fs_embedded_mount()` is declared/implemented void. Track its success-return API
+as maintainer-planned work; do not fabricate a return assertion against a void
+API or change CORE. Once exposed, cover initial and appended registrations,
+including allocation failure, through that public return value.
 
 
 ## Delayed-task fallback after atomic selection (68eba79)
@@ -1075,13 +1075,17 @@ that exact combination and confirm the setter's intended any/all semantics.
 Do not present this source-level discrepancy as a confirmed controller defect.
 Registered single-capability, claim-ownership and singleton-bank controls remain.
 
-## Unrouted door-delay availability guards - 2026-10-23
+## Four-axis delta homing precondition - 2026-10-23
 
-On CORE50f3865, settings.c has is_setting_available cases for DoorSpindleOnDelay
-and DoorCoolantOnDelay, but their setting descriptors register no availability
-callback. Public setting lookups/stores cannot dispatch those switch cases.
-Do not replace a descriptor's callback or call the private function to cover them.
-DoorOptions does register the callback and has supported board/parking states;
-new public-store controls cover those transitions. A registered at-speed VFD
-likewise reaches the real SpindleAtSpeedTolerance availability path without a
-separate encoder. Keep unrouted branches in the raw denominator.
+The public auxiliary jog rejection candidate cannot yet establish its homed
+precondition with the existing full-boot delta fixture. On CORE50f3865, actual
+`$H` invokes the completion observer with cycle mask15, success0 and homed0;
+the jog is not reached. Evidence: build-asan/batch74-delta-aux-diagnostic-results.xml.
+The board advertises all four home switches and cycle bits. Delta's homing
+transform writes only XYZ targets and its machine-position callback restores
+only XYZ. Establish the supported auxiliary homing configuration and switch
+model before classifying a firmware defect or requiring post-home A soft limits.
+The correct jog/no-motion candidate is retained unregistered in
+[proposals](proposals/delta_auxiliary_jog_after_homing_requires_supported_homing_fixture.c).
+Do not set sys.homed manually to bypass this precondition. Existing ordinary
+four-axis delta motion regression and XYZ homing controls remain registered.

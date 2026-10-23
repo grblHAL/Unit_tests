@@ -1,3 +1,99 @@
+# Hidden-file contract clarification and cumulative gate - 2026-10-23
+
+Terje clarified hidden entries are accessed through full paths, plans to block
+CWD into hidden mounts, and wants successful embedded registration to report true.
+Updated KNOWN_BUGS/TODO: hidden-CWD policy is resolved; existing rejection tests
+stay intact. vfs_mount already returns boolean; fs_embedded_mount remains void,
+so its future return API is tracked without editing CORE or inventing an assertion.
+
+New mixed visible/hidden mount regression confirms ordinary relative visible
+access and full-path hidden payload, then reproduces incorrect relative hidden
+access. One exact WILL_FAIL/known_bug retains its final rejection assertion;
+raw batch74-hidden-path-raw-results.xml. No sanitizer diagnostic waiver.
+
+The preceding7-case cross-module batch passes the full4,259-case ASan/UBSan gate
+162.66s and strict summary; evidence batch74-motion-probe-delivery-{results.xml,
+tests.log,summary.log}. The new hidden-path case is subsequent and receives a
+focused follow-up, rather than repeating that full gate. Total registration4,260.
+No CORE edits or merges. Coverage delta for this local batch remains unmeasured.
+
+# Nondefault probe board lifecycle - 2026-10-23
+
+A new public registration scenario starts with a toolsetter and secondary probe,
+without a default probe. Missing-default capability/trigger queries and selection
+reject safely while preserving the selected toolsetter. Selecting the secondary
+then changing its real input updates selected and aggregate states independently;
+return selection restores the toolsetter. No private probe state or slot mutation.
+Fresh ASan/UBSan1/1pass0.26s; evidence batch74-probe-order-results.xml and successful
+build log. Targets empty-slot default-ID comparisons in probe.c103/125/138 and
+nondefault registration/selection order. Coverage gain remains unmeasured until
+the cumulative checkpoint. Seven new local cases total4,259 across tool-change,
+arc fallback, rotary planner and probe lifecycle workflows. No new allowances.
+
+# Sparse rotary workflows and fresh arc verification - 2026-10-23
+
+Two new eight-axis workflows use public rotary settings and actual motor output:
+a Y3/Z4 cut with A/V rotation derives duration from5mm linear travel at120mm/min
+while X stays still; a metric rotary-only move retains120degrees/min even with
+inch-conversion reversion enabled. Planner timing and exact pulses/endpoints pass.
+
+Fresh build also exposed an error in the strengthened arc assertions: steps is
+steps_t with member value[], not an array. The earlier0.31s arc run used prior
+executables because that shell did not stop after build failure; it did not prove
+the added planner assertions. Corrected both assertions to steps.value[], required
+successful build before CTest, and ran all4changed rotary/arc cases:4/4pass0.50s
+under ASan/UBSan, evidence batch74-sparse-rotary-arc-results.xml and matching build
+log. This fresh result supersedes the earlier strengthened-assertion claim.
+No CORE edits or new allowances. Six local cases now total4,258; continue the
+substantial batch before cumulative delivery validation.
+
+# Arc chord fallback workflows - 2026-10-23
+
+Two new parser/stepper cases cover arcs whose diameter equals the configured
+0.02mm tolerance and short5degree/radius1 arcs whose intermediate segment count
+rounds to zero. Each checks the first planner endpoint separately, then executes
+an ordinary following cut and verifies exact physical position and pulse counts
+without reversal/overshoot. Both pass ASan/UBSan0.31s; evidence
+build-asan/batch74-small-arc-results.xml. No new exceptions or CORE edits.
+These target the remaining motion_control.c281/284 fallback outcomes in the
+source-locked report; their measured coverage delta awaits cumulative reporting.
+Four new local cases now total4,256 with the two G30 controls. Keep accumulating
+cross-module work before the next full gate/push/hosted checkpoint.
+
+# Source-locked hosted coverage measurement - 2026-10-23
+
+Run39927192936 at harness6b29d886e3320aae90f5286e8b89bf11cc559e49 and
+CORE50f38659db7b22f4689f3654df2d110d992bcc95 reports17,399/17,714 lines98.22%
+and12,299/13,800 outcomes89.12%. Against run39922349935 this is0new/lost lines
+and9additional branch outcomes. Both artifacts carry matching source locks;
+all7coverage stages exit0;4,252cases include4,230clean/22known/0failed/skipped.
+Evidence build-asan/hosted39927192936, comparison39922349935.json. README badges
+and raw-gap snapshot now reference this measured run.315raw lines remain;
+the unpushed G30 controls are not included in this measurement.
+
+# Hosted checkpoint and auxiliary homing audit - 2026-10-23
+
+Hosted run39927192936 completed successfully at exact harness6b29d88. Coverage
+artifacts have not yet been inspected; do not replace the last measured98.22%/
+89.06% snapshot with a guessed gain. No new hosted dispatch.
+
+An actual four-axis delta homing/jog candidate fails before the jog: home callback
+reports cycle15/success0/homed0. Retained unregistered pending a supported homing
+fixture/contract; no fabricated homed state or speculative WILL_FAIL. Diagnostic
+evidence and source boundary are recorded in TODO. The two passing aligned G30
+cases remain local for the next substantial cumulative batch.
+
+# Aligned G30 manual tool-change controls - 2026-10-23
+
+Two new full-boot cases exercise G30 with X already aligned and with both XY
+already aligned. Actual homing, tool acknowledgement and touch-off complete;
+pulse observations prove aligned horizontal axes remain still, the G30 pose is
+visited and the original handler and sender state are restored. Both new cases
+and the existing G30 control pass ASan/UBSan:3/3 in0.32s, evidence
+build-asan/batch74-g30-aligned-results.xml. Cumulative registration is4,254;
+these additions await the next substantial full gate. No new exceptions or CORE
+edits. Consolidated duplicate settings reachability notes against current CORE.
+
 # Cumulative input/macro/settings delivery - 2026-10-23
 
 Seven new cases plus three strengthened existing macro scenarios beyond e29e27e
