@@ -1,3 +1,22 @@
+# Cumulative operator/arc delivery gate - 2026-10-23
+
+Full4,245-case ASan/UBSan plus strict summary passes64.33s on the operator/arc
+batch:4,221clean/24documented regressions/0unexpected/0skipped. Raw and classified
+arc endpoint evidence remains linked below; both correct regressions reproduce.
+Evidence build-asan/batch74-operator-arc-delivery-{results.xml,tests.log,summary.log}.
+The shared sampled-geometry fixture retains all prior full-circle combinations
+and adds valid-endpoint short arcs. CORE unchanged50f3865. No script changes or
+new sanitizer diagnostic allowances; reporting helpers were not redundantly rerun.
+
+Previous hosted73c12ba run39919635378 is fully successful across all five jobs.
+Both source locks agree, all seven coverage stages exit0; classifier4,239total/
+4,219clean/20known/0failed/0skipped. Measured17,399/17,714 lines98.22% and
+12,282/13,800 branches89.00%, +2 lines/+5 outcomes over39914617515, no losses.
+Gained ioports.c1557 and spindle_control.c1014. Comparison saved under
+build-asan/hosted39919635378/comparison39914617515.json.315 raw uncovered lines.
+README/gap snapshot refreshed to that verified head; newer arc/hold work is not
+included in those percentages. Deliver the cumulative group, then keep authoring.
+
 # Operator hold policy and arc-envelope endpoint batch - 2026-10-23
 
 LOCAL beyond pushed73c12ba: six new cases plus seven expanded existing cases,

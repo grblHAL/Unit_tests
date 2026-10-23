@@ -51,5 +51,4 @@ static void check_arc_quadrant(unsigned quadrant, plane_t plane)
                         fprintf(stderr, "start quadrant=%u end quadrant=%u endpoint=%u direction=%d wall=%u expected=%d actual=%d\n", quadrant+1, end_quadrant+1, endpoint, direction, wall, expected, actual);
                     CHECK(actual == expected);
                 }
-    }
-
+}
