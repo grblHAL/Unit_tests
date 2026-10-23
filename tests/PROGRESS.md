@@ -1,3 +1,98 @@
+# Stream/I/O/macro/driver cumulative delivery validated - 2026-10-23
+
+Four new cases and two strengthened existing scenarios pass the full4,272-case
+ASan/UBSan gate153.75s and strict summary:4,245clean/27known/0unexpected/0skipped.
+Evidence batch74-stream-io-macro-delivery-{results.xml,tests.log,summary.log}.
+Batch covers null-console network reconnect, analog PWM assignment/retry, G65
+bitfield persistence/error recovery, $SDS warning/fault/recovery, optional legacy
+probe parameters and precise distance-mode motor nudges. No new allowances,
+source exclusions, shared fixture changes or CORE edits. Fresh upstream fetch
+still matches pinned50f3865; previous hosted39938331513 completed/success.
+Measured98.24%line/89.38%branch remains b54a339 until the next exact report.
+One cumulative gate only; no unchanged reporting-helper reruns or merges.
+
+# Public primary-motor diagnostic query and recovery - 2026-10-23
+
+New $SDS workflow uses a registered primary-only driver status callback: warningX
+prints exact MOTORWARNING:X without a second-bank comma, then faultZ prints only
+MOTORFAULT:Z, then the cleared driver status emits neither stale record. All3reads
+use reset=false; query does not request a hardware reset or change idle position/
+queue/alarm state. Targets report.c2910/2913/2921/2924's ordinary clear/single-bank
+outcomes. Fresh ASan/UBSan1/1pass0.29s; batch74-motor-diagnostic-results.xml. No
+new allowance, forced secondary capability or CORE edit. Current batch combines
+four new cases and two extended workflows across streams, I/O, macros, driver
+queries and auxiliary motor precision moves; next full gate is cumulative.
+
+# Legacy probe state without optional per-probe helper - 2026-10-23
+
+Extended the existing unavailable-capability named-parameter test, retaining all
+original missing-probe assertions. A legacy driver advertises a primary probe
+and supplies get_state while leaving the documented optional is_triggered handler
+absent. Active-probe identity remains available and contact input toggles through
+the driver, while _probe_state correctly reports unavailable(-1) rather than
+inventing false data or calling NULL. Secondary/toolsetter remain unavailable.
+Targets ngc_params.c737's capability-true/helper-absent condition. Fresh ASan/UBSan
+1/1pass0.38s; batch74-legacy-probe-parameter-results.xml. No new registration,
+allowance, removed required callback or CORE edit. Keep with current cross-module
+batch before cumulative validation; no additional hosted dispatch.
+
+# Built-in setting macro bitfield persistence and retry - 2026-10-23
+
+New public G65P1 workflow writes status-report bitfield3, returns3, rejects
+undefined bit32768, and preserves both runtime/saved mask plus notification count.
+A query still returns3; valid retry to1 updates runtime, return value and saved
+storage once. S remains a macro argument without spindle RPM side effects.
+Targets ngc_params.c1207 list classification and1215 rejected-store outcome.
+Fresh ASan/UBSan1/1pass0.31s; batch74-macro-bitfield-results.xml. No new allowance,
+private callback mutation or CORE edit. Keep with null-console/analog assignment/
+precision-nudge work before the next cumulative gate and hosted checkpoint.
+
+# Measured driver/PID/JSON checkpoint - 2026-10-23
+
+Coverage job39938331513 at exact harnessb54a339 / CORE50f3865 passes all7stages
+and matching source/filter locks.4,268cases:4,243clean/25known/0failed/skipped.
+Measured17,402/17,714lines98.24%,12,335/13,800outcomes89.38%. Versus39936164446:
+0new/lost lines,16additional branch outcomes.312raw lines/1,465outcomes remain.
+Evidence hosted39938331513/comparison39936164446.json. Badges and exact inventory
+updated. Source/coverage passed; GCC and Clang still in_progress at inspection;
+not an overall hosted-success claim. Local null-console/analog-function/nudge
+changes remain outside this measured head. No new dispatch or source exclusion.
+
+# Analog PWM driver-function assignment and retry - 2026-10-23
+
+New registered analog-bank workflow advertises PWM capability, rejects the first
+driver function-assignment request without changing pin function/free count, then
+accepts Output_SpindlePWM. The dedicated pin is no longer auxiliary-claimable;
+remaining output count is3, input count stays4, input sampling and an unrelated
+analog output still reach their original pins. Targets ioports.c435's valid
+analog-port switch arm, not an invalid enum. Fresh ASan/UBSan1/1pass0.29s;
+batch74-analog-function-results.xml. No new allowance or CORE edit. Keep with
+null-console handover and precision-nudge work for the next cumulative batch.
+
+# Network-only controller null-console handover - 2026-10-23
+
+New ordinary stream lifecycle starts with the exported stream_null_init fallback
+as base, connects a Telnet client, delivers its output, disconnects back to the
+null console, and reconnects/delivers again. Disconnected client receives no
+broadcast; fallback reads SERIAL_NO_DATA and base ownership remains unchanged.
+Uses the actual StreamType_Null provider, no out-of-enum stream or private state.
+Targets stream.c412-413's currently uncovered default arm through a valid fallback.
+Fresh build and ASan/UBSan1/1pass0.28s; batch74-null-console-results.xml. Initial
+test compile assumed disconnect returned bool; corrected to its actual void API
+and observable stream/callback/output assertions before execution. No allowance
+or CORE edit. Keep with the local precision-nudge extension for the next batch.
+
+# Distance-mode precision nudges - 2026-10-23
+
+Extended the existing millimetre-rounding case after its original1.01mm/81step
+assertions. Public forward and reverse distances of1/steps_per_mm each emit one
+step through normal motor service, returning to position81 with83total pulses.
+No immediate output occurs while queuing either distance-mode nudge. Targets
+stepper2.c354's one-computed-step/non-Stepper2_Steps condition without private
+profile access. Fresh ASan/UBSan1/1pass0.33s; batch74-mm-nudge-results.xml. No
+new registration, allowance or CORE edit. Accumulate independent work before
+another full/hosted checkpoint; the previous delivery remains b54a339.
+
 # Driver/PID/JSON cumulative delivery validated - 2026-10-23
 
 Four new cases and two extended scenarios pass the full4,268-case ASan/UBSan
