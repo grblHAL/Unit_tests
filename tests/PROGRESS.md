@@ -1,3 +1,129 @@
+# Parameter/storage/realtime-reset cumulative gate passed - 2026-10-24
+
+One new safety-door coolant-delay RESET case and seven strengthened existing
+I/O/regex/numeric/NGC/rotation cases cover unlabelled-port lookup, literal
+setting-prefix matching, startup separator compaction, absent-axis positions,
+G28/G30 independent CRC recovery and ordinary/rotated G55 recovery. Public
+workflows and existing configurations reused; no CORE/shared fixture edit,
+new allowance or source exclusion. Full ASan/UBSan4365 passes58.92s; strict
+summary4349clean/16known/0recovering diagnostics/0failed/skipped. Evidence
+batch74-parameter-reset-delivery-{build.log,tests.log,results.xml,summary.log}
+in build-asan. Unchanged Python helpers not rerun. CORE remains clean2e165a1.
+
+Previous exactbc84ad2 run40032608243 now all five jobs terminalsuccess; locks
+and exactly seven coverage stages0 verified. Refreshed badges/current inventory
+to17479/17756lines98.44%,12567/13834outcomes90.84%,277raw lines/1267outcomes.
+This new parameter/reset batch is outside that measurement until its hosted
+report. Full supported objective stays active; no merge or overlapping PR.
+
+# G55 parameter CRC recovery in ordinary and rotation builds - 2026-10-24
+
+Extended two existing cases. Ordinary inactive G55 query repairs bad CRC to
+zero, validates the repaired record, preserves active G54 and accepts a later
+rewrite. Rotation build reads both stored X and rotation, returns0 for absent
+A, repairs bad G55 CRC when queried through rotation5250, validates zero data
+and reads restored rotation after rewrite. Original assertions retained. Both
+ASan/UBSan pass0.07s each. Separate work-system-recovery-proof74 profiles
+show all outcomes at ngc_params325 ordinary,322/323 rotation; old report had
+3/4,2/4,1/2 respectively: four missing supported outcomes now exercised.
+No private maps or enum forcing, CORE/helper edit, extra cases or allowances.
+Keep with I/O/regex/reset/numeric/numbered-home successor batch; no repeated
+full gate or new hosted run for this small extension.
+
+# Numbered G28/G30 queries repair corrupt records independently - 2026-10-24
+
+Extended numbered_home_parameters_read_distinct_g28_and_g30_records. Preserve
+normal saved/home/absent-axis controls, corrupt one stored record byte via NVS
+driver API, query its public numbered parameter and require0 recovery. A fresh
+coordinate read validates the repaired CRC/zero data; the other saved home
+record is unchanged. Public write restores the original values and subsequent
+query succeeds. Repeat independently for G30. Existing storage recovery policy
+is exercised, not a new invented failure rule. ASan/UBSan passes0.07s; fresh
+home-parameter-recovery-proof74 covers all four outcomes at286 and298 versus
+previous3/4 each: two newly exercised read-error outcomes. No CORE/helper
+edit, extra case, allowance or full/hosted run. Existing hosted40032608243
+source/coverage/GCC succeeded; Clang live at last single refresh. Keep local
+parameter/I/O/regex/reset/numeric changes as one successor batch.
+
+# Portable numbered work-position reads for absent axes - 2026-10-24
+
+Extended existing numbered_work_position_combines_offsets_and_tracks_modal_units.
+Keep ordinary X work/tool/local offset and inch conversion assertions; read
+public numbered A5423 and W5428 on the actual three-axis configuration before
+and after G20. Both supported numbered IDs return zero without indexing an
+absent physical axis. No invented named registry entries, axis-map changes or
+private enum calls. ASan/UBSan passes0.07s. Fresh absent-axis-position-proof74
+shows both ngc_params200 outcomes (previous1/2): numbered work_position calls
+_relative_pos for all nine exposed slots, unlike conditionally registered named
+absolute-position providers. No CORE/helper edit, allowance or full/hosted run;
+keep with local I/O/regex/reset/numeric successor batch.
+
+# Exactbc84ad2 coverage job and startup separator compaction - 2026-10-24
+
+Existing run40032608243 coverage job passed with exactbc84ad2a29792c6dcc7349d4e5b6dd3c5a89f4c7/
+CORE2e165a1 locks/filter verified in both artifacts; exactly seven stages0.
+4364hosted:4349clean/15known/0failed/skipped.17479/17756lines98.44%,
+12567/13834outcomes90.84%, net+16outcomes/identical denominators and no
+lost covered lines versus40029656398. Overall run still in_progress; retain
+fully green5f3e17f badges until all jobs finish. No duplicate run.
+
+Extended existing nuts_bolts.uppercase_compaction with a space-separated
+startup command list using literal | separator. Compaction returns same buffer,
+uppercases G-code words and retains separator exactly: G1X2|G1X3. Public
+utility assertion, not a claim of a new native strcaps caller. ASan/UBSan
+passes0.10s. Isolated startup-compaction-proof74 covers all four conditional
+outcomes at442 versus previous3/4. No CORE/helper edit or exception; local
+successor I/O/regex/reset/compaction work remains outside hostedbc84ad2.
+
+# Realtime RESET during safety-door coolant restart delay - 2026-10-24
+
+Added state_machine.reset_during_coolant_restore_delay_prevents_plunge_and_cut_resume.
+Start real queued X cut with M8, park after door event, close door and request
+cycle start. Driver delay service delivers public RESET during100ms coolant
+restore. Protocol sets abort and notifies driver once; X stays at its interrupted
+position and Z stays at restore waypoint-640, never plunging to original-800.
+No private state forcing or spindle descriptor mutation. ASan/UBSan passes0.06s;
+isolated coolant-restore-reset-proof74 records the protocol-false short circuit
+in delay_sec at nuts_bolts333, absent from previous3/4 outcome coverage.
+
+Initial fixture lacked mandatory driver_reset callback; repaired locally. Reset
+flag is consumed normally, so assert abort/driver notification rather than flag
+persistence. This fixture stops at realtime abort and does not execute grbl_enter
+warm initialization; it cannot assert coolant shutdown during that later phase.
+Removed that premature output assumption, not a firmware regression assertion.
+No CORE/shared fixture changes, known-bug allowance or full/hosted run. Keep
+with successor I/O/regex work for a substantial cumulative batch.
+
+# Literal setting-prefix dollar in public regex - 2026-10-24
+
+Extended existing regex.literal_metacharacters with ^$110=.*$ matching the
+actual setting-record form $110=500.000. It rejects different setting111 and
+a prefixed non-record line. Dollar inside the pattern is literal; final dollar
+remains the end anchor. Original literal plus/question-mark controls retained.
+ASan/UBSan passes0.08s; isolated settings-regex-proof74 covers all four
+conditional outcomes at regex34 versus previous3/4: last measured regex
+outcome now exercised. This is the public utility contract, not a claim that
+a native CORE parser currently uses this regex filter. No CORE/helper edit,
+new case, allowance, full gate or hosted dispatch. Keep with successor I/O
+lookup work outside pendingbc84ad2/40032608243.
+
+# Public unlabelled output lookup covers optional description - 2026-10-24
+
+Extended existing ioports.find_output_by_description using its valid modern
+driver. Keep description callback and original assertions. Public
+ioport_set_description clears output1's optional xbar description with NULL;
+public get_info confirms absent label. Reverse description searches skip that
+port, still find output0's label and reject missing text; numeric lookup still
+finds output1 and both outputs remain unclaimed. No direct descriptor mutation,
+legacy claiming capability invention or absent modern setter callback. Previous
+withdrawn legacy exploration remains withdrawn. ASan/UBSan passes0.06s.
+Fresh unlabelled-port-proof74 covers all four Clang conditional outcomes at227;
+exact hosted GCC report previously had5/6 total (including its additional call
+outcomes). The missing NULL-description short circuit is now exercised; do not
+compare raw GCC/Clang branch identities. Initial proof parser assumed every
+following row was a branch; fixed to parse branch rows only. No CORE/helper
+edit, allowance or full/hosted run. Successor work outside pendingbc84ad2.
+
 # Search/report/rotary cumulative delivery gate passed - 2026-10-24
 
 Two new cases and four strengthened existing cases cover literal punctuation

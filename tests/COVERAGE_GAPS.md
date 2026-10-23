@@ -1,20 +1,19 @@
 # Remaining raw CORE coverage
 
-Verified report: [run40029656398](https://github.com/petervanderwalt/Unit_tests/actions/runs/40029656398),
-harness `5f3e17fd7fc5a4722e9a9ff1a05d682d88dc5e37`, CORE `2e165a1ac4c74be8e68971972c6577775d856b05`,
-filter `core/.*\.[ch]$`. Both artifact locks match and exactly seven coverage
-stages exit0. All five source/GCC/Clang/coverage/Results summary jobs
-completed successfully on this exact commit; success badges now use this run.
+Verified report: [run40032608243](https://github.com/petervanderwalt/Unit_tests/actions/runs/40032608243),
+harness `bc84ad2a29792c6dcc7349d4e5b6dd3c5a89f4c7`, CORE `2e165a1ac4c74be8e68971972c6577775d856b05`,
+filter `core/.*\.[ch]$`. Both artifact locks match, exactly seven coverage
+stages exit0, and all five source/GCC/Clang/coverage/Results summary jobs passed.
 
-17,479/17,756 lines (**98.44%**) and12,551/13,834 branch outcomes (**90.73%**)
-were covered. This table accounts for277 raw missing lines and1,283 missing
-outcomes. Coverage job:4,362 cases,4,347 clean/15 known/0 failed/skipped.
+17,479/17,756 lines (**98.44%**) and12,567/13,834 branch outcomes (**90.84%**)
+were covered. This table accounts for277 raw missing lines and1,267 missing
+outcomes. Coverage job:4,364 cases,4,349 clean/15 known/0 failed/skipped.
 
-Against same-source40024613962: fifteen additional covered branch outcomes,
-unchanged denominator and no lost covered lines. Provider/pendant hooks,
-spindle registration, RTU recovery and device-file lifecycle cases are included.
-Subsequent local literal-punctuation searches, analog-only catalog and legacy
-probe full/extended reporting and homed unlimited rotary jog cases are not included.
+Against same-source40029656398: sixteen additional covered branch outcomes,
+unchanged denominator and no lost covered lines. Literal-punctuation searches,
+analog-only catalog, legacy probe reporting, rotary jog and limit IRQ are included.
+Later local unlabelled-port, regex, numeric, reset-during-restore and numbered
+parameter recovery cases are outside this report.
 
 Raw coverage does not establish correctness or reachability. See [TODO](TODO.md)
 and [KNOWN_BUGS](KNOWN_BUGS.md) before selecting workflows. Historical audits
@@ -35,7 +34,7 @@ remain pinned to their stated revisions; no source exclusions were added.
 | [core/kinematics/polar.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/kinematics/polar.c) | 4 | 3 | 212, 214, 232, 234 |
 | [core/kinematics/rtcp_ac.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/kinematics/rtcp_ac.c) | 0 | 3 | none |
 | [core/kinematics/wall_plotter.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/kinematics/wall_plotter.c) | 56 | 28 | 208, 213-214, 216-227, 229, 234, 237, 239-240, 242-255, 257, 260, 262, 264-280, 283-284 |
-| [core/machine_limits.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/machine_limits.c) | 2 | 20 | 269, 502 |
+| [core/machine_limits.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/machine_limits.c) | 2 | 17 | 269, 502 |
 | [core/modbus.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/modbus.c) | 3 | 4 | 231-233 |
 | [core/modbus_rtu.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/modbus_rtu.c) | 3 | 36 | 241, 360-361 |
 | [core/motion_control.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/motion_control.c) | 3 | 29 | 690, 715, 1122 |
@@ -49,7 +48,7 @@ remain pinned to their stated revisions; no source exclusions were added.
 | [core/probe.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/probe.c) | 0 | 2 | none |
 | [core/protocol.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/protocol.c) | 1 | 45 | 185 |
 | [core/regex.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/regex.c) | 0 | 1 | none |
-| [core/report.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/report.c) | 5 | 79 | 450-452, 1955-1956 |
+| [core/report.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/report.c) | 5 | 76 | 450-452, 1955-1956 |
 | [core/settings.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/settings.c) | 58 | 128 | 701, 703, 780-781, 839, 925, 928, 1012, 1056, 1140-1141, 1199-1200, 1341, 1351, 1507-1508, 1569, 1577, 1584, 1591, 1594-1596, 1652-1653, 1693-1694, 1901-1902, 1960-1961, 2026-2027, 2175-2177, 2179-2181, 2192-2194, 2196-2198, 2239-2241, 2247-2248, 2957, 2959, 3476-3477, 3625-3627 |
 | [core/sleep.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/sleep.c) | 0 | 2 | none |
 | [core/spindle_control.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/spindle_control.c) | 7 | 40 | 499, 503, 1160-1161, 1172, 1215-1216 |
@@ -58,7 +57,7 @@ remain pinned to their stated revisions; no source exclusions were added.
 | [core/stepper2.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/stepper2.c) | 0 | 11 | none |
 | [core/stream.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/stream.c) | 3 | 37 | 277, 370, 615 |
 | [core/stream_file.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/stream_file.c) | 1 | 9 | 73 |
-| [core/strutils.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/strutils.c) | 0 | 15 | none |
+| [core/strutils.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/strutils.c) | 0 | 5 | none |
 | [core/system.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/system.c) | 2 | 35 | 466, 468 |
 | [core/tool_change.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/tool_change.c) | 2 | 46 | 435-436 |
 | [core/utf8.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/utf8.c) | 0 | 1 | none |

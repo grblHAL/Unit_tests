@@ -12,5 +12,8 @@ int main(void)
     CHECK(strcmp(compact, "G1X2Y-3") == 0);
     char no_text[] = "";
     CHECK(strcaps(no_text) == no_text && no_text[0] == '\0');
+    char startup[] = " g1 x2 | g1 x3 ";
+    CHECK(strcaps(startup) == startup);
+    CHECK(strcmp(startup, "G1X2|G1X3") == 0);
     return EXIT_SUCCESS;
 }
