@@ -1,3 +1,111 @@
+# Cross-module recovery batch passed cumulative sanitizer gate - 2026-10-23
+
+Five new workflows plus three strengthened existing helpers pass the full
+4,284-case ASan/UBSan gate64.17s and strict summary:4,257clean/27known/
+0unexpected/0skipped. Evidence batch74-recovery-delivery-{results.xml,
+tests.log,summary.log}. No new exceptions, source exclusions or CORE edits;
+fresh fetch still clean50f3865. No unchanged reporting helper rerun.
+
+Final new pair: public Z max-rate50 rejects a1mm/rev thread at100RPM without
+pulses or index acquisition; reducing spindle speed to40RPM completes two
+passes at X800/Z-80 with X560/Z240pulses. A separate stopped-thread rejection
+accepts user feed override110, then queues an ordinary G1 cut with
+no_feed_override=false and executes its exact80-pulse displacement. This is a
+passing recovery control, not a defect: runtime control bits alone were not
+used to assert an observable override failure. Focused speed/stopped pair2/2
+pass0.33s; ordinary-cut recovery1/1pass0.30s.
+
+Batch also includes ordinary unsegmented sender stop/restart, modal G66.1L1
+stack overflow/unwind/retry, both date-year representations and bounded-search
+empty/NULL conventions. Source-only residual audits are in TODO. Deliver as one
+checkpoint on74; latest measured98.26/89.47 remains39940715358 until cumulative
+hosted artifacts exist. Full coverage objective remains active/incomplete.
+
+# Stopped registered spindle rejects threading and permits retry - 2026-10-23
+
+New ordinary M5 -> G76Z-1P1I-1J0.5K1 -> M3S100 -> identical G76 workflow uses
+the registered encoder spindle and real stepper. Stopped feedback returns
+SpindleNotRunning with no new pulses, planner block, index reset or alarm;
+physical X800/Z0 stays unchanged. After restart, two passes complete with
+X560/Z240pulses and endpoint X800/Z-80, no Y motion. Targets runtime G76 error
+return gcode.c4871, distinct from earlier missing-encoder capability guards.
+Fresh ASan/UBSan1/1pass0.28s, batch74-thread-stopped-results.xml. No private
+callback removal, new allowance or CORE change. Registration now4,282.
+Keep with pending ordinary sender-stop, modal recursion and strengthened helper
+cases for the next substantial cumulative checkpoint; no fresh percentage claim.
+
+# Residual flow/storage dispatch audit - 2026-10-23
+
+Source-set verification finds all17 read_command assignments handled by the
+ngc_flowctrl switch; unknown text exits before dispatcher default811-812.
+The zero-size dirty-driver fallback at nvs_buffer.c366 likewise needs a write
+to an unallocated area: every successful public allocation includes checksum
+space and records a nonzero extent. Failed allocation returns0 and must not be
+used as storage. Existing unknown-command and driver allocation/retry cases
+already cover valid public outcomes. Exact evidence and revisit conditions in
+TODO. No fake tests, exceptions, source edits or denominator exclusions.
+
+These three raw lines are now explained rather than repeatedly pursued as
+ordinary missing workflows. Current local test additions remain preserved.
+Full objective remains incomplete; no completion or new coverage claim.
+
+# Ordinary streamed linear stop and relative restart - 2026-10-23
+
+Added motion_control.sender_stop_during_unsegmented_cut_clears_cancel_before_relative_restart.
+An actual G1X20F100 starts through protocol_main_loop with a nonfull planner;
+public sender STOP after40X pulses cancels input and decelerates the running
+stepper. The sender then transmits G91G1X1F100 from the observed stopped position.
+Exact final displacement is stoppedX+80pulses, Y/Z remain0, parser/physical
+positions agree, cancellation clears and no alarm/position loss remains. Existing
+stream/stepper fixture reused; no internal flag forcing, new allowance or CORE
+change. This targets protocol.c350's outer-loop cancellation cleanup, distinct
+from existing stops inside blocking segmented arc/drill generation.
+Fresh ASan/UBSan1/1pass0.29s, batch74-linear-stop-results.xml. Registration now
+4,281; keep with pending modal-recursion and strengthened helper cases for a
+substantial cross-module gate. No new coverage percentage claimed.
+
+# Bounded-search edge contract and control fallback audit - 2026-10-23
+
+Extended existing strutils.substring_bounded with empty pattern, NULL pattern
+and empty source; documented matching conventions hold without reading absent
+pattern bytes. Fresh ASan/UBSan substring group3/3pass0.35s, evidence
+batch74-string-boundary-results.xml. No additional executable count or allowance.
+
+Audited ioports.c1550-1551 against crossbar's contiguous real control enum and
+nonzero shifted-bit mapping: the outer function<Input_Probe gate precludes the
+zero-control-mask fallback. Exact evidence recorded in TODO so it is not chased
+again with invalid enum values. Raw coverage denominator remains unchanged.
+Pending batch now consists of the modal-recursion case and strengthened date/
+substring cases. No full gate or hosted run for this small local extension.
+
+# Both supported date-year representations validated - 2026-10-23
+
+Strengthened existing strutils.iso_date_format and internet_date_format cases:
+tm_year124 and the helper's explicitly supported full-year2024 representation
+produce identical leap-day timestamps, retaining existing NULL fallback checks.
+Targets strutils.c315/354's >=1000 year-selection outcomes without adding new
+cases or manufacturing oversized dates. No CORE, fixture or allowance changes.
+Fresh combined ASan/UBSan3/3pass0.44s includes both date cases plus the pending
+G66.1L1 recursion/overflow/recovery case, with its final diagnostic-only edit.
+Evidence batch74-date-representation-results.xml. Registration stays4,280.
+Keep these local changes together for the next substantial batch; no full gate
+or hosted request for this small addition. Last measured98.26line/89.47branch
+still belongs to39940715358, not these unmeasured changes.
+
+# Recursive modal provider overflow and recovery - 2026-10-23
+
+New public-parser G66.1P100A7L1 synchronous provider recursion reaches the call
+stack limit via gcode.c4989. Each callback observes its own argument7 and the
+next scope level; StackOverflow propagates, all modal arguments/scopes unwind,
+caller#1=99 survives, and a subsequent G65P101X3 succeeds at scope1 then restores
+scope0/caller99. Existing fixture reused, no private state injection, new
+allowance or CORE change. Fresh ASan/UBSan1/1pass0.26s, evidence
+batch74-modal-recursion-results.xml. Registration now4,280; retain locally for
+the next substantial cross-module batch, not another full gate for one case.
+Exploratory omitted-L nested callback reported repeats0 rather than1; explicit
+L1 is requested by the retained case and the omitted default is recorded in TODO.
+Latest delivered batch remains ea8cca5, fully locally validated4,279 cases.
+
 # Configuration/recovery batch cumulative gate passed - 2026-10-23
 
 Seven new cases pass the full4,279-test ASan/UBSan gate64.17s and strict summary:

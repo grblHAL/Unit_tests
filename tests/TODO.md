@@ -1135,3 +1135,56 @@ Existing G38.2X0F100 invalid-target/recovery control passes with the same real
 probe fixture. Keep the raw line in coverage; do not force parser axis_command
 or misclassify normal modal selection as a probe safety defect. Revisit only
 if another supported public axis-command path reaches the guard without axes.
+
+
+## Repeat default for reentrant modal macro replacement - 2026-10-23
+
+With a synchronous public macro provider, outer G66.1P100A7 supplies repeats1,
+but the provider submitting another G66.1P100A7 receives repeats0 at scope2.
+Explicit G66.1P100A7L1 at both levels receives1 and reaches the ordinary call
+stack limit, unwinds cleanly, preserves caller#1 and allows a subsequent G65.
+Confirm whether omitted L during an active G66.1 replacement should inherit or
+default to1, and whether this synchronous replacement is a supported provider
+contract, before classifying the repeat discrepancy as a defect. The overflow
+regression requests L1 explicitly and retains its exact callback assertions.
+No WILL_FAIL or CORE change for this unresolved repeat-default question.
+
+
+## Assigned-control zero-mask fallback is unreachable for valid pin functions - 2026-10-23
+
+CORE50f3865 ioports.c1542 gates control-setting reconfiguration on function <
+Input_Probe. crossbar.h45-59 defines the contiguous named control functions
+starting Input_Reset=0 through Input_ProbeOvertravel; crossbar.c206-212 returns
+1 shifted by that function for every value below Input_Probe. Therefore the
+else fallback at ioports.c1550-1551 requires a zero mask which no valid function
+admitted by the preceding gate can produce. Input_Aux and limit/home functions
+are >=Input_Probe and cannot enter this branch. Existing assigned-FeedHold
+setting workflows exercise both inversion/pull directions and preserve debounce.
+Retain both raw uncovered lines; no invalid enum or forged callback result.
+Revisit if the control-function range or xbar_fn_to_signals_mask mapping changes.
+
+
+## Flow dispatcher default has no recognized command - 2026-10-23
+
+CORE50f3865 ngc_flowctrl.c read_command assigns exactly17 recognized operations;
+a source-set comparison confirms every assigned operation has a case in the
+public ngc_flowctrl dispatcher. Unknown words return FlowControlSyntaxError
+before that switch. NGCFlowCtrl_NoOp is a stack sentinel, never a successful
+read_command result. Thus dispatcher default811-812 cannot be reached with
+public command text. Existing unknown_command syntax test remains the public
+rejection control. Keep both raw lines, no private enum forcing or exclusion.
+Revisit when a recognized operation is added without its dispatch case.
+
+## Zero-length driver dirty fallback requires unallocated writes - 2026-10-23
+
+CORE50f3865 nvs_buffer.c366 clears a pending driver dirty flag when the driver
+area size is0. Valid nvs_alloc success first adds NVS_CRC_BYTES and records the
+resulting nonzero area extent at315-319, even for a requested payload size0.
+The driver dirty flag is set by memcpy_to_ram only for a changed write at/above
+the configured driver address. An oversized failed allocation can leave that
+address initialized with size0, but it returns0; writing there afterward is
+writing an unallocated region, not a supported driver workflow. Existing
+oversized-request/small-retry and driver-payload retry tests cover valid use.
+Do not write after failed allocation or mutate driver_area/dirty flags to cover
+this fallback. It remains raw uncovered; reconsider if a supported area-release
+API can shrink a previously dirty driver area before physical synchronization.

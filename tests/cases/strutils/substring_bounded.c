@@ -9,6 +9,9 @@ int main(void)
     CHECK(strnistr(text, "ABCX", 3) == text);
     CHECK(strnistr(text, "ABCX", 4) == NULL);
     CHECK(strnistr(text, "xyz", 0) == text);
+    CHECK(strnistr(text, "", 3) == text);
+    CHECK(strnistr(text, NULL, 3) == text);
+    CHECK(strnistr("", "a", 1) == NULL);
     CHECK(strnistr(text, "de", 2) == text + 3);
     const char *overlap = "aaab";
     CHECK(strnistr(overlap, "AAB", 3) == overlap + 1);
