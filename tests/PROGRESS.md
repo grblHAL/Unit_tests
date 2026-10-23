@@ -1,3 +1,157 @@
+# Cumulative sanitizer gate complete - 2026-10-23
+
+CORE2e165a1ac4c74be8e68971972c6577775d856b05 remains clean. Full4340-case
+ASan/UBSan gate finished149.11s: only two exact delta version expectations
+failed after upstream changed0.05 to0.06. Updated both exact strings; affected
+2/2 pass0.12s case time. Original full and repair XML retained separately.
+Combined report replaces only those two original failed case nodes after
+asserting exact name-set agreement and4340 total cases. Strict summary passes:
+4326 clean/14 known regressions/0fail/0skip, no recovering sanitizer allowance.
+Evidence: batch74-core2e165-{delivery-results,version-repair-results,combined-results}.xml
+and batch74-core2e165-strict-summary.log. No repeated full suite. The earlier
+session67275 is terminal, not an active wait. No new-source hosted coverage yet.
+
+# Mixed delta/auxiliary job and cumulative gate — 2026-10-23
+
+Added a real-boot streamed G91 job combining Z-0.5/A1 and Z+0.5/A-1 on the
+four-axis delta build. Observed allthree delta motors return to0 with10pulses
+each and auxiliary A returns0 with160pulses; Cartesian XYZ/A return to their
+original coordinates. Focused ASan/UBSan passes0.08s on clean upstream2e165a1.
+No forced homing flags, private transforms or production edits.
+
+Started the single cumulative build/full sanitizer gate for this batch and
+upstream update: session67275, batch74-core2e165-delivery-build.log, then
+batch74-core2e165-delivery-tests.log/results.xml. Last verified build remains
+active and progressing through4194 compilation/link steps; no result claimed.
+Do not launch a duplicate gate. After completion inspect unexpected failures
+and run strict scripts/summary.py tests on the JUnit result before delivery.
+Corrected the obsolete M6 guard-review row; explicit check-mode message
+ownership still needs verification after upstream moved that cleanup arm.
+
+# Upstream2e165 fixes verified — 2026-10-23
+
+Fetched and selected clean upstream2e165a1ac4c74be8e68971972c6577775d856b05;
+no CORE edits. Rebuilt six exact affected cases. Direct execution preserves
+all original assertions and exits0 for both same-block lathe plane regressions,
+real-boot delta auxiliary80-step regression, rejected reverse motor nudge,
+stale unary-expression output classification, plus the M6 check-mode control.
+Raw results: batch74-core2e165-raw-regressions.json. Removed five obsolete
+WILL_FAIL blocks and their four resolved KNOWN_BUGS sections; tests remain.
+
+The measured coverage snapshot remains explicitly pinned to51b58594/run39996777540.
+Do not compare shifted source line numbers or claim new-source percentages until
+its cumulative report exists. New delta auxiliary transformations/segmentation
+and check-mode message cleanup need affected-module validation and the next
+substantial full gate, alongside the uncommitted RAM/parser/motor batch.
+
+# Finite-motor focused measurement — 2026-10-23
+
+The coverage build of the finite1000-step cruise workflow exits0. Isolated
+profiles and gcov are retained in finite-cruise-proof74. Public wrapper line501
+executes16 times, but this local compiler attributes the inline condition to
+stepper2.h rather than emitting branch counters on the wrapper line. Therefore
+do not claim an exact new hosted outcome at501 from this local file alone;
+compare the cumulative hosted report using its own compiler later. Existing
+finite/infinite cruise assertions remain correct. Reviewed file-stream/probe
+fallback candidates against native callers; no synthetic callback removal or
+closed-reader state added just to hit defensive branches. No full/hosted rerun.
+
+# Finite auxiliary motor cruise observation — 2026-10-23
+
+Added finite_move_reports_cruise_then_stops_at_exact_endpoint using the existing
+secondary_stepper_host public motor API and polling clock. A1000-step move
+starts noncruising, reaches100 speed while still short of its endpoint, finishes
+at exactly1000 observed output pulses/position, reports noncruising when idle,
+and emits no pulse on another poll. Existing cruise observers use infinite
+moves; this targets the finite State_Run outcome of st2_motor_cruising, whose
+hosted source line501 has only1/2 outcomes. No forced motor profile state.
+Focused ASan/UBSan1/1 passes0.05s. No CORE changes or new exceptions; keep with
+the RAM/parser batch. Exact new coverage awaits cumulative measurement, with
+no new aggregate claim, full-suite run or hosted dispatch at this checkpoint.
+
+# Accumulated parser branch evidence — 2026-10-23
+
+Strengthened existing string_replace_grow with a shorter replacement (no stale
+suffix), repeated final-entry deletion and reuse; strengthened the boolean
+setting macro with public inch/metric changes and ngc_float_decimals checks.
+Focused ASan/UBSan2/2 pass0.18s combined case time. No new exception.
+
+Built all four changed/new parser scenarios together in the coverage build.
+They exit0; isolated gcov under parser-branches-proof74 proves both outcomes
+for existing missing branches at985 (short replacement),1065 (empty cleanup),
+1209/1218 (registered nonnumeric provider), and the omitted-X outcome at1338.
+The earlier hosted baseline has missing outcomes at all five sites. This is
+local branch evidence, not an aggregate percentage update. Unit precision
+assertions pass; no per-line gcov branch claim is made for1193. The short-packet
+RAM proof separately covers both previously missing203/208 outcomes. Preserve
+all work for the next substantial batch; no tiny full gate or hosted dispatch.
+
+# Numeric macro with registered text provider — 2026-10-23
+
+Added builtin_setting_macro_leaves_text_provider_unchanged using the existing
+public plugin registration fixture. G65P1Q1001S123 selects a valid string setting:
+label/password remain unchanged, no provider save/change callback occurs, and
+_value_returned stays0. A following G65P1Q13S1 succeeds with value1 and changes
+the numeric report-units flag, confirming parser recovery. This targets the
+nonnumeric outcomes at ngc_params.c1209/1218 from the locked hosted report;
+no arbitrary metadata or private calls. Focused ASan/UBSan1/1 passes0.08s.
+No new exception or CORE change. Local batch now includes two parser cases and
+the strengthened RAM packet workflow; no full/hosted gate for this small group.
+Aggregate percentages remain the last verified39996777540 measurement.
+
+# Default packed-coil G65 workflow — 2026-10-23
+
+Added builtin_modbus_macro_defaults_packed_write_to_one_coil using the existing
+registered blocking Modbus fixture and public G65P7 parser commands. Consecutive
+F15 writes omit X and toggle A1/A0: exact slave/function/address, default count1,
+byte count1, payload, request length and completion result2 are asserted. This
+targets the omitted-X outcome at ngc_params.c1338, reported only2/4 outcomes in
+39996777540, without injecting private macro arguments. Focused ASan/UBSan1/1
+passes0.05s. No CORE change or new exception. Keep with the short-packet RAM
+scenario for the next substantial cross-module delivery; no full/hosted gate
+or new aggregate percentage claimed at this authoring checkpoint.
+
+# Short-packet upload accumulation — 2026-10-23
+
+Strengthened the existing chunked RAM upload scenario: split its initial13-byte
+packet into consecutive6/7-byte packets, preserving the same full5159-byte
+payload and readback/seek/lifetime assertions. This exercises normal buffered
+accumulation before large-packet flushes, previously absent from the hosted
+branch report at fs_ram.c203/208. Focused ASan/UBSan passes1/1; the separate
+coverage binary also exits0, with local gcov evidence under short-packet-proof74.
+No new test-count padding, CORE changes, full gate or hosted dispatch. Keep
+this local change with the next substantial cross-module delivery batch;
+aggregate coverage remains the last measured hosted report.
+
+# Native setting guard accounted for — 2026-10-23
+
+Completed the current-source NULL-value reporting audit: all eight native
+setting arrays (162 descriptors, including conditional alternatives) have
+non-NULL values; the 52 function tokens resolve to CORE definitions. Plugin
+registration rejects missing values. Recorded the limited proof for
+report.c450-452 in COVERAGE_GAPS without adding invalid metadata tests or
+excluding lines. Corrected the audit-only format-string/directive flag.
+Coverage remains the measured98.44% lines/90.40% branches from39996777540;
+this source review does not add executed coverage. Full supported coverage
+remains active. No new suite run or hosted dispatch for documentation.
+
+# Hosted cross-module checkpoint verified - 2026-10-23
+
+Run39996777540 fully succeeded on exact480ac7e/CORE51b58594: source, GCC,
+Clang, coverage and the new Results summary job all passed. Both artifact source
+locks match and all seven coverage stages exit0.4,336 hosted cases=4,318 clean,
+18 known regressions/0failed/skipped. No new-source or partial-report claim.
+Measured17,464/17,740 lines98.44%;12,497/13,824 outcomes90.40%. Same source/filter
+as39986380812; exact comparison gains10 lines/7 outcomes and loses no lines.
+README/KNOWN_BUGS snapshot and complete raw inventory refreshed only now.
+Remaining276 lines/1,327 outcomes, with no source exclusions.
+
+The Results summary executed successfully with stored measured totals. Its
+public logged-out GitHub page exposes job success but hides job-summary content;
+no logged-in rendered-content claim is made. Local rendered preview and80 helper
+checks cover the visible tables and unavailable/partial/failure handling.
+Continue supported remaining-gap work; passing checkpoint is not completion.
+
 # Combined RAM/spindle/delta delivery gate passed - 2026-10-23
 
 Full4,336 ASan/UBSan cases pass with strict summary:4,317 clean/19 documented

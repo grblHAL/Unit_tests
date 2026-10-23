@@ -110,32 +110,6 @@ maintain the separate unsupported-native-tapping contract. One exact named
 WILL_FAIL in known_bugs.cmake; no sanitizer allowance or CORE edit. When fixed,
 retain this regression and remove its expected-failure properties and this entry.
 
-## Lathe roughing checks the previous plane when a block selects a new plane
-
-**Confirmed:** 2026-10-23, clean Terje `50f38659db7b22f4689f3654df2d110d992bcc95`
-(latest fetched revision). A block's plane selection precedes its motion; the
-lathe cycle validator instead reads `gc_state.modal.plane_select` rather than
-`gc_block.modal.plane_select` at gcode.c3967. The finishing guard at3948 has the
-same source-level issue; executable reproductions below use G71.
-
-- From G17, `G18G71X10Z20Q7F100` returns IllegalPlane instead of accepting the
-  selected ZX plane and dispatching the supported driver/plugin interface.
-  [Correct acceptance regression](cases/lathe_ngc/roughing_same_block_plane_change_uses_selected_plane_before_dispatch.c).
-- From G18, `G17G71X10Z20Q7F100` dispatches the lathe plugin instead of rejecting
-  the selected XY plane. [Correct rejection regression](cases/lathe_ngc/roughing_same_block_xy_plane_is_rejected_before_plugin_dispatch.c).
-
-The capture fixture replaces only the documented weak lathe plugin interface;
-it does not implement roughing geometry. Standalone plane commands followed by
-roughing controls pass. The separate queued-motion rejection scenario covers
-all six G71/G72 forms with wrong-plane and missing-Q errors, preserves the
-original planner block and subsequently completes exact X/Z motor travel.
-
-**Proposed CORE correction (not applied):** validate the block's selected plane
-in both finishing and roughing guards before dispatch. Keep both correct test
-assertions. After a fix, remove only their two exact `WILL_FAIL`/`known_bug`
-blocks from known_bugs.cmake, run the lathe group and normal delivery gates,
-then remove this resolved entry. No sanitizer diagnostic allowance applies.
-
 ## Known coverage gaps
 
 These are tracked placeholders for missing or inaccessible implementation, not
@@ -145,9 +119,9 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Measured:** 2026-10-23, clean Terje `51b58594ce467e9c4b103fb93d1ca121e43cd15c`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39986380812)
-measures 17,454/17,740 lines (98.39%) and 12,490/13,824 branches (90.35%).
-The 286 uncovered lines include the following known gaps; this table does not
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39996777540)
+measures 17,464/17,740 lines (98.44%) and 12,497/13,824 branches (90.40%).
+The 276 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable. See the complete measured
 [line/branch inventory](COVERAGE_GAPS.md) before selecting the next workflow.
 
@@ -166,7 +140,7 @@ claim that every remaining line is unavailable. See the complete measured
 | Parking restore restart flag | The only setter of restoring runs after the handler changes to state_await_resumed; door events use its restart path. [Handler audit](TODO.md#parking-restore-restart-flag-and-callback-handler-ordering). | Upstream changes restore/event handler ordering. Real repark and second-resume completion remain tested. |
 | Delayed-task fallback search | Defensive/unreachable under supported single-core IRQ masking: task_get_due returns the selected head with IRQs still masked. See [atomic-selection audit](TODO.md#delayed-task-fallback-after-atomic-selection-68eba79). | Reassess if the selection/concurrency contract changes; retain the passing public interrupt/cancellation regressions. |
 | Post-reader NaN rejection | Expression reader rejects NaN before this guard; explicit valueless-word NaN is excluded by its M-code type condition (gcode.c1470-1471). See [reader audit](TODO.md#parser-post-reader-nan-guard-audit---2026-10-22). | Revisit if reader or valueless-word contract changes; retain raw coverage. |
-| M6 check-mode message cleanup | Nested check-mode branch is enclosed by a guard excluding check mode, with no intervening callback or assignment (gcode.c4231-4238). See [guard audit](TODO.md#m6-check-mode-message-cleanup-guard-audit---2026-10-22). | Revisit after upstream changes the guard or ownership; retain raw coverage. |
+| M6 check-mode message cleanup | Historical guard audit applies to the earlier source. Upstream2e165a1 moves check-mode message cleanup outside the execution-only arm. | Existing M6 check-mode control passes. Current-source normalization still preempts message allocation; see the updated routing review in TODO. |
 | M48/M49/M51 broadcast override arms | Unreachable through current parser addressing rules; ordinary blocks reject the unused/invalid dollar selector before these arms. See [parser audit](TODO.md#remaining-coverage-unexposed-settings-and-parser-branches). | Define and expose broadcast syntax upstream, then test observable output of every enabled spindle. |
 
 Pending contract questions, including G70-G72 execution/reporting and G76 main
@@ -348,32 +322,6 @@ follow the first failing success-result assertion and are not yet validated.
 Remove both blocks and this entry once upstream passes under sanitizers.
 No CORE edit or sanitizer diagnostic allowance applies.
 
-## Delta auxiliary-axis command advances parser but emits no motor steps
-
-**Confirmed:** 2026-10-23, clean Terje CORE `68eba7906ba60d66c8b55c4adc90cd5e85b5a828`.
-[Real-boot regression](cases/boot_delta_aux/streamed_auxiliary_move_preserves_delta_joints_and_reaches_a_endpoint.c)
-builds DELTA_ROBOT=1,N_AXIS=4, boots with physical NVS and normal driver setup,
-then streams G91G1A1F100. The sender acknowledges success and parserA becomes1,
-but the auxiliary driver never wakes and A remains0steps instead of80.
-[Same-configuration control](cases/boot_delta_aux/streamed_delta_cut_keeps_auxiliary_motor_stopped.c)
-passes: Z-0.5 moves allthree delta joints5steps while auxiliaryA remains stopped.
-CORE explicitly has N_AXIS>3 travel-limit handling, so this is an exposed
-configuration, not a forged axis state. Raw evidence: build-asan/batch73-delta-aux-raw.xml.
-
-[delta_segment_line and transforms](https://github.com/terjeio/grblHAL_core/blob/68eba7906ba60d66c8b55c4adc90cd5e85b5a828/kinematics/delta.c#L125-L295)
-only transform/copy XYZ joint coordinates. The static motor target's extra axis
-remains zero instead of preserving the requested auxiliary coordinate. Forward
-conversion likewise does not copy coordinates beyond the three transformed axes.
-
-**Suggested fix for Terje (not applied):** preserve unchanged auxiliary coordinates
-in both transform directions and segmented targets; retain XYZ geometry and
-apply configured auxiliary limits independently. Verify auxiliary-only and mixed
-motion, unchanged joints, encoder-independent pulse counts and Cartesian reports.
-The exact endpoint case has WILL_FAIL/known_bug in [known_bugs.cmake](known_bugs.cmake).
-Retain its correct80-step/endpoint assertion and the passing XYZ control; remove
-the block and this entry when upstream passes. No CORE edits or sanitizer allowance.
-Delta source is unchanged in newly fetched50f3865; latest-source runtime recheck pending.
-
 ## Large analog PWM request wraps to minimum duty with 16-bit fast integers
 
 Confirmed 2026-10-23 on clean CORE `50f38659db7b22f4689f3654df2d110d992bcc95`,
@@ -395,59 +343,4 @@ ordinary test. No sanitizer allowance or source exclusion is used.
 Proposed upstream fix: compare/clamp the scaled floating value including minimum
 duty before narrowing it, or bound it in a sufficiently wide intermediate.
 After repair retain the test and remove its scoped exception and type check.
-CORE is unchanged.
-
-## Rejected auxiliary reverse nudge changes the running motor direction
-
-**Confirmed2026-10-23, clean CORE50f38659db7b22f4689f3654df2d110d992bcc95.**
-[Public auxiliary motor regression](cases/stepper2/rejected_reverse_nudge_preserves_running_finite_move.c)
-accepts a20step forward move, emits its first forward pulse, then requests a
-one-step reverse nudge at the same speed. The nudge returns false (documented as
-command not accepted), without immediately emitting a step. The next driver
-pulse nevertheless has the reverse direction bit. The correct forward-direction
-assertion fails deterministically on pulse2; endpoint preservation assertions
-remain after it and are not reached. No private motor state or IRQ race is used.
-Raw evidence: build-asan/batch74-stepper-reject-raw-results.xml.
-
-`st2_motor_move` writes motor->dir and calls the speed/step-profile mutators before
-its one-step busy check (stepper2.c350-366). Returning false does not undo those
-changes. One exact WILL_FAIL preserves the correct direction/endpoint assertions;
-no sanitizer, timeout or broader failure allowance. Normal completed forward/
-reverse finite motion remains an independent passing control.
-
-Suggested repair for Terje: decide whether the nudge can be accepted before
-changing the active direction/profile, or preserve the accepted move when
-rejecting. Retain the test and remove its allowance once it passes. CORE unchanged.
-
-
-## Expression reader replaces a unary-name error using stale output
-
-Confirmed2026-10-23 on clean CORE `50f38659db7b22f4689f3654df2d110d992bcc95`.
-Public `ngc_read_real_value` correctly rejects `AX[1]` with
-`Status_ExpressionUknownOp` (71) when its output initially contains zero, but
-returns `Status_ExpressionInvalidResult` (76) when that same output parameter
-initially contains NaN. The parser never computed a result for the invalid
-name. `ngc_expr.c:823-826` nevertheless reads the output after the failed parse
-and overwrites the original error. An output parameter's previous value must
-not select the error for malformed input.
-
-Regression: `ngc_expr.unary_name_error_is_preserved_with_nonfinite_output_sentinel`.
-The ordinary zero-output control passes before the correct unknown-operation
-assertion fails for NaN. Exactly one named WILL_FAIL/known_bug; no sanitizer
-allowance or diagnostic suppression. Raw evidence:
-`build-asan/batch74-unary-sentinel-raw-results.xml`, status76/expected71.
-
-The full-expression evaluator declares an uninitialized `values` array at886
-and passes its first slot to this reader at897. A malformed-name status can
-therefore depend on stack contents. The existing complete-expression test
-`malformed_unary_operation_names_are_rejected` failed in the4,311-case gate
-and isolated rerun, then passed after adding per-input diagnostics changed its
-stack layout. All ten correct unknown-operation assertions remain. Diagnostic
-instrumentation is not a CORE fix or proof this intermittent path is resolved.
-No accepted invalid motion or expression result is claimed.
-
-Proposed repair for Terje: perform result-finiteness checks only after a
-successful parse, preserving prior errors. Also avoid reading an uninitialized
-output slot in the full-expression evaluator. Remove the named allowance when
-the unchanged deterministic regression passes, retaining all error assertions.
 CORE is unchanged.

@@ -1,24 +1,21 @@
 # Remaining raw CORE coverage
 
-Measured report: [run39986380812](https://github.com/petervanderwalt/Unit_tests/actions/runs/39986380812),
-harness `2dc01011f6ea69101f574f6dfb38a5d6e4dc1319`, CORE `51b58594ce467e9c4b103fb93d1ca121e43cd15c`,
+Measured report: [run39996777540](https://github.com/petervanderwalt/Unit_tests/actions/runs/39996777540),
+harness `480ac7e0eb8a029ad7083e66583627bfe2cb65a9`, CORE `51b58594ce467e9c4b103fb93d1ca121e43cd15c`,
 filter `core/.*\.[ch]$`. Both source locks match; all seven coverage stages exit0.
-All five hosted jobs completed successfully, including GCC, Clang and diagnosis.
+All five hosted jobs completed successfully, including GCC, Clang and Results summary.
 
-17,454/17,740 lines (**98.39%**) and12,490/13,824 branch outcomes (**90.35%**)
-were covered. This table accounts for all286 raw missing lines and1,334 missing
+17,464/17,740 lines (**98.44%**) and12,497/13,824 branch outcomes (**90.40%**)
+were covered. This table accounts for all276 raw missing lines and1,327 missing
 outcomes. Branch outcomes can be missing on otherwise covered lines.
-4,331 hosted cases:4,315 clean passes/16 known regressions/0failed/skipped.
+4,336 hosted cases:4,318 clean passes/18 known regressions/0failed/skipped.
 
-Upstream changed source and the denominator since CORE50f. Do not count shifted
-line numbers as newly exercised code or attribute every count increase to tests.
-The delivered normal M6/door, spindle broadcast and program-end action workflows
-are included. New local RAM shrink and strengthened mount/persistence assertions
-are not included in this measured head. Three local RAM shrink scenarios exercise all eight baseline missing RAM lines:
-committed and buffered prefix reads reach247/256-259 before the known fault,
-and a failed shrink allocation with successful next upload reaches261-263.
-Isolated profiles and exact hashes are in batch74-ram-prefix-line-proof.json;
-this is not a new aggregate measurement.
+Against same-source run39986380812, this batch added exactly10 covered lines and
+7 branch outcomes, with no lost lines: eight RAM shrink branches, the normal
+small spindle override fallback and the configured delta cuboid rejection.
+All three RAM shrink workflows and the strengthened mount/persistence assertions
+are included in this measured head. Correct RAM prefix regressions remain narrow
+expected failures, with exact sanitizer diagnostics on the compiler jobs.
 
 This inventory does not claim the remaining code is unreachable. Use [TODO](TODO.md)
 and [KNOWN_BUGS](KNOWN_BUGS.md) with current source contracts before authoring.
@@ -31,12 +28,12 @@ Historical source audits below remain explicitly pinned to their older source.
 | [core/crossbar.h](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/crossbar.h) | 0 | 3 | none |
 | [core/fs_device.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/fs_device.c) | 3 | 7 | 59, 190, 192 |
 | [core/fs_embedded.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/fs_embedded.c) | 4 | 5 | 133, 135, 138, 140 |
-| [core/fs_ram.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/fs_ram.c) | 8 | 17 | 247, 256-259, 261-263 |
+| [core/fs_ram.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/fs_ram.c) | 0 | 13 | none |
 | [core/gcode.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/gcode.c) | 28 | 214 | 325-326, 573, 1043, 1367-1368, 1499, 2190, 2728, 2730-2731, 2746-2747, 2898, 2987, 2999, 3065, 3482-3484, 3616-3617, 3929, 4270, 4861, 4863, 4975-4976 |
 | [core/grbllib.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/grbllib.c) | 14 | 37 | 92, 95, 140, 144-147, 149-150, 590-594 |
 | [core/ioports.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/ioports.c) | 28 | 146 | 782, 1195, 1291-1292, 1385, 1387, 1389, 1391, 1394-1398, 1401-1402, 1404, 1406-1407, 1409, 1411-1412, 1436-1438, 1440-1441, 1558-1559 |
 | [core/kinematics/asymmetric_ganging.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/kinematics/asymmetric_ganging.c) | 1 | 4 | 254 |
-| [core/kinematics/delta.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/kinematics/delta.c) | 10 | 46 | 173, 287-288, 343, 586-587, 592, 599, 610, 673 |
+| [core/kinematics/delta.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/kinematics/delta.c) | 9 | 45 | 173, 287-288, 343, 586-587, 592, 610, 673 |
 | [core/kinematics/polar.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/kinematics/polar.c) | 4 | 3 | 212, 214, 232, 234 |
 | [core/kinematics/rtcp_ac.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/kinematics/rtcp_ac.c) | 0 | 3 | none |
 | [core/kinematics/wall_plotter.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/kinematics/wall_plotter.c) | 56 | 28 | 208, 213-214, 216-227, 229, 234, 237, 239-240, 242-255, 257, 260, 262, 264-280, 283-284 |
@@ -57,7 +54,7 @@ Historical source audits below remain explicitly pinned to their older source.
 | [core/report.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/report.c) | 5 | 82 | 450-452, 1955-1956 |
 | [core/settings.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/settings.c) | 58 | 130 | 701, 703, 780-781, 839, 925, 928, 1012, 1056, 1140-1141, 1199-1200, 1341, 1351, 1507-1508, 1569, 1577, 1584, 1591, 1594-1596, 1652-1653, 1693-1694, 1901-1902, 1960-1961, 2026-2027, 2175-2177, 2179-2181, 2192-2194, 2196-2198, 2239-2241, 2247-2248, 2957, 2959, 3476-3477, 3625-3627 |
 | [core/sleep.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/sleep.c) | 0 | 2 | none |
-| [core/spindle_control.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/spindle_control.c) | 8 | 43 | 499, 503, 636, 1160-1161, 1172, 1215-1216 |
+| [core/spindle_control.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/spindle_control.c) | 7 | 41 | 499, 503, 1160-1161, 1172, 1215-1216 |
 | [core/state_machine.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/state_machine.c) | 12 | 44 | 157, 449, 502, 524-527, 614-615, 658-659, 819 |
 | [core/stepper.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/stepper.c) | 1 | 13 | 1093 |
 | [core/stepper2.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/stepper2.c) | 0 | 12 | none |
@@ -68,6 +65,27 @@ Historical source audits below remain explicitly pinned to their older source.
 | [core/tool_change.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/tool_change.c) | 2 | 46 | 435-436 |
 | [core/utf8.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/utf8.c) | 0 | 1 | none |
 | [core/vfs.c](https://github.com/terjeio/grblHAL_core/blob/51b58594ce467e9c4b103fb93d1ca121e43cd15c/vfs.c) | 4 | 44 | 272, 415, 482, 779 |
+
+## Native setting reporting guard review — 2026-10-23
+
+On CORE `51b58594ce467e9c4b103fb93d1ca121e43cd15c`, the three missing
+`report.c:450-452` lines print `$id=N/A` only when a setting descriptor has a
+NULL `value`. All eight native `setting_detail_t` arrays were enumerated:
+canbus, ioports, Modbus RTU, asymmetric ganging, delta, RTCP, global settings
+and secondary spindle. Their 162 initializer rows all provide a storage address
+or function; all 52 distinct function value tokens have definitions in CORE.
+This is a source inventory including conditional alternatives, not a claim that
+all 162 descriptors coexist in one configuration. No initializer gaps remained.
+
+The global table is installed directly (`settings.c:2750`); additional tables
+pass `settings_register`, whose line2759 rejects a NULL value before linking
+at2772. Together these account for the native tables and normally registered
+providers. They do not prove safety after a provider mutates registered metadata,
+or establish a contract for arbitrary unregistered descriptors. No synthetic
+NULL descriptor test was added; these three lines remain in the raw denominator.
+The audit's earlier conditional flag incorrectly treated `#` inside numeric
+format strings as a directive; that flag was corrected before this conclusion.
+
 
 ## Current-source dormant dispatch review
 

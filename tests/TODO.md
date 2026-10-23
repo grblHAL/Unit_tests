@@ -1539,3 +1539,20 @@ Likewise stream614's zero-report callback cannot follow public Report_ClearAll:
 report_add_realtime returns immediately after clearing primary flags. Explicit
 observer-clear fanout is a separate unresolved contract; no callback is called
 with fabricated flags to cover it. All eight raw lines remain included.
+
+## Updated M6 check-mode message cleanup routing - 2026-10-23
+
+On clean upstream2e165a1ac4c74be8e68971972c6577775d856b05, M6 now has an
+explicit check-mode message-free arm at gcode.c4313-4315. This removes the old
+nested contradictory guard, but does not establish an ordinary message owner:
+gc_execute_block snapshots check mode at1299, frees/clears an old message at
+1302-1304, and normalizes at1307. Normalization1123 skips message allocation
+and comment-provider callbacks in STATE_CHECK_MODE. The earlier cleanup1366
+also discards any message in check mode. Tool-name message lookup4266 is confined
+to the non-check-mode arm. No native callback between snapshot and normalization
+supplies a supported mode transition here.
+
+Retain existing passing M6 dry-run and comment controls. Do not inject
+parser-owned messages or toggle modes from callbacks just to reach4314.
+This is a native-routing review, not proof about arbitrary external mutation;
+retain the raw denominator and recheck after ownership changes.

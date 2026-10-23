@@ -15,7 +15,7 @@ int main(void)
     CHECK(kinematics.transform_from_cartesian != NULL);
     CHECK(kinematics.transform_steps_to_cartesian != NULL);
     CHECK(kinematics.segment_line != NULL);
-    CHECK(strstr(engine_output, "[KINEMATICS:Delta v0.05]") != NULL);
+    CHECK(strstr(engine_output, "[KINEMATICS:Delta v0.06]") != NULL);
     CHECK(strstr(engine_output, "error:") == NULL);
     return EXIT_SUCCESS;
 }

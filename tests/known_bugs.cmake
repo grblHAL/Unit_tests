@@ -52,9 +52,6 @@ if(TEST ioports.allocation_failure_first_analog_bank_preserves_counts_and_allows
 endif()
 
 
-if(TEST boot_delta_aux.streamed_auxiliary_move_preserves_delta_joints_and_reaches_a_endpoint)
-  set_tests_properties(boot_delta_aux.streamed_auxiliary_move_preserves_delta_joints_and_reaches_a_endpoint PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
 
 
 
@@ -72,15 +69,6 @@ int main(void) { return 0; }" HOST_UINT_FAST16_IS_16_BITS)
 endif()
 
 
-# Same-block lathe plane validation uses the old modal plane (2026-10-23).
-if(TEST lathe_ngc.roughing_same_block_plane_change_uses_selected_plane_before_dispatch)
-  set_tests_properties(lathe_ngc.roughing_same_block_plane_change_uses_selected_plane_before_dispatch
-    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-if(TEST lathe_ngc.roughing_same_block_xy_plane_is_rejected_before_plugin_dispatch)
-  set_tests_properties(lathe_ngc.roughing_same_block_xy_plane_is_rejected_before_plugin_dispatch
-    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
 
 # A named-file prescan must reject EOF without a matching ENDSUB (2026-10-23).
 
@@ -94,15 +82,7 @@ endif()
 
 # Mismatched numeric ENDSUB accepts the last registered sub, CORE50f3865.
 
-# Rejected auxiliary one-step request changes running direction, CORE50f3865.
-if(TEST stepper2.rejected_reverse_nudge_preserves_running_finite_move)
-  set_tests_properties(stepper2.rejected_reverse_nudge_preserves_running_finite_move PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
 
-# Error classification reads the stale output after parse failure, CORE50f3865.
-if(TEST ngc_expr.unary_name_error_is_preserved_with_nonfinite_output_sentinel)
-  set_tests_properties(ngc_expr.unary_name_error_is_preserved_with_nonfinite_output_sentinel PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
 
 # Synthesized EOF linefeed omits the file line-counter increment, CORE50f3865.
 
