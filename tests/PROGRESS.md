@@ -1,3 +1,177 @@
+# Storage/RTU cumulative gate passed - 2026-10-23
+
+Full4352-case ASan/UBSan gate passes77.01s on clean CORE2e165a1. Strict
+summary4337clean/15known/0failed/0skipped; no recovering sanitizer diagnostics.
+Parsed original JUnit confirms new lookup regression reaches final rejected
+assertion with stale/panel.nc only after initial-cache control and retry pass.
+All shared RTU fixture cases included; pending_tx_bytes defaults0 as before.
+Evidence: batch74-storage-rtu-delivery-{build.log,tests.log,results.xml,summary.log}.
+
+Batch adds six public storage/RTU workflows and strengthens optional Modbus busy
+reporting. One correct new VFS regression has exact WILL_FAIL and dated bug
+entry; no CORE edit, diagnostic suppression or source exclusion. Commit/push
+coherently; subsequent hosted measurement must check exact source/config/filter
+and no duplicate run. Current badges remain verified1ec72ce/40018600731 until
+the new batch's full hosted checkpoint passes. Full goal remains active.
+
+# UART drain workflow and cumulative storage/RTU gate - 2026-10-23
+
+Added pending_uart_output_waits_for_drain_before_receiving_reply. Existing RTU
+fixture now returns driver-owned pending_tx_bytes (default0 unchanged for prior
+cases). Three polls observe queued output decreasing3/2/1: transaction remains
+busy with one send and no reply/error callback. After driver reports0, valid
+CRC reply returns1234 and transport becomes idle. ASan/UBSan passes0.05s.
+Targets normal modbus_rtu.c160 nonempty TX queue; no timing race, private
+transport mutation or long transmit-stall policy asserted.
+
+Started the ONE cumulative sanitizer gate for this multi-module batch and all
+shared-RTU-fixture users: session15447, batch74-storage-rtu-delivery-build.log,
+then delivery-tests.log/results.xml under the same prefix. Verify the live
+handle before waiting; do not duplicate. After completion run strict summary
+and inspect expected failure output for the exact stale-lookup assertion.
+No CORE edits or new exceptions beyond that single documented VFS regression.
+
+# Remaining local filesystem branch proofs - 2026-10-23
+
+Built the relative-stat and unnamed-enumeration coverage cases together. Both
+exit0. Isolated stat-enumeration-proof74 profiles show vfs.c638 success/failure
+once each and vfs.c827 named/unnamed outcomes once each. These complement the
+RTC698, lookup912 and optional Modbus69 proofs; format recovery remains correctly
+asserted with its exact aggregate contribution left to the next hosted report.
+No source exclusions or denominator changes in this local group.
+
+Read-only upstream fetch confirms no successor to tested2e165a1. CORE remains
+unchanged. Do not trigger a full/hosted gate merely for this small group; retain
+the storage/Modbus work, including one narrowly documented stale-lookup failure,
+while adding independent supported gaps toward the next substantial delivery.
+
+# Relative stat query survives path allocation failure - 2026-10-23
+
+Added relative_stat_path_allocation_failure_skips_backend_and_allows_retry with
+the existing size-scoped allocator fixture. After public chdir to/store/jobs,
+one failed allocation of part.nc's path produces-1/ENOMEM without a backend
+stat. Retrying resolves exactly/jobs/part.nc, returns123-byte metadata and
+clears errno, then unmounts cleanly. No output-metadata guarantee asserted on
+the failed query. ASan/UBSan passes0.10s. Targets vfs.c638's parse-failure
+outcome in the verified report. No new exception or CORE edit; reuse the
+existing exact-case wrapped allocator group. Continue this coherent local
+storage/Modbus batch before one cumulative delivery gate.
+
+# Latest hosted batch fully green - 2026-10-23
+
+Run40018600731 is completed success; allfive source/coverage/GCC/Clang/Results
+summary jobs verified terminalsuccess. Exact1ec72ce/CORE2e165a1/filter locks,
+seven stages0 and4346coverage cases4333clean/13known/0failed/skip alreadyverified.
+Refreshed badges and inventories to17479/17756 lines98.44%,12520/13834 branch
+outcomes90.50%;41source rows sum277missing lines/1314outcomes. Same-source
+comparison preserves zero lost lines and explicit six-new-line denominator.
+Local filename-allocation regression, format/RTC/enumeration workflows and
+optional Modbus busy assertion remain outside the measured head. No new run.
+
+Reviewed sleep eligibility against existing13cases: ordinary no-power, motor
+shutdown, automatic reports, hold/door states and cancellation controls already
+exist. Do not duplicate them or reenter its blocking timeout with invented
+callbacks merely to hit the remaining condition counters. Continue from the
+current measured branch inventory; full goal remains active.
+
+# Unnamed backend enumeration and RTC branch proof - 2026-10-23
+
+Added drive_enumeration_skips_unnamed_backend_between_visible_drives using
+normal public registration. Iterator emits first named drive, skips an unnamed
+backend, retains the later named/removable drive and reaches EOF; direct path
+routing to the unnamed backend still succeeds before clean unmount. Targets
+vfs.c827 fs_name outcome without changing private mount lists. ASan/UBSan passes
+0.09s. No new exception or CORE change. Keep in the growing storage/Modbus batch.
+
+The prior mount/RTC case's isolated coverage binary exits0; mount-rtc-proof74
+vfs.c698 records both driver read results once. Local proof distinguishes
+read-failure handling from absent callback. Hosted40018600731 last checked live
+with source/coverage passed and GCC/Clang running. No duplicate checkpoint,
+fresh aggregate claim or small full-suite gate at this authoring point.
+
+# RTC read failure during ordinary mount - 2026-10-23
+
+Added mount_with_failed_rtc_read_remains_discoverable_and_allows_remount through
+public vfs_mount/get_drive/unmount. Registered RTC provider first returns false:
+mount still succeeds, driver calledonce, correct filesystem/path discoverable,
+then cleanly unmounts. Provider recovers with valid calendar fields; remount
+succeeds with second callback and same public drive identity. ASan/UBSan passes
+0.12s. Targets vfs.c698 read-failure outcome without invalid clock values or
+private mount state. Mount timestamps are not exposed by this API; no timestamp
+value assertion or claim added. No new exception/CORE edit/full or hosted run.
+Keep with local filename-allocation defect, format recovery and Modbus change.
+
+# Latest coverage job and local filesystem proof - 2026-10-23
+
+Exact1ec72ce/CORE2e165a1 coverage artifacts from40018600731 verify both
+source/filter locks and allseven stages0.4346tests4333clean/13known/0fail/skip.
+Measured17479/17756 lines98.44%,12520/13834 outcomes90.50%;277raw missing
+lines/1314missing outcomes. GCC/Clang remain running at last inspection; do
+not call the overall checkpoint green or update successful-run badges yet.
+
+Same-source comparison against40015747959: zero lost covered lines, six newly
+compiled and covered delta lines135-136/190-191/275-276, no previously missing
+line removed. Branch coverage increases10outcomes with6new outcomes compiled;
+keep denominator expansion explicit. Comparison JSON saved in build-asan.
+
+Measured local lookup/format workflows together under filesystem-recovery-proof74:
+lookup exits1 at exact final stale-result assertion, vfs.c912 both outcomes2x;
+format recovery exits0 and line875's error/optional-callback paths execute.
+Exact additional hosted branch gain for these local cases remains unmeasured.
+No CORE edits, duplicate run or additional exceptions. Continue independent work.
+
+# Format failure without optional remount callback - 2026-10-23
+
+Added vfs_integration.format_error_without_device_mount_callback_preserves_error_and_allows_retry
+using the existing registered driver-format fixture. A backend without optional
+device_mount returns-7: API/errno preserve-7, output drain/unmount/format events
+are exactlyTUF, no device callback occurs and the drive remains discoverable.
+A subsequent successful format returns0 with exactTUFM events and still no
+device mount calls. ASan/UBSan passes0.08s; no new exception or CORE edits.
+Targets the missing false outcome in vfs.c875 after a real format error.
+Keep with local filename-allocation regression and Modbus optional-busy change.
+Hosted40018600731 last verified live; no duplicate run or aggregate claim.
+
+# Stale lookup narrowed with initial-cache control - 2026-10-23
+
+Strengthened the same VFS regression, no new case: the first long-name growth
+failure returns NULL and performs no backend lookup when the static result is
+initially empty. Then successful panel.nc lookup primes the buffer, and another
+single growth failure incorrectly returns /panel.nc. Restored allocation still
+locates the longer filename and unmounts cleanly before final CHECK(rejected).
+Exactlytwo scoped realloc failures total, one in each state. Updated dated bug
+entry. ASan expected-failure execution0.18s; parsed JUnit explicitly confirms
+its diagnostic is the final stale-result assertion, not an earlier control.
+One narrow WILL_FAIL remains; no CORE edit, sanitizer suppression or duplicate
+case/full-suite/hosted run. Continue independent batch work.
+
+# Confirmed stale filename after allocation failure - 2026-10-23
+
+Public VFS lookup first finds panel.nc, then a longer requested filename needs
+one realloc. Scoped failure returns the old /panel.nc without another backend
+stat. Restored allocation successfully locates the new path; all recovery and
+unmount assertions run before the final correct NULL-result assertion fails.
+ASan/UBSan reports no memory diagnostic. Saved raw JUnit reproduction, dated
+KNOWN_BUGS entry and one exact WILL_FAIL; no CORE edit or sanitizer allowance.
+No actual wrong-file execution is claimed. Keep this local regression with
+next-batch optional Modbus busy coverage; hosted40018600731 remains separate.
+
+# Exact hosted handle and optional busy-provider outcome - 2026-10-23
+
+Requested one exact1ec72ce541dcae207c6c22197310f562b14821d1/CORE2e165a1
+checkpoint after duplicate and rolling-hour checks (one prior dispatch).
+Actual run40018600731 is in_progress:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/40018600731
+Handle saved in batch74-1ec72ce-hosted-handle.json; do not redispatch.
+
+During hosted execution strengthened the existing optional Modbus reset case
+with the normal idle query when both registered transports omit is_busy.
+No private state mutation or extra case. Updated coverage binary exits0 and
+isolated gcov modbus.c69 takes the omitted-handler outcome4times, absent from
+the last measured report. Evidence: modbus-optional-busy-proof74. This one-line
+assertion is local for the NEXT batch, outside40018600731. Sanitizer/full gates
+will include it cumulatively; no fresh aggregate percentage or tiny hosted run.
+
 # Multi-axis/report/Modbus batch passed cumulative gate - 2026-10-23
 
 Full4346-case ASan/UBSan gate passes70.30s on clean CORE2e165a1; strict

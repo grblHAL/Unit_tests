@@ -119,8 +119,8 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Measured:** 2026-10-23, clean Terje `2e165a1ac4c74be8e68971972c6577775d856b05`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40015747959)
-measures 17,473/17,750 lines (98.44%) and 12,510/13,828 branches (90.47%).
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40018600731)
+measures 17,479/17,756 lines (98.44%) and 12,520/13,834 branches (90.50%).
 The 277 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable. See the complete measured
 [line/branch inventory](COVERAGE_GAPS.md) before selecting the next workflow.
@@ -344,3 +344,33 @@ Proposed upstream fix: compare/clamp the scaled floating value including minimum
 duty before narrowing it, or bound it in a sufficiently wide intermediate.
 After repair retain the test and remove its scoped exception and type check.
 CORE is unchanged.
+
+## Filename lookup allocation failure returns the previous job path
+
+Confirmed2026-10-23 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
+Public `vfs_locate_file("panel.nc")` first returns `/panel.nc` from a mounted
+root backend. The next lookup for `workbee_panel_fixture_01.nc` needs a larger
+path buffer. If that single realloc fails, lookup returns `/panel.nc` without
+checking the requested filename with the backend. Failure must not report a
+previously located, different file as the requested result.
+
+[Correct regression](cases/vfs/locate_allocation_failure_does_not_return_previous_job_and_allows_retry.c)
+first verifies that allocation failure before any successful lookup returns NULL
+without a backend lookup. It then checks one failed allocation after the short
+successful lookup (two failures total) and no new backend lookup, then restores
+allocation and verifies the full new path and successful second stat before
+asserting the failed lookup returned NULL. The final assertion fails with the
+stale `/panel.nc` result. This proves an incorrect path result; it does not claim
+that any caller opened or executed that file. No private VFS state is modified.
+Raw evidence: `build-asan/batch74-locate-allocation-raw-results.xml`.
+
+At `vfs.c:912`, failed `strset` skips rebuilding the path. The final return at933
+still reads the static path buffer. On this initial static-to-heap growth,
+`strset` falls back to its existing static buffer without clearing its old text
+when the requested length cannot be met (`strutils.c:385-419`).
+
+Suggested repair for Terje: return NULL immediately when path allocation fails
+(or explicitly clear the result), preserving normal search ordering. Retain
+all regression/retry assertions; remove the single exact WILL_FAIL/known_bug
+block and this entry once the unchanged case passes. No CORE edit or sanitizer
+allowance is included.

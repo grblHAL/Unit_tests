@@ -112,3 +112,9 @@ if(TEST fs_ram.truncate_pending_upload_to_shorter_nonzero_length_preserves_prefi
     set_tests_properties(fs_ram.truncate_pending_upload_to_shorter_nonzero_length_preserves_prefix PROPERTIES LABELS "known_bug;known_crash")
   endif()
 endif()
+
+# Failed filename growth returns the previous successful path, CORE2e165a1.
+if(TEST vfs.locate_allocation_failure_does_not_return_previous_job_and_allows_retry)
+  set_tests_properties(vfs.locate_allocation_failure_does_not_return_previous_job_and_allows_retry
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

@@ -21,6 +21,7 @@ int main(void)
         modbus_reset(abort != 0);
         CHECK(reset_calls == abort + 1 && last_abort == (abort != 0));
         CHECK(modbus_isup().rtu && modbus_isup().tcp);
+        CHECK(!modbus_isbusy());
         uint16_t value = (uint16_t)(0x5678 + abort);
         CHECK(modbus_message(7, ModBus_WriteRegister, 0x1234, &value, 1, bus_completed) == Status_OK);
         CHECK(bus_callbacks == abort + 1 && bus_requests == abort + 1);

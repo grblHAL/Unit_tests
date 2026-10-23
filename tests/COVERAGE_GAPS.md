@@ -1,24 +1,23 @@
 # Remaining raw CORE coverage
 
-Measured coverage job: [run40015747959](https://github.com/petervanderwalt/Unit_tests/actions/runs/40015747959),
-harness `0237d9f3168c42564454991593f1019dc5d1f465`, CORE `2e165a1ac4c74be8e68971972c6577775d856b05`,
-filter `core/.*\.[ch]$`. Both artifact locks match and exactly seven coverage
-stages exit0. All five jobs completed successfully: source, GCC, Clang,
-coverage and Results summary. This is the latest fully verified checkpoint.
+Verified report: [run40018600731](https://github.com/petervanderwalt/Unit_tests/actions/runs/40018600731),
+harness `1ec72ce541dcae207c6c22197310f562b14821d1`, CORE `2e165a1ac4c74be8e68971972c6577775d856b05`,
+filter `core/.*\.[ch]$`. Both artifact locks match, all seven coverage stages
+exit0, and all five source/GCC/Clang/coverage/Results summary jobs succeeded.
 
-17,473/17,750 lines (**98.44%**) and12,510/13,828 branch outcomes (**90.47%**)
-were covered. The table accounts for277 raw missing lines and1,318 missing
-outcomes. Branch outcomes may be missing on covered lines. Coverage job totals:
-4,340 cases,4,327 clean/13 known/0 failed/skipped. Source changes moved lines and
-changed the denominator; no cross-revision hit-set gain is claimed.
+17,479/17,756 lines (**98.44%**) and12,520/13,834 branch outcomes (**90.50%**)
+were covered. This table accounts for277 raw missing lines and1,314 missing
+outcomes. Coverage job:4,346 cases,4,333 clean/13 known/0 failed/skipped.
 
-The local five-axis delta configuration and subsequent reporting cases are not
-part of this measured head. They require their own cumulative validation and
-report; adding a supported configuration can add executable code to the denominator.
-Correct RAM prefix regressions remain narrow expected failures with exact fatal
-diagnostic checks. Raw coverage does not establish correctness or reachability.
-See [TODO](TODO.md) and [KNOWN_BUGS](KNOWN_BUGS.md) for source contracts. Historical
-source audits below remain pinned to their stated revisions. No exclusions added.
+Against same-source40015747959: no lost line coverage; all six newly compiled
+multi-auxiliary delta lines execute. Branch outcomes covered increase10 while
+six new outcomes enter the denominator. The new five-axis mixed/reversal jobs,
+reporting and optional Modbus reset cases are included. Subsequent local VFS
+regressions/recovery cases and optional Modbus busy assertion are not included.
+
+Raw coverage does not establish correctness or reachability. See [TODO](TODO.md)
+and [KNOWN_BUGS](KNOWN_BUGS.md) before selecting workflows. Historical audits
+remain pinned to their stated revisions; no source exclusions were added.
 
 | Source | Uncovered lines | Missing branch outcomes | Exact executable line numbers |
 |---|---:|---:|---|
@@ -36,7 +35,7 @@ source audits below remain pinned to their stated revisions. No exclusions added
 | [core/kinematics/rtcp_ac.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/kinematics/rtcp_ac.c) | 0 | 3 | none |
 | [core/kinematics/wall_plotter.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/kinematics/wall_plotter.c) | 56 | 28 | 208, 213-214, 216-227, 229, 234, 237, 239-240, 242-255, 257, 260, 262, 264-280, 283-284 |
 | [core/machine_limits.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/machine_limits.c) | 2 | 20 | 269, 502 |
-| [core/modbus.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/modbus.c) | 3 | 6 | 231-233 |
+| [core/modbus.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/modbus.c) | 3 | 5 | 231-233 |
 | [core/modbus_rtu.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/modbus_rtu.c) | 3 | 41 | 241, 360-361 |
 | [core/motion_control.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/motion_control.c) | 3 | 29 | 690, 715, 1122 |
 | [core/my_plugin.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/my_plugin.c) | 2 | 0 | 26, 29 |
@@ -49,7 +48,7 @@ source audits below remain pinned to their stated revisions. No exclusions added
 | [core/probe.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/probe.c) | 0 | 2 | none |
 | [core/protocol.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/protocol.c) | 1 | 45 | 185 |
 | [core/regex.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/regex.c) | 0 | 1 | none |
-| [core/report.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/report.c) | 5 | 82 | 450-452, 1955-1956 |
+| [core/report.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/report.c) | 5 | 79 | 450-452, 1955-1956 |
 | [core/settings.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/settings.c) | 58 | 130 | 701, 703, 780-781, 839, 925, 928, 1012, 1056, 1140-1141, 1199-1200, 1341, 1351, 1507-1508, 1569, 1577, 1584, 1591, 1594-1596, 1652-1653, 1693-1694, 1901-1902, 1960-1961, 2026-2027, 2175-2177, 2179-2181, 2192-2194, 2196-2198, 2239-2241, 2247-2248, 2957, 2959, 3476-3477, 3625-3627 |
 | [core/sleep.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/sleep.c) | 0 | 2 | none |
 | [core/spindle_control.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/spindle_control.c) | 7 | 41 | 499, 503, 1160-1161, 1172, 1215-1216 |

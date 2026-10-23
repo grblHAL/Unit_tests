@@ -354,7 +354,8 @@ function(add_core_test name module source)
     OR name STREQUAL "ngc_params.string_insert_allocation_failure_preserves_existing_values"
     OR name STREQUAL "ngc_params.string_name_allocation_failure_reports_zero_and_allows_retry"
     OR name STREQUAL "ngc_params.named_label_allocation_failure_allows_conditional_retry"
-    OR name STREQUAL "ngc_params.named_label_reuse_needs_no_reallocation_under_memory_pressure")
+    OR name STREQUAL "ngc_params.named_label_reuse_needs_no_reallocation_under_memory_pressure"
+    OR name STREQUAL "vfs.locate_allocation_failure_does_not_return_previous_job_and_allows_retry")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=realloc)
   endif()
   if(name STREQUAL "nvs_buffer.buffer_allocation_failure_can_retry_without_changing_storage_handlers"
@@ -373,6 +374,7 @@ function(add_core_test name module source)
     OR name STREQUAL "vfs.mount_allocation_failure_reports_failure_without_notification"
     OR name STREQUAL "vfs.mount_retry_after_allocation_failure_registers_one_backend"
     OR name STREQUAL "vfs.relative_unlink_path_allocation_failure_preserves_other_directory_and_retries"
+    OR name STREQUAL "vfs.relative_stat_path_allocation_failure_skips_backend_and_allows_retry"
     OR name STREQUAL "vfs.getcwd_size_and_allocation_failures_preserve_caller_buffer_and_allow_retry")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=realloc)
   endif()
