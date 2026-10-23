@@ -61,9 +61,9 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Reviewed:** 2026-10-23, clean Terje `50f38659db7b22f4689f3654df2d110d992bcc95`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39955235052)
-measures 17,417/17,714 lines (98.32%) and 12,411/13,800 branches (89.93%).
-The 297 uncovered lines include the following known gaps; this table does not
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39961338202)
+measures 17,419/17,714 lines (98.33%) and 12,441/13,800 branches (90.15%).
+The 295 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable. See the complete measured
 [line/branch inventory](COVERAGE_GAPS.md) before selecting the next workflow.
 
@@ -618,3 +618,58 @@ successful parse, preserving prior errors. Also avoid reading an uninitialized
 output slot in the full-expression evaluator. Remove the named allowance when
 the unchanged deterministic regression passes, retaining all error assertions.
 CORE is unchanged.
+
+
+## Unterminated last file command reuses the preceding line number
+
+Confirmed2026-10-23 on clean CORE `50f38659db7b22f4689f3654df2d110d992bcc95`.
+For a file containing `G90\nG91` without a final newline, both commands execute
+successfully, but the second command is assigned line1 again rather than line2.
+Physical CR/LF increments `stream_file.c:60`; the EOF branch at67-69 synthesizes
+a final LF without that increment. A newline-terminated control advances the
+counter normally. This is a diagnostic line-number discrepancy, not skipped
+motion or a failed final command.
+
+Regression: `stream_file.unterminated_last_command_receives_next_line_number_before_eof`.
+First command line1 and successful G91 execution are checked, EOF and close
+complete, then the correct final-line2 assertion fails with actual1. One exact
+named WILL_FAIL/known_bug; no sanitizer allowance. Evidence:
+`build-asan/batch74-file-eof-number-raw-results.xml`.
+
+The separate prior-line-number-hook workflow uses terminated commands to verify
+implicit1/explicit42/implicit43 and sender77 after close. It retains per-phase
+observer assertions without inventing an exactly-once callback promise: parser
+assignment can visit the hook more than once.
+
+Proposed repair for Terje: count a real pending command completed by the
+synthesized final LF consistently with a physical LF, retaining empty-file and
+CRLF behavior. Remove the named allowance when the unchanged final-line2
+assertion passes. CORE is unchanged.
+
+
+## Expansion registration leaves previously queried free-port counts stale
+
+Confirmed2026-10-23 on clean CORE `50f38659db7b22f4689f3654df2d110d992bcc95`.
+During public startup registration, a native bank exposes two digital inputs/
+outputs. After discovery queries cache those free counts, successfully adding a
+two-channel expansion updates total available counts to four but
+`ioports_unclaimed` still reports two inputs and two outputs. Native and new
+expansion output routes work, proving the ports exist and registration succeeded.
+No motor state, private ownership flags or interrupt timing is manufactured.
+
+Regression: `ioports.free_port_counts_refresh_when_expansion_registers_after_discovery_query`.
+All initial/updated total counts and both output routing controls pass before
+the correct four-free-ports assertion fails. One named WILL_FAIL/known_bug;
+no sanitizer allowance. Raw evidence:
+`build-asan/batch74-expansion-count-cache-raw-results.xml`, inputs2/outputs2,
+expected4each.
+
+`add_ports` invalidates `count` at `ioports.c:931` but leaves the cached `free`
+value unchanged. `ioports_unclaimed` at189-203 recalculates only when `free`
+is-1. This is a stale discovery count after accepted registration, not lost
+outputs or a failure to route them. Digital input/output behavior is reproduced;
+no broader hardware or analog failure is claimed.
+
+Proposed repair for Terje: invalidate the free-count cache alongside total count
+when a nonempty bank is registered. Remove the named allowance when the unchanged
+free-count assertion passes, preserving count and routing controls. CORE unchanged.

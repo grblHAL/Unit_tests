@@ -1,3 +1,111 @@
+# Public discovery batch full gate passed - 2026-10-23
+
+All4,320 registered ASan/UBSan tests pass in201.64s, including30 documented
+known cases (two exact fatal-diagnostic wrappers). Strict summary passes.
+Evidence: build-asan/batch74-public-discovery-delivery-results.xml and matching
+-tests.log/-summary.log. Eight new public workflows and four strengthened cases
+span boot, settings, system help, reports, files, serial editing and I/O.
+No CORE edits. Unchanged reporting helpers were not rerun. Coverage remains the
+measured6ea4b5d report until a new exact-head hosted report exists.
+
+# Expansion discovery cache and remaining-line review - 2026-10-23
+
+A public digital-expansion registration after an earlier discovery query exposes
+stale free-port counts: available totals become4, but free counts stay2.
+Actual writes still route to native and expansion pins. Correct free-count
+assertions remain in one narrow WILL_FAIL with dated KNOWN_BUGS evidence.
+Four affected sanitizer cases pass0.55s, including that expected failure,
+batch74-expansion-count-known-results.xml. No CORE edit or sanitizer allowance.
+Local total4,320, eight new workflows plus four strengthened existing cases.
+
+Reviewed remaining G-code lines before adding more scenarios. The M6 message
+free arm at4260 is nested under the opposite check-mode guard; recorded the
+source proof in TODO rather than manufacturing callback timing to reach it.
+Measured coverage remains98.33% lines/90.15% branches. This cumulative local
+batch now proceeds to its single full sanitizer/strict pre-push gate.
+
+# Optional driver help and public homing-mode transition - 2026-10-23
+
+New system-help workflow starts without optional services, then publishes real
+pin-enumeration/stepper-status/reboot callbacks and registered digital I/O.
+$HELP COMMANDS advertises $PINS/$PINSTATE/$SDS/$REBOOT without invoking hardware.
+Subsequent $PINS/$SDS execute their providers, preserving no-reboot assertion.
+Three affected help cases pass ASan/UBSan0.42s,
+batch74-optional-service-help-results.xml. Targets system907/912/917/958.
+
+New homing workflow uses public stores only: shared $22=1 with25/400rates,
+$22=513 with distinct XYZ30/35/40 locate and450/550/650 search rates, persistence
+reload, then $22=1 copies X30/450 to all axes. Per-axis metadata/stores become
+disabled without notification. New shared50/700 values survive a second reload.
+No direct mode/axis-setting mutation. Six affected sanitizer cases pass0.60s,
+batch74-homing-mode-transition-results.xml. Targets settings1207/1234 transition
+conditions that prior isolated per-axis fixtures set directly.
+
+Local total4,319: seven new cases after measured6ea4b5d, including one narrow
+EOF line-number known regression, plus four strengthened serial/passthrough
+cases. No new exceptions in this group, no CORE edit, full gate, push or hosted
+run. Keep accumulating the next substantial cross-module delivery. Verified
+coverage remains98.33%lines/90.15%branches; these gains are unmeasured.
+
+# Numeric UART recovery and printable sender data - 2026-10-23
+
+New UART workflow publishes numeric TX9/RX10 pins without port prefixes and a
+registered driver whose optional status is temporarily unavailable. First report
+keeps correct pin/name fields and omits absent status. After driver recovery,
+report includes230400baud/8N1/free state with the same numeric pins. Shared UART
+fixture adds one availability flag default true; existing behavior preserved.
+Nine affected ASan/UBSan UART cases pass0.75s,
+batch74-uart-status-recovery-results.xml. Targets report2539/2551 outcomes.
+
+New full-boot sender job publicly sets $39=0, saves $I=Router?~!, then queries
+it. All three printable realtime characters remain literal stored build-info
+bytes, verified through physical NVS/CRC readback and serial output; no error.
+Existing setting passthrough case retains its $? assertions and now checks
+legacy cycle-start/feed-hold bytes are returned as data without execution flags.
+Four affected sanitizer cases pass0.42s,
+batch74-build-info-rt-text-results.xml. Targets protocol1017 false handling via
+an ordinary settings/data workflow rather than private line-flag mutation.
+
+Local total4,317: five new cases after measured6ea4b5d (including one narrow
+EOF diagnostic regression), plus four strengthened serial/passthrough cases.
+No new exception beyond the documented EOF discrepancy, no CORE edits, no full
+gate/push/hosted run for this small group. Continue accumulating related modules.
+Verified coverage remains98.33%lines/90.15%branches at39961338202; local gains
+are not measured yet and the full supported coverage objective remains active.
+
+# Verified90% branch checkpoint and next file/provider group - 2026-10-23
+
+Pushed6ea4b5d100244860217a46c514816532c11c016d hosted39961338202 is completed/
+success: all five jobs pass, both source locks match clean CORE50f3865 and exact
+filter, seven coverage stages0. Hosted4,312:4,286clean/26known/0failed/0skipped.
+17,419/17,714lines98.33%,12,441/13,800outcomes90.15%: +2lines/+30outcomes
+versus39955235052, no lost lines. Exact new lines motion_control772/779. Badges,
+KNOWN_BUGS snapshot and asserted295rawline/1,359outcome inventory refreshed.
+No claim that this checkpoint completes supported coverage.
+
+Next local provider workflow uses the legacy API's explicitly optional NULL
+pin-description setter, working get-info/claim/output/input handlers and proper
+physical pin metadata. Report falls back to Aux in0/1 and Aux out0/1, leaves
+output routing/value and available counts intact. Source contract ioports.h172;
+no active driver pointer is nulled after registration. Targets report2663/2686
+and registration's missing-optional-description paths. Existing serial edit
+cases now erase repeatedly at an empty buffer before their original command,
+retaining final position/query/ACK assertions; includes critical-alarm polling.
+Four affected cases pass fresh sanitizer0.50s, batch74-empty-line-editing-results.xml.
+
+New prior file-line observer workflow passes terminated implicit1/explicit42/
+implicit43 and sender77 after close; every observed assignment matches its
+phase, without an invented exactly-once promise. An unterminated final command
+exposed a separate real diagnostic defect: G90\nG91 executes both commands but
+assigns final line1 rather than2. Correct narrow regression documented/labelled
+WILL_FAIL, no sanitizer allowance; raw1/expected2 evidence retained. Latest
+CORE fetch still50f3865 clean. Five affected file controls pass0.39s including
+one known reproduction, batch74-file-observer-known-results.xml.
+
+Local total4,315 (three new cases, one expected defect, plus three strengthened
+serial cases) after measured6ea4b5d. No new full gate, push or hosted run for
+this small group. Keep accumulating supported cross-module work. CORE untouched.
+
 # Driver/report/recovery cumulative gate passed - 2026-10-23
 
 Confirmed repeat full ASan/UBSan gate passes4,312 in174.20s. Strict summary:

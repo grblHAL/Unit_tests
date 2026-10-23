@@ -1219,3 +1219,13 @@ exercise a separate registered validation rule, and file-end max-step-rate
 sanity checks remain real supported controls. Do not invent a rejection contract
 or turn the commented expression into a test expectation; revisit when upstream
 enables validation.
+
+## Tool-change check-mode message release is behind an opposite guard - 2026-10-23
+
+CORE50f3865 gcode.c4252 enters tool-change execution only when
+`!gc_parser_flags.check_mode`. Its nested check at4259 therefore cannot take
+the message-free arm at4260 during ordinary execution. Existing M6 check-mode
+tests verify no driver/tool change; normal M6 message tests verify prompt output.
+Do not toggle check mode from a synchronizing callback solely to cover this
+line. Keep it in the raw denominator; this is a source guard audit, not a
+new confirmed defect or an exclusion.

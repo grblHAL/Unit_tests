@@ -150,3 +150,13 @@ endif()
 if(TEST ngc_expr.unary_name_error_is_preserved_with_nonfinite_output_sentinel)
   set_tests_properties(ngc_expr.unary_name_error_is_preserved_with_nonfinite_output_sentinel PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Synthesized EOF linefeed omits the file line-counter increment, CORE50f3865.
+if(TEST stream_file.unterminated_last_command_receives_next_line_number_before_eof)
+  set_tests_properties(stream_file.unterminated_last_command_receives_next_line_number_before_eof PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+# Adding a bank invalidates total count but not cached free count, CORE50f3865.
+if(TEST ioports.free_port_counts_refresh_when_expansion_registers_after_discovery_query)
+  set_tests_properties(ioports.free_port_counts_refresh_when_expansion_registers_after_discovery_query PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
