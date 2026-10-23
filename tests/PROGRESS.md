@@ -1,3 +1,110 @@
+# Cumulative startup/lathe/storage delivery gate - 2026-10-23
+
+Branch coverage-batch-74 accumulates10 new cases and2 expanded workflows beyond
+1142871 across boot, boot_backlash, CAN, protocol, selected probing, lathe parsing
+and persisted tools. One full ASan/UBSan gate passes4,225 cases in176.79s:
+4,177 clean,48 documented known regressions,0unexpected/0skipped; strict summary
+passes. Evidence: build-asan/batch74-workflows-delivery-{results.xml,tests.log,
+summary.log,gate.json}. Session57908 completed; do not restart it.
+
+New lathe matrix checks wrong-plane and missing-Q errors for all six G71/G72
+forms, retains queued X motion and completes exact80 X/80 Z pulses afterwards.
+A real initialized persisted-tool G10L11 read-failure scenario returns ReadFail,
+preserves tool3 geometry and queued80-pulse cut, restores valid G59.3 and retries
+successfully to tool Z offset40. Both pass focused sanitizers.
+
+One confirmed same-block plane-validation defect has two correct named
+regressions (accepting selected G18; rejecting selected G17 before dispatch),
+two exact WILL_FAIL entries and dated KNOWN_BUGS documentation. Raw failures
+were verified separately; no sanitizer allowance was added. CORE latest fetch
+remains clean50f38659db7b22f4689f3654df2d110d992bcc95. No firmware edits.
+
+Deliver this coherent checkpoint on74 with one hosted dispatch. PR28 remains
+OPEN/ready/frozena9f355c; avoid a duplicate cumulative PR while it is open.
+Latest measured hosted39905420870 at1142871 is fully green98.11% lines/88.71%
+branches, NOT a measurement of these new cases. Continue independent reachable
+encoder/parser work after delivery; the full coverage goal remains active.
+Reporting helpers unchanged since75 passed checks, so no redundant rerun.
+
+# Startup fault timing and post-homing backlash group - 2026-10-23
+
+Four additional realistic boot workflows pass ASan/UBSan with CORE unchanged:
+- Motor fault arriving at the serial welcome boundary blocks G91. Clearing the
+  physical signal still makes $X return79; reset then $X permits G91 and $G.
+- Public $65=32 arms an actual registered watchable probe; warm reset followed
+  by guard contact reports Alarm_ProbeProtect (13), rejects G91 and permits
+  clear/$X/retry. Existing saved-flag clearing is not bypassed.
+- Engaged limit plus warm-reset physical limits_override enters Idle without
+  $X, retaining the engaged switch and enabled hard-limit policy.
+- Public $160/$161 configure0.1mm backlash; real $HX/$HY complete before a
+  two-axis bidirectional job. Homing pulses110/150, logical positions-10/-10;
+  final pulses278/318 and physical78/118 retain logical-10/-10 and no Z pulses.
+  Reuses existing boot_stream_motion fixture, enabling supported homing at boot.
+
+Three fault cases pass0.40s in batch74-late-alarm-results.xml; homing/backlash
+passes0.30s in batch74-home-backlash-results.xml. Initial failures were fixture
+setup/assertion mistakes: core resets its report callback, motor faults require
+reset, probe alarm number is13, and the stream fixture disables homing by default.
+Corrected driver-boundary setup and assertions; no CORE defect or allowance added.
+Source review identifies previously uncovered protocol.c145/146/160 and
+machine_limits.c544. These new local workflows have not had a fresh coverage
+measurement; do not count source review as measured gain. Keep the cumulative
+local group together and continue other reachable gaps before a delivery gate.
+
+Hosted39905420870 at1142871 is now fully green, all5jobs success. Exact source
+locks and measured98.11% lines/88.71% branches are verified below. Badges and
+KNOWN_BUGS gap snapshot refreshed to that report (335 raw uncovered lines).
+No new hosted run or small branch/commit checkpoint was created.
+
+# Source-matched coverage measurement and local CAN recovery - 2026-10-23
+
+Existing hosted run39905420870 coverage job completed successfully at harness
+114287185fada5f337fe1c13fdb1480f9e189f4f, CORE
+50f38659db7b22f4689f3654df2d110d992bcc95. Both artifact source locks agree;
+all seven coverage stages exit0. 17,379/17,714 lines (98.11%) and
+12,242/13,800 branch outcomes (88.71%). Against run39903031655 on the same
+CORE: +4 lines, +7 outcomes, no previously covered line lost. Gains are
+stepper.c1367,1494,1501,1503. This is +0.023 line percentage points and
++0.051 branch percentage points, NOT the requested two-point increase.
+Coverage classifier:4,215 total,4,170 clean,45known,0failed/0skipped.
+All five hosted jobs now completed successfully (source, GCC, Clang, coverage,
+CI diagnosis), confirmed by the run/jobs API at the exact harness head. Evidence: build-asan/hosted39905420870,
+comparison39903031655.json. No new hosted dispatch.
+
+Local CAN group expands receive_capacity through full-queue rejection, draining,
+retry and FIFO delivery across ring wrap; adds receive-generated ACK ordering
+behind a busy transmitter with exactly-once receive delivery. Both pass focused
+ASan/UBSan0.35s in batch74-can-recovery-results.xml. Callback signatures match
+can_rx_ptr (bool return). These are workflow checks on already-covered CAN paths;
+no extra coverage gain is claimed. Together with the existing local reboot case
+and selected-probe retry, they remain uncommitted pending a substantial batch.
+No CORE edits, exceptions or known bugs added. Full supported coverage remains
+incomplete; retain active goal and avoid repeated tiny validation checkpoints.
+
+# Missing-contact selected-probe recovery - 2026-10-23
+
+Extended existing G38.3/toolsetter missing-contact scenario through real rapid
+retract toX0, restored contact threshold and successful G38.2 retry toX1.
+Two public probe cycles complete, selection count4 restores default each time,
+previous failure becomes probe_succeeded, contact records64..66steps and no
+alarm/abort remains. Actual motor position follows both retract/retry; original
+no-contact endpoint/assertions retained. No private position/counter reset or
+new alias. ASan/UBSan passes0.07s;4,216 registered unchanged. Evidence
+build-asan/batch74-probe-retry-results.xml. One new and one extended local
+workflow now follow hosted1142871; keep grouped. CORE unchanged/no new allowance.
+
+# Unsupported reboot capability preserves queued machining - 2026-10-23
+
+First local follow-up after1142871 sends documented ESC/DC4 realtime reboot
+sequence with an ordinary driver that has no reboot callback. It leaves the
+queued planner head, idle state, abort/exec flags and physicalposition unchanged.
+Subsequent public cycle-start executes the retained cut to exactly80Xpulses,
+no Y/Zpulses, and returns Idle. No fake reboot callback or private reset flags.
+ASan/UBSan passes0.07s;4,216 total registered. Evidence
+build-asan/batch74-no-reboot-results.xml. No new exception or CORE edit.
+Latest hosted39905420870 at1142871 remains pending; earlier1142871 cumulative
+4,215-case gate passed133.27s. Keep extending74 without another hostedrun.
+
 # Batch74 second cumulative delivery gate passed - 2026-10-23
 
 Session43857 completed: build,CTest,strict summary all0.4,215 cases pass133.27s,

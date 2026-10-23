@@ -1,32 +1,28 @@
-#include "support/engine_host.h"
-#include "canbus.h"
-#include "check.h"
-static can_rx_enqueue_fn receive;
-static uint32_t baud_seen;
-static bool start_result = true;
-bool can_start(uint32_t baud, can_rx_enqueue_fn callback)
+#include "support/can_host.h"
+static unsigned received;
+static bool accept_frame(canbus_message_t message)
 {
-    baud_seen = baud;
-    receive = callback;
-    return start_result;
+    CHECK(message.id == 0x123 + received);
+    CHECK(message.len == 1 && message.data[0] == received);
+    received++;
+    return true;
 }
-static void load_bus(void)
-{
-    setting_details_t *details = NULL;
-    canbus_init();
-    CHECK(setting_get_details(Setting_CANbus_BaudRate, &details) != NULL);
-    CHECK(details != NULL && details->load != NULL);
-    details->load();
-    CHECK(receive != NULL);
-    CHECK(baud_seen >= 125000);
-}
-
 int main(void)
 {
-    engine_prepare();
-    load_bus();
-    canbus_message_t message = {.id = 0x123, .len = 1, .data = {42}};
-    for(unsigned i = 0; i < 7; i++) CHECK(receive(message, NULL));
-    CHECK(!receive(message, NULL));
+    prepare_can();
+    for(unsigned i = 0; i < 7; i++) {
+        canbus_message_t message = {.id = 0x123 + i, .len = 1, .data = {i}};
+        CHECK(can_receive(message, accept_frame));
+    }
+    canbus_message_t retry = {.id = 0x12a, .len = 1, .data = {7}};
+    CHECK(!can_receive(retry, accept_frame));
+    CHECK(received == 0);
+    poll_can();
+    CHECK(received == 1);
+    CHECK(can_receive(retry, accept_frame));
+    for(unsigned i = 0; i < 7; i++) poll_can();
+    CHECK(received == 8);
+    poll_can();
+    CHECK(received == 8 && tx_calls == 0);
     return EXIT_SUCCESS;
 }

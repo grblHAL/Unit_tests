@@ -26,6 +26,32 @@ in [storage write-failure policy](TODO.md#storage-write-failure-policy), includi
 its observations, existing test exceptions and cleanup links. It is not a
 settled requirement to retry physical writes a specific number of times.
 
+## Lathe roughing checks the previous plane when a block selects a new plane
+
+**Confirmed:** 2026-10-23, clean Terje `50f38659db7b22f4689f3654df2d110d992bcc95`
+(latest fetched revision). A block's plane selection precedes its motion; the
+lathe cycle validator instead reads `gc_state.modal.plane_select` rather than
+`gc_block.modal.plane_select` at gcode.c3967. The finishing guard at3948 has the
+same source-level issue; executable reproductions below use G71.
+
+- From G17, `G18G71X10Z20Q7F100` returns IllegalPlane instead of accepting the
+  selected ZX plane and dispatching the supported driver/plugin interface.
+  [Correct acceptance regression](cases/lathe_ngc/roughing_same_block_plane_change_uses_selected_plane_before_dispatch.c).
+- From G18, `G17G71X10Z20Q7F100` dispatches the lathe plugin instead of rejecting
+  the selected XY plane. [Correct rejection regression](cases/lathe_ngc/roughing_same_block_xy_plane_is_rejected_before_plugin_dispatch.c).
+
+The capture fixture replaces only the documented weak lathe plugin interface;
+it does not implement roughing geometry. Standalone plane commands followed by
+roughing controls pass. The separate queued-motion rejection scenario covers
+all six G71/G72 forms with wrong-plane and missing-Q errors, preserves the
+original planner block and subsequently completes exact X/Z motor travel.
+
+**Proposed CORE correction (not applied):** validate the block's selected plane
+in both finishing and roughing guards before dispatch. Keep both correct test
+assertions. After a fix, remove only their two exact `WILL_FAIL`/`known_bug`
+blocks from known_bugs.cmake, run the lathe group and normal delivery gates,
+then remove this resolved entry. No sanitizer diagnostic allowance applies.
+
 ## Known coverage gaps
 
 These are tracked placeholders for missing or inaccessible implementation, not
@@ -35,9 +61,9 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Reviewed:** 2026-10-23, clean Terje `50f38659db7b22f4689f3654df2d110d992bcc95`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39903031655)
-measures 17,375/17,714 lines (98.09%) and 12,235/13,800 branches (88.66%).
-The 339 uncovered lines include the following known gaps; this table does not
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39905420870)
+measures 17,379/17,714 lines (98.11%) and 12,242/13,800 branches (88.71%).
+The 335 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable.
 
 | Region | Status and evidence | What makes it testable |

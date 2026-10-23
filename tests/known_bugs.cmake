@@ -184,3 +184,13 @@ if(TEST ioports.pwm_frequency_above_timer_clock_reports_no_range_and_allows_vali
   set_tests_properties(ioports.pwm_frequency_above_timer_clock_reports_no_range_and_allows_valid_retry
     PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Same-block lathe plane validation uses the old modal plane (2026-10-23).
+if(TEST lathe_ngc.roughing_same_block_plane_change_uses_selected_plane_before_dispatch)
+  set_tests_properties(lathe_ngc.roughing_same_block_plane_change_uses_selected_plane_before_dispatch
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+if(TEST lathe_ngc.roughing_same_block_xy_plane_is_rejected_before_plugin_dispatch)
+  set_tests_properties(lathe_ngc.roughing_same_block_xy_plane_is_rejected_before_plugin_dispatch
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
