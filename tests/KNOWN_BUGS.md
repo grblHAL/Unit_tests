@@ -118,10 +118,10 @@ They do not create synthetic CTest failures, increase test counts, exclude sourc
 or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
-**Measured:** 2026-10-23, clean Terje `51b58594ce467e9c4b103fb93d1ca121e43cd15c`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39996777540)
-measures 17,464/17,740 lines (98.44%) and 12,497/13,824 branches (90.40%).
-The 276 uncovered lines include the following known gaps; this table does not
+**Measured:** 2026-10-23, clean Terje `2e165a1ac4c74be8e68971972c6577775d856b05`.
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40015747959)
+measures 17,473/17,750 lines (98.44%) and 12,510/13,828 branches (90.47%).
+The 277 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable. See the complete measured
 [line/branch inventory](COVERAGE_GAPS.md) before selecting the next workflow.
 

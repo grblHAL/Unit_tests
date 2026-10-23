@@ -1,3 +1,163 @@
+# Multi-axis/report/Modbus batch passed cumulative gate - 2026-10-23
+
+Full4346-case ASan/UBSan gate passes70.30s on clean CORE2e165a1; strict
+summary4332clean/14known/0failed/0skipped, no recovering sanitizer diagnostics.
+Six new cases cover the supported five-axis delta build (mixed nonzero position
+conversion and independent auxiliary reversals), registered bitfield allocation
+failure/retry, public legacy-RT capability changes, terminal-newline descriptions,
+and optional Modbus reset with post-reset fallback. All expected failures remain
+narrow; no new exception or CORE change. Evidence uses prefix
+batch74-multi-delta-report-modbus-delivery-{build.log,tests.log,results.xml,summary.log}.
+
+Current percentages remain the fully verified0237d9f report40015747959, not these
+six cases/new configuration. Commit/push this coherent batch, then request one
+exact-source hosted checkpoint after duplicate/hourly-limit checks. No unchanged
+Python helper rerun or repeated full suite. Full supported coverage remains active.
+
+# Registered description with terminal newline - 2026-10-23
+
+Added human_setting_description_accepts_terminal_escaped_newline. Register the
+normal plugin metadata descriptor with First/Second/Third and a terminal escaped
+newline before initialization. The public human-readable query must render the
+three text lines, remove escaped delimiters, avoid repeating text and leave the
+setting value unchanged. Uses the existing bounded write_n fixture. Targets
+report.c1818's missing empty-remainder outcome after splitting descriptions.
+Focused ASan/UBSan passes0.06s. No private callbacks, metadata mutation after
+registration, CORE edits, exception or new aggregate claim. Retain with the
+local multi-axis/report/Modbus batch for cumulative validation and delivery.
+
+# Optional reset branch proof - 2026-10-23
+
+The isolated coverage build of the normal mixed-transport reset/recovery case
+exits0. modbus-reset-proof74/modbus.c.gcov shows line93's two outcomes taken
+2times each, matching graceful/abort resets with one handler omitted and one
+present. The locked40015747959 report has only1/2 outcomes here. This is exact
+local evidence for a new supported branch in the next batch, not a refreshed
+aggregate total. CORE remains clean; no new exceptions or hosted dispatch.
+
+# Exact hosted checkpoint fully passed - 2026-10-23
+
+Run40015747959 completed successfully: allfive source/GCC/Clang/coverage/
+Results summary jobs green on harness0237d9f/CORE2e165a1. Artifact source/filter
+locks and allseven coverage stages already verified. Measured17473/17750 lines
+98.44%,12510/13828 outcomes90.47%;4340coverage cases4327clean/13known/0failed/
+0skipped. Refreshed README badges and measured KNOWN_BUGS/COVERAGE_GAPS snapshots.
+No new full/local/hosted run merely for documentation. Local five-axis delta,
+reporting and optional Modbus reset cases remain outside this measured head.
+Continue the full supported-coverage goal; this checkpoint is not completion.
+
+# Optional Modbus reset and post-reset fallback - 2026-10-23
+
+Added reset_skips_transport_without_handler_and_preserves_next_transaction.
+Normal registration installs an RTU transport without an optional reset and
+a TCP transport with a reset handler. Graceful and abort reset choices reach
+that handler exactlyonce, preserve advertised transports, and each next write
+falls back from TCP to RTU with exact address/value echo and no stale exception.
+Targets missing modbus.c93 outcome without changing private transport state.
+
+Initial fixture omitted TCP's required send callback; native TCP-first dispatch
+therefore faulted. This was fixture misuse, not a CORE defect. Added a valid
+TCP sender that declines this RTU server and assert each fallback attempt.
+All original reset/response assertions retained. Affected ASan/UBSan1/1 passes
+0.07s; no exception or diagnostic allowance. Keep with local delta/report batch;
+no small full-suite/hosted run and no new aggregate coverage claim.
+
+# Current-source inventory refreshed - 2026-10-23
+
+COVERAGE_GAPS now enumerates the exact2e165a1/0237d9f coverage-job artifact:
+41source rows sum to277missing executable lines/1318missing outcomes, checked
+against XML totals. Every table link uses the measured source SHA. Explicitly
+marks GCC/overall checkpoint pending and retains prior fully successful run
+as historical reference; README badges were not changed prematurely. New
+five-axis/report cases are explicitly outside the measured head and may expand
+the compiled denominator. Coverage job data remains98.44% lines/90.47% branches.
+No cross-revision line-hit comparison, exclusion, duplicate run or CORE edit.
+
+# New-source coverage job verified; GCC pending - 2026-10-23
+
+Downloaded40015747959 artifacts and verified both exact harness0237d9f/source
+2e165a1/filter locks plus exactlyseven fetch/tooling/configure/build/test/
+classify/coverage stages, all exit0. Coverage job measures17473/17750 lines
+98.44% and12510/13828 branch outcomes90.47%;4340 tests4327clean/13known/0fail/
+0skip. Source and Clang jobs passed; GCC was still live at last inspection.
+Do not call the overall checkpoint green or refresh successful-run badges yet.
+New raw inventory: batch74-post0237-missing-lines.json,277missing lines.
+This source changed the denominator; no cross-revision line-hit gain claimed.
+
+Separately, local metadata recovery binary exits0 and gcov report.c1680 has
+both outcomes taken once (bitfield-recovery-proof74). This confirms a missing
+supported allocation/retry branch for the NEXT batch. Its case and the new
+five-axis configuration are not part of40015747959. No new dispatch.
+
+# Bitfield metadata allocation recovery - 2026-10-23
+
+Added report.bitfield_metadata_allocation_failure_allows_complete_retry using
+registered text metadata and the existing malloc wrapper scoped to this exact
+case. During the public human-readable query exactlyone allocation fails:
+setting identity and reboot notice remain, no option rows are invented, and
+stored value remains0. A subsequent query lists both exact option/bit values
+and reboot notice with no additional failure. ASan/UBSan passes0.14s; no CORE
+bug or allowance added. Targets report.c1680's missing allocation outcome.
+
+The legacy0/1/0 capability report coverage binary also exits0 and executes
+report.c1033 three times. Its output assertions prove RT-/RT+ behavior; local
+Clang gcov has no branch counters on that ternary, so exact hosted branch gain
+is not claimed from this local profile. Evidence: legacy-report-proof74.
+Hosted40015747959 was still live with source green and three compiler/coverage
+jobs running. Keep these reporting cases and five-axis delta work local for
+the next substantive batch; no duplicate checkpoint or aggregate percentage.
+
+# Public legacy realtime capability reporting - 2026-10-23
+
+Added report.build_info_tracks_legacy_realtime_setting_without_stale_capability:
+public Setting_EnableLegacyRTCommands writes0/1/0 and extended build reports
+must show exactly the corresponding NEWOPT RT-/RT+ prefix, reject the stale
+opposite prefix, and retain the stored flag. Each query also checks the two
+plugin report phases. Initial repeated queries exceeded the existing fixture's
+four-callback observation buffer; reset/check its count per query, without
+changing shared fixture or CORE behavior. Focused ASan/UBSan passes0.06s.
+This targets report.c1033's missing option outcome on unchanged report source.
+
+Hosted40015747959 was verified live with source job successful and GCC/Clang/
+coverage running. No duplicate dispatch. New report scenario and five-axis
+delta work remain local for the next cumulative batch, outside that run.
+No new coverage percentage or confirmed firmware defect claimed.
+
+# Multi-auxiliary delta paths measured locally - 2026-10-23
+
+Added a second five-axis real-boot job: simultaneous Z-0.5/A1/B-0.5 produces
+5pulses on each delta joint,80 on A and40 reverse on B. Both parser coordinates
+and system_convert_array_steps_to_mpos retain distinct nonzero A1/B-0.5;
+Cartesian XYZ agree with the independent symmetric geometry within0.03mm.
+Focused ASan/UBSan1/1 passes0.07s. The existing return-to-zero control separately
+checks160/80 auxiliary pulses, no joint movement and independent reversals.
+
+Built both coverage binaries together; both exit0. Isolated gcov evidence in
+delta-multi-proof74/proof.json confirms execution of all three new N_AXIS>4
+loops: delta.c135-136 inverse transform,190-191 forward transform and275-276
+segment deltas. Bodies execute426/25160/6times respectively. This establishes
+real execution under the new configuration, not an aggregate gain versus a
+report that did not compile it. Local CMake/configuration and two cases remain
+for the next batch; exact0237d9f hosted run40015747959 does not contain them.
+No CORE changes, exclusions, new exceptions or extra hosted dispatch.
+
+# Hosted checkpoint active; multi-auxiliary delta authoring - 2026-10-23
+
+Exact pushed0237d9f3168c42564454991593f1019dc5d1f465/CORE2e165a1 hosted
+run40015747959 is active: https://github.com/petervanderwalt/Unit_tests/actions/runs/40015747959
+Duplicate/head and rolling-hour checks preceded its single dispatch; actual
+run handle saved in batch74-core2e165-hosted-handle.json. Do not redispatch.
+
+While it runs, added local host_core_delta_multi (DELTA_ROBOT=1,N_AXIS=5)
+and boot_delta_multi module reusing the existing real-boot/pulse fixtures.
+One streamed job drives A+1/B-0.5 then A-1/B+0.5:160/80 observed pulses,
+independent exact zero endpoints, no delta joint pulses or position changes,
+and original Cartesian height. This reaches upstream's N_AXIS>4 auxiliary
+loops omitted by existing three/four-axis builds. Focused ASan/UBSan1/1
+passes0.06s; no private transforms or CORE edits. This new configuration/case
+is local for the NEXT cumulative batch and is not part of run40015747959.
+No aggregate coverage claim until the exact source/configuration report exists.
+
 # Cumulative sanitizer gate complete - 2026-10-23
 
 CORE2e165a1ac4c74be8e68971972c6577775d856b05 remains clean. Full4340-case

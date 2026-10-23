@@ -1,8 +1,8 @@
 # Unit tests for the grblHAL core
 
 [![Core tests](https://github.com/grblHAL/Unit_tests/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/grblHAL/Unit_tests/actions/workflows/tests.yml)
-[![Core line coverage: 98.44%](https://img.shields.io/badge/core_lines-98.44%25-brightgreen)](https://github.com/petervanderwalt/Unit_tests/actions/runs/39996777540)
-[![Core branch coverage: 90.40%](https://img.shields.io/badge/core_branches-90.40%25-green)](https://github.com/petervanderwalt/Unit_tests/actions/runs/39996777540)
+[![Core line coverage: 98.44%](https://img.shields.io/badge/core_lines-98.44%25-brightgreen)](https://github.com/petervanderwalt/Unit_tests/actions/runs/40015747959)
+[![Core branch coverage: 90.47%](https://img.shields.io/badge/core_branches-90.47%25-green)](https://github.com/petervanderwalt/Unit_tests/actions/runs/40015747959)
 
 Coverage badges show a verified successful report, not a live measurement of
 every source revision. Click either percentage for its run and coverage artifact.
@@ -527,11 +527,14 @@ use a new build directory so old execution counts cannot carry over.
 
 The host variants currently exercise the default configuration, legacy protocol
 compatibility level 1, disabled NGC parameters/expressions (including boot and reset), NGC expressions with default and extended (`NGC_MAX_PARAM_LENGTH=80`) named-parameter/macro labels, non-modal lathe U/V/W commands with NGC expressions, cutter-compensation parsing and plugin interfaces, G187 acceleration profiles, jerk acceleration with and without G187 profiles, coordinate rotation with NGC expressions, default Mach3-style and alternate Fanuc-style G51 scaling (`MACH3_SCALING=0`), spindle synchronization with simulated encoder feedback (including normal boot and streamed G95 programs),
-CoreXY, polar, wall-plotter, delta and five-axis RTCP kinematics, backlash
+CoreXY, polar, wall-plotter, three/four/five-axis delta and five-axis RTCP kinematics, backlash
 compensation, four-axis asymmetric ganging with and without auto-squaring,
 seven-axis XYZABCU, the eight-axis maximum, six-axis UVW remapping, and three registered spindles
 with two active spindle slots, a four-slot persistent tool table with and without NGC expressions, fixed X/Y/Z tool-offset axes (`TOOL_LENGTH_OFFSET_AXIS`), optional spindle PWM linearization, and enabled PID logging. All variants run in one
-CTest suite; coverage merges their executed source lines. Compatibility levels
+CTest suite; coverage merges their executed source lines. The five-axis delta
+fixture streams mixed cuts and independent auxiliary reversals, checking emitted
+steps and public machine-position conversion. It does not establish auxiliary
+homing behavior. Compatibility levels
 1, 2 and 10 have runtime reporting tests. Levels 2 and 10 also exercise normal
 boot/reset, coordinate availability and legacy settings; their coordinate-report
 compile checks remain. The `separate` function
