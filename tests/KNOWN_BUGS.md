@@ -61,8 +61,8 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Reviewed:** 2026-10-23, clean Terje `50f38659db7b22f4689f3654df2d110d992bcc95`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39919635378)
-measures 17,399/17,714 lines (98.22%) and 12,282/13,800 branches (89.00%).
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/39922349935)
+measures 17,399/17,714 lines (98.22%) and 12,290/13,800 branches (89.06%).
 The 315 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable.
 

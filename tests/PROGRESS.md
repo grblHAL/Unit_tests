@@ -1,3 +1,28 @@
+# Cumulative input/macro/settings delivery - 2026-10-23
+
+Seven new cases plus three strengthened existing macro scenarios beyond e29e27e
+pass the full4,252-case ASan/UBSan gate77.82s and strict summary:4,228clean/
+24documented regressions/0unexpected/0skipped. No new defect allowances or CORE
+edits. Evidence build-asan/batch74-ownership-macro-settings-delivery-{results.xml,
+tests.log,summary.log}. This combines registered input ownership, singleton plugin
+selection, actual nested macro motion/recovery and driver-dependent settings.
+
+Three new settings controls use public writes and capability lookup: parking on
+an input-less board hides DoorOptions and rejects writes without changing saved
+flags; a board advertising its door before metadata initialization retains both
+options across reload while parking stays enabled; a registered feedback VFD
+exposes/sets/clears speed tolerance without a separate encoder. Seven focused
+availability controls pass0.44s. The unused DoorSpindle/Coolant delay availability
+switch cases have no descriptor callback; their raw gaps are documented, not
+forced by altering private setting tables. Reporting helpers remain unchanged.
+
+Previous e29e27e hosted run39922349935 passed all five jobs, both source locks
+match50f3865 and all seven coverage stages exit0. Classifier4,245total/4,223clean/
+22known/0failed/0skipped. Measured17,399/17,714 lines98.22% and12,290/13,800
+branches89.06%: unchanged lines,+8 outcomes versus39919635378, no lost lines.
+Comparison is build-asan/hosted39922349935/comparison39919635378.json.
+README/gap badges use this locked result; no gain claimed for the newer batch.
+
 # Assigned input ownership and real macro recovery batch - 2026-10-23
 
 LOCAL beyond e29e27e: four new cases plus three expanded existing scenarios,

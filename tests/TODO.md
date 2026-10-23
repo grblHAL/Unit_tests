@@ -1074,3 +1074,14 @@ an expected failure for a compound filter, establish a supported plugin requirin
 that exact combination and confirm the setter's intended any/all semantics.
 Do not present this source-level discrepancy as a confirmed controller defect.
 Registered single-capability, claim-ownership and singleton-bank controls remain.
+
+## Unrouted door-delay availability guards - 2026-10-23
+
+On CORE50f3865, settings.c has is_setting_available cases for DoorSpindleOnDelay
+and DoorCoolantOnDelay, but their setting descriptors register no availability
+callback. Public setting lookups/stores cannot dispatch those switch cases.
+Do not replace a descriptor's callback or call the private function to cover them.
+DoorOptions does register the callback and has supported board/parking states;
+new public-store controls cover those transitions. A registered at-speed VFD
+likewise reaches the real SpindleAtSpeedTolerance availability path without a
+separate encoder. Keep unrouted branches in the raw denominator.
