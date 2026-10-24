@@ -48,6 +48,12 @@ else:
             expected_diagnostic = any(p.get("name") == "cmake_labels" and "known_sanitizer_bug" in p.get("value", "").split(";") for p in case.findall("./properties/property"))
             diagnostics = []
             output = "\n".join(case.findtext(tag, "") for tag in ("system-out", "system-err"))
+            profile_errors = [line for line in output.splitlines() if line.lstrip().startswith(("profiling:", "libgcov profiling error:"))]
+            if profile_errors:
+                case.set("coverage_error", "true")
+                failed += 1
+                ET.SubElement(case, "failure", message="Coverage counter data could not be saved; check writable output paths and rerun coverage.").text = "\n".join(profile_errors)
+                continue
             fatal = any(p.get("name") == "cmake_labels" and "known_crash" in p.get("value", "").split(";") for p in case.findall("./properties/property"))
             expected_diagnostic = expected_diagnostic or fatal
             if fatal and matches_known_crash(case.get("name"), output, manifest):
@@ -87,7 +93,9 @@ else:
             for case in affected:
                 name = html.escape(case.get("name", "unknown")).replace("|", "&#124;")
                 labelled = any(p.get("name") == "cmake_labels" and any(label in p.get("value", "").split(";") for label in ("known_bug", "known_sanitizer_bug")) for p in case.findall("./properties/property"))
-                if labelled:
+                if case.get("coverage_error"):
+                    advice = "Coverage counter data could not be saved. Check writable output paths, path length and free disk space, then rerun coverage."
+                elif labelled:
                     advice = "See " + known_link + "; it may be a fixed regression. Inspect the actual assertion/diagnostic before concluding it is fixed. If the correct expectations now pass, retain the test, remove only its linked WILL_FAIL/sanitizer/wrapper exception, delete the resolved known-bug entry, and rerun the suite plus summary. An unrelated crash or different failure is not proof of a fix."
                 else:
                     advice = "Inspect the failing assertion and LastTest.log; reproduce with `ctest --test-dir build -V -R` and this test's name. Compare the selected source change with the intended contract and fixture startup/configuration. Fix a source regression, or update the test/fixture only for a confirmed intended API/behavior change. Add boundary/error coverage for new behavior; do not weaken assertions or broadly suppress sanitizer failures."
@@ -106,6 +114,8 @@ else:
                     message = (case.get("name", "unknown") + "\n" + case.get("sanitizer_output"))[-6000:].replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
                     print(f"::error title=Unexpected sanitizer diagnostic::{message}")
             name = html.escape(case.get("name", "unknown")).replace("|", "&#124;")
+            if case.get("coverage_error"):
+                status = "Coverage counter write failed"
             lines.append(f"| {name} | {status} | {case.get('time', '0')} |")
             for tag in ("failure", "error"):
                 detail = case.find(tag)
