@@ -193,3 +193,9 @@ if(TEST gcode.m6_unloading_tool_with_g43_clears_previous_offset_after_sender_ack
   set_tests_properties(gcode.m6_unloading_tool_with_g43_clears_previous_offset_after_sender_ack
     PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Confirmed CORE2e165a1, 2026-10-24: blocking CRC failure reports NoException.
+if(TEST modbus_rtu.blocking_crc_error_reports_crc_code_and_allows_next_request)
+  set_tests_properties(modbus_rtu.blocking_crc_error_reports_crc_code_and_allows_next_request
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

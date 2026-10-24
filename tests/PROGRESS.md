@@ -1,3 +1,45 @@
+# Conditional recovery, blocking CRC, rotary return and PWM reset - 2026-10-24
+
+Branch coverage-batch-74, parent0fb0967fc1681c4d4b6aca7ff2c59361533dddeb.
+CORE remains clean/latest2e165a1ac4c74be8e68971972c6577775d856b05 after fetch.
+PR28 still open/unmerged/frozen a9f355c; do not merge or overlap it.
+
+Seven new cases span four modules:
+- ngc_flowctrl: IF/ELSEIF/REPEAT/DO-WHILE expression DivideByZero returns the
+  exact error, suppresses body/tail writes, closes/unwinds actual RAM file,
+  restores sender, then accepts $G and a fresh IF/assignment/ENDIF plus $G.
+  DO body executes exactlyonce. Compatibility0 intentionally latches errors;
+  public $G precedes recovery G-code. Four normal cases pass under sanitizers.
+- modbus_rtu confirmed defect: no-retry blocking CRC-corrupt response returns
+  false and calls one error observer, but code0(NoException) instead of254(CRC).
+  Next valid request recovers with expected address/function/data bytes. Correct
+  final CRC assertion retained in one exact WILL_FAIL; dated KNOWN_BUGS entry.
+  Existing asynchronous CRC and blocking retry controls pass. No sanitizer
+  allowance or lockup/data-acceptance claim. Separate undocumented blocking
+  callback rx_length0 recorded in TODO, not promoted to a confirmed defect.
+- eight_axis: public rotary/wrap settings, actual moveA30/G28.1 save/moveA90.
+  G91G28A0 returns60degrees (4800steps); requested G28A10 preserves10forward/
+  70back (6400steps). Physical/system/parser end at30, other seven axes stay0.
+- multi_spindle: registered PWM driver starts rising, public CMD_RESET requested
+  during native ramp; actual reset processing quenches output and calls driver
+  reset once. All PWM writes from observed quench onward remain0; optional
+  secondary untouched. No invented arrival-time guarantee: one write can precede
+  processing of the queued reset. No private flags or spindle-pointer mutations.
+
+Full4449 ASan/UBSan gate passes58.88s; strict report4420clean/2knownSAN/
+27knownregressions/0failed/skipped. Evidence build-asan/driver-recovery74-delivery-
+{results.xml,tests.log,summary.log}. No CORE/shared-fixture/reporting-script edits;
+no redundant unchanged Python-helper rerun. Fresh isolated LLVM branch proofs
+retained for conditional errors486/497/542/585, rotary4626/4660 and ramp729/743/815;
+no new aggregate percentage inferred from those profiles.
+
+Verified hosted40068761972 allfive jobs green, exact0fb0967/2e165a1/filter locks,
+7stages exit0. 17480/17756lines98.45%,12721/13834branches91.95%; +12outcomes vs
+40066895627, identical line hit sets/denominators. Raw276lines/1113outcomes remain.
+Badges and inventory now reference that report. This successor needs one exact-
+head hosted checkpoint. Preserve unrelated ioports phantom M. Continue the full
+supported-coverage goal; gates, commits and PR checkpoints are not completion.
+
 # Conditional jobs, deferred offsets and primary-only program end - 2026-10-24
 
 Branch coverage-batch-74, parent51d3a6e55e6070b86526eab5bfed239382c501fa.

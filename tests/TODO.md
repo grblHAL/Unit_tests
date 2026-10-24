@@ -1754,3 +1754,15 @@ an L-integer NAN-to-0xFF conversion. Establish whether a valueless L is a suppor
 plugin request or only a defensive/internal sentinel before registering a case
 solely for that partial branch. Existing valueless-float controls remain; no
 integer-plugin behavior, defect, private state or source exclusion is invented.
+
+
+## Blocking Modbus receive-callback length contract - 2026-10-24
+
+On CORE2e165a1, a valid blocking RTU response callback receives correct ADU bytes
+but rx_length0: the receive loop decrements packet->msg.rx_length to0; only the
+async completion arm restores rx_len before its callback (modbus_rtu.c231).
+The public modbus_message_t field and callback have no length semantics comment.
+Existing blocking tests use known response bytes. Establish whether
+blocking observers are promised the original/received length before registering
+a separate length defect. The blocking CRC regression checks actual response
+bytes and transport recovery; no new receive-length assertion or allowance.

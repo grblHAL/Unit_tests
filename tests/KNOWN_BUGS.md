@@ -26,6 +26,29 @@ in [storage write-failure policy](TODO.md#storage-write-failure-policy), includi
 its observations, existing test exceptions and cleanup links. It is not a
 settled requirement to retry physical writes a specific number of times.
 
+## Blocking Modbus CRC failure reports NoException to its error callback
+
+Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
+A blocking RTU read with CRC checking and no retries receives a normal-length
+reply with one corrupted CRC byte. The call correctly returns false and invokes
+its exception observer once, but reports0 (`ModBus_NoException`) instead of254
+(`ModBus_CRCError`). The asynchronous CRC control reports the correct CRC code.
+
+[Regression](cases/modbus_rtu/blocking_crc_error_reports_crc_code_and_allows_next_request.c)
+uses the existing registered serial fixture, actual CRC calculation and public
+`modbus_send`. Before its final correct CRC-code assertion, it proves one failed
+request, no receive callback for corrupt data, and successful next request with
+one valid response and expected address/function/data bytes. No transport lockup,
+corrupt data acceptance or sanitizer fault is claimed. Exactly one named
+`WILL_FAIL`/`known_bug` applies in [known_bugs.cmake](known_bugs.cmake).
+
+Source: [CRC detection](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/modbus_rtu.c#L212)
+sets `ModBus_Exception` for blocking requests but does not assign the CRC error
+to the stored exception code. The [blocking dispatcher](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/modbus_rtu.c#L295)
+passes that stored code to the observer. Review assigning the CRC code for that
+path; CORE is unchanged here. Keep the assertions and remove the allowance and
+this entry after a fixed source passes sanitizer validation and recovery controls.
+
 ## Acknowledged tool-zero G43 retains the previous tool offsets
 
 Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
@@ -387,8 +410,8 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Measured:** 2026-10-24, clean Terje `2e165a1ac4c74be8e68971972c6577775d856b05`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40066895627)
-measures 17,480/17,756 lines (98.45%) and 12,709/13,834 branches (91.87%).
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40068761972)
+measures 17,480/17,756 lines (98.45%) and 12,721/13,834 branches (91.95%).
 The 276 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable. See the complete measured
 [line/branch inventory](COVERAGE_GAPS.md) before selecting the next workflow.
