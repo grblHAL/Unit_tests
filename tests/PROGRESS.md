@@ -1,11 +1,23 @@
 # Current handoff - 2026-10-24
 
-User reports PR28 MERGED. This supersedes every earlier frozen/open PR28 note.
+PR28 is MERGED. Draft PR30 now presents the substantial pushed batch74 at
+58774aa: https://github.com/grblHAL/Unit_tests/pull/30
+PR30 is NOT ready: prior pushed source/GCC/coverage passed but Clang/summary
+failed; new cumulative-head hosted validation is pending.
+No merge performed. Nine later cases are now locally validated for the next head.
+This supersedes older no-new-PR and frozen/open PR28 notes.
 Fetch origin/upstream and compare ancestry before preparing the next PR; never
 merge PRs or reset existing changes. Active checkout:
 C:/Users/User/Documents/Codex/2026-10-08/https-github-com-petervanderwalt-unit-tests/work/Unit_tests
-Branch coverage-batch-74, pushed58774aa6491f86cee1256dc28844a18a2e75c095;
-tracks origin/coverage-batch-74.
+Branch coverage-batch-74: cumulative nine-workflow delivery after localb955ba1;
+pushed58774aa6491f86cee1256dc28844a18a2e75c095 tracks origin/coverage-batch-74.
+Localb955ba1 plus six further cases provide nine actual-use workflows and the
+observed exact recursive index27 diagnostic variant. Cumulative full4,484-case
+ASan/UBSan/strict gate PASSES148.53s:4,459 clean,24 known regressions,1 known
+diagnostic,0 failed/skipped.17 matcher helpers passed earlier; unchanged helpers
+were not rerun. Logs: build-asan/batch74-normal-workflows-{build,tests,summary}.log
+and batch74-normal-workflows-results.xml. Preparing commit/push and one hosted
+checkpoint for this substantial normal-use group; no new coverage claim yet.
 Current pushed delivery adds exact Clang handling, reconciled inventories and
 three normal-use workflows. Full local4,475 sanitizer/strict gate passes67.27s:
 4,450 clean/24 known regressions/1 known diagnostic/0 failures/skips.
@@ -17,12 +29,75 @@ https://github.com/petervanderwalt/Unit_tests/actions/runs/40103625282
 Do not redispatch, report green or update badges before terminal locked results.
 Coverage/Clang artifacts now downloaded and exact harness/source locks verified.
 Clang absent/changed expected tapping diagnostics prevent a PR-ready claim.
-Do not redispatch for these small additions. Continue normal workflows. Draft body is in
+The nine-workflow group has reached a substantial validated delivery boundary.
+Use one new exact-head checkpoint after push; do not repeat older failed heads. Draft body is in
 build-asan/batch74-pr-body.md. Full supported-coverage goal remains ACTIVE.
 CORE clean at b01f481072edecac33d5e40c25869359a5b3fa1f; Terje alone edits it.
 Full objective remains meaningful supported CORE line AND branch coverage.
 
-## Next normal-use authoring group (local; outside hosted58774aa)
+## Further ordinary board/startup workflows - 2026-10-24
+
+Three new cases finish the current nine-workflow group beyond pushed58774aa:
+- settings.autosquare_homing_failure_limits_save_and_reload_on_supported_board:
+  a real Y autosquare capability exposes percent/min/max homing-failure settings;
+  public writes3.5%/0.5mm/8mm survive settings reload with exact values.
+- settings.dual_motor_board_without_autosquaring_hides_homing_failure_limits:
+  a valid ganged Y driver with no autosquare capability hides/rejects these
+  settings, preserving prior values and emitting no settings-change callback.
+  Together these target remaining settings2163 availability outcomes.
+- boot.saved_laser_mode_survives_capable_pwm_startup_and_executes_dynamic_cut:
+  normal full startup registers PWM laser before settings init; saved laser mode
+  survives sanity check. Real serial G1M4S500F100X1/M5/$32/$G executes80 X pulses,
+  observes nonzero PWM during the cut and final output off. Targets settings2260.
+Allthree sanitizer/strict checks pass0.15s in normal-boot-board-group-results.xml.
+An initial fixture assertion checked abort after deliberate CMD_EXIT reset; moved
+that assertion to live pre-read observation, retaining no-alarm/no-abort checks
+throughout the job. No CORE defect/allowance was added.
+
+Nine authored actual-use workflows now span reporting, help, delta metadata,
+queued offsets, board settings and full laser startup. They form the next useful
+cumulative delivery boundary. Full4,484 sanitizer/strict gate passed148.53s; next commit/push and one
+hosted measurement. Do not claim new coverage until locked evidence.
+No CORE edits, speculative inputs or private-state injection.
+
+## Further ordinary offset workflows - 2026-10-24
+
+Two additional uncommitted cases reuse existing driver/motion fixtures:
+- motion_control.machine_position_reports_pair_with_executing_g92_offset_without_draining_queue:
+  public $10=33 enables MPos/WCO with nonblocking offsets; two queued moves keep
+  physical MPos0.5/1.5mm paired with executing WCO0/1mm. G92 does not drain the
+  first move; actual endpoint160 X pulses, no Y/Z movement. Targets gcode286.
+- gcode.missing_additional_tool_offset_preserves_existing_offset_and_queued_cut:
+  ordinary unavailable tool G43.2H2 rejects while preserving dynamic Z2 offset
+  and queued cut. Valid registered H1 retries to X1/Y2/Z5 offsets; the original
+  cut retains80 X pulses with zero Y/Z movement. Targets gcode2998.
+Both pass focused ASan/UBSan and strict summary0.10s in
+build-asan/normal-offset-group-results.xml. No new CORE defect or exception.
+These plus delta metadata and localb955ba1 remain the next cumulative batch;
+no extra full gate or hosted run was started. Raw measured counts are unchanged.
+Fresh Terje fetch stillb01f481 clean. Draft PR30 is linked/attached and remains
+explicitly unready; keep new work on74 and update it only at a useful boundary.
+
+## Additional local normal-use coverage - 2026-10-24
+
+Uncommitted delta.sender_axis_metadata_works_without_preceding_extension_callbacks
+uses normal delta initialization with no earlier metadata extension. Public reports
+retain X travel in mm and its built-in description, while motor resolution reports
+step/rad and the delta description. Workspace remains finite and ordered.
+Targets delta761/907 optional prior callbacks. Focused sanitizer passes0.05s;
+strict summary also passes. No new defects/allowances or measured coverage claim.
+
+One newly reviewed residual outcome at ngc_flowctrl372 is forced by immediate
+sub->callback=callback assignment before the return; no intervening call. The
+callback-equality false outcome requires unsupported mutation. Inventory retains
+its raw count with concise current-source proof; no dummy test added. Delta726
+likewise starts buf with fixed |KPos: and only appends before its nonempty check;
+its empty-buffer outcome is recorded as a source invariant, with raw count kept.
+Further I/O IRQ/expansion candidates were already covered by existing mixed-bank
+cases, so no duplicates were authored. Continue across distinct actual-use gaps;
+no full gate or hosted run for these few local additions.
+
+## Next normal-use authoring group (committed localb955ba1; outside hosted58774aa)
 
 Three new cases use existing public fixtures; no CORE changes, private flags,
 new exceptions or unusual inputs:
