@@ -1,3 +1,42 @@
+# Public workflow recovery batch - 2026-10-24
+
+Branch coverage-batch-74, parent f1879ab83df4cf623a9a4b8a98043ea672e0fa77.
+CORE remains clean/latest2e165a1ac4c74be8e68971972c6577775d856b05 after fresh
+fetch. PR28 is still open/unmerged at a9f355c; do not merge or overlap it.
+
+Seven new cases plus two existing-case extensions span six modules:
+- ngc_expr: malformed named RHS and computed index preserve values and queued
+  motion; corrected assignments and following cut execute to160 steps.
+- gcode: documented OpenPNP M201.3 drains queued motion before plugin execution,
+  preserves claimed axis values without moving them; integer form rejects.
+- motion_control: registered probe rejects G38.6 without touching queued motion,
+  then valid G38.2 detects actual120-step contact and completes once.
+- motion_control: a100mm G5 inflection checks independent Bezier samples/extrema,
+  both Y reversals, exact pulse totals and physical/parser endpoint.
+- motion_control: inverse-time G80/rapid, rejected G80X2 and F-less G1 retain
+  queue/modes; corrected feed command finishes160 steps. Isolated LLVM trace
+  confirms both outcomes at gcode.c2415, not an aggregate GCC gain claim.
+- lathe_ngc: optional pre-execution hook observes native metric jog while prior
+  inch/incremental program modes/feed remain intact; exactly80 steps finish.
+- ngc_params: actual percent-delimited RAM file finishes80 steps, reports end,
+  closes/restores sender and answers $G with no optional completion observer.
+  Isolated trace confirms callback-absent side at gcode.c1324.
+- Existing cutter_comp check-mode rejection now includes G40/T2M6 recovery.
+  Persistent tool-table G43 covers omitted H with pending/current tool selection.
+  These are explicitly check-mode cases, not physical tool-change claims.
+
+Full ASan/UBSan4435-case gate passes60.19s; strict reporting passes. Evidence:
+build-asan/public-workflows74-delivery-{results.xml,tests.log,summary.log}.
+Known25 expected failures and2 recovering sanitizer cases unchanged; no CORE,
+shared fixture, CMake, reporting script or allowance changes. No redundant
+unchanged reporting-helper rerun. Valueless integer-L plugin contract remains
+in TODO; no invented behavior test. Preserve unrelated ioports phantom M.
+
+Last verified hosted40064204492 is98.45% lines/91.80% branches, source/harness
+locks verified, allfivejobs green. Badges/docs refreshed to that report.
+This successor needs one hosted exact-head measurement; no new percentage yet.
+Continue the full supported-coverage goal; passing this gate is not completion.
+
 # Driver/parser allocation recovery batch - 2026-10-24
 
 Five new cases pass one cumulative ASan/UBSan gate: 4,428/4,428 in 58.84s.

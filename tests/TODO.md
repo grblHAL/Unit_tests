@@ -1745,3 +1745,12 @@ an inconsistent callback object or call this file-local handler directly.
 
 All these outcomes remain in raw coverage. This is a bounded native source
 finding, not completion of all ngc_params paths or a new confirmed defect.
+
+## Valueless integer L word plugin contract - 2026-10-24
+
+CORE2e165a1 core_handlers.h documents UserMCode_NoValueWords for floating-point
+parameter words, with NAN passed to the plugin validator. gcode.c2061 also has
+an L-integer NAN-to-0xFF conversion. Establish whether a valueless L is a supported
+plugin request or only a defensive/internal sentinel before registering a case
+solely for that partial branch. Existing valueless-float controls remain; no
+integer-plugin behavior, defect, private state or source exclusion is invented.
