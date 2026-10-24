@@ -1,3 +1,124 @@
+# Reset/handover cumulative gate passed; prior checkpoint fully green - 2026-10-24
+
+Six new workflows pass the one full4398-case ASan/UBSan gate in58.36s.
+Strict summary:4377clean/1exact recovering UBSan/20known regressions/0unexpected
+failures/skips. New null-console restoration regression keeps correct assertions
+and one exact expected failure; no sanitizer allowance. Shared PWM fixture's
+three controls also passed focused. Fresh CORE fetch remains clean2e165a1.
+Prior7d0dff6 run40047406632 all five jobs completed success; verified source/filter
+locks and seven stages0 support98.45%lines/91.34%branches. Badges and measured
+paragraph now point to that fully green report. New source coverage is pending.
+Deliver the six-workflow group on existing74 with one exact-source hosted run;
+no merge, completion claim or per-case hosted dispatch. Continue next batch.
+
+# Selected VFD boots normally when unused PWM configuration fails - 2026-10-24
+
+Added boot_multi_spindle.vfd_default_boot_continues_when_unused_pwm_configuration_fails.
+Existing mixed-driver fixture now supports a genuine driver config false result.
+Unused PWM is configured with saved range but receives no state/output call on
+failure; selected VFD still configures, remains default, emits normal off output
+and accepts $G with valid started/no-alarm startup. Both prior saved/locked-range
+success controls remain unchanged by default. Three affected ASan/UBSan cases
+pass3/3 in0.18s. Targets spindle_control.c63 failed unselected-PWM init arm.
+No CORE edits or new allowance. Small shared fixture change verified against
+all its three consumers. Six successor workflows ready for one cumulative gate.
+
+# Confirmed null-console pendant release restoration defect - 2026-10-24
+
+Public network-only base -> network connect/disconnect -> registered serial
+pendant takeover/release reproduces success with sys.mpg_mode cleared but all
+five restoration observations false: reader/writer/stream-mode/RX/handler.
+Normal network reconnection/output succeeds before the final correct restoration
+assertions fail. Raw ASan/UBSan failure0.06s has no sanitizer diagnostic.
+Source stream.c847 treats a valid saved null-console type as no backup and skips
+restoration. Dated KNOWN_BUGS entry includes bounded impact, source, repair and
+cleanup guidance. One exact WILL_FAIL/known_bug retains all assertions; focused
+classified gate/strict summary passes1known/0unexpected/0skipped in0.05s.
+No CORE change, broad allowance or motion hazard claim. Expected regressions
+now20 on Windows, plus unchanged1recovering UBSan. Five local successor cases
+continue independently; this confirmed defect is not a blocker or completion.
+
+# Reset/pendant group isolated profiles verify intended source paths - 2026-10-24
+
+Extended active-pendant boot scenario with a repeated public enable(true) while
+already active: returns false, preserves live read/handler/RX ownership, then
+normal Ctrl-X/$G still succeeds. Focused sanitizer passes1/1 in0.06s.
+Built and ran all four local scenarios together into one fresh isolated GCOV
+prefix. Proof at build-asan/reset-pendant-native-proof74/{proof.json,*.gcov}.
+ATC496 executes both arms; unlock-policy502 reaches the disabled-requirement
+short circuit; pendant716 reaches active-cycle input; enable823 reaches the
+unchanged-mode early return. Native active-MPG506 line executes but this Windows
+compiler emits no branch rows there; do not invent cross-compiler branch gain.
+Initial profile lookup used grbllib.c rather than its existing task_host.c wrapper;
+corrected collector read already-generated data, no rerun or source mutation.
+Aggregate gain remains pending a substantial successor gate/report. No new
+exceptions, shared fixture edits, duplicate hosted runs or completion claim.
+
+# Pendant start buttons during a real running cut preserve exact endpoint - 2026-10-24
+
+Added boot.pendant_cycle_start_during_running_cut_preserves_motion_and_start_report.
+Normal serial G1X2F100 drives actual stepper pulses. After8 pulses, registered
+passive pendant handler receives modern and legacy cycle-start commands while
+native state is CYCLE and a real planner block exists. Both queue normal start
+without idle-start report flag or input takeover. Original cut finishes exactly
+160 X pulses/steps, no Y/Z motion, one expected command ack, no alarm/errors.
+Targets stream.c716 nonidle arm (prior report5/6), without forced controller
+state or a fake suspended job. Focused ASan/UBSan passes1/1 in0.07s.
+No CORE/shared fixture edits or allowances. Four local workflows now accumulate;
+no per-module full gate or hosted dispatch. Full supported goal remains active.
+
+# 7d0dff6 coverage gains verified; compiler jobs still active - 2026-10-24
+
+Run40047406632 coverage job success, exact harness/CORE2e165a1/filter locks in
+both artifacts, exactly seven stages0.4392hosted:4374clean/18known/0failed/skips.
+17480/17756lines98.45%,12636/13834outcomes91.34%; +9outcomes againsted8dc71,
+identical covered-line set/no lost lines. Measured system175/365/389, rotary306,
+spindle101/539 and persistent tool235 now fully covered; pendant716 rises4/6->5/6.
+Updated raw inventory276lines/1198outcomes and per-source counts. Source passed;
+GCC/Clang in_progress at API inspection, so retain previous all-green badges.
+Three new local reset scenarios target other startup branches outside this report.
+No duplicate run or completion claim. Existing ATC driver-error case already
+covers failed M6 preserving current tool; do not duplicate it for case count.
+
+# Released E-stop reset honors disabled unlock requirement - 2026-10-24
+
+Added boot.cleared_estop_reset_without_unlock_requirement_accepts_sender_commands.
+Public Setting_UnlockAfterEStop484=0 is explicitly documented in settings.c2698
+as disabling the requirement for $X after reset of a cleared E-stop. Initial
+hardware E-stop raises real E-stop state; release then Ctrl-X returns idle with
+no alarm, G91/$G succeed without $X, and all positions remain0. The opposite
+require-unlock case remains unchanged. Targets grbllib.c502 policy short-circuit.
+Focused ASan/UBSan passes1/1 in0.06s. Initial inverse-name interpretation was
+wrong and corrected against the description/config.h contract, not documented
+as a defect or given WILL_FAIL. No CORE/shared fixture edits or allowances.
+Three local successor workflows now accumulate while prior hosted batch runs.
+
+# Active pendant survives real Ctrl-X and receives full reset status - 2026-10-24
+
+Added boot.active_pendant_retains_control_and_full_status_after_warm_reset.
+Driver registers real serial pendant plus handlers; public stream_mpg_enable
+performs takeover before Ctrl-X. No internal mpg_mode/state assignment. After
+reset, pendant retains input, realtime handler and enabled RX; it receives $G
+and full status including MPG1/WCS/tool/firmware fields with no errors/alarm.
+Targets grbllib.c506 active-MPG reset report arm, previously only inactive arm
+measured. Focused ASan/UBSan passes1/1 in0.07s. Override/WCO field assumptions
+were corrected to the fixture's enabled report mask, not classified as a defect.
+No CORE/shared fixture changes or allowances. Two local successor cases remain
+outside hosted7d0dff6 run40047406632. Continue batching without tiny full gates.
+
+# Driver ATC handler survives startup and a native warm reset - 2026-10-24
+
+Added boot.automatic_toolchanger_handler_survives_boot_and_warm_reset.
+Driver registers ATC capability/change callback before initialization. Serial
+T3M6 completes on the native callback; Ctrl-X warm reset then T4M6 uses the same
+handler. Driver-installed tool and parser tool agree at3 before reset and4 after;
+manual-change flag stays clear, final idle/no alarm/no error. Exactly two changes,
+one driver setup/release. This targets grbllib.c496 automatic-changer startup arm,
+previously absent from the measured report, through ordinary driver lifecycle.
+Focused ASan/UBSan passes1/1 in0.06s. No CORE/shared fixture edits or exceptions.
+This is the first successor after pushed7d0dff6; hosted40047406632 covers that
+prior batch only. Preserve batch pacing and keep authoring while it runs.
+
 # Controls/recovery cumulative sanitizer gate passed - 2026-10-24
 
 Six new scenarios plus one existing pendant extension pass the single complete

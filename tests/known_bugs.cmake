@@ -147,3 +147,9 @@ if(TEST uvw_axis.motor_fault_uv_inversion_uses_remapped_axis_bits)
   set_tests_properties(uvw_axis.motor_fault_uv_inversion_uses_remapped_axis_bits
     PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Confirmed CORE2e165a1, 2026-10-24: null console is confused with no saved stream.
+if(TEST stream.mpg_disable_after_network_disconnect_restores_null_console)
+  set_tests_properties(stream.mpg_disable_after_network_disconnect_restores_null_console
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

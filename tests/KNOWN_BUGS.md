@@ -26,6 +26,39 @@ in [storage write-failure policy](TODO.md#storage-write-failure-policy), includi
 its observations, existing test exceptions and cleanup links. It is not a
 settled requirement to retry physical writes a specific number of times.
 
+## Pendant release fails to restore a network-only controller's null console
+
+Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
+A controller uses the public null console as its base, connects then disconnects
+a network client, and enables a registered serial pendant. Disabling pendant
+control returns success and clears `sys.mpg_mode`, but does not restore the
+original reader/writer, clear `hal.stream.state.is_mpg`, disable pendant RX or
+restore its previous realtime handler. The pendant remains attached while the
+public system mode says control has been released. No unintended motion is
+claimed; the regression does not send motion through this mismatched state.
+
+[Regression](cases/stream/mpg_disable_after_network_disconnect_restores_null_console.c)
+uses `stream_null_init`, normal connect/disconnect, real pendant registration
+and public enable/disable calls. Before its final correct restoration assertions,
+an independent network reconnect and output check succeed. Raw sanitizer run
+logs `reader=0 writer=0 mode=0 rx=0 handler=0`, without sanitizer diagnostics.
+Existing serial-base pendant-release and network-only reconnect controls remain.
+
+Cause: [stream.c829-850](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/stream.c#L829)
+uses `org_stream.type == StreamType_Null` as the empty-backup marker, although
+`StreamType_Null` is also a valid original console. The disable guard at847
+therefore skips restoring a legitimately saved null stream.
+
+Suggested maintainer repair: track whether a stream backup exists separately
+from its stream type, and restore valid null-console backups through the same
+handler/RX restoration path. No CORE change is included here.
+
+Exception: one exact `WILL_FAIL`/`known_bug` entry in
+[known_bugs.cmake](known_bugs.cmake). Remove only that entry when the unchanged
+regression passes; retain serial, null-console, reconnect and pendant controls.
+No sanitizer allowance is added. Raw evidence:
+`build-asan/batch74-null-console-release-raw-results.xml`.
+
 ## Absent-axis inch conversion shifts by the unavailable axis marker
 
 2026-10-24 reporting correction: GCC names the same unsigned-long type
@@ -177,8 +210,8 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Measured:** 2026-10-24, clean Terje `2e165a1ac4c74be8e68971972c6577775d856b05`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40044741403)
-measures 17,480/17,756 lines (98.45%) and 12,627/13,834 branches (91.28%).
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40047406632)
+measures 17,480/17,756 lines (98.45%) and 12,636/13,834 branches (91.34%).
 The 276 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable. See the complete measured
 [line/branch inventory](COVERAGE_GAPS.md) before selecting the next workflow.
