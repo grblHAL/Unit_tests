@@ -148,3 +148,9 @@ if(TEST ngc_flowctrl.call_with_twenty_nine_arguments_inherits_last_local_and_res
   set_tests_properties(ngc_flowctrl.call_with_twenty_nine_arguments_inherits_last_local_and_restores_caller
     PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Confirmed COREb01f481, 2026-10-24: accepted $SLP is ignored by alarm state handler.
+if(TEST boot.sleep_from_forced_startup_alarm_reports_sleep_and_allows_reset_unlock)
+  set_tests_properties(boot.sleep_from_forced_startup_alarm_reports_sleep_and_allows_reset_unlock
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

@@ -6,16 +6,85 @@ Active checkout: C:/Users/User/Documents/Codex/2026-10-08/https-github-com-peter
 
 ## Git, source and delivered PR
 
-Working branch coverage-batch-75 has local30a25d5/ded87c2 plus the current
-sender-report group. Pushed origin/coverage-batch-75 remains
-d05945e968eab3e3684ebbfcb0cffef5a1ae4218. Preserve all unrelated changes.
+Working branch coverage-batch-75 tracks pushed origin at
+cf41105519753520c5f2e0d2a31c2f1726b56be0, with later local status/modal-restore/alarm-sleep followups. The cumulative six-workflow group,
+exact diagnostic data and current inventory evidence are included. PR28 merged.
+Preserve all unrelated changes. No merge performed.
 CORE clean/fresh-fetched b01f481072edecac33d5e40c25869359a5b3fa1f; origin/master
 matches. PR28 merged. PR30 remains open/ready/unmerged at59b3ad9:
 https://github.com/grblHAL/Unit_tests/pull/30
 Its exact run40111349496 passed all five jobs; badges stay98.50%/92.48% on that
 fully green head. Keep it unchanged. No later PR75 readiness claim.
 
-## Latest measured head: successful coverage, failed compiler matrix
+## Current exact-head hosted checkpoint
+
+Run40118321363 COMPLETED FAILURE on cf41105/COREb01f481:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/40118321363
+One dispatch accepted2026-10-24T17:55:17Z after duplicate-head/hourly-ceiling
+checks (one prior run in that hour). Saved batch75-followup-dispatch.json.
+Do not redispatch. Full local4,501/71.00s passed before push; new gains require
+this locked hosted report. Prior measured baseline and failed matrix are below.
+
+Coverage now PASSED; downloaded artifact AND report locks match cf41105/b01f481/
+filter core/.*\.[ch]$, allseven stages0/no findings.4,501 total/4,478 clean/
+23 known/zero failed or skipped.17,491/17,757 lines98.50%;12,828/13,852 outcomes
+92.61%.266 missing lines/1,024 outcomes. Same-source d05945e report comparison:
++8 outcomes, zero new/lost lines and no lost outcomes. Exact gains gcode5104/5122,
+grbl459, ngc_params319, report1636, spindle_control1043, state_machine824/875.
+All six pushed workflows match their targets; physical parking also adds two
+resume-state outcomes. Both inventories reconciled; exact266 raw line keys
+unchanged. Saved hosted40118321363/{coverage-core,report-core-coverage} and
+verified-comparison.json. GCC PASSED, exact artifact lock cf41105/b01f481, allstages0/no findings:
+4,501 total/4,477 clean/24 known/zero failed or skipped. Clang/summary FAILED;
+Clang4,501/4,474 clean/26 known/1failed/0skipped. All six pushed workflows
+individually pass without allowances. The only failure is existing recursive
+tapping index29 at gcode485/const27-entry table/macro_arguments_push, followed
+by ASan global-buffer-overflow. Saved compiler artifacts and verified-new-workflows.json.
+One local exact recursive-index29 entry passes production/first1024 replay plus
+changed index/source/table/function, absent and zero-exit negative controls; no
+matcher/assertion/wildcard change. Prior clean exits still reject. Dated addendum
+and verified-exact-diagnostic-replay.json. Do not retry CI for this data alone.
+This is not a green matrix; badges/PR30 remain at fully green59b3ad9.
+Later local full-probe/cutter restore work is outside this measurement.
+
+## Further local ordinary sender-status work
+
+Existing report/realtime_full_report_lists_all_registered_probe_inputs.c now
+uses report_get_rt_flags_all(), the same flag builder as a real full-status
+request. Registered probe inputs and public selector stay unchanged; report
+must include selected ID |P:2 alongside all input pins, with no idle-protection
+marker for noninterrupt inputs. This exercises the previously absent native
+probe-ID flag rather than manufacturing tracking bits. Focused ASan/UBSan and
+strict1/1 pass0.29s, saved build-asan/full-probe-status-{build,summary}.log and
+full-probe-status-results.xml. Targets report1594/1596; no measured gain claimed.
+No new case/helper/allowance. Outside cf41105/full4,501 gate. Accumulate more
+before another full gate/push/CI; do not repeat full runs for this extension.
+
+Added cutter_comp/feed_only_modal_restore_leaves_disabled_compensation_provider_untouched.c.
+Ordinary F120/M70/F240/M72 restores feed120 while compensation remains off,
+its radius stays0 and the installed provider is never reconfigured. Public M71
+releases the snapshot. Uses the existing cutter build/capture fixture; no new
+variant or compensated-geometry claim. Focused ASan/UBSan1/1 pass0.34s and
+strict summary pass, saved feed-only-cutter-restore-{build,summary}.log and
+results.xml. Targets gcode541/542/611 unchanged-compensation restore paths.
+No allowance/private-state setup. Outside cf41105/full4,501 gate; accumulate
+with native full-probe status work before the next substantial full gate/CI.
+
+Added boot/sleep_from_forced_startup_alarm_reports_sleep_and_allows_reset_unlock.c.
+Normal saved forced-initialization alarm and enabled sleep; $SLP is acknowledged
+but state remains Alarm. Precise correct Sleep assertion fails after eight ordinary
+foreground polls, not on read limit or sanitizer fault. Same public fixture control
+with $X before $SLP passes sleep/status/reset/unlock, proving the tail works.
+Source system571-582 explicitly accepts Alarm/posts EXEC_SLEEP, but state_machine
+Alarm handler is state_noop and ignores it. Confirmed basic functional defect;
+one exact WILL_FAIL/known_bug in tests/known_bugs.cmake, dated KNOWN_BUGS entry,
+no sanitizer allowance or private-state setup. Focused expected-failure/strict1/1
+passes0.29s; raw/control proof in alarm-sleep-verification.json and XMLs. Post-known-
+failure Alarm-specific transition awaits upstream fix; common tail has control proof.
+Known regression count increases by one only in this later local group. Full
+4,501 gate and cf41105 do not include it. Target system576's accepted Alarm route.
+
+## Prior measured head: successful coverage, failed compiler matrix
 
 Run40114356917 on d05945e/COREb01f481 COMPLETED FAILURE:
 https://github.com/petervanderwalt/Unit_tests/actions/runs/40114356917
@@ -41,7 +110,7 @@ matcher code/assertion relaxation, wildcard/range or new known failure. Dated
 KNOWN_BUGS addendum; verified-exact-diagnostic-replay.json. Do not rerun CI for
 these manifest additions alone. Post-fatal assertions remain unvalidated.
 
-## Current cumulative followup: full local gate passed
+## Pushed cumulative followup: full local gate passed
 
 Six supported workflows accumulated since d05945e, each focused sanitizer/strict
 validated; no new coverage gain claimed before hosted measurement:
@@ -66,9 +135,8 @@ One cumulative full ASan/UBSan/strict gate PASSED4,501 in71.00s:
 Logs: build-asan/batch75-followup-delivery-{build,tests,summary}.log and
 batch75-followup-delivery-results.xml. No active local runner. The six workflows
 include three new cases and three existing-case extensions. No unchanged helper
-rerun. Commit
-only authored paths, push the same branch and use one exact-source hosted run
-(duplicate-head check and three/hour absolute ceiling). Continue independent
+rerun. Committed/pushed cf41105 and dispatched the one exact-source hosted run
+above after duplicate-head/hourly-ceiling checks. Continue independent
 work while hosted CI runs; no small full-run/dispatch loops.
 
 Specific current branch-route evidence also covers Modbus42/69 (all supported

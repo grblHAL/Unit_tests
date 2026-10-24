@@ -752,3 +752,48 @@ new known failure was added. Assertions after fatal faults remain unvalidated.
 Do not rerun CI solely for these manifest additions. Saved logs and replay proof:
 build-asan/hosted40114356917/results-core-clang/build/known-crash-<test>.log,
 verified-exact-diagnostic-replay.json and verified-new-workflows.json.
+
+
+## Accepted sleep command is ignored while the controller is in alarm
+
+Confirmed2026-10-24 on clean CORE `b01f481072edecac33d5e40c25869359a5b3fa1f`.
+With saved forced-initialization alarm and sleep enabled, the normal sender
+command `$SLP` is acknowledged `ok` but the controller remains in alarm instead
+of entering sleep. The regression allows eight ordinary foreground polls after
+acknowledgement, then retains the correct `STATE_SLEEP` assertion. It fails on
+that assertion, without a sanitizer fault, read-limit failure or injected state.
+The same fixture/control using `$X` before `$SLP` enters sleep, reports Sleep,
+resets and explicitly unlocks successfully. It uses normal public commands.
+
+Source cause: [enter_sleep](https://github.com/terjeio/grblHAL_core/blob/b01f481072edecac33d5e40c25869359a5b3fa1f/system.c#L571)
+explicitly accepts Idle or Alarm and posts `EXEC_SLEEP`. The
+[alarm state](https://github.com/terjeio/grblHAL_core/blob/b01f481072edecac33d5e40c25869359a5b3fa1f/state_machine.c#L352)
+installs `state_noop`; state_update dispatches to that handler, so the accepted
+sleep request is ignored. The idle handler consumes the same request normally.
+CORE remains unchanged. Upstream should make accepted alarm-state sleep requests
+reach the sleep transition consistently with the public command's allowed states.
+
+[Regression](cases/boot/sleep_from_forced_startup_alarm_reports_sleep_and_allows_reset_unlock.c)
+has one exact `WILL_FAIL`/`known_bug` block in [known_bugs.cmake](known_bugs.cmake).
+No sanitizer allowance. Sleep/recovery assertions after the known failure remain
+in the case; their common fixture tail is validated by the explicit-unlock control.
+Evidence: build-asan/alarm-sleep-regression-raw-results.xml,
+alarm-sleep-unlock-control-results.xml and alarm-sleep-verification.json.
+After upstream fixes it, retain the case, remove only this expected-failure block
+and entry, and verify the complete workflow under ASan/UBSan before cleanup.
+
+
+### Tapping diagnostic evidence update - 2026-10-24, run40118321363
+
+[Run40118321363](https://github.com/petervanderwalt/Unit_tests/actions/runs/40118321363)
+at harnesscf41105/COREb01f481 passed source/GCC/coverage but failed Clang/summary
+on one existing recursive tapping diagnostic: index29 at core/gcode.c485:32,
+const27-entry table, macro_arguments_push top frame, ASan global-buffer-overflow.
+All six new normal workflows pass Clang individually without allowances. One
+additional exact recursive-test/index29 entry records only this actual saved
+output. Production runner/first1024 replay pass; changed index/source/table/
+function, absent diagnostic and zero-exit output reject. No matcher code,
+assertion, padding or wildcard/range changes. Earlier clean recursive exits still
+remain red; CORE has not changed. Do not rerun CI solely for this data addition.
+Evidence: build-asan/hosted40118321363/results-core-clang/build/known-crash-<test>.log,
+verified-exact-diagnostic-replay.json and verified-new-workflows.json.

@@ -2,64 +2,57 @@
 
 ## Latest verified coverage job; compiler matrix failed
 
-[Run40114356917](https://github.com/petervanderwalt/Unit_tests/actions/runs/40114356917)
-coverage PASSED on harnessd05945e968eab3e3684ebbfcb0cffef5a1ae4218 and
+[Run40118321363](https://github.com/petervanderwalt/Unit_tests/actions/runs/40118321363)
+coverage PASSED on harnesscf41105519753520c5f2e0d2a31c2f1726b56be0 and
 COREb01f481072edecac33d5e40c25869359a5b3fa1f. Both artifact/report locks and
-filter core/.*\.[ch]$ match; allseven stages exit0/no findings. Coverage4,498
-cases/4,475 clean/23 known/zero failed or skipped.
-17,491/17,757 lines (**98.50%**) and12,820/13,852 outcomes (**92.55%**):
-266 missing lines and1,032 missing outcomes. Against same-source40111349496:
-zero new/lost lines; nine additional outcomes/no loss. Exact new sites:
-gcode122(two spline outcomes)/4622; ioports1214/1256/1316;
-motion_control1028; ngc_params753; report1581. All match the six basic
-controller workflows delivered in batch75. Both inventories were reconciled;
-the unchanged line inventory's266 source/line keys match the current report.
-Evidence: build-asan/hosted40114356917/verified-comparison.json.
+filter core/.*\.[ch]$ match; allseven stages0/no findings. Coverage4,501 total/
+4,478 clean/23 known/zero failed or skipped.
+17,491/17,757 lines (**98.50%**) and12,828/13,852 outcomes (**92.61%**):
+266 missing lines/1,024 missing outcomes. Against same-source40114356917:
+zero new/lost lines; eight additional outcomes/no loss. Exact new sites:
+gcode5104/5122, grbllib459, ngc_params319, report1636, spindle_control1043,
+state_machine824/875. These match all six pushed workflows; actual parking
+also adds two resume-state outcomes. Both inventories reconciled; unchanged
+line inventory266 exact keys checked. Evidence: hosted40118321363/
+verified-comparison.json under build-asan.
 
-GCC passed with an exact d05945e/b01f481 report lock, allstages0/no findings:
-4,498 total/4,474 clean/24 known/zero failed or skipped. Clang/summary FAILED.
-Exact Clang report lock matches d05945e/b01f481;4,498 total/4,471 clean/24 known/
-3 failed/zero skipped. All six new workflows individually pass without allowances.
-Existing tapping cases report eight-axis index28, unsupported fallback index30,
-and a recursive clean exit without its required diagnostic. Two new local exact
-entries match only the saved28/30 outputs; production runner/first1024 and changed/
-zero-exit controls pass. Recursive clean output correctly remains red. Dated
-KNOWN_BUGS addendum; no matcher implementation/assertion relaxation. No retry
-solely for this diagnostic data.
-This is a verified coverage job, not
-a green matrix. README badges and ready PR30 remain at fully green40111349496
-(harness59b3ad9,98.50% lines/92.48% branches). Never merge PRs.
+GCC PASSED with exact artifact lock/allstages0/no findings:4,501 total/4,477 clean/
+24 known/zero failed or skipped. Clang/summary FAILED:4,501 total/4,474 clean/
+26 known/one failed/zero skipped. All six newly pushed workflows pass without
+allowances. The only failure is existing recursive tapping index29 at gcode485.
+A local exact test/index entry passes production/first1024 and changed/absent/
+zero-exit negative controls; matcher/assertions unchanged, clean exits still red.
+No retry for this diagnostic alone; no green matrix claim. README
+badges and ready PR30 remain fully green40111349496 at59b3ad9 (98.50%/92.48%).
+Never merge PRs. Full local ASan/UBSan/strict passed4,501 in71.00s before push:
+4,476 clean/24 known regressions/1 known diagnostic/zero failures or skips.
 
-Batch75 full local ASan/UBSan/strict gate passed4,498 in63.51s:
-4,473 clean/24 known regressions/1 known diagnostic/zero failures or skips.
-A later local extension of the existing PWM overdrive case now checks disabling
-that feature and ordinary running/off PWM output; focused sanitizer/strict1/1
-passes0.28s. It is outside d05945e, so no measured gain is attributed to it.
+Prior40114356917 on d05945e failed Clang/summary on the documented tapping
+fault. Its six new workflows all pass individually without allowances. Actually
+saved indices28/30 now have local exact entries, production/first1024 replay and
+changed/zero-exit negative controls. Recursive clean exit still correctly rejects;
+no wildcard/range or matcher/assertion weakening. Those data entries are included
+in cf41105; current compiler results must be inspected before readiness claims.
 
-A later full-boot parking regression also passes focused sanitizer/strict:
-public $HZ and $41=5, M56P0/M2, next-cut door IRQ,640-step retract/restore and
-completed160-step X motion. No synthetic homed/position setup or new allowance.
-It targets gcode5104's initially-active policy; gain remains unmeasured. Do not
-run another full gate/CI for this one case and PWM extension alone.
+Later local work is outside cf41105: the existing full-probe status case now uses
+report_get_rt_flags_all and verifies selected probe ID/all registered inputs with
+no false idle-protection marker; a new feed-only M70/M72 test in the existing
+cutter-extension build restores feed without touching disabled compensation or
+its provider. Focused sanitizer/strict checks pass0.29s/0.34s. Targets report1594/
+1596 and gcode541/542/611 remain unmeasured. No new host variant, private-state
+setup or compensated-geometry claim; accumulate before any next full gate/CI.
 
-Further local ordinary work: the existing persistent G92 case now verifies that
-an unchanged offset at the next M30 emits no duplicate save notification; a new
-full-boot case physically homes Z, applies public keep-homed reset policy,
-cancels a feed, unlocks after restart and verifies retained status/no extra motion.
-Both pass focused sanitizer/strict checks; targets gcode5122/grbllib459 remain
-unmeasured. There are4,500 registered cases, not a new full-suite result.
+A later normal sleep-from-startup-alarm regression confirms a functional defect:
+$SLP is accepted but the Alarm handler ignores EXEC_SLEEP. Correct Sleep assertion
+is retained with one exact WILL_FAIL/known_bug and a dated KNOWN_BUGS entry.
+The public $X-before-$SLP control validates the same fixture's sleep/reset/unlock
+tail. No sanitizer allowance or injected state. Focused strict classification
+passes; no new coverage claim or full run for this local case.
 
-The cumulative followup now includes compatibility2 extended-coordinate queries
-and tool-only modal notifications, using existing configurations/public commands.
-One full ASan/UBSan/strict gate passes4,501 in71.00s:4,476 clean/24 known
-regressions/1 known diagnostic/zero failed or skipped. It includes three new
-cases and three existing-case extensions. Gains for all six ordinary workflows
-remain unmeasured until their one exact-source hosted checkpoint completes.
-
-Two raw Modbus outcomes42/69 have specific current supported-interface evidence:
-RTU/ASCII/TCP cases are all covered; remaining source-block1 switch defaults
-would require another provider interface value. Optional callback absence is
-already covered. No duplicate omission or invented transport test was added.
+Specific branch-route proof in the CSV covers Modbus42/69 (all supported
+RTU/ASCII/TCP cases; remaining switch defaults) and fs_ram103/140/146/148/153
+(fresh allocation/exclusive refs/live linked owners). No invented transport,
+multiple owner or stale-handle tests. All raw outcomes remain in the denominator.
 
 Current b01 stream_file73 ownership review: native redirect installs a nonnull
 opened file and its reader together at160; close209-214 restores both saved
