@@ -33,14 +33,23 @@ or force private state to enter a path.
   ownership on spindle changes before extending that scenario; do not fabricate
   ppi_spindle or static laser state. Cluster malformed/overflow contracts remain
   source-review work, not covered by the valid-stream cases.
-- Plasma source d2f91b5 has plasma_init dependencies on registered digital/analog
-  I/O, hal.stepper.output_step and secondary stepper APIs. Establish those valid
-  contracts before THC/material scenarios; do not force private ready state.
-- Trinamic source9229617 includes actual chip HALs from terjeio/Trinamic-library.
-  RP2040 source2f5bc4a has gitlink9b304175318d93818c8967faadc89dd101b17e92
-  for that library (verified ls-tree). Fetch and independently lock the library,
-  inspect transport/registration contracts and add real chip-specific suites.
-  Fetched source alone is not tested support for either family.
+- Plasma now compiles original THC/material/SheetCam/LinuxCNC code with actual
+  CORE I/O registration, secondary-stepper and VFS APIs. Off-mode initialization,
+  materials/comments and file imports pass. Largest remaining executable region
+  is torch/arc/up-down/voltage runtime: establish supported setting changes,
+  actual spindle registration, public systick/realtime calls and observable step/
+  output states. Do not set init_ok or private state handlers. PowerMax and
+  expression integration remain separate. Material add currently always returns
+  true even if malloc fails (source598-622); failure semantics need a scoped
+  public-operation allocator fixture before classification.
+- TMC2209 now compiles actual plugin + library9b304175318d93818c8967faadc89dd101b17e92
+  with simulated UART register replies, real CRC/IFCNT and EEPROM-backed restart.
+  Largest remaining paths include homing, debug/report modes, polling and dynamic
+  current. Extend valid registered motor/limit/step callbacks and other chips,
+  bridges/transport types. The library revision is an explicit inspected RP2040
+  gitlink pin, not automatic fallback. Actual RP2040/ESP32 UART reads return a
+  static reply buffer (timeout marks address0xFF), confirming the non-null host
+  transport model. Null reply behavior was not force-entered.
 - Simulator VFS fails current-CORE compilation: removed vfs_path_t. The explicit
   driver gitlink reference executes nine cases with three known assertions;
   retain both incompatibility evidence and separate source locks. No fallback.

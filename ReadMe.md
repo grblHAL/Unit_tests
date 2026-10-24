@@ -277,10 +277,15 @@ repository's default branch.
 | Plugin tests | `plugin_networking` | Interface events/enumeration, status reports and service/MAC helpers with real lwIP headers |
 | Plugin tests | `plugin_laser_ppi` | Registered laser PPI spacing, mode changes, shutdown and hardware delegation |
 | Plugin tests | `plugin_laser_cluster` | LightBurn cluster expansion, acknowledgement suppression and stream/reset hooks |
+| Plugin tests | `plugin_trinamic` | TMC2209 initialization, UART/register behavior, current/microstep settings and EEPROM restart |
+| Plugin tests | `plugin_plasma` | Supported initialization, material comments/listing and LinuxCNC/SheetCam imports in Off mode |
 | Driver tests | `driver_rp2040_flash` | Flash-copy behavior with simulated SDK/IRQ calls |
 | Driver tests | `driver_esp32_nvs` | Partition storage, failures and realtime-handler restoration with simulated SDK calls |
 
 These are initial host tests, not full plugin/driver coverage or board validation.
+Trinamic also locks and compiles the actual chip library; its UART device is
+simulated. Plasma material tests use real CORE I/O/secondary-stepper/VFS APIs
+in initial Off mode; arc control and hardware timing remain separate work.
 Networking locks upstream lwIP headers separately; its common-interface suite
 does not start protocol listeners. Laser tests observe simulated driver pulses
 and byte-stream transformations; no physical laser operation is established.

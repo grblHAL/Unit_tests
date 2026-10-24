@@ -1,4 +1,70 @@
-# Latest component checkpoint - 2026-10-24 (batch6)
+# Latest component checkpoint - 2026-10-24 (batch7)
+
+Full all-plugin/driver/CORE goal remains active across48 implementation repos.
+No production sources or concurrent CORE work changed. Isolated branch continues
+existing PR29, freshly OPEN/draft/unmerged. Fork list still registers only Core
+tests and Reusable host tests. No hosted component run or merge is claimed.
+
+Added26 cases:14 Trinamic and12 plasma. One cumulative Windows Clang ASan/UBSan
+gate rebuilds/rechecks all seventeen compatible suites against pinned COREb01f481:
+224 cases =200 clean +23 correct known assertions +1 previously scoped fan
+callback diagnostic. Zero unexpected failures/skips. All81 CI/reporting helpers
+pass9.677s; actionlint/whitespace checks pass. Original source warnings remain
+visible under documented rules; fixtures stay -Werror. No new sanitizer allowance.
+
+Trinamic executes original plugin plus actual TMC2209 chip/HAL/common library
+against a simulated UART register device with CRC-checked packets and real IFCNT
+accounting. Cases cover3 registered motors, setup/address callbacks, current and
+mode commands, current/microstep settings/rejection, communication/setup/storage
+failure, recovery/status reset, fault IRQ, callback chaining and EEPROM-backed
+restart in two processes. Current checks concern configured values, not measured
+motor current. Host parser/settings boundaries model named axis words and their
+consumption/restoration; full CORE parser execution is not claimed. An initial
+fixture mistake caused NaN conversions and was corrected to the real public
+parser contract before classification; no diagnostic was waived.
+
+Plasma compiles original THC/SheetCam/LinuxCNC modules with actual CORE I/O
+registration, secondary stepper, PID, VFS/embedded backend and real EEPROM/CRC.
+Cases use its normal initial Off mode and do not fabricate private ready state.
+Initialization failures, material validation/add/overwrite/enumeration, comments/
+rejection/recovery, registered listing and report hooks pass. Both external file
+formats load through actual VFS mount listeners with the read-only host backend
+mounted through public APIs. I/O and plasma settings are distinct registrations
+and receive separate NVS allocations. Full torch/arc/voltage/up-down motion,
+PowerMax, expression integration and hardware timing remain untested. MinGW's
+exported isnanf lacks a math.h declaration; the Windows-only host declaration
+uses the actual runtime function, without replacement code or production aliases.
+
+Fresh LOCAL LLVM measured compiled-file/configuration coverage:
+
+| Suite | Covered/total lines | Covered/total branch outcomes |
+|---|---:|---:|
+| plugin_trinamic / trinamic.c | 320/885 (36.16%) | 122/570 (21.40%) |
+| plugin_plasma / THC + two importers | 263/869 (30.26%) | 150/553 (27.12%) |
+
+Plasma detail: THC167/764 lines, LinuxCNC51/56, SheetCam45/49. Remaining runtime
+code stays in the denominator; no whole-plugin, library or catalogue claim.
+All coverage result sets pass strict profiling-error checks; maximum counter
+paths222/227. The largest remaining supported runtime regions are recorded in
+COMPONENT_TODO.md rather than excluded or entered through private state.
+
+GitHub-resolved locks match clean local sources:
+motor9229617c1d8a3cc7a71fd584896500a779978b02,
+plasma d2f91b5887db6550ddec0fc0229cd87ec0af1a56,
+COREb01f481072edecac33d5e40c25869359a5b3fa1f,
+EEPROM0c278db74edc38303b9d86583a7d51a1ec1be51e,
+Trinamic-library9b304175318d93818c8967faadc89dd101b17e92. The latter is an
+explicit dependency-only pin from the inspected RP2040 gitlink, not an implicit
+fallback. Full immutable locks/classification/logs are in ignored build-evidence/
+*batch7*, alongside per-suite coverage XML/JSON/HTML. New Plugin tests choices
+await default-branch installation. No hosted/GCC/board/physical-device pass claim.
+
+Continue supported plasma/TMC runtime and remaining catalogue/modules/configs.
+The full goal is not complete.
+
+---
+
+# Previous batch6 checkpoint - 2026-10-24
 
 Full all-plugin/driver/CORE goal remains active across48 inventoried repositories.
 No production sources or concurrent CORE work changed. This isolated branch

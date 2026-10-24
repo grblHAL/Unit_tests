@@ -240,5 +240,40 @@
     "test_regex": "^plugin_laser_cluster[.]",
     "coverage_filter": "plugins/laser/lb_clusters\\.c$",
     "diagnostics_directory": "tests/plugins/laser_cluster"
+  },
+  "plugin_trinamic": {
+    "repository": "grblHAL/Plugins_motor",
+    "ref": "master",
+    "path": "plugins/motor",
+    "dependencies": [
+      "core",
+      "trinamic_library",
+      "eeprom_backend"
+    ],
+    "cmake_source": "tests/plugins/trinamic",
+    "cmake_options": [],
+    "test_regex": "^plugin_trinamic[.]",
+    "coverage_filter": "plugins/motor/trinamic\\.c$",
+    "diagnostics_directory": "tests/plugins/trinamic"
+  },
+  "trinamic_library": {
+    "repository": "terjeio/Trinamic-library",
+    "ref": "9b304175318d93818c8967faadc89dd101b17e92",
+    "path": "deps/trinamic",
+    "source_only": true
+  },
+  "plugin_plasma": {
+    "repository": "grblHAL/Plugin_plasma",
+    "ref": "master",
+    "path": "plugins/plasma",
+    "dependencies": [
+      "core",
+      "eeprom_backend"
+    ],
+    "cmake_source": "tests/plugins/plasma",
+    "cmake_options": [],
+    "test_regex": "^plugin_plasma[.]",
+    "coverage_filter": "plugins/plasma/.*\\.c$",
+    "diagnostics_directory": "tests/plugins/plasma"
   }
 }
