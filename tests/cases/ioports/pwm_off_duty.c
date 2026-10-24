@@ -11,5 +11,13 @@ int main(void)
     CHECK(ioports_precompute_pwm_values(&config, &pwm, 1000000));
     CHECK(pwm.always_on);
     CHECK(ioports_compute_pwm_value(&pwm, 0) == 250);
+    pwm.invert_pwm = true;
+    config.invert = true;
+    CHECK(ioports_precompute_pwm_values(&config, &pwm, 1000000));
+    CHECK(pwm.always_on && pwm.period == 1000);
+    CHECK(ioports_compute_pwm_value(&pwm, 0) == 749);
+    CHECK(ioports_compute_pwm_value(&pwm, 10) == 899);
+    CHECK(ioports_compute_pwm_value(&pwm, 60) == 499);
+    CHECK(ioports_compute_pwm_value(&pwm, 110) == 99);
     return EXIT_SUCCESS;
 }

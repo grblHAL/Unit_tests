@@ -1,3 +1,45 @@
+# Conditional jobs, deferred offsets and primary-only program end - 2026-10-24
+
+Branch coverage-batch-74, parent51d3a6e55e6070b86526eab5bfed239382c501fa.
+CORE clean/latest2e165a1ac4c74be8e68971972c6577775d856b05 after freshfetch.
+PR28 remains open/unmerged/frozen a9f355c; do not overlap it or merge.
+
+Seven new cases plus two existing-case improvements span four modules:
+- multi_spindle: optional secondary disabled before startup; M2 stops primary
+  and restores100% override, next M3 runs nominal4000RPM, M30 stops it again.
+  No secondary/auxiliary output calls; modal optional slot staysNULL. Existing
+  variable-speed driver fixture reused; on/off-only fixture was inappropriate.
+- gcode: T1M6G43 without H defers offsets while waiting, then native sender
+  cycle-start acknowledgement applies2/3/4mm. Existing explicit-H control now
+  uses public cycle start/realtime instead of directly clearing a parser flag.
+- gcode confirmed regression: T0M6G43 selects tool0 after the same acknowledgement
+  but leaves prior2/3/4mm offsets, despite a verified zero table entry. G49
+  recovery clears them. Correct final assertions retained in one exact WILL_FAIL
+  and dated KNOWN_BUGS entry; no sanitizer allowance or physical hazard claim.
+  Source4310 stores pending0; completion996 only applies pending values>0.
+- ngc_flowctrl: false ELSEIF chains select ELSE/later true branch; native RAM
+  file/protocol/stepper emits exactly160 X steps and only chosen parameter writes.
+  False outer IF skips nested DO/REPEAT/WHILE/IF bodies then emits80 X steps.
+- ngc_flowctrl: condition1/#100 becomes invalid after first iteration; ENDWHILE
+  and CONTINUE separately report DivideByZero, skip the remaining file, unwind
+  and restore sender $G. Intentional fixture CMD_EXIT is accounted for.
+- ioports: existing off-duty case now checks inverted25% idle749ticks plus
+  minimum/midpoint/maximum899/499/99ticks for a valid1000tick PWM period.
+
+Full4442 ASan/UBSan gate passes58.76s; strict report4414clean/2knownSAN/
+26knownregressions/0failed/skipped. Evidence build-asan/conditional-tool74-delivery-
+{results.xml,tests.log,summary.log}. No CORE/shared-fixture/reporting-script edits.
+No redundant unchanged Python-helper rerun. Isolated local branch proofs retained
+for conditional selection/skips, omitted-H deferral and optional spindle slots;
+these do not establish a new aggregate hosted percentage.
+
+Last verified hosted40066895627: allfive jobs green, exact51d3a6e/2e165a1 locks,
+7coverage stages exit0;17480/17756lines98.45%,12709/13834branches91.87%.
+Gain over40064204492 is10outcomes, identical covered-line sets/denominators.
+Badges and gap inventory refreshed to that verified report. This successor needs
+one exact-head hosted checkpoint. Preserve unrelated ioports phantom M.
+Continue full supported coverage; passing gates/commits are not completion.
+
 # Public workflow recovery batch - 2026-10-24
 
 Branch coverage-batch-74, parent f1879ab83df4cf623a9a4b8a98043ea672e0fa77.

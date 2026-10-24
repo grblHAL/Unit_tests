@@ -26,6 +26,30 @@ in [storage write-failure policy](TODO.md#storage-write-failure-policy), includi
 its observations, existing test exceptions and cleanup links. It is not a
 settled requirement to retry physical writes a specific number of times.
 
+## Acknowledged tool-zero G43 retains the previous tool offsets
+
+Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
+The existing asynchronous changer fixture first completes `T1M6G43H1` through
+public cycle-start acknowledgement and applies its table offsets (2,3,4 mm).
+`T0M6G43` then defers tool0's zero table offsets while waiting. After the same
+public acknowledgement, the current tool becomes0 and the change notifications
+complete, but the old offsets remain (2,3,4 mm). No motion or physical collision
+claim is made. The immediate `G49` recovery correctly clears all three offsets.
+
+[Regression](cases/gcode/m6_unloading_tool_with_g43_clears_previous_offset_after_sender_ack.c)
+retains the correct zero-offset assertion after checking both change callbacks,
+idle state, released change flag, zero table entry and successful G49 recovery.
+The failure is deterministic with no sanitizer diagnostic. Exactly one named
+`WILL_FAIL`/`known_bug` entry applies in [known_bugs.cmake](known_bugs.cmake).
+The omitted-H tool1 control passes using the same driver and public handshake.
+
+Source: [deferred selection](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/gcode.c#L4310)
+stores pending0, but [completion](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/gcode.c#L996)
+applies offsets only for pending values greater than0. Review valid tool0 versus
+the -1 sentinel during acknowledgement; CORE is not changed here. Once fixed,
+retain the regression, remove its exact allowance and delete this entry after
+sanitizer validation confirms offset application and recovery.
+
 ## Synchronized output allocation failure is silently acknowledged
 
 Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
@@ -363,8 +387,8 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Measured:** 2026-10-24, clean Terje `2e165a1ac4c74be8e68971972c6577775d856b05`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40064204492)
-measures 17,480/17,756 lines (98.45%) and 12,699/13,834 branches (91.80%).
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40066895627)
+measures 17,480/17,756 lines (98.45%) and 12,709/13,834 branches (91.87%).
 The 276 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable. See the complete measured
 [line/branch inventory](COVERAGE_GAPS.md) before selecting the next workflow.
