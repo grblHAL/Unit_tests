@@ -48,6 +48,7 @@ jobs:
     outputs:
       harness_sha: ${{ steps.harness.outputs.sha }}
       coverage_filter: ${{ steps.resolve.outputs.coverage_filter }}
+      host_bits: ${{ steps.resolve.outputs.host_bits }}
     steps:
       - name: Checkout test harness
         uses: actions/checkout@v7
@@ -108,6 +109,11 @@ jobs:
           name: source-lock-${{ inputs.run_label }}
       - name: Fetch locked sources
         run: python scripts/report_stage.py --job "${{ matrix.compiler }}" --stage fetch -- python scripts/prepare_sources.py
+      - name: Install 32-bit host runtime
+        if: needs.source.outputs.host_bits == '32'
+        run: |
+          python scripts/report_stage.py --job "${{ matrix.compiler }}" --stage tooling -- sudo apt-get update
+          python scripts/report_stage.py --job "${{ matrix.compiler }}" --stage tooling -- sudo apt-get install -y gcc-multilib libclang-rt-dev
       - name: Configure
         id: test_configure
         env:
@@ -157,6 +163,11 @@ jobs:
       - name: Fetch locked sources
         run: python scripts/report_stage.py --job coverage --stage fetch -- python scripts/prepare_sources.py
       - run: python scripts/report_stage.py --job coverage --stage tooling -- pip install gcovr==8.4
+      - name: Install 32-bit host runtime
+        if: needs.source.outputs.host_bits == '32'
+        run: |
+          python scripts/report_stage.py --job coverage --stage tooling -- sudo apt-get update
+          python scripts/report_stage.py --job coverage --stage tooling -- sudo apt-get install -y gcc-multilib libclang-rt-dev
       - id: coverage_configure
         run: python scripts/report_stage.py --job coverage --stage configure -- python scripts/configure_suite.py --mode coverage --compiler gcc
       - id: coverage_build

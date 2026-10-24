@@ -283,6 +283,9 @@ repository's default branch.
 | Plugin tests | `plugin_embroidery_readers` | DST/PES metadata and stitch decoding through real VFS reads |
 | Driver tests | `driver_rp2040_flash` | Flash-copy behavior with simulated SDK/IRQ calls |
 | Driver tests | `driver_esp32_nvs` | Partition storage, failures and realtime-handler restoration with simulated SDK calls |
+| Driver tests | `driver_stm32f4_flash` | Flash read/write, erase retry and failure handling with simulated HAL calls |
+| Driver tests | `driver_stm32f7_flash` | Flash read/write and halfword failure regression with simulated HAL calls |
+| Driver tests | `driver_lpc176x_flash` | IAP storage, failures and IRQ restoration in a mapped host flash region |
 
 These are initial host tests, not full plugin/driver coverage or board validation.
 Trinamic also locks and compiles the actual chip library; its UART device is
@@ -295,8 +298,11 @@ reader tests compile Tajima/Brother modules; the job coordinator and physical
 needle control remain untested. Networking locks upstream lwIP headers separately; its common-interface suite
 does not start protocol listeners. Laser tests observe simulated driver pulses
 and byte-stream transformations; no physical laser operation is established.
-Driver SDK boundaries are simulated; no actual Pico SDK/ESP-IDF firmware build or
-physical flash/interrupt timing is established. Keypad tests explicitly compare
+Driver SDK boundaries are simulated; no actual Pico SDK/ESP-IDF/STM32/NXP firmware
+build or physical flash/interrupt timing is established. STM32/LPC storage suites
+use 32-bit host targets. Their Linux jobs install multilib runtimes only when the
+locked suite requests them. LPC's padded-source case does not establish safety
+for a normal unpadded CORE allocation. Keypad tests explicitly compare
 signed/unsigned char builds; the observed extended-key defect is compiler-specific.
 See [component progress](tests/COMPONENT_PROGRESS.md) and the
 [repository backlog](tests/COMPONENT_INVENTORY.csv) for remaining work. Each suite

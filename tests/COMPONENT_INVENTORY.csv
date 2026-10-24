@@ -31,7 +31,7 @@ third-party plugin,Thermistor,gcormier/grblhal-thermistor,not yet assessed,,Revi
 third-party plugin,Virtual inputs,siganberg/grblhal-virtual-inputs,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
 driver,STM32H7xx,dresco/STM32H7xx,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
 driver,ESP32,grblHAL/ESP32,partial host tests,driver_esp32_nvs,Partition-storage module tested through simulated SDK calls only; assess IO/serial helpers and real ESP-IDF board builds separately.
-driver,LPC176x,grblHAL/LPC176x,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
+driver,LPC176x,grblHAL/LPC176x,partial host tests,driver_lpc176x_flash,Host IAP storage tested with padded buffers; resolve CORE allocation/copy-size compatibility and add SDK/board workflows.
 driver,MSP430F5529,grblHAL/MSP430F5529,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
 driver,MSP432E401Y,grblHAL/MSP432E401Y,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
 driver,MSP432P401R,grblHAL/MSP432P401R,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
@@ -41,8 +41,8 @@ driver,SAM3X8E (Arduino Due),grblHAL/SAM3X8E,not yet assessed,,Identify host-tes
 driver,SAMD21,grblHAL/SAMD21,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
 driver,STM32F1xx,grblHAL/STM32F1xx,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
 driver,STM32F3xx,grblHAL/STM32F3xx,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
-driver,STM32F4xx,grblHAL/STM32F4xx,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
-driver,STM32F7xx,grblHAL/STM32F7xx,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
+driver,STM32F4xx,grblHAL/STM32F4xx,partial host tests,driver_stm32f4_flash,32-bit host flash module tested with simulated HAL; assess serial/IO and real SDK/board builds separately.
+driver,STM32F7xx,grblHAL/STM32F7xx,partial host tests,driver_stm32f7_flash,Retain first-halfword failure regression; add other modules/configurations and real SDK/board validation.
 driver,Simulator,grblHAL/Simulator,partial host tests,driver_simulator;driver_simulator_vfs,VFS current-CORE compilation fails; reference gitlink tests reproduce three filesystem defects. Serial/timer fixtures remain.
 driver,TM4C123,grblHAL/TM4C123,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
 driver,TM4C1294,grblHAL/TM4C1294,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.

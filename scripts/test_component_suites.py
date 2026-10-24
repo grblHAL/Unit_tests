@@ -21,6 +21,7 @@ class ComponentSuitesTests(unittest.TestCase):
                 plan = resolve_plan(suites, name, ref="candidate", core_ref="compatible-core", request=request)
                 self.assertEqual(calls, [(suites[name]["repository"], "commits/candidate")] + [(suites[dependency]["repository"], "commits/" + ("compatible-core" if dependency == "core" else suites[dependency]["ref"])) for dependency in suites[name]["dependencies"]])
                 self.assertEqual([source["sha"] for source in plan["sources"]], ["a" * 40] + [("b" if dependency == "core" else "c") * 40 for dependency in suites[name]["dependencies"]])
+                self.assertEqual(plan["host_bits"], suites[name].get("host_bits", 64))
                 self.assertEqual(len({source["path"] for source in plan["sources"]}), 1 + len(suites[name]["dependencies"]))
                 self.assertNotEqual(plan["cmake_source"], ".")
                 self.assertIsNone(re.search(plan["test_regex"], "boot.normal_startup"))

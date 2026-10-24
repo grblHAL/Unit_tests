@@ -302,5 +302,47 @@
     "test_regex": "^plugin_embroidery_readers[.]",
     "coverage_filter": "plugins/embroidery/.*\\.c$",
     "diagnostics_directory": "tests/plugins/embroidery"
+  },
+  "driver_stm32f4_flash": {
+    "repository": "grblHAL/STM32F4xx",
+    "ref": "master",
+    "path": "drivers/stm32f4",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/drivers/stm32f4_flash",
+    "cmake_options": [],
+    "host_bits": 32,
+    "test_regex": "^driver_stm32f4_flash[.]",
+    "coverage_filter": "drivers/stm32f4/Src/flash\\.c$",
+    "diagnostics_directory": "tests/drivers/stm32f4_flash"
+  },
+  "driver_stm32f7_flash": {
+    "repository": "grblHAL/STM32F7xx",
+    "ref": "master",
+    "path": "drivers/stm32f7",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/drivers/stm32f7_flash",
+    "cmake_options": [],
+    "host_bits": 32,
+    "test_regex": "^driver_stm32f7_flash[.]",
+    "coverage_filter": "drivers/stm32f7/Src/flash\\.c$",
+    "diagnostics_directory": "tests/drivers/stm32f7_flash"
+  },
+  "driver_lpc176x_flash": {
+    "repository": "grblHAL/LPC176x",
+    "ref": "master",
+    "path": "drivers/lpc176x",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/drivers/lpc176x_flash",
+    "cmake_options": [],
+    "host_bits": 32,
+    "test_regex": "^driver_lpc176x_flash[.]",
+    "coverage_filter": "drivers/lpc176x/src/flash\\.c$",
+    "diagnostics_directory": "tests/drivers/lpc176x_flash"
   }
 }

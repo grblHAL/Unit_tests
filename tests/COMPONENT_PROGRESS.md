@@ -1,4 +1,83 @@
-# Latest component checkpoint - 2026-10-24 (batch9)
+# Latest component checkpoint - 2026-10-24 (batch10)
+
+All-plugin/driver/CORE goal remains active across48 inventoried implementations.
+No production sources or concurrent CORE work changed. Continue PR29, freshly
+OPEN/draft/unmerged. Fork still registers only Core tests and Reusable host tests;
+component dispatch/32-bit runtime installation awaits default-branch workflow
+installation. No hosted component run or merge is claimed.
+
+Added27 driver cases:9 STM32F4 flash,8 STM32F7 flash and10 LPC176x IAP storage.
+All three have separate Driver tests choices and immutable source plans with
+host_bits32. One cumulative Windows Clang ASan/UBSan gate covers all22 compatible
+suites:305 cases =278 clean +26 correct known assertion regressions +1 previously
+scoped fan callback diagnostic. Zero unexpected failures/skips. All83 CI/reporting
+helpers pass17.915s; actionlint/whitespace checks pass. No new sanitizer allowance.
+Existing plugin/CORE source warning policies remain; these new storage sources
+and their fixtures compile with -Werror.
+
+STM32 cases compile original flash.c with -m32, a pointer-width assertion and
+linker-style region/sector symbols. No original pointer type or source is patched.
+Shared HAL fixture models the distinct F4/F7 erase structures, unlock/erase/
+halfword program/lock, byte output and failure state. Cases cover read/copy,
+unchanged suppression, unlock failure, F4 erase retry, exhausted erase failure,
+first/second halfword failure, recovery and selected word-aligned buffer sizes.
+CORE nvs_buffer_init253 explicitly requires word alignment. These helper tests
+are not complete CORE settings boot/integration or real STM32 HAL execution.
+
+F7 first-halfword write failure is a confirmed source defect: its second call
+unconditionally overwrites failure status with success, continuing and returning
+true despite missing data. One exact program_first_failure WILL_FAIL/known_bug
+retains the correct false assertion, with dated source/removal guidance. F4's
+corresponding failure path and F7's second-halfword failure controls pass.
+
+LPC tests compile original src/flash.c and map its fixed0x78000 region inside the
+dedicated test process. Windows VirtualAlloc refuses an occupied address; Linux
+MAP_FIXED_NOREPLACE is authored but not executed here. Simulated IAP callbacks
+validate sector29, preparation/blank-state requirements, writes and IRQ restoration.
+Cases cover erased reads,1024/4096 copy/readback, unchanged suppression, failure
+at either preparation/erase/copy stage and retry. The2048 configured-size case
+supplies4096 source bytes because original code copies4096 except for size1024.
+It does not establish safety for normal CORE2048 allocation; unpadded overread is
+not reproduced. Earlier IAP errors are overwritten in source; provider state
+preserves failed prerequisites so final copy reports failure. Immediate abort,
+allocation/copy-size compatibility and full CORE integration remain TODO.
+
+Reusable jobs now install gcc-multilib/libclang-rt-dev only for source-locked32-bit
+plans; existing plans default64. Host width is validated before source resolution.
+Two new helpers verify default/accepted/rejected widths; component plan checks
+also validate width metadata. The target Linux STM32 flags disable PIE to retain
+absolute sector-symbol semantics. No Linux/GCC/multilib execution is claimed until
+actual hosted runs exist. Source and fixture SDK boundaries remain simulated.
+
+Fresh LOCAL LLVM compiled-file/configuration coverage, strict profiling checks pass:
+
+| Suite / original selected file | Covered/total lines | Covered/total branch outcomes |
+|---|---:|---:|
+| driver_stm32f4_flash / Src/flash.c | 20/20 (100%) | 12/12 (100%) |
+| driver_stm32f7_flash / Src/flash.c | 19/19 (100%) | 8/8 (100%) |
+| driver_lpc176x_flash / src/flash.c | 14/14 (100%) | 4/4 (100%) |
+
+Maximum counter paths220/223/213 in fresh short builds. These numbers cover only
+three storage modules, including the retained F7 regression; no full-driver,
+board, cache/IRQ timing, ARM firmware or real SDK validation is claimed.
+
+GitHub-resolved locks match unchanged clean original sources:
+STM32F4a6318ac92f079f49fab91687530f832997396edc,
+STM32F785e6e800b16fb1a46bc00b87b7015489b9d3ec93,
+LPC176x ea6e9f78fa349e86fbd58a203760b614f513684a,
+COREb01f481072edecac33d5e40c25869359a5b3fa1f.
+Ignored build-evidence/*batch10* contains immutable source locks, classification,
+coverage XML/JSON/HTML and logs. Local short builds are build-sf4-asan,
+build-sf7-asan and build-lpc-asan; PATH needs LLVM bin plus its i686-w64-mingw32/bin
+for32-bit ASan DLLs. Historical compatibility limits remain unchanged.
+
+Continue remaining driver families and plugin modules/configurations with public
+interfaces. Do not narrow the full goal to these storage helpers, modify CORE or
+merge PRs. The requested full supported coverage is not complete.
+
+---
+
+# Previous batch9 checkpoint - 2026-10-24
 
 All-plugin/driver/CORE goal remains active across48 inventoried implementations.
 No production sources or concurrent CORE work changed. Continue existing PR29,

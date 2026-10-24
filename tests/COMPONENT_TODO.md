@@ -7,6 +7,18 @@ or force private state to enter a path.
 
 ## Next source families
 
+- STM32F4/F7 flash helpers execute in32-bit host suites with shared linker-symbol/
+  HAL fixtures. Retain F7 first-halfword-status regression. Linux multilib steps
+  remain unverified hosted; actual SDK/cache/IRQ/serial/IO and board configurations
+  remain. Current storage tests do not establish full-driver coverage.
+- LPC176x IAP cases use a dedicated process-local0x78000 mapping and valid padded
+  source buffers. Original implementation copies4096 unless NVS size is1024;
+  CORE normally allocates2048. Resolve allocation/copy-size compatibility before
+  claiming normal CORE integration. Do not reproduce an unpadded overread. Earlier
+  IAP errors are overwritten; the provider preserves prepare/blank requirements
+  so failed prerequisites produce final copy failure. Immediate abort and actual
+  ROM/SDK/IRQ/board behavior remain unvalidated.
+
 - HC-05 serial mode now executes AT success/rejection/timeout, stream switching,
   settings/report hooks and EEPROM restart through actual CORE stream/I/O APIs.
   Retain two source regressions: highest valid STATE pin rejected at load, and
