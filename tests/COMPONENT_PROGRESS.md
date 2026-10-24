@@ -1,3 +1,33 @@
+# Local MPG CORE-stream checkpoint - 2026-10-24 (next combined batch)
+
+Goal active. Six new integration cases use original CORE stream.c, stream_passthru.c,
+vfs.c, strutils.c and nuts_bolts.c with original MPG source in plain/framed builds.
+Complete affected MPG suite42/42 passes Windows Clang ASan/UBSan2.30s and strict
+classification:42 clean, zero known/failures/skips. Existing36 capture cases remain
+unchanged in behavior. Integration builds exclude the capture replacements for
+CORE APIs and link the real functions; fixtures stay strict, original CORE warnings
+remain visible under source-specific rules. No production edits or new allowance.
+
+Tests exercise real stream property registration/claim ownership, descriptor-copy
+registration, passive filtering, busy refusal/active reader selection, restoration
+on disable, runtime baud table and output broadcast ownership. Passive status
+requests pass through real stream_mpg_check_enable and queued report delivery,
+then original transport output/ACK handling. The host report formatter emits an
+explicit marker; no controller report-format claim. CORE's normal null stream
+provides the console baseline; physical UART callbacks and time/task/protocol
+boundaries remain simulations. MPG_BUFFER_SIZE=0 explicitly disables passive
+command buffering, which is untested here. No full parser or driver task loop.
+
+CORE b01f481072edecac33d5e40c25869359a5b3fa1f and candidate
+503b422d0aa92c4d2b6a190e92ce25344bcc629e verified clean. Tool-ACK remains unresolved:
+mode switching retains primary suspend_read/set_enqueue_rt_handler while replacing
+input routing. Establish supported primary-driver ownership before asserting MPG
+manual-tool behavior; no forced private state or artificial failure registered.
+No new whole-repository coverage or hosted result; batch19 remains delivered
+baseline. Accumulate the next substantial group before cumulative gate/push.
+
+---
+
 # Local MPG callback checkpoint - 2026-10-24 (next combined batch)
 
 Goal active. Seven additional public callback cases pass focused Windows Clang

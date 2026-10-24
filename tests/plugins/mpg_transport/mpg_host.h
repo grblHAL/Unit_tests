@@ -24,3 +24,10 @@ extern struct mpg_packet
     uint8_t data[256];
     size_t size;
 } sent[256];
+
+#ifdef MPG_CORE_STREAM
+void mpg_core_start(void);
+void mpg_core_run(void);
+extern sys_state_t core_state;
+extern unsigned status_reports, mode_reports;
+#endif

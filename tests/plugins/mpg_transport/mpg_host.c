@@ -16,6 +16,9 @@ static sys_commands_t *commands;
 static uint8_t nvs[64];
 static size_t stored;
 static io_stream_t physical;
+#ifdef MPG_CORE_STREAM
+static io_stream_properties_t physical_properties;
+#endif
 static void print(const char *text)
 {
     CHECK(strlen(output) + strlen(text) < sizeof(output));
@@ -65,6 +68,7 @@ bool protocol_enqueue_realtime_command(uint8_t value)
     rt_calls++;
     return value == '!';
 }
+#ifndef MPG_CORE_STREAM
 bool stream_mpg_check_enable(uint8_t value) { return protocol_enqueue_realtime_command(value); }
 io_stream_t const *stream_open_instance(uint8_t instance, uint32_t rate,
                                         stream_write_char_ptr handler, const char *description)
@@ -100,6 +104,46 @@ bool stream_rx_suspend(stream_rx_buffer_t *buffer, bool suspend)
     CHECK(false);
     return false;
 }
+#else
+static enqueue_realtime_command_ptr set_physical_handler(enqueue_realtime_command_ptr handler)
+{
+    enqueue_realtime_command_ptr previous = physical_rx;
+    physical_rx = handler;
+    return previous;
+}
+static const io_stream_t *claim_physical(uint32_t rate)
+{
+    CHECK(rate == 115200);
+    claims++;
+    physical_properties.flags.claimed = On;
+    baud = rate;
+    return &physical;
+}
+static void registered(io_stream_t *stream, bool tx_capable)
+{
+    CHECK(stream && tx_capable);
+    registrations++;
+    proxy = *stream;
+}
+void mpg_core_start(void)
+{
+    physical_properties = (io_stream_properties_t){
+        .type = StreamType_Serial, .instance = 1, .flags.claimable = On, .claim = claim_physical};
+    static io_stream_details_t details = {.n_streams = 1, .streams = &physical_properties};
+    static io_stream_t console;
+    mpg_prepare();
+    physical.set_enqueue_rt_handler = set_physical_handler;
+    stream_register_streams(&details);
+    console = *stream_null_init(115200);
+    console.write = print;
+    CHECK(stream_connect(&console));
+    grbl.on_mpg_registered = registered;
+    mpg_init();
+    CHECK(registered_settings && commands);
+    registered_settings->load();
+    CHECK(registrations == 1 && claims == 1 && hal.driver_cap.mpg_mode);
+}
+#endif
 nvs_address_t nvs_alloc(size_t size)
 {
     CHECK(size <= sizeof(nvs));
@@ -146,12 +190,14 @@ bool task_run_on_startup(foreground_task_ptr fn, void *data)
     fn(data);
     return true;
 }
+#ifndef MPG_CORE_STREAM
 bool task_add_immediate(foreground_task_ptr fn, void *data)
 {
     CHECK(fn == report_warning && data);
     fn(data);
     return true;
 }
+#endif
 void report_plugin(const char *name, const char *version)
 {
     CHECK(strcmp(name, "MPG/DRO framed transport") == 0 && strcmp(version, "1.00") == 0);
