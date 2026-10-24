@@ -1,3 +1,29 @@
+# Latest component checkpoint - 2026-10-25 (batch24)
+
+Goal active. Combined pre-push Windows Clang ASan/UBSan gate passes all42
+current-compatible suites:699 cases =643 clean +56 documented known results,
+zero unexpected failures/skips. Separate full legacy reference gates pass:
+PSoC9 =8 clean +1 known; TI shared serial17 =15 clean +2 known. These26 cases
+remain outside699 and the older Simulator VFS reference evidence.
+
+Nine accumulated cases add actual070f80 CORE stream connection/suspend/ACK/
+backup/restore under explicit char modes and optional TI UART7 public workflows.
+Correct signed-char ACK and secondary descriptor instance assertions remain exact
+known_bug regressions; PSoC capacity regression remains. No new sanitizer allowance,
+production source edit, cast or fallback. UART7 explicitly enables RX before IRQs;
+physical startup policy and MCU default char signedness are not inferred.
+
+Fresh selected-source LLVM coverage: PSoC59/59 lines,14/16 branches,13/13 functions;
+TI primary plus optional secondary168/173 lines,48/60 branches,23/24 functions.
+TI's expanded configuration changes the denominator from primary-only batch23;
+these percentages are not a same-configuration gain or whole-repository coverage.
+Original candidate/reference CORE/SDK pins remain unchanged. Existing86 helper
+and actionlint checks from batch23 were not repeated: no helper/workflow changes.
+Physical hardware, target linking, full task/protocol execution and remaining
+components stay open. Draft PR29 remains unmerged; no hosted success claimed.
+
+---
+
 # Local TI secondary-UART checkpoint - 2026-10-25
 
 Goal active. Added5 source-supported SERIAL2_MOD/UART7 cases:4 clean +1 correct

@@ -23,12 +23,10 @@ or force private state to enter a path.
   c9d721259783ca578ee1b0c3f6111839610c26a4 READMEs end support at CORE20250518,
   both pin070f80cc5c0d095ff63d5980795b5a15c5bb0202. MSP432E pins shared6adcc848,
   whose EEPROM is tested separately with Tiva headers, not that SDK/parent build.
-  PSoC5 now has eight registered fixed-CORE reference cases outside compatible
-  totals; prior seven-case checkpoint is6 clean +1 capacity regression, and the
-  new handler lifecycle case passes focused ASan/UBSan/strict checks. Current CORE stream ABI
-  rejects unchanged callbacks. Generated UART APIs remain declaration-only host
-  boundaries, not real SDK/UDB validation; driver.c/NVS stay untested. Never silently
-  fall back or extract production functions. MSP430/MSP432E runtime remains open.
+  PSoC5 now has nine fixed-CORE reference cases:8 clean +1 capacity regression.
+  Original CORE stream connection/suspend executes under explicit unsigned char.
+  Current CORE rejects unchanged callbacks. Generated UART APIs remain host-only;
+  driver.c/NVS, SDK/UDB and physical validation remain open. No silent fallback.
 - ATCi18 cases now exercise original registered settings/M-code/travel/sensor
   callbacks at671f145530ec8ec9f5828897477dc0192593b3d8:292/305 lines,156/193
   branches. Retain M960 P0 regression: validate consumes words.p, execute tests
@@ -319,34 +317,18 @@ before claiming MSP430 execution. No compiler/installer is installed/executed an
 no driver/header is edited. The old driver CORE gitlink31f6a4bf remains distinct
 from the PSoC070f80 reference. Never silently substitute either reference.
 
-## TI shared serial reference - batch23
+## Legacy serial references - batch24
 
-Nine clean cases execute primary UART0 with legacy070f80 CORE and original Tiva
-headers, separately from current-compatible totals. Current CORE ABI rejects its
-unchanged callbacks. Standalone candidate6adcc848 differs from archived TM4C1294
-parent3e7873; MSP432E parent pins6adcc but uses a different SDK. Never substitute
-that parent or claim it built. Selected .c92/108 lines,31/42 branches; remaining
-public handler/enqueue and suspend paths need the next supported group. Secondary
-UART7/RTS, actual CORE legacy stream/scheduler, physical FIFO/timing and real
-parent firmware remain. Current-compatible shared EEPROM suite remains separate.
+Combined reference gates: TI17 =15 clean +2 known; PSoC9 =8 clean +1 known.
+Actual070f80 CORE connection/suspend/ACK/restore and UART7 RX workflows execute.
+Retain correct signed-char ACK, secondary instance metadata and PSoC capacity
+assertions. Explicit char flags establish host portability only, not MCU defaults.
+Selected-source coverage: TI primary/secondary168/173 lines,48/60 branches;
+PSoC59/59 lines,14/16 branches. TI denominator differs from earlier primary-only.
+Current CORE rejects historical callbacks; fixed references remain separate.
 
-## Legacy stream integration authoring
-
-Four pending new reference cases now execute actual070f80 CORE stream registration/
-connection and suspend/ACK/restore for TI and PSoC under explicit char modes. TI's
-signed-char case correctly expects1 acknowledgement but gets0 because old char
-cannot equal0xA3; paired unsigned control passes. Keep the exact assertion/label
-and do not infer MCU compiler defaults. TI12/PSoC9 registered; focused4 authoring
-cases are3 clean +1 known, not a new full reference or compatible gate. Captured
-registration remains in the other cases; protocol/task/hardware remain boundaries.
-
-## Pending secondary UART reference coverage
-
-Five new UART7 cases (SERIAL2_MOD) add isolated RX/wrap/cancel, realtime-at-capacity,
-per-port handlers and public mute/re-enable. Affected TI17-case sanitizer/strict
-gate is15 clean +2 known. Secondary metadata returns instance0 despite registry1;
-retain the exact correct assertion. Current TM4C14-case gate still has only its
-existing known result after fixture changes. No new global/coverage measurement.
-UART7 tests explicitly call disable_rx(false); missing startup interrupt enabling
-is source-review-only pending intended RX-only activation contract. No disabled
-IRQ is injected. Physical clock/IRQ/UART, RTS and parent firmware remain untested.
+UART7 tests explicitly call disable_rx(false). Startup interrupt enablement needs
+an intended RX-only activation contract; never inject disabled IRQs. Physical
+clock/IRQ/FIFO/RTS, full scheduler/protocol, SDK linking and parent firmware remain.
+Standalone6adcc848 is not archived TM4C1294 parent3e7873 or an MSP432E SDK build.
+Current-compatible shared EEPROM evidence remains separate.
