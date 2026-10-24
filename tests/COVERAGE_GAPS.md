@@ -42,6 +42,13 @@ completed160-step X motion. No synthetic homed/position setup or new allowance.
 It targets gcode5104's initially-active policy; gain remains unmeasured. Do not
 run another full gate/CI for this one case and PWM extension alone.
 
+Further local ordinary work: the existing persistent G92 case now verifies that
+an unchanged offset at the next M30 emits no duplicate save notification; a new
+full-boot case physically homes Z, applies public keep-homed reset policy,
+cancels a feed, unlocks after restart and verifies retained status/no extra motion.
+Both pass focused sanitizer/strict checks; targets gcode5122/grbllib459 remain
+unmeasured. There are4,500 registered cases, not a new full-suite result.
+
 Two raw Modbus outcomes42/69 have specific current supported-interface evidence:
 RTU/ASCII/TCP cases are all covered; remaining source-block1 switch defaults
 would require another provider interface value. Optional callback absence is

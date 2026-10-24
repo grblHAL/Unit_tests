@@ -12,5 +12,11 @@ int main(void)
     coord_system_data_t saved = read_end_coordinate(CoordinateSystem_G92);
     NEAR(saved.coord.x, -5);
     NEAR(gc_state.g92_offset.coord.x, -5);
+    CHECK(program_block("M30") == Status_OK);
+    CHECK(program_complete_calls == 2 && program_completion == ProgramFlow_CompletedM30);
+    CHECK(end_g92_saves == 1);
+    saved = read_end_coordinate(CoordinateSystem_G92);
+    NEAR(saved.coord.x, -5);
+    NEAR(gc_state.g92_offset.coord.x, -5);
     return EXIT_SUCCESS;
 }

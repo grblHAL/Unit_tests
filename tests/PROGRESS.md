@@ -87,6 +87,42 @@ true/false counts108/2 and busy callback present/absent28/4; existing reset and
 ASCII cases already exercise omission. Both inventory rows now carry specific
 current evidence so this review is not repeated. No invented transport case.
 
+## Continuing local ordinary workflows
+
+Extended existing gcode/m2_persistent_g92_updates_changed_saved_offset.c:
+a later M30 with the unchanged persistent G92 offset must not produce another
+coordinate-save notification, while the offset and second completion remain
+correct. Focused ASan/UBSan and strict1/1 pass0.29s, saved
+build-asan/persistent-offset-repeat-{build,summary}.log and
+persistent-offset-repeat-results.xml. No new case/exception; target gcode5122
+(equal saved/runtime offset). No new hosted measurement or full-gate claim.
+
+Added boot/keep_homed_reset_option_preserves_actual_homing_after_sender_cancels_cut.c.
+Public $22/$44 configure real Z homing, $676=14 disables clearing homed status
+when position is lost. $HZ establishes the axis before a real feed; sender reset
+cancels before endpoint, warm restart retains configured Z status, $X unlocks,
+$G responds, and physical pulses/software counters remain stable thereafter.
+The local service respects the driver's timer-running state. No synthetic
+homed mask/position/reset flags. Focused ASan/UBSan and strict1/1 pass0.28s,
+saved keep-homed-motion-reset-{build,summary}.log and results.xml. Expected
+missing branch grbllib459 (keep option evaluated during reset after motion).
+
+Fixture corrections: public Z cycle must be configured, since reset filters
+homed axes against configured cycles; reset during motion promises no mechanical
+position accuracy, so assertions verify stable stopped software/physical counters
+separately; idle/nonabort checks run before the host-only CMD_EXIT, which itself
+requests shutdown. No firmware defect or new allowance. Current CTest listing
+verifies4,500 registered; latest full gate remains4,498 before these two new
+boot cases and later existing-case extensions. No tiny full gate/CI.
+
+Current fs_ram branch review completed once for103/140/146/148/153. Fresh
+metadata is calloc-zeroed; open rejects nonzero refs before the sole increment;
+valid owners are0/1 refs; unlink callers retain live linked owners. False arms
+need altered allocator semantics, impossible multiple owners or stale handles.
+Existing exclusive-open and list-deletion cases already cover actual lifetimes.
+Five inventory rows now have specific current-source evidence, retaining all
+raw outcomes. No fabricated file, stale handle or duplicate multiple-reader test.
+
 ## New coverage evidence and ongoing authoring
 
 Hosted40111349496 coverage PASSED, exact harness59b3ad9/COREb01f481/filter
