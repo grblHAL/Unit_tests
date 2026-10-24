@@ -17,3 +17,8 @@ void run_event_startup(void);
 
 extern unsigned pending_tasks, control_calls;
 void run_event_tasks(void);
+
+extern bool alloc_ok;
+extern unsigned available_ports, warnings;
+void prepare_event_driver(void);
+void initialize_events(void);

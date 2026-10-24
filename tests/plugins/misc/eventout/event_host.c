@@ -6,6 +6,8 @@ grbl_t grbl;
 system_t sys;
 setting_details_t *event_details;
 bool levels[4];
+bool alloc_ok = true;
+unsigned available_ports = 4, warnings;
 uint8_t claimed_mask, missing_mask;
 unsigned writes, saves, state_calls, spindle_calls, speed_calls, coolant_calls, resets, reports,
     options;
@@ -17,7 +19,7 @@ static void *startup_data;
 nvs_address_t nvs_alloc(size_t size)
 {
     CHECK(size <= sizeof(nvs));
-    return 2048;
+    return alloc_ok ? 2048 : 0;
 }
 static nvs_transfer_result_t read_nvs(uint8_t *dst, uint32_t addr, uint32_t size, bool checksum)
 {
@@ -46,13 +48,13 @@ static uint8_t next_port(io_port_cfg_t *cfg, uint8_t port, const char *descripti
 {
     (void)description;
     (void)caps;
-    CHECK(cfg->n_ports == 4);
-    return port == IOPORT_UNASSIGNED ? 3 : (uint8_t)(port - 1);
+    CHECK(cfg->n_ports == available_ports);
+    return port == IOPORT_UNASSIGNED ? (uint8_t)(available_ports - 1) : (uint8_t)(port - 1);
 }
 static xbar_t *get_info(io_port_cfg_t *cfg, uint8_t port)
 {
     static xbar_t pin;
-    CHECK(cfg->n_ports == 4 && port < 4);
+    CHECK(cfg->n_ports == available_ports && port < 4);
     if (missing_mask & (1u << port))
         return NULL;
     pin = (xbar_t){.id = port, .description = descriptions[port]};
@@ -62,20 +64,20 @@ static xbar_t *get_info(io_port_cfg_t *cfg, uint8_t port)
 static status_code_t set_port(io_port_cfg_t *cfg, uint8_t *port, pin_cap_t caps, float value)
 {
     (void)caps;
-    CHECK(cfg->n_ports == 4 && value >= -1 && value < 4);
+    CHECK(cfg->n_ports == available_ports && value >= -1 && value < 4);
     *port = value < 0 ? IOPORT_UNASSIGNED : (uint8_t)value;
     return Status_OK;
 }
 static float get_port(io_port_cfg_t *cfg, uint8_t port)
 {
-    CHECK(cfg->n_ports == 4);
+    CHECK(cfg->n_ports == available_ports);
     return port == IOPORT_UNASSIGNED ? -1 : port;
 }
 io_port_cfg_t *ioports_cfg(io_port_cfg_t *cfg, io_port_type_t type, io_port_direction_t dir)
 {
     CHECK(type == Port_Digital && dir == Port_Output);
-    cfg->n_ports = 4;
-    cfg->port_max = 3;
+    cfg->n_ports = available_ports;
+    cfg->port_max = available_ports ? available_ports - 1 : 0;
     cfg->get_next = next_port;
     cfg->get_info = get_info;
     cfg->set_value = set_port;
@@ -101,8 +103,8 @@ bool ioport_set_description(io_port_type_t type, io_port_direction_t dir, uint8_
 }
 void report_warning(void *data)
 {
-    (void)data;
-    CHECK(false);
+    CHECK(data);
+    warnings++;
 }
 bool task_run_on_startup(foreground_task_ptr fn, void *data)
 {
@@ -170,9 +172,8 @@ void report_plugin(const char *name, const char *version)
     CHECK(strcmp(name, "Events plugin") == 0 && strcmp(version, "0.14") == 0);
     reports++;
 }
-void prepare_events(void)
+void prepare_event_driver(void)
 {
-    void event_out_init(void);
     hal.nvs.memcpy_from_nvs = read_nvs;
     hal.nvs.memcpy_to_nvs = write_nvs;
     hal.driver_reset = reset;
@@ -182,7 +183,16 @@ void prepare_events(void)
     grbl.on_spindle_at_speed = at_speed;
     grbl.on_report_options = report_options;
     grbl.on_control_signals_changed = control_changed;
+}
+void initialize_events(void)
+{
+    void event_out_init(void);
     event_out_init();
+}
+void prepare_events(void)
+{
+    prepare_event_driver();
+    initialize_events();
     CHECK(event_details && startup);
 }
 void run_event_startup(void)
@@ -197,7 +207,7 @@ void load_events(void)
     prepare_events();
     event_details->load();
     run_event_startup();
-    CHECK(saves == 1 && writes == 0);
+    CHECK(saves == 1 && writes == 0 && warnings == 0);
 }
 void bind_event(unsigned slot, uint_fast16_t trigger)
 {

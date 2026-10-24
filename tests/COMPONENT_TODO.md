@@ -392,11 +392,12 @@ source-created indexes0..3. Optional-stop/single-block/block-delete, unrelated
 signal filtering and pending-work rebind execute; actual CORE tasks and arbitrary
 pointer-width portability remain unverified. Settings iterator/early stop/normalization,
 saved/deferred mapping and claimed/missing/disabled port rejection now execute.
-Other slot counts and actual CORE scheduler/spindle/controller/physical outputs
-remain open. Batch27 selected eventout169/204 lines,92/127 branches; probe relays
-91/94 lines,60/65 branches. Expanded misc denominator is9 files, not whole module.
-Next groups include supported control toggles and startup/failure settings paths;
-retain source review for pointer-width/return callback contracts before execution.
+Two available-port bounds and no-port/allocation startup failures now execute.
+Other slot layouts and actual CORE scheduler/spindle/controller/physical outputs
+remain open. Batch28 selected eventout202/204 lines,111/127 branches; remaining
+trigger getter ABI needs review. Probe relays retain91/94 lines,60/65 branches.
+Expanded misc denominator is10 files, not whole module. Retain source review for
+arbitrary pointer-width/return callback contracts before execution.
 
 ## HC595 shift-register outputs
 
@@ -406,4 +407,6 @@ No startup shift occurs in the source; host zero initialization does not establi
 physical output state. Four-chip highest bit uses signed1 << pin and remains
 source-review-only; do not force UB. Nonzero bank offsets, inversion/config ABI,
 write/deselect failure semantics, optional CS-port and MCU timing remain open.
-Actual CORE aggregation/SPI SDK/hardware are untested. No fresh coverage yet.
+Actual CORE aggregation/SPI SDK/hardware are untested. Fresh batch28 selected
+HC5951/2/3-chip configurations cover85/96 lines,28/44 branches; fourth-chip and
+other configurations remain outside that report.

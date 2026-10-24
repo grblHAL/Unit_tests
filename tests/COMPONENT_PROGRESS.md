@@ -1,3 +1,38 @@
+# Latest component checkpoint - 2026-10-25 (batch28)
+
+Goal active. Deliver16 accumulated cases:11 HC595 SPI and5 deferred event-control/
+startup cases. One full Windows Clang ASan/UBSan compatible gate passes42 suites,
+777 cases =718 clean +59 documented known, zero unexpected failures/skips. Known
+results remain55 correct assertion regressions +4 diagnostic-only cases;3 assertions
+also carry exact diagnostics, counted once. No new known result or sanitizer
+allowance. Unchanged26 legacy serial references retain separate batch24 validation.
+
+HC5951/2/3-chip configurations execute8/16/24 bits, wire byte ordering, duplicate
+successful-write suppression, bus selection failure/retry, startup failure and
+public descriptors. Event controls execute via bounded FIFO with source-created
+indexes0..3; optional stop/single-block/block-delete deferred outputs, unrelated
+signal filtering and disabled binding before dispatch pass. No-port/allocation
+startup failures preserve original hooks and queue warning; two available ports
+bound settings iteration, coolant output mapping and reset. Remaining4-chip
+highest-bit shift/config ABI and full CORE scheduler/hardware remain untested.
+
+Fresh LLVM selected-source report spans10 misc files:887/921 lines96.3%,476/607
+branches78.4%,92/95 functions. Eventout202/204 lines,111/127 branches; same-config
+line increase33 from batch27. HC59585/96 lines,28/44 branches across1/2/3 chips.
+Expanded total denominator differs from prior9-file report; unbuilt modules and
+other configurations remain excluded. Strict coverage classification passes79
+misc cases (76 clean +3 unchanged known assertions), fresh counter paths max224.
+
+GitHub-resolved Plugins_misc2657119 and CORE b01f481 locks match clean originals.
+No production source/header edits, private state changes or new diagnostic waiver.
+Unchanged86 helper/actionlint checks were not repeated. Port/NVS/scheduler/SPI
+boundaries are host models; no physical power-on state, SPI timing or controller
+motion claim. Latest workflow availability remains batch26's core/reusable-only
+listing; manual Plugin/Driver dispatch awaits default-branch installation.
+Keep draft PR29 unmerged. Continue remaining modules and actual integration.
+
+---
+
 # Local HC595 SPI output checkpoint - 2026-10-25
 
 Goal active. Eleven new cases pass focused Windows Clang ASan/UBSan0.71s plus
