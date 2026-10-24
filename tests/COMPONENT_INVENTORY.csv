@@ -2,7 +2,7 @@ kind,name,repository,status,suite,next_action
 core,CORE,grblHAL/core,existing suite,core,Continue source-matched CORE inventory in its separate active checkout.
 plugin,EEPROM,grblHAL/Plugin_EEPROM,partial host tests,plugin_eeprom,Propagate physical and checksum transfer errors; exercise FRAM/littlefs combinations and bank-boundary reads.
 plugin,Encoder,grblHAL/Plugin_encoder,partial host tests,plugin_encoder,Retain four correct regressions; establish supported MPG configuration and per-slot binding contracts.
-plugin,Keypad,grblHAL/Plugin_I2C_keypad,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+plugin,Keypad,grblHAL/Plugin_I2C_keypad,partial host tests,plugin_keypad,Retain signed-char extended-key regressions; add shared MPG and macro/display modules. Clarify UART initialization bool contract.
 plugin,Networking,grblHAL/Plugin_networking,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
 plugin,Odometer,grblHAL/Plugin_odometer,partial host tests,plugin_odometer,Review remaining branch outcomes and portable report formatting; restart and reset backup tested with actual EEPROM backend.
 plugin,Plasma/THC,grblHAL/Plugin_plasma,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
@@ -30,13 +30,13 @@ third-party plugin,Sienci Lights,Sienci-Labs/grblhal-rgb-plugin,not yet assessed
 third-party plugin,Thermistor,gcormier/grblhal-thermistor,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
 third-party plugin,Virtual inputs,siganberg/grblhal-virtual-inputs,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
 driver,STM32H7xx,dresco/STM32H7xx,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
-driver,ESP32,grblHAL/ESP32,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
+driver,ESP32,grblHAL/ESP32,partial host tests,driver_esp32_nvs,Partition-storage module tested through simulated SDK calls only; assess IO/serial helpers and real ESP-IDF board builds separately.
 driver,LPC176x,grblHAL/LPC176x,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
 driver,MSP430F5529,grblHAL/MSP430F5529,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
 driver,MSP432E401Y,grblHAL/MSP432E401Y,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
 driver,MSP432P401R,grblHAL/MSP432P401R,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
 driver,PSoC5,grblHAL/PSoC5,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
-driver,RP2040 (Pi Pico & Pi Pico W),grblHAL/RP2040,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
+driver,RP2040 (Pi Pico & Pi Pico W),grblHAL/RP2040,partial host tests,driver_rp2040_flash,Flash-copy module tested through simulated SDK calls only; assess littlefs/IO/serial helpers and real Pico SDK board builds separately.
 driver,SAM3X8E (Arduino Due),grblHAL/SAM3X8E,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
 driver,SAMD21,grblHAL/SAMD21,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
 driver,STM32F1xx,grblHAL/STM32F1xx,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.

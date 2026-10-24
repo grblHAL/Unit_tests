@@ -1,4 +1,78 @@
-# Latest component checkpoint - 2026-10-24 (batch4)
+# Latest component checkpoint - 2026-10-24 (batch5)
+
+Goal remains active across all48 implementation repositories. No production
+sources or concurrent CORE work changed. The isolated plugin-driver-tests branch
+continues existing PR29, freshly confirmed OPEN/draft/unmerged. Fork workflow
+listing still contains only Core tests and Reusable host tests; no hosted plugin/
+driver success or merge is claimed.
+
+Added43 cases:30 keypad cases and13 driver-storage cases. One cumulative Windows
+Clang ASan/UBSan gate rebuilds/rechecks all twelve current-compatible suites:
+167 cases =144 clean +22 correct known assertions +1 previously scoped fan
+callback diagnostic. Zero unexpected failures/skips. All81 CI/reporting helpers
+pass9.743s. Actionlint and whitespace checks pass. Keypad source warnings remain
+visible under documented production-source rules; fixtures and both small driver
+sources retain -Werror. No sanitizer allowances added.
+
+Keypad cases cover I2C strobe/UART registration, fast/slow/step and diagonal jog
+commands, modifiers, preview hooks, released-key suppression before foreground
+processing, successful/rejected enqueue cancellation, legacy control, real CORE
+override queues, settings/report callbacks, initialization failures and NVS
+restart. The NVS provider is opaque CRC-backed RAM, with two-process persisted
+bytes and actual CORE CRC; no private serialized plugin structure is copied.
+Initial jog string expectations were corrected to CORE ftoa's trailing decimal
+point; actual numeric distances/feed assertions remain exact.
+
+Four correct regressions reproduce extended keys lost when char is signed:
+I2C/UART extended control and override cases. The identical unsigned-char controls
+pass. Compile modes are explicit, not inferred as universal firmware behavior.
+UART failed stream opening leaves no settings registration but init returns NVS
+allocation success; intended bool semantics remain TODO, not a declared defect.
+
+RP2040 original flash.c executes against a RAM XIP mapping and simulated erase/
+program/IRQ calls. Five cases verify erased reads, bytes copied, unchanged-write
+avoidance, page rounding with a padded source and readback verification failure.
+The host preinclude omits board driver.h setup intentionally; it does not compile
+the actual Pico SDK/PIO/pins or prove timing/multicore safety. ESP32 original
+main/nvs.c executes through simulated partition APIs. Eight cases verify discovery,
+absent/uninitialized storage, bytes, erase/write/read failures, invalidation,
+reinitialization and retry. Every erase checks all256 input values through the
+original temporary realtime filter; handler restoration is observed on success
+and failure. No physical flash/cache/UART timing or full-driver claim.
+
+Fresh LOCAL LLVM coverage, selected compiled files/configurations only:
+
+| Suite / measured file | Covered/total lines | Covered/total branch outcomes |
+|---|---:|---:|
+| plugin_keypad / keypad.c | 218/230 (94.78%) | 109/144 (75.69%) |
+| driver_rp2040_flash / flash.c | 12/12 (100.00%) | 2/2 (100.00%) |
+| driver_esp32_nvs / main/nvs.c | 16/16 (100.00%) | 14/14 (100.00%) |
+
+All coverage result sets pass strict profiling-error classification. Maximum
+counter paths237/203/199. Initial local keypad aggregation failed because the
+two conditional keypad_init definitions occupy different lines. Re-reading the
+same counters with --merge-mode-functions=separate, already used by hosted CI,
+fixes reporting; no source changes, ignored errors, denominator exclusion or
+redundant test run. Rejected attempt/log retained. These are not percentages for
+whole drivers/catalogues. Source/configuration gaps remain in the inventory.
+
+GitHub-resolved locks match clean source checkouts and verified master defaults:
+keypad c34933091df668d009fe11ed7397a9b78c9bfd79,
+RP2040 2f5bc4a06ecea3b1f78c1644623810f9b6416376,
+ESP32 0b2d3e1bb7da3b0ae0e03490b71275374eb84c67,
+CORE b01f481072edecac33d5e40c25869359a5b3fa1f. Local evidence is in ignored
+build-evidence/*batch5* plus per-suite sanitizer/coverage logs/XML/JSON/HTML.
+SDK boundary declarations are local test fixtures, not SDK version-lock claims.
+
+The new choices are wired into separate Plugin tests / Driver tests workflows,
+available after default-branch installation. No hosted/GCC/hardware pass claim.
+Next: remaining catalogue families, VFD/SD/MPG gaps and other driver modules;
+keep source incompatibilities and reference-only results visible below. The full
+goal is not complete.
+
+---
+
+# Previous batch4 checkpoint - 2026-10-24
 
 Goal remains active across all48 inventoried implementation repositories. No
 production sources or concurrent CORE work changed. Isolated plugin-driver-tests

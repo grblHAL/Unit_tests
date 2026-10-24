@@ -273,8 +273,14 @@ repository's default branch.
 | Plugin tests | `plugin_spindle_vfd` | GS20/MODVFD commands, feedback, exceptions and EEPROM restart |
 | Plugin tests | `plugin_sdcard_stream` | File input, stream ownership, error/reset recovery and external macro repeats |
 | Driver tests | `driver_simulator_vfs` | File/directory workflows; current CORE compile incompatibility recorded |
+| Plugin tests | `plugin_keypad` | I2C/UART jog commands, cancellation, overrides and NVS restart |
+| Driver tests | `driver_rp2040_flash` | Flash-copy behavior with simulated SDK/IRQ calls |
+| Driver tests | `driver_esp32_nvs` | Partition storage, failures and realtime-handler restoration with simulated SDK calls |
 
 These are initial host tests, not full plugin/driver coverage or board validation.
+Driver SDK boundaries are simulated; no actual Pico SDK/ESP-IDF firmware build or
+physical flash/interrupt timing is established. Keypad tests explicitly compare
+signed/unsigned char builds; the observed extended-key defect is compiler-specific.
 See [component progress](tests/COMPONENT_PROGRESS.md) and the
 [repository backlog](tests/COMPONENT_INVENTORY.csv) for remaining work. Each suite
 has its own `KNOWN_BUGS.md`; keep correct regression assertions when removing

@@ -17,8 +17,16 @@ or force private state to enter a path.
   FATFS/SD detection and YMODEM are separate untested implementations. Original
   fs_littlefs.c fails current-CORE syntax checking on removed vfs_path_t; record
   an explicit compatible reference before adapter runtime work, never alias it.
-- Assess the next catalogue family (I2C keypad) and real host-testable RP2040/
-  ESP32 driver helpers; do not treat firmware builds as hardware validation.
+- Keypad now has I2C/UART jog, cancellation, override, callback and NVS restart
+  cases. Retain four signed-char extended-command regressions and paired unsigned
+  controls. Shared MPG, coordinate cycling with the real parser, macro/display
+  modules, ring-buffer saturation and additional initialization paths remain.
+  UART init reports allocation success despite failed stream opening; its bool
+  contract remains a question, not a classified defect. Coordinate string
+  formatting is a fixture boundary, not a tested CORE formatting contract.
+- Assess the next catalogue families (networking, plasma/THC and Trinamic), keeping
+  actual supported registration and transport contracts. Do not force private
+  state merely to enter branches.
 - Simulator VFS fails current-CORE compilation: removed vfs_path_t. The explicit
   driver gitlink reference executes nine cases with three known assertions;
   retain both incompatibility evidence and separate source locks. No fallback.
@@ -29,10 +37,12 @@ or force private state to enter a path.
   Do not forge persisted settings or private state to cover these paths.
 - Odometer: all124 measured lines execute, but6 branch outcomes and other storage/
   axis configurations remain. Keep visible report-format warnings documented.
-- For RP2040 and ESP32, identify real host-testable driver helpers and required
-  SDK/board build contracts before enabling suites. A firmware compile does not
-  prove GPIO timing or physical hardware behavior. Other drivers and third-party
-  plugins retain explicit not-yet-assessed inventory rows.
+- RP2040 flash-copy and ESP32 partition NVS helpers now execute original source
+  with simulated SDK boundaries. Other IO/serial/timing modules, SDK builds and
+  board/hardware checks remain. RP2040 rounding test provides a padded page buffer;
+  it does not prove arbitrary unpadded buffers safe. Keep multicore flash access
+  as an explicit hardware contract. Other drivers and third-party plugins retain
+  not-yet-assessed inventory rows.
 
 ## Current suites
 

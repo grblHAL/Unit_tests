@@ -155,5 +155,44 @@
     "test_regex": "^plugin_sdcard_stream[.]",
     "coverage_filter": "plugins/sdcard/(fs_stream|macros)\\.c$",
     "diagnostics_directory": "tests/plugins/sdcard_stream"
+  },
+  "plugin_keypad": {
+    "repository": "grblHAL/Plugin_I2C_keypad",
+    "ref": "master",
+    "path": "plugins/keypad",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/keypad",
+    "cmake_options": [],
+    "test_regex": "^plugin_keypad[.]",
+    "coverage_filter": "plugins/keypad/keypad\\.c$",
+    "diagnostics_directory": "tests/plugins/keypad"
+  },
+  "driver_rp2040_flash": {
+    "repository": "grblHAL/RP2040",
+    "ref": "master",
+    "path": "drivers/rp2040",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/drivers/rp2040_flash",
+    "cmake_options": [],
+    "test_regex": "^driver_rp2040_flash[.]",
+    "coverage_filter": "drivers/rp2040/flash\\.c$",
+    "diagnostics_directory": "tests/drivers/rp2040_flash"
+  },
+  "driver_esp32_nvs": {
+    "repository": "grblHAL/ESP32",
+    "ref": "master",
+    "path": "drivers/esp32",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/drivers/esp32_nvs",
+    "cmake_options": [],
+    "test_regex": "^driver_esp32_nvs[.]",
+    "coverage_filter": "drivers/esp32/main/nvs\\.c$",
+    "diagnostics_directory": "tests/drivers/esp32_nvs"
   }
 }

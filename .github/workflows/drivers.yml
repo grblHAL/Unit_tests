@@ -7,7 +7,7 @@ on:
       suite:
         description: Registered suite
         type: choice
-        options: [driver_simulator, driver_simulator_vfs]
+        options: [driver_simulator, driver_simulator_vfs, driver_rp2040_flash, driver_esp32_nvs]
         default: driver_simulator
       source_repository:
         description: 'Source owner/repo or GitHub URL (blank = suite default)'

@@ -7,7 +7,7 @@ on:
       suite:
         description: Registered suite
         type: choice
-        options: [plugins_misc, plugin_eeprom, plugin_fans, plugin_openpnp, plugin_odometer, plugin_encoder, plugin_spindle_vfd, plugin_sdcard_stream]
+        options: [plugins_misc, plugin_eeprom, plugin_fans, plugin_openpnp, plugin_odometer, plugin_encoder, plugin_spindle_vfd, plugin_sdcard_stream, plugin_keypad]
         default: plugins_misc
       source_repository:
         description: 'Source owner/repo or GitHub URL (blank = suite default)'
