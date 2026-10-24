@@ -18,23 +18,23 @@ plugin,Embroidery,grblHAL/Plugin_embroidery,partial host tests,plugin_embroidery
 plugin,Miscellaneous,grblHAL/Plugins_misc,partial host tests,plugins_misc,Add BLTouch and remaining I/O expansion/settings workflows.
 third-party plugin,Add status of digital aux outputs to real-time report,Avatario34/auxp,partial host tests,plugin_auxp,Full selected-file host coverage; add real parser/report integration and physical output checks.
 third-party plugin,'Datron like' RGB indicator lights,5ocworkshop/grblhal-rgb-plugin,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
-third-party plugin,Control panel,dresco/Plugin_panel,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+third-party plugin,Control panel,dresco/Plugin_panel,current CORE compile failure,,CAN and documented Modbus64 builds call obsolete one-argument system_execute_line at panel.c707; retain source unchanged and assess explicit compatibility separately.
 third-party plugin,CRC ensured MPG communication,nickshl/grblHAL_mpg_transport,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
 third-party plugin,FlexGPIO I2C I/O expander,Expatria-Technologies/plugin_FlexGPIO,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
-third-party plugin,Homing acceleration,Sienci-Labs/grbhal-homingaccel-plugin,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+third-party plugin,Homing acceleration,Sienci-Labs/grbhal-homingaccel-plugin,partial host tests,plugin_homingaccel,Per-axis override requests tested; add real settings backup/planner homing integration and resolve unit-hook ownership.
 third-party plugin,Interlock,gcormier/grblhal-interlock,partial host tests,plugin_interlock,Forward/inverse request paths tested; add settings getters/parser and null hooks/other slot counts plus real controller shutdown validation.
 third-party plugin,PicoHAL,Expatria-Technologies/Plugins_picoHAL,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
 third-party plugin,Pneumaseal,gcormier/grblhal-pneumaseal,partial host tests,plugin_pneumaseal,Lifecycle tested with remapped port and simulated tasks; add settings getters/parser and real scheduler/controller integration.
 third-party plugin,Sienci ATCi,Sienci-Labs/sienci-atci-plugin,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
 third-party plugin,Sienci Lights,Sienci-Labs/grblhal-rgb-plugin,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
 third-party plugin,Thermistor,gcormier/grblhal-thermistor,partial host tests,plugin_thermistor,Conversion/calibration/alarm requests tested; review reload hook ownership and command/sampling contracts plus actual analog hardware.
-third-party plugin,Virtual inputs,siganberg/grblhal-virtual-inputs,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+third-party plugin,Virtual inputs,siganberg/grblhal-virtual-inputs,partial host tests,plugin_virtual_inputs,Real CORE probe registration shared/separate cases tested; add full G38 jobs and remaining HAL/command configurations.
 driver,STM32H7xx,dresco/STM32H7xx,partial host tests,driver_stm32h7_flash,H743/H723 flash modules tested through simulated HAL; add other SDK/IO/serial modules and board builds.
 driver,ESP32,grblHAL/ESP32,partial host tests,driver_esp32_nvs,Partition-storage module tested through simulated SDK calls only; assess IO/serial helpers and real ESP-IDF board builds separately.
 driver,LPC176x,grblHAL/LPC176x,partial host tests,driver_lpc176x_flash,Host IAP storage tested with padded buffers; resolve CORE allocation/copy-size compatibility and add SDK/board workflows.
 driver,MSP430F5529,grblHAL/MSP430F5529,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
 driver,MSP432E401Y,grblHAL/MSP432E401Y,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
-driver,MSP432P401R,grblHAL/MSP432P401R,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
+driver,MSP432P401R,grblHAL/MSP432P401R,source review only,,Driver uses external EEPROM plugin or NVS_None; assess original serial/helpers and required TI SDK before registering tests.
 driver,PSoC5,grblHAL/PSoC5,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
 driver,RP2040 (Pi Pico & Pi Pico W),grblHAL/RP2040,partial host tests,driver_rp2040_flash,Flash-copy module tested through simulated SDK calls only; assess littlefs/IO/serial helpers and real Pico SDK board builds separately.
 driver,SAM3X8E (Arduino Due),grblHAL/SAM3X8E,partial host tests,driver_sam3x8e_serial,Retain RX-disable/realtime-route/pinmux regressions and exact callback diagnostic; add other ports and controller/board builds.
@@ -44,6 +44,6 @@ driver,STM32F3xx,grblHAL/STM32F3xx,partial host tests,driver_stm32f3_flash,Retai
 driver,STM32F4xx,grblHAL/STM32F4xx,partial host tests,driver_stm32f4_flash,32-bit host flash module tested with simulated HAL; assess serial/IO and real SDK/board builds separately.
 driver,STM32F7xx,grblHAL/STM32F7xx,partial host tests,driver_stm32f7_flash,Retain first-halfword failure regression; add other modules/configurations and real SDK/board validation.
 driver,Simulator,grblHAL/Simulator,partial host tests,driver_simulator;driver_simulator_vfs,VFS current-CORE compilation fails; reference gitlink tests reproduce three filesystem defects. Serial/timer fixtures remain.
-driver,TM4C123,grblHAL/TM4C123,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
-driver,TM4C1294,grblHAL/TM4C1294,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
+driver,TM4C123,grblHAL/TM4C123,source review only,,Original eeprom.c is a host candidate; real TivaWare headers and driver include dependencies need a pinned fixture.
+driver,TM4C1294,grblHAL/TM4C1294,source review only,,Upstream README marks archived/unsupported; shared TI_SimpleLink modules and SDK dependencies need explicit source-lock assessment.
 driver,iMXRT1062 (Teensy 4.x),grblHAL/iMXRT1062,partial host tests,driver_imxrt1062_pwm,Three Teensy PWM configurations use real SDK register headers; review shared-module configuration and add other driver modules/board builds.

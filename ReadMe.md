@@ -293,6 +293,8 @@ repository's default branch.
 | Plugin tests | `plugin_interlock` | Forward/inverse spindle interlock requests and settings |
 | Plugin tests | `plugin_pneumaseal` | Air-seal state, spindle and delayed-off lifecycle |
 | Plugin tests | `plugin_thermistor` | ADC reports, calibration and thermal alarm requests |
+| Plugin tests | `plugin_virtual_inputs` | Real CORE probe registration, virtual contacts, commands and reset |
+| Plugin tests | `plugin_homingaccel` | Per-axis homing override requests, restoration, units and persistence |
 | Driver tests | `driver_imxrt1062_pwm` | Teensy 4.0/4.1/MicroMod PWM register, routing and ownership workflows |
 | Driver tests | `driver_sam3x8e_serial` | Dual UART/USART queues, callbacks, settings and CORE stream suspend |
 

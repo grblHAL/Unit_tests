@@ -7,6 +7,30 @@ or force private state to enter a path.
 
 ## Next source families
 
+- Virtual Inputs now links real CORE probe.c and formatting.21 cases cover shared/
+  separate sensors, physical/virtual toward-away input, inversion, registered
+  commands/counters and lifecycle. Selected source146/146 lines,66/71 branches;
+  full G38 jobs, legacy missing callbacks, optional private init and alternate
+  command base remain. Homing Acceleration13 cases cover requested override and
+  restoration for4 axes; selected source101/101 lines,43/44 branches. Real
+  settings.c backup/parser and actual planner/stepper homing remain untested.
+- Homing Acceleration source uses NULL prior unit hook as install sentinel; with
+  no previous hook, repeated settings changes can capture its own wrapper. Keep
+  this source-review concern separate; do not force recursive stack failure.
+- Panel09c90184288a09d7357fd994c395911dec38683f fails syntax compilation against
+  CORE b01f481 for CAN(PANEL_ENABLE2/CAN_PORT1) and documented Modbus configuration
+  (PANEL_ENABLE1/MODBUS_ENABLE1/MODBUS_MAX_ADU_SIZE64): panel.c707 calls
+  system_execute_line with1 argument; CORE system.h330 requires2. An initial
+  default15-byte Modbus probe also failed array initialization; that probe omitted
+  the README-required64-byte option and is not an independent compatibility defect.
+  No source aliases/edits, obsolete CORE fallback or runtime/Actions pass claimed.
+- TI next sources fetched/read only: TM4C12314fdf8de2126316c14d88656f3a19337800ad1c1
+  has standalone eeprom.c but quoted tiva.h/driver.h pull actual TivaWare headers.
+  TM4C12942374d48ea5580c7912c999bf99e94fdd1c7e4ded is archived/unsupported per
+  README and delegates to TI_SimpleLink_shared. MSP432P401R
+  1fa8bc31d8e8669d4d569e768154a0532ec5311e uses external EEPROM or NVS_None;
+  assess serial/helpers with pinned SDK. No driver execution/compilation yet.
+
 - Four third-party suites now run unchanged sources: AUXP selected file45/45
   lines and24/24 branches; Interlock173/185 lines,67/84 branches; PneumaSeal
   128/141 lines,43/52 branches; Thermistor133/139 lines,68/74 branches. Remaining

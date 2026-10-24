@@ -478,5 +478,31 @@
     "test_regex": "^plugin_thermistor[.]",
     "coverage_filter": "plugins/thermistor/.*\\.c$",
     "diagnostics_directory": "tests/plugins/thermistor"
+  },
+  "plugin_virtual_inputs": {
+    "repository": "siganberg/grblhal-virtual-inputs",
+    "ref": "main",
+    "path": "plugins/virtual_inputs",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/virtual_inputs",
+    "cmake_options": [],
+    "test_regex": "^plugin_virtual_inputs[.]",
+    "coverage_filter": "plugins/virtual_inputs/.*\\.c$",
+    "diagnostics_directory": "tests/plugins/virtual_inputs"
+  },
+  "plugin_homingaccel": {
+    "repository": "Sienci-Labs/grbhal-homingaccel-plugin",
+    "ref": "main",
+    "path": "plugins/homingaccel",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/homingaccel",
+    "cmake_options": [],
+    "test_regex": "^plugin_homingaccel[.]",
+    "coverage_filter": "plugins/homingaccel/.*\\.c$",
+    "diagnostics_directory": "tests/plugins/homingaccel"
   }
 }

@@ -1,3 +1,41 @@
+# Latest component checkpoint - 2026-10-24 (batch14)
+
+Goal remains active; no production sources or concurrent CORE edits, no merges.
+Added34 cases:21 Virtual Inputs and13 Homing Acceleration. Separate Plugin tests
+choices resolve candidate and CORE independently into immutable source locks.
+Topology-independent Virtual Inputs cases run once; only sensor behavior varies
+across shared/separate registration. Original CORE probe.c and formatting execute
+with public registration/select/configure/IRQ boundaries and simulated pins.
+Homing cases capture public per-axis settings/override requests, including
+restoration, failures, persistence and rotary units; real settings.c backup and
+planner/stepper homing are not executed by that suite.
+
+One cumulative Windows Clang ASan/UBSan gate:33 compatible suites,488 cases =
+453 clean +35 documented known results, zero unexpected failures/skips. Same34
+correct expected assertion regressions plus1 fan-only diagnostic; two existing
+SAM assertion cases also have exact callback diagnostics, counted once. All34
+new cases clean; no new exception/diagnostic allowance. All84 reporting helpers
+pass16.345s; actionlint and whitespace pass.
+
+Fresh local LLVM selected-file coverage: Virtual Inputs146/146 lines100%,66/71
+branches93.0%,17/17 functions; Homing Acceleration101/101 lines100%,43/44
+branches97.7%,14/14 functions. Adds247 exercised executable lines. Fresh counter
+paths max226 characters; strict profiling checks pass. These are selected host
+configurations, not complete plugin/controller or hardware coverage.
+
+Pinned CORE b01f481072edecac33d5e40c25869359a5b3fa1f;
+Virtual Inputs e943e0c5da8a70ac9cfa91234bfa0a35a388c5f6;
+Homing Acceleration a06b7cd6095a40478dde5bb1b44323d0e10373c2.
+API-matched local source/CORE HEADs clean. Panel09c90184288a09d7357fd994c395911dec38683f
+fails unchanged-source syntax checks in CAN and README-required Modbus64 configs:
+obsolete one-argument system_execute_line at707 versus CORE two-argument API.
+No panel runtime suite/Actions choice or source alias; evidence in build-evidence.
+Remaining TI families fetched/read for next batch; details and ownership concerns
+in COMPONENT_TODO. PR29 stays draft/unmerged. Hosted component workflows still
+need default-branch installation; no Linux/GCC/physical-board success claimed.
+
+---
+
 # Latest component checkpoint - 2026-10-24 (batch13)
 
 Goal remains active. Added50 unchanged-source third-party plugin cases in separate
