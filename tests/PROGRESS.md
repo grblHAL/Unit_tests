@@ -47,6 +47,22 @@ and verified-exact-diagnostic-replay.json. Do not retry CI for this data alone.
 This is not a green matrix; badges/PR30 remain at fully green59b3ad9.
 Later local full-probe/cutter restore work is outside this measurement.
 
+## Local primary-only modal restore regression
+
+New multi_spindle/m72_primary_only_machine_restores_feed_speed_and_override_without_unused_driver.c
+uses the existing registered spindle/settings fixture with the optional secondary
+slot disabled before gc_init. M3S3000F120 at120% is saved by M70, then stopped
+and changed to S5000/F240/80%. M72 restores clockwise output3600RPM, nominal3000,
+feed120 and override120%; unused registered drivers receive no output/RPM update.
+Public M71 releases the snapshot. No private parser setup, new variant or allowance.
+Focused ASan/UBSan and strict1/1 pass0.31s; saved primary-only-modal-restore-
+{build,summary}.log and primary-only-modal-restore-results.xml. Targets gcode4381
+and corresponding optional-slot restore guards; no measured coverage gain claimed.
+Together the local group now covers native full-probe status, feed-only cutter
+restore, alarm sleep, E-stop identification, background USB DTR and primary-only
+spindle modal restore. Full4,501/hostedcf41105 predates these followups. Keep the
+next cumulative delivery substantial; no new full run or hosted dispatch here.
+
 ## Local background USB connection regression
 
 Existing stream/base_usb_without_connection_callback_restores_output_after_network_handoff.c
