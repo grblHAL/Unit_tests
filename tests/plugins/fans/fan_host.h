@@ -9,7 +9,7 @@ void load_fans(void);
 const setting_detail_t *fan_setting(setting_id_t id);
 extern setting_details_t *registered_settings;
 extern unsigned available_ports, warnings, reset_calls, completed_calls, spindle_calls, output_calls, reports, saved;
-extern bool alloc_ok, claims_ok, outputs[2];
+extern bool alloc_ok, claims_ok, outputs[4];
 extern char fan_output[256];
 extern foreground_task_ptr delayed_task;
 extern void *delayed_data;

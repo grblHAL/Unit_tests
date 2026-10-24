@@ -1,3 +1,29 @@
+# Local fan configuration checkpoint - 2026-10-25
+
+Goal active. Nine new cases build original fans.c with FANS_ENABLE1/3/4 and pass
+focused Windows Clang ASan/UBSan0.68s plus strict classification:9 clean, zero
+unexpected failures/skips. Each configuration checks its actual registered port
+settings, boolean/bitfield format, M106 physical mapping, fan count/report mask,
+stored disabled last port and shutdown/reset across every configured output.
+Only valid public fan indexes are used; no private state or production edits.
+
+Host output storage now bounds four pins and respects advertised port counts.
+After this shared fixture change, the initial18-case fan gate passed1.23s and
+strict classification17 clean +1 unchanged spindle-setter diagnostic. The later
+three-fan expansion changes only case registration/report expectations; all9
+configuration cases then passed. The original diagnostic source line is untouched.
+
+One fresh local coverage measurement, before adding three-fan configuration,
+covers selected one/two/four-fan builds:184/190 lines,102/119 branches,23/24 functions.
+Counter paths max237; original fan pin c5c3613 remains clean. Do not describe this
+as three-fan measurement or whole-repository coverage. Current fan suite21 cases;
+711 compatible cases is authored, not a new completed global gate. Batch24 remains
+latest delivered699 compatible +26 separate reference cases. Accumulate further
+work before combined delivery; actual settings/parser/scheduler, physical outputs
+and hosted execution remain unverified.
+
+---
+
 # Local fan persistence and delayed-shutdown checkpoint - 2026-10-25
 
 Goal active. Three new fan cases pass focused Windows Clang ASan/UBSan0.27s

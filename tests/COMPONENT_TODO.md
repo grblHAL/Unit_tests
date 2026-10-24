@@ -271,7 +271,10 @@ or force private state to enter a path.
   implementation changes. Do not assign that private pointer in a test.
   The empty-body spindle enumeration callback at237/242 needs a valid registered
   spindle integration fixture, not fabricated state solely for two lines.
-  One-, three- and four-fan configurations and stored port recovery remain.
+  One/three/four-fan settings, disabled stored ports and complete shutdown loops
+  now execute, alongside two-fan saved mapping/delay and timer cancellation.
+  Real settings/parser/scheduler integration, NVS hardware and physical outputs
+  remain; selected one/two/four-fan coverage is184/190 lines and102/119 branches.
 - EEPROM: measured lines are covered for the tested chip/FRAM/littlefs layouts,
   but several branch outcomes and other supported configurations remain. The
   byte helpers discard I2C errors, so checksum-byte failure propagation needs

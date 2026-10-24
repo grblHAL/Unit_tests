@@ -1,7 +1,7 @@
 #include "fan_host.h"
 setting_details_t *registered_settings;
 unsigned available_ports = 2, warnings, reset_calls, completed_calls, spindle_calls, output_calls, reports, saved;
-bool alloc_ok = true, claims_ok = true, outputs[2];
+bool alloc_ok = true, claims_ok = true, outputs[4];
 char fan_output[256];
 foreground_task_ptr delayed_task;
 void *delayed_data;
@@ -18,15 +18,15 @@ static nvs_transfer_result_t write_nvs(uint32_t address, uint8_t *source, uint32
 nvs_address_t nvs_alloc(size_t size) { CHECK(size <= sizeof(nvs)); return alloc_ok ? 2048 : 0; }
 bool settings_register(setting_details_t *details) { CHECK(registered_settings == NULL); registered_settings = details; return true; }
 static uint8_t get_next(io_port_cfg_t *config, uint8_t port, const char *description, pin_cap_t caps)
-{ (void)caps; CHECK(config->n_ports == 2 && description); return port == IOPORT_UNASSIGNED ? 1 : (uint8_t)(port - 1); }
+{ (void)caps; CHECK(config->n_ports == available_ports && description); return port == IOPORT_UNASSIGNED ? (uint8_t)(available_ports - 1) : (uint8_t)(port - 1); }
 static xbar_t *claim(io_port_cfg_t *config, uint8_t *port, const char *description, pin_cap_t caps)
-{ static xbar_t pin; (void)caps; CHECK(config->n_ports == 2 && *port < 2 && description); return claims_ok ? &pin : NULL; }
+{ static xbar_t pin; (void)caps; CHECK(config->n_ports == available_ports && *port < available_ports && description); return claims_ok ? &pin : NULL; }
 static status_code_t set_value(io_port_cfg_t *config, uint8_t *port, pin_cap_t caps, float value)
-{ (void)config; (void)caps; CHECK(value >= -1 && value < 2); *port = value < 0 ? IOPORT_UNASSIGNED : (uint8_t)value; return Status_OK; }
+{ (void)config; (void)caps; CHECK(value >= -1 && value < available_ports); *port = value < 0 ? IOPORT_UNASSIGNED : (uint8_t)value; return Status_OK; }
 static float get_value(io_port_cfg_t *config, uint8_t port) { (void)config; return port == IOPORT_UNASSIGNED ? -1 : port; }
 io_port_cfg_t *ioports_cfg(io_port_cfg_t *config, io_port_type_t type, io_port_direction_t dir)
 { CHECK(type == Port_Digital && dir == Port_Output); config->n_ports = available_ports; config->get_next = get_next; config->claim = claim; config->get_value = get_value; config->set_value = set_value; return config; }
-bool ioport_digital_out(uint8_t port, uint32_t value) { CHECK(port < 2 && value <= 1); outputs[port] = value; output_calls++; return true; }
+bool ioport_digital_out(uint8_t port, uint32_t value) { CHECK(port < available_ports && port < 4 && value <= 1); outputs[port] = value; output_calls++; return true; }
 bool spindle_enumerate_spindles(spindle_enumerate_callback_ptr callback, void *data) { (void)callback; (void)data; return true; }
 void report_warning(void *message) { CHECK(message); }
 bool task_run_on_startup(foreground_task_ptr fn, void *data) { CHECK(fn == report_warning && data); warnings++; return true; }

@@ -12,3 +12,12 @@ set_source_files_properties("${HARNESS_ROOT}/plugins/fans/fans.c" PROPERTIES COM
 if(ENABLE_SANITIZERS AND CMAKE_C_COMPILER_ID STREQUAL "Clang")
   set_tests_properties(plugin_fans.spindle_delay PROPERTIES LABELS known_sanitizer_bug)
 endif()
+
+foreach(count 1 3 4)
+  foreach(behavior configuration configured_disabled shutdown)
+    set(target plugin_fans.count${count}_${behavior})
+    component_case(${target} count_${behavior}.c fan_host.c "${HARNESS_ROOT}/tests/plugins/misc/misc_host.c" "${COMPONENT_CORE_ROOT}/nuts_bolts.c" "${HARNESS_ROOT}/plugins/fans/fans.c")
+    target_compile_definitions(${target} PRIVATE FANS_ENABLE=${count})
+    target_include_directories(${target} PRIVATE "${HARNESS_ROOT}/plugins/fans" "${HARNESS_ROOT}/tests/plugins/misc")
+  endforeach()
+endforeach()
