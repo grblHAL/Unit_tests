@@ -35,37 +35,35 @@ or force private state to enter a path.
   exact callback-count assumption was removed, with all coordinate assertions
   retained and unrestricted chaining separately tested. Establish integration
   contract before classifying that source path.
-- MPG transport21 cases at503b422d0aa92c4d2b6a190e92ce25344bcc629e cover valid
-  plain/framed RX/TX, duplicate suppression, ACK/NAK/retry budget, normal capacity
-  backpressure, chunks, reset and resource/baud/diagnostic workflows. Original
-  .c404/468 lines,146/234 branches; public wire header25/25 lines,10/10 branches.
-  Stream registration is captured, not actual CORE MPG switching/broadcast or
-  tool-ACK suspend. Eight local authoring cases (affected suite29/29 ASan/UBSan) now cover pending
-  transport persistence, in-flight timeout/attempt changes, output discard/stale
-  ACK isolation, payload limit, restore and plain/framed byte-only UART. Not yet
-  cumulatively validated/delivered. Remaining NVS clamping and
-  controller/physical transport integration need the next substantial group.
+- MPG transport29 cases at503b422d0aa92c4d2b6a190e92ce25344bcc629e now pass
+  cumulative batch19. Original .c423/468 lines,160/234 branches; public wire
+  header25/25 lines,10/10 branches. Settings persistence/restore, pending transport,
+  runtime timeout/attempt/payload, stale ACK isolation and both byte-only UART
+  modes covered. Remaining workflows: delay-time polling/realtime enqueue/byte
+  writes, normal RX/TX capacity loss/reporting, noisy/invalid wire rejection,
+  NVS clamping and failed-claim settings warnings. Never force a memory failure.
+  Actual CORE MPG selection/broadcast/tool-ACK and physical link remain untested.
 - PicoHAL babac83b030fdc053b66f711e82f92b6fdfcc455 fails unchanged-source syntax
   compilation against pinned CORE: on_probe_fixture_ptr and grbl.on_probe_fixture
   removed; on_probe_completed argument changed. No obsolete-type aliases, header
   bypasses, old-CORE fallback or runtime/Actions choice. Exact evidence locked in
   build-evidence/picohal-batch17-source.json and picohal-syntax.log.
 
-- Sienci RGB24 cases now cover original legacy STATUS_LIGHT_ENABLE2 and advanced3
-  sources at df3409058f8bb9c202f560e562bb2671a0829561(default SLB32_DEV). Combined
-  533/557 lines,267/311 branches. Retain stale legacy delayed tool-color regression.
-  Remaining regions include optional absent callbacks, offboard green override and
-  live state-transition animation edges; actual CORE scheduler/parser/hardware
-  still need integration. Workflow names use suite default instead of master.
-- FlexGPIO17 cases at bc8dab40162b49718179bffe973c4533fc73436f cover257/272 lines,
-  123/150 branches. Eight additional local authoring cases now exercise public pin value callbacks
-  across both axis configurations, configuration-send failure and input-read
-  recovery without false edges (8/8 ASan/UBSan and strict checks). Await cumulative
-  delivery; no updated coverage percentage yet. Registered descriptors are captured,
-  not passed through actual CORE ioports aggregation/remapping; multiple bank
-  offsets, controller/physical IRQ/I2C timing and no-MCU-IRQ mode remain untested.
-  Retain exact IRQ-disable/pull-mode result regressions and four Clang transparent-
-  union call diagnostics, with strict scoped manifest/labels and no suppression.
+- Sienci RGB31 cases cover original STATUS_LIGHT_ENABLE2/3 sources at
+  df3409058f8bb9c202f560e562bb2671a0829561(default SLB32_DEV), cumulative batch19.
+  Combined545/557 lines,294/311 branches; retain stale legacy tool-color regression.
+  Optional hooks/driver callbacks, offboard green and E-stop override edges now
+  covered. Live state changing before queued animation callback remains reachable
+  via state_get; default/fallback branches need contract review rather than
+  invented state values. Actual CORE scheduler/parser/hardware still untested.
+- FlexGPIO25 cases atbc8dab40162b49718179bffe973c4533fc73436f cover269/272 lines,
+  126/150 branches, cumulative batch19. Public pin value callbacks run across both
+  axis configurations; config-send failure and read recovery preserve valid
+  snapshots/edges. Remaining executable paths include output function assignment
+  through public descriptor and wait cancellation. Registered banks remain captured,
+  not actual CORE ioports aggregation/remapping; multiple bank offsets, no-MCU-IRQ,
+  controller/physical I2C timing remain. Retain IRQ-disable/pull-mode regressions
+  and four scoped Clang callback diagnostics with no suppression.
 - Datron-style RGB672ebd8beeed746b5c668be18b4e4c48b6c14883 fails unchanged-source
   current-CORE syntax compilation: status_light.c207 private static bit_count
   conflicts with CORE nuts_bolts.h541 declaration. Windows also reports ffsl

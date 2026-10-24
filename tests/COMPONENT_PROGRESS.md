@@ -1,3 +1,44 @@
+# Latest component checkpoint - 2026-10-24 (batch19)
+
+Goal active. Combined23 new public behavior cases: MPG8, FlexGPIO8 and SienciRGB7.
+One complete Windows Clang ASan/UBSan gate:42 compatible suites,654 cases =599
+clean +55 documented known results, zero unexpected failures/skips. Existing51
+correct expected assertion regressions and4 diagnostic-only results remain;3
+assertion cases also have exact diagnostics, counted once. No assertion weakening,
+new known failures, diagnostic allowance, production edits or CORE changes.
+Strict classifier ran for every suite. Unchanged84 reporting helpers were not
+rerun (last full pass batch17); unchanged workflows need no new actionlint run.
+Whitespace passes. Source locks API-match candidate/CORE SHAs and clean originals.
+
+Fresh local LLVM configured-source coverage:
+- MPG original .c423/468 lines90.4%,160/234 branches68.4%,43/48 functions;
+  public wire header25/25 lines,10/10 branches. Adds19 exercised lines.
+- FlexGPIO269/272 lines98.9%,126/150 branches84.0%,21/21 functions. Adds12 lines.
+- Sienci legacy200/200 lines100%,118/125 branches94.4%; advanced345/357 lines96.6%,
+  176/186 branches94.6%; all49 functions exercised. Combined545/557 lines97.8%,
+  294/311 branches94.5%. Adds12 lines. All three add43 exercised lines; fresh
+  counter paths max226 characters. Not whole repositories or controller coverage.
+
+MPG settings changes retain queued output, enforce runtime ACK/attempt/payload
+limits, persist/restore defaults, keep transport pending through soft reset, and
+separate discarded output from fresh acknowledgements. Both plain/framed modes
+run byte-only UART fallback. FlexGPIO covers each input/output value callback in
+three-/six-axis builds, configuration-send alarm and read-failure edge recovery.
+RGB covers absent optional hooks/driver callbacks, offboard green/off/automatic,
+and stopping/resuming E-stop pulses via overrides. In active animation mode,
+offboard changes render on the next scheduled frame; the fixture now waits for
+that real callback before asserting the unchanged exact requested colors.
+
+Pinned COREb01f481072edecac33d5e40c25869359a5b3fa1f;
+MPG503b422d0aa92c4d2b6a190e92ce25344bcc629e;
+Flexbc8dab40162b49718179bffe973c4533fc73436f;
+RGBdf3409058f8bb9c202f560e562bb2671a0829561.
+Evidence/locks are ignored in build-evidence. Keep PR29 draft/unmerged; hosted
+workflow installation, controller integration and hardware validation remain.
+See COMPONENT_TODO for remaining executable workflows and compatibility gaps.
+
+---
+
 # Local FlexGPIO authoring checkpoint - 2026-10-24 (next combined batch)
 
 Goal active. Eight additional cases (four behaviors in three-/six-axis builds)
