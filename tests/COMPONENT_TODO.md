@@ -397,3 +397,13 @@ remain open. Batch27 selected eventout169/204 lines,92/127 branches; probe relay
 91/94 lines,60/65 branches. Expanded misc denominator is9 files, not whole module.
 Next groups include supported control toggles and startup/failure settings paths;
 retain source review for pointer-width/return callback contracts before execution.
+
+## HC595 shift-register outputs
+
+Eleven cases exercise original1/2/3-chip builds,8/16/24 bits, wire byte ordering,
+SPI selection retry, duplicate writes, registration failure and descriptor APIs.
+No startup shift occurs in the source; host zero initialization does not establish
+physical output state. Four-chip highest bit uses signed1 << pin and remains
+source-review-only; do not force UB. Nonzero bank offsets, inversion/config ABI,
+write/deselect failure semantics, optional CS-port and MCU timing remain open.
+Actual CORE aggregation/SPI SDK/hardware are untested. No fresh coverage yet.

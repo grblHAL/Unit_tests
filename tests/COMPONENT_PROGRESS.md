@@ -1,3 +1,29 @@
+# Local HC595 SPI output checkpoint - 2026-10-25
+
+Goal active. Eleven new cases pass focused Windows Clang ASan/UBSan0.71s plus
+strict classification, all clean with zero unexpected failures/skips. Original
+hc595.c executes one/two/three-chip builds:8/16/24 output bits, single-byte versus
+multi-byte big-endian transmission, each bit's preservation and clearing,
+suppression of duplicate successful writes and retry after SPI selection failure.
+Pin metadata/ports_id, public descriptor/function/description updates, bounds,
+failed SPI startup and native enumeration chaining execute. Default4MHz and
+explicit1MHz slave settings plus CS pin7 are checked at the driver boundary.
+
+Original source performs no startup shift transfer; tests assert registration/
+software state only, not physical power-on outputs. Four-chip highest-bit signed
+shift remains source-only and is not deliberately executed. Nonzero descriptor
+bank offsets, config/inversion callback ABI, SPI write/deselect failures, optional
+CS-port and physical timing remain open. No source edits, private state changes,
+new known result or sanitizer allowance. SPI/port registration remain bounded
+host models, not actual CORE aggregator or MCU SPI SDK execution.
+
+Misc76 cases,774 compatible authored; latest delivered batch27 remains761 plus26
+separate legacy references. This adds11 to the2 local event-control cases for13
+accumulated cases. No fresh whole-suite gate, coverage, hosted or hardware claim.
+Continue substantial related work before the next combined validation/push.
+
+---
+
 # Local deferred event-control checkpoint - 2026-10-25
 
 Goal active. Two new control workflows plus all7 existing event-output cases pass
