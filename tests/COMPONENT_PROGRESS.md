@@ -1,3 +1,30 @@
+# Local MCP23017 mixed/input checkpoint - 2026-10-25
+
+Goal active. Nine new cases pass Windows Clang ASan/UBSan0.55s and strict
+classification, all clean with zero unexpected failures/skips. Original ENABLE1
+mixed8-input/8-output and ENABLE3 input-only16 configurations execute documented
+IOCON/direction/interrupt-disable setup, mandatory initial read, immediate sampling
+of zero/all-high/alternating GPIO patterns through both bank and descriptor APIs,
+and A/B descriptor enumeration. Input/output isolation retains independent mixed
+bank values. Input endpoints cover every valid bit and reject the unavailable port.
+
+Fixture driver declines IRQ ownership. Source advertises IRQ_Mode_None, rejects
+interrupt registration/edge waits without I2C writes or realtime polling, and
+preserves normal immediate sampling. This is supported polling-only behavior,
+not IRQ delivery coverage. Original IRQ/deferred code compiles but task dispatch,
+blocking polls/delays and settings-config calls fail fast if unexpectedly invoked.
+Successful reads initialize exactly the requested1/2 bytes; failed receive paths
+remain source-only rather than executing uninitialized local read behavior.
+
+No source edits, private state changes, new known result or sanitizer allowance.
+Actual CORE aggregation/I2C SDK/electrical registers, IRQ/wait/config and transport
+failure behavior remain open. Misc94 cases,792 compatible authored; latest
+delivered batch28 remains777 plus26 separate legacy references. Together with
+output-only cases,15 local MCP cases accumulate for next combined gate/push.
+No new full gate or coverage measurement; continue supported IRQ/controller work.
+
+---
+
 # Local MCP23017 output-bank checkpoint - 2026-10-25
 
 Goal active. Six new MCP23017_ENABLE2 output-only cases pass Windows Clang

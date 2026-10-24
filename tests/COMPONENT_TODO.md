@@ -416,7 +416,9 @@ other configurations remain outside that report.
 Six output-only ENABLE2 cases cover original16-bit packets, bit preservation,
 duplicate writes, native enumeration/descriptors and startup failures. Nonzero
 bank offsets correctly retain device-local id in output read/write callbacks.
-Mixed8/8 ENABLE1 and16-input ENABLE3, IRQ/wait/config and transport failures still
-need tests. Registration/I2C are captured boundaries, not actual CORE aggregation
+Mixed8/8 ENABLE1 and16-input ENABLE3 now have9 polling-only cases covering
+setup, immediate samples, enumeration and unavailable-edge rejection; mixed bank
+inputs/outputs stay isolated. Actual IRQ delivery, blocking wait/config and
+transport failures still need tests. Registration/I2C are captured boundaries, not actual CORE aggregation
 or physical registers. Review config callback ABI and failed receive handling
 before runtime; no source edits or new diagnostic exceptions.
