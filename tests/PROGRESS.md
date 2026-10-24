@@ -4,7 +4,7 @@ Full objective remains meaningful supported CORE line AND branch coverage.
 Goal ACTIVE; never edit CORE or merge PRs. Use Ponytail full and explicit RTK.
 Work in C:/Users/User/Documents/Codex/2026-10-08/https-github-com-petervanderwalt-unit-tests/work/Unit_tests.
 
-Branch coverage-batch-74 has a local followup group; origin/coverage-batch-74
+Branch coverage-batch-75 contains the six-case validated followup; origin/coverage-batch-74
 and PR30 remain at validated59b3ad9f9198d9973cc03b7af983c1d9899abc2d. PR28 is merged. PR30 is READY FOR REVIEW at this exact pushed head:
 https://github.com/grblHAL/Unit_tests/pull/30
 PR30 is exact-head validated and marked ready via GitHub; no merge performed. All eight cases and exact diagnostic
@@ -34,10 +34,14 @@ reproduce29/27/28; post-crash assertions remain unvalidated. Saved compiler repo
 Clang XML/logs and verified-new-workflows.json. README badges updated to this
 fully green run. PR30 validated at exacthead and marked ready for review; never merge.
 
-## Local ordinary-workflow followup; not in measured head
+## Batch75 cumulative delivery validation
 
-Four cases now pass focused ASan/UBSan (4,496 registered verified via CTest listing; latest full
-suite remains4,492). Keep accumulating before the next full gate/push/CI:
+Six added actual-use cases pass one cumulative full ASan/UBSan/strict gate:
+4,498 total in63.51s;4,473 clean/24 known regressions/1 known diagnostic/
+zero failed or skipped. Logs/XML: build-asan/batch75-delivery-{build,tests,summary}.log
+and batch75-delivery-results.xml. No unchanged helper rerun. Commit/push75 and
+use one exact-source hosted checkpoint; do not redispatch74. New gains remain
+unmeasured. PR30 stays ready at59b3ad9. The first four cases are local828e4ff:
 - homing/named_homed_state_tracks_individual_switch_homing_without_combined_cycle:
   public individual-axis configuration/no combined cycle; $HX/$HY/$HZ physically
   finish70/110/150steps. Named and sender |H completion/masks track0/1/3/7;
@@ -59,6 +63,18 @@ suite remains4,492). Keep accumulating before the next full gate/push/CI:
   wrongly equated contact latch and stopped position; corrected to normal
   deceleration contract. No CORE defect/allowance.
 
+Two additional normal dedicated-pin save cases pass focused2/2 sanitizer/strict
+in assigned-pin-save-results.xml (0.34s): assigned_probe_save_keeps_auxiliary_
+inversion_and_persists_probe_configuration and assigned_coolant_save_preserves_
+auxiliary_inversion_and_persists_open_drain. Public assignment removes the
+pin from generic inversion ownership; driver save retains neighbor mask2,
+persists dedicated probe inversion/pullup or coolant open-drain, then clears
+those options without changing the neighbor. NVS bytes are read back. Output
+assignment does not perform claim remapping; direct aux1 still reaches pin1.
+Expected new branch targets ioports1214/1256; no new CORE defect/exception.
+Fresh CORE fetch remainsb01f481 clean. PR30 live open/ready/mergeable at59b3ad9;
+no merge performed. Keep its validated head unchanged; successor75 is local.
+
 Saved individual CTest XMLs are combined without rerunning into
 build-asan/batch74-followup-focused-results.xml; strict summary passes4clean,
 zero failures/skips. No new coverage claim, exception or unchanged helper rerun.
@@ -70,7 +86,7 @@ stream_set_file callers exist. External NULL-file/retained-reader meaning is
 unestablished; no private stale-reader invocation added. Raw line remains.
 All existing unrelated workflow/reporting/driver scaffold edits remain excluded.
 
-## Current local delivery validation
+## Prior batch74 local delivery validation
 
 Eight later actual-use workflows (listed below) now pass one cumulative full
 ASan/UBSan/strict gate:4,492 cases in63.97s,4,467 clean/24 known regressions/

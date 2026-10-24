@@ -26,12 +26,16 @@ fatal faults remain unvalidated on Clang. README badges now point to this run.
 PR30 is ready for review at validated59b3ad9; no merge performed. Further work should prioritize supported missing lines;
 this batch adds distinct behavior branches but no new executable lines.
 
-Four later ordinary-workflow cases pass focused sanitizers: individual switch
+Six later ordinary-workflow cases pass focused sanitizers: individual switch
 homing with named/sender completion fields, absolute rotary G28 intermediate
 return, cubic/quadratic dynamic laser cuts with blanked rapid, and unhomed
-manual probe without toolsetter selection. They are outside the measured head;
+manual probe without toolsetter selection, and dedicated probe/coolant pin
+configuration saves that preserve auxiliary inversion ownership. They are outside
+the measured head;
 no gains are attributed until a substantial cumulative hosted report exists.
-The next full gate remains deferred while the followup batch grows.
+Successor75 cumulative full ASan/UBSan/strict gate passes4,498 in63.51s:
+4,473 clean/24 known regressions/1 known diagnostic/zero failures or skips.
+Only the next exact-source hosted report can establish coverage gains.
 
 Current b01 stream_file73 ownership review: native redirect installs a nonnull
 opened file and its reader together at160; close209-214 restores both saved
