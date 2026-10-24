@@ -1,0 +1,41 @@
+name: Plugin tests
+run-name: >-
+  Plugin tests: ${{ inputs.suite }} @ ${{ inputs.source_pr && format('PR #{0}', inputs.source_pr) || inputs.source_ref || 'master' }}
+on:
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: Registered suite
+        type: choice
+        options: [plugins_misc, plugin_eeprom, plugin_fans, plugin_openpnp]
+        default: plugins_misc
+      source_repository:
+        description: 'Source owner/repo or GitHub URL (blank = suite default)'
+        type: string
+        default: ''
+      source_ref:
+        description: 'Branch, tag or SHA (blank = default branch)'
+        type: string
+        default: ''
+      source_pr:
+        description: 'PR number; leave source_ref blank'
+        type: string
+        default: ''
+      core_ref:
+        description: 'Core branch, tag or SHA (blank = core default)'
+        type: string
+        default: ''
+permissions:
+  contents: read
+jobs:
+  tests:
+    uses: ./.github/workflows/reusable-tests.yml
+    with:
+      harness_repository: ${{ github.repository }}
+      harness_ref: ${{ github.sha }}
+      suite: ${{ inputs.suite }}
+      run_label: ${{ inputs.suite }}
+      source_repository: ${{ inputs.source_repository }}
+      source_ref: ${{ inputs.source_ref }}
+      source_pr: ${{ inputs.source_pr }}
+      core_ref: ${{ inputs.core_ref }}

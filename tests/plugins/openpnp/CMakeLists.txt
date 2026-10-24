@@ -1,0 +1,11 @@
+cmake_minimum_required(VERSION 3.20)
+project(grblhal_openpnp_tests LANGUAGES C)
+include(../../components.cmake)
+foreach(behavior digital_outputs analog_scaling input_validation synchronization position_reports firmware_and_chaining fractional_output_port)
+  component_case(plugin_openpnp.${behavior} ${behavior}.c openpnp_host.c "${HARNESS_ROOT}/tests/plugins/misc/misc_host.c" "${HARNESS_ROOT}/core/nuts_bolts.c" "${HARNESS_ROOT}/plugins/openpnp/openpnp.c")
+  target_compile_definitions(plugin_openpnp.${behavior} PRIVATE OPENPNP_ENABLE=1)
+  target_include_directories(plugin_openpnp.${behavior} PRIVATE "${HARNESS_ROOT}/tests/plugins/misc")
+endforeach()
+set_source_files_properties("${HARNESS_ROOT}/plugins/openpnp/openpnp.c" PROPERTIES COMPILE_OPTIONS -Wno-unused-parameter)
+
+set_tests_properties(plugin_openpnp.fractional_output_port PROPERTIES WILL_FAIL TRUE LABELS known_bug)
