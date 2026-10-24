@@ -1,3 +1,24 @@
+# Local Teensy PWM checkpoint - 2026-10-25 (next combined batch)
+
+Goal active. Nine new cases pass focused Windows Clang ASan/UBSan0.49s and strict
+classification:9 clean, zero known/failures/skips. Three behavior files execute
+under Teensy4.0/4.1/MicroMod: reconfigure already-claimed X/A/B/QuadTimer handles
+through period/prescaler/inversion changes, retain exact duty images, preserve
+independent FlexPWM submodule/QuadTimer outputs, and independently configure/update
+three QuadTimer channels in the same module. All handles come from public claim;
+never exceed five claims or forge opaque signals. No shared fixture/source edits,
+new known assertions or sanitizer allowances.
+
+PWM suite now36 registered cases. Driverd1f8d1ed904242ee08b0a5583e78f490afd9ae93
+and Teensy SDK7f107ee0a309f3813ed13f0d8f615497eca2ee49 verified clean. Together
+with pending SAM6 authoring cases, keep accumulating before combined validation
+and delivery. Batch20 below remains delivered baseline; no new source coverage or
+hosted result. These tests verify register images, not actual clock source/edge
+frequency, physical output timing or board startup. Shared FlexPWM A/B channels
+within one submodule still need their separate board-level ownership contract.
+
+---
+
 # Local SAM serial checkpoint - 2026-10-25 (next combined batch)
 
 Goal active. Six new SAM3X8E cases pass focused Windows Clang ASan/UBSan0.38s and

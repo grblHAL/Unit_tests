@@ -11,10 +11,14 @@ configurations are separate targets. The host maps only its own peripheral
 memory and simulates pin-mux lookup plus F_BUS_ACTUAL. IRQ/cache ARM inline paths
 are not called. No copied decoder or production/header guard replacement is used.
 
-Cases cover valid/unavailable/duplicate claims, up to five registered pins,
+Thirty-six registered cases cover valid/unavailable/duplicate claims, up to five registered pins,
 FlexPWM X/A/B output, all four clock gates, QuadTimer programming, inversion,
 zero/full register duty values and source-specific board routing. Prescaler/
-period, mux and compare/output-enable write images are checked. Register memory
+period, mux and compare/output-enable write images are checked. Nine further
+authoring cases reconfigure claimed handles and test independent FlexPWM
+submodules plus three independent QuadTimer channels across all three models.
+They preserve unrelated compare/control images and check polarity reset back to
+normal; shared A/B submodule ownership is still outside this validated group. Register memory
 does not emulate real timer progression or every write-one hardware effect;
 physical frequency, edge timing, fault clearing and full board startup are not
 established. pwm_enable currently returns true without configuring hardware.

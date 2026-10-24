@@ -145,7 +145,10 @@ or force private state to enter a path.
   registered). Await cumulative delivery/coverage; no source/fixture changes.
 - Teensy PWM executes original code/board headers with pinned real SDK register
   definitions for4.0/4.1/MicroMod. Timer/fault side effects and real frequency/edge
-  timing are not modelled. Type0 config/out paths are not returned by public claim;
+  timing are not modelled. Nine further local authoring cases pass9/9 ASan/UBSan
+  and strict: repeated claimed-output configuration, independent submodules/timer
+  outputs and independent QuadTimer channels across all models (36 registered).
+  Await cumulative delivery; no new coverage claim. Type0 config/out paths are not returned by public claim;
   do not forge handles for coverage. Review five-slot ownership capacity without
   force-entering a memory failure. Shared FlexPWM channel polarity/compare
   preservation needs a supported multi-output board contract before classification.
