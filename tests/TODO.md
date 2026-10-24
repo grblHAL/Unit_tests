@@ -559,6 +559,10 @@ without checking the macro-file contract and identifying the exact stalled path.
 
 ## G76 X-word main taper: confirm implementation scope
 
+User decision 2026-10-24: keep this on TODO. Do not register a main-taper
+geometry regression or expected-failure allowance while implementation scope
+is unresolved. This decision does not bless straight passes as tapered output.
+
 **Source review 2026-10-19, Terje 16c7dff3aa9614322cfc2b47a2109cc9196ccca4.**
 `gcode.c` computes `thread.main_taper_height` and a pitch correction when G76 has
 an X word. `motion_control.c` rescales that height, but no generated threading
@@ -1766,3 +1770,26 @@ Existing blocking tests use known response bytes. Establish whether
 blocking observers are promised the original/received length before registering
 a separate length defect. The blocking CRC regression checks actual response
 bytes and transport recovery; no new receive-length assertion or allowance.
+
+
+## Rotary return inner check-mode guard is dominated - 2026-10-24
+
+CORE2e165a1 gcode.c4666 checks !gc_parser_flags.check_mode inside the4644
+rotary-wrap arm, which already requires !gc_parser_flags.check_mode. This flag
+is a stack-local snapshot initialized at1299; neither called function receives
+its address, and intervening code does not assign it. The inner false outcome
+is not reachable through supported check-mode entry, even if callbacks change
+the global controller mode. Keep the raw branch denominator; do not mutate
+stack locals or reenter parsing to manufacture that outcome. Existing G28
+check-mode controls and actual wrapped motor-return cases remain the basis.
+
+
+## Delta interior cutoff reporting policy - 2026-10-24
+
+A real streamed move between reachable endpoints(-250,0,-150) and(250,0,-150)
+with default rod lengths crosses an unreachable interior. The native segmenter
+stops safely near X=-164.857; the physical-cutoff regression asserts that stop
+and one terminal response per command without requiring silent success. Clarify
+whether an intermediate inverse failure should report a motion error and how
+parser position should be resynchronized. This is separate from the proven
+physical cutoff, not a confirmed new defect or expected-failure allowance.

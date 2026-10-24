@@ -1,0 +1,277 @@
+source,line,status,evidence
+core/fs_device.c,59,contract-pending,TODO native backend scope; claimable non-UART transport naming contract required.
+core/fs_device.c,190,backend-stub-contract,TODO native backend stub audit; opendir supplies no valid device directory handle.
+core/fs_device.c,192,backend-stub-contract,TODO native backend stub audit; opendir supplies no valid device directory handle.
+core/fs_embedded.c,133,backend-stub-contract,"TODO native backend stub audit; native hidden read-only mount, no supported writable-owner lifecycle established."
+core/fs_embedded.c,135,backend-stub-contract,"TODO native backend stub audit; native hidden read-only mount, no supported writable-owner lifecycle established."
+core/fs_embedded.c,138,backend-stub-contract,"TODO native backend stub audit; native hidden read-only mount, no supported writable-owner lifecycle established."
+core/fs_embedded.c,140,backend-stub-contract,"TODO native backend stub audit; native hidden read-only mount, no supported writable-owner lifecycle established."
+core/gcode.c,325,contract-pending,COVERAGE_GAPS current G-code table; native helper callers use dynamic mode; external other-mode caller unestablished.
+core/gcode.c,326,contract-pending,COVERAGE_GAPS current G-code table; native helper callers use dynamic mode; external other-mode caller unestablished.
+core/gcode.c,573,guarded-native-routing,COVERAGE_GAPS current G-code table; prefix copy or earlier public G43 tool-table validation.
+core/gcode.c,1043,historical-proof-matched,"COVERAGE_GAPS historical parser audits / TODO; earlier validation, complete dispatch sets or opposite check-mode guard. See exact per-path narrative; not a fresh runtime proof."
+core/gcode.c,1367,historical-proof-matched,"COVERAGE_GAPS historical parser audits / TODO; earlier validation, complete dispatch sets or opposite check-mode guard. See exact per-path narrative; not a fresh runtime proof."
+core/gcode.c,1368,historical-proof-matched,"COVERAGE_GAPS historical parser audits / TODO; earlier validation, complete dispatch sets or opposite check-mode guard. See exact per-path narrative; not a fresh runtime proof."
+core/gcode.c,1499,historical-proof-matched,"COVERAGE_GAPS historical parser audits / TODO; earlier validation, complete dispatch sets or opposite check-mode guard. See exact per-path narrative; not a fresh runtime proof."
+core/gcode.c,2190,historical-proof-matched,"COVERAGE_GAPS historical parser audits / TODO; earlier validation, complete dispatch sets or opposite check-mode guard. See exact per-path narrative; not a fresh runtime proof."
+core/gcode.c,2728,historical-proof-matched,"COVERAGE_GAPS historical parser audits / TODO; earlier validation, complete dispatch sets or opposite check-mode guard. See exact per-path narrative; not a fresh runtime proof."
+core/gcode.c,2730,historical-proof-matched,"COVERAGE_GAPS historical parser audits / TODO; earlier validation, complete dispatch sets or opposite check-mode guard. See exact per-path narrative; not a fresh runtime proof."
+core/gcode.c,2731,historical-proof-matched,"COVERAGE_GAPS historical parser audits / TODO; earlier validation, complete dispatch sets or opposite check-mode guard. See exact per-path narrative; not a fresh runtime proof."
+core/gcode.c,2746,historical-proof-matched,"COVERAGE_GAPS historical parser audits / TODO; earlier validation, complete dispatch sets or opposite check-mode guard. See exact per-path narrative; not a fresh runtime proof."
+core/gcode.c,2747,historical-proof-matched,"COVERAGE_GAPS historical parser audits / TODO; earlier validation, complete dispatch sets or opposite check-mode guard. See exact per-path narrative; not a fresh runtime proof."
+core/gcode.c,2898,historical-proof-matched,"COVERAGE_GAPS historical parser audits / TODO; earlier validation, complete dispatch sets or opposite check-mode guard. See exact per-path narrative; not a fresh runtime proof."
+core/gcode.c,2987,guarded-native-routing,COVERAGE_GAPS current G-code table; prefix copy or earlier public G43 tool-table validation.
+core/gcode.c,2999,guarded-native-routing,COVERAGE_GAPS current G-code table; prefix copy or earlier public G43 tool-table validation.
+core/gcode.c,3065,historical-proof-matched,"COVERAGE_GAPS historical parser audits / TODO; earlier validation, complete dispatch sets or opposite check-mode guard. See exact per-path narrative; not a fresh runtime proof."
+core/gcode.c,3482,user-deferred-todo,User decision2026-10-24: document G76 X-word main taper in TODO; no geometry regression/allowance. Computed height currently has no consuming taper move; scope unresolved.
+core/gcode.c,3483,user-deferred-todo,User decision2026-10-24: document G76 X-word main taper in TODO; no geometry regression/allowance. Computed height currently has no consuming taper move; scope unresolved.
+core/gcode.c,3484,user-deferred-todo,User decision2026-10-24: document G76 X-word main taper in TODO; no geometry regression/allowance. Computed height currently has no consuming taper move; scope unresolved.
+core/gcode.c,3616,historical-proof-matched,"COVERAGE_GAPS historical parser audits / TODO; earlier validation, complete dispatch sets or opposite check-mode guard. See exact per-path narrative; not a fresh runtime proof."
+core/gcode.c,3617,historical-proof-matched,"COVERAGE_GAPS historical parser audits / TODO; earlier validation, complete dispatch sets or opposite check-mode guard. See exact per-path narrative; not a fresh runtime proof."
+core/gcode.c,3929,historical-proof-matched,"COVERAGE_GAPS historical parser audits / TODO; earlier validation, complete dispatch sets or opposite check-mode guard. See exact per-path narrative; not a fresh runtime proof."
+core/gcode.c,4314,guarded-native-routing,Current gcode normalizer does not allocate messages in check mode; the revised M6 check-mode release at4314-4315 therefore receives NULL. Historical opposite-outer-guard proof is superseded by this normalization proof.
+core/gcode.c,4315,guarded-native-routing,Current gcode normalizer does not allocate messages in check mode; the revised M6 check-mode release at4314-4315 therefore receives NULL. Historical opposite-outer-guard proof is superseded by this normalization proof.
+core/gcode.c,4864,defect-dependent,TODO G33.1 continuation audit and existing stopped-spindle regression; do not normalize erroneous fallback.
+core/gcode.c,4866,configuration-contract-pending,COVERAGE_GAPS current G-code table; A_AXIS plus supported tapping continuation/provider needed.
+core/gcode.c,4978,historical-proof-matched,"COVERAGE_GAPS historical parser audits / TODO; earlier validation, complete dispatch sets or opposite check-mode guard. See exact per-path narrative; not a fresh runtime proof."
+core/gcode.c,4979,historical-proof-matched,"COVERAGE_GAPS historical parser audits / TODO; earlier validation, complete dispatch sets or opposite check-mode guard. See exact per-path narrative; not a fresh runtime proof."
+core/grbllib.c,92,harness-no-op,COVERAGE_GAPS current helper table; empty weak board hook replaced by host/driver.
+core/grbllib.c,95,harness-no-op,COVERAGE_GAPS current helper table; empty weak board hook replaced by host/driver.
+core/grbllib.c,140,guarded-native-routing,COVERAGE_GAPS current helper table; failed-startup task filter or atomic scheduler selection.
+core/grbllib.c,144,guarded-native-routing,COVERAGE_GAPS current helper table; failed-startup task filter or atomic scheduler selection.
+core/grbllib.c,145,guarded-native-routing,COVERAGE_GAPS current helper table; failed-startup task filter or atomic scheduler selection.
+core/grbllib.c,146,guarded-native-routing,COVERAGE_GAPS current helper table; failed-startup task filter or atomic scheduler selection.
+core/grbllib.c,147,guarded-native-routing,COVERAGE_GAPS current helper table; failed-startup task filter or atomic scheduler selection.
+core/grbllib.c,149,guarded-native-routing,COVERAGE_GAPS current helper table; failed-startup task filter or atomic scheduler selection.
+core/grbllib.c,150,guarded-native-routing,COVERAGE_GAPS current helper table; failed-startup task filter or atomic scheduler selection.
+core/grbllib.c,590,guarded-native-routing,COVERAGE_GAPS current helper table; failed-startup task filter or atomic scheduler selection.
+core/grbllib.c,591,guarded-native-routing,COVERAGE_GAPS current helper table; failed-startup task filter or atomic scheduler selection.
+core/grbllib.c,592,guarded-native-routing,COVERAGE_GAPS current helper table; failed-startup task filter or atomic scheduler selection.
+core/grbllib.c,593,guarded-native-routing,COVERAGE_GAPS current helper table; failed-startup task filter or atomic scheduler selection.
+core/grbllib.c,594,guarded-native-routing,COVERAGE_GAPS current helper table; failed-startup task filter or atomic scheduler selection.
+core/ioports.c,782,contract-pending,COVERAGE_GAPS I/O audit; unmatched analog-output provider without generic output callback contract not established.
+core/ioports.c,1195,platform-specific,"COVERAGE_GAPS I/O audit and KNOWN_BUGS; fast integer narrowing regression exercises this on Windows, not wider Linux fast integer."
+core/ioports.c,1291,historical-proof-matched,COVERAGE_GAPS I/O audit; unrouted callbacks / complete control-function mapping.
+core/ioports.c,1292,historical-proof-matched,COVERAGE_GAPS I/O audit; unrouted callbacks / complete control-function mapping.
+core/ioports.c,1385,historical-disabled-or-guarded,COVERAGE_GAPS I/O audit: disabled open-drain registration plus callback defaults. Historical per-line grouping retained in narrative; no claim of supported access.
+core/ioports.c,1387,historical-disabled-or-guarded,COVERAGE_GAPS I/O audit: disabled open-drain registration plus callback defaults. Historical per-line grouping retained in narrative; no claim of supported access.
+core/ioports.c,1389,historical-disabled-or-guarded,COVERAGE_GAPS I/O audit: disabled open-drain registration plus callback defaults. Historical per-line grouping retained in narrative; no claim of supported access.
+core/ioports.c,1391,historical-disabled-or-guarded,COVERAGE_GAPS I/O audit: disabled open-drain registration plus callback defaults. Historical per-line grouping retained in narrative; no claim of supported access.
+core/ioports.c,1394,historical-disabled-or-guarded,COVERAGE_GAPS I/O audit: disabled open-drain registration plus callback defaults. Historical per-line grouping retained in narrative; no claim of supported access.
+core/ioports.c,1395,historical-disabled-or-guarded,COVERAGE_GAPS I/O audit: disabled open-drain registration plus callback defaults. Historical per-line grouping retained in narrative; no claim of supported access.
+core/ioports.c,1396,historical-disabled-or-guarded,COVERAGE_GAPS I/O audit: disabled open-drain registration plus callback defaults. Historical per-line grouping retained in narrative; no claim of supported access.
+core/ioports.c,1397,historical-disabled-or-guarded,COVERAGE_GAPS I/O audit: disabled open-drain registration plus callback defaults. Historical per-line grouping retained in narrative; no claim of supported access.
+core/ioports.c,1398,historical-disabled-or-guarded,COVERAGE_GAPS I/O audit: disabled open-drain registration plus callback defaults. Historical per-line grouping retained in narrative; no claim of supported access.
+core/ioports.c,1401,historical-disabled-or-guarded,COVERAGE_GAPS I/O audit: disabled open-drain registration plus callback defaults. Historical per-line grouping retained in narrative; no claim of supported access.
+core/ioports.c,1402,historical-disabled-or-guarded,COVERAGE_GAPS I/O audit: disabled open-drain registration plus callback defaults. Historical per-line grouping retained in narrative; no claim of supported access.
+core/ioports.c,1404,historical-disabled-or-guarded,COVERAGE_GAPS I/O audit: disabled open-drain registration plus callback defaults. Historical per-line grouping retained in narrative; no claim of supported access.
+core/ioports.c,1406,historical-disabled-or-guarded,COVERAGE_GAPS I/O audit: disabled open-drain registration plus callback defaults. Historical per-line grouping retained in narrative; no claim of supported access.
+core/ioports.c,1407,historical-disabled-or-guarded,COVERAGE_GAPS I/O audit: disabled open-drain registration plus callback defaults. Historical per-line grouping retained in narrative; no claim of supported access.
+core/ioports.c,1409,historical-disabled-or-guarded,COVERAGE_GAPS I/O audit: disabled open-drain registration plus callback defaults. Historical per-line grouping retained in narrative; no claim of supported access.
+core/ioports.c,1411,historical-disabled-or-guarded,COVERAGE_GAPS I/O audit: disabled open-drain registration plus callback defaults. Historical per-line grouping retained in narrative; no claim of supported access.
+core/ioports.c,1412,historical-disabled-or-guarded,COVERAGE_GAPS I/O audit: disabled open-drain registration plus callback defaults. Historical per-line grouping retained in narrative; no claim of supported access.
+core/ioports.c,1436,historical-disabled-or-guarded,COVERAGE_GAPS I/O audit: disabled open-drain registration plus callback defaults. Historical per-line grouping retained in narrative; no claim of supported access.
+core/ioports.c,1437,historical-disabled-or-guarded,COVERAGE_GAPS I/O audit: disabled open-drain registration plus callback defaults. Historical per-line grouping retained in narrative; no claim of supported access.
+core/ioports.c,1438,historical-disabled-or-guarded,COVERAGE_GAPS I/O audit: disabled open-drain registration plus callback defaults. Historical per-line grouping retained in narrative; no claim of supported access.
+core/ioports.c,1440,historical-disabled-or-guarded,COVERAGE_GAPS I/O audit: disabled open-drain registration plus callback defaults. Historical per-line grouping retained in narrative; no claim of supported access.
+core/ioports.c,1441,historical-disabled-or-guarded,COVERAGE_GAPS I/O audit: disabled open-drain registration plus callback defaults. Historical per-line grouping retained in narrative; no claim of supported access.
+core/ioports.c,1558,historical-proof-matched,COVERAGE_GAPS I/O audit; unrouted callbacks / complete control-function mapping.
+core/ioports.c,1559,historical-proof-matched,COVERAGE_GAPS I/O audit; unrouted callbacks / complete control-function mapping.
+core/kinematics/asymmetric_ganging.c,254,configuration-contract-pending,"Current public homing-cycle Format_AxisMask validation uses system_n_axis=3, rejecting standalone internal motor bit8; plugin normalization only adds it alongside primary. Persisted configuration migration or external caller contract unestablished."
+core/kinematics/delta.c,180,contract-pending,COVERAGE_GAPS delta table; invalid assembly/driver position or incompatible home/floor geometry behavior needs an established contract.
+core/kinematics/delta.c,320,local-regression-pending-measurement,"boot_delta.streamed_move_across_unreachable_interior_stops_at_last_valid_segment: normal streamed reachable endpoints(-250,0,-150)/(250,0,-150) cross unreachable center; actual motors stop near X=-164.857, no fabricated state. ASan/UBSan passes; cumulative coverage pending."
+core/kinematics/delta.c,321,local-regression-pending-measurement,"boot_delta.streamed_move_across_unreachable_interior_stops_at_last_valid_segment: normal streamed reachable endpoints(-250,0,-150)/(250,0,-150) cross unreachable center; actual motors stop near X=-164.857, no fabricated state. ASan/UBSan passes; cumulative coverage pending."
+core/kinematics/delta.c,376,contract-pending,COVERAGE_GAPS delta table; invalid assembly/driver position or incompatible home/floor geometry behavior needs an established contract.
+core/kinematics/delta.c,619,fixture-precondition,COVERAGE_GAPS delta table / TODO four-axis delta homing; real boot attempt fails before auxiliary jog.
+core/kinematics/delta.c,620,fixture-precondition,COVERAGE_GAPS delta table / TODO four-axis delta homing; real boot attempt fails before auxiliary jog.
+core/kinematics/delta.c,625,contract-pending,COVERAGE_GAPS delta table; invalid assembly/driver position or incompatible home/floor geometry behavior needs an established contract.
+core/kinematics/delta.c,643,fixture-precondition,COVERAGE_GAPS delta table / TODO four-axis delta homing; real boot attempt fails before auxiliary jog.
+core/kinematics/delta.c,706,guarded-native-routing,"COVERAGE_GAPS delta table; both loop exits imply ok, preempting the subsequent !ok fallback."
+core/kinematics/polar.c,212,unimplemented-public-entry,TODO polar homing audit; installed hooks are behind unimplemented public homing. Historical proof.
+core/kinematics/polar.c,214,unimplemented-public-entry,TODO polar homing audit; installed hooks are behind unimplemented public homing. Historical proof.
+core/kinematics/polar.c,232,unimplemented-public-entry,TODO polar homing audit; installed hooks are behind unimplemented public homing. Historical proof.
+core/kinematics/polar.c,234,unimplemented-public-entry,TODO polar homing audit; installed hooks are behind unimplemented public homing. Historical proof.
+core/kinematics/wall_plotter.c,208,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,213,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,214,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,216,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,217,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,218,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,219,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,220,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,221,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,222,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,223,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,224,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,225,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,226,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,227,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,229,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,234,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,237,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,239,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,240,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,242,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,243,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,244,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,245,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,246,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,247,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,248,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,249,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,250,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,251,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,252,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,253,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,254,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,255,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,257,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,260,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,262,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,264,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,265,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,266,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,267,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,268,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,269,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,270,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,271,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,272,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,273,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,274,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,275,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,276,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,277,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,278,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,279,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,280,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,283,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/kinematics/wall_plotter.c,284,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
+core/machine_limits.c,269,local-regression-pending-measurement,boot.reset_during_initial_homing_report_delay_prevents_all_motor_motion: real reset during normal 100ms pre-homing report delay; ASan/UBSan passes; zero pulses/homed axes and $G recovery. Cumulative line measurement pending.
+core/machine_limits.c,502,contract-pending,TODO zero locate feed rate policy; seek reference/homed-state contract unresolved.
+core/modbus.c,231,unimplemented-public-entry,COVERAGE_GAPS current dormant dispatch review; TBA diagnostics function is unregistered.
+core/modbus.c,232,unimplemented-public-entry,COVERAGE_GAPS current dormant dispatch review; TBA diagnostics function is unregistered.
+core/modbus.c,233,unimplemented-public-entry,COVERAGE_GAPS current dormant dispatch review; TBA diagnostics function is unregistered.
+core/modbus_rtu.c,241,guarded-native-routing,"TODO RTU timeout audit, current transitions rechecked; TimeoutException has blocking owner, async timeout clears owner earlier."
+core/modbus_rtu.c,360,contract-pending,TODO RTU reset-in-retry; independent nonabort cancellation of blocking owner unresolved.
+core/modbus_rtu.c,361,contract-pending,TODO RTU reset-in-retry; independent nonabort cancellation of blocking owner unresolved.
+core/motion_control.c,690,user-deferred-todo,User decision2026-10-24: document G76 X-word main taper in TODO; no geometry regression/allowance. Computed height currently has no consuming taper move; scope unresolved.
+core/motion_control.c,715,local-regression-pending-measurement,"spindle_sync.reset_during_g76_preparation_prevents_first_radial_move: public reset at idle preparation before first radial move; ASan/UBSan passes; zero pulses/sync starts, spindle off, position retained. Cumulative coverage pending."
+core/my_plugin.c,26,harness-no-op,COVERAGE_GAPS weak empty hooks audit; default no-op plugin entry replaced by host/driver.
+core/my_plugin.c,29,harness-no-op,COVERAGE_GAPS weak empty hooks audit; default no-op plugin entry replaced by host/driver.
+core/ngc_expr.c,115,historical-proof-matched,TODO expression dispatch audit; private enum defaults and bypassed EXISTS arm.
+core/ngc_expr.c,116,historical-proof-matched,TODO expression dispatch audit; private enum defaults and bypassed EXISTS arm.
+core/ngc_expr.c,189,historical-proof-matched,TODO expression dispatch audit; private enum defaults and bypassed EXISTS arm.
+core/ngc_expr.c,190,historical-proof-matched,TODO expression dispatch audit; private enum defaults and bypassed EXISTS arm.
+core/ngc_expr.c,250,historical-proof-matched,TODO expression dispatch audit; private enum defaults and bypassed EXISTS arm.
+core/ngc_expr.c,252,historical-proof-matched,TODO expression dispatch audit; private enum defaults and bypassed EXISTS arm.
+core/ngc_expr.c,292,historical-proof-matched,TODO expression dispatch audit; private enum defaults and bypassed EXISTS arm.
+core/ngc_expr.c,293,historical-proof-matched,TODO expression dispatch audit; private enum defaults and bypassed EXISTS arm.
+core/ngc_expr.c,337,historical-proof-matched,TODO expression dispatch audit; private enum defaults and bypassed EXISTS arm.
+core/ngc_expr.c,338,historical-proof-matched,TODO expression dispatch audit; private enum defaults and bypassed EXISTS arm.
+core/ngc_expr.c,341,historical-proof-matched,TODO expression dispatch audit; private enum defaults and bypassed EXISTS arm.
+core/ngc_flowctrl.c,816,historical-proof-matched,"TODO flow command-set audit; recognized handlers complete, unknown command rejected earlier."
+core/ngc_flowctrl.c,817,historical-proof-matched,"TODO flow command-set audit; recognized handlers complete, unknown command rejected earlier."
+core/ngc_params.c,772,historical-proof-matched,"TODO named registry / root / literal local4 audits; complete handlers, nonempty builtins and valid constant read. Source file is line-identical to CORE50f3865; caller/header scope remains as stated."
+core/ngc_params.c,773,historical-proof-matched,"TODO named registry / root / literal local4 audits; complete handlers, nonempty builtins and valid constant read. Source file is line-identical to CORE50f3865; caller/header scope remains as stated."
+core/ngc_params.c,942,historical-proof-matched,"TODO named registry / root / literal local4 audits; complete handlers, nonempty builtins and valid constant read. Source file is line-identical to CORE50f3865; caller/header scope remains as stated."
+core/ngc_params.c,1247,historical-proof-matched,"TODO named registry / root / literal local4 audits; complete handlers, nonempty builtins and valid constant read. Source file is line-identical to CORE50f3865; caller/header scope remains as stated."
+core/nvs_buffer.c,366,historical-proof-matched,TODO zero-size allocation and even retry counter audits; no unallocated driver write or forced counter. Source file is line-identical to CORE50f3865; caller/header scope remains as stated.
+core/nvs_buffer.c,391,historical-proof-matched,TODO zero-size allocation and even retry counter audits; no unallocated driver write or forced counter. Source file is line-identical to CORE50f3865; caller/header scope remains as stated.
+core/nvs_buffer.c,392,historical-proof-matched,TODO zero-size allocation and even retry counter audits; no unallocated driver write or forced counter. Source file is line-identical to CORE50f3865; caller/header scope remains as stated.
+core/protocol.c,185,public-trigger-pending,Current native pending-alarm producers enumerated in system140/147/1355. Boot idle/door entry has no demonstrated motion/probing producer; critical deferred alarms remain locked until unlock dispatch. No normal startup trigger demonstrated; external callback timing not ruled out.
+core/report.c,450,historical-proof-matched,COVERAGE_GAPS native setting reporting audit and TODO datatype audit; registration checks / complete valid datatypes. Source file is line-identical to CORE50f3865; caller/header scope remains as stated.
+core/report.c,451,historical-proof-matched,COVERAGE_GAPS native setting reporting audit and TODO datatype audit; registration checks / complete valid datatypes. Source file is line-identical to CORE50f3865; caller/header scope remains as stated.
+core/report.c,452,historical-proof-matched,COVERAGE_GAPS native setting reporting audit and TODO datatype audit; registration checks / complete valid datatypes. Source file is line-identical to CORE50f3865; caller/header scope remains as stated.
+core/report.c,1955,historical-proof-matched,COVERAGE_GAPS native setting reporting audit and TODO datatype audit; registration checks / complete valid datatypes. Source file is line-identical to CORE50f3865; caller/header scope remains as stated.
+core/report.c,1956,historical-proof-matched,COVERAGE_GAPS native setting reporting audit and TODO datatype audit; registration checks / complete valid datatypes. Source file is line-identical to CORE50f3865; caller/header scope remains as stated.
+core/settings.c,701,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,703,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,780,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,781,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,839,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,925,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,928,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,1012,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,1056,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,1140,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,1141,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,1199,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,1200,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,1341,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,1351,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,1507,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,1508,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,1569,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,1577,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,1584,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,1591,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,1594,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,1595,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,1596,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,1652,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,1653,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,1693,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,1694,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,1901,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,1902,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,1960,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,1961,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,2026,contract-pending,COVERAGE_GAPS current settings table; external getter mismatch or direct-buffer IPv4 provider contract required.
+core/settings.c,2027,contract-pending,COVERAGE_GAPS current settings table; external getter mismatch or direct-buffer IPv4 provider contract required.
+core/settings.c,2175,unused-registration,COVERAGE_GAPS current settings table; availability arms are not registered.
+core/settings.c,2176,unused-registration,COVERAGE_GAPS current settings table; availability arms are not registered.
+core/settings.c,2177,unused-registration,COVERAGE_GAPS current settings table; availability arms are not registered.
+core/settings.c,2179,unused-registration,COVERAGE_GAPS current settings table; availability arms are not registered.
+core/settings.c,2180,unused-registration,COVERAGE_GAPS current settings table; availability arms are not registered.
+core/settings.c,2181,unused-registration,COVERAGE_GAPS current settings table; availability arms are not registered.
+core/settings.c,2192,unused-registration,COVERAGE_GAPS current settings table; availability arms are not registered.
+core/settings.c,2193,unused-registration,COVERAGE_GAPS current settings table; availability arms are not registered.
+core/settings.c,2194,unused-registration,COVERAGE_GAPS current settings table; availability arms are not registered.
+core/settings.c,2196,unused-registration,COVERAGE_GAPS current settings table; availability arms are not registered.
+core/settings.c,2197,unused-registration,COVERAGE_GAPS current settings table; availability arms are not registered.
+core/settings.c,2198,unused-registration,COVERAGE_GAPS current settings table; availability arms are not registered.
+core/settings.c,2239,unused-registration,COVERAGE_GAPS current settings table; availability arms are not registered.
+core/settings.c,2240,unused-registration,COVERAGE_GAPS current settings table; availability arms are not registered.
+core/settings.c,2241,unused-registration,COVERAGE_GAPS current settings table; availability arms are not registered.
+core/settings.c,2247,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,2248,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,2957,no-op-stub,COVERAGE_GAPS current settings table; N_TOOLS=0 persistence stub; native G10 rejects earlier.
+core/settings.c,2959,no-op-stub,COVERAGE_GAPS current settings table; N_TOOLS=0 persistence stub; native G10 rejects earlier.
+core/settings.c,3476,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,3477,guarded-native-routing,"COVERAGE_GAPS current settings table; TODO registration/type/caller audits, historical proof matched to current line locations."
+core/settings.c,3625,contract-pending,COVERAGE_GAPS current settings table; external getter mismatch or direct-buffer IPv4 provider contract required.
+core/settings.c,3626,contract-pending,COVERAGE_GAPS current settings table; external getter mismatch or direct-buffer IPv4 provider contract required.
+core/settings.c,3627,contract-pending,COVERAGE_GAPS current settings table; external getter mismatch or direct-buffer IPv4 provider contract required.
+core/spindle_control.c,499,guarded-native-routing,COVERAGE_GAPS current dormant dispatch review; null spindle PWM callbacks take precedence over RPM callback.
+core/spindle_control.c,503,guarded-native-routing,COVERAGE_GAPS current dormant dispatch review; null spindle PWM callbacks take precedence over RPM callback.
+core/spindle_control.c,1160,historical-proof-matched,TODO secondary PWM validation audit; public registration/value gates and complete getter IDs. Source file is line-identical to CORE50f3865; caller/header scope remains as stated.
+core/spindle_control.c,1161,historical-proof-matched,TODO secondary PWM validation audit; public registration/value gates and complete getter IDs. Source file is line-identical to CORE50f3865; caller/header scope remains as stated.
+core/spindle_control.c,1172,historical-proof-matched,TODO secondary PWM validation audit; public registration/value gates and complete getter IDs. Source file is line-identical to CORE50f3865; caller/header scope remains as stated.
+core/spindle_control.c,1215,historical-proof-matched,TODO secondary PWM validation audit; public registration/value gates and complete getter IDs. Source file is line-identical to CORE50f3865; caller/header scope remains as stated.
+core/spindle_control.c,1216,historical-proof-matched,TODO secondary PWM validation audit; public registration/value gates and complete getter IDs. Source file is line-identical to CORE50f3865; caller/header scope remains as stated.
+core/state_machine.c,157,historical-proof-matched,COVERAGE_GAPS reporting/restore caller audit; nonnull spindle and handler changed before restoring flag. Source file is line-identical to CORE50f3865; caller/header scope remains as stated.
+core/state_machine.c,449,guarded-native-routing,"Both native EXEC_TOOL_CHANGE producers (gcode4302, tool_change541) follow protocol_buffer_synchronize. Normal idle dispatch owns manual change; no supported active-cycle producer established. Do not fabricate an IRQ between synchronized completion and flag processing."
+core/state_machine.c,502,public-trigger-pending,"Current system140 probe contact pairs pending alarm with EXEC_STOP, consumed before motion-cancel handling; system147 disconnection pairs it with feed hold, handled by state_await_hold520. Critical deferred alarms block motion. Alarm arrival during cancel may need a supported asynchronous event sequence; not classified universally unreachable."
+core/state_machine.c,524,guarded-native-routing,"COVERAGE_GAPS current controller-state routing; native hold handlers use HOLD/DOOR/SLEEP, tool change installs a different handler."
+core/state_machine.c,525,guarded-native-routing,"COVERAGE_GAPS current controller-state routing; native hold handlers use HOLD/DOOR/SLEEP, tool change installs a different handler."
+core/state_machine.c,526,guarded-native-routing,"COVERAGE_GAPS current controller-state routing; native hold handlers use HOLD/DOOR/SLEEP, tool change installs a different handler."
+core/state_machine.c,527,guarded-native-routing,"COVERAGE_GAPS current controller-state routing; native hold handlers use HOLD/DOOR/SLEEP, tool change installs a different handler."
+core/state_machine.c,614,guarded-native-routing,"COVERAGE_GAPS current controller-state routing; native hold handlers use HOLD/DOOR/SLEEP, tool change installs a different handler."
+core/state_machine.c,615,guarded-native-routing,"COVERAGE_GAPS current controller-state routing; native hold handlers use HOLD/DOOR/SLEEP, tool change installs a different handler."
+core/state_machine.c,658,guarded-native-routing,"COVERAGE_GAPS current controller-state routing; native hold handlers use HOLD/DOOR/SLEEP, tool change installs a different handler."
+core/state_machine.c,659,guarded-native-routing,"COVERAGE_GAPS current controller-state routing; native hold handlers use HOLD/DOOR/SLEEP, tool change installs a different handler."
+core/state_machine.c,819,historical-proof-matched,COVERAGE_GAPS reporting/restore caller audit; nonnull spindle and handler changed before restoring flag. Source file is line-identical to CORE50f3865; caller/header scope remains as stated.
+core/stepper.c,1093,guarded-native-routing,TODO native fast-hold producer ordering audit; planner-null path returns and new load clears fast-hold flag.
+core/stream.c,277,guarded-native-routing,TODO Connection lookup terminal fallback; exact CORE2e165 registration/selection caller proof.
+core/stream.c,370,guarded-native-routing,Current add_connection installs nonnull base.stream before later connections; removing a stream after MPG selects the preceding nonnull base/registered stream. No native API clears that stored descriptor.
+core/stream.c,615,historical-proof-matched,COVERAGE_GAPS report-clear caller proof; ClearAll returns before observer dispatch.
+core/stream_file.c,73,historical-proof-matched,TODO file reader no-file fallback; native close restores parent reader before dropping file.
+core/system.c,466,historical-proof-matched,TODO HELP dispatch audit; prefix handler bypasses command-table wrapper. Source file is line-identical to CORE50f3865; caller/header scope remains as stated.
+core/system.c,468,historical-proof-matched,TODO HELP dispatch audit; prefix handler bypasses command-table wrapper. Source file is line-identical to CORE50f3865; caller/header scope remains as stated.
+core/tool_change.c,435,fixture-precondition,TODO legacy boot cannot enter manual fixture-mode handler; startup clears stream suspension; do not reinstall solely for coverage.
+core/tool_change.c,436,fixture-precondition,TODO legacy boot cannot enter manual fixture-mode handler; startup clears stream suspension; do not reinstall solely for coverage.
+core/vfs.c,272,contract-pending,TODO VFS NULL-path caller contract; reachable numeric API fallback but supported NULL meaning unestablished.
+core/vfs.c,415,historical-proof-matched,TODO verified VFS lookup/rename guards; successful rename same mount and validated chdir nonnull path.
+core/vfs.c,482,historical-proof-matched,TODO verified VFS lookup/rename guards; successful rename same mount and validated chdir nonnull path.
+core/vfs.c,779,contract-pending,TODO VFS NULL-path caller contract; reachable numeric API fallback but supported NULL meaning unestablished.

@@ -1,4 +1,4 @@
-# Validation batching correction - 2026-10-22
+# Validation batching correction - 2026-10-24
 
 User correction: repeated hosted runs for 3-5 new cases waste time. This policy
 supersedes earlier checkpoint habits and automatic end-of-turn delivery notes.
@@ -6,11 +6,20 @@ supersedes earlier checkpoint habits and automatic end-of-turn delivery notes.
 - Continue authoring across multiple remaining supported regions before delivery.
 - Do not run a full local suite, push or dispatch hosted CI merely because a
   goal turn ends or a small module is finished. Keep accumulating local work.
-- Use source review during authoring; focused execution only resolves uncertain
-  behavior, failures, or changes to shared reporting/fixture infrastructure.
-- One full sanitizer/strict gate and one hosted run at a substantial cumulative
-  delivery boundary. Three hosted runs per hour is an absolute ceiling, not a
-  target; normally run substantially fewer. Do not dispatch redundant heads.
+- Use source review during authoring. Do not build/run an isolated coverage
+  profile for each case or small group. Collect coverage once for the accumulated
+  batch. Focused sanitizer execution only resolves uncertain behavior, failures,
+  or shared fixture changes; do not automatically execute every authored case.
+- Prioritize remaining supported executable regions and reuse the existing
+  residual-guard audit. Do not repeatedly rediscover documented unreachable paths
+  or choose easy branch-only cases to manufacture progress.
+- A handful of tests or branch outcomes is not a delivery boundary. Do not run
+  a full gate/push/hosted cycle for another 3-7 cases merely because several
+  modules were touched. Accumulate substantial work with a clear coverage purpose
+  before one cumulative sanitizer/strict gate and one hosted measurement.
+- Three hosted runs per hour is only an absolute safety ceiling, never a cadence
+  or target. Do not use another short authoring interval followed by a long CI
+  cycle as the work loop. Do not dispatch redundant heads.
 - While hosted jobs run, continue independent test authoring. Do not wait or
   repeatedly poll them. Refresh their results at the next useful checkpoint.
 - Do not manufacture 500 cases or duplicate covered behavior to meet a quota.

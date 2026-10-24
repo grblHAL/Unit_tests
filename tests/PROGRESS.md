@@ -1,3 +1,49 @@
+# Residual line audit and supported pre-motion/error cutoffs - 2026-10-24
+
+Branch coverage-batch-74, parent dcd124c2. CORE2e165a1 remains unchanged and clean.
+The276-row source/line CSV exactly matches both hosted40068761972 and40070163310
+coverage XML sets. Each gap has a disposition and evidence; historical proofs,
+provider contracts, unavailable implementations and fixture preconditions remain
+separate. No exclusions or invented private states. Two remaining alarm caller
+paths have no demonstrated public trigger; this is not a universal dead-code proof.
+
+Four new cases plus one existing-case extension are cumulatively validated:
+- Full boot reset during the normal100ms pre-homing report delay: no driver
+  wake/pulses/displacement/homed axes, empty planner, $G responds after reset.
+  Focused ASan/UBSan0.05s; targets machine_limits269.
+- Registered encoder-spindle G76 preparation reset: no first radial move,
+  pulses, sync starts or pending cut; spindle/coolant off, position retained.
+  Focused ASan/UBSan0.08s; targets motion_control715.
+- Full boot delta move between reachable(-250,0,-150)/(250,0,-150) endpoints
+  crosses an unreachable interior. Real motors stop nearX=-164.857; finite pose,
+  preserved height, motor counters, opposite endpoint and five terminal command
+  responses checked. Final ASan/UBSan0.10s; targets delta320-321. Response/error
+  policy is separate TODO, not silently-successful geometry blessed by the test.
+- Registered two-spindle M5$-1M61/M6 tool callbacks stop both outputs before the
+  changer runs; addressed restart preserves independent drivers. ASan/UBSan0.06s.
+- Existing VFS size/allocation/retry case adds successful bounded allocating CWD,
+  verifies /store/jobs and frees ownership. ASan/UBSan0.09s.
+No new defect allowances, CORE changes, shared-fixture or reporting-script edits.
+Cumulative4453 ASan/UBSan gate passes179.29s; strict summary4424clean,
+2knownSAN,27knownregressions,0failed/skipped. Evidence:
+build-asan/residual-audit74-{results.xml,tests.log,summary.log}. Source/pinned
+CORE unchanged. No reporting-helper rerun because reporting scripts are unchanged.
+This validates the accumulated audit checkpoint, not a measured line increase.
+
+Latest existing hosted40070163310 is completed: allfive jobs green, both source
+locks match dcd124c2/CORE2e165a1/filter, allseven coverage stages exit0. Coverage
+4449cases:4423clean/26known/0failed/skipped.17480/17756lines98.45%,12730/13834
+branch outcomes92.02%; nine more outcomes and identical covered-line set versus
+40068761972. Badges and measured inventory now reference this verified report.
+Full local gate completed once at the end of the276-line audit; hosted coverage
+measurement is the next checkpoint. No per-case coverage profiles were added.
+
+User productivity correction is in AGENTS: no per-case profiles, automatic tiny
+batch full gates or CI cadence; accumulate supported work without padding a quota.
+Earlier isolated broadcast trace predates that correction and was not repeated.
+User decision: G76 X-word main taper stays on TODO; no geometry regression or
+allowance while implementation scope remains unresolved. Full coverage goal active.
+
 # Conditional recovery, blocking CRC, rotary return and PWM reset - 2026-10-24
 
 Branch coverage-batch-74, parent0fb0967fc1681c4d4b6aca7ff2c59361533dddeb.

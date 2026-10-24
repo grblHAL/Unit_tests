@@ -1,17 +1,17 @@
 # Remaining raw CORE coverage
 
-Verified coverage report: [run40068761972](https://github.com/petervanderwalt/Unit_tests/actions/runs/40068761972),
-harness `0fb0967fc1681c4d4b6aca7ff2c59361533dddeb`, CORE `2e165a1ac4c74be8e68971972c6577775d856b05`,
+Verified coverage report: [run40070163310](https://github.com/petervanderwalt/Unit_tests/actions/runs/40070163310),
+harness `dcd124c2ae1127a2502d7db1e077e866a3a56d2c`, CORE `2e165a1ac4c74be8e68971972c6577775d856b05`,
 filter `core/.*\.[ch]$`. Both artifact locks match and exactly seven coverage
 stages exit0. All five source/GCC/Clang/coverage/Results summary jobs passed
 at final API inspection.
 
-17,480/17,756 lines (**98.45%**) and12,721/13,834 branch outcomes (**91.95%**)
-were covered:276 raw missing lines and1,113 missing outcomes. Coverage job:
-4,442 cases,4,417 clean/25 known/0 failed/skipped. Against same-source40066895627:
-twelve additional branch outcomes with identical covered-line set and denominator.
+17,480/17,756 lines (**98.45%**) and12,730/13,834 branch outcomes (**92.02%**)
+were covered:276 raw missing lines and1,104 missing outcomes. Coverage job:
+4,449 cases,4,423 clean/26 known/0 failed/skipped. Against same-source40068761972:
+nine additional branch outcomes with identical covered-line set and denominator.
 
-Success badges show fully green40068761972 (98.45%/91.95%). Local condition-recovery, blocking CRC, rotary-return and PWM-reset cases are separate from this report.
+Success badges show fully green40070163310 (98.45%/92.02%). Local broadcast-tool, bounded-CWD, pre-motion homing-reset and G76 preparation-reset additions are separate from this report.
 
 Raw coverage does not establish correctness or reachability. See [TODO](TODO.md)
 and [KNOWN_BUGS](KNOWN_BUGS.md) before selecting workflows. Historical audits
@@ -24,7 +24,7 @@ remain pinned to their stated revisions; no source exclusions were added.
 | [core/fs_device.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/fs_device.c) | 3 | 3 | 59, 190, 192 |
 | [core/fs_embedded.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/fs_embedded.c) | 4 | 5 | 133, 135, 138, 140 |
 | [core/fs_ram.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/fs_ram.c) | 0 | 11 | none |
-| [core/gcode.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/gcode.c) | 29 | 195 | 325-326, 573, 1043, 1367-1368, 1499, 2190, 2728, 2730-2731, 2746-2747, 2898, 2987, 2999, 3065, 3482-3484, 3616-3617, 3929, 4314-4315, 4864, 4866, 4978-4979 |
+| [core/gcode.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/gcode.c) | 29 | 193 | 325-326, 573, 1043, 1367-1368, 1499, 2190, 2728, 2730-2731, 2746-2747, 2898, 2987, 2999, 3065, 3482-3484, 3616-3617, 3929, 4314-4315, 4864, 4866, 4978-4979 |
 | [core/grbllib.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/grbllib.c) | 14 | 29 | 92, 95, 140, 144-147, 149-150, 590-594 |
 | [core/ioports.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/ioports.c) | 28 | 129 | 782, 1195, 1291-1292, 1385, 1387, 1389, 1391, 1394-1398, 1401-1402, 1404, 1406-1407, 1409, 1411-1412, 1436-1438, 1440-1441, 1558-1559 |
 | [core/kinematics/asymmetric_ganging.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/kinematics/asymmetric_ganging.c) | 1 | 4 | 254 |
@@ -38,7 +38,7 @@ remain pinned to their stated revisions; no source exclusions were added.
 | [core/motion_control.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/motion_control.c) | 2 | 26 | 690, 715 |
 | [core/my_plugin.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/my_plugin.c) | 2 | 0 | 26, 29 |
 | [core/ngc_expr.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/ngc_expr.c) | 11 | 13 | 115-116, 189-190, 250, 252, 292-293, 337-338, 341 |
-| [core/ngc_flowctrl.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/ngc_flowctrl.c) | 2 | 49 | 816-817 |
+| [core/ngc_flowctrl.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/ngc_flowctrl.c) | 2 | 45 | 816-817 |
 | [core/ngc_params.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/ngc_params.c) | 4 | 40 | 772-773, 942, 1247 |
 | [core/nuts_bolts.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/nuts_bolts.c) | 0 | 1 | none |
 | [core/nvs_buffer.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/nvs_buffer.c) | 3 | 7 | 366, 391-392 |
@@ -49,7 +49,7 @@ remain pinned to their stated revisions; no source exclusions were added.
 | [core/report.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/report.c) | 5 | 65 | 450-452, 1955-1956 |
 | [core/settings.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/settings.c) | 58 | 124 | 701, 703, 780-781, 839, 925, 928, 1012, 1056, 1140-1141, 1199-1200, 1341, 1351, 1507-1508, 1569, 1577, 1584, 1591, 1594-1596, 1652-1653, 1693-1694, 1901-1902, 1960-1961, 2026-2027, 2175-2177, 2179-2181, 2192-2194, 2196-2198, 2239-2241, 2247-2248, 2957, 2959, 3476-3477, 3625-3627 |
 | [core/sleep.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/sleep.c) | 0 | 1 | none |
-| [core/spindle_control.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/spindle_control.c) | 7 | 27 | 499, 503, 1160-1161, 1172, 1215-1216 |
+| [core/spindle_control.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/spindle_control.c) | 7 | 24 | 499, 503, 1160-1161, 1172, 1215-1216 |
 | [core/state_machine.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/state_machine.c) | 12 | 42 | 157, 449, 502, 524-527, 614-615, 658-659, 819 |
 | [core/stepper.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/stepper.c) | 1 | 12 | 1093 |
 | [core/stepper2.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/stepper2.c) | 0 | 11 | none |
@@ -60,6 +60,229 @@ remain pinned to their stated revisions; no source exclusions were added.
 | [core/tool_change.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/tool_change.c) | 2 | 37 | 435-436 |
 | [core/utf8.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/utf8.c) | 0 | 1 | none |
 | [core/vfs.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/vfs.c) | 4 | 38 | 272, 415, 482, 779 |
+
+
+## Complete line inventory and finite review queue - 2026-10-24
+
+[Per-line inventory](COVERAGE_LINE_INVENTORY.csv) contains all 276 raw missing
+lines from the pinned report above, one row per source/line with disposition and
+evidence. Its source/line set was checked against the downloaded coverage XML,
+not just summed from the Markdown table. Historical matches remain labelled as
+historical; a matched explanation is not a fresh proof of global unreachability.
+No line was removed from the denominator.
+
+Every line now has an explicit disposition. This does not mean every line has a
+reachability proof: protocol185 and state_machine502 remain public-trigger-pending
+after their native alarm producers were enumerated. machine_limits269 and
+motion_control715 have passing local regressions; cumulative line measurement
+is pending. The standalone internal-motor homing case is configuration-contract-
+pending; normal public masks exclude that motor. Other contracts, configuration
+and fixture dependencies retain separate categories in the CSV.
+
+## Current-source target correction - 2026-10-24
+
+Source inspected at CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
+This supplements the raw report above; it changes no coverage counts. The
+113-line settings/G-code/helpers/state-machine total is not a reachable target
+estimate. No supported line-gain estimate is established yet.
+
+### General helpers: all 14 missing lines accounted for
+
+| Exact lines | Count | Evidence / disposition |
+|---|---:|---|
+|grbllib.c92,95|2|Empty weak board_ports_init hook, replaced by driver-owned initialization in the host. No observable default action. Harness/no-op limit.|
+|grbllib.c140,144-147,149-150|7|Private report_driver_error formatter. Existing failed-startup audit establishes that startup task filtering drops this detailed diagnostic. Preserve the generic fatal-startup regression; formatter policy needs upstream clarification, not a direct private call.|
+|grbllib.c590-594|5|Interior delayed-task removal fallback. Existing atomic-selection audit applies to the unchanged code: due-task selection retains IRQ masking through the head identity check. No supported intervening mutation identified.|
+|**Total**|**14**|**Remove these from the proposed executable-work queue. Keep them in the raw denominator.**|
+
+### G-code: newly matched source contracts
+
+| Exact lines | Count | Evidence / next action |
+|---|---:|---|
+|gcode.c325-326|2|gc_set_tool_offset handles Cancel and EnableDynamic; both native tool_change.c callers pass EnableDynamic. Other enum values are public API values but a supported external caller of this particular helper has not been established. External-caller contract question, not proven universally unreachable.|
+|gcode.c573|1|Existing prefix-copy proof still matches source507-516: rpm_mode is restored before the later comparison. Do not author another CSS snapshot test for this assignment.|
+|gcode.c2987,2999|2|Public G43/G43.2 decoding at1706-1709 requires a nonempty tool table before selecting these modes. The later no-table checks repeat that requirement. Do not mutate the table between parser phases to reach them.|
+|gcode.c4864|1|Call-push failure in rigid-tapping continuation. Native mc_rigid_tapping is an UnsupportedCommand stub, but the existing stopped-spindle regression proves an initialization error can enter this continuation. This is defect-dependent reachability, not a blanket unreachable classification. A resource/depth regression here must preserve the original SpindleNotRunning contract; do not normalize the erroneous macro fallback.|
+|gcode.c4866|1|A-axis argument construction in that same continuation. Requires both A_AXIS and entry into the continuation. Establish an actual supported tapping provider/configuration before adding a substitute implementation solely for this line.|
+|**Matched here**|**7**|These are classifications, not seven promised newly coverable lines. Other G-code gaps retain their individual audits or remain pending.|
+
+### Settings: all 58 missing lines matched to existing audits
+
+Current source line mapping checked at CORE2e165a1. Existing registration and
+caller proofs are documented in TODO under "Counted public settings guards"
+and "Remaining settings defaults"; the historical line offsets below have
+been corrected against the current source. These are not 58 pending tests.
+
+| Current exact lines | Count | Classification |
+|---|---:|---|
+|2175-2177,2179-2181,2192-2194,2196-2198,2239-2241|15|Unused availability arms: four descriptors use NULL availability; timezone registration is disabled.|
+|839,1012,1056,1341,1351,1569,1577,1584,1591|9|Repeated capability/build/availability rejection after public setting lookup has already gated access.|
+|925,928,1140-1141|4|PWM bounds and mode default preempted by registered format validation.|
+|701,703,780-781,1199-1200,1507-1508,1594-1596,1652-1653,1693-1694,1901-1902,2247-2248|19|Private routing defaults without a corresponding available registered ID; deprecated spindle getter is hidden.|
+|1960-1961,3476-3477|4|Datatype defaults after all applicable valid types have explicit handling.|
+|2026-2027|2|Public integer getter with noninteger direct metadata: possible API mismatch, but no supported caller established. Contract question, not universal unreachability.|
+|2957,2959|2|No-tool-table persistence success/no-op stub; native G10 rejects before calling it.|
+|3625-3627|3|Direct-buffer IPv4 write-provider contract unresolved. Registered function-provider writes already covered.|
+|**Total**|**58**|**53 have existing guard/unused/stub explanations; five remain external-caller/provider questions. No proven untested native settings workflow identified.**|
+
+### Controller-state routing: current source, not an assumed test gap
+
+The native hold entry calls in state_machine.c324/341 accept HOLD, SAFETY_DOOR
+or SLEEP. They install the hold/resume handlers for those states. Selecting
+TOOL_CHANGE at315-318 instead installs state_await_toolchanged directly.
+Consequently the TOOL_CHANGE arms at524-527 and658-659 (six missing lines)
+do not describe the native manual-change acknowledgement workflow. The existing
+full-boot M6 pause and cancelled manual jog cases already assert acknowledgement,
+position, stream restoration and completed tool selection; do not add variations
+of them to try to reach these six arms.
+
+The hold-switch default arm at614-615 (two lines) is likewise outside the three
+native hold states, all of which have explicit cases. These eight lines remain
+raw gaps. This is a native-routing proof, not a universal restriction on external
+plugins calling state_set during callbacks. The cycle-handler tool-change line449 and pending-alarm cancellation line502
+are examined separately in the later caller reviews below.
+
+### Selected-stream predecessor fallback
+
+Current stream.c370 follows removal of a stream whose predecessor is MPG. The
+fallback tests the descriptor before MPG. add_connection installs base.stream
+before any later connection is linked, and every allocated connection receives
+its nonnull descriptor before insertion. The chain before MPG therefore has a
+nonnull base/registered descriptor. No native stream API clears it. The fallback
+remains counted; do not mutate connection records to create a missing descriptor.
+
+### Other matched gaps retained outside the authoring queue
+
+- RTU241: TimeoutException is assigned only for the blocking owner; asynchronous
+  timeout clears its packet and enters Silent earlier. Existing async and blocking
+  timeout/recovery tests remain. RTU360-361 are separately unresolved nonaborting
+  reset-during-blocking-retry semantics; do not simulate cancellation ownership.
+- motion_control690 and gcode3482-3484: G76 main-taper calculations have no
+  consuming generated taper move. Preserve the implementation-scope question;
+  executing the calculations while asserting straight motion would bless the
+  wrong geometry. Existing entry/exit taper tests address different behavior. User decision2026-10-24:
+  retain main taper on TODO; no regression or expected-failure allowance.
+- machine_limits502: zero locate rate after seek has an unresolved reference/
+  disabled-axis contract. Do not invent final homed coordinates to cover it.
+
+### Delta: nine current missing lines, remaining questions explicit
+
+| Lines | Count | Current evidence / next action |
+|---|---:|---|
+|706|1|Unreachable post-search fallback: the do/while continues while !ok, and its early break also requires ok. Both exits therefore imply ok before if(!ok). No test can reach the copy through this unchanged loop.|
+|619-620,643|3|Additional-axis travel handling. The existing real four-axis homing attempt fails before the intended jog; preserve the documented proposal and establish a working supported homing fixture first. Do not substitute sys.homed assignment for the missing boot workflow.|
+|180,625|2|Forward-transform nonassembly/NaN handling and its travel-check rejection. An actual motor-position/driver failure contract is still needed before choosing an input and expected recovery. Not classified as impossible for arbitrary numeric input.|
+|320-321|2|Reachable: normal streamed move from(-250,0,-150) to(250,0,-150) crosses an unreachable interior with default rod lengths. New full-boot physical-cutoff regression passes; cumulative line measurement pending. No private state injection.|
+|376|1|Workspace top lies below the configured floor. Establish the required behavior for physically incompatible home/floor geometry before asserting a clamped usable workspace. Do not bless an infeasible robot configuration merely because the descriptor accepts its numbers.|
+|**Total**|**9**|**One proven dead fallback, three blocked by a documented fixture precondition, three still need a supported trigger/contract; two now have a local physical-cutoff regression pending measurement.**|
+
+### Reachable aborted-homing guard: local regression added
+
+machine_limits.c269 is not necessarily an invalid post-abort caller. With normal
+compatibility0 homing progress reports disabled, mc_homing_cycle first reports
+status and performs a 100ms realtime-serviced delay at motion_control.c901-906.
+A sender reset during that interval sets abort before limits_go_home invokes the
+native home_machine. The entry guard therefore protects a real supported reset.
+
+New boot.reset_during_initial_homing_report_delay_prevents_all_motor_motion
+uses the existing full initialization/stepper driver fixture, a public reset
+command and an ordinary $HX/$G input stream. It asserts no driver wake, no motor
+pulses or displacement, no homed axes, an empty planner and a responding parser
+after reset. Focused ASan/UBSan passes0.05s. No expected-failure allowance or CORE
+edit. This is a newly established target, not a measured coverage increase; keep
+the raw report and denominator unchanged until the cumulative checkpoint.
+
+### Reachable G76 first-approach abort: local regression added
+
+The initial protocol_buffer_synchronize in G76 services foreground events even
+when the planner is idle. A sender reset queued there is consumed by mc_line
+before the first radial approach is queued, returning through motion_control715.
+New spindle_sync.reset_during_g76_preparation_prevents_first_radial_move uses the
+existing registered encoder-spindle and real stepper fixture plus the public
+reset command. It verifies zero pulses, zero spindle synchronization starts,
+no queued move, spindle/coolant shutdown, retained physical/logical position and
+no later pulses. Focused ASan/UBSan passes0.08s. This differs from the existing
+entry-taper cancellation test, which has already completed the radial approach.
+No CORE edit or allowance; line gain awaits the cumulative report.
+
+### Other newly matched callers
+
+Asymmetric ganging254 requires a homing cycle containing the internal secondary
+motor without its primary. Public Format_AxisMask validation uses the three
+logical axes, rejecting bit8 before its setter; the ganging callback adds bit8
+only to cycles containing the primary. A persisted configuration migration or
+external provider that supplies a standalone internal motor remains a separate
+contract question, not a normal public setting test.
+
+State-machine449's active-cycle EXEC_TOOL_CHANGE branch has no native producer
+before motion synchronization: both G-code and manual tool-change producers
+synchronize first. Do not queue that internal flag during an unrelated cut.
+Existing full-boot manual change tests cover the native idle dispatcher.
+
+### Deferred alarm paths: native producers enumerated, trigger still pending
+
+A scan of all CORE C files finds pending-alarm assignments only in system.c:
+probe contact during CYCLE/JOG140, disconnected active probe147, and alarm deferral
+while in ESTOP/critical blocking state1355. Reads are protocol184/577,
+state_machine501/519 and system455; system1349 clears an alarm when raised.
+
+For state_machine502, ordinary probe contact queues EXEC_STOP, whose protocol
+handler consumes the pending alarm before motion-cancel dispatch. Disconnection
+queues feed hold, whose completion uses state_await_hold520 instead. Deferring
+an alarm in ESTOP/critical lock does not supply a normal runnable jog. No ordinary
+cancel sequence reaching502 has been demonstrated. An asynchronous alarm during
+cancellation is not declared impossible, but no timing-specific injected flag is
+being used as a substitute for an established driver event sequence.
+
+For protocol185, startup's idle/door branch has no demonstrated active
+CYCLE/JOG/probing producer. Existing critical/deferred boot alarms stay in their
+alarm/unlock path instead. External callbacks could change this conclusion;
+this is a public-trigger question, not proof that all possible providers are
+excluded. Both lines remain raw and explicitly pending, with no allowance.
+
+### Reachable delta interior inverse failure: local regression added
+
+Default 300mm forearms and100mm biceps admit both Cartesian endpoints
+(-250,0,-150) and(250,0,-150), but not their connecting segment's center. For
+example the center's distance to a leg pivot is less than the200mm difference
+between the two rod lengths. A bounded independent geometry calculation found
+this pair; no private state or invalid enum was used.
+
+New full-boot streamed G53 rapid/dwell/move/dwell/$G regression reaches the first
+endpoint using real driver pulses and observes cutoff near(-164.857,0.126,-149.930)
+before the inner unreachable region. It asserts finite physical position, stopped
+planner, unchanged travel height, matching motor counters, exactly one terminal
+response per command and a responding parser. The opposite endpoint also has a
+finite inverse/forward roundtrip to the requested position. Safe cutoff is the
+contract under test; error versus success response policy is deliberately separate.
+Final focused ASan/UBSan passes0.10s including the opposite-endpoint assertion;
+cumulative sanitizer validation passes; line measurement remains pending. Targets delta320-321; no CORE edit/allowance.
+
+### Historical audit freshness check
+
+Compared the historical CORE50f3865 source blobs with the pinned CORE2e165a1.
+Twenty-one historical inventory rows refer to line-identical source files;
+this confirms unchanged local code, not every external caller/header assumption.
+For changed expression, flow, I/O, stream, reader and VFS files, reviewed their
+source diff: native enum dispatch sets and the cited lookup/registration guards
+are retained. G-code M6 release4314-4315 is now explained by the current check-
+mode normalizer, not the obsolete opposite-outer-guard argument. Earlier proofs
+remain explicitly scoped rather than promoted to universal runtime claims.
+
+### Work queue before another cumulative measurement
+
+1. Match remaining current missing lines to the existing exact audits; only
+   investigate unmatched source. In particular, do not re-open the 14 helper
+   lines above or the disabled I/O/settings registrations as fresh opportunities.
+2. Resolve remaining native configuration/caller questions first: delta homing
+   and motion paths, state-machine tool-change transitions, Modbus recovery,
+   and remaining filesystem entry guards. A target enters the authoring queue
+   only with a public trigger and an observable result identified from source.
+3. Keep G76 main-taper semantics, external provider contracts and incomplete
+   native homing/tapping implementations separate from executable test work.
+4. Accumulate tests for proven supported targets on the current branch. Existing
+   local broadcast-tool and bounded-CWD additions remain pending cumulative
+   validation. No full gate or hosted dispatch for this inventory update.
 
 ## Native setting reporting guard review — 2026-10-23
 
