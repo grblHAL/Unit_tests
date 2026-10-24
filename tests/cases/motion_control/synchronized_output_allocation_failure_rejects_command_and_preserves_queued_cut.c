@@ -1,5 +1,11 @@
 #include "support/io_motion_host.h"
 #include "support/malloc_failure_host.h"
+void *__real_calloc(size_t count, size_t size);
+void *__wrap_calloc(size_t count, size_t size)
+{
+    if(fail_malloc) { failed_malloc_calls++; return NULL; }
+    return __real_calloc(count, size);
+}
 
 int main(void)
 {

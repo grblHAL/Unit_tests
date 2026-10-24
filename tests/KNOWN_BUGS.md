@@ -73,70 +73,6 @@ the -1 sentinel during acknowledgement; CORE is not changed here. Once fixed,
 retain the regression, remove its exact allowance and delete this entry after
 sanitizer validation confirms offset application and recovery.
 
-## Synchronized output allocation failure is silently acknowledged
-
-Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
-Publicly registered digital outputs are used by M62 commands attached to ordinary
-queued G1 moves. Rejecting the single output-node malloc for `M62P1` returns
-`Status_OK`, although the command was not queued. A sender cannot distinguish
-this lost output from an accepted synchronized change.
-
-The regression first queues `M62P0`/`G1X1F100`, rejects exactly one allocation for
-`M62P1`, verifies the original planner block and zero motor/output activity, then
-retries after memory recovery and queues `G1X2F100`. Both expected driver outputs
-execute in order and motion finishes exactly 160 X steps. These controls pass;
-the final correct assertion requires an error for the lost command and fails:
-`status=0 failures=1 retry_outputs=2 X_steps=160`. No sanitizer diagnostic occurs.
-The test does not prescribe an error enum or require rolling back earlier moves.
-
-Cause: [gcode.c1005-1026](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/gcode.c#L1005)
-returns false from `add_output_command` when malloc fails, but the parser's
-synchronized-output cases ignore that result. Propagate allocation failure as a
-command error while preserving previously queued motion/output ownership.
-The analog call site has the same unchecked result; this reproduction covers
-registered digital output only and makes no physical-output hazard claim.
-
-[Regression](cases/motion_control/synchronized_output_allocation_failure_rejects_command_and_preserves_queued_cut.c)
-uses the existing narrowly scoped malloc wrapper. Only its exact CTest name has
-`WILL_FAIL`/`known_bug` in [known_bugs.cmake](known_bugs.cmake).
-Raw evidence: `build-asan/synchronized-output-allocation74-raw-results.xml`.
-When fixed, retain the complete rejection/prior-cut/retry assertions, remove the
-single allowance and this entry. No CORE edits or diagnostic suppression.
-
-## Laser safety-door resume leaves enable off when feed-hold laser disable is off
-
-Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
-A registered enable-capable PWM laser runs an ordinary `G1X20F100M3S500` or M4
-cut with public `$63=2` (restore on resume enabled; disable during feed hold off).
-A real safety-door input stops the cut and disables the laser. Closing the door
-alone does not restart it. After cycle start, motion finishes all 1,600 X steps,
-but the driver still reports its enable state off. The otherwise identical
-`$63=3` controls pass for both laser modes; only the feed-hold disable bit differs.
-
-Raw ASan/UBSan controls:2/2 pass; correct new regressions:2/2 fail at the final
-laser restoration assertion, without sanitizer diagnostics. Constant M3 observes
-`state_on=0 powered=0 PWM_updates=0`; dynamic M4 observes `state_on=0 powered=1
-PWM_updates=15`. The latter receives positive PWM updates but no enable restore.
-This is a driver-visible enable/state mismatch; no unintended laser activation
-or measured physical output is claimed. Door-open and closed-before-cycle-start
-checks still require zero power and no additional motion.
-
-Cause: [spindle_control.c887-889](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/spindle_control.c#L887)
-returns success without arming/restoring laser output when the feed-hold disable
-bit is clear, although safety-door handling independently disabled that output.
-[Safety-door restoration](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/state_machine.c#L89)
-uses this same helper. Restore the door-stopped laser for resumed motion
-independently of the feed-hold policy, retaining zero output while the door is
-open and until motion resumes; do not simply enable the laser early.
-
-Regressions: [constant power](cases/state_machine/constant_laser_door_resume_with_feed_hold_disable_action_off.c)
-and [dynamic power](cases/state_machine/dynamic_laser_door_resume_with_feed_hold_disable_action_off.c).
-Only these two exact tests have `WILL_FAIL`/`known_bug` in
-[known_bugs.cmake](known_bugs.cmake). Raw reproduction:
-`build-asan/laser-door-hold-policy74-raw-results.xml`.
-When fixed, retain both correct regressions and the passing `$63=3` controls;
-remove their two allowances and this entry. No CORE edits or diagnostic wrappers.
-
 ## Pendant release fails to restore a network-only controller's null console
 
 Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
@@ -170,128 +106,26 @@ regression passes; retain serial, null-console, reconnect and pendant controls.
 No sanitizer allowance is added. Raw evidence:
 `build-asan/batch74-null-console-release-raw-results.xml`.
 
-## Starting a secondary PWM spindle cancels the primary override ramp
+Upstream b01f481 retest2026-10-24 restores reader, writer, mode and realtime
+handler, but pendant RX remains enabled (rx=0 in restoration diagnostic).
+The correct receiver-restoration assertion still fails. Keep the allowance
+for this remaining observable release failure.
 
-Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
-With two registered normal PWM spindles, start primary at6000 RPM and request
-120% override. After observing its first intermediate PWM output, start the
-secondary at8000 RPM. The primary output remains at660 instead of its computed
-target719 after ten further task deadlines, while its override percentage and
-calculated RPM still report120% and about7200. The target uses the driver's
-normal float/quantization mapping; no rounding defect or measured shaft RPM is
-claimed. Both spindles remain logically on. A later primary125% override reaches
-its correct target without changing secondary output.
+## Supported 32-channel free-port scan reads beyond its map
 
-[Regression](cases/multi_spindle/starting_secondary_preserves_pending_primary_override_ramp.c)
-uses existing registered PWM fixtures, ordinary M3 commands and the public
-override API. It observes an actual intermediate output before the second start;
-there is no interrupt race, pool saturation or private state injection. Recovery
-and secondary-output controls pass before the final correct captured-target
-assertion fails. Raw ASan/UBSan run reports `before=660 after=660 target=719`
-without sanitizer diagnostics.
-
-Cause: [spindle_control.c714](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/spindle_control.c#L714)
-starts the new spindle ramp with `task_delete(spindle_ramp_task, NULL)`.
-[grbllib.c664](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/grbllib.c#L664)
-treats NULL data as a wildcard and deletes the first matching delayed task,
-which belongs to the primary override in this supported sequence.
-
-Suggested maintainer repair: cancel only the ramp context being replaced,
-retaining other spindles' pending tasks. No CORE change is included here.
-
-Exception: one exact `WILL_FAIL`/`known_bug` in
-[known_bugs.cmake](known_bugs.cmake). Remove it once the unchanged regression
-passes; retain paired override, retarget and stop-isolation controls. No sanitizer
-allowance is added. Raw evidence:
-`build-asan/batch74-secondary-start-primary-ramp-raw-results.xml`.
-
-## Claimed nonzero output loses ownership metadata on pin lookup
-
-Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
-The standard two-output driver claims physical output1 through `ioport_claim`.
-A subsequent public pin-info lookup reports `mode.claimed == 0`, although the
-claim is still exclusive: duplicate claim rejection, physical output routing,
-remaining output routing and the cached available count all pass.
-
-`ioports.c703` assigns the raw mask result to a one-bit integer field. For pin1,
-the value2 truncates to0. A boolean comparison against zero would preserve the
-ownership flag. This is an observable metadata defect; no unintended output or
-lost exclusivity is claimed. CORE is unchanged.
-
-[Regression](cases/ioports/claimed_nonzero_output_retains_ownership_metadata.c)
-captures metadata before running routing and duplicate-claim controls, then
-retains the correct ownership/count assertion. One exact `WILL_FAIL` and
-`known_bug` label in `known_bugs.cmake`; no sanitizer allowance. Remove only this
-allowance when the assertion passes. Raw evidence:
-`build-asan/batch74-io32-isolation-raw-results.xml` (original case name).
-
-## Supported 32-channel bank registration and free-port scan exceed integer/map bounds
-
-Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
-`crossbar.h` explicitly accepts `N_AUX_DIN=32` and `N_AUX_DOUT=32`. Registering a
-normal full bank reaches signed `1 << 31` when setting the input and output bus
-masks in [ioports.c994/1007](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/ioports.c#L994).
-UBSan reports `left shift of 1 by 31 places cannot be represented in type 'int'`
-at both lines. The ordinary free-port query also scans for its terminating null
-pin by calling index32; `ioports.c696` reads `map[32]` before validating it,
-producing the exact UBSan index32 diagnostic. Both are undefined behavior. P31 descriptions, highest-channel
-input and on/off output routing assertions all pass on the measured host;
-no incorrect physical output or channel corruption is claimed from UB alone.
+Reconfirmed 2026-10-24 on clean upstream CORE `b01f481072edecac33d5e40c25869359a5b3fa1f`.
+The public full-bank regression still reaches index32 when a free-port query
+searches for the terminating null pin; ioports.c696 reads map[32] before
+validating that index. UBSan reports index32 out of bounds for uint8_t[32].
+The same upstream update repaired signed input/output bus-mask shifts. Those
+obsolete diagnostic patterns are removed; only the exact remaining bounds
+pattern is allowed in known_sanitizer_diagnostics.json.
 
 [Regression](cases/ioports_32/full_bank_registers_p31_and_routes_highest_channels.c)
-uses a host variant with those supported compile settings and real32-entry
-input/output descriptors. Counts, P31 names, pin lookup, immediate sampling and
-on/off output31 and initial free-port counts are checked. No forged index, over-advertised bank or private
-state is used. This expands a supported configuration absent from the earlier
-24-channel-default host builds; it is not a coverage exclusion.
-
-Suggested maintainer repair: form the bus masks from an unsigned mask-width
-constant before shifting, and reject an index outside the map before lookup.
-No CORE change is included here.
-
-Allowance: exact case, `core/ioports.c` lines994/1007 with the exact signed-one,
-shift31,int-type diagnostic, plus line696 with the exact index32/uint8_t[32]
-diagnostic in
-[known_sanitizer_diagnostics.json](known_sanitizer_diagnostics.json), with a
-sanitizer-only `known_sanitizer_bug` label in [known_bugs.cmake](known_bugs.cmake).
-There is no `WILL_FAIL`; all numerical and routing assertions remain passing.
-Remove this manifest entry and label when diagnostics disappear, retaining the
-32-channel variant and regression. Raw evidence:
-`build-asan/batch74-io32-full-bank-raw-results.xml`.
-
-## Absent-axis inch conversion shifts by the unavailable axis marker
-
-2026-10-24 reporting correction: GCC names the same unsigned-long type
-`long unsigned int`; the exact diagnostic matcher accepts both compiler
-spellings. Case, source line177, shift255 and integer widths remain constrained.
-The regression assertions and defect classification are unchanged.
-
-Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
-The normal named parameter registry exposes `_abs_w` and `_w` even when W is not
-configured. In an eight-axis build, both getters correctly supply a zero value
-for absent W, but inch conversion still checks the rotary mask with axis255.
-UBSan reports `shift exponent 255 is too large for 32-bit type 'unsigned long'`
-at [ngc_params.c177](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/ngc_params.c#L177).
-This is undefined behavior; the reproduction's numerical assertions still pass.
-No wrong coordinate or motion result is claimed from this diagnostic alone.
-
-[Regression](cases/eight_axis/absent_named_w_position_in_inches_returns_zero.c)
-uses ordinary G21/G20 and named lookups on the existing eight-axis configuration.
-Metric absent-W controls and both inch-mode zero assertions remain. No invalid
-enum, forged axis map or private function is used. Three-axis conversion lacks
-the rotary-mask operation and its existing controls remain ordinary passing tests.
-
-One sanitizer-only `known_sanitizer_bug` label and exact
-[manifest](known_sanitizer_diagnostics.json) entry accept only this test, source
-line177 and shift255 message, allowing the platform's 32/64-bit unsigned-long
-width. Unrelated diagnostics or failed assertions remain failures. If the
-diagnostic disappears, strict reporting requires exception cleanup. No WILL_FAIL
-is applied because the numerical assertions are correct and currently pass.
-
-Suggested maintainer fix: return zero for an unavailable axis before calling
-conversion, or validate the axis before the rotary bit shift. CORE is unchanged.
-After the upstream fix, remove this case's manifest entry and sanitizer label;
-retain the ordinary metric/inch named-lookup assertions.
+retains correct channel31 registration, counts, ownership and routing assertions.
+Its affected-module output is in upstream-b01-affected-raw-results.xml. Keep the
+single known_sanitizer_bug label until the unchanged regression has no bounds
+diagnostic; then remove its manifest entry and this section. No CORE edits.
 
 ## Device open allocation failure leaves the UART reserved
 
@@ -316,38 +150,6 @@ file for the caller to close and release. Suggested maintainer fix: reserve only
 after successful allocation, or roll back the reservation when allocation fails.
 CORE is unchanged here. Once corrected upstream, remove this one allowance and
 retain the passing retry and independent-device assertions.
-
-## RAM nonzero truncate loses the retained file allocation
-
-Confirmed2026-10-23 on clean CORE `51b58594ce467e9c4b103fb93d1ca121e43cd15c`.
-An ordinary public VFS sequence uploads `G1X1\nG1X2\n`, closes/reopens the file,
-shrinks it to five bytes, confirms the reported size, seeks to zero and reads the
-retained prefix. Shrink succeeds and size is correct, but the read starts just
-past the five-byte allocation. ASan reports a five-byte heap-buffer-overread in
-`fs_read` at `core/fs_ram.c:184`, allocated by `fs_truncate` at256.
-
-Regression: [retained-prefix workflow](cases/fs_ram/truncate_committed_file_to_nonzero_length_preserves_prefix.c).
-The [pending-upload variant](cases/fs_ram/truncate_pending_upload_to_shorter_nonzero_length_preserves_prefix.c)
-shrinks before closing the write handle, covering the normal pending-buffer flush
-branch as well as committed-file shrink. Each case has its own exact allowance.
-Correct prefix, EOF, close and consumed-file assertions remain; the fatal
-sanitizer reproduction cannot execute assertions after the read. Two named
-WILL_FAIL allowances and sanitizer-only known_crash wrappers accept only this memcpy
-read-overrun, exact CORE caller/source line and shrink allocation frame.
-Other faults, changed frames, missing diagnostics and a repaired executable
-remain failures requiring allowance cleanup. Raw evidence:
-`build-asan/batch74-ram-shrink-raw-results.xml`; classified evidence:
-`build-asan/batch74-ram-shrink-known-results.xml`.
-
-Cause: the shrink branch first retains the realloc base, then overwrites both
-`data` and `pos` with `data + length` at258. Subsequent public seek/read uses that
-one-past-end pointer as the allocation base. No private state or invalid handle
-is injected. This does not claim executed motion or a sender-specific effect.
-
-Suggested repair for Terje: retain the allocation base and keep cursor/remaining
-length coherent after shrink. Remove this entry, named allowance, diagnostic
-manifest entry and wrapper registration when the unchanged sanitizer regression
-passes. CORE has not been edited.
 
 ## Combined broadcast M48 leaves both spindle speed overrides disabled
 
@@ -375,31 +177,10 @@ allowance or CORE edit. When fixed, retain the regression, remove its exception
 and delete this entry. This is an ordinary accepted command combination, not a
 saturated scheduler or timing-window proposal.
 
-## Stopped-spindle rigid tapping enters macro fallback after synchronization fails
-
-**Confirmed:** 2026-10-23, clean CORE `50f38659db7b22f4689f3654df2d110d992bcc95`.
-With an actual registered encoder spindle, M5 followed by G33.1Z-1K1I2 fails
-synchronization with Status_GcodeSpindleNotRunning (41). The G33.1 execution
-path nevertheless tests only whether status differs from UnsupportedCommand,
-pushes a call scope, and calls macro331. An unhandled provider changes the
-result to Status_GcodeValueOutOfRange (39), losing the original error.
-
-[Regression](cases/spindle_sync/stopped_spindle_rejects_rigid_tapping_without_calling_macro_fallback.c)
-uses public parser commands, real encoder/stepper observers, and a normal macro
-provider returning Unhandled. The running-spindle control correctly returns the
-current weak implementation's UnsupportedCommand without calling that provider.
-The stopped command must preserve error41 and must not invoke a macro after
-failed synchronization. No motion, queue, encoder reset, override leak or call
-scope leak was observed; do not claim an executed macro body or unsafe motion.
-Raw evidence: build-asan/batch74-stopped-tapping-raw-results.xml: status39,
-expected41, provider called1. All preceding no-motion/restoration assertions pass.
-
-Source: [init_sync_motion](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/gcode.c#L1058)
-and [G33.1 execution](https://github.com/terjeio/grblHAL_core/blob/50f38659db7b22f4689f3654df2d110d992bcc95/gcode.c#L4841).
-Preserve initialization failures before considering any native/macro continuation;
-maintain the separate unsupported-native-tapping contract. One exact named
-WILL_FAIL in known_bugs.cmake; no sanitizer allowance or CORE edit. When fixed,
-retain this regression and remove its expected-failure properties and this entry.
+Upstream b01f481 retest2026-10-24: both disable bits now clear, but the
+secondary output remains7000 instead of8400 while primary reaches3300. The
+same correct output assertion still fails; retain the exact allowance until
+both driver outputs match their restored overrides.
 
 ## Known coverage gaps
 
@@ -667,66 +448,10 @@ block and this entry once the unchanged case passes. No CORE edit or sanitizer
 allowance is included.
 
 
-## Read-only RTC write reports success without setting the clock
-
-Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
-A driver advertises RTC capability, implements `get_datetime`, and omits
-`set_datetime`, which `hal.h` explicitly declares optional. `$RTC` reads the
-clock successfully. `$RTC=2026-10-25T01:02:03` then returns `Status_OK` even
-though the driver cannot perform the requested write; the next query retains
-its original readable time. This is an incorrect acknowledgement, not a claim
-about motion or time corruption.
-
-[Regression](cases/system/readonly_rtc_rejects_write_and_preserves_readable_time.c)
-retains before/after query controls and requires a non-success write status.
-Raw ASan/UBSan evidence: `build-asan/batch74-readonly-rtc-raw-results.xml`:
-`Read-only RTC write status=0; unchanged clock remains readable`. No sanitizer
-diagnostic is emitted. Only this exact case has `WILL_FAIL`/`known_bug`.
-
-`rtc_action` initializes its return to success when RTC capability is present
-(`system.c:816`), then executes writes only if the optional setter exists at821.
-Its missing-setter arm leaves that success untouched. The existing no-capability,
-failed-read and rejected-write paths return `Status_InvalidStatement` instead.
-Suggested upstream repair: reject a write when `set_datetime` is absent, while
-preserving read-only queries. Retain the correct rejection and query assertions;
-remove this entry and its single exact expected-failure block after repair.
-No CORE edit, broad exception or sanitizer allowance is included.
-
-
-## Remapped UVW motor-fault inputs use incorrect inversion bits
-
-Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`,
-supported `N_AXIS=6` / `AXIS_REMAP_ABC2UVW=1` configuration. Register W and X
-motor-fault input functions before adding the digital bank, advertise their
-capabilities and use the public motor-fault inversion setting/driver notification.
-With X inversion only, the driver receives W inverted; with W inversion only,
-the driver receives W not inverted. X controls and callback counts pass.
-
-[Correct regression](cases/uvw_axis/motor_fault_w_inversion_uses_w_axis_without_following_x.c)
-retains both independent-axis assertions. Raw ASan/UBSan evidence in
-`build-asan/batch74-axis-mapping-raw-results.xml` reports
-`UVW motor-fault W invert: X-only=1 W-only=0`, then fails the correct W-not-X
-assertion. Each linked regression has its own exact WILL_FAIL/known_bug; no sanitizer
-diagnostic or allowance. This establishes incorrect driver input configuration, not a claim
-that this test generated a motor-fault alarm or moved a machine incorrectly.
-
-The independent [U/V regression](cases/uvw_axis/motor_fault_uv_inversion_uses_remapped_axis_bits.c)
-registers U/V inputs before bank registration, writes the public U-only8 and
-V-only16 inversion masks and observes both driver configurations. Both report
-`(0,0)`, rather than `(1,0)` and `(0,1)`, with callback counts/debounce controls
-passing. Raw evidence: `build-asan/batch74-uv-fault-raw-results.xml`. Keep both
-correct independent-input assertions. This prevents a W-only repair from hiding
-incorrect U/V remapping.
-
-`config_fault_pins` at `ioports.c:1505` selects the inversion bit using
-`xbar_fault_pin_to_axis`. Its implementation at `crossbar.h:936` omits
-Input_MotorFaultW from the primary range and returns fallback axis0/X.
-U/V return fixed ordinal6/7 instead of configured UVW axis3/4.
-Suggested upstream repair: map fault functions through configured axis identities,
-including W and secondary XYZ, rather than fixed function ordinals. Keep the
-registered-driver and independent-axis controls; remove this entry and both
-exact expected-failure blocks when the unchanged regression passes. No CORE edit.
-
+Upstream b01f481 retest2026-10-24 fixes initial lookup allocation handling,
+but a later growth failure after a successful lookup still returns /panel.nc.
+Retry succeeds; the final rejected-path assertion remains false. Retain this
+exact allowance for stale-path reuse rather than classifying the whole fix done.
 
 ## Manual auxiliary homing rewrites stationary delta joint coordinates
 

@@ -1,5 +1,9 @@
 # Remaining raw CORE coverage
 
+Working checkout is now upstream `b01f481072edecac33d5e40c25869359a5b3fa1f`.
+The inventories and percentages below remain the last measured CORE2e165a1
+snapshot; no new-source coverage is claimed before its own locked report.
+
 Verified coverage report: [run40074304720](https://github.com/petervanderwalt/Unit_tests/actions/runs/40074304720),
 harness `2d8b8d0f980c74dd6da5252a9a91cf17a50e93e8`, CORE `2e165a1ac4c74be8e68971972c6577775d856b05`,
 filter `core/.*\.[ch]$`. Both artifact locks match and exactly seven coverage
@@ -589,3 +593,14 @@ port counts. Follow-up read/write operations verify observable recovery. This
 reaches the claim_hal=false short-circuit at1071/1107 without changing private
 state. Focused ASan/UBSan passes; coverage gain remains unmeasured and does not
 resolve every reported branch record at these two locations.
+
+
+### Upstream-supported tapping handoff - 2026-10-24
+
+On b01, the native tapping stub returns Unhandled and the parser intentionally
+invokes macro331. The new eight-axis case verifies public A/I/K/Z transfer,
+line/repeat identity, caller scope restoration and override cleanup using a
+registered running spindle. No replacement native tapping function or new host
+variant was introduced. This supersedes the earlier implementation-contract
+blocker for the A-argument path (source2e line4866). The raw inventory remains
+the old measured source snapshot; new-source line gain awaits measurement.

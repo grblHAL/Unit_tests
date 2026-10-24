@@ -12082,3 +12082,106 @@ Latest measured coverage remains frozen2d8b8d0/run40074304720:98.46% lines,
 inventory273 and branch inventory890sites/1,097outcomes still describe that
 locked source/report. Rebuild inventories only from the next source-matched
 measurement, preserving historical proof scope.
+
+
+## Upstream b01 affected-contract validation and allowance cleanup - 2026-10-24
+
+Selected upstream b01f481072edecac33d5e40c25869359a5b3fa1f after checking that
+CORE had no local changes; only version selection, no firmware edits. The
+16 affected regression targets build and pass classified ASan/UBSan1.16s:
+12 clean,3 reproduced known regressions,1 exact remaining UBSan diagnostic;
+zero unexpected failures/skips. Evidence: upstream-b01-cleanup-results.xml,
+upstream-b01-cleanup-tests.log and upstream-b01-cleanup-summary.log.
+
+Removed11 proven resolved WILL_FAIL allowances and the absent-axis sanitizer
+label. Removed4 obsolete diagnostic manifest entries (two RAM fatal patterns,
+absent-axis shift and signed bank-mask shift), retaining only the reproduced
+32-channel map[32] diagnostic. Correct regression assertions remain. Removed
+9 resolved KNOWN_BUGS sections and narrowed the 32-channel section.
+- eight_axis.absent_named_w_position_in_inches_returns_zero
+- fs_ram.truncate_committed_file_to_nonzero_length_preserves_prefix
+- fs_ram.truncate_pending_upload_to_shorter_nonzero_length_preserves_prefix
+- ioports.claimed_nonzero_output_retains_ownership_metadata
+- motion_control.synchronized_output_allocation_failure_rejects_command_and_preserves_queued_cut
+- multi_spindle.starting_secondary_preserves_pending_primary_override_ramp
+- spindle_sync.stopped_spindle_rejects_rigid_tapping_without_calling_macro_fallback
+- state_machine.constant_laser_door_resume_with_feed_hold_disable_action_off
+- state_machine.dynamic_laser_door_resume_with_feed_hold_disable_action_off
+- system.readonly_rtc_rejects_write_and_preserves_readable_time
+- uvw_axis.motor_fault_uv_inversion_uses_remapped_axis_bits
+- uvw_axis.motor_fault_w_inversion_uses_w_axis_without_following_x
+
+The synchronized-output fixture now rejects calloc as well as malloc, matching
+upstream's allocation change, while requiring exactly one rejected allocation,
+queue preservation and successful retry. Tapping's running control explicitly
+declines its now-supported fallback; stopped-spindle rejection still requires
+no additional provider call and the original SpindleNotRunning status.
+
+Partial fixes remain exact known failures: broadcast M48 clears disable bits but
+secondary RPM remains7000 instead of8400; pendant release restores console and
+handler but leaves RX enabled; VFS lookup still reuses /panel.nc after a later
+growth failure. No broad success claim from patch appearance. Full b01 suite,
+conditional-enum fixture compatibility, tapping fallback coverage and hosted
+measurement remain pending in this accumulated source-update batch. No hosted
+run or new PR dispatched for the affected-only check.
+
+
+## Native tapping macro handoff with an A argument - 2026-10-24
+
+COREb01 exposes the normal Unhandled tapping macro fallback instead of entering
+it only through a failed synchronization defect. Added one eight_axis case using
+its existing host variant and a publicly registered encoder-capable VFD. M3S100
+establishes live RPM; N27G33.1A12.5Z-3K0.75I2 invokes macro331 exactly once at
+scope1 with matching A/I/K/Z flags and local values. Parent #1/#26 restore, scope
+returns0, overrides restore, no firmware motion is queued by the stub and no
+alarm/reset occurs. The provider observes the handoff; this is not a physical
+tapping geometry claim. No substitute mc_rigid_tapping or new build variant.
+
+Focused ASan/UBSan passes0.06s: tapping-a-b01-results.xml. Initial fixture needed
+state_machine.h and the same cold-start initialization as existing spindle
+fixtures; fixed those setup errors without a CORE allowance. CMake registers
+the case only when the selected source has the new native fallback guard; old
+sources retain their documented unavailable-feature scope. Earlier source2e
+line4866's A-argument gap now has a supported b01 trigger, still unmeasured.
+
+
+## Conditional enum compatibility and full source rebuild - 2026-10-24
+
+Started one full compile against b01 because its crossbar header changes every
+host variant. Ninja session is tracked through the active tool handle; no
+restarted build or full test run during this compile. The obsolete UVW test of
+unconfigured ABC identifiers is omitted only for headers that no longer expose
+those identifiers. Configured UVW mapping/inversion tests remain unchanged.
+Unsupported tapping recovery now uses an explicitly declining macro provider;
+its position, pulse and following-G33 assertions are preserved.
+
+Verified feature selectors against actual2e/b01 source objects. A generic
+Status_Unhandled guard also exists in older gcode, so tightened the new tapping
+case selector to the native mc_rigid_tapping stub's Unhandled implementation.
+It is absent on2e and present onb01. This corrects fixture registration rather
+than accepting an unexpected old-source test failure. Build result pending.
+
+
+The full b01 compile completed its11,728-step plan with one fixture error:
+RTCP A/C test referenced now-absent Input_LimitB. Guarded only that legacy
+identifier check; retained all configured A/C and grouped-enable assertions.
+Incremental full build then passed. Started the single cumulative b01 sanitizer
+suite with tracked session25395 and output upstream-b01-suite-tests.log/XML.
+Its runtime result remains pending; do not claim full-suite success yet.
+
+
+## Full b01 sanitizer result and isolated compatibility repair - 2026-10-24
+
+Full4,462-case execution completed233.32s with one obsolete tapping-status
+fixture failure. Raw XML and strict summary remain unchanged/red, preserving
+that evidence: upstream-b01-suite-results.xml and upstream-b01-suite-summary.log.
+The remaining4,461 cases completed:4,438 clean,22 documented regressions and
+one exact map[32] sanitizer diagnostic. No other unexpected failure/skips.
+
+The gcode check-mode case assumed native G33.1 always rejects. Registered an
+explicitly declining provider, preserving UnsupportedCommand, no queued motion,
+unchanged position/overrides and successful following G33. Focused repaired case
+passes0.07s plus strict summary in upstream-b01-checkmode-repair-results.xml.
+No new allowance, synthetic green aggregate or repeated full suite. This is
+a full execution plus separately verified repair, not a single exact-head clean
+full-run claim; hosted current-head validation remains required.

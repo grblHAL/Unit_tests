@@ -1,58 +1,5 @@
 [
   {
-    "kind": "fatal_asan",
-    "test": "fs_ram.truncate_committed_file_to_nonzero_length_preserves_prefix",
-    "source": "core/fs_ram.c",
-    "lines": [
-      184
-    ],
-    "function": "fs_read",
-    "message_pattern": "heap-buffer-overflow",
-    "interceptor": "memcpy",
-    "allocation_frames": [
-      {
-        "source": "core/fs_ram.c",
-        "line": 256,
-        "function": "fs_truncate"
-      }
-    ]
-  },
-  {
-    "kind": "fatal_asan",
-    "test": "fs_ram.truncate_pending_upload_to_shorter_nonzero_length_preserves_prefix",
-    "source": "core/fs_ram.c",
-    "lines": [
-      184
-    ],
-    "function": "fs_read",
-    "message_pattern": "heap-buffer-overflow",
-    "interceptor": "memcpy",
-    "allocation_frames": [
-      {
-        "source": "core/fs_ram.c",
-        "line": 256,
-        "function": "fs_truncate"
-      }
-    ]
-  },
-  {
-    "test": "eight_axis.absent_named_w_position_in_inches_returns_zero",
-    "source": "core/ngc_params.c",
-    "lines": [
-      177
-    ],
-    "message_pattern": "shift exponent 255 is too large for (32|64)-bit type '(unsigned long|long unsigned int)'"
-  },
-  {
-    "test": "ioports_32.full_bank_registers_p31_and_routes_highest_channels",
-    "source": "core/ioports.c",
-    "lines": [
-      994,
-      1007
-    ],
-    "message_pattern": "left shift of 1 by 31 places cannot be represented in type 'int'"
-  },
-  {
     "test": "ioports_32.full_bank_registers_p31_and_routes_highest_channels",
     "source": "core/ioports.c",
     "lines": [

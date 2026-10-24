@@ -7,7 +7,9 @@ int main(void)
     CHECK(xbar_fn_to_axismask(Input_LimitC).mask == 16);
     CHECK(xbar_fn_to_axismask(Input_MotorFaultC).mask == 16);
     CHECK(xbar_fn_to_axismask(Output_StepperEnableC).mask == 16);
+#ifndef MOTOR_UNDEFINED // Older headers expose unconfigured axis identifiers.
     CHECK(xbar_fn_to_axismask(Input_LimitB).mask == 0);
+#endif
     CHECK(xbar_fn_to_axismask(Output_StepperEnable).mask == 31);
     return EXIT_SUCCESS;
 }

@@ -1833,3 +1833,19 @@ An indexed grblHAL organization search followed by immutable blob reads found 40
 | [grblHAL/TI_SimpleLink_shared/ethernet/enet.c](https://github.com/grblHAL/TI_SimpleLink_shared/blob/6adcc848946fe69075f6ed062afa31f11c5a4c97/ethernet/enet.c) | 3 | `94eb9dbcd0165355b840716e92a3d126d6f4beb4` |
 
 Plugin_WebUI fs_handlers.c keeps upload.filename in a char[100] array and calls vfs_get_drive only after checking upload. This established caller cannot supply NULL. It does not establish a supported NULL meaning for vfs779. The independently demonstrated vfs_utime allocation failure reaches vfs272, not779. Source: [pinned WebUI caller](https://github.com/grblHAL/Plugin_WebUI/blob/3712523bc98f0bce343b56e03bdf881cc7fd4aa0/fs_handlers.c#L370-L381). Local search/blob manifest: build-asan/provider-audit74-manifest.json.
+
+
+## Upstream conditional axis enums and tapping fallback - 2026-10-24
+
+CORE b01f481 scopes individual ABC/UVW pin enums to configured axes. The old
+unconfigured-ABC runtime rejection case cannot name identifiers that no longer
+exist in a UVW build, so it is registered only for older headers. Configured
+UVW mapping, inversion and grouped-enable controls remain. This is obsolete
+API fixture handling, not a CORE source exclusion.
+
+Native G33.1 now returns Unhandled to invoke macro331. Earlier source2e
+unsupported-stub/defect-only continuation notes remain historical. The new
+eight-axis callback-handoff case verifies A/I/K/Z scope and override cleanup.
+The unsupported-cycle recovery case now installs a provider that explicitly
+declines the operation, preserving its no-motion and next-G33 assertions.
+Wall-plotter/polar homing and G76 main taper remain on user-requested TODO.
