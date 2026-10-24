@@ -387,8 +387,10 @@ execution or mutate private callback storage. No new exception registered.
 Seven host workflows exercise original spindle/laser/at-speed, mist/flood, controller
 state/reset and live trigger rebind/report chains. Actual CORE strgetentry runs;
 MinGW CRT legacy names are disabled via supported NO_OLDNAMES for these targets.
-Deferred control tasks remain fail-fast; their original pointer/integer-width
-casts are not runtime-validated. Settings iterator/early stop/normalization,
+Deferred control callbacks now execute through a bounded FIFO with validated
+source-created indexes0..3. Optional-stop/single-block/block-delete, unrelated
+signal filtering and pending-work rebind execute; actual CORE tasks and arbitrary
+pointer-width portability remain unverified. Settings iterator/early stop/normalization,
 saved/deferred mapping and claimed/missing/disabled port rejection now execute.
 Other slot counts and actual CORE scheduler/spindle/controller/physical outputs
 remain open. Batch27 selected eventout169/204 lines,92/127 branches; probe relays

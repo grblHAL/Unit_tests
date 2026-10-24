@@ -111,13 +111,30 @@ bool task_run_on_startup(foreground_task_ptr fn, void *data)
     startup_data = data;
     return true;
 }
+unsigned pending_tasks, control_calls;
+static foreground_task_ptr queue_fn[16];
+static void *queue_data[16];
 bool task_add_immediate(foreground_task_ptr fn, void *data)
 {
-    (void)fn;
-    (void)data;
-    CHECK(false);
-    return false;
+    CHECK(fn && pending_tasks < 16 && (uintptr_t)data < 4);
+    queue_fn[pending_tasks] = fn;
+    queue_data[pending_tasks++] = data;
+    return true;
 }
+void run_event_tasks(void)
+{
+    unsigned count = pending_tasks;
+    pending_tasks = 0;
+    for (unsigned i = 0; i < count; i++)
+        queue_fn[i](queue_data[i]);
+    CHECK(pending_tasks == 0);
+}
+static void control_changed(control_signals_t signals)
+{
+    (void)signals;
+    control_calls++;
+}
+
 static void state_changed(sys_state_t state)
 {
     (void)state;
@@ -164,6 +181,7 @@ void prepare_events(void)
     grbl.on_spindle_programmed = spindle_programmed;
     grbl.on_spindle_at_speed = at_speed;
     grbl.on_report_options = report_options;
+    grbl.on_control_signals_changed = control_changed;
     event_out_init();
     CHECK(event_details && startup);
 }

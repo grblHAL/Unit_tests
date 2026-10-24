@@ -1,3 +1,26 @@
+# Local deferred event-control checkpoint - 2026-10-25
+
+Goal active. Two new control workflows plus all7 existing event-output cases pass
+Windows Clang ASan/UBSan0.70s and strict classification:9 clean, zero unexpected
+failures/skips. Original signal_out executes from a bounded FIFO boundary with
+only source-created event indexes0..3; queue admission verifies uintptr_t values
+before storing them. Optional-stop-disable, single-block and block-delete flags
+update outputs on dispatch, preserve isolation and chain the previous control hook.
+Cycle-start alone schedules no event work. Disabling a binding before dispatch
+prevents its pending output change. No injected private callback/index or unsafe
+pointer dereference, production edit or sanitizer allowance.
+
+The original pointer/integer cast paths now execute only for validated tiny
+indices in this host configuration; do not infer arbitrary pointer portability.
+The queue remains a simulated scheduler, not actual CORE task execution. Public
+controller flags and driver signals are host event inputs, not a real serial/job
+or physical-input workflow. Trigger getter callback ABI and other layouts still
+need source review. No fresh coverage measurement or full global gate for2 cases.
+Misc65 cases,763 compatible authored; delivered batch27 remains761 plus26 separate
+legacy references. Keep accumulating supported work before next combined push.
+
+---
+
 # Latest component checkpoint - 2026-10-25 (batch27)
 
 Goal active. Deliver21 accumulated cases:14 probe-relay and7 event-output cases.

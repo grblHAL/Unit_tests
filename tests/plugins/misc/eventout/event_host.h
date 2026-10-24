@@ -14,3 +14,6 @@ void bind_event(unsigned slot, uint_fast16_t trigger);
 extern uint8_t claimed_mask, missing_mask;
 void prepare_events(void);
 void run_event_startup(void);
+
+extern unsigned pending_tasks, control_calls;
+void run_event_tasks(void);
