@@ -1,3 +1,56 @@
+# Controls/recovery cumulative sanitizer gate passed - 2026-10-24
+
+Six new scenarios plus one existing pendant extension pass the single complete
+4392-case ASan/UBSan gate in58.50s. Strict summary succeeds with existing19
+known regressions and one exact recovering UBSan; no unexpected failures/skips.
+No new allowances, CORE/shared fixture edits or unchanged helper-test reruns.
+Fresh upstream CORE fetch remains2e165a1 and checkout is clean. New cases cover
+native sender controls, physical M0 resume, configured rotary homing, spindle
+failure/retry/cached activation, automatic null fallback and repeated file-tool
+persistence. Isolated branch evidence distinguishes controls from new targets.
+Deliver cumulative checkpoint on existing74; one exact-source hosted report
+next, no isolated module runs. Current measured coverage remains ed8dc71's
+98.45%lines/91.28%branches until successor artifact locks and stages are verified.
+
+# Pendant denied-command recovery also routes feed hold correctly - 2026-10-24
+
+Extended existing stream.mpg_buffered_gcode_denied_without_control_takeover,
+retaining G20 rejection/non-takeover checks. Pendant realtime feed hold queues
+EXEC_FEED_HOLD without EXEC_CYCLE_START or a visible cycle-start report flag.
+Following $13 query returns normal value/ack only to pendant; primary input
+and output ownership remain unchanged. This targets stream.c716's accepted
+non-cycle-start command arm through normal pendant input, without fake motion
+state or another quota case. Focused ASan/UBSan passes1/1 in0.06s.
+Six new scenarios plus one extension now span boot control, physical resume,
+rotary homing, spindle recovery/fallback, file tool persistence and pendant I/O.
+No CORE/shared fixture edits, new allowances or per-module hosted runs.
+
+# Repeated file tool selection preserves persistent NVS without duplicate save - 2026-10-24
+
+Added boot_ngc native embedded macro with matched SUB/ENDSUB and two M61Q7
+commands, called from serial O<toolrepeat>CALL then restored sender $G. Public
+persistence setting enabled during setup. Chained tool/NVS observers see both
+native tool-change notifications but exactly one global settings write; live
+NVS read confirms persistent tool7, final parser/settings remain7 with no alarm.
+Targets grbllib.c235 unchanged-tool branch through file parser's normal forced
+selection, not direct invocation of the core-only gc_tool_changed helper.
+Focused ASan/UBSan passes1/1 in0.06s. Initial post-shutdown NVS read was a test
+lifetime error; moved read before controller exit with assertions retained.
+No CORE changes or sanitizer exception. Six successor scenarios now accumulate.
+
+# Native failed-default startup creates one safe null fallback - 2026-10-24
+
+Added full boot with two real driver descriptors registered before initialization.
+Configured primary returns false; normal grbllib startup scans the nonempty
+catalog and adds null spindle2. Secondary remains unconfigured. M3S500 is
+observed on the null driver, M5 turns it off, no physical driver output occurs.
+Normal listing completes without errors; driver startup/idle/alarm state valid.
+Repeated public spindle_add_null returns2 with count3, preserving catalog.
+Targets spindle_control.c539 scan exhaustion, previously one missing outcome,
+through its native startup caller rather than manufactured registry state.
+Focused ASan/UBSan passes1/1 in0.06s. No CORE/shared fixture edits or exception.
+Successor now accumulates five scenarios; full gate/hosted report still pending.
+
 # ed8dc71 fully green; displayed coverage refreshed - 2026-10-24
 
 Actual API run40044741403 completed success at00:37:46UTC; all five source,
