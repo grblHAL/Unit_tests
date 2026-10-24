@@ -1,4 +1,67 @@
-# Latest component checkpoint - 2026-10-24 (batch7)
+# Latest component checkpoint - 2026-10-24 (batch8)
+
+Goal remains active across48 inventoried implementation repositories. No production
+sources or concurrent CORE work changed. Existing PR29 verified OPEN/draft/unmerged.
+Fork still registers only Core tests and Reusable host tests: component workflows
+await default-branch installation. No merge or hosted component success claimed.
+
+Added20 registered cases:9 Trinamic runtime cases plus7 plasma runtime cases and
+4 fresh-process EEPROM setup/cleanup cases. One cumulative Windows Clang ASan/UBSan
+gate covers all17 current-compatible suites:244 cases =220 clean +23 correct known
+assertion regressions +1 previously scoped fan callback diagnostic. Zero unexpected
+failures/skips. Both expanded suites pass23/23. All81 reporting/helper checks pass
+9.554s; actionlint and whitespace checks pass. Source warnings remain visible under
+documented rules; host fixtures remain -Werror. No new exception/diagnostic waiver.
+Formatting reordered two dependent headers; restoring the host include first fixed
+those fixture builds. Completed unaffected suite results were retained, not rerun.
+
+Trinamic enables actual status polling and dynamic current in nine targets while
+keeping the existing default targets. Registered task/stepper/limit callbacks cover
+hold/block/idle current, quiet polls, persistent/recovered over-temperature reports,
+moving feed-hold requests and homing seek/locate sensitivity plus IRQ routing.
+Disable retains the homing-rate callback but inactive axes prevent register writes;
+assert that observable behavior. The source Pending holding-state assignment is
+commented out; no private state is forced. Current is configured/register behavior,
+not measured electrical current; actual homing motion and stall timing remain.
+
+Plasma saves its registered reboot-required Mode setting through actual EEPROM/CRC
+then boots a fresh process into Arc-ok or Up/down mode. Actual CORE spindle registry,
+I/O registration and secondary-stepper polling execute with simulated torch/pins,
+clock and controller state. Cases cover successful ignition/shutdown, three failed
+attempts, third-attempt success, lost-arc hold requests, positive/negative Z output,
+velocity lock/recovery and reset. No private init_ok/state handler is assigned.
+Mode3 does not claim cutter inputs: fixture setup now initializes physical values
+without demanding those unregistered descriptions. Full CORE suspension, primary XY
+motion, voltage/PID regulation, pierce/cut-height planner moves, PowerMax, expression
+integration and physical timing remain. These are not board/firmware build results.
+
+Fresh LOCAL LLVM compiled-file/configuration coverage, strict profiling checks pass:
+
+| Suite | Covered/total lines | Covered/total branch outcomes |
+|---|---:|---:|
+| plugin_trinamic / trinamic.c | 446/1001 (44.56%) | 192/652 (29.45%) |
+| plugin_plasma / THC + two importers | 457/869 (52.59%) | 222/553 (40.14%) |
+
+Trinamic gained126 covered lines while the denominator expanded885->1001 because
+polling/dynamic configurations now compile. Plasma gained194 covered lines with
+unchanged denominator: THC361/764; importers remain LinuxCNC51/56 and SheetCam45/49.
+Fresh short coverage builds have maximum counter paths223/225. No source exclusions,
+whole-plugin/library/catalogue coverage claim or reused old counter graphs.
+
+GitHub-resolved locks match unchanged clean source checkouts:
+COREb01f481072edecac33d5e40c25869359a5b3fa1f,
+motor9229617c1d8a3cc7a71fd584896500a779978b02,
+plasma d2f91b5887db6550ddec0fc0229cd87ec0af1a56,
+EEPROM0c278db74edc38303b9d86583a7d51a1ec1be51e,
+Trinamic library9b304175318d93818c8967faadc89dd101b17e92 (explicit RP2040 gitlink pin).
+Ignored build-evidence/*batch8* contains strict classifications, source locks, logs
+and coverage XML/JSON/HTML. Existing source compatibility limits remain recorded.
+No hosted/GCC/hardware validation is claimed. Continue remaining supported modules
+and configurations; the all-plugin/driver/CORE goal is not complete.
+
+---
+
+# Previous batch7 checkpoint - 2026-10-24
 
 Full all-plugin/driver/CORE goal remains active across48 implementation repos.
 No production sources or concurrent CORE work changed. Isolated branch continues

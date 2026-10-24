@@ -33,23 +33,24 @@ or force private state to enter a path.
   ownership on spindle changes before extending that scenario; do not fabricate
   ppi_spindle or static laser state. Cluster malformed/overflow contracts remain
   source-review work, not covered by the valid-stream cases.
-- Plasma now compiles original THC/material/SheetCam/LinuxCNC code with actual
-  CORE I/O registration, secondary-stepper and VFS APIs. Off-mode initialization,
-  materials/comments and file imports pass. Largest remaining executable region
-  is torch/arc/up-down/voltage runtime: establish supported setting changes,
-  actual spindle registration, public systick/realtime calls and observable step/
-  output states. Do not set init_ok or private state handlers. PowerMax and
-  expression integration remain separate. Material add currently always returns
-  true even if malloc fails (source598-622); failure semantics need a scoped
-  public-operation allocator fixture before classification.
-- TMC2209 now compiles actual plugin + library9b304175318d93818c8967faadc89dd101b17e92
+- Plasma has materials/imports and fresh-process EEPROM boots into Arc-ok and
+  Up/down modes. Actual registered spindle callbacks, public timers, ARC input,
+  retries/loss, secondary Z step output, velocity lock and reset now execute.
+  Voltage/PID regulation, pierce/cut-height planner moves, full CORE suspension,
+  PowerMax and expression integration remain. Never set private init_ok or state
+  handlers. Material add currently always returns true even if malloc fails
+  (source598-622); public allocation-failure semantics remain unclassified.
+- TMC2209 compiles actual plugin + library9b304175318d93818c8967faadc89dd101b17e92
   with simulated UART register replies, real CRC/IFCNT and EEPROM-backed restart.
-  Largest remaining paths include homing, debug/report modes, polling and dynamic
-  current. Extend valid registered motor/limit/step callbacks and other chips,
-  bridges/transport types. The library revision is an explicit inspected RP2040
-  gitlink pin, not automatic fallback. Actual RP2040/ESP32 UART reads return a
-  static reply buffer (timeout marks address0xFF), confirming the non-null host
-  transport model. Null reply behavior was not force-entered.
+  Dynamic hold/block/idle current, status polling/recovery, moving over-temperature
+  hold requests and homing rate/IRQ callbacks now execute through public hooks.
+  Debug/report modes, other chips and transport configurations remain. The
+  holding-state Pending assignment is commented out in source; do not force it.
+  Homing disable retains the rate callback but its inactive axes prevent writes;
+  test that observable outcome rather than requiring callback removal.
+  The library pin is an inspected RP2040 gitlink, not automatic fallback. Actual
+  RP2040/ESP32 UART transports return static buffers with address0xFF on timeout;
+  null reply behavior was not force-entered.
 - Simulator VFS fails current-CORE compilation: removed vfs_path_t. The explicit
   driver gitlink reference executes nine cases with three known assertions;
   retain both incompatibility evidence and separate source locks. No fallback.

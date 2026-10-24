@@ -25,6 +25,10 @@ actual inspected RP2040/ESP32 UART transports return static reply buffers and
 mark address0xFF on timeout. No unproven null reply contract is force-entered.
 
 Only the three-axis TMC2209 non-I2C configuration is compiled; other chips,
-bridges, sensorless homing, dynamic current and polling/physical timing remain.
+bridges, debug/report modes and physical timing remain. Additional runtime cases
+enable polling and dynamic current: hold/block/idle current transitions, quiet
+polls, repeated/recovered over-temperature warnings, moving hold requests and
+homing sensitivity/IRQ callbacks execute through public tasks and HAL hooks.
+Homing rate/IRQ callbacks are tested; actual homing motion/stall detection is not.
 Original warnings remain visible under -Wno-error while host fixtures stay
 -Werror. No sanitizer allowances or whole-plugin/library coverage claim.

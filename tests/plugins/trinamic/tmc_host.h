@@ -16,3 +16,12 @@ void tmc_load(void);
 void tmc_start(void);
 void tmc_axis_command(user_mcode_t code, unsigned axis, float value);
 status_code_t tmc_set(setting_id_t base, unsigned axis, uint_fast16_t value);
+
+extern sys_state_t tmc_state;
+extern unsigned tmc_enable_calls, tmc_pulse_calls, tmc_holds, tmc_warn_reports;
+void tmc_runtime_prepare(void);
+void tmc_run_tasks(void);
+void tmc_poll(void);
+void tmc_block(unsigned axis);
+void tmc_mask(setting_id_t id, uint8_t value);
+void tmc_sensitivity(setting_id_t base, unsigned axis, float value);

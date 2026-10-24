@@ -9,12 +9,17 @@ char plasma_output[8192];
 bool plasma_storage_ok = true;
 static sys_commands_t *commands;
 static xbar_t pins[3];
-static uint64_t micros;
-static uint64_t get_micros(void) { return micros; }
+uint64_t plasma_micros;
+float plasma_inputs[3] = {1, 1, 1};
+unsigned plasma_up_steps, plasma_down_steps;
+static uint64_t get_micros(void) { return plasma_micros; }
 static void step(axes_signals_t value, axes_signals_t dir)
 {
     CHECK((value.mask & ~Z_AXIS_BIT) == 0);
-    (void)dir;
+    if (dir.mask & Z_AXIS_BIT)
+        plasma_down_steps++;
+    else
+        plasma_up_steps++;
     plasma_steps++;
 }
 static void previous_settings(settings_t *value, settings_changed_flags_t changed)
@@ -52,12 +57,12 @@ static int32_t read_input(uint8_t port, wait_mode_t mode, float timeout)
     (void)mode;
     (void)timeout;
     CHECK(port < 3);
-    return 1;
+    return plasma_wait_input(port, mode, timeout);
 }
 static float pin_value(xbar_t *pin)
 {
     CHECK(pin && pin->id < 3);
-    return 1;
+    return plasma_inputs[pin->id];
 }
 nvs_address_t nvs_alloc(size_t size)
 {
@@ -120,6 +125,7 @@ void plasma_prepare(unsigned inputs, bool output_step)
     prepare_eeprom();
     CHECK(i2c_eeprom_init());
     hal.get_micros = get_micros;
+    plasma_runtime_prepare();
     hal.stepper.output_step = output_step ? step : NULL;
     hal.stream.write = output;
     grbl.on_settings_changed = previous_settings;
@@ -175,11 +181,6 @@ void plasma_mount(const embedded_file_t **files)
     vfs_drives_close(dh);
     CHECK(backend && vfs_mount(NULL, "/", backend, (vfs_st_mode_t){.read_only = On}));
 }
-bool protocol_execute_realtime(void)
-{
-    CHECK(false);
-    return false;
-}
 bool protocol_exec_rt_system(void)
 {
     CHECK(false);
@@ -194,29 +195,11 @@ void setting_remove_elements(setting_id_t id, uint32_t mask, bool trim)
 {
     CHECK(id == Setting_THC_Mode && mask == 0b1101 && trim);
 }
-bool task_add_systick(foreground_task_ptr fn, void *data)
-{
-    (void)fn;
-    (void)data;
-    CHECK(false);
-    return false;
-}
-void task_delete(foreground_task_ptr fn, void *data)
-{
-    (void)fn;
-    (void)data;
-    CHECK(false);
-}
 void plan_feed_override(override_t feed, override_t rapid)
 {
     (void)feed;
     (void)rapid;
     CHECK(false);
-}
-sys_state_t state_get(void)
-{
-    CHECK(false);
-    return STATE_IDLE;
 }
 void plan_sync_position(void) { CHECK(false); }
 void system_convert_array_steps_to_mpos(float *position, int32_t *steps)
@@ -224,14 +207,6 @@ void system_convert_array_steps_to_mpos(float *position, int32_t *steps)
     (void)position;
     (void)steps;
     CHECK(false);
-}
-bool task_add_delayed(foreground_task_ptr fn, void *data, uint32_t delay)
-{
-    (void)fn;
-    (void)data;
-    (void)delay;
-    CHECK(false);
-    return false;
 }
 void plan_data_init(plan_line_data_t *data)
 {
@@ -270,4 +245,15 @@ bool stream_await_tx_clear(const io_stream_t *stream)
 {
     CHECK(stream == &hal.stream);
     return true;
+}
+
+void plasma_input(const char *description, bool on)
+{
+    for (unsigned i = 0; i < 3; i++)
+        if (pins[i].description && !strcmp(pins[i].description, description))
+        {
+            plasma_inputs[i] = on;
+            return;
+        }
+    CHECK(false);
 }

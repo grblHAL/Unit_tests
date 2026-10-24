@@ -123,16 +123,7 @@ bool settings_register(setting_details_t *details)
     return true;
 }
 void report_warning(void *text) { CHECK(text); }
-bool task_add_immediate(foreground_task_ptr fn, void *data)
-{
-    CHECK(fn == report_warning && data);
-    tmc_warnings++;
-    return true;
-}
-bool task_run_on_startup(foreground_task_ptr fn, void *data)
-{
-    return task_add_immediate(fn, data);
-}
+
 void report_plugin(const char *name, const char *version)
 {
     CHECK(!strcmp(name, "Trinamic") && version && *version);
@@ -165,6 +156,7 @@ void tmc_prepare(void)
     CHECK(i2c_eeprom_init());
     hal.delay_ms = delay;
     hal.driver_setup = setup;
+    tmc_runtime_prepare();
     hal.stepper.motor_iterator = iterator;
     hal.limits.enable = previous_limits;
     hal.limits.interrupt_callback = limit_irq;
@@ -220,14 +212,7 @@ bool state_door_reopened(void)
     CHECK(false);
     return false;
 }
-bool task_add_delayed(foreground_task_ptr fn, void *data, uint32_t delay_ms)
-{
-    (void)fn;
-    (void)data;
-    (void)delay_ms;
-    CHECK(false);
-    return false;
-}
+
 setting_id_t settings_get_axis_base(setting_id_t id, uint_fast8_t *idx)
 {
     const setting_id_t bases[] = {Setting_AxisStepperCurrent, Setting_AxisMicroSteps,
