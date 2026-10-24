@@ -1,0 +1,49 @@
+kind,name,repository,status,suite,next_action
+core,CORE,grblHAL/core,existing suite,core,Continue source-matched CORE inventory in its separate active checkout.
+plugin,EEPROM,grblHAL/Plugin_EEPROM,partial host tests,plugin_eeprom,Add littlefs adapter and checksum transfer error propagation.
+plugin,Encoder,grblHAL/Plugin_encoder,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+plugin,Keypad,grblHAL/Plugin_I2C_keypad,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+plugin,Networking,grblHAL/Plugin_networking,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+plugin,Odometer,grblHAL/Plugin_odometer,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+plugin,Plasma/THC,grblHAL/Plugin_plasma,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+plugin,SD card,grblHAL/Plugin_SD_card,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+plugin,Spindle,grblHAL/Plugins_spindle,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+plugin,Trinamic,grblHAL/Plugins_motor,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+plugin,Laser/PPI,grblHAL/Plugins_laser,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+plugin,Fans,grblHAL/Plugin_fans,partial host tests,plugin_fans,Add persisted settings reload and delayed program-end workflows.
+plugin,Bluetooth,grblHAL/Plugins_Bluetooth,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+plugin,WebUI,grblHAL/Plugin_WebUI,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+plugin,OpenPNP,grblHAL/Plugin_OpenPNP,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+plugin,Embroidery,grblHAL/Plugin_embroidery,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+plugin,Miscellaneous,grblHAL/Plugins_misc,partial host tests,plugins_misc,Add BLTouch and remaining I/O expansion/settings workflows.
+third-party plugin,Add status of digital aux outputs to real-time report,Avatario34/auxp,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+third-party plugin,'Datron like' RGB indicator lights,5ocworkshop/grblhal-rgb-plugin,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+third-party plugin,Control panel,dresco/Plugin_panel,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+third-party plugin,CRC ensured MPG communication,nickshl/grblHAL_mpg_transport,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+third-party plugin,FlexGPIO I2C I/O expander,Expatria-Technologies/plugin_FlexGPIO,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+third-party plugin,Homing acceleration,Sienci-Labs/grbhal-homingaccel-plugin,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+third-party plugin,Interlock,gcormier/grblhal-interlock,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+third-party plugin,PicoHAL,Expatria-Technologies/Plugins_picoHAL,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+third-party plugin,Pneumaseal,gcormier/grblhal-pneumaseal,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+third-party plugin,Sienci ATCi,Sienci-Labs/sienci-atci-plugin,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+third-party plugin,Sienci Lights,Sienci-Labs/grblhal-rgb-plugin,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+third-party plugin,Thermistor,gcormier/grblhal-thermistor,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+third-party plugin,Virtual inputs,siganberg/grblhal-virtual-inputs,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+driver,STM32H7xx,dresco/STM32H7xx,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
+driver,ESP32,grblHAL/ESP32,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
+driver,LPC176x,grblHAL/LPC176x,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
+driver,MSP430F5529,grblHAL/MSP430F5529,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
+driver,MSP432E401Y,grblHAL/MSP432E401Y,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
+driver,MSP432P401R,grblHAL/MSP432P401R,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
+driver,PSoC5,grblHAL/PSoC5,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
+driver,RP2040 (Pi Pico & Pi Pico W),grblHAL/RP2040,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
+driver,SAM3X8E (Arduino Due),grblHAL/SAM3X8E,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
+driver,SAMD21,grblHAL/SAMD21,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
+driver,STM32F1xx,grblHAL/STM32F1xx,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
+driver,STM32F3xx,grblHAL/STM32F3xx,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
+driver,STM32F4xx,grblHAL/STM32F4xx,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
+driver,STM32F7xx,grblHAL/STM32F7xx,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
+driver,Simulator,grblHAL/Simulator,partial host tests,driver_simulator,Add VFS and serial/timer fixtures.
+driver,TM4C123,grblHAL/TM4C123,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
+driver,TM4C1294,grblHAL/TM4C1294,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
+driver,iMXRT1062 (Teensy 4.x),grblHAL/iMXRT1062,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.

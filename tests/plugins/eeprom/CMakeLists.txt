@@ -1,0 +1,22 @@
+cmake_minimum_required(VERSION 3.20)
+project(grblhal_eeprom_tests LANGUAGES C)
+include(../../components.cmake)
+foreach(chip 16 32 128 1024)
+  if(chip EQUAL 16)
+    set(source eeprom_24LC16B.c)
+  else()
+    set(source eeprom_24AAxxx.c)
+  endif()
+  foreach(behavior initialization page_roundtrip write_failure read_failure checksum_write_failure)
+    component_case(plugin_eeprom.${chip}_${behavior} ${behavior}.c eeprom_host.c "${HARNESS_ROOT}/plugins/eeprom/${source}" "${HARNESS_ROOT}/core/crc.c")
+    target_compile_definitions(plugin_eeprom.${chip}_${behavior} PRIVATE EEPROM_ENABLE=${chip} EEPROM_IS_FRAM=0)
+    target_include_directories(plugin_eeprom.${chip}_${behavior} PRIVATE "${HARNESS_ROOT}/plugins/eeprom")
+  endforeach()
+endforeach()
+component_case(plugin_eeprom.fram_roundtrip page_roundtrip.c eeprom_host.c "${HARNESS_ROOT}/plugins/eeprom/eeprom_24AAxxx.c" "${HARNESS_ROOT}/core/crc.c")
+target_compile_definitions(plugin_eeprom.fram_roundtrip PRIVATE EEPROM_ENABLE=128 EEPROM_IS_FRAM=1)
+target_include_directories(plugin_eeprom.fram_roundtrip PRIVATE "${HARNESS_ROOT}/plugins/eeprom")
+
+set_tests_properties(plugin_eeprom.16_read_failure plugin_eeprom.32_read_failure plugin_eeprom.128_read_failure plugin_eeprom.1024_read_failure
+  plugin_eeprom.32_checksum_write_failure plugin_eeprom.128_checksum_write_failure plugin_eeprom.1024_checksum_write_failure
+  PROPERTIES WILL_FAIL TRUE LABELS known_bug)

@@ -9,5 +9,57 @@
     "test_regex": ".*",
     "coverage_filter": "core/.*\\.[ch]$",
     "diagnostics_directory": "tests"
+  },
+  "plugins_misc": {
+    "repository": "grblHAL/Plugins_misc",
+    "ref": "master",
+    "path": "plugins/misc",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/misc",
+    "cmake_options": [],
+    "test_regex": "^plugins_misc[.]",
+    "coverage_filter": "plugins/misc/.*\\.c$",
+    "diagnostics_directory": "tests/plugins/misc"
+  },
+  "driver_simulator": {
+    "repository": "grblHAL/Simulator",
+    "ref": "master",
+    "path": "drivers/simulator",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/drivers/simulator",
+    "cmake_options": [],
+    "test_regex": "^driver_simulator[.]",
+    "coverage_filter": "drivers/simulator/.*\\.c$",
+    "diagnostics_directory": "tests/drivers/simulator"
+  },
+  "plugin_eeprom": {
+    "repository": "grblHAL/Plugin_EEPROM",
+    "ref": "master",
+    "path": "plugins/eeprom",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/eeprom",
+    "cmake_options": [],
+    "test_regex": "^plugin_eeprom[.]",
+    "coverage_filter": "plugins/eeprom/.*\\.[ch]$",
+    "diagnostics_directory": "tests/plugins/eeprom"
+  },
+  "plugin_fans": {
+    "repository": "grblHAL/Plugin_fans",
+    "ref": "master",
+    "path": "plugins/fans",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/fans",
+    "cmake_options": [],
+    "test_regex": "^plugin_fans[.]",
+    "coverage_filter": "plugins/fans/.*\\.[ch]$",
+    "diagnostics_directory": "tests/plugins/fans"
   }
 }

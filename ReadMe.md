@@ -251,28 +251,53 @@ repository needs an explicit ref or PR number. Unknown suites and ambiguous
 PR/ref combinations fail before building. Caller inputs are passed as data,
 not evaluated as shell commands. Core-only calls should leave `core_ref` empty.
 
-### Extending to plugins
+### Plugin and driver tests
 
-[ci/callers/plugin.yml.example](ci/callers/plugin.yml.example) is intentionally a
-template until the plugin's tests exist. Install callers in actual plugin repos;
-the Plugins overview is a catalogue, not a combined source checkout.
+Actions has separate manual **Plugin tests** and **Driver tests** workflows.
+Choose an implementation suite, optional candidate repository/ref/PR, and
+optional `core_ref`. Each run records both source revisions, runs GCC/Clang with
+sanitizers, measures that implementation's code, and publishes its own test
+results, known defects, diagnostics and coverage artifacts. **Core tests** remains
+separate. New dispatch workflows become available after installation on the
+repository's default branch.
 
-To add a suite, register its repository, branch, path under `plugins/<name>`,
-`dependencies: ["core"]`, CMake source/options, CTest regex, diagnostics directory
-and coverage filter in `ci/suites.json`. Add its fixtures/tests and CMake support
-first, then replace the template's suite/run label and install it upstream.
-Unknown suites fail explicitly instead of silently running only core tests.
-The resolver already locks dependency sources independently: a plugin candidate
-is selected from its PR or commit, while `core_ref` defaults to core's configured
-branch and can select another branch/tag/SHA. All jobs fetch both exact SHAs.
-Each invocation must have a unique `run_label` when multiple suites/core versions
-are called in one upstream run, to keep artifacts distinct.
+| Workflow | Suite | Initial tested behavior |
+|---|---|---|
+| Plugin tests | `plugins_misc` | M220 feed override, M150 RGB, M280 servo |
+| Plugin tests | `plugin_eeprom` | I2C EEPROM/FRAM page/block storage |
+| Plugin tests | `plugin_fans` | Fan commands, shutdown, spindle links and reports |
+| Driver tests | `driver_simulator` | Simulator EEPROM storage |
 
-Core and plugin tests share compiler/sanitizer/coverage execution, but each suite
-selects its tests, diagnostic inventory and coverage files. Plugin fixtures may
-also require representative core tests in their regex. Defect cleanup retains
-correct regression assertions; new upstream fixes may legitimately fail the
-existing expected-failure inventory until that inventory is updated.
+These are initial host tests, not full plugin/driver coverage or board validation.
+See [component progress](tests/COMPONENT_PROGRESS.md) and the
+[repository backlog](tests/COMPONENT_INVENTORY.csv) for remaining work. Each suite
+has its own `KNOWN_BUGS.md`; keep correct regression assertions when removing
+expected-failure handling for an upstream fix.
+
+The [plugins](https://github.com/grblHAL/plugins) and
+[drivers](https://github.com/grblHAL/drivers) overviews are catalogues. Register
+actual implementation repositories in `ci/suites.json`. Add a standalone CMake
+project under `tests/plugins/<name>` or `tests/drivers/<name>` before adding its
+suite to a workflow's choices. Unknown suites and zero selected tests fail.
+
+For a local run in a fresh checkout:
+
+```sh
+python scripts/resolve_source.py --suite plugin_eeprom --core-ref CORE_SHA
+python scripts/prepare_sources.py
+python scripts/configure_suite.py --mode sanitizers --compiler clang
+python scripts/build_suite.py
+python scripts/run_suite.py test
+python scripts/run_suite.py summary
+```
+
+Replace `CORE_SHA` with a real core commit, or omit `core_ref` to select the
+configured default. Use a fresh checkout when switching locked sources: source
+preparation preserves existing directories rather than overwriting them.
+Host callbacks validate original component behavior against CORE interfaces;
+complete board builds and electrical/timing behavior need separate SDK/hardware
+checks. [ci/callers/plugin.yml.example](ci/callers/plugin.yml.example) remains
+an upstream caller template; each invocation needs a unique `run_label`.
 
 ### Source registry fields and a future plugin example
 

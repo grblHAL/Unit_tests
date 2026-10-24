@@ -10,12 +10,12 @@ import xml.etree.ElementTree as ET
 
 
 def location(text):
-    match = re.search(r"((?:[A-Za-z]:)?[^\n]*?(?:core/|tests/|plugins/|scripts/)[^: \n]+):(\d+)(?::\d+)?", text.replace("\\", "/"))
+    match = re.search(r"((?:[A-Za-z]:)?[^\n]*?(?:core/|tests/|plugins/|drivers/|scripts/)[^: \n]+):(\d+)(?::\d+)?", text.replace("\\", "/"))
     if not match:
         cmake = re.search(r"(CMakeLists\.txt):(\d+)", text)
         return (cmake[1], int(cmake[2])) if cmake else ("", None)
     path = match[1]
-    for prefix in ("core/", "tests/", "plugins/", "scripts/"):
+    for prefix in ("core/", "tests/", "plugins/", "drivers/", "scripts/"):
         marker = re.search(r"(?:^|/)" + re.escape(prefix), path)
         if marker:
             path = path[marker.end() - len(prefix):]
