@@ -1,3 +1,29 @@
+# Local MCP23017 blocking-wait checkpoint - 2026-10-25
+
+Goal active. Eight new blocking-wait cases plus prior17 affected input/IRQ cases
+pass Windows Clang ASan/UBSan1.72s and strict classification:21 clean +4 unchanged
+edge-filter regressions, zero unexpected failures/skips. Original source polls
+for high/low levels, returns immediately for already-matching level, times out
+without input, and exits after public controller abort during realtime polling.
+Both mixed8-bit and input-only16-bit configurations execute these workflows.
+
+Accepted IRQ source callbacks and deferred reads provide matching rise/fall waits;
+completion and timeout restore previously unregistered IRQ mask to disabled.
+After timeout, immediate input reads still work. Host realtime callback supplies
+normal level/IRQ/abort events; delay boundary records finite <=50ms requests and
+poll limits prevent accidental hangs. No private plugin state or invalid IDs.
+This verifies return values/control flow/register restoration, not actual elapsed
+seconds, CORE scheduler behavior, serial reset handling or physical timing.
+
+No production edit, new known result or sanitizer allowance. Config/inversion
+callback ABI, active-handler restoration, transfer failure/uninitialized reads
+and hardware remain open. Misc110 cases;808 compatible authored, not a fresh
+full global gate. Latest delivered batch29 remains800 plus26 separate legacy
+references. No new coverage measurement; accumulate next supported workflows
+before combined validation/push. Original checkouts remain unchanged.
+
+---
+
 # Latest component checkpoint - 2026-10-25 (batch29)
 
 Goal active. Deliver23 accumulated MCP23017 cases across ENABLE1 mixed8/8,

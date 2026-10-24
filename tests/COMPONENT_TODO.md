@@ -421,6 +421,9 @@ setup, immediate samples, enumeration and unavailable-edge rejection; mixed bank
 inputs/outputs stay isolated. Eight accepted-IRQ cases now execute deferred
 source reads/routing, empty flags, detach and edge filtering. Four correct
 rising/falling assertions remain known failures because callbacks still dispatch
-filtered opposite edges. Blocking wait/config and transport failures still need tests. Registration/I2C are captured boundaries, not actual CORE aggregation
+filtered opposite edges. Eight mixed/input-only blocking-wait cases now cover level/edge success,
+timeout/abort and restoration of previously disabled IRQ masks. Actual elapsed
+time, active-handler restoration, configuration ABI and transport failures
+remain untested. Registration/I2C are captured boundaries, not actual CORE aggregation
 or physical registers. Review config callback ABI and failed receive handling
 before runtime; no source edits or new diagnostic exceptions.

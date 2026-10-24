@@ -10,6 +10,13 @@ uint16_t irq_flags, irq_levels;
 static irq_callback_ptr hardware_irq;
 static foreground_task_ptr pending;
 static void *pending_data;
+unsigned polls, delays;
+void (*poll_action)(void);
+static void delay_ms(uint32_t ms, void (*callback)(void))
+{
+    CHECK(ms > 0 && ms <= 50 && callback == NULL && delays < 16);
+    delays++;
+}
 static void enumerate(bool low_level, pin_info_ptr callback, void *data)
 {
     (void)low_level;
@@ -30,6 +37,7 @@ void start_inputs(void)
     void mcp23017_init(void);
     hal.enumerate_pins = enumerate;
     hal.irq_claim = irq_claim;
+    hal.delay_ms = delay_ms;
     mcp23017_init();
     CHECK(ports.ports && irq_claims == 1 && reads == 1);
 }
@@ -120,6 +128,9 @@ void run_mcp_irq(void)
 
 bool protocol_execute_realtime(void)
 {
-    CHECK(false);
-    return false;
+    CHECK(polls < 16);
+    polls++;
+    if (poll_action)
+        poll_action();
+    return !sys.abort;
 }
