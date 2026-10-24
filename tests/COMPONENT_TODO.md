@@ -39,8 +39,11 @@ or force private state to enter a path.
   cumulative batch19. Original .c423/468 lines,160/234 branches; public wire
   header25/25 lines,10/10 branches. Settings persistence/restore, pending transport,
   runtime timeout/attempt/payload, stale ACK isolation and both byte-only UART
-  modes covered. Remaining workflows: delay-time polling/realtime enqueue/byte
-  writes, normal RX/TX capacity loss/reporting, noisy/invalid wire rejection,
+  modes covered. Seven further local authoring cases cover delay-time polling, realtime handler
+  lifecycle, muted RX and byte output (7/7 ASan/UBSan/strict;36 registered, pending
+  cumulative validation/delivery). Next substantial group should link actual CORE
+  stream.c registration/mode/tool-ACK behavior rather than extend capture claims.
+  Remaining workflows include normal RX/TX capacity loss/reporting, wire rejection,
   NVS clamping and failed-claim settings warnings. Never force a memory failure.
   Actual CORE MPG selection/broadcast/tool-ACK and physical link remain untested.
 - PicoHAL babac83b030fdc053b66f711e82f92b6fdfcc455 fails unchanged-source syntax

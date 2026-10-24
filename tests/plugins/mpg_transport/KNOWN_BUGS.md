@@ -1,6 +1,6 @@
 # Scope and remaining work
 
-Twenty-nine cases compile original mpg_transport.c and its public wire header
+Thirty-six cases compile original mpg_transport.c and its public wire header
 against pinned CORE types and original nuts_bolts formatting. Plain and framed
 transport defaults are separate source-supported builds. Valid peer frames use
 the public reference encoder; the CRC check vector123456789=0x29B1 and exact
@@ -20,7 +20,10 @@ through save/load; a soft reset retains the applied transport. Output discard
 checks sequence separation and rejects stale acknowledgements for fresh data.
 Byte-only UART output is checked in both modes; restore persists defaults,
 runtime payload limits retain complete ordered data, and the updated attempt
-budget bounds retransmission without resetting a healthy link. No known runtime assertion or sanitizer
+budget bounds retransmission without resetting a healthy link. Seven further
+local callback cases cover delay-time polling, realtime handler lifecycle, muted
+RX decoding and public byte output in both modes. The no-consumer case asserts
+observable drop counts rather than accessing private counters. No known runtime assertion or sanitizer
 exception registered.
 
 Full CORE stream/protocol integration, actual task/IRQ ordering, alternate UART

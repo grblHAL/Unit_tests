@@ -1,3 +1,25 @@
+# Local MPG callback checkpoint - 2026-10-24 (next combined batch)
+
+Goal active. Seven additional public callback cases pass focused Windows Clang
+ASan/UBSan0.47s and strict classification:7 clean, zero known/failures/skips.
+Delay-time polling chains the existing hook and performs ACK/retry/retirement;
+plain/framed realtime callback replacement, removal and restoration control actual
+incoming bytes and public enqueue semantics; missing consumers drop/count bytes
+without filling RX. RX mute leaves the transport decoder running in both modes,
+while realtime filtering controls what reaches the captured parser stream.
+Public byte writes preserve output order and framed ACK sequencing.
+
+MPG now36 registered cases. No shared fixture, production, sanitizer allowance or
+assertion expectation change. Not yet cumulative validation, coverage measurement
+or delivery; batch19 below remains the delivered baseline. Keep accumulating.
+Actual CORE stream registration/mode switching/tool-ACK remains a distinct next
+integration group: source review confirms stream.c owns proxy copies, passive
+realtime filtering, mode selection and suspend backup/restore. Existing capture
+fixture must not be called proof of those CORE behaviors. Delay/time/stream/task
+callbacks remain explicit simulations.
+
+---
+
 # Latest component checkpoint - 2026-10-24 (batch19)
 
 Goal active. Combined23 new public behavior cases: MPG8, FlexGPIO8 and SienciRGB7.
