@@ -386,5 +386,45 @@
     "test_regex": "^driver_stm32f3_flash[.]",
     "coverage_filter": "drivers/stm32f3/Src/flash\\.c$",
     "diagnostics_directory": "tests/drivers/stm32f3_flash"
+  },
+  "teensy_sdk": {
+    "repository": "PaulStoffregen/cores",
+    "ref": "7f107ee0a309f3813ed13f0d8f615497eca2ee49",
+    "path": "deps/teensy",
+    "source_only": true
+  },
+  "arduino_sam_sdk": {
+    "repository": "arduino/ArduinoCore-sam",
+    "ref": "790ff2c852bf159787a9966bddee4d9f55352d15",
+    "path": "deps/arduino-sam",
+    "source_only": true
+  },
+  "driver_imxrt1062_pwm": {
+    "repository": "grblHAL/iMXRT1062",
+    "ref": "master",
+    "path": "drivers/imxrt1062",
+    "dependencies": [
+      "core",
+      "teensy_sdk"
+    ],
+    "cmake_source": "tests/drivers/imxrt1062_pwm",
+    "cmake_options": [],
+    "test_regex": "^driver_imxrt1062_pwm[.]",
+    "coverage_filter": "drivers/imxrt1062/grblHAL_Teensy4/src/pwm\\.c$",
+    "diagnostics_directory": "tests/drivers/imxrt1062_pwm"
+  },
+  "driver_sam3x8e_serial": {
+    "repository": "grblHAL/SAM3X8E",
+    "ref": "master",
+    "path": "drivers/sam3x8e",
+    "dependencies": [
+      "core",
+      "arduino_sam_sdk"
+    ],
+    "cmake_source": "tests/drivers/sam3x8e_serial",
+    "cmake_options": [],
+    "test_regex": "^driver_sam3x8e_serial[.]",
+    "coverage_filter": "drivers/sam3x8e/grblHAL_Due/src/serial\\.c$",
+    "diagnostics_directory": "tests/drivers/sam3x8e_serial"
   }
 }

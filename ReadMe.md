@@ -289,6 +289,8 @@ repository's default branch.
 | Driver tests | `driver_stm32h7_flash` | H743/H723 flash-word writes, tail padding and bank selection |
 | Driver tests | `driver_stm32f1_flash` | Page erase/retry and halfword storage failure handling |
 | Driver tests | `driver_stm32f3_flash` | Flash-size register geometry, page storage and halfword failure regression |
+| Driver tests | `driver_imxrt1062_pwm` | Teensy 4.0/4.1/MicroMod PWM register, routing and ownership workflows |
+| Driver tests | `driver_sam3x8e_serial` | Dual UART/USART queues, callbacks, settings and CORE stream suspend |
 
 These are initial host tests, not full plugin/driver coverage or board validation.
 Trinamic also locks and compiles the actual chip library; its UART device is
@@ -305,7 +307,10 @@ Driver SDK boundaries are simulated; no actual Pico SDK/ESP-IDF/STM32/NXP firmwa
 build or physical flash/interrupt timing is established. STM32 storage suites use 32-bit host targets. LPC keeps 32-bit physical flash
 addresses with native-width RAM pointers. Linux jobs install multilib runtimes
 only when the locked suite requests them. LPC's padded-source case does not establish safety
-for a normal unpadded CORE allocation. Keypad tests explicitly compare
+for a normal unpadded CORE allocation. Teensy PWM uses actual SDK register
+headers with simulated memory and pin-mux lookup. SAM serial uses actual device/
+Arduino headers and CORE streams with simulated clocks/NVIC/IRQ delivery. SDK
+revisions are locked separately; these are not Arduino/ARM firmware builds. Keypad tests explicitly compare
 signed/unsigned char builds; the observed extended-key defect is compiler-specific.
 See [component progress](tests/COMPONENT_PROGRESS.md) and the
 [repository backlog](tests/COMPONENT_INVENTORY.csv) for remaining work. Each suite

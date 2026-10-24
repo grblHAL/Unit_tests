@@ -7,7 +7,7 @@ on:
       suite:
         description: Registered suite
         type: choice
-        options: [driver_simulator, driver_simulator_vfs, driver_rp2040_flash, driver_esp32_nvs, driver_stm32f4_flash, driver_stm32f7_flash, driver_lpc176x_flash, driver_stm32h7_flash, driver_stm32f1_flash, driver_stm32f3_flash]
+        options: [driver_simulator, driver_simulator_vfs, driver_rp2040_flash, driver_esp32_nvs, driver_stm32f4_flash, driver_stm32f7_flash, driver_lpc176x_flash, driver_stm32h7_flash, driver_stm32f1_flash, driver_stm32f3_flash, driver_imxrt1062_pwm, driver_sam3x8e_serial]
         default: driver_simulator
       source_repository:
         description: 'Source owner/repo or GitHub URL (blank = suite default)'

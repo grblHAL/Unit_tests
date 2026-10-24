@@ -1,0 +1,18 @@
+[
+  {
+    "test": "driver_sam3x8e_serial.p-1_secondary_realtime",
+    "source": "tests/drivers/sam3x8e_serial/secondary_realtime.c",
+    "lines": [
+      20
+    ],
+    "message_pattern": "call to function serial2EnqueueRtCommand through pointer to incorrect function type 'bool \\(\\*\\)\\(unsigned char\\)'"
+  },
+  {
+    "test": "driver_sam3x8e_serial.p1_secondary_realtime",
+    "source": "tests/drivers/sam3x8e_serial/secondary_realtime.c",
+    "lines": [
+      20
+    ],
+    "message_pattern": "call to function serial2EnqueueRtCommand through pointer to incorrect function type 'bool \\(\\*\\)\\(unsigned char\\)'"
+  }
+]

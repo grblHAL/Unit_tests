@@ -7,6 +7,24 @@ or force private state to enter a path.
 
 ## Next source families
 
+- SAM3X8E serial now has dual-port queue/IRQ/callback/settings/suspend cases using
+  actual SDK/device/board headers and CORE stream APIs. Retain three functional
+  regression groups and exact secondary callback signature diagnostic. Primary
+  SERIAL_PORT0 appears to omit its status array entry; do not force a memory
+  failure or add an obsolete-type alias. Other port/format/error IRQ states,
+  primary manual realtime enqueue, metadata detail and full controller jobs remain.
+- Teensy PWM executes original code/board headers with pinned real SDK register
+  definitions for4.0/4.1/MicroMod. Timer/fault side effects and real frequency/edge
+  timing are not modelled. Type0 config/out paths are not returned by public claim;
+  do not forge handles for coverage. Review five-slot ownership capacity without
+  force-entering a memory failure. Shared FlexPWM channel polarity/compare
+  preservation needs a supported multi-output board contract before classification.
+- SAMD21 source55c61e6f028482fd90e77031802a3e391aa076a3 README ends support at
+  CORE build20250518. Its grbl gitlink070f80cc5c0d095ff63d5980795b5a15c5bb0202
+  is a potential explicit reference, not automatic fallback or a verified build.
+  Its NVS routines live inside driver.c; do not extract/copy functions to inflate
+  coverage. Serial/SDK fixtures and current-CORE compatibility remain untested.
+
 - H7 flash cases exercise source-supported H743/H72332-byte configurations and
   distinct banks; no16-byte mode is exposed by the inspected source header. F1
   now has page HAL cases and F3 uses mapped register/flash geometry. Retain F3's

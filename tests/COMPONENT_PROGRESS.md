@@ -1,3 +1,44 @@
+# Latest component checkpoint - 2026-10-24 (batch12)
+
+Goal remains active across48 inventoried implementations. Added62 driver cases:
+27 Teensy PWM across4.0/4.1/MicroMod and35 SAM3X8E serial across UART/USART1.
+Original production sources, actual board/device headers and pinned SDK register
+layouts compile unchanged; host memory, clock and IRQ callbacks model hardware
+boundaries. No production or concurrent CORE checkout changes, no merges.
+
+One cumulative Windows Clang ASan/UBSan gate covers27 compatible suites:
+404 cases =369 clean +34 correct expected assertion regressions +1 fan-only
+passed-assertion diagnostic. Two of the34 assertion cases also reproduce exact
+SAM callback type diagnostics; they are counted once, with explicit mixed labels.
+Zero unexpected failures/skips. All84 reporting helpers pass9.514s; actionlint
+and whitespace pass. Two new narrowly scoped SAM diagnostic expectations retain
+the actual callback defect; no blanket sanitizer suppression.
+
+SAM regressions cover RX disable writing IER instead of IDR, secondary realtime
+routing to the primary handler, and USART1 TX pin peripheral selection. The
+secondary callback also has a char versus uint8_t signature mismatch. Correct
+assertions and repair/removal guides remain in the suite KNOWN_BUGS.md. Reporting
+now distinguishes mixed assertion/diagnostic cases without double counting or
+claiming their assertions passed.
+
+Fresh local LLVM selected-file coverage: Teensy pwm.c88/88 lines100%,31/37
+branches83.8%,6/6 functions; SAM serial.c274/278 lines98.6%,100/108 branches92.6%,
+38/39 functions. Fresh counter paths max210 characters; strict profiling checks
+pass. These are selected-file host results, not whole-driver/board coverage.
+
+Pinned CORE b01f481072edecac33d5e40c25869359a5b3fa1f;
+iMXRT1062 d1f8d1ed904242ee08b0a5583e78f490afd9ae93;
+SAM3X8E2321092b02cbbdecf2eba2b168a74b085e573418;
+Teensy SDK7f107ee0a309f3813ed13f0d8f615497eca2ee49;
+Arduino SAM SDK790ff2c852bf159787a9966bddee4d9f55352d15.
+Source locks and local evidence live in ignored build-evidence. Separate Driver
+tests choices added for both suites. PR29 stays draft/unmerged; fork default
+branch still registers only Core tests and Reusable host tests. No hosted GCC,
+Linux, full ARM SDK or physical-board success is claimed. Remaining public APIs,
+other modules and SAMD21 legacy support boundary are in COMPONENT_TODO.md.
+
+---
+
 # Latest component checkpoint - 2026-10-24 (batch11)
 
 All-plugin/driver/CORE goal remains active across48 inventoried implementations.
