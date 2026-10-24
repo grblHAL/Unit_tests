@@ -1,3 +1,44 @@
+# Latest component checkpoint - 2026-10-24 (batch17)
+
+Goal remains active. Added39 cases: ATCi18 and MPG transport21. New separate
+Plugin tests choices lock candidate/CORE revisions; ATCi defaults main and MPG
+master. No production source or concurrent CORE changes, no merge. Public hooks,
+registered settings and source-supported configurations only; no private test seams.
+
+One cumulative Windows Clang ASan/UBSan gate:40 compatible suites,603 cases =
+549 clean +54 documented known results, zero unexpected failures/skips. Known
+results comprise50 correct assertion regressions +4 passed-assertion diagnostic
+cases;3 assertion cases also have exact existing diagnostics, counted once.
+New correct ATCi M960 disable assertion reproduces consumed-word execution defect.
+MPG21 cases clean. No new sanitizer expectation/allowance. All84 reporting helpers
+pass14.056s; actionlint and whitespace pass.
+
+Fresh local LLVM selected-file coverage: ATCi292/305 lines95.7%,156/193 branches
+80.8%,20/20 functions. MPG .c404/468 lines86.3%,146/234 branches62.4%,41/48
+functions; public .h25/25 lines100%,10/10 branches100%,3/3 functions. MPG combined
+429/493 lines87%,156/244 branches63.9%. Adds721 exercised executable lines.
+Fresh counter paths max224 characters, strict profiling checks pass. Remaining
+source/configuration/integration gaps stay explicit in TODO and per-suite guides.
+
+ATCi uses logical host GPIO/planner/NVS callbacks, not actual LongBoard pin maps
+or complete native motion safety. Geometry assertions retain four clipping sides,
+other-axis preservation and boundary behavior; initial unsupported exact chained-
+callback count removed, unrestricted chaining independently controlled. MPG uses
+captured stream registration and active byte consumer, not CORE MPG mode switching,
+broadcast ownership or tool-ACK suspend. Valid peer frames/retries only.
+
+Pinned CORE b01f481072edecac33d5e40c25869359a5b3fa1f;
+ATCi671f145530ec8ec9f5828897477dc0192593b3d8;
+MPG503b422d0aa92c4d2b6a190e92ce25344bcc629e.
+API-matched local source/CORE HEADs clean. PicoHAL babac83b030fdc053b66f711e82f92b6fdfcc455
+fails current-CORE syntax compilation on removed probe-fixture APIs and changed
+probe-completed argument. No source aliases, runtime suite or compatibility
+fallback registered. Source locks/evidence ignored in build-evidence. PR29 stays
+draft/unmerged; default-branch hosted workflow installation and physical checks
+remain outstanding. Existing564-case delivered checkpoint below is preserved.
+
+---
+
 # Latest component checkpoint - 2026-10-24 (batch16)
 
 Goal remains active. Added41 cases: Sienci RGB24 (legacy2 and advanced3 modes),

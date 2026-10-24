@@ -297,6 +297,8 @@ repository's default branch.
 | Plugin tests | `plugin_homingaccel` | Per-axis homing override requests, restoration, units and persistence |
 | Plugin tests | `plugin_rgb_sienci` | Legacy/advanced RGB state, override, animation and tool-change callbacks |
 | Plugin tests | `plugin_flexgpio` | I2C expander registration, packets, input edges and configuration |
+| Plugin tests | `plugin_atci` | Keepout checks, jog clipping, rack sensors and M960 regression |
+| Plugin tests | `plugin_mpg_transport` | Framed/plain stream data, acknowledgement, retry and reset behavior |
 | Driver tests | `driver_imxrt1062_pwm` | Teensy 4.0/4.1/MicroMod PWM register, routing and ownership workflows |
 | Driver tests | `driver_sam3x8e_serial` | Dual UART/USART queues, callbacks, settings and CORE stream suspend |
 | Driver tests | `driver_tm4c123_eeprom` | Aligned EEPROM, CRC storage and transfer failures |

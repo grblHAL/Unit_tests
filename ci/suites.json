@@ -578,5 +578,31 @@
     "test_regex": "^plugin_flexgpio[.]",
     "coverage_filter": "plugins/flexgpio/.*\\.c$",
     "diagnostics_directory": "tests/plugins/flexgpio"
+  },
+  "plugin_atci": {
+    "repository": "Sienci-Labs/sienci-atci-plugin",
+    "ref": "main",
+    "path": "plugins/atci",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/atci",
+    "cmake_options": [],
+    "test_regex": "^plugin_atci[.]",
+    "coverage_filter": "plugins/atci/.*\\.[ch]$",
+    "diagnostics_directory": "tests/plugins/atci"
+  },
+  "plugin_mpg_transport": {
+    "repository": "nickshl/grblHAL_mpg_transport",
+    "ref": "master",
+    "path": "plugins/mpg_transport",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/mpg_transport",
+    "cmake_options": [],
+    "test_regex": "^plugin_mpg_transport[.]",
+    "coverage_filter": "plugins/mpg_transport/.*\\.[ch]$",
+    "diagnostics_directory": "tests/plugins/mpg_transport"
   }
 }

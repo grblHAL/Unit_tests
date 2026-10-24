@@ -7,6 +7,28 @@ or force private state to enter a path.
 
 ## Next source families
 
+- ATCi18 cases now exercise original registered settings/M-code/travel/sensor
+  callbacks at671f145530ec8ec9f5828897477dc0192593b3d8:292/305 lines,156/193
+  branches. Retain M960 P0 regression: validate consumes words.p, execute tests
+  consumed flag and never disables. Logical host AUX inputs are not actual board
+  maps; full parser/planner/native envelope and LongBoard validation remain.
+  Clipped paths return without chaining native apply_travel_limits; an initial
+  exact callback-count assumption was removed, with all coordinate assertions
+  retained and unrestricted chaining separately tested. Establish integration
+  contract before classifying that source path.
+- MPG transport21 cases at503b422d0aa92c4d2b6a190e92ce25344bcc629e cover valid
+  plain/framed RX/TX, duplicate suppression, ACK/NAK/retry budget, normal capacity
+  backpressure, chunks, reset and resource/baud/diagnostic workflows. Original
+  .c404/468 lines,146/234 branches; public wire header25/25 lines,10/10 branches.
+  Stream registration is captured, not actual CORE MPG switching/broadcast or
+  tool-ACK suspend. Remaining dynamic settings, UART fallback, output-discard and
+  controller/physical transport integration need the next substantial group.
+- PicoHAL babac83b030fdc053b66f711e82f92b6fdfcc455 fails unchanged-source syntax
+  compilation against pinned CORE: on_probe_fixture_ptr and grbl.on_probe_fixture
+  removed; on_probe_completed argument changed. No obsolete-type aliases, header
+  bypasses, old-CORE fallback or runtime/Actions choice. Exact evidence locked in
+  build-evidence/picohal-batch17-source.json and picohal-syntax.log.
+
 - Sienci RGB24 cases now cover original legacy STATUS_LIGHT_ENABLE2 and advanced3
   sources at df3409058f8bb9c202f560e562bb2671a0829561(default SLB32_DEV). Combined
   533/557 lines,267/311 branches. Retain stale legacy delayed tool-color regression.
