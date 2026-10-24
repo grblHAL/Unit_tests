@@ -381,3 +381,13 @@ actual CORE bank aggregation and G65/P5/probe-motion/relay hardware remain open.
 Review repeated load hook ownership by source before runtime: load reassigns the
 saved previous selector from the currently installed hook. Do not force recursive
 execution or mutate private callback storage. No new exception registered.
+
+## Event-output callbacks
+
+Four host workflows exercise original spindle/laser/at-speed, mist/flood, controller
+state/reset and live trigger rebind/report chains. Actual CORE strgetentry runs;
+MinGW CRT legacy names are disabled via supported NO_OLDNAMES for these targets.
+Deferred control tasks remain fail-fast; their original pointer/integer-width
+casts are not runtime-validated. Remaining settings iterator/normalization,
+port failures/slot counts and actual CORE scheduler/spindle/controller/physical
+outputs remain open. No whole-module or new source coverage measurement claimed.

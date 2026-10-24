@@ -103,3 +103,17 @@ foreach(behavior selection native_toolsetter native_probe2 persistence partial_d
   endif()
 endforeach()
 set_source_files_properties("${HARNESS_ROOT}/plugins/misc/probe_relays.c" PROPERTIES COMPILE_OPTIONS "-Wno-unused-parameter;-Wno-missing-field-initializers")
+
+foreach(behavior spindle_outputs coolant_outputs state_outputs live_rebind)
+  set(target plugins_misc.eventout_${behavior})
+  component_case(${target} eventout/${behavior}.c eventout/event_host.c "${COMPONENT_CORE_ROOT}/strutils.c" "${HARNESS_ROOT}/plugins/misc/eventout.c")
+  target_include_directories(${target} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/eventout")
+  target_compile_definitions(${target} PRIVATE EVENTOUT_ENABLE=1)
+  if(WIN32)
+    # MinGW's optional legacy strset conflicts with CORE's unrelated string API.
+    target_compile_definitions(${target} PRIVATE NO_OLDNAMES=1)
+  endif()
+endforeach()
+set_source_files_properties("${HARNESS_ROOT}/plugins/misc/eventout.c" PROPERTIES COMPILE_OPTIONS "-Wno-unused-parameter;-Wno-missing-field-initializers;-Wno-pointer-to-int-cast;-Wno-int-to-void-pointer-cast")
+
+set_source_files_properties("${COMPONENT_CORE_ROOT}/strutils.c" PROPERTIES COMPILE_OPTIONS -Wno-sign-compare)

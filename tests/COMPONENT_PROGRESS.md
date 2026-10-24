@@ -1,3 +1,33 @@
+# Local event-output callback checkpoint - 2026-10-25
+
+Goal active. Four new workflow cases pass focused Windows Clang ASan/UBSan0.33s
+and strict classification, all clean with zero unexpected failures/skips. Original
+eventout.c restores settings, resolves public port descriptors during startup and
+registers native hooks. Spindle/laser enabled outputs stay separate; at-speed has
+its own output. Mist/flood masks remain independent; state outputs track hold,
+alarm and homing/cycle/jog, with duplicate state notifications suppressing extra
+writes while chaining the previous hook. Reset clears non-alarm bound outputs
+and preserves alarm indication. Live mist-to-flood-to-ignore rebinding preserves
+single hook ownership and original coolant calls; reports chain.
+
+Original CORE strgetentry executes from unchanged strutils.c. MinGW's supported
+NO_OLDNAMES option disables its optional CRT strset alias, avoiding a name clash
+with CORE's unrelated string API; no macro renaming or header/source bypass.
+Signed-comparison warnings in original strutils and pointer/integer-width cast
+warnings in original eventout are source-scoped. Deferred control-signal tasks
+are unexecuted: task_add_immediate fails fast. No runtime sanitizer suppression
+or new known allowance. Unused ftoa link dependency is a fail-fast boundary.
+
+Port registry/configuration, startup scheduling and outputs are captured host
+boundaries; native spindle descriptors are host event inputs, not executed CORE
+spindle registration/parser/motion. Remaining event settings, control toggles,
+other slot counts and real controller/hardware remain open. Misc60 cases;
+758 compatible is authored, not a new full global gate. Latest delivered batch26
+remains740 compatible plus26 separate references. Accumulate next group before
+combined delivery. Original source checkouts remain unchanged.
+
+---
+
 # Local probe-relay selection checkpoint - 2026-10-25
 
 Goal active. Fourteen new cases pass focused Windows Clang ASan/UBSan plus strict
