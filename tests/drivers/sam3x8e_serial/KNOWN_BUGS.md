@@ -49,6 +49,11 @@ The correct peripheral-A assertion fails. Proposed repair: complement the OR of
 both masks, as the secondary implementation does. Retain the exact expected
 regression until fixed; no private driver state is injected.
 
+Forty-one registered cases now include primary realtime enqueue/handler restore,
+independent simultaneous two-port RX/TX, and even/odd/none parity transitions
+that preserve unrelated mode bits in both primary configurations. Six new cases
+pass focused authoring checks; no new diagnostics or expected failures.
+
 Other cases cover FIFO/wrap/full/cancel, realtime IRQ handling, direct/queued/
 blocked TX with recovery, baud/parity, claim/release/reclaim, secondary flush and
 real CORE tool-ACK suspend/restore. Buffer size32 is an explicit supported

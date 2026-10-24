@@ -1,3 +1,22 @@
+# Local SAM serial checkpoint - 2026-10-25 (next combined batch)
+
+Goal active. Six new SAM3X8E cases pass focused Windows Clang ASan/UBSan0.38s and
+strict classification:6 clean, zero known/failures/skips. Three separate behavior
+files run with primary UART(-1)/USART1 and secondary USART2: supported8-bit/one-stop
+parity transitions even/odd/none update status and preserve all other mode bits;
+queued two-port TX with simultaneous RX retains exact independent payloads; primary
+public realtime enqueue and actual RX IRQ use the installed handler, then restore
+normal filtering without queuing the direct callback's rejected bytes.
+
+SAM suite now41 registered cases. No shared fixture, source, known assertion or
+sanitizer allowance changes. Original driver2321092b02cbbdecf2eba2b168a74b085e573418
+and Arduino SDK790ff2c852bf159787a9966bddee4d9f55352d15 verified clean. Existing
+CORE b01f481 contract retained. This is focused authoring evidence, not a new
+cumulative gate, source coverage measurement, hosted or physical UART result.
+Batch20 below remains delivered baseline. Keep accumulating before next full gate.
+
+---
+
 # Latest component checkpoint - 2026-10-25 (batch20)
 
 Goal active. Combined16 additional MPG cases:7 callback cases,6 original CORE

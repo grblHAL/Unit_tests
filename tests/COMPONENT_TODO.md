@@ -114,7 +114,8 @@ or force private state to enter a path.
   TM4C12942374d48ea5580c7912c999bf99e94fdd1c7e4ded is archived/unsupported per
   README and delegates to TI_SimpleLink_shared. MSP432P401R
   1fa8bc31d8e8669d4d569e768154a0532ec5311e uses external EEPROM or NVS_None;
-  assess serial/helpers with pinned SDK. No driver execution/compilation yet.
+  primary serial is now tested with pinned SDK as described above; this older
+  note does not override the delivered primary-UART evidence.
 
 - Four third-party suites now run unchanged sources: AUXP selected file45/45
   lines and24/24 branches; Interlock173/185 lines,67/84 branches; PneumaSeal
@@ -138,7 +139,10 @@ or force private state to enter a path.
   regression groups and exact secondary callback signature diagnostic. Primary
   SERIAL_PORT0 appears to omit its status array entry; do not force a memory
   failure or add an obsolete-type alias. Other port/format/error IRQ states,
-  primary manual realtime enqueue, metadata detail and full controller jobs remain.
+  metadata detail and full controller jobs remain. Six further local authoring
+  cases now cover supported parity transitions, primary public realtime enqueue
+  and simultaneous independent two-port RX/TX (6/6 ASan/UBSan and strict;41
+  registered). Await cumulative delivery/coverage; no source/fixture changes.
 - Teensy PWM executes original code/board headers with pinned real SDK register
   definitions for4.0/4.1/MicroMod. Timer/fault side effects and real frequency/edge
   timing are not modelled. Type0 config/out paths are not returned by public claim;
