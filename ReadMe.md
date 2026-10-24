@@ -295,6 +295,8 @@ repository's default branch.
 | Plugin tests | `plugin_thermistor` | ADC reports, calibration and thermal alarm requests |
 | Plugin tests | `plugin_virtual_inputs` | Real CORE probe registration, virtual contacts, commands and reset |
 | Plugin tests | `plugin_homingaccel` | Per-axis homing override requests, restoration, units and persistence |
+| Plugin tests | `plugin_rgb_sienci` | Legacy/advanced RGB state, override, animation and tool-change callbacks |
+| Plugin tests | `plugin_flexgpio` | I2C expander registration, packets, input edges and configuration |
 | Driver tests | `driver_imxrt1062_pwm` | Teensy 4.0/4.1/MicroMod PWM register, routing and ownership workflows |
 | Driver tests | `driver_sam3x8e_serial` | Dual UART/USART queues, callbacks, settings and CORE stream suspend |
 | Driver tests | `driver_tm4c123_eeprom` | Aligned EEPROM, CRC storage and transfer failures |

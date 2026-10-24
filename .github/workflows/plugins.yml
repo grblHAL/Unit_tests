@@ -1,13 +1,13 @@
 name: Plugin tests
 run-name: >-
-  Plugin tests: ${{ inputs.suite }} @ ${{ inputs.source_pr && format('PR #{0}', inputs.source_pr) || inputs.source_ref || 'master' }} | CORE ${{ inputs.core_ref || 'default' }}
+  Plugin tests: ${{ inputs.suite }} @ ${{ inputs.source_pr && format('PR #{0}', inputs.source_pr) || inputs.source_ref || 'suite default' }} | CORE ${{ inputs.core_ref || 'default' }}
 on:
   workflow_dispatch:
     inputs:
       suite:
         description: Registered suite
         type: choice
-        options: [plugins_misc, plugin_eeprom, plugin_fans, plugin_openpnp, plugin_odometer, plugin_encoder, plugin_spindle_vfd, plugin_sdcard_stream, plugin_keypad, plugin_networking, plugin_laser_ppi, plugin_laser_cluster, plugin_trinamic, plugin_plasma, plugin_bluetooth, plugin_embroidery_readers, plugin_auxp, plugin_interlock, plugin_pneumaseal, plugin_thermistor, plugin_virtual_inputs, plugin_homingaccel]
+        options: [plugins_misc, plugin_eeprom, plugin_fans, plugin_openpnp, plugin_odometer, plugin_encoder, plugin_spindle_vfd, plugin_sdcard_stream, plugin_keypad, plugin_networking, plugin_laser_ppi, plugin_laser_cluster, plugin_trinamic, plugin_plasma, plugin_bluetooth, plugin_embroidery_readers, plugin_auxp, plugin_interlock, plugin_pneumaseal, plugin_thermistor, plugin_virtual_inputs, plugin_homingaccel, plugin_rgb_sienci, plugin_flexgpio]
         default: plugins_misc
       source_repository:
         description: 'Source owner/repo or GitHub URL (blank = suite default)'

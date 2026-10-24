@@ -7,6 +7,25 @@ or force private state to enter a path.
 
 ## Next source families
 
+- Sienci RGB24 cases now cover original legacy STATUS_LIGHT_ENABLE2 and advanced3
+  sources at df3409058f8bb9c202f560e562bb2671a0829561(default SLB32_DEV). Combined
+  533/557 lines,267/311 branches. Retain stale legacy delayed tool-color regression.
+  Remaining regions include optional absent callbacks, offboard green override and
+  live state-transition animation edges; actual CORE scheduler/parser/hardware
+  still need integration. Workflow names use suite default instead of master.
+- FlexGPIO17 cases at bc8dab40162b49718179bffe973c4533fc73436f cover257/272 lines,
+  123/150 branches. Remaining public get-value callbacks and configuration-send
+  failure path need the next integrated group. Registered descriptors are captured,
+  not passed through actual CORE ioports aggregation/remapping; multiple bank
+  offsets, controller/physical IRQ/I2C timing and no-MCU-IRQ mode remain untested.
+  Retain exact IRQ-disable/pull-mode result regressions and four Clang transparent-
+  union call diagnostics, with strict scoped manifest/labels and no suppression.
+- Datron-style RGB672ebd8beeed746b5c668be18b4e4c48b6c14883 fails unchanged-source
+  current-CORE syntax compilation: status_light.c207 private static bit_count
+  conflicts with CORE nuts_bolts.h541 declaration. Windows also reports ffsl
+  undeclared at427. No source macro renaming/header bypass, runtime/Actions choice
+  or old-CORE fallback was added; exact source/evidence is in build-evidence.
+
 - TM4C123 EEPROM12 and UART012 cases now run unchanged sources with real driver/
   board/TivaWare headers and CORE CRC/stream support. Shared TI EEPROM11 cases
   test its current standalone candidate, not archived TM4C1294 parent gitlink.

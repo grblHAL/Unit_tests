@@ -1,0 +1,34 @@
+[
+  {
+    "test": "plugin_flexgpio.a3_output_inversion",
+    "source": "tests/plugins/flexgpio/output_inversion.c",
+    "lines": [
+      7
+    ],
+    "message_pattern": "call\\ to\\ function\\ digital_out_cfg\\ through\\ pointer\\ to\\ incorrect\\ function\\ type\\ 'bool\\ \\(\\*\\)\\(struct\\ xbar\\ \\*,\\ xbar_cfg_ptr_t,\\ bool\\)'"
+  },
+  {
+    "test": "plugin_flexgpio.a3_input_reads",
+    "source": "tests/plugins/flexgpio/input_reads.c",
+    "lines": [
+      11
+    ],
+    "message_pattern": "call\\ to\\ function\\ digital_in_cfg\\ through\\ pointer\\ to\\ incorrect\\ function\\ type\\ 'bool\\ \\(\\*\\)\\(struct\\ xbar\\ \\*,\\ xbar_cfg_ptr_t,\\ bool\\)'"
+  },
+  {
+    "test": "plugin_flexgpio.a3_probe_irq_config",
+    "source": "tests/plugins/flexgpio/probe_irq_config.c",
+    "lines": [
+      12
+    ],
+    "message_pattern": "call\\ to\\ function\\ digital_in_cfg\\ through\\ pointer\\ to\\ incorrect\\ function\\ type\\ 'bool\\ \\(\\*\\)\\(struct\\ xbar\\ \\*,\\ xbar_cfg_ptr_t,\\ bool\\)'"
+  },
+  {
+    "test": "plugin_flexgpio.a3_pull_mode_rejection",
+    "source": "tests/plugins/flexgpio/pull_mode_rejection.c",
+    "lines": [
+      7
+    ],
+    "message_pattern": "call\\ to\\ function\\ digital_in_cfg\\ through\\ pointer\\ to\\ incorrect\\ function\\ type\\ 'bool\\ \\(\\*\\)\\(struct\\ xbar\\ \\*,\\ xbar_cfg_ptr_t,\\ bool\\)'"
+  }
+]

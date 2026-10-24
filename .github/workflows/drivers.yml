@@ -1,6 +1,6 @@
 name: Driver tests
 run-name: >-
-  Driver tests: ${{ inputs.suite }} @ ${{ inputs.source_pr && format('PR #{0}', inputs.source_pr) || inputs.source_ref || 'master' }} | CORE ${{ inputs.core_ref || 'default' }}
+  Driver tests: ${{ inputs.suite }} @ ${{ inputs.source_pr && format('PR #{0}', inputs.source_pr) || inputs.source_ref || 'suite default' }} | CORE ${{ inputs.core_ref || 'default' }}
 on:
   workflow_dispatch:
     inputs:

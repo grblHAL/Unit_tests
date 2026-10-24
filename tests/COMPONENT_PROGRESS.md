@@ -1,3 +1,43 @@
+# Latest component checkpoint - 2026-10-24 (batch16)
+
+Goal remains active. Added41 cases: Sienci RGB24 (legacy2 and advanced3 modes),
+FlexGPIO17 (three-axis behaviors and six-axis registration). New Plugin tests
+choices source-lock candidate/CORE separately. Corrected both component workflow
+run names to suite default instead of assuming master; Sienci defaults SLB32_DEV.
+No production source changes, concurrent CORE edits or merges.
+
+One cumulative Windows Clang ASan/UBSan gate:38 compatible suites,564 cases =
+511 clean +53 documented known results, zero unexpected failures/skips. Known
+results comprise49 correct assertion regressions +4 passed-assertion diagnostic
+cases;3 assertion cases also have exact diagnostics, counted once. New assertions
+retain legacy delayed tool color, FlexGPIO IRQ-disable result and unsupported
+pull-mode acceptance. Four new exact test/file/line/function/type expectations
+cover original FlexGPIO config callbacks through CORE's GNU transparent-union API;
+this records the Clang signature diagnostic separately from functional defects.
+No sanitizer disabled; unknown/missing diagnostics fail strict reporting. Actual
+mixed assertion/diagnostic summary verified. All84 helpers pass17.106s; actionlint
+and whitespace pass after workflow label correction.
+
+Fresh local LLVM selected-file coverage: Sienci rgb.c194/200 lines97%,104/125
+branches83.2%,15/15 functions; rgbv2.c339/357 lines95%,163/186 branches87.6%,
+34/34 functions. Combined533/557 lines,267/311 branches. FlexGPIO257/272 lines
+94.5%,123/150 branches82%,19/21 functions. Adds790 exercised executable lines.
+Fresh counter paths max212 characters, strict profiling checks pass. No full
+controller/parser/CORE task scheduling/port aggregation or hardware claim.
+
+Pinned CORE b01f481072edecac33d5e40c25869359a5b3fa1f;
+Sienci RGB df3409058f8bb9c202f560e562bb2671a0829561;
+FlexGPIO bc8dab40162b49718179bffe973c4533fc73436f.
+API-matched local source/CORE HEADs clean. Datron RGB672ebd8beeed746b5c668be18b4e4c48b6c14883
+fails unchanged-source syntax compilation due private static bit_count versus
+CORE declaration; ffsl is additionally undeclared on Windows. No source aliases,
+header bypasses or compatibility fallback; no runtime choice registered for it.
+Remaining scope in TODO/per-suite guides; evidence and source locks ignored in
+build-evidence. PR29 stays draft/unmerged. Hosted workflow installation on default
+branch and physical target checks remain outstanding.
+
+---
+
 # Latest component checkpoint - 2026-10-24 (batch15)
 
 Goal remains active. Added35 cases: TM4C123 EEPROM12/UART012 and standalone TI

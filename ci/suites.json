@@ -552,5 +552,31 @@
     "test_regex": "^driver_tm4c123_serial[.]",
     "coverage_filter": "drivers/tm4c123/serial\\.c$",
     "diagnostics_directory": "tests/drivers/tm4c123_serial"
+  },
+  "plugin_rgb_sienci": {
+    "repository": "Sienci-Labs/grblhal-rgb-plugin",
+    "ref": "SLB32_DEV",
+    "path": "plugins/rgb_sienci",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/rgb_sienci",
+    "cmake_options": [],
+    "test_regex": "^plugin_rgb_sienci[.]",
+    "coverage_filter": "plugins/rgb_sienci/.*\\.c$",
+    "diagnostics_directory": "tests/plugins/rgb_sienci"
+  },
+  "plugin_flexgpio": {
+    "repository": "Expatria-Technologies/plugin_FlexGPIO",
+    "ref": "main",
+    "path": "plugins/flexgpio",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/flexgpio",
+    "cmake_options": [],
+    "test_regex": "^plugin_flexgpio[.]",
+    "coverage_filter": "plugins/flexgpio/.*\\.c$",
+    "diagnostics_directory": "tests/plugins/flexgpio"
   }
 }
