@@ -49,6 +49,13 @@ cancels a feed, unlocks after restart and verifies retained status/no extra moti
 Both pass focused sanitizer/strict checks; targets gcode5122/grbllib459 remain
 unmeasured. There are4,500 registered cases, not a new full-suite result.
 
+The cumulative followup now includes compatibility2 extended-coordinate queries
+and tool-only modal notifications, using existing configurations/public commands.
+One full ASan/UBSan/strict gate passes4,501 in71.00s:4,476 clean/24 known
+regressions/1 known diagnostic/zero failed or skipped. It includes three new
+cases and three existing-case extensions. Gains for all six ordinary workflows
+remain unmeasured until their one exact-source hosted checkpoint completes.
+
 Two raw Modbus outcomes42/69 have specific current supported-interface evidence:
 RTU/ASCII/TCP cases are all covered; remaining source-block1 switch defaults
 would require another provider interface value. Optional callback absence is
