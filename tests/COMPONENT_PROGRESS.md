@@ -1,3 +1,22 @@
+# Local fan persistence and delayed-shutdown checkpoint - 2026-10-25
+
+Goal active. Three new fan cases pass focused Windows Clang ASan/UBSan0.27s
+and strict classification:3 clean, zero unexpected failures/skips. Saved port
+remapping/delay survive live-setting changes before the first registered load;
+program completion then uses the persisted physical mapping and7500ms delay.
+Driver reset cancels pending shutdown, clears both outputs and permits a later
+fan cycle. M106 in check mode preserves the timer; real execution cancels it,
+and the next program end schedules a fresh shutdown. Original registered plugin
+callbacks execute; scheduler/NVS/physical outputs remain bounded host models.
+
+No fixture/production source edit or new known allowance. Existing spindle setter
+diagnostic case is untouched. Fan suite now12 registered cases; compatible702 is
+an authored total, not a newly completed global gate. Latest delivered batch24
+remains699 compatible plus26 separate reference cases. Accumulate more supported
+work before the next full combined gate/push. Hardware/hosted checks remain open.
+
+---
+
 # Latest component checkpoint - 2026-10-25 (batch24)
 
 Goal active. Combined pre-push Windows Clang ASan/UBSan gate passes all42

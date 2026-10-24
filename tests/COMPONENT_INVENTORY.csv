@@ -10,7 +10,7 @@ plugin,SD card,grblHAL/Plugin_SD_card,partial host tests,plugin_sdcard_stream,Re
 plugin,Spindle,grblHAL/Plugins_spindle,partial host tests,plugin_spindle_vfd,GS20/MODVFD single-spindle cases tested; add other VFD protocols and output/selection/stepper variants with real registration.
 plugin,Trinamic,grblHAL/Plugins_motor,partial host tests,plugin_trinamic,TMC2209 plugin/library with UART polling/dynamic current/homing callbacks tested; add debug/report modes and other chip/transport configurations.
 plugin,Laser/PPI,grblHAL/Plugins_laser,partial host tests,plugin_laser_ppi;plugin_laser_cluster,Retain zero-PWM pulse regression; add coolant/overdrive and alternate PPI/cluster configurations with public driver registration.
-plugin,Fans,grblHAL/Plugin_fans,partial host tests,plugin_fans,Add persisted settings reload and delayed program-end workflows.
+plugin,Fans,grblHAL/Plugin_fans,partial host tests,plugin_fans,Saved mapping/delay first-load and delayed reset/restart now tested; add actual CORE settings/parser/scheduler and hardware integration.
 plugin,Bluetooth,grblHAL/Plugins_Bluetooth,partial host tests,plugin_bluetooth,Retain highest-STATE-pin and startup-connection regressions; add shared MPG and remaining IRQ/transport configurations.
 plugin,WebUI,grblHAL/Plugin_WebUI,partial host tests,plugin_webui,13 helper/provider cases validated; HTTP/login/v2/v3/storage/lwIP/browser modules remain untested.
 plugin,OpenPNP,grblHAL/Plugin_OpenPNP,partial host tests,plugin_openpnp,Add jerk-enabled configuration and full parser/driver integration; investigate detailed-only reporting contract.
