@@ -1,12 +1,14 @@
 #pragma once
 #include "support/laser_stepper_host.h"
 #include "support/parking_host.h"
-static inline void run_laser_door_program(const char *program)
+static inline void run_laser_door_program_actions(const char *program, const char *hold_actions)
 {
     prepare_laser_stepper();
     configure_parking_move();
     hal.signals_cap.safety_door_ajar = true;
-    char actions[] = "3";
+    char actions[4];
+    CHECK(strlen(hold_actions) < sizeof(actions));
+    strcpy(actions, hold_actions);
     CHECK(settings_store_setting(Setting_HoldActions, actions) == Status_OK);
     sys.cold_start = false;
     sys.driver_started = true;
@@ -46,5 +48,10 @@ static inline void run_laser_door_program(const char *program)
     CHECK(axis_pulses[Z_AXIS] == 0 && physical_position[Z_AXIS] == -800);
     bool powered = laser_output_state.on && laser_output_power > 0;
     for(unsigned i = 0; i < laser_pwm_calls; i++) powered |= laser_pwm_log[i] > 0;
+    if(!(powered && laser_output_state.on))
+        fprintf(stderr, "Laser resume: actions=%s state_on=%u powered=%u PWM_updates=%u X_pulses=%u X_position=%ld\n", hold_actions, (unsigned)laser_output_state.on, (unsigned)powered, laser_pwm_calls, axis_pulses[X_AXIS], (long)physical_position[X_AXIS]);
     CHECK(powered && laser_output_state.on);
 }
+
+static inline void run_laser_door_program(const char *program)
+{ run_laser_door_program_actions(program, "3"); }

@@ -1,17 +1,17 @@
 # Remaining raw CORE coverage
 
-Verified coverage report: [run40060050917](https://github.com/petervanderwalt/Unit_tests/actions/runs/40060050917),
-harness `2f0b74b630cb7b1b4e27e4f6a00c0e15c7864061`, CORE `2e165a1ac4c74be8e68971972c6577775d856b05`,
+Verified coverage report: [run40061404353](https://github.com/petervanderwalt/Unit_tests/actions/runs/40061404353),
+harness `4a252c70e769cbdd71cd7be68b8dbd987f548c79`, CORE `2e165a1ac4c74be8e68971972c6577775d856b05`,
 filter `core/.*\.[ch]$`. Both artifact locks match and exactly seven coverage
 stages exit0. All five source/GCC/Clang/coverage/Results summary jobs passed
 at final API inspection.
 
-17,480/17,756 lines (**98.45%**) and12,680/13,834 branch outcomes (**91.66%**)
-were covered:276 raw missing lines and1,154 missing outcomes. Coverage job:
-4,415 cases,4,394 clean/21 known/0 failed/skipped. Against same-source40056914079:
-six additional branch outcomes with identical covered-line set and denominator.
+17,480/17,756 lines (**98.45%**) and12,687/13,834 branch outcomes (**91.71%**)
+were covered:276 raw missing lines and1,147 missing outcomes. Coverage job:
+4,418 cases,4,397 clean/21 known/0 failed/skipped. Against same-source40060050917:
+seven additional branch outcomes with identical covered-line set and denominator.
 
-Success badges show fully green40060050917 (98.45%/91.66%). Local three-spindle, probe recovery and optional help-provider cases are separate from this report.
+Success badges show fully green40061404353 (98.45%/91.71%). Local laser-door policy, USB and early-client startup cases are separate from this report.
 
 Raw coverage does not establish correctness or reachability. See [TODO](TODO.md)
 and [KNOWN_BUGS](KNOWN_BUGS.md) before selecting workflows. Historical audits
@@ -35,7 +35,7 @@ remain pinned to their stated revisions; no source exclusions were added.
 | [core/machine_limits.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/machine_limits.c) | 2 | 16 | 269, 502 |
 | [core/modbus.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/modbus.c) | 3 | 4 | 231-233 |
 | [core/modbus_rtu.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/modbus_rtu.c) | 3 | 34 | 241, 360-361 |
-| [core/motion_control.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/motion_control.c) | 2 | 27 | 690, 715 |
+| [core/motion_control.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/motion_control.c) | 2 | 26 | 690, 715 |
 | [core/my_plugin.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/my_plugin.c) | 2 | 0 | 26, 29 |
 | [core/ngc_expr.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/ngc_expr.c) | 11 | 13 | 115-116, 189-190, 250, 252, 292-293, 337-338, 341 |
 | [core/ngc_flowctrl.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/ngc_flowctrl.c) | 2 | 57 | 816-817 |
@@ -46,10 +46,10 @@ remain pinned to their stated revisions; no source exclusions were added.
 | [core/probe.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/probe.c) | 0 | 0 | none |
 | [core/protocol.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/protocol.c) | 1 | 45 | 185 |
 | [core/regex.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/regex.c) | 0 | 0 | none |
-| [core/report.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/report.c) | 5 | 67 | 450-452, 1955-1956 |
+| [core/report.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/report.c) | 5 | 65 | 450-452, 1955-1956 |
 | [core/settings.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/settings.c) | 58 | 124 | 701, 703, 780-781, 839, 925, 928, 1012, 1056, 1140-1141, 1199-1200, 1341, 1351, 1507-1508, 1569, 1577, 1584, 1591, 1594-1596, 1652-1653, 1693-1694, 1901-1902, 1960-1961, 2026-2027, 2175-2177, 2179-2181, 2192-2194, 2196-2198, 2239-2241, 2247-2248, 2957, 2959, 3476-3477, 3625-3627 |
 | [core/sleep.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/sleep.c) | 0 | 1 | none |
-| [core/spindle_control.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/spindle_control.c) | 7 | 33 | 499, 503, 1160-1161, 1172, 1215-1216 |
+| [core/spindle_control.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/spindle_control.c) | 7 | 29 | 499, 503, 1160-1161, 1172, 1215-1216 |
 | [core/state_machine.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/state_machine.c) | 12 | 42 | 157, 449, 502, 524-527, 614-615, 658-659, 819 |
 | [core/stepper.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/stepper.c) | 1 | 12 | 1093 |
 | [core/stepper2.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/stepper2.c) | 0 | 11 | none |

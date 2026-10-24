@@ -1,3 +1,39 @@
+# Laser door policy and stream/startup batch - 2026-10-24
+
+Five new cases on coverage-batch-74 pass one cumulative ASan/UBSan gate:
+4,423/4,423 in 59.06s. Strict summary: 4,397 clean, two existing recovering
+sanitizer cases, 24 documented regressions, zero unexpected failures/skips.
+Artifacts: build-asan/laser-stream-startup74-delivery-{build.log,tests.log,
+results.xml,summary.log}. No CORE edits or source exclusions.
+
+Two M3/M4 laser jobs with public $63=2 reproduce failed enable restoration after
+real safety-door stop/close/resume. All 1,600 X steps finish, but driver enable
+stays off. Matched $63=3 controls pass. Correct final assertions remain; only the
+two exact cases have WILL_FAIL/known_bug. Dated KNOWN_BUGS entry records raw
+2-pass/2-fail evidence, driver output, source cause and cleanup. No diagnostic
+suppression or premature-enable fix. Existing helper defaults and safety checks
+remain; it now accepts a public hold-policy argument.
+
+Three ordinary stream scenarios pass: base USB without optional connection
+status retains output through network handoff/reconnect; USB and UART instance0
+remain distinct; Bluetooth/WebSocket clients connected during actual driver_init
+receive no premature welcome, then one startup welcome and successful $G reply.
+No fabricated startup flags or registered-provider identity mutation.
+
+Isolated no-sanitizer source proof: laser-stream-branch-proof74/{proof.json,
+stream-conditions.json}. Successful stream/boot cases and exact laser failures
+confirmed. LLVM places USB/UART condition branches at265-266; lookup-loop264's
+exhaustion outcome remains absent. Do not infer portable aggregate branch counts.
+
+Prior run40061404353 is fully green at exact4a252c70e769cbdd71cd7be68b8dbd987f548c79:
+both source locks, CORE2e165a1/filter and seven coverage stages verified.
+17,480/17,756 lines (98.45%), 12,687/13,834 outcomes (91.71%); 276 missing lines
+and 1,147 missing outcomes. Against40060050917, identical covered-line sets and
+seven more outcomes (motion_control+1, report+2, spindle_control+4).
+4,418 coverage cases: 4,397 clean, 21 known, zero unexpected failures/skips.
+Badges and gap inventory now reference that verified checkpoint. This new batch
+requires its own hosted measurement; passing local tests are not goal completion.
+
 # Three-spindle/probe/help batch cumulative delivery - 2026-10-24
 
 Three new cases and two existing-case extensions pass one full ASan/UBSan gate:

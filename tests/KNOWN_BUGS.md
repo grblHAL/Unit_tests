@@ -26,6 +26,40 @@ in [storage write-failure policy](TODO.md#storage-write-failure-policy), includi
 its observations, existing test exceptions and cleanup links. It is not a
 settled requirement to retry physical writes a specific number of times.
 
+## Laser safety-door resume leaves enable off when feed-hold laser disable is off
+
+Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
+A registered enable-capable PWM laser runs an ordinary `G1X20F100M3S500` or M4
+cut with public `$63=2` (restore on resume enabled; disable during feed hold off).
+A real safety-door input stops the cut and disables the laser. Closing the door
+alone does not restart it. After cycle start, motion finishes all 1,600 X steps,
+but the driver still reports its enable state off. The otherwise identical
+`$63=3` controls pass for both laser modes; only the feed-hold disable bit differs.
+
+Raw ASan/UBSan controls:2/2 pass; correct new regressions:2/2 fail at the final
+laser restoration assertion, without sanitizer diagnostics. Constant M3 observes
+`state_on=0 powered=0 PWM_updates=0`; dynamic M4 observes `state_on=0 powered=1
+PWM_updates=15`. The latter receives positive PWM updates but no enable restore.
+This is a driver-visible enable/state mismatch; no unintended laser activation
+or measured physical output is claimed. Door-open and closed-before-cycle-start
+checks still require zero power and no additional motion.
+
+Cause: [spindle_control.c887-889](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/spindle_control.c#L887)
+returns success without arming/restoring laser output when the feed-hold disable
+bit is clear, although safety-door handling independently disabled that output.
+[Safety-door restoration](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/state_machine.c#L89)
+uses this same helper. Restore the door-stopped laser for resumed motion
+independently of the feed-hold policy, retaining zero output while the door is
+open and until motion resumes; do not simply enable the laser early.
+
+Regressions: [constant power](cases/state_machine/constant_laser_door_resume_with_feed_hold_disable_action_off.c)
+and [dynamic power](cases/state_machine/dynamic_laser_door_resume_with_feed_hold_disable_action_off.c).
+Only these two exact tests have `WILL_FAIL`/`known_bug` in
+[known_bugs.cmake](known_bugs.cmake). Raw reproduction:
+`build-asan/laser-door-hold-policy74-raw-results.xml`.
+When fixed, retain both correct regressions and the passing `$63=3` controls;
+remove their two allowances and this entry. No CORE edits or diagnostic wrappers.
+
 ## Pendant release fails to restore a network-only controller's null console
 
 Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
@@ -299,8 +333,8 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Measured:** 2026-10-24, clean Terje `2e165a1ac4c74be8e68971972c6577775d856b05`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40060050917)
-measures 17,480/17,756 lines (98.45%) and 12,680/13,834 branches (91.66%).
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40061404353)
+measures 17,480/17,756 lines (98.45%) and 12,687/13,834 branches (91.71%).
 The 276 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable. See the complete measured
 [line/branch inventory](COVERAGE_GAPS.md) before selecting the next workflow.
