@@ -2,23 +2,31 @@
 
 ## Latest coverage job passed; compiler matrix remains failed
 
-[Run40093560650](https://github.com/petervanderwalt/Unit_tests/actions/runs/40093560650)
-coverage passed on harness8b189a929cf7ea3b31570961dd75ab7dd8f98e3e and
-COREb01f481072edecac33d5e40c25869359a5b3fa1f. Artifact locks and filter match;
-all seven coverage stages exit0. It reports17,491/17,757 lines (**98.50%**)
-and12,788/13,852 branch outcomes (**92.32%**):266 missing lines and1,064
-missing outcomes. Coverage tests:4,472 total/4,449 clean/23 known/0 failed/skipped.
-Against same-source40082861198 this adds3 lines and14 outcomes, with no lost lines.
-Both CSV inventories now match this report while preserving dispositions and
-function/source-block branch identities. Historical explanations below still
-require current-caller proof; they are not blanket reachability claims.
+[Run40103625282](https://github.com/petervanderwalt/Unit_tests/actions/runs/40103625282)
+coverage passed on harness58774aa6491f86cee1256dc28844a18a2e75c095 and
+COREb01f481072edecac33d5e40c25869359a5b3fa1f. Artifact/report locks and filter
+match; all seven coverage stages exit0 with no findings. It reports
+17,491/17,757 lines (**98.50%**) and12,791/13,852 branch outcomes (**92.34%**):
+266 missing lines and1,061 missing outcomes. Coverage tests:4,475 total/
+4,452 clean/23 known/0 failed/skipped. Against same-source40093560650 this adds
+zero lines and three outcomes, with no lost lines/outcomes. Exact gains:
+ioports1625 ioports_configure@3:7, state_machine595 state_await_hold@1:5,
+and tool_change140 restore@0:0. Each corresponds to its authored normal workflow.
+No ineffective value permutations or source exclusions were added.
 
-The overall run remains FAILED due to two additional Linux-Clang tapping table
-bounds diagnostics. Both saved outputs now pass production manifest/runner checks,
-including the first1024 output characters and changed/unrelated-fault rejection.
-All16 matcher tests pass. Windows configuration retains direct executable tests
-without WILL_FAIL. No new hosted validation has run; badges retain the last fully
-green40074304720. Assertions after a fatal fault remain unvalidated on Clang.
+Inventories match this report, preserving dispositions and function/source-block
+identities. Historical explanations below still require current-caller proof.
+Three further normal reporting/help cases are local and unmeasured.
+
+The run completed FAILURE: source/GCC/coverage passed; Clang/summary failed.
+The Clang job FAILED: the eight-axis tapping executable now exits0 without the
+expected diagnostic; recursive tapping reports the same table fault at index27
+instead of the previously observed30. Strict wrappers correctly reject these
+changes. Saved index27 and30 recursive outputs now pass the exact production
+matcher/runner and first1024 checks;17 matcher tests pass. Missing diagnostics
+remain red. Windows and GCC coverage execute the functional assertions normally.
+See KNOWN_BUGS; do not force private bits to make this failure repeatable.
+The run is not green and badges retain fully green40074304720.
 
 Working checkout is now upstream `b01f481072edecac33d5e40c25869359a5b3fa1f`.
 The table and percentages below are the prior fully green CORE2e165a1

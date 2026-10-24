@@ -31,6 +31,17 @@
   },
   {
     "kind": "fatal_asan",
+    "test": "spindle_sync.recursive_tapping_macro_overflow_restores_scope_and_allows_next_cut",
+    "source": "core/gcode.c",
+    "lines": [
+      485
+    ],
+    "function": "macro_arguments_push",
+    "message_pattern": "global-buffer-overflow",
+    "preceding_ubsan_pattern": "index 27 out of bounds for type 'const uint8_t\\[27\\]' \\(aka 'const unsigned char\\[27\\]'\\)"
+  },
+  {
+    "kind": "fatal_asan",
     "test": "spindle_sync.unsupported_rigid_tapping_preserves_position_and_next_supported_sync_move",
     "source": "core/gcode.c",
     "lines": [

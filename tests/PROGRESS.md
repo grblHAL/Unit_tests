@@ -4,40 +4,68 @@ User reports PR28 MERGED. This supersedes every earlier frozen/open PR28 note.
 Fetch origin/upstream and compare ancestry before preparing the next PR; never
 merge PRs or reset existing changes. Active checkout:
 C:/Users/User/Documents/Codex/2026-10-08/https-github-com-petervanderwalt-unit-tests/work/Unit_tests
-Branch coverage-batch-74; prior pushed head8b189a929cf7ea3b31570961dd75ab7dd8f98e3e.
-Current cumulative delivery adds exact Clang handling, reconciled inventories and
+Branch coverage-batch-74, pushed58774aa6491f86cee1256dc28844a18a2e75c095;
+tracks origin/coverage-batch-74.
+Current pushed delivery adds exact Clang handling, reconciled inventories and
 three normal-use workflows. Full local4,475 sanitizer/strict gate passes67.27s:
 4,450 clean/24 known regressions/1 known diagnostic/0 failures/skips.
 Logs: build-asan/batch74-resume-{build,tests,summary}.log and results.xml.
 Saved hosted diagnostic replay and all16 matcher helpers pass.
-Preparing one new exact-head hosted checkpoint; do not call it green yet.
+Exact-head hosted40103625282 COMPLETED FAILURE against COREb01f481.
+Source/GCC/coverage PASSED; Clang/Results summary FAILED. This matrix is NOT green.
+https://github.com/petervanderwalt/Unit_tests/actions/runs/40103625282
+Do not redispatch, report green or update badges before terminal locked results.
+Coverage/Clang artifacts now downloaded and exact harness/source locks verified.
+Clang absent/changed expected tapping diagnostics prevent a PR-ready claim.
+Do not redispatch for these small additions. Continue normal workflows. Draft body is in
+build-asan/batch74-pr-body.md. Full supported-coverage goal remains ACTIVE.
 CORE clean at b01f481072edecac33d5e40c25869359a5b3fa1f; Terje alone edits it.
 Full objective remains meaningful supported CORE line AND branch coverage.
 
+## Next normal-use authoring group (local; outside hosted58774aa)
+
+Three new cases use existing public fixtures; no CORE changes, private flags,
+new exceptions or unusual inputs:
+- report.g55_change_and_feed_override_report_together_without_losing_queued_motion:
+  G55 and110% feed override report WCO/WCS/Ov together; original20mm cut retains
+  all1600 physical X pulses and ends Idle. Targets report1498 GWCO outcome.
+- report.periodic_override_reports_retain_flood_until_m9_without_rewriting_output:
+  repeated ordinary polls retain flood at override refreshes; no redundant driver
+  writes; M9 clears output and reports it. Targets report1480 coolant-state outcome.
+- system.homing_help_lists_builtin_settings_without_unrelated_plugin_groups:
+  $HELP homing selects core Homing settings before plugin traversal and leaves
+  configuration/motion unchanged. Targets report395 built-in-match outcome.
+First two pass focused ASan/UBSan and strict summary0.18s (normal-status-results.xml).
+Help passes focused sanitizer/strict summary0.07s. Branch evidence rows
+retain raw measured counts. Gains remain UNMEASURED until a later substantial
+coverage checkpoint. No new full gate/hosted run for these three cases.
+
 ## Latest measured result and compiler failure
 
-Run40093560650 on exact pushed8b189a9/COREb01f481 COMPLETED FAILURE:
-source/GCC/coverage passed; Linux Clang and Results summary failed. Coverage
-artifact AND report locks match harness/source/filter; allseven stages exit0.
-17,491/17,757 lines98.50%;12,788/13,852 branch outcomes92.32%.
-266 raw missing lines/1,064 missing outcomes. Same-source40082861198 comparison:
-+3 covered lines (fs_embedded252, gcode2647/4862), +14 outcomes, no lost lines.
-Coverage tests4,472 total/4,449 clean/23 known/0 failed/skipped. This is coverage
-job evidence, NOT a green compiler-matrix claim. Keep badges on last fully
-green40074304720 until a complete exact-head run passes.
+Run40103625282 COMPLETED FAILURE on pushed58774aa/COREb01f481: source/GCC/
+coverage PASSED, Clang/Results summary FAILED. Coverage exact
+artifact/report locks match; allseven coverage stages exit0, no findings.
+17,491/17,757 lines98.50%;12,791/13,852 branch outcomes92.34%.
+266 raw missing lines/1,061 missing outcomes. Same-source40093560650 comparison:
+zero line gain/loss, +3 outcomes/no loss. Each target is confirmed:
+ioports1625 ioports_configure@3:7 (servo load exclusion), state_machine595
+state_await_hold@1:5 (door coolant without parking), tool_change140 restore@0:0
+(Y-only restoration). Inventories/GAPS reconciled without dropping dispositions.
+Coverage4,475 total/4,452 clean/23 known/0 failed/skipped. Badges stay on last
+fully green40074304720, since Clang FAILED. Saved evidence:
+build-asan/hosted40103625282/{coverage-core,report-core-coverage,
+report-core-clang,results-core-clang}; verified-comparison.json records gain.
 
-Downloaded evidence: build-asan/hosted40093560650/{coverage-core,
-report-core-coverage,report-core-clang,results-core-clang}; verified-comparison.json
-records the delta. Both residual CSVs now match40093560650:266 missing lines/1,064 missing
-outcomes, preserving dispositions and function/block branch identities.
-COVERAGE_GAPS current measurement is refreshed; historical sections remain pinned.
-
-Clang has TWO unexpected fatal occurrences of the same gcode.c485 offset-table
-fault: recursive tapping overflow index30, unsupported tapping fallback index28,
-const uint8_t[27], macro_arguments_push top frame + ASan global-buffer-overflow.
-The existing eight-axis index27 wrapper reproduced correctly in this run.
-All correct test assertions remain. Paths after a fatal fault are unvalidated
-on Linux Clang; GCC/coverage/Windows execute those paths successfully.
+Clang4,475 total/4,448 clean/25 known/2 failed: eight-axis tapping wrapper
+rejects exit0/no diagnostic; recursive tapping reports index27 at the same
+27-entry table/gcode485/macro_arguments_push instead of observed30. Unsupported
+fallback index28 still matches. This proves diagnostic variability on the same
+source; do not force internal bits or weaken assertions for repeatable failure.
+New EXACT alternate recursive index27 manifest entry matches saved evidence.
+Both saved recursive indices pass production matcher/runner/first1024 checks;
+changed source and absent diagnostics reject.17 matcher tests pass0.475s.
+Fresh Terje fetch stillb01f481 clean. KNOWN_BUGS records the observed variation;
+post-crash Clang assertions remain unvalidated. No CORE edits or new hosted run.
 
 ## Current cumulative work
 
@@ -65,7 +93,11 @@ on Linux Clang; GCC/coverage/Windows execute those paths successfully.
 - Preserve unrelated phantom M on
   tests/cases/ioports/legacy_registration_allows_missing_optional_description_callback.c;
   it was byte-identical to HEAD and intentionally excluded from earlier staging.
-- PROGRESS/GAPS/inventory/TODO edits are local; AGENTS updated for this handoff.
+- Coverage edits through58774aa are committed/pushed; this latest run-status
+  checkpoint is local. Concurrent unrelated changes appeared in reusable-tests.yml,
+  .gitignore, scripts/ci_report.py and untracked drivers/. Other provisional paths
+  appeared/disappeared during concurrent work; inspect live status and preserve all.
+  These changes are excluded from this coverage delivery.
 
 ## Normal-use scope and new regression - 2026-10-24
 
@@ -90,7 +122,7 @@ module. New Linux-only launcher changes need focused validation and the next
 substantial exact-head hosted checkpoint; old failed runs stay failed.
 Cumulative4,475 local gate now passed67.27s with strict summary.
 No active local build/test process remains. Hosted40093560650 is terminal:
-DO NOT redispatch that head or wait on it. No newer hosted run was started.
+DO NOT redispatch that head or wait on it. Exact-head run40103625282 is terminal FAILURE; do not redispatch the same head.
 
 Saved diagnostic validation and inventory refresh are complete. Continue
 substantial cross-module public-workflow authoring. Group the local cases with

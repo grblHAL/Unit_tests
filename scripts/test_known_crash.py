@@ -229,6 +229,23 @@ SUMMARY: AddressSanitizer: global-buffer-overflow /repo/core/gcode.c:485:32 in m
                 self.assertFalse(matches_known_crash(name, output.replace(f"index {index}", "index 27"), manifest))
                 self.assertFalse(matches_known_crash(name, output.replace(":485", ":486"), manifest))
 
+    def test_recursive_tapping_accepts_only_two_observed_exact_indices(self):
+        name = "spindle_sync.recursive_tapping_macro_overflow_restores_scope_and_allows_next_cut"
+        manifest = [dict(kind="fatal_asan", test=name, source="core/gcode.c", lines=[485],
+            function="macro_arguments_push", message_pattern="global-buffer-overflow",
+            preceding_ubsan_pattern=rf"index {index} out of bounds for type 'const uint8_t\[27\]' \(aka 'const unsigned char\[27\]'\)")
+            for index in (27, 30)]
+        for index in (27, 28, 30, 31):
+            output = (f"/repo/core/gcode.c:485:32: runtime error: index {index} out of bounds for type 'const uint8_t[27]' (aka 'const unsigned char[27]')\n"
+                "SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /repo/core/gcode.c:485:32\n"
+                "ERROR: AddressSanitizer: global-buffer-overflow on address 0x123\n"
+                "    #0 0x456 in macro_arguments_push /repo/core/gcode.c:485:32\n"
+                "SUMMARY: AddressSanitizer: global-buffer-overflow /repo/core/gcode.c:485:32 in macro_arguments_push\n")
+            self.assertEqual(matches_known_crash(name, output, manifest), index in (27, 30))
+            self.assertFalse(matches_known_crash("other.case", output, manifest))
+            self.assertFalse(matches_known_crash(name, output.replace(":485", ":486"), manifest))
+        self.assertFalse(matches_known_crash(name, "", manifest))
+
     def test_runner_error_is_not_an_expected_failure(self):
         result = subprocess.run([sys.executable, str(SCRIPTS / "known_crash.py"), NAME,
                                  "missing-inventory.json", "missing-executable"], capture_output=True)

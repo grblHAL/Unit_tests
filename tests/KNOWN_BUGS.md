@@ -693,3 +693,23 @@ that platform. Hosted GCC/coverage and local Windows Clang execute them without
 these faults. Different indices, locations or unrelated diagnostics remain red;
 no blanket sanitizer acceptance. Remove each entry/launcher/label when its
 unchanged regression passes after an upstream fix. No CORE edits.
+
+
+### Tapping diagnostic varies on the same source - 2026-10-24
+
+Exact-head run40103625282 (harness58774aa, COREb01f481) confirms that this
+fault is intermittent across builds. The eight-axis handoff executable exits0
+with no diagnostic; its strict expected-diagnostic wrapper therefore correctly
+fails. The recursive tapping case now reports index27 at gcode.c485 with the
+same27-entry table and macro_arguments_push top frame; run40093560650 reported
+index30. The unsupported fallback still reproduces index28 and matches.
+Saved evidence: build-asan/hosted40103625282/results-core-clang/build/
+known-crash-spindle_sync.recursive_tapping_macro_overflow_restores_scope_and_allows_next_cut.log.
+
+One additional exact recursive-test/index27 manifest entry recognizes that saved
+diagnostic. All other test/source/table/function matching remains unchanged;
+missing expected diagnostics still fail. Do not force padding/private bits or
+weaken the functional assertions to obtain repeatable crashes. Complete mask
+initialization remains an upstream source hypothesis. Terje origin/master was
+freshly fetched and remainsb01f481. No CORE edits. This run remains failed;
+post-crash assertions remain unvalidated on Clang, and no PR-ready claim follows.
