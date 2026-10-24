@@ -1,3 +1,32 @@
+# Local probe-relay selection checkpoint - 2026-10-25
+
+Goal active. Fourteen new cases pass focused Windows Clang ASan/UBSan plus strict
+classification:11 cases0.83s +3 added controls0.25s, all clean with zero unexpected
+failures/skips. Original probe_relays.c registers settings, restores/persists port
+assignments and wraps hal.probe.select. Tests select toolsetter/second/default,
+check output exclusivity and50ms debounce requests, retain existing native probe
+selection, handle absent previous selector and reject disabled relay selection
+without changing the active relay or requesting another delay.
+
+Saved reversed port mapping loads before first hook installation. Live settings
+changes/save retain currently claimed mapping, matching reboot-required settings.
+Both disabled ports and failed claims leave the prior selector intact. No probe,
+both native probes, no AUX ports and failed NVS allocation preserve existing hooks;
+reports/setting availability chain correctly. Native-state reader fails fast if
+unexpectedly called. No private state, source edits or new known allowances.
+
+Port configuration/claims, NVS, output levels and delays are captured driver/API
+boundaries. Actual CORE port aggregation, G65/P5 routing, probe motion, physical
+relay settling and target builds remain untested. Repeated settings load after
+hook installation needs ownership review: source saves current hal.probe.select
+again; these cases do not force recursion. Original production checkout clean.
+Misc suite56 registered;754 compatible is authored, not a new full global gate.
+Latest delivered batch26 remains740 compatible +26 separate reference cases.
+Accumulate next supported module work before combined validation/push; no new
+coverage/hosted/hardware claim. Goal remains active.
+
+---
+
 # Latest component checkpoint - 2026-10-25 (batch26)
 
 Goal active. Deliver18 accumulated cases:8 PCA9654E output-bank and10 per-axis

@@ -371,3 +371,13 @@ with receive/startup error contracts still requiring source review. Prior MCU,
 controller/parser/scheduler and physical checks remain open despite line coverage.
 Prioritize source-supported eventout and probe-relay workflows, then MCP23017
 transports/configurations; do not claim entire miscellaneous plugin covered.
+
+## Probe relay selection
+
+Fourteen cases now cover settings/defaults/persistence, native/relay mixed selection,
+null previous selector, disabled/failed ports, deferred live mapping and reports.
+Outputs/debounce and NVS/claim/port configuration are modeled public boundaries;
+actual CORE bank aggregation and G65/P5/probe-motion/relay hardware remain open.
+Review repeated load hook ownership by source before runtime: load reassigns the
+saved previous selector from the currently installed hook. Do not force recursive
+execution or mutate private callback storage. No new exception registered.
