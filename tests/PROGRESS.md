@@ -16,6 +16,18 @@ https://github.com/grblHAL/Unit_tests/pull/30
 Its exact run40111349496 passed all five jobs; badges stay98.50%/92.48% on that
 fully green head. Keep it unchanged. No later PR75 readiness claim.
 
+## Cumulative local follow-up delivery gate
+
+Full ASan/UBSan4,504 cases pass62.62s and strict summary passes:4,478 clean,
+25 known regressions reproduced, one exact known sanitizer diagnostic, zero
+failed/skipped. Saved batch75-modal-delivery-{build,tests,summary}.log and
+batch75-modal-delivery-results.xml. This covers all six local workflow followups
+and the exact recursive-index29 evidence entry. No production CORE edits or
+unrelated workflow/report/driver changes are included. Reporting helpers were
+unchanged by this group and were not redundantly rerun. Commit this checkpoint,
+push the cumulative75 head, and use one exact-source hosted run; do not repeat
+full local checks without a new failure or shared change. PR30 remains unchanged.
+
 ## Current exact-head hosted checkpoint
 
 Run40118321363 COMPLETED FAILURE on cf41105/COREb01f481:
