@@ -1,3 +1,28 @@
+# Local MCP23017 output-bank checkpoint - 2026-10-25
+
+Goal active. Six new MCP23017_ENABLE2 output-only cases pass Windows Clang
+ASan/UBSan0.35s and strict classification, all clean with zero unexpected failures/
+skips. Original mcp23017.c executes IOCON/direction/initial GPIO writes,16-bit
+GPIO A/B packet ordering, each output bit's preservation/clearing, duplicate write
+suppression, public descriptors/function/description and native enumeration.
+Bus-start/probe failure registers no bank and performs no writes. Nonzero pin_base2
+descriptor reads/writes correctly use local id for both port0 and15; no PCA-style
+offset failure occurs in these controls. Only valid descriptor IDs are used.
+
+One original output-only unused direction argument receives a source-scoped
+compiler warning option; no production source edit or runtime sanitizer allowance.
+I2C and ioports registration are bounded public boundary models, not actual CORE
+aggregation or MCU SDK/device execution. Mixed8-input/8-output and input-only16
+configurations, input IRQ/wait/error recovery, inversion/config ABI and actual
+hardware remain open. No new coverage or full-suite gate for this authoring group.
+
+Misc85 registered cases;783 compatible is authored, not newly gated. Latest
+delivered batch28 remains777 compatible plus26 separate legacy references.
+Keep accumulating supported MCP input/transport and remaining modules before the
+next combined validation/push. Original checkouts remain unchanged; goal active.
+
+---
+
 # Latest component checkpoint - 2026-10-25 (batch28)
 
 Goal active. Deliver16 accumulated cases:11 HC595 SPI and5 deferred event-control/

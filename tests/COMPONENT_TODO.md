@@ -410,3 +410,13 @@ write/deselect failure semantics, optional CS-port and MCU timing remain open.
 Actual CORE aggregation/SPI SDK/hardware are untested. Fresh batch28 selected
 HC5951/2/3-chip configurations cover85/96 lines,28/44 branches; fourth-chip and
 other configurations remain outside that report.
+
+## MCP23017 I2C port expander
+
+Six output-only ENABLE2 cases cover original16-bit packets, bit preservation,
+duplicate writes, native enumeration/descriptors and startup failures. Nonzero
+bank offsets correctly retain device-local id in output read/write callbacks.
+Mixed8/8 ENABLE1 and16-input ENABLE3, IRQ/wait/config and transport failures still
+need tests. Registration/I2C are captured boundaries, not actual CORE aggregation
+or physical registers. Review config callback ABI and failed receive handling
+before runtime; no source edits or new diagnostic exceptions.
