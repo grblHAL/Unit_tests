@@ -1,3 +1,108 @@
+# ed8dc71 fully green; displayed coverage refreshed - 2026-10-24
+
+Actual API run40044741403 completed success at00:37:46UTC; all five source,
+GCC, Clang, coverage and Results summary jobs completed success. Prior exact
+artifact/source/filter locks, seven stages0 and coverage counts remain verified:
+17480/17756lines98.45%,12627/13834outcomes91.28%, no lost covered lines.
+README badges and KNOWN_BUGS measured paragraph now point to this successful
+checkpoint; gap inventory removes stale pending-GCC wording. Four successor
+scenario files remain local and outside this measurement. No full rerun or
+new hosted dispatch for documentation. Full objective remains active.
+
+# Corrected rotary and spindle activation coverage evidence - 2026-10-24
+
+Ran the corrected rotary and spindle scenarios with existing coverage binaries
+into fresh isolated prefixes. machine_limits.c306 configured negative travel arm
+executes once. spindle_control.c101 executes both initialized and uninitialized
+arms in one realistic fail/retry/switch-back lifecycle;102 handles both optional
+config absence and supplied driver configuration. Proof and gcov sources retained
+at build-asan/rotary-spindle-native-proof74. Prior measured306/101 each have one
+missing outcome; compiler branch IDs are not compared across compilers and no
+aggregate percentage is inferred. The superseded zero-travel duplicate remains
+removed. Existing partial RTU reply case already covers truncated exception,
+normal-function and wrong-address headers plus recovery; no duplicate added.
+No CORE edits, new exceptions, full gate or hosted dispatch for this evidence.
+
+# Configured-travel rotary replacement passes - 2026-10-24
+
+Replacement homing_command_eight.rotary_configured_travel_homes_selected_axis
+passes focused ASan/UBSan1/1 in0.06s. Public A travel360 persists as-360; $HA
+contacts and pulls off to physical70/logical-10, only A moves and becomes homed.
+The removed zero-travel duplicate is not registered or counted as added work.
+Existing full-boot zero-travel controls remain unchanged. No CORE edits/allowance.
+
+# Registered spindle configuration failure, retry and cached reactivation - 2026-10-24
+
+Added one scenario with two drivers defined before registration. Primary config
+fails once: selection rejects, no output callback occurs, no default is enabled.
+Retry succeeds; repeated selection does not reconfigure. Normal M3S1200/M5
+reaches driver output. Selecting an alternate driver without optional config and
+switching back preserves the primary successful configuration count at2, targeting
+spindle_control.c101 cached activation arm (prior report one missing outcome).
+Focused ASan/UBSan passes1/1 in0.05s. Initial fixture omitted cold-start/tool
+initialization; aligned with existing fixture and retained all assertions. That
+setup crash is not a CORE defect and has no exception. No shared fixture edits.
+Four scenarios now accumulate across sender/physical input, rotary homing and
+spindle lifecycle. No repetitive full gate or hosted dispatch for this addition.
+
+# Rotary search case corrected against existing boot coverage - 2026-10-24
+
+Existing boot_eight.rotary_axis_without_travel_limit_homes_using_switch_feedback
+already covers the zero-travel/full-turn fallback. Removed the duplicate local
+zero-travel case; its earlier passing result was no new coverage. Replacement
+uses public rotary and A travel360 writes, covering the configured-travel side
+of machine_limits.c306. Keep switch/pulloff/reference and axis-isolation checks.
+This corrects the previous coverage-target assumption; raw percentages unchanged.
+
+# ed8dc71 coverage job verified; overall workflow still running - 2026-10-24
+
+Run40044741403 exact harness/CORE2e165a1/filter locks match both artifacts;
+exactly seven coverage stages exit0.4386 cases:4368clean/18known/0failed/skipped.
+17480/17756lines98.45%,12627/13834outcomes91.28%; eight additional outcomes
+against05603c7, identical covered-line set/no lost lines. Updated measured gap
+inventory to276lines/1207outcomes, including per-source branch counts.
+Source/Clang/coverage passed; GCC in_progress at actual API inspection, so
+README success badges retain prior all-five-green checkpoint. Do not confuse
+this complete coverage job with overall workflow success. Existing run reused;
+no duplicate dispatch. Two local boot additions remain outside this measurement.
+
+# Isolated coverage confirms native sender/physical-start branch execution - 2026-10-24
+
+Built both new boot scenarios with existing no-sanitizer coverage configuration
+and ran them into a fresh isolated GCOV prefix. system.c175 absent cycle-start
+callback executes once;365/389 absent control observer each execute twice.
+These three conditions each have one missing outcome in verified05603c7 XML;
+the cases assert their callbacks are naturally NULL throughout the workflow.
+Block-delete377 also executes twice but its prior condition was already fully
+covered, so it is a behavioral control rather than claimed new branch gain.
+Raw local proof: build-asan/sender-native-branch-proof74/{system.c.gcov,proof.json}.
+No aggregate percentage claimed from isolated profiles or compiler branch IDs.
+No CORE changes, exceptions, full gate or hosted dispatch for this proof.
+
+# Physical cycle start resumes a real M0 pause without observers - 2026-10-24
+
+Added a full-boot streamed two-move job with M0 between moves. Registered driver
+advertises cycle-start capability; its actual control IRQ asserts then releases
+the input after four complete-hold polls. Both optional plugin callbacks remain
+naturally NULL. First move stays at80 pulses throughout the pause; input resumes
+the second move to160 exact X pulses with no Y/Z motion, errors or alarm.
+Focused ASan/UBSan passes1/1 in0.05s. This exercises system.c175's absent cycle
+observer through a supported physical input, rather than a private callback.
+No CORE/shared fixture edits, new exceptions or redundant full/hosted run.
+Two new boot scenarios now accumulate locally for the next substantial batch.
+
+# Native sender toggles without plugin observer - 2026-10-24
+
+Added one full-boot serial scenario using native $S/$O/$B commands with no
+control observer or hardware switch capabilities. Single-block and optional-stop
+flags toggle and restore; block delete skips /G91 while enabled, then accepts
+/G91 after disabling it. Parser queries remain usable, no errors/alarm occur.
+Targets optional observer arms in system.c365/377/389 without removing an
+installed callback. Focused ASan/UBSan passes1/1 in0.07s; no CORE/fixture edits,
+new defect or allowance. Accumulate a substantial successor before full gate.
+Existing ed8dc71 hosted run40044741403 remains in_progress at live inspection;
+coverage artifact not yet published, so no new aggregate percentage claimed.
+
 # Door/sleep/UVW cumulative gate passed; prior checkpoint fully verified - 2026-10-24
 
 Current five new cases/two extensions pass full4386-case ASan/UBSan58.67s and
