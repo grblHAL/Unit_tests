@@ -58,8 +58,10 @@ or force private state to enter a path.
   live state-transition animation edges; actual CORE scheduler/parser/hardware
   still need integration. Workflow names use suite default instead of master.
 - FlexGPIO17 cases at bc8dab40162b49718179bffe973c4533fc73436f cover257/272 lines,
-  123/150 branches. Remaining public get-value callbacks and configuration-send
-  failure path need the next integrated group. Registered descriptors are captured,
+  123/150 branches. Eight additional local authoring cases now exercise public pin value callbacks
+  across both axis configurations, configuration-send failure and input-read
+  recovery without false edges (8/8 ASan/UBSan and strict checks). Await cumulative
+  delivery; no updated coverage percentage yet. Registered descriptors are captured,
   not passed through actual CORE ioports aggregation/remapping; multiple bank
   offsets, controller/physical IRQ/I2C timing and no-MCU-IRQ mode remain untested.
   Retain exact IRQ-disable/pull-mode result regressions and four Clang transparent-

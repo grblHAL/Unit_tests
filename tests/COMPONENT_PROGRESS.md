@@ -1,3 +1,23 @@
+# Local FlexGPIO authoring checkpoint - 2026-10-24 (next combined batch)
+
+Goal active. Eight additional cases (four behaviors in three-/six-axis builds)
+pass focused Windows Clang ASan/UBSan0.45s and strict classification:8 clean,
+zero known/failures/skips. Saved public descriptors read each input after walking
+physical snapshots and each output after nonzero float/zero commands; expected
+wire masks include every spindle/coolant/motor-disable/output mapping. Initial
+configuration-send failure raises the expander alarm while the input refresh still
+runs. A failed input read preserves the last snapshot and emits no false edge;
+subsequent successful IRQ refresh delivers exactly the missing change. No source
+or shared fixture edits, sanitizer allowances or assertion changes.
+
+FlexGPIO now25 registered cases. MPG29 and these new cases are local authoring
+work, pending a substantial combined full gate and delivery; delivered baseline
+remains batch18. Existing FlexGPIO callback diagnostics and two correct expected
+assertion regressions remain untouched. Actual CORE ioports aggregation/remapping,
+no-IRQ mode, target builds and physical timing remain unverified.
+
+---
+
 # Local authoring checkpoint - 2026-10-24 (next combined batch)
 
 Goal active. Eight additional MPG transport cases; complete affected suite29/29

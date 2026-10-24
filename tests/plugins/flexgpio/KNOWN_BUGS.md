@@ -25,13 +25,16 @@ its resolved exact manifest entry and known_sanitizer_bug label after review.
 
 # Scope
 
-Seventeen original-source cases use real CORE driver-option/type declarations for
-three-axis operation and a six-axis registration control. Public registered digital
+Twenty-five original-source cases use real CORE driver-option/type declarations for
+three-axis operation and six-axis registration/value/failure controls. Public registered digital
 bank descriptors are captured; full CORE ioports remapping/claim aggregation is not
 executed. Host I2C packets, task delivery, MCU IRQ/claim callbacks, persistence and
 alarm requests are explicit simulations. Public pin metadata/callbacks configure
 supported operations; private state is untouched. Tests cover wire byte order,
-inversion, input snapshots/edges/waits, failure alarms and pin enumeration. Original
+inversion, input snapshots/edges/waits, failure alarms and pin enumeration. Saved
+public get_value/set_value descriptors cover every physical pin map. New normal
+I2C failure/recovery cases retain snapshots without false edges and verify the
+startup configuration-send alarm; these cases need no sanitizer allowance. Original
 assignment-condition and const-field initialization warnings remain visible under
 narrow source-only warning rules; fixtures stay strict. Full-controller integration,
 multiple port-bank offsets, no-IRQ configuration and physical expander timing remain.
