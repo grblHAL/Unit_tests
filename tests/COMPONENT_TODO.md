@@ -7,6 +7,25 @@ or force private state to enter a path.
 
 ## Next source families
 
+- TM4C123 EEPROM12 and UART012 cases now run unchanged sources with real driver/
+  board/TivaWare headers and CORE CRC/stream support. Shared TI EEPROM11 cases
+  test its current standalone candidate, not archived TM4C1294 parent gitlink.
+  Retain12 correct new known assertions: TM4C123 CRC8 trailing-address mismatch,
+  each module's hardware/malloc failure reporting, shared CRC payload overwrite/
+  prefix reads and UART realtime dispatch at full ring capacity. No diagnostic
+  allowance or firmware fix. Source-specific reports/guides are in each suite.
+- Both EEPROM files cover49/51 lines and17/20 branches. Their only missing lines
+  are direct EEPROMProgram/EEPROMRead else paths: alignend=4-((alignstart+size)&3)
+  is always1..4, so alignstart||alignend cannot be false for valid transfers.
+  Do not manufacture invalid states or exclude these branches. UART0112/112 lines,
+  44/48 branches; UART1 cannot be selected without editing its unconditional
+  BACKCHANNEL source header, which is forbidden. Full SDK/link/physical work remains.
+- TivaWare original vendor headers come from declared mirror yuvadm/tiva-c at
+  c23bf8ba7a82b20421aa04d4df3f77501c5883ea. No newer official SDK provenance is
+  claimed. Parent TM4C1294 pins TI shared3e7873dba011c0cb405c31771720a189b8841760;
+  separately tested shared candidate6adcc848946fe69075f6ed062afa31f11c5a4c97 must
+  never be silently substituted for the parent's dependency or called a parent build.
+
 - Virtual Inputs now links real CORE probe.c and formatting.21 cases cover shared/
   separate sensors, physical/virtual toward-away input, inversion, registered
   commands/counters and lifecycle. Selected source146/146 lines,66/71 branches;
@@ -24,8 +43,7 @@ or force private state to enter a path.
   default15-byte Modbus probe also failed array initialization; that probe omitted
   the README-required64-byte option and is not an independent compatibility defect.
   No source aliases/edits, obsolete CORE fallback or runtime/Actions pass claimed.
-- TI next sources fetched/read only: TM4C12314fdf8de2126316c14d88656f3a19337800ad1c1
-  has standalone eeprom.c but quoted tiva.h/driver.h pull actual TivaWare headers.
+- Earlier TI source review (TM4C123 EEPROM/UART now tested above):
   TM4C12942374d48ea5580c7912c999bf99e94fdd1c7e4ded is archived/unsupported per
   README and delegates to TI_SimpleLink_shared. MSP432P401R
   1fa8bc31d8e8669d4d569e768154a0532ec5311e uses external EEPROM or NVS_None;

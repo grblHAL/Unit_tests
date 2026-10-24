@@ -297,6 +297,9 @@ repository's default branch.
 | Plugin tests | `plugin_homingaccel` | Per-axis homing override requests, restoration, units and persistence |
 | Driver tests | `driver_imxrt1062_pwm` | Teensy 4.0/4.1/MicroMod PWM register, routing and ownership workflows |
 | Driver tests | `driver_sam3x8e_serial` | Dual UART/USART queues, callbacks, settings and CORE stream suspend |
+| Driver tests | `driver_tm4c123_eeprom` | Aligned EEPROM, CRC storage and transfer failures |
+| Driver tests | `driver_ti_shared_eeprom` | Standalone TI shared EEPROM candidate and CRC regressions |
+| Driver tests | `driver_tm4c123_serial` | Original UART0 queues, realtime dispatch and CORE stream suspend |
 
 These are initial host tests, not full plugin/driver coverage or board validation.
 Trinamic also locks and compiles the actual chip library; its UART device is

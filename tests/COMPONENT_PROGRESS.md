@@ -1,3 +1,41 @@
+# Latest component checkpoint - 2026-10-24 (batch15)
+
+Goal remains active. Added35 cases: TM4C123 EEPROM12/UART012 and standalone TI
+shared EEPROM11. Three new Driver tests choices source-lock original driver/
+shared code, CORE and a declared TivaWare vendor-header mirror. Actual driver.h,
+tiva.h and board headers compile unchanged. CORE CRC and full stream support
+execute; hardware calls are explicit bounded EEPROM and UART/IRQ simulations.
+No production edits, no concurrent CORE checkout changes, no merges.
+
+One cumulative Windows Clang ASan/UBSan gate:36 compatible suites,523 cases =
+476 clean +47 documented known results, zero unexpected failures/skips. Known
+results now46 correct expected assertion regressions +1 fan-only diagnostic;
+two existing SAM assertion cases also retain exact diagnostics, counted once.
+Added12 correct assertion regressions: CRC8 read location, shared checksum layout/
+read location, ignored hardware/allocation errors in both EEPROM modules, and
+full RX ring dropping realtime dispatch. No new sanitizer allowance. All84
+reporting helpers pass16.302s; actionlint and whitespace pass.
+
+Fresh local LLVM selected-file coverage: TM4C123 EEPROM49/51 lines96.1%,17/20
+branches85%,7/7 functions; shared EEPROM49/51 lines96.1%,17/20 branches85%,7/7
+functions; TM4C123 UART0112/112 lines100%,44/48 branches91.7%,14/14 functions.
+Adds210 exercised executable lines. Fresh counter paths max227 characters;
+strict profiling checks pass. Missing EEPROM direct-transfer branches cannot be
+entered by valid alignment: alignend is always1..4. Retained without exclusions.
+
+Pinned CORE b01f481072edecac33d5e40c25869359a5b3fa1f;
+TM4C12314fdf8de2126316c14d88656f3a19337800ad1c1;
+TI shared6adcc848946fe69075f6ed062afa31f11c5a4c97;
+TivaWare mirror c23bf8ba7a82b20421aa04d4df3f77501c5883ea(yuvadm/tiva-c).
+API-matched upstream/CORE/SDK HEADs clean. Shared is a standalone candidate;
+archived TM4C1294 parent pins a different shared source3e7873 and remains unbuilt.
+No latest-official-SDK, full target-link, timing/endurance or physical-board claim.
+Evidence/source locks in ignored build-evidence; remaining scope in TODO and
+per-suite guides. PR29 remains draft/unmerged; hosted component workflow default-
+branch installation remains separate from these local results.
+
+---
+
 # Latest component checkpoint - 2026-10-24 (batch14)
 
 Goal remains active; no production sources or concurrent CORE edits, no merges.

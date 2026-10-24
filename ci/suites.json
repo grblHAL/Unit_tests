@@ -504,5 +504,53 @@
     "test_regex": "^plugin_homingaccel[.]",
     "coverage_filter": "plugins/homingaccel/.*\\.c$",
     "diagnostics_directory": "tests/plugins/homingaccel"
+  },
+  "tivaware_sdk": {
+    "repository": "yuvadm/tiva-c",
+    "ref": "c23bf8ba7a82b20421aa04d4df3f77501c5883ea",
+    "path": "deps/tivaware",
+    "source_only": true
+  },
+  "driver_tm4c123_eeprom": {
+    "repository": "grblHAL/TM4C123",
+    "ref": "master",
+    "path": "drivers/tm4c123",
+    "dependencies": [
+      "core",
+      "tivaware_sdk"
+    ],
+    "cmake_source": "tests/drivers/tm4c123_eeprom",
+    "cmake_options": [],
+    "test_regex": "^driver_tm4c123_eeprom[.]",
+    "coverage_filter": "drivers/tm4c123/eeprom\\.c$",
+    "diagnostics_directory": "tests/drivers/tm4c123_eeprom"
+  },
+  "driver_ti_shared_eeprom": {
+    "repository": "grblHAL/TI_SimpleLink_shared",
+    "ref": "master",
+    "path": "drivers/ti_shared",
+    "dependencies": [
+      "core",
+      "tivaware_sdk"
+    ],
+    "cmake_source": "tests/drivers/ti_shared_eeprom",
+    "cmake_options": [],
+    "test_regex": "^driver_ti_shared_eeprom[.]",
+    "coverage_filter": "drivers/ti_shared/base/eeprom\\.c$",
+    "diagnostics_directory": "tests/drivers/ti_shared_eeprom"
+  },
+  "driver_tm4c123_serial": {
+    "repository": "grblHAL/TM4C123",
+    "ref": "master",
+    "path": "drivers/tm4c123",
+    "dependencies": [
+      "core",
+      "tivaware_sdk"
+    ],
+    "cmake_source": "tests/drivers/tm4c123_serial",
+    "cmake_options": [],
+    "test_regex": "^driver_tm4c123_serial[.]",
+    "coverage_filter": "drivers/tm4c123/serial\\.c$",
+    "diagnostics_directory": "tests/drivers/tm4c123_serial"
   }
 }
