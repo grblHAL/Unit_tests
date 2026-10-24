@@ -10,6 +10,13 @@ import xml.etree.ElementTree as ET
 from ci_report import test_findings
 
 SCRIPTS = Path(__file__).resolve().parent
+# Historical matcher fixture must survive cleanup of production allowances.
+ABSENT_AXIS_MANIFEST = [{
+    "test": "eight_axis.absent_named_w_position_in_inches_returns_zero",
+    "source": "core/ngc_params.c",
+    "lines": [177],
+    "message_pattern": "shift exponent 255 is too large for (32|64)-bit type '(unsigned long|long unsigned int)'",
+}]
 
 class SanitizerExpectationTests(unittest.TestCase):
     def reports(self, output="", label=True, failure=False, name="module.case", stderr_output="", manifest=None):
@@ -36,7 +43,7 @@ class SanitizerExpectationTests(unittest.TestCase):
             return findings, counts, summary
 
     def test_absent_axis_manifest_accepts_exact_gcc_and_clang_type_spellings(self):
-        manifest = json.loads((SCRIPTS.parent / "tests/known_sanitizer_diagnostics.json").read_text())
+        manifest = ABSENT_AXIS_MANIFEST
         for width, spelling in [(32, "unsigned long"), (64, "unsigned long"), (64, "long unsigned int")]:
             with self.subTest(width=width, spelling=spelling):
                 output = f"/repo/core/ngc_params.c:177:45: runtime error: shift exponent 255 is too large for {width}-bit type '{spelling}'"
@@ -47,7 +54,7 @@ class SanitizerExpectationTests(unittest.TestCase):
                 self.assertEqual(summary.returncode, 0, summary.stderr)
 
     def test_absent_axis_manifest_rejects_other_shift_or_source(self):
-        manifest = json.loads((SCRIPTS.parent / "tests/known_sanitizer_diagnostics.json").read_text())
+        manifest = ABSENT_AXIS_MANIFEST
         for source, exponent in [("core/ngc_params.c:178", 255), ("core/other.c:177", 255), ("core/ngc_params.c:177", 254)]:
             with self.subTest(source=source, exponent=exponent):
                 output = f"/repo/{source}:45: runtime error: shift exponent {exponent} is too large for 64-bit type 'long unsigned int'"
