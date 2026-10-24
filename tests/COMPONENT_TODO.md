@@ -74,7 +74,7 @@ or force private state to enter a path.
   undeclared at427. No source macro renaming/header bypass, runtime/Actions choice
   or old-CORE fallback was added; exact source/evidence is in build-evidence.
 
-- TM4C123 EEPROM12 and UART012 cases now run unchanged sources with real driver/
+- TM4C123 EEPROM12 and UART014 cases now run unchanged sources with real driver/
   board/TivaWare headers and CORE CRC/stream support. Shared TI EEPROM11 cases
   test its current standalone candidate, not archived TM4C1294 parent gitlink.
   Retain12 correct new known assertions: TM4C123 CRC8 trailing-address mismatch,
@@ -142,13 +142,15 @@ or force private state to enter a path.
   metadata detail and full controller jobs remain. Six further local authoring
   cases now cover supported parity transitions, primary public realtime enqueue
   and simultaneous independent two-port RX/TX (6/6 ASan/UBSan and strict;41
-  registered). Await cumulative delivery/coverage; no source/fixture changes.
+  registered), now cumulative batch21. Selected-source276/278 lines,100/108
+  branches; no new allowances or source/fixture changes.
 - Teensy PWM executes original code/board headers with pinned real SDK register
   definitions for4.0/4.1/MicroMod. Timer/fault side effects and real frequency/edge
   timing are not modelled. Nine further local authoring cases pass9/9 ASan/UBSan
   and strict: repeated claimed-output configuration, independent submodules/timer
   outputs and independent QuadTimer channels across all models (36 registered).
-  Await cumulative delivery; no new coverage claim. Type0 config/out paths are not returned by public claim;
+  Cumulative batch21 confirms source counts unchanged88/88 lines,31/37 branches.
+  Type0 config/out paths are not returned by public claim;
   do not forge handles for coverage. Review five-slot ownership capacity without
   force-entering a memory failure. Shared FlexPWM channel polarity/compare
   preservation needs a supported multi-output board contract before classification.

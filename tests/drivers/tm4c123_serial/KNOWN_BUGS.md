@@ -14,9 +14,11 @@ this entry after repair. No sanitizer exception.
 
 # Scope
 
-Twelve cases compile original serial.c/serial.h and real TivaWare headers with
+Fourteen cases compile original serial.c/serial.h and real TivaWare headers with
 CORE stream.c, stream_passthru, VFS and formatting. Hardware API callbacks capture
-UART config, GPIO, FIFO/IRQ and ordered TX. Public stream connect/tool-ACK suspend
+UART config, GPIO, FIFO/IRQ and ordered TX. Receive-timeout IRQ and simultaneous
+RX/TX cases now deliver enabled SDK event flags through the registered handler;
+TX draining preserves RX/timeout masks and ordered incoming bytes. Public stream connect/tool-ACK suspend
 uses actual CORE backup/restore; no copied firmware implementation. Original
 serial.h selects BACKCHANNEL/UART0 unconditionally; UART1 is not configured by
 editing that header or bypassing its definition. RX1024/TX32 are valid power-of-two

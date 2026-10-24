@@ -52,7 +52,9 @@ regression until fixed; no private driver state is injected.
 Forty-one registered cases now include primary realtime enqueue/handler restore,
 independent simultaneous two-port RX/TX, and even/odd/none parity transitions
 that preserve unrelated mode bits in both primary configurations. Six new cases
-pass focused authoring checks; no new diagnostics or expected failures.
+pass cumulative batch21 sanitizer/strict checks; no new diagnostics or expected
+failures. Fresh selected-source coverage276/278 lines and100/108 branches does
+not establish physical UART timing or whole-driver coverage.
 
 Other cases cover FIFO/wrap/full/cancel, realtime IRQ handling, direct/queued/
 blocked TX with recovery, baud/parity, claim/release/reclaim, secondary flush and

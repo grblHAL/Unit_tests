@@ -15,7 +15,7 @@ Thirty-six registered cases cover valid/unavailable/duplicate claims, up to five
 FlexPWM X/A/B output, all four clock gates, QuadTimer programming, inversion,
 zero/full register duty values and source-specific board routing. Prescaler/
 period, mux and compare/output-enable write images are checked. Nine further
-authoring cases reconfigure claimed handles and test independent FlexPWM
+batch21-validated cases reconfigure claimed handles and test independent FlexPWM
 submodules plus three independent QuadTimer channels across all three models.
 They preserve unrelated compare/control images and check polarity reset back to
 normal; shared A/B submodule ownership is still outside this validated group. Register memory

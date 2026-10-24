@@ -132,13 +132,15 @@ void uart_start(void)
     uart_stream = serialInit();
     CHECK(uart_stream && handler);
 }
-void uart_receive(uint8_t value)
+void uart_event(uint32_t flags, uint8_t value)
 {
-    CHECK(handler && (irq_mask & UART_INT_RX));
+    CHECK(handler && flags && (flags & ~(UART_INT_RX | UART_INT_RT | UART_INT_TX)) == 0 &&
+          (irq_mask & flags) == flags);
     received = value;
-    pending = UART_INT_RX;
+    pending = flags;
     handler();
 }
+void uart_receive(uint8_t value) { uart_event(UART_INT_RX, value); }
 void uart_drain(void)
 {
     tx_ready = true;

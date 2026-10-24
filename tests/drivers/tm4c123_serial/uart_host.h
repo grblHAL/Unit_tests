@@ -6,6 +6,7 @@
 #include "grbl/task.h"
 void uart_start(void);
 void uart_receive(uint8_t value);
+void uart_event(uint32_t flags, uint8_t value);
 void uart_drain(void);
 extern const io_stream_t *uart_stream;
 extern unsigned pins, clocks, rt_calls, block_calls, tx_count;

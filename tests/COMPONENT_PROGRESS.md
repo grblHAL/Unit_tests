@@ -1,3 +1,44 @@
+# Latest component checkpoint - 2026-10-25 (batch21)
+
+Goal active. Delivered accumulated17 new driver behavior cases: SAM6, TeensyPWM9,
+TM4C123UART2. One complete Windows Clang ASan/UBSan gate:42 compatible suites,
+687 cases =631 clean +56 documented known results, zero unexpected failures/skips.
+Known results remain52 correct expected assertion regressions +4 diagnostic-only;
+3 assertion cases also carry exact existing diagnostics, counted once. No new
+assertion/sanitizer allowances, weakened assertions, SDK or production edits.
+Strict classifier ran every suite. Unchanged84 reporting helpers last passed
+batch17; no redundant rerun or relint of unchanged workflows. Whitespace passes.
+
+Fresh local LLVM selected-source results: SAM serial276/278 lines99.3%,100/108
+branches92.6%,39/39 functions; adds2 exercised lines and1 function. Teensy PWM
+88/88 lines100%,31/37 branches83.8%,6/6 functions; TM4C123 serial112/112 lines100%,
+44/48 branches91.7%,14/14 functions. Latter two source-coverage counts unchanged;
+new cases verify additional observable workflows, not a percentage gain. Fresh
+counter paths max216 characters. These files/configurations are not whole drivers,
+board startup, physical timing, SDK linking or target firmware build evidence.
+
+SAM cases cover supported even/odd/none parity changes retaining other mode bits,
+independent simultaneous RX/TX on both UARTs, and primary public realtime handler
+routing/restoration in UART(-1)/USART1-primary builds. PWM cases cover repeated
+configuration/duty updates, independent FlexPWM submodules and QuadTimer channels
+across Teensy4.0/4.1/MicroMod. TMUART timeout-RX and simultaneous TX/RX IRQ delivery
+use a bounded SDK event fixture; TX completion preserves receive interrupts.
+Known primary/secondary disable and full-ring realtime regressions remain intact.
+No opaque PWM handle forging, sixth ownership claim or unsafe memory reproduction.
+
+API source locks match clean originals: COREb01f481072edecac33d5e40c25869359a5b3fa1f;
+SAM2321092b02cbbdecf2eba2b168a74b085e573418 with Arduino SDK
+790ff2c852bf159787a9966bddee4d9f55352d15; Teensyd1f8d1ed904242ee08b0a5583e78f490afd9ae93
+with SDK7f107ee0a309f3813ed13f0d8f615497eca2ee49; TM4C12314fdf8de2126316c14d88656f3a19337800ad1c1
+with Tiva mirrorc23bf8ba7a82b20421aa04d4df3f77501c5883ea. Locks/evidence ignored in
+build-evidence. Keep existing PR29 draft/unmerged. Hosted workflow installation,
+full controller integration and remaining components/hardware checks remain.
+Fresh fork API lists only Reusable host tests and Core tests; the separate
+Plugin/Driver workflows are still unavailable for manual dispatch. No dispatch
+retry or merge is performed to install them.
+
+---
+
 # Local Teensy PWM checkpoint - 2026-10-25 (next combined batch)
 
 Goal active. Nine new cases pass focused Windows Clang ASan/UBSan0.49s and strict
