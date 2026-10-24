@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 project(grblhal_pneumaseal_tests LANGUAGES C)
 include(../../components.cmake)
-foreach(behavior active_motion idle_timeout pause_timeout resume_cancels spindle_idle spindle_stop_pause program_completed reset_timer zero_timeouts custom_masks reload_retains_claim claim_failure no_ports no_nvs hook_chaining)
+foreach(behavior settings_readback pending_port settings_restore active_motion idle_timeout pause_timeout resume_cancels spindle_idle spindle_stop_pause program_completed reset_timer zero_timeouts custom_masks reload_retains_claim claim_failure no_ports no_nvs hook_chaining)
   component_case(plugin_pneumaseal.${behavior} ${behavior}.c seal_host.c "${HARNESS_ROOT}/plugins/pneumaseal/pneumaseal.c")
   target_compile_definitions(plugin_pneumaseal.${behavior} PRIVATE PNEUMASEAL_ENABLE=1)
 endforeach()

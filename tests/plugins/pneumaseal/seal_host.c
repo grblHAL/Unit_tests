@@ -203,17 +203,32 @@ void seal_expire(void)
     timer_ms = 0;
     fn(data);
 }
-void seal_setting(unsigned id, uint_fast16_t value)
+static const setting_detail_t *find(unsigned id)
 {
     CHECK(registered_settings);
     for (unsigned i = 0; i < registered_settings->n_settings; i++)
-    {
-        const setting_detail_t *s = &registered_settings->settings[i];
-        if (s->id == id)
-        {
-            CHECK(((setting_set_int_ptr)s->value)((setting_id_t)id, value) == Status_OK);
-            return;
-        }
-    }
+        if (registered_settings->settings[i].id == id)
+            return &registered_settings->settings[i];
     CHECK(false);
+    return NULL;
+}
+void seal_setting(unsigned id, uint_fast16_t value)
+{
+    const setting_detail_t *s = find(id);
+    CHECK(((setting_set_int_ptr)s->value)((setting_id_t)id, value) == Status_OK);
+}
+uint32_t seal_read(unsigned id)
+{
+    const setting_detail_t *s = find(id);
+    return ((setting_get_int_ptr)s->get_value)((setting_id_t)id);
+}
+status_code_t seal_port(float value)
+{
+    const setting_detail_t *s = find(450);
+    return ((setting_set_float_ptr)s->value)(450, value);
+}
+float seal_read_port(void)
+{
+    const setting_detail_t *s = find(450);
+    return ((setting_get_float_ptr)s->get_value)(450);
 }

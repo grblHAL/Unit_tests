@@ -1,3 +1,25 @@
+# Local PneumaSeal settings checkpoint - 2026-10-25 (next combined batch)
+
+Goal active. Three additional settings lifecycle cases pass focused Windows Clang
+ASan/UBSan0.22s and strict classification:3 clean, zero known/failures/skips.
+Registered getters verify persisted timeout/mask values and configured port,
+with corresponding state/timer/output behavior. Port changes/disable require a
+reboot per the public setting flag; reload retains the existing remapped claim
+and active output, rather than treating changed configuration as immediate
+hardware reassignment. Restore persists default timing/masks and subsequent
+state transitions use the restored delays without reclaiming the port.
+
+PneumaSeal now18 registered cases. Shared fixture extracts its existing registered
+setting lookup and adds typed getter/port callbacks; no production source changes,
+new assertion allowances or diagnostics. Original candidate
+3127ab8c15982569d7e89822a9e1095cdce89cbb verified clean. Public CORE io_port_cfg helpers remain
+host boundaries, timer expiry is explicit host delivery, full settings parsing
+and actual scheduler/controller/air-pressure behavior remain untested. Combine
+with pending Interlock6 and further work before next cumulative gate/delivery.
+No new coverage measurement or hosted result; batch21 remains delivered baseline.
+
+---
+
 # Local Interlock settings checkpoint - 2026-10-25 (next combined batch)
 
 Goal active. Six additional cases pass focused Windows Clang ASan/UBSan0.44s and

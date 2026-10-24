@@ -124,8 +124,10 @@ or force private state to enter a path.
   restore, inverse disable, direction/polarity and supported1/2 plus2/1 slot
   configurations (6/6 ASan/UBSan and strict;19 registered). Pending cumulative
   delivery and measurement; prior coverage figure above remains historical.
-  Remaining PneumaSeal paths include port setter/getter and integer getters;
-  Thermistor includes
+  Three further local PneumaSeal cases now cover registered getters/persistence/
+  restore and pending port configuration (3/3 ASan/UBSan/strict;18 registered).
+  Public io_port_cfg delegation remains simulated; actual port remapping and full
+  settings parser need integration. Thermistor includes
   port getter/availability and guarded conversion paths. Full public settings
   parser integration is still absent; captured registered callbacks only are tested.
 - Interlock observes alarm/reset requests and suppresses writes at host boundaries;
