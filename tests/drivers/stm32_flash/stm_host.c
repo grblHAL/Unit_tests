@@ -34,20 +34,33 @@ HAL_StatusTypeDef HAL_FLASH_Unlock(void)
 }
 HAL_StatusTypeDef HAL_FLASH_Lock(void)
 {
-    CHECK(unlocked);
+    CHECK(unlocked || STM32_FAMILY == 1);
     stm_locks++;
     unlocked = false;
     return HAL_OK;
 }
 HAL_StatusTypeDef HAL_FLASHEx_Erase(FLASH_EraseInitTypeDef *erase, uint32_t *error)
 {
-    CHECK(unlocked && erase && error);
+    CHECK(erase && error);
+#if STM32_FAMILY != 1
+    CHECK(unlocked);
+#endif
+#if STM32_FAMILY == 1
+    CHECK(erase->Banks == FLASH_BANK_1 && erase->TypeErase == FLASH_TYPEERASE_PAGES &&
+          erase->NbPages == 1 && erase->PageAddress == (uintptr_t)stm_flash_words);
+#else
 #if STM32_FAMILY == 4
     CHECK(erase->Banks == FLASH_BANK_1);
 #endif
     CHECK(erase->Sector == 1 && erase->TypeErase == FLASH_TYPEERASE_SECTORS &&
           erase->NbSectors == 1 && erase->VoltageRange == FLASH_VOLTAGE_RANGE_3);
+#endif
     stm_erases++;
+    if (!unlocked)
+    {
+        *error = 1;
+        return HAL_ERROR;
+    }
     if (stm_erase_failures)
     {
         stm_erase_failures--;

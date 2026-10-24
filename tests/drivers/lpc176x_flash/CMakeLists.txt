@@ -7,12 +7,13 @@ foreach(behavior erased_read roundtrip_1024 roundtrip_4096 padded_2048 unchanged
   set(case_source failure.c)
  endif()
  component_case(driver_lpc176x_flash.${behavior} ${case_source} lpc_host.c "${HARNESS_ROOT}/drivers/lpc176x/src/flash.c")
- target_compile_options(driver_lpc176x_flash.${behavior} PRIVATE -m32)
- target_link_options(driver_lpc176x_flash.${behavior} PRIVATE -m32)
  if(NOT WIN32)
   target_compile_definitions(driver_lpc176x_flash.${behavior} PRIVATE _GNU_SOURCE)
  endif()
 endforeach()
+# Keep original fixed-address cast warnings visible on wider hosts.
+set_source_files_properties("${HARNESS_ROOT}/drivers/lpc176x/src/flash.c" PROPERTIES
+ COMPILE_OPTIONS -Wno-error=int-to-pointer-cast)
 set(stages prepare_failure erase_failure prepare_again_failure copy_failure)
 set(stage 0)
 foreach(behavior IN LISTS stages)

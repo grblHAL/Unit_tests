@@ -1,4 +1,82 @@
-# Latest component checkpoint - 2026-10-24 (batch10)
+# Latest component checkpoint - 2026-10-24 (batch11)
+
+All-plugin/driver/CORE goal remains active across48 inventoried implementations.
+No production sources or concurrent CORE work changed. Existing PR29 verified
+OPEN/draft/unmerged at prior pushed head20fa750. Fork still registers only Core
+tests and Reusable host tests; no hosted component success or merge is claimed.
+
+Added37 cases:18 H7 (nine each H743/H723),9 F1 and10 F3. All three have separate
+Driver tests choices and immutable host_bits32 source plans. One cumulative
+Windows Clang ASan/UBSan gate covers all25 compatible suites:342 cases =314 clean
++27 correct known assertion regressions +1 previously scoped fan diagnostic.
+Zero unexpected failures/skips. All83 CI/reporting helpers pass9.325s; actionlint
+and whitespace pass. No new sanitizer allowance. New STM32 sources/fixtures stay
+-Werror; native LPC fixed-address cast warnings remain visible under one narrow
+original-source warning rule, and its fixture remains strict.
+
+H7 compiles original Src/flash.c and original Inc/flash.h in actual source-supported
+H743 dual-bank/H723 single-bank configurations. Inspected CMSIS/HAL headers define
+8 sectors and32-byte flash words for both; BANK_2 only applies to H743. The host
+HAL uses the real32-bit DataAddress third argument. Cases cover bank/sector
+selection, aligned and exact-length36-byte source writes with zero-padded tail,
+readback/unchanged handling, unlock/erase/first/second word failures and retry.
+No invented16-byte write configuration is compiled despite the source comment.
+
+F1 uses the shared halfword fixture with its actual page erase layout and linker
+page-count/address symbols. Its unlock status is unchecked; locked erase errors
+are returned by the HAL model rather than becoming fixture assertions. Erase
+retry/failure, both halfword failures, recovery and copy/read controls pass.
+Existing F4/F7 layout/lock checks remain intact and pass the cumulative gate.
+
+F3 keeps FLASH_TARGET calculation unchanged. Dedicated test-process mappings
+supply actual F303xC flash base0x08000000 and size register0x1FFFF7CC with2KB pages.
+Separate128/256KB cases validate end-minus4KB target selection; full2KB-page,
+read/unchanged, unlock/erase/program failure and retry controls execute. One new
+correct first-halfword failure assertion reproduces its F7-like overwritten
+status defect. Exact WILL_FAIL/known_bug plus dated guidance retain the proper
+false result/immediate-stop contract without changing firmware.
+
+Initial cumulative execution caught an intermittent address collision in the old
+32-bit LPC fixture. Its original module does not convert RAM pointers to32-bit
+integers, so that host restriction was unnecessary. It now uses native64-bit RAM
+pointers with unchanged32-bit physical flash addresses and normal ASLR. Mappings
+still refuse occupied addresses. All10 affected cases pass three repetitions,
+then cumulative strict classification and fresh coverage. Failed evidence is kept
+as lpc-batch11-address-collision.xml. Earlier passing suites were retained after
+this isolated repair; they were not repeatedly rerun. LPC CORE2048 allocation/
+4096-copy compatibility remains unresolved and is not masked by padded tests.
+
+Fresh LOCAL LLVM compiled-file/configuration coverage, strict profiling checks pass:
+
+| Suite / original selected file | Covered/total lines | Covered/total branch outcomes |
+|---|---:|---:|
+| driver_stm32h7_flash / Src/flash.c | 21/21 (100%) | 12/12 (100%) |
+| driver_stm32f1_flash / Src/flash.c | 20/20 (100%) | 10/10 (100%) |
+| driver_stm32f3_flash / Src/flash.c | 20/20 (100%) | 6/6 (100%) |
+| driver_lpc176x_flash / src/flash.c, native host repair | 14/14 (100%) | 4/4 (100%) |
+
+Maximum counter paths219/220/214/213 in fresh short builds. These are selected
+storage-module results including retained regressions, not whole-driver/SDK/board
+coverage. No Linux/GCC execution, physical flash/cache/IRQ timing or ARM firmware
+build is claimed. Default-branch workflow installation remains unavailable.
+
+GitHub-resolved locks match clean unchanged sources:
+H7bfe5d4f6ec271cc9929336244c3b1c8e55d1d040 (dresco/STM32H7xx),
+F1c22362352f6abeea94897bb0346ae8042cdf3210,
+F39a40877b87b6fffbb475f753f0e12cc6c5126770,
+COREb01f481072edecac33d5e40c25869359a5b3fa1f.
+LPC source remains ea6e9f78fa349e86fbd58a203760b614f513684a; its updated native
+source lock is part of this checkpoint. Ignored build-evidence/*batch11* contains
+classification, locks, coverage XML/JSON/HTML and logs. Local short builds:
+build-sh7-asan/build-sf1-asan/build-sf3-asan; PATH needs LLVM bin plus its
+i686-w64-mingw32/bin for STM32 ASan DLLs. LPC now uses the normal native LLVM bin.
+
+Continue the remaining driver families and untested plugin modules/configurations.
+No full-goal completion claim, CORE edits or merges.
+
+---
+
+# Previous batch10 checkpoint - 2026-10-24
 
 All-plugin/driver/CORE goal remains active across48 inventoried implementations.
 No production sources or concurrent CORE work changed. Continue PR29, freshly

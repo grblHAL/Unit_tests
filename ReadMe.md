@@ -286,6 +286,9 @@ repository's default branch.
 | Driver tests | `driver_stm32f4_flash` | Flash read/write, erase retry and failure handling with simulated HAL calls |
 | Driver tests | `driver_stm32f7_flash` | Flash read/write and halfword failure regression with simulated HAL calls |
 | Driver tests | `driver_lpc176x_flash` | IAP storage, failures and IRQ restoration in a mapped host flash region |
+| Driver tests | `driver_stm32h7_flash` | H743/H723 flash-word writes, tail padding and bank selection |
+| Driver tests | `driver_stm32f1_flash` | Page erase/retry and halfword storage failure handling |
+| Driver tests | `driver_stm32f3_flash` | Flash-size register geometry, page storage and halfword failure regression |
 
 These are initial host tests, not full plugin/driver coverage or board validation.
 Trinamic also locks and compiles the actual chip library; its UART device is
@@ -299,9 +302,9 @@ needle control remain untested. Networking locks upstream lwIP headers separatel
 does not start protocol listeners. Laser tests observe simulated driver pulses
 and byte-stream transformations; no physical laser operation is established.
 Driver SDK boundaries are simulated; no actual Pico SDK/ESP-IDF/STM32/NXP firmware
-build or physical flash/interrupt timing is established. STM32/LPC storage suites
-use 32-bit host targets. Their Linux jobs install multilib runtimes only when the
-locked suite requests them. LPC's padded-source case does not establish safety
+build or physical flash/interrupt timing is established. STM32 storage suites use 32-bit host targets. LPC keeps 32-bit physical flash
+addresses with native-width RAM pointers. Linux jobs install multilib runtimes
+only when the locked suite requests them. LPC's padded-source case does not establish safety
 for a normal unpadded CORE allocation. Keypad tests explicitly compare
 signed/unsigned char builds; the observed extended-key defect is compiler-specific.
 See [component progress](tests/COMPONENT_PROGRESS.md) and the

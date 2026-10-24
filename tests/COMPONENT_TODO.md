@@ -7,6 +7,15 @@ or force private state to enter a path.
 
 ## Next source families
 
+- H7 flash cases exercise source-supported H743/H72332-byte configurations and
+  distinct banks; no16-byte mode is exposed by the inspected source header. F1
+  now has page HAL cases and F3 uses mapped register/flash geometry. Retain F3's
+  first-halfword failure regression. Full driver/SDK/IO/serial/board scope remains.
+- LPC now uses native-width host RAM pointers with original32-bit physical flash
+  addresses. The initial32-bit Windows fixture suffered an address collision;
+  do not restore that unnecessary pointer-width constraint or force an occupied
+  mapping. Actual CORE allocation/copy-size compatibility remains unresolved.
+
 - STM32F4/F7 flash helpers execute in32-bit host suites with shared linker-symbol/
   HAL fixtures. Retain F7 first-halfword-status regression. Linux multilib steps
   remain unverified hosted; actual SDK/cache/IRQ/serial/IO and board configurations

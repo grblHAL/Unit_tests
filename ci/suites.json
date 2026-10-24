@@ -340,9 +340,51 @@
     ],
     "cmake_source": "tests/drivers/lpc176x_flash",
     "cmake_options": [],
-    "host_bits": 32,
+    "host_bits": 64,
     "test_regex": "^driver_lpc176x_flash[.]",
     "coverage_filter": "drivers/lpc176x/src/flash\\.c$",
     "diagnostics_directory": "tests/drivers/lpc176x_flash"
+  },
+  "driver_stm32h7_flash": {
+    "repository": "dresco/STM32H7xx",
+    "ref": "master",
+    "path": "drivers/stm32h7",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/drivers/stm32h7_flash",
+    "cmake_options": [],
+    "host_bits": 32,
+    "test_regex": "^driver_stm32h7_flash[.]",
+    "coverage_filter": "drivers/stm32h7/Src/flash\\.c$",
+    "diagnostics_directory": "tests/drivers/stm32h7_flash"
+  },
+  "driver_stm32f1_flash": {
+    "repository": "grblHAL/STM32F1xx",
+    "ref": "master",
+    "path": "drivers/stm32f1",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/drivers/stm32f1_flash",
+    "cmake_options": [],
+    "host_bits": 32,
+    "test_regex": "^driver_stm32f1_flash[.]",
+    "coverage_filter": "drivers/stm32f1/Src/flash\\.c$",
+    "diagnostics_directory": "tests/drivers/stm32f1_flash"
+  },
+  "driver_stm32f3_flash": {
+    "repository": "grblHAL/STM32F3xx",
+    "ref": "master",
+    "path": "drivers/stm32f3",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/drivers/stm32f3_flash",
+    "cmake_options": [],
+    "host_bits": 32,
+    "test_regex": "^driver_stm32f3_flash[.]",
+    "coverage_filter": "drivers/stm32f3/Src/flash\\.c$",
+    "diagnostics_directory": "tests/drivers/stm32f3_flash"
   }
 }

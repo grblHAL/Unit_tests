@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include "grbl/hal.h"
 #define FLASH_ENABLE 1
-// Host HAL boundary; types/constants follow this source checkout's STM32F4 HAL headers.
+// Host HAL boundary; layouts follow each selected family's original HAL headers.
 typedef enum
 {
     HAL_OK = 0,
@@ -14,13 +14,18 @@ typedef enum
 typedef struct
 {
     uint32_t TypeErase;
+#if STM32_FAMILY == 1
+    uint32_t Banks, PageAddress, NbPages;
+#else
 #if STM32_FAMILY == 4
     uint32_t Banks;
 #endif
     uint32_t Sector, NbSectors, VoltageRange;
+#endif
 } FLASH_EraseInitTypeDef;
 #define FLASH_BANK_1 1U
 #define FLASH_TYPEERASE_SECTORS 0U
+#define FLASH_TYPEERASE_PAGES 0U
 #define FLASH_VOLTAGE_RANGE_3 2U
 #define FLASH_TYPEPROGRAM_HALFWORD 1U
 HAL_StatusTypeDef HAL_FLASH_Unlock(void);

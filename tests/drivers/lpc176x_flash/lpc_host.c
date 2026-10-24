@@ -7,7 +7,7 @@
 #include <sys/mman.h>
 #endif
 #include "lpc_host.h"
-_Static_assert(sizeof(void *) == 4, "LPC176x fixture requires a32-bit host target");
+// Physical flash addresses stay32-bit; RAM pointers use the native host width.
 grbl_hal_t hal;
 uint32_t lpc_source[1024];
 unsigned lpc_stage, lpc_fail_at, lpc_prepares, lpc_erases, lpc_copies, lpc_disables, lpc_enables,
