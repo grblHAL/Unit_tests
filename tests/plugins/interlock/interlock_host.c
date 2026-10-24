@@ -171,6 +171,18 @@ void il_int(unsigned id, uint_fast16_t value)
     const setting_detail_t *s = find(id);
     CHECK(((setting_set_int_ptr)s->value)((setting_id_t)id, value) == Status_OK);
 }
+float il_read_float(unsigned id)
+{
+    const setting_detail_t *s = find(id);
+    CHECK(s->get_value);
+    return ((setting_get_float_ptr)s->get_value)((setting_id_t)id);
+}
+uint32_t il_read_int(unsigned id)
+{
+    const setting_detail_t *s = find(id);
+    CHECK(s->get_value);
+    return ((setting_get_int_ptr)s->get_value)((setting_id_t)id);
+}
 void il_command(bool on)
 {
     spindle_state_t state = {0};

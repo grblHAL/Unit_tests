@@ -1,3 +1,25 @@
+# Local Interlock settings checkpoint - 2026-10-25 (next combined batch)
+
+Goal active. Six additional cases pass focused Windows Clang ASan/UBSan0.44s and
+strict classification:6 clean, zero known/failures/skips. Registered getters now
+check every default slot through save/load and restore; inverse guards can be
+individually disabled while other configured guards still suppress writes;
+direction and active-level changes select the correct observed port/polarity.
+Two additional source-supported configurations (forward/inverse1/2 and2/1) verify
+runtime-generated setting IDs/names/getters and actual forward/inverse decisions.
+Existing default4/4 cases remain. No production edits or new known allowances.
+
+Interlock now19 registered cases. Helper additions invoke original registered
+getter callbacks with CORE's exact typed signatures. Ports/NVS/spindle output,
+reset/alarm requests and task/realtime boundaries remain simulations; these tests
+do not establish controller emergency-stop timing, protocol permission to change
+settings during motion, physical machine safety, real settings parser behavior or
+multi-spindle ownership. Source5893ea35645c334ec96333ccd0519eac03128ee6 verified
+clean. No new coverage measurement, cumulative gate or hosted result; batch21
+below remains delivered baseline. Accumulate related modules before delivery.
+
+---
+
 # Latest component checkpoint - 2026-10-25 (batch21)
 
 Goal active. Delivered accumulated17 new driver behavior cases: SAM6, TeensyPWM9,

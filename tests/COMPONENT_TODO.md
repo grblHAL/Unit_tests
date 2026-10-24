@@ -119,13 +119,17 @@ or force private state to enter a path.
 
 - Four third-party suites now run unchanged sources: AUXP selected file45/45
   lines and24/24 branches; Interlock173/185 lines,67/84 branches; PneumaSeal
-  128/141 lines,43/52 branches; Thermistor133/139 lines,68/74 branches. Remaining
-  Interlock lines include settings getters and inverse-disable handling;
-  PneumaSeal includes port setter/getter and integer getters; Thermistor includes
+  128/141 lines,43/52 branches; Thermistor133/139 lines,68/74 branches.
+  Six new local Interlock cases cover registered settings readback/persistence/
+  restore, inverse disable, direction/polarity and supported1/2 plus2/1 slot
+  configurations (6/6 ASan/UBSan and strict;19 registered). Pending cumulative
+  delivery and measurement; prior coverage figure above remains historical.
+  Remaining PneumaSeal paths include port setter/getter and integer getters;
+  Thermistor includes
   port getter/availability and guarded conversion paths. Full public settings
   parser integration is still absent; captured registered callbacks only are tested.
 - Interlock observes alarm/reset requests and suppresses writes at host boundaries;
-  real controller shutdown, ISR ordering, other slot counts and multi-spindle scope
+  real controller shutdown, ISR ordering, further slot counts and multi-spindle scope
   remain. Unreadable monitoring deliberately follows source-documented fail-open.
 - PneumaSeal delayed task requests/explicit expiry do not validate real scheduler
   timing or air pressure. Keep claimed-port remapping and programmed M5 ordering.
