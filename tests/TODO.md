@@ -1849,3 +1849,24 @@ eight-axis callback-handoff case verifies A/I/K/Z scope and override cleanup.
 The unsupported-cycle recovery case now installs a provider that explicitly
 declines the operation, preserving its no-motion and next-G33 assertions.
 Wall-plotter/polar homing and G76 main taper remain on user-requested TODO.
+
+
+## Bounded external caller follow-up - 2026-10-24
+
+Indexed grblHAL organization searches for device_fs_add_stream and
+gc_set_tool_offset found only CORE definitions/declarations and the native
+tool-change caller. No external non-UART device naming or other tool-offset
+mode caller was demonstrated by this search. This is not exhaustive evidence
+about unindexed/private plugins, and does not upgrade either contract question
+to a universal unreachable proof. Avoid inventing such providers for coverage.
+Evidence: build-asan/device-fs-callers-b01-search.json and
+build-asan/tool-offset-callers-b01-search.json; indexed CORE snapshot4ec1ae44.
+Selected b01 definitions and native callers were reviewed separately.
+
+
+## Zero homing locate feed rate decision - 2026-10-24
+
+User decision: keep zero locate feed rate and seek/pull-off-only homed-state
+semantics on TODO. Do not assert either successful referencing or mandatory
+setting rejection until the intended contract is established. The raw missing
+line remains counted; no forced homing state or coverage exclusion.

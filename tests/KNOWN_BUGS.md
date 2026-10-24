@@ -600,3 +600,79 @@ classify exception responses by their function field while preserving normal
 address bits. Keep the callback/function/value assertions unchanged. One exact
 WILL_FAIL/known_bug; remove it and this entry when the unchanged regression
 passes. No CORE changes or sanitizer allowance.
+
+
+## Failed embedded mount changes the unrelated root mount visibility
+
+Confirmed 2026-10-24 on CORE `b01f481072edecac33d5e40c25869359a5b3fa1f`.
+Reject the first embedded mount's allocation through the public VFS path. The
+mount correctly returns false and emits no mount notification, but changes the
+existing root mode from hidden1 to hidden0. Failure must preserve unrelated
+mount policy. This establishes a metadata mutation, not a claim of file leakage.
+
+[Regression](cases/fs_embedded/allocation_failure_first_mount_preserves_root_mode_and_allows_asset_retry.c)
+uses the normal initial root state and a real embedded asset list. Retry mounts
+exactly once; its mount observer can already read the asset. Directory contents
+and later reads are correct before the retained root-preservation assertion
+fails. Raw ASan/UBSan evidence: `build-asan/analog-embedded-b01-raw-results.xml`,
+root hidden1->0. One exact WILL_FAIL/known_bug, no sanitizer allowance.
+
+fs_embedded.c252 correctly clears the asset pointer when vfs_mount fails, but
+the later !all_hidden arm still calls vfs_mount_set_mode("/embedded", ...).
+That API resolves the absent path to the root mount and updates its mode.
+Suggested upstream repair: change embedded visibility only after a successful
+mount/append, preserving other mount metadata on failure. Keep the regression
+and remove only its allowance and this entry when unchanged assertions pass.
+No CORE edits.
+
+
+## Linux Clang tapping argument handoff reads beyond its offset table
+
+Confirmed 2026-10-24 on CORE `b01f481072edecac33d5e40c25869359a5b3fa1f`,
+hosted run40082861198, harness7bf1306. The correct eight-axis tapping handoff
+regression reaches macro_arguments_push at gcode.c485 with index27 for its
+27-entry offset table. Hosted Clang reports the exact bounds UBSan followed
+by an ASan global-buffer-overflow at that function/line. Windows Clang, hosted
+GCC sanitizer and GCC coverage execute the assertions successfully.
+
+[Regression](cases/eight_axis/rigid_tapping_fallback_receives_a_axis_arguments_and_restores_caller_scope.c)
+retains exact argument/scope/override assertions. Only Linux Clang sanitizer
+builds use the diagnostic launcher and WILL_FAIL/known_crash. The manifest
+requires index27, const27-entry table, source485, macro_arguments_push, and
+the global-buffer-overflow signature. Changed/unrelated faults and absent
+diagnostics make that exception red; assertions after the fatal fault are
+unvalidated on the reproducing platform. No broad crash acceptance or CORE edit.
+
+The handoff initializes named bitfields of parameter_words_t, then the helper
+iterates its full32-bit mask against27 offset entries. Unused/padding bits in
+that initialization are a source hypothesis, not a proven exclusive cause.
+Upstream should ensure the complete mask is initialized and bound offset
+accesses. Remove only this platform-scoped launcher/allowance and manifest
+entry after unchanged assertions run without diagnostics. Hosted evidence:
+build-asan/hosted40082861198/report-core-clang/logs/clang-test.log.
+
+
+## Twenty-nine-argument CALL fails to inherit the final caller local
+
+Confirmed 2026-10-24 on CORE `b01f481072edecac33d5e40c25869359a5b3fa1f`;
+Terje's master still resolves to that revision at classification.
+[Regression](cases/ngc_flowctrl/call_with_twenty_nine_arguments_inherits_last_local_and_restores_caller.c)
+uses the real RAM backend and protocol loop. A thirty-argument control receives
+#29=29/#30=30; both calls restore caller #1=99/#29=72/#30=73 and the following
+root statement executes. The twenty-nine-argument call receives #29 correctly,
+but its omitted #30 fails the correct inherited73 assertion. No prescan or
+named-file execution-policy change is requested.
+
+The [O-call contract](https://www.linuxcnc.org/docs/html/gcode/o-code.html#_subroutines)
+requires omitted arguments through #30 to retain their calling-context values.
+CORE's own argument-fill loop implements this contract for shorter calls.
+At ngc_flowctrl.c754-760, parsing29 arguments increments param_id to30, then
+`param_id < 30` skips the fill loop entirely. The later copy reads the unfilled
+params[29] stack slot. Its incidental value is not part of the test contract;
+no particular corrupt value or sanitizer diagnostic is required.
+
+Raw sanitizer evidence: `build-asan/call-argument-boundary-raw-results.xml`.
+One exact WILL_FAIL/known_bug retains all correct assertions. Suggested upstream
+repair: initialize every omitted parameter through30 before pushing scope.
+Keep the regression and remove only its allowance and this entry after the
+unchanged assertions pass. No CORE edits or sanitizer suppression.

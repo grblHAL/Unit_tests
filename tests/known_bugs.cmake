@@ -127,3 +127,21 @@ if(TEST modbus_rtu.high_bit_server_address_delivers_register_reply_and_preserves
   set_tests_properties(modbus_rtu.high_bit_server_address_delivers_register_reply_and_preserves_next_request
     PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Confirmed COREb01f481, 2026-10-24: failed embedded mount changes unrelated root visibility.
+if(TEST fs_embedded.allocation_failure_first_mount_preserves_root_mode_and_allows_asset_retry)
+  set_tests_properties(fs_embedded.allocation_failure_first_mount_preserves_root_mode_and_allows_asset_retry
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+# Confirmed COREb01f481 on hosted Linux Clang: exact macro argument table bounds fault.
+if(HOST_TAPPING_KNOWN_CRASH AND TEST eight_axis.rigid_tapping_fallback_receives_a_axis_arguments_and_restores_caller_scope)
+  set_tests_properties(eight_axis.rigid_tapping_fallback_receives_a_axis_arguments_and_restores_caller_scope
+    PROPERTIES WILL_FAIL TRUE LABELS "known_bug;known_crash")
+endif()
+
+# Confirmed COREb01f481, 2026-10-24: 29-argument CALL omits initialization of inherited local30.
+if(TEST ngc_flowctrl.call_with_twenty_nine_arguments_inherits_last_local_and_restores_caller)
+  set_tests_properties(ngc_flowctrl.call_with_twenty_nine_arguments_inherits_last_local_and_restores_caller
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

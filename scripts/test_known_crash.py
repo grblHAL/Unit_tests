@@ -191,6 +191,24 @@ SUMMARY: AddressSanitizer: heap-buffer-overflow /repo/core/fs_ram.c:184:9 in fs_
         self.assertLess(len(compact), 1024)
         self.assertTrue(matches_known_crash(name, compact, manifest))
 
+    def test_tapping_bounds_fault_requires_exact_table_source_and_frame(self):
+        name = "eight_axis.rigid_tapping_fallback_receives_a_axis_arguments_and_restores_caller_scope"
+        manifest = [dict(kind="fatal_asan", test=name, source="core/gcode.c", lines=[485],
+            function="macro_arguments_push", message_pattern="global-buffer-overflow",
+            preceding_ubsan_pattern=r"index 27 out of bounds for type 'const uint8_t\[27\]' \(aka 'const unsigned char\[27\]'\)")]
+        output = """/repo/core/gcode.c:485:32: runtime error: index 27 out of bounds for type 'const uint8_t[27]' (aka 'const unsigned char[27]')
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /repo/core/gcode.c:485:32
+ERROR: AddressSanitizer: global-buffer-overflow on address 0x123
+    #0 0x456 in macro_arguments_push /repo/core/gcode.c:485:32
+SUMMARY: AddressSanitizer: global-buffer-overflow /repo/core/gcode.c:485:32 in macro_arguments_push
+"""
+        self.assertTrue(matches_known_crash(name, output, manifest))
+        self.assertFalse(matches_known_crash("other.case", output, manifest))
+        for old, new in [("index 27", "index 28"), ("uint8_t[27]", "uint8_t[28]"),
+                         (":485", ":486"), ("macro_arguments_push", "other_function")]:
+            self.assertFalse(matches_known_crash(name, output.replace(old, new), manifest))
+        self.assertFalse(matches_known_crash(name, output + "other.c:1:1: runtime error: overflow", manifest))
+
     def test_runner_error_is_not_an_expected_failure(self):
         result = subprocess.run([sys.executable, str(SCRIPTS / "known_crash.py"), NAME,
                                  "missing-inventory.json", "missing-executable"], capture_output=True)

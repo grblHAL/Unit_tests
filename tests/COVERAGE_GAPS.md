@@ -1,8 +1,30 @@
 # Remaining raw CORE coverage
 
+## Coverage job passed; Clang diagnostic handling pending
+
+[Run40082861198](https://github.com/petervanderwalt/Unit_tests/actions/runs/40082861198)
+coverage job passed on harness7bf13067978f81622c4d7e0981b4f24b761775d5 and
+COREb01f481072edecac33d5e40c25869359a5b3fa1f. Both artifact locks and the core
+filter match; exactly seven coverage stages exit0. It reports17,488/17,757
+lines (**98.49%**) and12,774/13,852 outcomes (**92.22%**):269 missing lines and
+1,078 missing outcomes. Coverage tests:4,462 total,4,441 clean,21 known,0 failed
+or skipped. The run completed with source, GCC and coverage passing, but Clang
+failed on the tapping macro argument-table bounds fault at gcode.c:485. Exact
+Linux-Clang diagnostic handling is pending locally; this run remains failed.
+Badges remain on the prior fully green run.
+
+CORE changed between these reports; raw count/percentage differences are not
+a same-source harness gain. The raw JSON/block IDs are now retained. Fresh
+public targets include analog synchronized-output allocation rejection at
+gcode2647 and first embedded-mount allocation rollback at fs_embedded252.
+Both CSV inventories now match the current b01 coverage job:269 missing lines
+and1,078 missing outcomes. Branch keys retain function/source-block identity.
+Mapped historical explanations are explicitly unverified for current callers.
+The historical table and audit narrative below still describe source2e.
+
 Working checkout is now upstream `b01f481072edecac33d5e40c25869359a5b3fa1f`.
-The inventories and percentages below remain the last measured CORE2e165a1
-snapshot; no new-source coverage is claimed before its own locked report.
+The table and percentages below are the prior fully green CORE2e165a1
+snapshot; current coverage-job evidence is reported separately above.
 
 Verified coverage report: [run40074304720](https://github.com/petervanderwalt/Unit_tests/actions/runs/40074304720),
 harness `2d8b8d0f980c74dd6da5252a9a91cf17a50e93e8`, CORE `2e165a1ac4c74be8e68971972c6577775d856b05`,
@@ -71,7 +93,7 @@ remain pinned to their stated revisions; no source exclusions were added.
 
 ## Complete line inventory and finite review queue - 2026-10-24
 
-[Per-line inventory](COVERAGE_LINE_INVENTORY.csv) contains all 273 current raw
+[Per-line inventory](COVERAGE_LINE_INVENTORY.csv) contains all 269 current raw
 missing lines from the pinned report above, one row per source/line with disposition and
 evidence. Its source/line set was checked against the downloaded coverage XML,
 not just summed from the Markdown table. Historical matches remain labelled as
@@ -577,10 +599,10 @@ the current XML/HTML-only artifact lacks. Use those keys before choosing more
 G66 cases. References: [8.4 JSON schema](https://gcovr.com/en/8.4/output/json.html)
 and [HTML block IDs](https://gcovr.com/en/8.4/manpage.html#cmdoption-html-block-ids).
 
-Inventory caveat: missing_branch_ids contains raw HTML labels, which can repeat
-within one source line; it is not a unique branch identifier. Future mapping
-uses JSON source_block_id/function metadata and HTML block labels together.
-The original1,097 missing count remains authoritative and unchanged.
+Historical inventory caveat (CORE2e snapshot): branch IDs were raw HTML labels
+and could repeat. The current b01 CSV now uses function@source_block:branch
+keys from JSON and contains1,078 missing outcomes. Neither keys nor counts
+prove that every missing outcome has a supported trigger.
 
 
 ### Supported legacy-driver registration refusal - 2026-10-24
@@ -604,3 +626,37 @@ registered running spindle. No replacement native tapping function or new host
 variant was introduced. This supersedes the earlier implementation-contract
 blocker for the A-argument path (source2e line4866). The raw inventory remains
 the old measured source snapshot; new-source line gain awaits measurement.
+
+
+### Native tapping stack rejection now has a public trigger
+
+On b01, recursive macro331 -> G33.1 calls reach the normal tapping scope limit.
+The new spindle-sync case requires StackOverflow, intact caller scope/overrides,
+no motion during recursion, and a successful80-pulse G33 cut afterwards. It uses
+public parser callbacks and the existing registered encoder driver; no private
+stack setup. The earlier defect-dependent classification of source2e4864 is
+superseded for b01 by this tested native trigger. Gain remains unmeasured.
+
+
+### Persistent file EOF wrapper after a redirected job
+
+An ordinary file provider can start a plain RAM job after a redirected macro
+finishes. The new protocol scenario uses real VFS handles and public stream
+selection, verifies both owner completions and sender query recovery, and
+provides a supported empty-redirect-stack trigger for stream_file94. Existing
+no-file private-reader55/73 proof is separate and unchanged. Local sanitizer
+validation passes; branch gain awaits the next accumulated measurement.
+
+
+### Extension-enabled modal macro workflow - 2026-10-24
+
+The cutter-compensation configuration has now been exercised with a public
+motion-extension filter and G66. Refused feed/rapid commands produce no pulses
+or invocation; normal parser-error cleanup cancels G66 and explicit public
+rearming permits retry. Accepted moves queue through the extension and invoke
+the callback with correct target, arguments and scope. Physical endpoints are
+checked after synchronization; the callback is a parser loader, so no artificial
+physical-completion-before-callback contract is asserted. G67 cancels subsequent
+invocations. Focused sanitizer evidence is recorded in PROGRESS. Contribution
+to the duplicate branch records at current gcode4762/4778 awaits cumulative
+coverage measurement; no complete mapping or percentage gain is claimed.

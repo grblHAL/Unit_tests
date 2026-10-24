@@ -1,29 +1,67 @@
-# Validation batching correction - 2026-10-24
+# Productive coverage continuation - 2026-10-24
 
-User correction: repeated hosted runs for 3-5 new cases waste time. This policy
-supersedes earlier checkpoint habits and automatic end-of-turn delivery notes.
+This policy supersedes historical batch, branch and validation instructions.
+The objective remains meaningful full CORE line and branch coverage across
+supported configurations. Never edit CORE or merge PRs. Use Ponytail full and
+explicit RTK for supported commands. Preserve all existing local changes.
 
-- Continue authoring across multiple remaining supported regions before delivery.
-- Do not run a full local suite, push or dispatch hosted CI merely because a
-  goal turn ends or a small module is finished. Keep accumulating local work.
-- Use source review during authoring. Do not build/run an isolated coverage
-  profile for each case or small group. Collect coverage once for the accumulated
-  batch. Focused sanitizer execution only resolves uncertain behavior, failures,
-  or shared fixture changes; do not automatically execute every authored case.
-- Prioritize remaining supported executable regions and reuse the existing
-  residual-guard audit. Do not repeatedly rediscover documented unreachable paths
-  or choose easy branch-only cases to manufacture progress.
-- A handful of tests or branch outcomes is not a delivery boundary. Do not run
-  a full gate/push/hosted cycle for another 3-7 cases merely because several
-  modules were touched. Accumulate substantial work with a clear coverage purpose
-  before one cumulative sanitizer/strict gate and one hosted measurement.
-- Three hosted runs per hour is only an absolute safety ceiling, never a cadence
-  or target. Do not use another short authoring interval followed by a long CI
-  cycle as the work loop. Do not dispatch redundant heads.
-- While hosted jobs run, continue independent test authoring. Do not wait or
-  repeatedly poll them. Refresh their results at the next useful checkpoint.
-- Do not manufacture 500 cases or duplicate covered behavior to meet a quota.
-  Optimize newly exercised supported paths and bugs found per validation cycle.
+## Choose work that can add useful coverage
+
+- Read the current checkpoint in tests/PROGRESS.md, current Git status and the
+  source-matched coverage inventory. Recheck actual source and harness revisions;
+  an old percentage or branch name is not current evidence.
+- Rank missing executable regions by supported lines reachable through a real
+  controller workflow. Prioritize line gaps; use branch gaps where they represent
+  distinct supported behavior. Reuse public APIs and existing valid fixtures.
+- Before writing a case, identify its missing lines/region, supported trigger and
+  observable expected result. Check existing tests once. Do not add dummy-value
+  permutations, duplicate assertions or tests solely to raise case counts.
+- Keep assertions about outputs, motion, state restoration, errors and ownership.
+  Executing a line without validating its behavior is insufficient. Do not force
+  private state, impossible startup conditions or speculative timing races.
+- For each residual region record a concrete next action or concise evidence for
+  TODO/unavailable implementation. Distinguish an unproven route from an
+  unreachable path. Move to independent work when a contract is unresolved.
+- If a measured batch adds zero covered lines, inspect the mapping and workflow
+  before authoring more of the same. Do not repeat ineffective permutations.
+
+## Spend time authoring, not repeatedly validating
+
+- Accumulate a substantial cross-module batch on the existing feature branch.
+  A turn ending, a few new cases, or one finished module is not a delivery boundary.
+- During authoring use source review. Focused builds/tests resolve uncertain
+  behavior, failures or fixture changes; they are not an automatic per-case ritual.
+- Run one cumulative local sanitizer/strict gate at the substantial pre-push
+  boundary, then one hosted validation/coverage checkpoint. After a failure rerun
+  affected checks; broaden only for shared changes or remaining suite uncertainty.
+- Do not rerun unchanged helpers or generate per-case coverage reports. Three
+  hosted runs per hour is an absolute ceiling, never a target or work cadence.
+- Continue independent authoring while CI runs. Poll only at useful checkpoints.
+  Confirm a specific live process/job before waiting; an observation timeout does
+  not justify restarting a run or launching another worker.
+
+## Failures, contracts and honest reporting
+
+- Confirmed CORE defects do not block independent coverage work. Retain correct
+  assertions, add narrow WILL_FAIL/known_bug handling and a dated entry in
+  tests/KNOWN_BUGS.md. Fixture errors must be fixed rather than exempted.
+- Fatal sanitizer defects require exact test/platform/source/diagnostic matching.
+  Reject unrelated crashes and missing expected diagnostics. Paths after a crash
+  remain unvalidated. Remove obsolete launchers, labels and allowances together
+  when upstream fixes the defect; keep the regression assertions.
+- Respect maintainer decisions: named files must be prescanned before execution;
+  synthetic scheduler saturation is not a confirmed timing defect. G76 main
+  taper, all polar/wall-plotter homing, and zero locate-feed homing stay on TODO.
+  Do not invent a successful or rejected contract for these unfinished decisions.
+- Compare coverage gains only on matching CORE revisions/configurations and
+  report covered/total lines and branches. Reconcile inventories after source
+  changes. Do not attribute source changes to new test coverage or hide gaps.
+- A passing coverage job does not make a failed compiler matrix green. Check the
+  exact PR head, required results and mergeability before calling a PR ready.
+  Frozen PRs and newer working branches are separate deliverables.
+- Keep current revisions, run status, unfinished edits and the next concrete
+  action at the TOP of tests/PROGRESS.md; keep this file reusable. Passing tests,
+  commits and PR checkpoints do not complete or stop the full coverage goal.
 
 # Repository working instructions
 

@@ -1,3 +1,144 @@
+# Current continuation checkpoint - 2026-10-24
+
+Active checkout: work/Unit_tests on coverage-batch-74, pushed harness7bf1306,
+COREb01f481. Preserve all local changes. Never edit CORE or merge PRs.
+
+Hosted40082861198 completed FAILED: source/GCC/coverage passed; Linux Clang
+reported a macro_arguments_push offset-table read beyond27 entries at
+gcode.c:485 during the eight-axis tapping fallback regression. Exact correct
+assertions remain. Local handling is limited to this Linux-Clang sanitizer
+case, with a dated KNOWN_BUGS entry and exact fatal diagnostic manifest; paths
+after the crash remain unvalidated. The actual saved hosted output matches
+that manifest; changed location/index/function and missing diagnostics reject.
+83 reporting helper tests passed after the added matcher regression. Removing
+obsolete RAM crash launchers is part of the same pending repair so normal
+assertion failures cannot be hidden by resolved fault handling.
+
+Coverage job only:17,488/17,757 lines98.49%,12,774/13,852 branches92.22%;
+269 missing lines/1,078 outcomes, both source/harness locks and seven stages
+verified. Overall run is NOT green; badges remain on40074304720. CORE changed,
+so this is not a same-source harness gain. Both residual CSVs now match the current locked b01 report:269 missing lines
+and1,078 missing outcomes with function/source-block/branch identity.267 line
+statements map unchanged from2e; historical caller proofs are explicitly
+unverified. Two new/changed statement targets have local cases pending coverage.
+
+Ten further local workflow cases cover recursive tapping overflow recovery,
+redirected-file to plain-RAM sender restoration, synchronized analog allocation
+failure/retry, first embedded-mount rollback, shared-limit homing and storage-exhausted RTU
+startup, the O CALL argument-inheritance boundary, interrupted spindle deceleration and
+additional PWM startup without an optional config callback, and the extension/G66 interaction. Focused sanitizer evidence is
+recorded below. Embedded rollback changes unrelated root visibility; retain
+its correct assertion, exact WILL_FAIL and dated bug entry. No fresh cumulative
+coverage measurement includes these ten cases yet. Do not run an
+additional full gate solely for a few more cases. This ten-workflow batch now
+has its single cumulative gate recorded below; preserve the review checkpoint.
+
+Regenerated Windows CTest confirms direct executables and no WILL_FAIL for
+both resolved RAM cases and the tapping case; allthree pass0.47s. Actual hosted
+Linux execution of the new wrapper remains pending a substantial checkpoint.
+Next: use the reconciled inventories to author supported remaining regions. Zero locate-feed
+homing, polar/wall homing and G76 main taper remain TODO by user decision.
+AGENTS.md now defines the productive batching and continuation rules; keep
+volatile evidence here rather than accumulating stale agent handoffs.
+
+## Cumulative delivery gate - 2026-10-24
+
+Single accumulated build and full ASan/UBSan gate passes4,472/4,472 cases in
+147.61s at COREb01f481, ten new workflows across nine modules. Strict counts:
+4,447 clean passes,24 known regressions and1 known sanitizer diagnostic;
+zero failed or skipped.
+Strict summary is build-asan/batch74-cumulative-summary.md; raw result is
+build-asan/batch74-cumulative-results.xml. All source files unchanged during
+execution; CORE remains clean.83 helper tests previously passed on unchanged
+reporting code; they were not rerun redundantly.
+
+The production fatal runner also recognizes the actual saved Linux-Clang fault
+and its first1024 output characters, returning its exact deliberate1. Linux
+execution of that CMake-specific launcher still needs the hosted checkpoint.
+This local full gate does not change failed hosted40082861198 or coverage
+percentages. Prepare one cumulative commit/push, leave frozenPR28 untouched,
+and run one exact-source hosted checkpoint; continue independent work while
+it runs. No full-gate repetition absent a shared change or unresolved failure.
+
+## Extension/G66 integration and live PR checkpoint - 2026-10-24
+
+GitHub API freshly verifies PR28 is OPEN/non-draft, mergeable=true/state clean,
+head a9f355c35717006f497754d1acc421cf5b141670 on coverage-batch-73. Allfive
+exact-head checks (source/GCC/Clang/coverage/CI diagnosis) completed success.
+No merge or PR update was performed. Newer batch74 work remains separate.
+
+New cutter-comp-enabled scenario installs a public motion-extension filter
+with real foreground step generation and modal macro callback. Rejected G1/G0
+queue no motion and invoke no macro; parser errors normally clear G66, so the
+sender explicitly rearms before accepted retries. Accepted feed/rapid each
+invoke exactly once with the stored argument and correct local scope. The
+callback observes accepted logical target/queued motion; physical completion
+is checked at public synchronization boundaries, not inside the parser loader
+callback. Caller1 restores99, G67 stops subsequent invocation, and the final
+move reaches240 pulses/physical/logical X steps with Y/Z stationary.
+Focused ASan/UBSan passes0.09s, no new CORE defect or allowance. Earlier fixture
+assumptions about error retention and callback physical completion were corrected.
+
+This exercises a distinct supported configuration interaction at gcode4762/4778.
+Its contribution to repeated JSON function/source-block identities is still
+unmeasured; do not claim that all six missing outcomes are now covered. No
+extra full gate or hosted dispatch for this single case. Continue the batch.
+
+## Interrupted spindle reduction and optional PWM startup - 2026-10-24
+
+New sender CMD_RESET during an8000->2000 RPM ramp reaches the previously
+missing aborted-deceleration outcome at spindle_control733. Hardware is off
+before driver reset notification; no final2000 target write occurs and30 later
+scheduler advances produce no PWM restart. Correct timing measures completed
+reset dispatch, not command enqueue. Focused ASan/UBSan passes0.07s.
+
+Full boot registers two PWM drivers with valid precomputed PWM contexts and
+no optional config callback. Additional PWM's startup task initializes it off
+exactly once before the primary M3S3000 job; M5/report succeed, secondary stays
+disabled and isolated. This targets spindle_init63's missing NULL-config arm:
+its extra-PWM startup caller is supported even though the direct unused-primary
+caller checks config first. Focused ASan/UBSan passes0.07s. Initial fixture
+omitted required PWM context and assumed serial reads followed startup; both
+fixture mistakes were corrected, with no CORE issue/allowance claimed.
+
+No new full gate, push or hosted run. Both branch gains await the next
+substantial cumulative measurement; no additional raw line gain is claimed.
+
+## Public O CALL final-argument inheritance regression - 2026-10-24
+
+CORE remains cleanb01f481; remote Terje master verified at the same revision.
+New real-RAM/protocol scenario calls a subroutine with all30 arguments, then29.
+Full30 control receives29/30; the29 call receives argument29 correctly. Both
+restore caller1=99/29=72/30=73 and execute the following root statement with
+scope back at0. Only the correct omitted-argument30 inheritance assertion fails.
+LinuxCNC O-call documentation explicitly requires omitted locals to inherit
+calling-context values; link and exact source cause are in KNOWN_BUGS.
+
+ngc_flowctrl754-760 increments param_id to30 after29 supplied arguments, then
+`param_id < 30` skips initialization of params[29]. No private state, prescan
+policy change or required corrupt value. Correct assertion retained, one exact
+WILL_FAIL/known_bug, dated bug entry, no sanitizer suppression/CORE edits.
+Raw call-argument-boundary-raw-results.xml is red; classified sanitizer check
+and strict summary pass0.06s with exactly this known regression. Pending future
+coverage measurement of branches754/759; no claimed new lines or full gate.
+
+## Supported shared-switch homing and exhausted RTU storage - 2026-10-24
+
+Two new public configuration workflows target existing missing branch outcomes,
+not new raw line regions. Shared end-of-travel switches start clear and use
+CORE's own limit-to-home adapter; full boot $HX completes110 physical X pulses,
+ends at70 physical steps/-10 logical steps, releases the switch and leaves Y/Z
+stationary. This covers the previously missing clear-input decision at
+motion_control870; focused ASan/UBSan passes0.05s.
+
+Existing plugins reserve available NVS through nvs_alloc before Modbus startup.
+Transport initialization then fails with Alarm_SelftestFailed, preserves the
+existing reserved address/size, registers neither its API nor baud settings,
+preserves the report handler and transmits no frames across20 foreground polls.
+This targets modbus_rtu592's failed-storage operand; focused ASan/UBSan passes
+0.05s. No new defects or allowances. Coverage gain is unmeasured. No full gate,
+push or hosted run was dispatched for these additions.
+
 # Verified residual-audit measurement and compound setup reset - 2026-10-24
 
 Frozen2d8b8d0 hosted40074304720 is fullygreen: allfive jobs passed, both artifact
@@ -12185,3 +12326,95 @@ passes0.07s plus strict summary in upstream-b01-checkmode-repair-results.xml.
 No new allowance, synthetic green aggregate or repeated full suite. This is
 a full execution plus separately verified repair, not a single exact-head clean
 full-run claim; hosted current-head validation remains required.
+
+
+## Supported recursive tapping overflow and next-cut recovery - 2026-10-24
+
+Added one case on the existing encoder/stepper fixture. A public macro331
+provider accidentally calls G33.1 recursively until the ordinary call-stack
+limit rejects it. No direct ngc_call_push or scope injection. Every unwinding
+callback retains its local #1 and depth; root #1=99 and overrides restore.
+The recursion emits no pulses or sync starts. A following real G33 completes
+80 Z pulses at the requested endpoint, with X stationary and no alarm/reset.
+Focused ASan/UBSan passes0.07s (tapping-overflow-b01-results.xml), no allowance.
+This targets b01 gcode4861's native stack-overflow return (old2e4864), now
+reachable through the supported fallback. No new full gate/push/CI for this
+isolated addition. Frozen hosted7bece00 does not include it.
+
+
+## Hosted source-check recovery after allowance cleanup - 2026-10-24
+
+Run40082454827 stopped in source/helper validation; compiler and coverage jobs
+were skipped. Reproduced locally: the type-spelling matcher unit test read the
+active absent-axis diagnostic allowance after that defect was correctly fixed
+and removed. Isolated its historical diagnostic fixture for both matching and
+wrong-source rejection tests; production manifest stays clean. All82 helper
+tests pass7.85s under simulated Actions environment. Reporting policy and
+regression assertions unchanged. Pushed7bf1306 (helper repair only), preserving
+new recursive-tapping work locally. A single corrected-head hosted retry was
+requested against the same pinned b01 source; no full local rerun for this
+Python-only fix. Previous failure remains recorded, never counted as green.
+
+
+## No invented external providers from indexed caller survey - 2026-10-24
+
+A bounded grblHAL organization search found only native CORE symbols for
+device_fs_add_stream and gc_set_tool_offset. It supplies no actual non-UART
+mount provider or additional tool-offset mode caller. Recorded this evidence
+without claiming exhaustive unreachability or writing artificial provider tests.
+Hosted40082861198 source job is now verified successful; GCC, Clang and coverage
+jobs are live at the last inspection. No redispatch or measurement claim.
+
+
+## Redirected macro to plain RAM job ownership transition - 2026-10-24
+
+New stream_file case executes a redirected G91 fixture file through the actual
+protocol loop. Its local EOF closes that owner; the prior provider opens a real
+RAM G90 job and selects its own reader through public stream_set_file. The
+persistent EOF wrapper must delegate the second completion with no active
+redirect context. Exactly one redirect EOF, two provider EOFs, both files closed,
+no parser error, G90 state, restored serial reader and responding $G are asserted.
+No direct invocation of private readers or fabricated NULL file state.
+
+ASan/UBSan passes0.09s: file-owner-transition-b01-results.xml. Reused existing
+protocol fixture; made its optional whole-run helper static inline so callers
+can reuse setup callbacks without unused-function warnings. No behavioral
+change to existing helper. Targets stream_file94's empty-redirect-stack arm,
+still unmeasured and not included in frozen7bf1306 hosted run. No full gate
+or additional hosted run for this case.
+
+
+## First b01 coverage evidence available - 2026-10-24
+
+Downloaded coverage/report artifacts from40082861198 without waiting on the
+still-running GCC/Clang builds. Verified both harness/source/filter locks and
+exactly seven successful coverage stages. Counts:17,488/17,757 lines98.49%,
+12,774/13,852 branches92.22%,269 missing lines/1,078 missing outcomes. Coverage
+4,462 cases:4,441 clean/21 known/0failed/skipped. No badge promotion or full-run
+success claim; source changed, so no same-source delta attribution.
+
+Raw coverage.json now preserves source-block identities: G66's repeated branch
+numbers represent distinct blocks with different counts, not one unique branch
+key. Mapping review remains required before duplicate tests. New concrete
+source targets include analog-output allocation rejection gcode2647 and
+embedded first-mount rollback252. Full missing list is captured separately in
+build-asan/upstream-b01-missing-lines.json. The new file-transition test was
+strengthened to require G91 at first EOF then G90 at second EOF/final sender
+report, proving both programs executed; focused sanitizer check passes0.07s.
+
+
+## Analog allocation rejection and embedded mount rollback - 2026-10-24
+
+New analog M67 failure case uses registered two-output hardware, rejects one
+allocation with exact OutOfMemory, preserves the existing queued80-step cut
+and prior setpoint, retries then verifies160 physical X steps and exactly
+two correctly ordered analog outputs25/50 on pins0/1. No premature output or
+abort/alarm. ASan/UBSan passes0.05s, targeting new gcode2647.
+
+First embedded mount allocation failure reaches new rollback252. The asset
+pointer resets and retry works, including reading assets from the mount
+notification. However the failed operation changes unrelated root hidden1->0
+without a mount notification. Correct root-preservation assertion retained
+with one dated known regression and exact allowance; no leakage claim or
+sanitizer waiver. Raw two-case evidence: analog-embedded-b01-raw-results.xml.
+No new full gate, push or hosted run for these local additions.

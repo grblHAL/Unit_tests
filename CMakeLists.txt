@@ -10,6 +10,10 @@ if(NOT MSVC)
 endif()
 option(ENABLE_COVERAGE "Instrument tested core modules for coverage (GCC or Clang)" OFF)
 option(ENABLE_SANITIZERS "Enable address and undefined behavior checks" OFF)
+set(HOST_TAPPING_KNOWN_CRASH OFF)
+if(ENABLE_SANITIZERS AND CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_C_COMPILER_ID STREQUAL "Clang")
+  set(HOST_TAPPING_KNOWN_CRASH ON)
+endif()
 if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/core/crc.c")
   message(FATAL_ERROR "Fetch sources with python scripts/resolve_source.py then python scripts/prepare_sources.py, or supply a local core checkout")
 endif()
@@ -107,13 +111,14 @@ if(NOT MSVC)
   add_host_core(host_core_linearization ENABLE_SPINDLE_LINEARIZATION=1)
 endif()
 set(ENGINE_MODULES three_spindle ioports_32 junction_floor tool_axis_x tool_axis_y tool_axis_z fanuc_scaling ngc_long_names compat_2 compat_10 boot_compat_2 boot_compat_10 manual_tool_table seven_axis boot_spindle_sync boot_parameters_disabled boot_backlash parameters_disabled ioports_pullup homing_command_eight homing_command_uvw motion_mode_tracking debug_serial debug_external spindle_sync rotation jerk_profiles jerk_acceleration acceleration_profiles cutter_comp lathe_ngc ngc_tools tool_table compat_1 pid_report gcode planner system settings state_machine nvs_debug nvs_debug_eight protocol motion_control stepper stepper2 spindle_control nvs_buffer grbllib ngc_expr ngc_params ngc_flowctrl corexy report stream probe ioports canbus tool_change stream_json fs_device sleep stream_file modbus_rtu polar stream_passthru asymmetric_ganging wall_plotter asymmetric_auto_square delta rtcp_ac backlash homing coolant_integration boot boot_rtcp boot_square boot_wall boot_delta boot_delta_aux boot_delta_multi boot_polar boot_ganging boot_corexy boot_eight boot_uvw boot_ngc boot_multi_spindle vfs_integration eight_axis uvw_axis multi_spindle spindle_linearization boot_debug_serial boot_debug_external)
-set(HOST_MOUNT_RESULT_CASES fs_ram.repeated_mount_preserves_uploaded_file_and_installs_reset_wrapper_only_once fs_embedded.appending_asset_list_preserves_active_reader_and_directory_order fs_embedded.allocation_failure_appended_list_preserves_existing_directory_and_allows_retry)
+set(HOST_MOUNT_RESULT_CASES fs_embedded.allocation_failure_first_mount_preserves_root_mode_and_allows_asset_retry fs_ram.repeated_mount_preserves_uploaded_file_and_installs_reset_wrapper_only_once fs_embedded.appending_asset_list_preserves_active_reader_and_directory_order fs_embedded.allocation_failure_appended_list_preserves_existing_directory_and_allows_retry)
 function(add_core_test name module source)
   if(name STREQUAL "uvw_axis.unconfigured_abc_functions_do_not_alias_remapped_uvw_axes" AND HOST_CONFIG_SCOPED_MOTOR_ENUMS)
     message(STATUS "Skipping ${name}: unconfigured ABC enum identifiers are absent in selected core")
     return()
   endif()
-  if(name STREQUAL "eight_axis.rigid_tapping_fallback_receives_a_axis_arguments_and_restores_caller_scope" AND NOT HOST_TAPPING_MACRO_FALLBACK)
+  if((name STREQUAL "eight_axis.rigid_tapping_fallback_receives_a_axis_arguments_and_restores_caller_scope"
+      OR name STREQUAL "spindle_sync.recursive_tapping_macro_overflow_restores_scope_and_allows_next_cut") AND NOT HOST_TAPPING_MACRO_FALLBACK)
     message(STATUS "Skipping ${name}: selected core predates the native tapping macro fallback")
     return()
   endif()
@@ -366,13 +371,15 @@ function(add_core_test name module source)
     OR name STREQUAL "report.uart_report_survives_sort_allocation_failure"
     OR name STREQUAL "report.bitfield_metadata_allocation_failure_allows_complete_retry"
     OR name STREQUAL "boot_ngc.abort_message_allocation_failure_retains_exception_and_allows_sender_retry"
+    OR name STREQUAL "motion_control.synchronized_analog_allocation_failure_preserves_queued_cut_and_allows_retry"
     OR name STREQUAL "motion_control.synchronized_output_allocation_failure_rejects_command_and_preserves_queued_cut"
     OR name STREQUAL "ngc_params.virtual_registration_allocation_failure_preserves_existing_list"
     OR name STREQUAL "ngc_params.named_allocation_failure_preserves_existing_value_and_allows_retry"
     OR name MATCHES "^ngc_params\\.m7[03]_snapshot_")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc)
   endif()
-  if(name STREQUAL "motion_control.synchronized_output_allocation_failure_rejects_command_and_preserves_queued_cut")
+  if(name STREQUAL "motion_control.synchronized_output_allocation_failure_rejects_command_and_preserves_queued_cut"
+    OR name STREQUAL "motion_control.synchronized_analog_allocation_failure_preserves_queued_cut_and_allows_retry")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=calloc)
   endif()
   if(name STREQUAL "ngc_params.string_growth_allocation_failure_preserves_neighbors_and_allows_retry"
@@ -440,8 +447,7 @@ function(add_core_test name module source)
   if(HOST_FS_MOUNT_RESULT_DECLARATION AND name IN_LIST HOST_MOUNT_RESULT_CASES)
     target_compile_definitions(test_${name} PRIVATE HOST_FS_MOUNT_RESULT_API=1)
   endif()
-  if(ENABLE_SANITIZERS AND (name STREQUAL "fs_ram.truncate_committed_file_to_nonzero_length_preserves_prefix"
-      OR name STREQUAL "fs_ram.truncate_pending_upload_to_shorter_nonzero_length_preserves_prefix"))
+  if(HOST_TAPPING_KNOWN_CRASH AND name STREQUAL "eight_axis.rigid_tapping_fallback_receives_a_axis_arguments_and_restores_caller_scope")
     find_package(Python3 REQUIRED COMPONENTS Interpreter)
     add_test(NAME ${name} COMMAND "${Python3_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/scripts/known_crash.py"
       "${name}" "${CMAKE_SOURCE_DIR}/tests/known_sanitizer_diagnostics.json" "$<TARGET_FILE:test_${name}>")
