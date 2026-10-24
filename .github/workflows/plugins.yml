@@ -1,13 +1,13 @@
 name: Plugin tests
 run-name: >-
-  Plugin tests: ${{ inputs.suite }} @ ${{ inputs.source_pr && format('PR #{0}', inputs.source_pr) || inputs.source_ref || 'master' }}
+  Plugin tests: ${{ inputs.suite }} @ ${{ inputs.source_pr && format('PR #{0}', inputs.source_pr) || inputs.source_ref || 'master' }} | CORE ${{ inputs.core_ref || 'default' }}
 on:
   workflow_dispatch:
     inputs:
       suite:
         description: Registered suite
         type: choice
-        options: [plugins_misc, plugin_eeprom, plugin_fans, plugin_openpnp]
+        options: [plugins_misc, plugin_eeprom, plugin_fans, plugin_openpnp, plugin_odometer, plugin_encoder]
         default: plugins_misc
       source_repository:
         description: 'Source owner/repo or GitHub URL (blank = suite default)'

@@ -7,12 +7,18 @@ or force private state to enter a path.
 
 ## Next source families
 
-- Add Simulator POSIX VFS file/directory workflows next; its driver storage suite
-  currently covers EEPROM only. Keep filesystem ownership and full-path behavior
-  observable through public mount/file APIs.
-- Assess Plugin_odometer (distance/time persistence), Plugins_spindle (registered
-  Modbus transactions), Plugin_encoder (overrides), and Plugin_SD_card (stream
-  ownership/job recovery), reusing valid CORE host fixtures where useful.
+- Assess Plugins_spindle (registered Modbus transactions) and Plugin_SD_card
+  (stream ownership/job recovery), reusing valid CORE host fixtures where useful.
+- Simulator VFS fails current-CORE compilation: removed vfs_path_t. The explicit
+  driver gitlink reference executes nine cases with three known assertions;
+  retain both incompatibility evidence and separate source locks. No fallback.
+- Encoder: registered radio settings expose modes0-3; CORE rejects higher values.
+  Establish a supported MPG/migration route before testing modes4+. Source does
+  not copy provider velocity into its internal velocity field; live mode rebinding
+  and per-device settings-slot assignment also need maintainer contract review.
+  Do not forge persisted settings or private state to cover these paths.
+- Odometer: all124 measured lines execute, but6 branch outcomes and other storage/
+  axis configurations remain. Keep visible report-format warnings documented.
 - For RP2040 and ESP32, identify real host-testable driver helpers and required
   SDK/board build contracts before enabling suites. A firmware compile does not
   prove GPIO timing or physical hardware behavior. Other drivers and third-party

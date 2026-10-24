@@ -1,10 +1,63 @@
+# Latest component checkpoint - 2026-10-24
+
+Continuing the active all-plugin/driver/CORE goal on isolated plugin-driver-tests.
+No production source edits or merges. The separate CORE chat remains untouched.
+PR29 is freshly confirmed OPEN/draft/unmerged; its fork still registers only
+Core tests and Reusable host tests. No hosted component success is claimed.
+
+83 cases against CORE b01f481072edecac33d5e40c25869359a5b3fa1f pass strict
+Windows Clang ASan/UBSan classification:66 clean,16 correct known assertions,
+1 previously scoped fan callback diagnostic,0 unexpected failures/skips.
+All81 Python helpers pass9.906s; actionlint and whitespace checks pass.
+The combined gate rebuilt/rechecked all seven current-compatible suites after
+CORE-root selection changes. Fixture files retain strict compiler warnings;
+original-source portability warnings remain visible and documented.
+
+New odometer10 cases use real EEPROM/CRC storage and pulse/state/time callbacks:
+restart persistence runs in two processes, reset preserves previous readings,
+foreground work persists spindle time, and settings callbacks reclaim pulse
+observation. Encoder12 cases use real CORE registration/claim/enumeration,
+actual EEPROM restart and observed realtime command bytes. Four correct
+regressions reproduce rapid command mapping and early enumeration termination.
+No encoder sanitizer allowances. Unsupported MPG routes remain TODO.
+
+Simulator VFS is separate from its EEPROM suite. Current CORE compilation fails
+on removed vfs_path_t; the failure log is retained, with no alias/fallback.
+The driver's own CORE gitlink4ec1ae44b857a70d2f9298344feac4b43ed0eb6b was fetched
+unchanged to a separate directory. Its explicit reference build passes strict
+classification:9 cases,6 clean/3 known assertions,0 unexpected/skipped/diagnostics.
+These confirm nested-directory metadata, stale remount success and buffered
+truncate defects. Reference success does not validate current CORE.
+
+New local LLVM coverage, selected original files/configurations only:
+
+| Suite / CORE selection | Lines | Branch outcomes |
+|---|---:|---:|
+| plugin_odometer / b01f481 | 124/124 (100.00%) | 44/50 (88.00%) |
+| plugin_encoder / b01f481 | 186/346 (53.76%) | 77/195 (39.49%) |
+| driver_simulator_vfs / reference4ec1ae4 | 125/139 (89.93%) | 54/72 (75.00%) |
+
+Each measured JUnit file passes strict profiling-error classification. Maximum
+counter paths217/229/223; no counters lost. Unused/unproven encoder code remains
+in the denominator. Earlier five-suite coverage below remains unchanged.
+Source locks were independently resolved through GitHub and verified against
+clean local source checkouts; odometer a752dc6, encoder b3e31df, EEPROM backend
+0c278db, Simulator150e3f9. Immutable full revisions are in ignored build-evidence
+*-batch3-source-lock.json alongside sanitizer/coverage logs, XML, JSON and HTML.
+
+Next substantial work: SD-card stream/job ownership and spindle integrations;
+resolve valid public encoder MPG contracts without private-state forcing. The
+48-repository inventory is partial; this checkpoint does not complete the goal.
+
+---
+
 # Plugin and driver coverage - 2026-10-24
 
 Goal: meaningful functional tests across all plugin/driver catalogue implementations
 and CORE. Never edit CORE/plugin/driver production sources or merge PRs. Preserve
 other work and use substantial batches. CORE coverage continues in its active chat.
 
-## Current validated checkpoint
+## Previous validated checkpoint
 
 Draft https://github.com/grblHAL/Unit_tests/pull/29 is OPEN/draft, not merged
 (fresh API check). Branch plugin-driver-tests tracks origin/plugin-driver-tests;

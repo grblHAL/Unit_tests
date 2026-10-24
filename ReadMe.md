@@ -268,6 +268,9 @@ repository's default branch.
 | Plugin tests | `plugin_fans` | Fan commands, shutdown, spindle links and reports |
 | Driver tests | `driver_simulator` | Simulator EEPROM storage |
 | Plugin tests | `plugin_openpnp` | Digital/analog I/O, ADC scaling, position reports and synchronization |
+| Plugin tests | `plugin_odometer` | Pulse distance, elapsed/spindle time, EEPROM restart and reset backup |
+| Plugin tests | `plugin_encoder` | Registered encoder ownership, override commands and persisted settings |
+| Driver tests | `driver_simulator_vfs` | File/directory workflows; current CORE compile incompatibility recorded |
 
 These are initial host tests, not full plugin/driver coverage or board validation.
 See [component progress](tests/COMPONENT_PROGRESS.md) and the
@@ -300,8 +303,15 @@ complete board builds and electrical/timing behavior need separate SDK/hardware
 checks. [ci/callers/plugin.yml.example](ci/callers/plugin.yml.example) remains
 an upstream caller template; each invocation needs a unique `run_label`.
 
+Simulator VFS currently fails to compile against CORE `b01f481` because its
+`vfs_path_t` dependency was removed. Its separate reference run uses the
+Simulator gitlink CORE `4ec1ae44b857a70d2f9298344feac4b43ed0eb6b`: select that
+exact `core_ref` in a fresh checkout to reproduce it. There is no automatic
+fallback. A passing reference run does not establish current-CORE compatibility.
+
 The EEPROM suite also locks the actual littlefs dependency and tests a complete
 format/write/unmount/remount/read workflow without touching the settings region.
+Odometer and encoder also lock the actual EEPROM backend for persistent storage.
 Dependency-only registry entries use `source_only: true`: they are fetched at an
 exact resolved revision and cannot be selected as test suites.
 

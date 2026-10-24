@@ -1,13 +1,13 @@
 name: Driver tests
 run-name: >-
-  Driver tests: ${{ inputs.suite }} @ ${{ inputs.source_pr && format('PR #{0}', inputs.source_pr) || inputs.source_ref || 'master' }}
+  Driver tests: ${{ inputs.suite }} @ ${{ inputs.source_pr && format('PR #{0}', inputs.source_pr) || inputs.source_ref || 'master' }} | CORE ${{ inputs.core_ref || 'default' }}
 on:
   workflow_dispatch:
     inputs:
       suite:
         description: Registered suite
         type: choice
-        options: [driver_simulator]
+        options: [driver_simulator, driver_simulator_vfs]
         default: driver_simulator
       source_repository:
         description: 'Source owner/repo or GitHub URL (blank = suite default)'

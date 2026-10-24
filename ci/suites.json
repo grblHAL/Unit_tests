@@ -81,5 +81,52 @@
     "ref": "master",
     "path": "deps/littlefs",
     "source_only": true
+  },
+  "driver_simulator_vfs": {
+    "repository": "grblHAL/Simulator",
+    "ref": "master",
+    "path": "drivers/simulator",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/drivers/simulator_vfs",
+    "cmake_options": [],
+    "test_regex": "^driver_simulator_vfs[.]",
+    "coverage_filter": "drivers/simulator/src/fs_posix\\.c$",
+    "diagnostics_directory": "tests/drivers/simulator_vfs"
+  },
+  "plugin_odometer": {
+    "repository": "grblHAL/Plugin_odometer",
+    "ref": "master",
+    "path": "plugins/odometer",
+    "dependencies": [
+      "core",
+      "eeprom_backend"
+    ],
+    "cmake_source": "tests/plugins/odometer",
+    "cmake_options": [],
+    "test_regex": "^plugin_odometer[.]",
+    "coverage_filter": "plugins/odometer/.*\\.[ch]$",
+    "diagnostics_directory": "tests/plugins/odometer"
+  },
+  "eeprom_backend": {
+    "repository": "grblHAL/Plugin_EEPROM",
+    "ref": "master",
+    "path": "plugins/eeprom",
+    "source_only": true
+  },
+  "plugin_encoder": {
+    "repository": "grblHAL/Plugin_encoder",
+    "ref": "master",
+    "path": "plugins/encoder",
+    "dependencies": [
+      "core",
+      "eeprom_backend"
+    ],
+    "cmake_source": "tests/plugins/encoder",
+    "cmake_options": [],
+    "test_regex": "^plugin_encoder[.]",
+    "coverage_filter": "plugins/encoder/.*\\.[ch]$",
+    "diagnostics_directory": "tests/plugins/encoder"
   }
 }

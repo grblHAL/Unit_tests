@@ -1,10 +1,10 @@
 kind,name,repository,status,suite,next_action
 core,CORE,grblHAL/core,existing suite,core,Continue source-matched CORE inventory in its separate active checkout.
 plugin,EEPROM,grblHAL/Plugin_EEPROM,partial host tests,plugin_eeprom,Propagate physical and checksum transfer errors; exercise FRAM/littlefs combinations and bank-boundary reads.
-plugin,Encoder,grblHAL/Plugin_encoder,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+plugin,Encoder,grblHAL/Plugin_encoder,partial host tests,plugin_encoder,Retain four correct regressions; establish supported MPG configuration and per-slot binding contracts.
 plugin,Keypad,grblHAL/Plugin_I2C_keypad,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
 plugin,Networking,grblHAL/Plugin_networking,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
-plugin,Odometer,grblHAL/Plugin_odometer,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+plugin,Odometer,grblHAL/Plugin_odometer,partial host tests,plugin_odometer,Review remaining branch outcomes and portable report formatting; restart and reset backup tested with actual EEPROM backend.
 plugin,Plasma/THC,grblHAL/Plugin_plasma,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
 plugin,SD card,grblHAL/Plugin_SD_card,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
 plugin,Spindle,grblHAL/Plugins_spindle,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
@@ -43,7 +43,7 @@ driver,STM32F1xx,grblHAL/STM32F1xx,not yet assessed,,Identify host-testable help
 driver,STM32F3xx,grblHAL/STM32F3xx,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
 driver,STM32F4xx,grblHAL/STM32F4xx,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
 driver,STM32F7xx,grblHAL/STM32F7xx,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
-driver,Simulator,grblHAL/Simulator,partial host tests,driver_simulator,Add VFS and serial/timer fixtures.
+driver,Simulator,grblHAL/Simulator,partial host tests,driver_simulator;driver_simulator_vfs,VFS current-CORE compilation fails; reference gitlink tests reproduce three filesystem defects. Serial/timer fixtures remain.
 driver,TM4C123,grblHAL/TM4C123,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
 driver,TM4C1294,grblHAL/TM4C1294,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
 driver,iMXRT1062 (Teensy 4.x),grblHAL/iMXRT1062,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.

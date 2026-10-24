@@ -12,7 +12,7 @@ foreach(behavior erased_storage existing_storage close_without_open)
 endforeach()
 
 foreach(behavior block_roundtrip checksum_write checksum_read)
-  component_case(driver_simulator.${behavior} ${behavior}.c "${HARNESS_ROOT}/drivers/simulator/src/eeprom.c" "${HARNESS_ROOT}/drivers/simulator/src/grbl_eeprom_extensions.c" "${HARNESS_ROOT}/core/crc.c")
+  component_case(driver_simulator.${behavior} ${behavior}.c "${HARNESS_ROOT}/drivers/simulator/src/eeprom.c" "${HARNESS_ROOT}/drivers/simulator/src/grbl_eeprom_extensions.c" "${COMPONENT_CORE_ROOT}/crc.c")
   target_include_directories(driver_simulator.${behavior} PRIVATE "${HARNESS_ROOT}/drivers/simulator/src")
   if(WIN32)
     target_compile_definitions(driver_simulator.${behavior} PRIVATE PLATFORM_WINDOWS)
