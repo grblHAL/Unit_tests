@@ -384,10 +384,14 @@ execution or mutate private callback storage. No new exception registered.
 
 ## Event-output callbacks
 
-Four host workflows exercise original spindle/laser/at-speed, mist/flood, controller
+Seven host workflows exercise original spindle/laser/at-speed, mist/flood, controller
 state/reset and live trigger rebind/report chains. Actual CORE strgetentry runs;
 MinGW CRT legacy names are disabled via supported NO_OLDNAMES for these targets.
 Deferred control tasks remain fail-fast; their original pointer/integer-width
-casts are not runtime-validated. Remaining settings iterator/normalization,
-port failures/slot counts and actual CORE scheduler/spindle/controller/physical
-outputs remain open. No whole-module or new source coverage measurement claimed.
+casts are not runtime-validated. Settings iterator/early stop/normalization,
+saved/deferred mapping and claimed/missing/disabled port rejection now execute.
+Other slot counts and actual CORE scheduler/spindle/controller/physical outputs
+remain open. Batch27 selected eventout169/204 lines,92/127 branches; probe relays
+91/94 lines,60/65 branches. Expanded misc denominator is9 files, not whole module.
+Next groups include supported control toggles and startup/failure settings paths;
+retain source review for pointer-width/return callback contracts before execution.

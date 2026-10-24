@@ -1,3 +1,40 @@
+# Latest component checkpoint - 2026-10-25 (batch27)
+
+Goal active. Deliver21 accumulated cases:14 probe-relay and7 event-output cases.
+One full Windows Clang ASan/UBSan compatible gate passes42 suites,761 cases =702
+clean +59 documented known, zero unexpected failures/skips. Known results remain
+55 correct assertion regressions +4 diagnostic-only cases;3 assertions also carry
+exact diagnostics and are counted once. No new known result or sanitizer allowance.
+Unchanged26 legacy serial reference cases retain separate batch24 validation.
+
+Probe-relay selection covers native/relay combinations, exclusive levels/default
+selection, delay requests, disabled/failed ports, saved/deferred mapping, reports
+and absent prior selector. Event outputs cover spindle/laser/at-speed, coolant,
+state/reset, trigger rebind, settings iteration/early-stop/normalization and
+saved/deferred mapping. Claimed/missing/disabled ports reject without unintended
+output; valid remaining mapping still responds. Original CORE strgetentry executes.
+
+Fresh LLVM selected-source coverage spans9 misc files:769/825 lines93.2%,429/563
+branches76.2%,81/85 functions. Eventout169/204 lines,92/127 branches; probe relays
+91/94 lines,60/65 branches. Expanded denominator differs from prior7-file report;
+these numbers exclude unbuilt modules and alternative layouts. No whole-plugin
+coverage claim. Fresh counter paths max224; strict coverage classification passes
+63 misc cases (60 clean +3 unchanged known assertions).
+
+Deferred control-signal tasks remain fail-fast boundaries; pointer-width casts
+and trigger getter ABI need review before invocation. MinGW's supported CRT
+NO_OLDNAMES option avoids its optional strset alias clash; no production header/
+source edit, rename or bypass. Port configuration, scheduler, NVS, debounce and
+outputs are host models; actual controller/parser/probe motion/hardware remain.
+
+GitHub-resolved Plugins_misc2657119 and CORE b01f481 locks match clean originals.
+Unchanged86 source/report helpers and actionlint were not rerun. Batch26 fork
+workflow listing exposes only reusable/core workflows; separate Plugin/Driver
+manual dispatch awaits default-branch installation. Keep PR29 draft/unmerged;
+no hosted/target/hardware success claimed. Continue remaining modules/integration.
+
+---
+
 # Local event-output callback checkpoint - 2026-10-25
 
 Goal active. Four new workflow cases pass focused Windows Clang ASan/UBSan0.33s

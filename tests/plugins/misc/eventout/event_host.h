@@ -10,3 +10,7 @@ extern unsigned writes, saves, state_calls, spindle_calls, speed_calls, coolant_
     reports, options;
 void load_events(void);
 void bind_event(unsigned slot, uint_fast16_t trigger);
+
+extern uint8_t claimed_mask, missing_mask;
+void prepare_events(void);
+void run_event_startup(void);

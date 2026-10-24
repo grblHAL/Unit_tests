@@ -104,7 +104,7 @@ foreach(behavior selection native_toolsetter native_probe2 persistence partial_d
 endforeach()
 set_source_files_properties("${HARNESS_ROOT}/plugins/misc/probe_relays.c" PROPERTIES COMPILE_OPTIONS "-Wno-unused-parameter;-Wno-missing-field-initializers")
 
-foreach(behavior spindle_outputs coolant_outputs state_outputs live_rebind)
+foreach(behavior spindle_outputs coolant_outputs state_outputs live_rebind settings_iteration saved_ports rejected_ports)
   set(target plugins_misc.eventout_${behavior})
   component_case(${target} eventout/${behavior}.c eventout/event_host.c "${COMPONENT_CORE_ROOT}/strutils.c" "${HARNESS_ROOT}/plugins/misc/eventout.c")
   target_include_directories(${target} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/eventout")

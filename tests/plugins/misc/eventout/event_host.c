@@ -6,6 +6,7 @@ grbl_t grbl;
 system_t sys;
 setting_details_t *event_details;
 bool levels[4];
+uint8_t claimed_mask, missing_mask;
 unsigned writes, saves, state_calls, spindle_calls, speed_calls, coolant_calls, resets, reports,
     options;
 static uint8_t nvs[64];
@@ -52,7 +53,10 @@ static xbar_t *get_info(io_port_cfg_t *cfg, uint8_t port)
 {
     static xbar_t pin;
     CHECK(cfg->n_ports == 4 && port < 4);
+    if (missing_mask & (1u << port))
+        return NULL;
     pin = (xbar_t){.id = port, .description = descriptions[port]};
+    pin.mode.claimed = !!(claimed_mask & (1u << port));
     return &pin;
 }
 static status_code_t set_port(io_port_cfg_t *cfg, uint8_t *port, pin_cap_t caps, float value)
@@ -88,7 +92,9 @@ bool ioport_digital_out(uint8_t port, uint32_t value)
 bool ioport_set_description(io_port_type_t type, io_port_direction_t dir, uint8_t port,
                             const char *description)
 {
-    CHECK(type == Port_Digital && dir == Port_Output && port < 4 && description);
+    CHECK(type == Port_Digital && dir == Port_Output && description);
+    if (port >= 4)
+        return false;
     CHECK(strlen(description) < sizeof(descriptions[port]));
     strcpy(descriptions[port], description);
     return true;
@@ -147,7 +153,7 @@ void report_plugin(const char *name, const char *version)
     CHECK(strcmp(name, "Events plugin") == 0 && strcmp(version, "0.14") == 0);
     reports++;
 }
-void load_events(void)
+void prepare_events(void)
 {
     void event_out_init(void);
     hal.nvs.memcpy_from_nvs = read_nvs;
@@ -160,10 +166,19 @@ void load_events(void)
     grbl.on_report_options = report_options;
     event_out_init();
     CHECK(event_details && startup);
-    event_details->load();
+}
+void run_event_startup(void)
+{
+    CHECK(startup);
     foreground_task_ptr fn = startup;
     startup = NULL;
     fn(startup_data);
+}
+void load_events(void)
+{
+    prepare_events();
+    event_details->load();
+    run_event_startup();
     CHECK(saves == 1 && writes == 0);
 }
 void bind_event(unsigned slot, uint_fast16_t trigger)
