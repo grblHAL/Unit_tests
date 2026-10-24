@@ -8,9 +8,11 @@ read/write/realtime callback signatures in the recorded syntax check. No aliases
 function casts, header guards or production sources are changed to conceal that.
 Reference results never count toward current-compatible suite/case totals.
 
-Seven cases execute original serial.c/serial.h with actual legacy CORE types.
+Eight registered cases execute original serial.c/serial.h with actual legacy CORE types.
 They cover normal initialization, ordered RX/realtime filtering, full-ring realtime
-handling, repeated wrap, flush/cancel and string/binary TX. Generated project.h is
+handling, repeated wrap, flush/cancel, string/binary TX and realtime-handler
+replacement/restoration. The added lifecycle case passes focused ASan/UBSan and
+strict checks; the prior seven-case reference checkpoint remains separate. Generated project.h is
 absent from the repository; the test's project.h declares only the UART symbols
 called by serial.c and binds them to bounded host FIFO/TX/IRQ callbacks. These are
 explicit declaration-only hardware boundaries, not Cypress SDK headers or a

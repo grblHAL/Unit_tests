@@ -1,3 +1,26 @@
+# Local reference-handler/SDK checkpoint - 2026-10-25
+
+Goal active. Added one PSoC legacy-reference realtime handler lifecycle case:
+public enqueue and RX callbacks reach the replacement, direct rejected input is
+not queued, restoration recovers normal filtering and ordered RX. Focused Windows
+Clang ASan/UBSan1/1 passes0.08s with strict classification;8 reference cases now
+registered. No new allowance, production edit or compatible-suite count change.
+Keep reference results separate from batch22's698 current-compatible baseline.
+
+MSP430 SDK investigation located/downloaded official TI support package1.207,
+verified SHA256 and inspected original F5529/iomacros headers. Word registers use
+target-width unsigned int and assembler-bound addresses; native host replacement
+would not establish the16-bit target ABI. Installed Clang backend inventory has no
+MSP430 target. Archive/source metadata and compiler target list are saved ignored
+under build-evidence; no toolchain installer executed. Exact provenance/remaining
+compiler boundary are in COMPONENT_TODO. MSP430 runtime remains unclaimed.
+
+PSoC reference workflow/plan helper checks remain last85 pass from prior checkpoint;
+unchanged scripts/workflows were not rerun. No full compatible gate/coverage/hosted
+result; accumulate pending reference/first-boot work before combined delivery.
+
+---
+
 # Local legacy-reference/first-boot checkpoint - 2026-10-25
 
 Goal active. PSoC5 now has an explicit registered Driver-tests reference choice

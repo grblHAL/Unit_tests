@@ -23,8 +23,9 @@ or force private state to enter a path.
   c9d721259783ca578ee1b0c3f6111839610c26a4 READMEs end support at CORE20250518,
   both pin070f80cc5c0d095ff63d5980795b5a15c5bb0202. MSP432E pins shared6adcc848,
   whose EEPROM is tested separately with Tiva headers, not that SDK/parent build.
-  PSoC5 now has seven explicit fixed-CORE reference cases outside compatible
-  totals; six clean plus one free-capacity regression. Current CORE stream ABI
+  PSoC5 now has eight registered fixed-CORE reference cases outside compatible
+  totals; prior seven-case checkpoint is6 clean +1 capacity regression, and the
+  new handler lifecycle case passes focused ASan/UBSan/strict checks. Current CORE stream ABI
   rejects unchanged callbacks. Generated UART APIs remain declaration-only host
   boundaries, not real SDK/UDB validation; driver.c/NVS stay untested. Never silently
   fall back or extract production functions. MSP430/MSP432E runtime remains open.
@@ -301,3 +302,19 @@ reject Clang/GCC profiling errors even on expected-failure tests. Verified misc
 coverage uses the shorter build-plugin-cov directory in the original attached
 workspace, with maximum counter path226; it reads the isolated branch's source.
 All five suites' accepted coverage result sets were checked for counter errors.
+
+## MSP430 SDK investigation - 2026-10-25
+
+Official TI MSP430-GCC6_1_1_0 header/support package1.207 downloaded unchanged for
+inspection only (21,947,988 bytes), source:
+https://software-dl.ti.com/msp430/msp430_public_sw/mcu/msp430/MSPGCC/6_1_1_0/exports/msp430-gcc-support-files-1.207.zip
+SHA25638f61940c6fe09e92ed9fc25124bd1705500d6f0db4af494fa5470de53a67570.
+Archive/evidence is ignored in build-evidence, not a registered runnable SDK suite.
+Original iomacros.h uses target-width unsigned int for word registers and binds
+symbols to assembler register addresses. F5529 device headers include those
+macros/in430; arbitrary native host int/register substitution is not target ABI
+validation. Installed LLVM-MinGW's saved --print-targets list has no MSP430 backend.
+Need a suitable target compiler/emulator or explicitly justified hardware boundary
+before claiming MSP430 execution. No compiler/installer is installed/executed and
+no driver/header is edited. The old driver CORE gitlink31f6a4bf remains distinct
+from the PSoC070f80 reference. Never silently substitute either reference.
