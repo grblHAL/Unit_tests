@@ -177,8 +177,8 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Measured:** 2026-10-24, clean Terje `2e165a1ac4c74be8e68971972c6577775d856b05`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40041178250)
-measures 17,480/17,756 lines (98.45%) and 12,611/13,834 branches (91.16%).
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40042658660)
+measures 17,480/17,756 lines (98.45%) and 12,619/13,834 branches (91.22%).
 The 276 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable. See the complete measured
 [line/branch inventory](COVERAGE_GAPS.md) before selecting the next workflow.
@@ -458,3 +458,38 @@ Suggested upstream repair: reject a write when `set_datetime` is absent, while
 preserving read-only queries. Retain the correct rejection and query assertions;
 remove this entry and its single exact expected-failure block after repair.
 No CORE edit, broad exception or sanitizer allowance is included.
+
+
+## Remapped UVW motor-fault inputs use incorrect inversion bits
+
+Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`,
+supported `N_AXIS=6` / `AXIS_REMAP_ABC2UVW=1` configuration. Register W and X
+motor-fault input functions before adding the digital bank, advertise their
+capabilities and use the public motor-fault inversion setting/driver notification.
+With X inversion only, the driver receives W inverted; with W inversion only,
+the driver receives W not inverted. X controls and callback counts pass.
+
+[Correct regression](cases/uvw_axis/motor_fault_w_inversion_uses_w_axis_without_following_x.c)
+retains both independent-axis assertions. Raw ASan/UBSan evidence in
+`build-asan/batch74-axis-mapping-raw-results.xml` reports
+`UVW motor-fault W invert: X-only=1 W-only=0`, then fails the correct W-not-X
+assertion. Each linked regression has its own exact WILL_FAIL/known_bug; no sanitizer
+diagnostic or allowance. This establishes incorrect driver input configuration, not a claim
+that this test generated a motor-fault alarm or moved a machine incorrectly.
+
+The independent [U/V regression](cases/uvw_axis/motor_fault_uv_inversion_uses_remapped_axis_bits.c)
+registers U/V inputs before bank registration, writes the public U-only8 and
+V-only16 inversion masks and observes both driver configurations. Both report
+`(0,0)`, rather than `(1,0)` and `(0,1)`, with callback counts/debounce controls
+passing. Raw evidence: `build-asan/batch74-uv-fault-raw-results.xml`. Keep both
+correct independent-input assertions. This prevents a W-only repair from hiding
+incorrect U/V remapping.
+
+`config_fault_pins` at `ioports.c:1505` selects the inversion bit using
+`xbar_fault_pin_to_axis`. Its implementation at `crossbar.h:936` omits
+Input_MotorFaultW from the primary range and returns fallback axis0/X.
+U/V return fixed ordinal6/7 instead of configured UVW axis3/4.
+Suggested upstream repair: map fault functions through configured axis identities,
+including W and secondary XYZ, rather than fixed function ordinals. Keep the
+registered-driver and independent-axis controls; remove this entry and both
+exact expected-failure blocks when the unchanged regression passes. No CORE edit.

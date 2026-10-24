@@ -1,17 +1,17 @@
 # Remaining raw CORE coverage
 
-Verified report: [run40041178250](https://github.com/petervanderwalt/Unit_tests/actions/runs/40041178250),
-harness `6d566e00024bfc18c9e754f88d6895211c6c8c2f`, CORE `2e165a1ac4c74be8e68971972c6577775d856b05`,
+Verified report: [run40042658660](https://github.com/petervanderwalt/Unit_tests/actions/runs/40042658660),
+harness `05603c7754d5c453cf6a3b66b13b3f384661f177`, CORE `2e165a1ac4c74be8e68971972c6577775d856b05`,
 filter `core/.*\.[ch]$`. Both artifact locks match, exactly seven coverage
 stages exit0, and all five source/GCC/Clang/coverage/Results summary jobs passed.
 
-17,480/17,756 lines (**98.45%**) and12,611/13,834 branch outcomes (**91.16%**)
-were covered:276 raw missing lines and1,223 missing outcomes. Coverage job:
-4,378 cases,4,363 clean/15 known/0 failed/skipped. Against same-source40039209481:
-thirteen additional branch outcomes, identical covered-line set and denominator.
+17,480/17,756 lines (**98.45%**) and12,619/13,834 branch outcomes (**91.22%**)
+were covered:276 raw missing lines and1,215 missing outcomes. Coverage job:
+4,381 cases,4,365 clean/16 known/0 failed/skipped. Against same-source40041178250:
+eight additional branch outcomes, identical covered-line set and denominator.
 
-Success badges show this fully green98.45%/91.16% checkpoint. Local RTC,
-backlash, RTU and I/O extensions are separate and not included in this report.
+Success badges show this fully green98.45%/91.22% checkpoint. Local physical
+door/sleep, legacy claim and UVW fault regressions are separate from this report.
 
 Raw coverage does not establish correctness or reachability. See [TODO](TODO.md)
 and [KNOWN_BUGS](KNOWN_BUGS.md) before selecting workflows. Historical audits
@@ -26,7 +26,7 @@ remain pinned to their stated revisions; no source exclusions were added.
 | [core/fs_ram.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/fs_ram.c) | 0 | 11 | none |
 | [core/gcode.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/gcode.c) | 29 | 214 | 325-326, 573, 1043, 1367-1368, 1499, 2190, 2728, 2730-2731, 2746-2747, 2898, 2987, 2999, 3065, 3482-3484, 3616-3617, 3929, 4314-4315, 4864, 4866, 4978-4979 |
 | [core/grbllib.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/grbllib.c) | 14 | 37 | 92, 95, 140, 144-147, 149-150, 590-594 |
-| [core/ioports.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/ioports.c) | 28 | 141 | 782, 1195, 1291-1292, 1385, 1387, 1389, 1391, 1394-1398, 1401-1402, 1404, 1406-1407, 1409, 1411-1412, 1436-1438, 1440-1441, 1558-1559 |
+| [core/ioports.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/ioports.c) | 28 | 138 | 782, 1195, 1291-1292, 1385, 1387, 1389, 1391, 1394-1398, 1401-1402, 1404, 1406-1407, 1409, 1411-1412, 1436-1438, 1440-1441, 1558-1559 |
 | [core/kinematics/asymmetric_ganging.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/kinematics/asymmetric_ganging.c) | 1 | 4 | 254 |
 | [core/kinematics/delta.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/kinematics/delta.c) | 9 | 46 | 180, 320-321, 376, 619-620, 625, 643, 706 |
 | [core/kinematics/polar.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/kinematics/polar.c) | 4 | 3 | 212, 214, 232, 234 |
@@ -34,8 +34,8 @@ remain pinned to their stated revisions; no source exclusions were added.
 | [core/kinematics/wall_plotter.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/kinematics/wall_plotter.c) | 56 | 28 | 208, 213-214, 216-227, 229, 234, 237, 239-240, 242-255, 257, 260, 262, 264-280, 283-284 |
 | [core/machine_limits.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/machine_limits.c) | 2 | 17 | 269, 502 |
 | [core/modbus.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/modbus.c) | 3 | 4 | 231-233 |
-| [core/modbus_rtu.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/modbus_rtu.c) | 3 | 36 | 241, 360-361 |
-| [core/motion_control.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/motion_control.c) | 2 | 28 | 690, 715 |
+| [core/modbus_rtu.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/modbus_rtu.c) | 3 | 34 | 241, 360-361 |
+| [core/motion_control.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/motion_control.c) | 2 | 27 | 690, 715 |
 | [core/my_plugin.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/my_plugin.c) | 2 | 0 | 26, 29 |
 | [core/ngc_expr.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/ngc_expr.c) | 11 | 13 | 115-116, 189-190, 250, 252, 292-293, 337-338, 341 |
 | [core/ngc_flowctrl.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/ngc_flowctrl.c) | 2 | 60 | 816-817 |
@@ -56,7 +56,7 @@ remain pinned to their stated revisions; no source exclusions were added.
 | [core/stream.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/stream.c) | 3 | 30 | 277, 370, 615 |
 | [core/stream_file.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/stream_file.c) | 1 | 9 | 73 |
 | [core/strutils.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/strutils.c) | 0 | 5 | none |
-| [core/system.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/system.c) | 2 | 35 | 466, 468 |
+| [core/system.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/system.c) | 2 | 33 | 466, 468 |
 | [core/tool_change.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/tool_change.c) | 2 | 37 | 435-436 |
 | [core/utf8.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/utf8.c) | 0 | 1 | none |
 | [core/vfs.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/vfs.c) | 4 | 38 | 272, 415, 482, 779 |

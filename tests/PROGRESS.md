@@ -1,3 +1,129 @@
+# Door/sleep/UVW cumulative gate passed; prior checkpoint fully verified - 2026-10-24
+
+Current five new cases/two extensions pass full4386-case ASan/UBSan58.67s and
+strict summary:4366clean/1exact recovering UBSan/19known regressions/0unexpected
+failed/skipped. Correct W/X and U/V inversion assertions remain in two exact
+expected failures under one confirmed mapping issue. No CORE/shared fixture
+edits or sanitizer allowance added; unchanged reporting helpers not rerun.
+
+Prior05603c7 run40042658660 is fullygreen, all five jobs success, exact harness/
+CORE2e165a1/filter locks and seven stages0 verified.4381hosted:4365clean/16known/
+0failed/skipped.17480/17756lines98.45%,12619/13834outcomes91.22%; +8outcomes
+with identical covered-line set against6d566e0. Updated successful badges/current
+inventory276raw lines/1215outcomes. Current successor coverage remains pending.
+Full supported-coverage objective remains active; no merge or completion claim.
+
+# Confirmed U/V inversion also ignores remapped axis bits - 2026-10-24
+
+Added the independent registered U/V pair in supported UVW6 configuration.
+Public inversion masks8 and16 and normal driver setting notifications each
+produce two configuration callbacks, but both physical input inversions stay0.
+Correct U-only(1,0) and V-only(0,1) assertions retained. Raw ASan/UBSan output
+records U-only=(0,0)/V-only=(0,0), no sanitizer diagnostic. Source helper uses
+fixed ordinal6/7 rather than configured axis3/4, complementing W's X alias.
+
+Expanded one dated KNOWN_BUGS mapping entry with both reproducers. Each exact
+case has WILL_FAIL/known_bug; grouped pair/strict check passes2known/0unexpected/
+0skipped,0.09s test time. No broad allowance or CORE edit. Total expected
+regressions becomes19, preventing an incomplete W-only repair from passing.
+
+Substantial successor now has five new cases/two extensions across physical
+door/sleep, legacy I/O, provider metadata and eight-axis/UVW mappings. All
+focused checks complete; cumulative gate and source-matched coverage pending.
+Do not dispatch isolated per-defect runs or treat these known failures as blockers.
+
+# Confirmed W motor-fault inversion aliases X in supported UVW configuration - 2026-10-24
+
+Added registered-input/public-setting reproduction in host_core_uvw (N_AXIS6,
+ABC->UVW). W/X fault functions are assigned before registration, driver caps
+advertised, and public inversion stores followed by normal driver notification
+configure both physical inputs. X-only inversion incorrectly sets W inverted;
+W-only inversion incorrectly clears it. X controls/callback counts pass. Raw
+ASan/UBSan group logs X-only=1/W-only=0 and the correct W assertion fails.
+
+Retained both correct independent-axis assertions, one exact WILL_FAIL/known_bug
+and dated KNOWN_BUGS entry with cause/fix/removal guide. Labelled focused run and
+strict summary pass1known/0unexpected/0skipped,0.05s. No sanitizer allowance or
+CORE edit. Total known regressions becomes18. No alarm/motion failure claimed.
+
+Also extended existing eight-axis grouped mapping with Input_Probe -> no axis
+mask, covering its configuration-specific non-axis control. That case passed
+raw grouped check0.07s. Keep with door/sleep, legacy I/O and metadata successor
+work; no per-case full gate or hosted dispatch. Defect remains nonblocking.
+
+# Legacy driver-owned claim count and provider rejection validated together - 2026-10-24
+
+Added a one-relay legacy driver registered through ioports_add with its own
+HAL pin-info/claim/output handlers. Claim callback decrements the driver-owned
+legacy available count. Public ioport_claim must not decrement it twice; require
+zero count (no unsigned wrap), claimed ownership and correct relay on/off through
+the returned port. No modern handler is replaced after registration and no
+private mapping/state is forced. Targets ioports336's changed-count arm.
+
+Grouped ASan/UBSan passes this and pending multi-setting early rejection/retry
+extension (2/2,0.12s test time). Current successor: physical door/no-retract sleep,
+legacy I/O claim and provider-table validation. No new allowance, CORE/shared
+fixture edit, full gate or hosted dispatch; aggregate coverage still pending.
+
+# Source-reviewed early rejection of multi-setting provider table - 2026-10-24
+
+Extended the existing public metadata rejection/recovery control with missing
+required value in the last of two setting descriptors. Reverse iteration must
+reject immediately, publish neither setting nor group and invoke no persistence
+or setter; restoring the value retains the original successful registration and
+ordered report controls. Targets settings2760's idx-nonzero/error loop exit.
+No new invalid enum, native controller state or direct private callback.
+
+Confirmed settings2759 requires function getters before registration, so no
+missing-getter reporting fixture was added. The small table extension is source
+reviewed and awaits grouped execution with the physical-door/sleep successor
+cases. No new case/exception, shared fixture/CORE edit or full/hosted run.
+
+# Sleep above parking target disables kept coolant without Z motion - 2026-10-24
+
+Added public $62=1/$SLP workflow with registered normal PWM spindle and actual
+G0 to Z home above parking target. With keep-coolant policy enabled and M3/M8
+active, require real sleep feedback/state, spindle and coolant off, no extra Z
+pulses or XY movement, empty planner and no system motion. Wrap and chain the
+normal feedback reporter, retaining the Sleeping text assertion. ASan/UBSan
+passes0.05s. Targets the no-retract sleep accessory policy at state_machine589.
+
+Initial message-only failure came from parking fixture's deliberate no-output
+feedback callback; restoring report_init_fns after parking setup resolves it.
+Shutdown/no-motion assertions were unchanged and no CORE defect was claimed.
+Keep with physical-door counterpart for substantial successor batch; no new
+exception, shared fixture/CORE edit, full gate or hosted dispatch.
+
+# Physical-door no-retract coverage evidence corrects target assumption - 2026-10-24
+
+Fresh physical-door-no-retract-proof74 confirms the new registered-spindle case
+executes state_machine550/589. The intended extra678 outcome is NOT reached:
+no parking motion means the restore-motion handler is bypassed. Corrected the
+prior source-target note; no678 gain is claimed. Profile/result retains this
+unexecuted line explicitly. Public physical-door/coolant/no-Z/resume assertions
+still pass. This changes the next search:678 needs separate ownership review,
+not another already-above-target geometry. No full or hosted run was started.
+
+Fetched upstream CORE refs: origin/HEAD remains2e165a1, same clean working
+checkout. No dependency switch or CORE edit. Continue independent successor
+work;05603c7's existing hosted checkpoint handle remains40042658660.
+
+# Physical door above parking target keeps coolant and resumes without Z motion - 2026-10-24
+
+Added ordinary no-retract door workflow with a properly registered normal PWM
+spindle. Move Z from fixture position to home using actual G0, start powered X
+cut with M3/M8, raise physical door IRQ and require spindle off/coolant retained
+by policy, stopped cut and no extra Z pulses. Close/resume completes exact X20
+endpoint with spindle/coolant restored and unchanged Z pulse count. No registered
+spindle pointer mutation or forced parking internals. ASan/UBSan passes0.07s.
+Targets state_machine550/589 no-retract accessory conditions.
+
+Initial fixture used CMD_SAFETY_DOOR helper, which deliberately sets is_parking
+and turns coolant off. Corrected to native control_interrupt_handler physical
+input routing; retained intended physical-door assertions. No CORE defect or
+allowance inferred. This successor case is separate from pushed05603c7/live
+hosted40042658660; keep accumulating before full/hosted validation.
+
 # RTC/backlash/RTU/I/O cumulative gate passed - 2026-10-24
 
 Three new cases/five extensions pass the full4381-case ASan/UBSan gate58.16s.

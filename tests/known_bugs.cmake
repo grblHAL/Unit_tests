@@ -135,3 +135,15 @@ if(TEST system.readonly_rtc_rejects_write_and_preserves_readable_time)
   set_tests_properties(system.readonly_rtc_rejects_write_and_preserves_readable_time
     PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Confirmed on CORE2e165a1, 2026-10-24: remapped W fault follows X inversion.
+if(TEST uvw_axis.motor_fault_w_inversion_uses_w_axis_without_following_x)
+  set_tests_properties(uvw_axis.motor_fault_w_inversion_uses_w_axis_without_following_x
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+# Same configured-axis mapping defect: U/V use fixed function ordinals.
+if(TEST uvw_axis.motor_fault_uv_inversion_uses_remapped_axis_bits)
+  set_tests_properties(uvw_axis.motor_fault_uv_inversion_uses_remapped_axis_bits
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
