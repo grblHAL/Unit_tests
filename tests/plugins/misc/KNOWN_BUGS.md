@@ -69,3 +69,17 @@ Proposed repair: invoke a callback only when its flag remains set after directio
 filtering, preserving event-bit/wait handling and callback user-port mapping.
 After repair, retain assertions, remove those four exact properties and this
 entry, then rerun both configurations plus strict reporting. No source edits here.
+
+## BLTouch D validation checks the S value for integer format - 2026-10-25
+
+Source Plugins_misc265711922037cab6b6e47a9560ef11da3a6e5f83, CORE b01f481.
+The Probe_Deploy D branch calls isintf(values.s) before checking values.d range.
+D0.5 with absent S therefore returns Status_OK instead of BadNumberFormat.
+`plugins_misc.bltouch_fractional_d` retains the correct rejection assertion under
+one exact WILL_FAIL/known_bug label; invalid input is never executed. No sanitizer
+allowance. Fix the checked value upstream, then retain the test and remove its
+exact property and this entry. No production change here.
+
+S/D/H options work when the host reproduces CORE's consumed-word restoration
+(gcode.c2349-2355/4494). Cleared validation flags alone are not execution flags;
+do not classify a missing-restoration fixture failure as a plugin defect.

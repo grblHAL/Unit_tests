@@ -1,3 +1,43 @@
+# Latest component checkpoint - 2026-10-25 (batch31)
+
+Goal active. Corrected an M-code dispatch fixture error and added3 BLTouch option/
+validation cases. Full Windows Clang ASan/UBSan gate was justified by the shared
+contract repair across ATCi/BLTouch/PPI/RGB fixtures:42 compatible suites,822 cases
+=759 clean +63 documented known, zero unexpected failures/skips. Known results
+remain59 correct assertion regressions +4 diagnostic-only cases;3 assertions also
+carry exact diagnostics, counted once. One false ATCi allowance removed; one
+correct BLTouch fractional-D assertion added. No sanitizer allowance added.
+
+IMPORTANT CORRECTION: prior ATCi M960 P0 failure was a harness error, not a
+confirmed upstream defect. CORE gcode.c2349-2355 records consumed word bits and
+4494 restores them before execute. Host helper omitted restoration. Corrected
+helper preserves every assertion; all18 ATCi cases now clean and obsolete exact
+WILL_FAIL/known_bug entry is removed. Earlier checkpoint claims about that defect
+are superseded. PPI/RGB helpers now apply the same consumed-word handoff; their
+registered results remain unchanged. No production source/header changes.
+
+BLTouch S/D/H options work with the faithful handoff. Tests cover high-speed and
+auto-deploy on/off, H reporting, S/R numeric rejections and valid ignored R values.
+Actual D0.5 validation defect remains: D's integer check reads values.s instead
+of values.d, accepts fractional D. Invalid command is never executed. Keep one
+correct BadNumberFormat assertion under exact known_bug with source/removal guide.
+These remain driver/API boundary tests, not actual CORE parser/controller jobs.
+
+Fresh misc selected-source LLVM report:1267/1373 lines92.3%,655/866 branches75.6%,
+122/128 functions across12 files. BLTouch125/138 lines (+24 same configuration).
+Strict coverage classification passes124 misc cases (116 clean +8 known assertions).
+Counter paths max224. Other modules/configurations/hardware remain unverified.
+Exact source locks cover unchanged misc2657119/ATCi671f145/PPI26934c6/RGBdf340905
+and CORE b01f481. Unchanged86 helper/actionlint checks were not rerun.
+
+Unchanged26 legacy serial references retain separate batch24 validation. Latest
+workflow listing remains batch29's reusable/core-only availability; separate
+Plugin/Driver dispatch awaits default installation. Keep PR29 draft/unmerged.
+No hosted GCC/Linux, physical timing or full controller/SDK success claimed.
+Continue remaining modules and integration with the full goal intact.
+
+---
+
 # Latest component checkpoint - 2026-10-25 (batch30)
 
 Goal active. Deliver19 accumulated cases:12 MCP23017 wait/handler and7 BLTouch

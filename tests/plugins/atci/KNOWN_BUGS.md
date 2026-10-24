@@ -1,14 +1,11 @@
-# Known regression - 2026-10-24
+# M-code dispatch contract correction - 2026-10-25
 
-ATCi source671f145530ec8ec9f5828897477dc0192593b3d8.
-command_disable executes the documented M960 P0 using the actual registered
-check -> validate -> execute path. Validation clears block.words.p; execution
-then tests that cleared flag, so the disable request is replaced by usage text
-and keepout remains active. Correct assertion requires an inside target to become
-allowed after disabling. Keep it; upstream should retain parameter presence for
-execution or inspect the validated value instead of the consumed word flag.
-Remove only the exact WILL_FAIL/known_bug label and entry once repaired. No
-sanitizer diagnostic allowance.
+No confirmed command-disable defect remains in this fixture. CORE gcode.c2349-
+2355 records consumed user words and4494 restores them before execution. The old
+host helper passed cleared validation flags straight to execute, creating a false
+M960 P0 failure. The helper now models consumed-word restoration; original
+assertions and production code remain unchanged. Remove the obsolete exact
+WILL_FAIL/known_bug entry. This is a harness repair, not an upstream source fix.
 
 # Scope and unresolved integration
 

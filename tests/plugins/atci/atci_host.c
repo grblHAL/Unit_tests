@@ -174,9 +174,14 @@ status_code_t atci_command(float value, sys_state_t state)
     block.words.p = 1;
     block.values.p = value;
     CHECK(grbl.user_mcode.check(block.user_mcode) == UserMCode_Normal);
+    parameter_words_t supplied = block.words;
     status_code_t result = grbl.user_mcode.validate(&block);
     if (result == Status_OK)
+    {
+        // CORE gcode.c restores the words consumed by validation for execution.
+        block.words.mask = supplied.mask ^ block.words.mask;
         grbl.user_mcode.execute(state, &block);
+    }
     return result;
 }
 void atci_poll(void)

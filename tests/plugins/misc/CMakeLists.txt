@@ -206,10 +206,12 @@ foreach(mode 1 3)
   endforeach()
 endforeach()
 
-foreach(behavior manual_commands probe_lifecycle probe_rejected native_probe reset_stow selftest_reset unavailable)
+foreach(behavior manual_commands probe_lifecycle probe_rejected native_probe reset_stow selftest_reset unavailable options_flow validation_boundaries fractional_d)
   set(target plugins_misc.bltouch_${behavior})
   component_case(${target} bltouch/${behavior}.c bltouch/bltouch_host.c "${COMPONENT_CORE_ROOT}/nuts_bolts.c" "${HARNESS_ROOT}/plugins/misc/bltouch.c")
   target_include_directories(${target} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/bltouch")
   target_compile_definitions(${target} PRIVATE BLTOUCH_ENABLE=1)
 endforeach()
 set_source_files_properties("${HARNESS_ROOT}/plugins/misc/bltouch.c" PROPERTIES COMPILE_OPTIONS "-Wno-unused-parameter;-Wno-missing-field-initializers")
+
+set_tests_properties(plugins_misc.bltouch_fractional_d PROPERTIES WILL_FAIL TRUE LABELS known_bug)

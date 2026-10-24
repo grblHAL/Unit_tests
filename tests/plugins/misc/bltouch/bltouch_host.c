@@ -7,6 +7,7 @@ settings_t settings;
 system_t sys;
 bool claims_ok = true, probe_ok = true, native_probe;
 float angle, last_delay;
+char bltouch_output[256];
 unsigned outputs, delays, resets, starts, completed, selections, warnings;
 probe_id_t selected_probe;
 uint32_t delayed_ms;
@@ -58,7 +59,11 @@ bool protocol_execute_realtime(void)
 }
 bool protocol_exec_rt_system(void) { return true; }
 bool state_door_reopened(void) { return false; }
-static void write_text(const char *text) { CHECK(text); }
+static void write_text(const char *text)
+{
+    CHECK(text && strlen(bltouch_output) + strlen(text) < sizeof(bltouch_output));
+    strcat(bltouch_output, text);
+}
 static void reset(void) { resets++; }
 static bool probe_start(axes_signals_t axes, float *target, plan_line_data_t *data)
 {
@@ -155,13 +160,24 @@ void load_bltouch(void)
     CHECK(startup);
     run_bltouch_startup();
 }
+status_code_t dispatch_bltouch(parser_block_t *block)
+{
+    CHECK(grbl.user_mcode.check(block->user_mcode) == UserMCode_NoValueWords);
+    parameter_words_t supplied = block->words;
+    status_code_t status = grbl.user_mcode.validate(block);
+    if (status == Status_OK)
+    {
+        // Match CORE's consumed-word handoff, not the cleared validation mask.
+        block->words.mask = supplied.mask ^ block->words.mask;
+        grbl.user_mcode.execute(STATE_IDLE, block);
+    }
+    return status;
+}
 void command_bltouch(user_mcode_t command)
 {
     parser_block_t block = {0};
     block.user_mcode = command;
-    CHECK(grbl.user_mcode.check(command) == UserMCode_NoValueWords);
-    CHECK(grbl.user_mcode.validate(&block) == Status_OK);
-    grbl.user_mcode.execute(STATE_IDLE, &block);
+    CHECK(dispatch_bltouch(&block) == Status_OK);
 }
 status_code_t system_bltouch(const char *command)
 {

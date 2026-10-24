@@ -181,12 +181,16 @@ status_code_t rgb_command(float zone, float mode, float intensity, bool execute)
     block.values.q = mode;
     block.values.s = intensity;
     CHECK(grbl.user_mcode.check(block.user_mcode) == UserMCode_Normal);
+    parameter_words_t supplied = block.words;
     status_code_t status = grbl.user_mcode.validate(&block);
     if (status == Status_OK)
     {
         CHECK(!block.words.p && !block.words.q && !block.words.s && block.user_mcode_sync);
         if (execute)
+        {
+            block.words.mask = supplied.mask ^ block.words.mask;
             grbl.user_mcode.execute(machine_state, &block);
+        }
     }
     return status;
 }

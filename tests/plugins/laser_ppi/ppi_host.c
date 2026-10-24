@@ -208,7 +208,9 @@ void ppi_command(user_mcode_t code, float value, sys_state_t state)
 {
     parser_block_t block = {.user_mcode = code, .values.p = value, .words.p = On};
     CHECK(grbl.user_mcode.check(code) == UserMCode_Normal);
+    parameter_words_t supplied = block.words;
     CHECK(grbl.user_mcode.validate(&block) == Status_OK && !block.words.p);
+    block.words.mask = supplied.mask ^ block.words.mask;
     grbl.user_mcode.execute(state, &block);
 }
 void ppi_move(unsigned steps, float steps_per_mm)

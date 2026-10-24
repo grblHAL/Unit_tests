@@ -10,5 +10,3 @@ set_source_files_properties("${HARNESS_ROOT}/plugins/atci/sienci-atci-plugin.c" 
 if(CMAKE_C_COMPILER_ID STREQUAL "Clang")
   set_property(SOURCE "${HARNESS_ROOT}/plugins/atci/sienci-atci-plugin.c" APPEND PROPERTY COMPILE_OPTIONS -Wno-error=unused-but-set-global)
 endif()
-
-set_tests_properties(plugin_atci.command_disable PROPERTIES WILL_FAIL TRUE LABELS known_bug)

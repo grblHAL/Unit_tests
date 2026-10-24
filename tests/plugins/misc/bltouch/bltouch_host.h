@@ -15,3 +15,6 @@ void run_bltouch_delayed(void);
 void command_bltouch(user_mcode_t command);
 status_code_t system_bltouch(const char *command);
 extern foreground_task_ptr delayed_task;
+
+extern char bltouch_output[256];
+status_code_t dispatch_bltouch(parser_block_t *block);

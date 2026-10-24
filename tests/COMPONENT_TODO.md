@@ -29,8 +29,9 @@ or force private state to enter a path.
   driver.c/NVS, SDK/UDB and physical validation remain open. No silent fallback.
 - ATCi18 cases now exercise original registered settings/M-code/travel/sensor
   callbacks at671f145530ec8ec9f5828897477dc0192593b3d8:292/305 lines,156/193
-  branches. Retain M960 P0 regression: validate consumes words.p, execute tests
-  consumed flag and never disables. Logical host AUX inputs are not actual board
+  branches. M960 P0's prior failure was a host dispatch error: CORE restores
+  consumed word flags for execution. Correct assertions pass after fixing the
+  helper; obsolete known allowance removed. Logical host AUX inputs are not actual board
   maps; full parser/planner/native envelope and LongBoard validation remain.
   Clipped paths return without chaining native apply_travel_limits; an initial
   exact callback-count assumption was removed, with all coordinate assertions
@@ -441,3 +442,13 @@ models, not physical servo timing. Remaining S/D/R validation and consumed-word
 flow, high-speed/auto-deploy configuration, no-readback fallback, toolsetter/
 reports and actual controller/servo hardware remain. Do not infer complete
 BLTouch support from this selected configuration.
+
+## M-code consumed-word contract correction
+
+CORE records XOR of supplied and remaining validation masks, then restores those
+consumed bits for execution. ATCi/PPI/RGB/BLTouch host helpers now follow that
+contract. Prior ATCi M960 P0 failure was fixture error; assertions pass unchanged
+and its known allowance is removed. Earlier progress notes claiming that defect
+are superseded. BLTouch S/D/H option flow works. Retain separate correct fractional-
+D rejection regression; no invalid input is executed. Full parser integration
+still needs tests; do not treat isolated callback handoff as controller execution.
