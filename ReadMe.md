@@ -1,8 +1,8 @@
 # Unit tests for the grblHAL core
 
 [![Core tests](https://github.com/grblHAL/Unit_tests/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/grblHAL/Unit_tests/actions/workflows/tests.yml)
-[![Core line coverage: 98.45%](https://img.shields.io/badge/core_lines-98.45%25-brightgreen)](https://github.com/petervanderwalt/Unit_tests/actions/runs/40056914079)
-[![Core branch coverage: 91.61%](https://img.shields.io/badge/core_branches-91.61%25-green)](https://github.com/petervanderwalt/Unit_tests/actions/runs/40056914079)
+[![Core line coverage: 98.45%](https://img.shields.io/badge/core_lines-98.45%25-brightgreen)](https://github.com/petervanderwalt/Unit_tests/actions/runs/40060050917)
+[![Core branch coverage: 91.66%](https://img.shields.io/badge/core_branches-91.66%25-green)](https://github.com/petervanderwalt/Unit_tests/actions/runs/40060050917)
 
 Coverage badges show a verified successful report, not a live measurement of
 every source revision. Click either percentage for its run and coverage artifact.
@@ -530,7 +530,7 @@ compatibility level 1, parameter-disabled builds where the selected CORE support
 CoreXY, polar, wall-plotter, three/four/five-axis delta and five-axis RTCP kinematics, backlash
 compensation, four-axis asymmetric ganging with and without auto-squaring,
 seven-axis XYZABCU, the eight-axis maximum, six-axis UVW remapping, and three registered spindles
-with two active spindle slots, a four-slot persistent tool table with and without NGC expressions, fixed X/Y/Z tool-offset axes (`TOOL_LENGTH_OFFSET_AXIS`), optional spindle PWM linearization, and enabled PID logging. All variants run in one
+with two and three active spindle slots, a four-slot persistent tool table with and without NGC expressions, fixed X/Y/Z tool-offset axes (`TOOL_LENGTH_OFFSET_AXIS`), optional spindle PWM linearization, and enabled PID logging. All variants run in one
 CTest suite; coverage merges their executed source lines. The five-axis delta
 fixture streams mixed cuts and independent auxiliary reversals, checking emitted
 steps and public machine-position conversion. It does not establish auxiliary

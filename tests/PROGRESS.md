@@ -1,3 +1,94 @@
+# Three-spindle/probe/help batch cumulative delivery - 2026-10-24
+
+Three new cases and two existing-case extensions pass one full ASan/UBSan gate:
+4,418/4,418 in58.53s. Strict classification:4,394 clean,2 known recovering
+sanitizer cases,22 documented expected regressions,0 unexpected failures/skips.
+Added three-active-spindle configuration; public drivers exercise every outcome
+of the ramp-list traversal. Extended allocation recovery also rejects the next
+ramp allocation during an actual override, verifies immediate correct PWM/no
+stale tasks, then successful independent primary/secondary ramps on retry.
+Public probe failure/$X/retry and optional plugin help providers are included.
+No CORE edits or new allowances. Artifacts:
+build-asan/three-spindle-probe-help74-delivery-{build.log,tests.log,results.xml,summary.log}.
+Keep the measured badges at fully green2f0b74b/run40060050917 until this batch
+has its own exact-source hosted coverage and compiler result.
+
+# Fully verified2f0b74b coverage checkpoint - 2026-10-24
+
+Run40060050917 completed success; all five source/GCC/Clang/coverage/Results
+summary jobs passed. Both exact harness/core/filter locks and seven successful
+coverage stages were verified.17,480/17,756 lines98.45%,12,680/13,834 branch
+outcomes91.66%;276 missing lines/1,154 missing outcomes. Compared to40056914079,
+covered-line sets are identical and six additional outcomes are covered (four
+report outcomes, two grbllib outcomes). Coverage4,415 cases:4,394 clean,21 known,
+zero unexpected failures/skips. Badges, current raw inventory and measured
+KNOWN_BUGS paragraph now point to this fully green checkpoint.
+Local three-spindle, no-observer probe recovery and optional help-provider work
+remains separate. No completion claim or CORE/source exclusion changes.
+
+# Completed coverage job at2f0b74b; compiler validation pending - 2026-10-24
+
+Run40060050917 coverage and GCC jobs pass; Clang remains running at inspection.
+Both artifact locks match harness2f0b74b630cb7b1b4e27e4f6a00c0e15c7864061,
+CORE2e165a1 and the core source filter. Exactly seven coverage stages exit0.
+Measured17,480/17,756 lines98.45%,12,680/13,834 outcomes91.66%: +6 outcomes
+with identical covered-line sets against40056914079.4,415 cases,4,394 clean,
+21 known,0 failed/skipped. Keep success badges at the last fully green run
+until all jobs complete; this is a completed coverage job, not all-check success.
+
+Local next-batch proof: three-spindle-branch-proof74/proof.json shows all six
+outcomes at spindle_control.c594 exercised by registered drivers, including list
+traversal and context reuse. ASan/UBSan and isolated no-sanitizer case pass.
+No claim of aggregate next-batch gain until its own hosted report exists.
+
+# Three simultaneous PWM spindle ramp contexts - 2026-10-24
+
+Added supported N_SPINDLE=3/N_SYS_SPINDLE=3 host configuration and one registered
+public-driver scenario. Three PWM drivers map through registered slot settings;
+M3/M4 start distinct speeds/directions. Two rounds of independent overrides reach
+each bounded RPM target with exact driver PWM, retain programmed RPM/direction,
+and stop scheduling updates after completion. M5$-1 stops all three. This reaches
+the native ramp-list traversal beyond the existing two-active-slot fixture.
+Focused ASan/UBSan passes0.11s. Initial exact PWM expectation used independently
+rounded RPM; corrected comparison to CORE's returned target, separately bounded
+within0.01 RPM of the requested percentage, preserving exact PWM assertions.
+No defect, CORE edit or exception. README lists the added supported configuration.
+CMake adds one host target/module, reusing existing driver registration utilities.
+Next cumulative gate must include this configuration and local probe/help cases.
+
+# Default probe observer alarm recovery - 2026-10-24
+
+Added one public probe-motion scenario with no plugin completion observer.
+Initial contact raises Alarm_ProbeFailInitial, disarms the probe and emits no
+motor steps. After releasing the modeled contact, public $X clears the alarm;
+a retry detects contact at40 steps, completes without observer calls and leaves
+no queued move or armed probe. Focused ASan/UBSan passes0.05s. This targets the
+verified missing absent-observer outcome at motion_control.c1056 without changing
+CORE or suppressing a failure. Local next-batch work; no full gate/CI repeat.
+
+# Optional plugin help providers - 2026-10-24
+
+One new registered scenario puts a valid settings-only plugin (no group table)
+between two providers with help groups. Lookup reaches the later provider;
+unknown-topic lookup exhausts the chain and emits only N/A. Extended the existing
+Commands topic case through installed/absent/reinstalled optional reporter, with
+exact output and callback counts. Focused ASan/UBSan passes0.07s/0.06s.
+Targets report.c396 optional-group guard and382 optional-command callback.
+No CORE edits or new exceptions. These local successors are outside hosted
+run40060050917; keep accumulating useful cases before another full gate/dispatch.
+
+# Delivered report branches locally confirmed - 2026-10-24
+
+Pushed 2f0b74b630cb7b1b4e27e4f6a00c0e15c7864061; exact-head hosted
+run40060050917 is active (source job succeeded; compiler/coverage jobs running
+at inspection). No duplicate dispatch. PR28 is open, unmerged and unchanged at
+a9f355c35717006f497754d1acc421cf5b141670. Fresh CORE fetch remains2e165a1.
+Isolated no-sanitizer LLVM profiles from the three delivered report cases show
+both outcomes at report.c901 (sender connection),970 (homing init lock),1044
+(probe selector) and1049 (disconnect input). Proof:
+build-asan/public-report-branch-proof74/proof.json. These confirm target paths;
+do not convert local branch IDs into a hosted aggregate percentage.
+
 # Public startup/report batch cumulative gate - 2026-10-24
 
 One new optional-release boot scenario and seven existing-case extensions are
