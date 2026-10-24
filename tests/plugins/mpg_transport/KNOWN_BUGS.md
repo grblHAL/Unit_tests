@@ -1,6 +1,6 @@
 # Scope and remaining work
 
-Twenty-one cases compile original mpg_transport.c and its public wire header
+Twenty-nine cases compile original mpg_transport.c and its public wire header
 against pinned CORE types and original nuts_bolts formatting. Plain and framed
 transport defaults are separate source-supported builds. Valid peer frames use
 the public reference encoder; the CRC check vector123456789=0x29B1 and exact
@@ -14,10 +14,16 @@ fails explicitly if reached; it is not a copied implementation. UART output,
 clock, settings registration and NVS are simulated. Tests cover ordered traffic,
 duplicate suppression, channel separation, fragmented valid frames, ACK/NAK,
 timeout/retry budget, normal receive backpressure, TX chunking, reset, baud,
-resource failures and diagnostics. No known runtime assertion or sanitizer
+resource failures and diagnostics. Registered setting pointers and on_changed hooks
+now cover acknowledgement floors during queued output and transport persistence
+through save/load; a soft reset retains the applied transport. Output discard
+checks sequence separation and rejects stale acknowledgements for fresh data.
+Byte-only UART output is checked in both modes; restore persists defaults,
+runtime payload limits retain complete ordered data, and the updated attempt
+budget bounds retransmission without resetting a healthy link. No known runtime assertion or sanitizer
 exception registered.
 
 Full CORE stream/protocol integration, actual task/IRQ ordering, alternate UART
-write fallback, remaining dynamic settings/output-discard behavior, physical
+write fallback, remaining setting validation boundaries, physical
 serial/radio reliability and board builds remain. These bounded cases do not establish complete controller behavior or physical
 link reliability.

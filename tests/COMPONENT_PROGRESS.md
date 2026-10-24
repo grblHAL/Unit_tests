@@ -1,3 +1,27 @@
+# Local authoring checkpoint - 2026-10-24 (next combined batch)
+
+Goal active. Eight additional MPG transport cases; complete affected suite29/29
+passes Windows Clang ASan/UBSan in1.71s with strict classification:29 clean,
+zero known/failures/skips. Shared fixture adds only byte-only UART capability;
+plain/framed fallback both validate original output. Registered setting changes
+preserve queued/in-flight output and apply a500ms acknowledgement floor;
+transport changes stay pending through soft reset and apply after persisted
+settings reload; output discard separates sequence numbers so stale ACKs cannot
+retire fresh output. Restore returns exact default settings/status and persists;
+runtime payload limit preserves ordered chunks and runtime attempt limit bounds
+retransmission without restarting the healthy link. No production source edits.
+
+This is affected-suite authoring validation, not a new cumulative gate, coverage
+measurement or hosted result; batch18 below remains delivered baseline. Keep
+accumulating before full validation/push. Original candidate503b422d0aa92c4d2b6a190e92ce25344bcc629e
+and COREb01f481072edecac33d5e40c25869359a5b3fa1f checkouts verified clean.
+Legacy driver review confirms original CORE070f80 commit exists locally, but no
+legacy runtime suite or SDK compatibility result is claimed. Never silently
+substitute legacy CORE. Actual MPG selection/tool-ACK/controller and physical
+transport behavior still require integration checks.
+
+---
+
 # Latest component checkpoint - 2026-10-24 (batch18)
 
 Goal remains active. Delivered the accumulated WebUI13 authoring cases together

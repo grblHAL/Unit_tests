@@ -40,7 +40,10 @@ or force private state to enter a path.
   backpressure, chunks, reset and resource/baud/diagnostic workflows. Original
   .c404/468 lines,146/234 branches; public wire header25/25 lines,10/10 branches.
   Stream registration is captured, not actual CORE MPG switching/broadcast or
-  tool-ACK suspend. Remaining dynamic settings, UART fallback, output-discard and
+  tool-ACK suspend. Eight local authoring cases (affected suite29/29 ASan/UBSan) now cover pending
+  transport persistence, in-flight timeout/attempt changes, output discard/stale
+  ACK isolation, payload limit, restore and plain/framed byte-only UART. Not yet
+  cumulatively validated/delivered. Remaining NVS clamping and
   controller/physical transport integration need the next substantial group.
 - PicoHAL babac83b030fdc053b66f711e82f92b6fdfcc455 fails unchanged-source syntax
   compilation against pinned CORE: on_probe_fixture_ptr and grbl.on_probe_fixture

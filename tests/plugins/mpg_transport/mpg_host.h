@@ -16,7 +16,7 @@ void mpg_ack(unsigned packet);
 extern io_stream_t proxy;
 extern setting_details_t *registered_settings;
 extern unsigned claims, registrations, rt_calls, resets, warnings, saves, packets, chains;
-extern bool alloc_ok, settings_ok, claim_ok, register_ok, baud_ok;
+extern bool alloc_ok, settings_ok, claim_ok, register_ok, baud_ok, byte_only;
 extern uint32_t now, baud;
 extern char output[4096];
 extern struct mpg_packet

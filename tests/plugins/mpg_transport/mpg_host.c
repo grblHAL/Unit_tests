@@ -7,6 +7,7 @@ io_stream_t proxy;
 setting_details_t *registered_settings;
 unsigned claims, registrations, rt_calls, resets, warnings, saves, packets, chains;
 bool alloc_ok = true, settings_ok = true, claim_ok = true, register_ok = true, baud_ok = true;
+bool byte_only;
 uint32_t now, baud;
 char output[4096];
 struct mpg_packet sent[256];
@@ -175,7 +176,7 @@ void mpg_prepare(void)
 {
     physical = (io_stream_t){.type = StreamType_Serial,
                              .instance = 1,
-                             .write_n = transmit,
+                             .write_n = byte_only ? NULL : transmit,
                              .write_char = transmit_char,
                              .disable_rx = disable_rx,
                              .is_connected = connected,
