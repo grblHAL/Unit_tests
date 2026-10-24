@@ -1,17 +1,17 @@
 # Remaining raw CORE coverage
 
-Verified coverage report: [run40054135733](https://github.com/petervanderwalt/Unit_tests/actions/runs/40054135733),
-harness `8a8bea36c8c23528241789f660b18531c7dd143e`, CORE `2e165a1ac4c74be8e68971972c6577775d856b05`,
+Verified coverage report: [run40056914079](https://github.com/petervanderwalt/Unit_tests/actions/runs/40056914079),
+harness `bb5a6f8cccfb70daec25fab3f6b443bda44f111b`, CORE `2e165a1ac4c74be8e68971972c6577775d856b05`,
 filter `core/.*\.[ch]$`. Both artifact locks match and exactly seven coverage
 stages exit0. All five source/GCC/Clang/coverage/Results summary jobs passed
 at final API inspection.
 
-17,480/17,756 lines (**98.45%**) and12,660/13,834 branch outcomes (**91.51%**)
-were covered:276 raw missing lines and1,174 missing outcomes. Coverage job:
-4,409 cases,4,388 clean/21 known/0 failed/skipped. Against same-source40050621444:
-eight additional branch outcomes with identical covered-line set and denominator.
+17,480/17,756 lines (**98.45%**) and12,674/13,834 branch outcomes (**91.61%**)
+were covered:276 raw missing lines and1,160 missing outcomes. Coverage job:
+4,414 cases,4,393 clean/21 known/0 failed/skipped. Against same-source40054135733:
+fourteen additional branch outcomes with identical covered-line set and denominator.
 
-Success badges show fully green40054135733 (98.45%/91.51%). The subsequent local native macro/comment cases are separate from this report.
+Success badges show fully green40056914079 (98.45%/91.61%). The subsequent local optional/failed-init callback cases are separate from this report.
 
 Raw coverage does not establish correctness or reachability. See [TODO](TODO.md)
 and [KNOWN_BUGS](KNOWN_BUGS.md) before selecting workflows. Historical audits
@@ -25,7 +25,7 @@ remain pinned to their stated revisions; no source exclusions were added.
 | [core/fs_embedded.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/fs_embedded.c) | 4 | 5 | 133, 135, 138, 140 |
 | [core/fs_ram.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/fs_ram.c) | 0 | 11 | none |
 | [core/gcode.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/gcode.c) | 29 | 213 | 325-326, 573, 1043, 1367-1368, 1499, 2190, 2728, 2730-2731, 2746-2747, 2898, 2987, 2999, 3065, 3482-3484, 3616-3617, 3929, 4314-4315, 4864, 4866, 4978-4979 |
-| [core/grbllib.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/grbllib.c) | 14 | 32 | 92, 95, 140, 144-147, 149-150, 590-594 |
+| [core/grbllib.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/grbllib.c) | 14 | 31 | 92, 95, 140, 144-147, 149-150, 590-594 |
 | [core/ioports.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/ioports.c) | 28 | 130 | 782, 1195, 1291-1292, 1385, 1387, 1389, 1391, 1394-1398, 1401-1402, 1404, 1406-1407, 1409, 1411-1412, 1436-1438, 1440-1441, 1558-1559 |
 | [core/kinematics/asymmetric_ganging.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/kinematics/asymmetric_ganging.c) | 1 | 4 | 254 |
 | [core/kinematics/delta.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/kinematics/delta.c) | 9 | 46 | 180, 320-321, 376, 619-620, 625, 643, 706 |
@@ -38,22 +38,22 @@ remain pinned to their stated revisions; no source exclusions were added.
 | [core/motion_control.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/motion_control.c) | 2 | 27 | 690, 715 |
 | [core/my_plugin.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/my_plugin.c) | 2 | 0 | 26, 29 |
 | [core/ngc_expr.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/ngc_expr.c) | 11 | 13 | 115-116, 189-190, 250, 252, 292-293, 337-338, 341 |
-| [core/ngc_flowctrl.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/ngc_flowctrl.c) | 2 | 59 | 816-817 |
-| [core/ngc_params.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/ngc_params.c) | 4 | 44 | 772-773, 942, 1247 |
+| [core/ngc_flowctrl.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/ngc_flowctrl.c) | 2 | 57 | 816-817 |
+| [core/ngc_params.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/ngc_params.c) | 4 | 40 | 772-773, 942, 1247 |
 | [core/nuts_bolts.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/nuts_bolts.c) | 0 | 1 | none |
 | [core/nvs_buffer.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/nvs_buffer.c) | 3 | 7 | 366, 391-392 |
 | [core/planner.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/planner.c) | 0 | 1 | none |
 | [core/probe.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/probe.c) | 0 | 0 | none |
 | [core/protocol.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/protocol.c) | 1 | 45 | 185 |
 | [core/regex.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/regex.c) | 0 | 0 | none |
-| [core/report.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/report.c) | 5 | 76 | 450-452, 1955-1956 |
+| [core/report.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/report.c) | 5 | 71 | 450-452, 1955-1956 |
 | [core/settings.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/settings.c) | 58 | 124 | 701, 703, 780-781, 839, 925, 928, 1012, 1056, 1140-1141, 1199-1200, 1341, 1351, 1507-1508, 1569, 1577, 1584, 1591, 1594-1596, 1652-1653, 1693-1694, 1901-1902, 1960-1961, 2026-2027, 2175-2177, 2179-2181, 2192-2194, 2196-2198, 2239-2241, 2247-2248, 2957, 2959, 3476-3477, 3625-3627 |
 | [core/sleep.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/sleep.c) | 0 | 1 | none |
 | [core/spindle_control.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/spindle_control.c) | 7 | 33 | 499, 503, 1160-1161, 1172, 1215-1216 |
 | [core/state_machine.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/state_machine.c) | 12 | 42 | 157, 449, 502, 524-527, 614-615, 658-659, 819 |
-| [core/stepper.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/stepper.c) | 1 | 13 | 1093 |
+| [core/stepper.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/stepper.c) | 1 | 12 | 1093 |
 | [core/stepper2.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/stepper2.c) | 0 | 11 | none |
-| [core/stream.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/stream.c) | 3 | 23 | 277, 370, 615 |
+| [core/stream.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/stream.c) | 3 | 22 | 277, 370, 615 |
 | [core/stream_file.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/stream_file.c) | 1 | 9 | 73 |
 | [core/strutils.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/strutils.c) | 0 | 5 | none |
 | [core/system.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/system.c) | 2 | 30 | 466, 468 |
@@ -220,3 +220,12 @@ selects the metric formatter directly. The selector and both formatters are
 file-local. Existing public metric/inch diameter reporting remains covered;
 no direct private formatter test or exclusion was added. See
 [exact call-site audit](TODO.md#imperial-coordinate-formatter-position-flag-has-no-native-false-caller---2026-10-24).
+
+## Fast-cancel preparation guard - 2026-10-24
+
+CORE2e165a1 stepper.c1093 is behind a native ordering contradiction: its only true
+flag writer leaves the planner block pointer NULL; the next preparation pass
+returns before the check or reloads the block and clears the flag first. Native
+IRQ step output does not reenter preparation. Existing public jog cancellation
+and hold/resume checks remain; no flag injection or exclusion was added. See
+[exact ordering audit](TODO.md#fast-cancel-segment-guard-is-cleared-before-its-native-check---2026-10-24).

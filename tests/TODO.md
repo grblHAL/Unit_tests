@@ -1654,3 +1654,60 @@ reporting covers metric/inch diameter conversion; the new M72 extensions verify
 G7/G8 sender modes. Do not add a private imperial(false) call for this outcome.
 This proves a native caller bound, not a platform-wide impossibility after
 source changes. Keep the outcome in the raw measured denominator.
+
+## Secondary stepper idle-run guard: native polling versus timer contract - 2026-10-24
+
+CORE2e165a1 stepper2.c429 retains a prev_state != State_Idle outcome.
+The foreground public st2_motor_run at450-465 calls _motor_run only when polling
+is enabled and profile.state != State_Idle. Repeated idle polling cannot reach
+_motor_run with prev_state==Idle; existing finite/idle/stop tests already check
+public no-step behavior. The other call is the registered timer callback435-440.
+Normal completion stops the timer. A callback delivered after that stop would
+need a real driver's late/in-flight IRQ contract; none is established here.
+Do not manually fire a stopped timer solely for this outcome or call the private
+helper. This is a foreground caller bound and unresolved timer lifecycle point,
+not a claim that all hardware forbids late callbacks, a confirmed defect or an
+exclusion from the raw branch denominator.
+
+## Failed-driver query is preempted by the deliberate permanent fault loop - 2026-10-24
+
+Resolved on CORE2e165a1 with source and a debugger attached only to the spawned
+host test. The main thread is in task_execute -> task_execute_on_startup
+(grbllib.c882) -> protocol_exec_rt_system626 -> protocol_execute_realtime ->
+protocol_main_loop238. grbllib.c875-883 deliberately ends failed startup with
+while(true) task_execute(false). It does not return to normal command dispatch.
+
+protocol_main_loop reads the $G newline, then calls protocol_execute_realtime
+before executing the buffered line. EXEC_RT_COMMAND enters that permanent fault
+loop, explaining why neither step-enable callback variant nor a registered
+Serial console produces a first modal-report write. system.c964's generic
+allow_blocking flag does not bypass this separate startup policy. No late IRQ,
+command-registration cycle, missing-enable defect or timeout exception follows.
+
+Evidence: build-asan/failed-init-query-debug-stack74.log; preceding bounded
+controls remain in failed-init-query-*74.log. The incorrect expected-query
+proposal was removed. Existing failed-init/setup fault-loop scenarios already
+observe safe permanent alarm behavior and discarded plugin work. The separate
+failed_driver_init_skips_setup case still covers a missing enable callback with
+its original immediate host-exit path, which preempts that permanent loop.
+Do not register another query-success test without an upstream fault-loop
+contract/implementation change. All raw coverage remains included.
+
+## Fast-cancel segment guard is cleared before its native check - 2026-10-24
+
+CORE2e165a1 stepper.c1093 remains a raw missing return. exec_fast_hold can become
+true only at820 in st_update_plan_block_parameters(true); that function leaves
+pl_block NULL (already NULL, or cleared at836 after marking recalculation).
+All native true calls come from state_cycle455, reached by foreground realtime
+motion-cancel handling. Other planner/state callers pass false. IRQ step output
+does not call st_prep_buffer or this parameter-update function.
+
+On the next st_prep_buffer pass, full-buffer/end-motion exits cannot reach1092.
+Once its segment loop runs, pl_block==NULL enters the block-load/recalculation
+arm: no planner block returns at906, otherwise exec_fast_hold is cleared at1088
+before the check at1092. Thus native serialized execution cannot take1093.
+Existing real jog-cancel/resume and fast short-segment controls exercise the
+supported motion paths; do not forge the flag or call private state to hit this
+return. This is a current native caller/order bound, not a guarantee for an
+external plugin that reenters segment preparation from an IRQ. Keep the line
+and branch in the raw denominator; revisit if ordering/callers change upstream.

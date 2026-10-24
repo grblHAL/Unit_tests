@@ -1,3 +1,79 @@
+# Public startup/report batch cumulative gate - 2026-10-24
+
+One new optional-release boot scenario and seven existing-case extensions are
+ready for delivery on coverage-batch-74. Full ASan/UBSan: 4,415/4,415 pass in
+58.78s; strict summary passes with existing 22 known failures and two recovering
+sanitizer cases, zero unexpected failures/skips. No CORE or shared fixture edits,
+no new exceptions. Artifacts: build-asan/public-startup-reports74-delivery-*
+(build/test logs, results XML, strict summary). Verified coverage badges remain
+pinned to fully green bb5a6f8/run40056914079 until this batch is measured.
+
+# Sender reconnect and basic-probe capability reports - 2026-10-24
+
+Extended two existing reporting scenarios. Startup-command output is suppressed
+while disconnected; reconnect reports the correct error and the following success.
+Probe capability reports now alternate selectable three-probe and ordinary
+single-probe drivers, checking absent selector/disconnect tokens without stale
+capabilities and retaining NOPROBE absence for a working basic probe. Focused
+ASan/UBSan 2/2 passed (0.31s total). These target verified missing conditions at
+report.c901/1044/1049; aggregate gains await the next cumulative hosted batch.
+No CORE changes, new exceptions or duplicate case registrations.
+
+# Live public automatic-report controls - 2026-10-24
+
+Three existing timer scenarios now use public settings storage and realtime
+sender toggle commands instead of assigning report interval/enable fields.
+The interval-change and disabled-chain checks run in the live boot read observer,
+before NVS shutdown, and retain deadline/rearm/no-report assertions plus a
+successful following $G query and normal driver release. Pause/resume uses the
+sender toggle in both directions. Focused ASan/UBSan 3/3 passed (0.35s total).
+Initial post-shutdown persistence attempts hit freed host NVS; corrected the test
+lifecycle, no CORE defect or allowance claimed. No shared fixture changes.
+
+# Homing capability follows public startup-lock changes - 2026-10-24
+
+Extended the existing enabled-homing report case through public $22 values
+1 -> 5 -> 1 and public first-phase XYZ homing configuration. HOME remains
+advertised throughout; the legacy OPT L flag disappears with initialization
+lock and returns when unlocked. Assertions inspect only the OPT flag field.
+Focused ASan/UBSan case passed (0.05s). No CORE edits or new exceptions.
+This local successor is not included in the verified 98.45%/91.61% report.
+
+# Verifiedbb5a6f8; optional callbacks and resolved startup observation - 2026-10-24
+
+Hosted40056914079 passes all five jobs at exactbb5a6f8cccfb70daec25fab3f6b443bda44f111b.
+Both locks match CORE2e165a1 and the core filter; seven coverage stages exit0.
+Measured17,480/17,756 lines98.45%,12,674/13,834 outcomes91.61%: net+14 against
+40054135733 with identical covered-line set.4,414 hosted cases:4,393 clean,
+21 known,0 failed/skipped. Badges/measurement/gap table refreshed locally.
+
+Local successor: one new missing-release-handler boot scenario and one extended
+failed-init case. No release handler means native Ctrl-C restarts the parser;
+second $G works, one setup and no release calls, saved $10 survives. A bounded
+observer ends that intentionally persistent controller after assertions.
+Failed init without step-enable retains original alarm/setup/exit expectations.
+Focused sanitizer cases pass0.06/0.07s; grouped non-sanitized2/2 passes0.11s.
+optional-release-enable-proof74/proof.json shows both outcomes at grbllib194/513.
+Last full gate remains4,414;4,415 registered. No tiny new gate/CI or allowance.
+
+The separate failed-init $G stall is resolved as expected policy, not a bug.
+Bundled LLDB attached to the spawned query process shows the intentional
+permanent task_execute_on_startup fault loop at grbllib882, entered at the
+protocol realtime checkpoint before command dispatch. Generic $G allow_blocking
+does not bypass failed startup. Incorrect query-success proposal removed; TODO
+now records source/runtime evidence. Temporary probes restored and passing
+registered case rebuilt/verified. No CORE edit, unknown timeout acceptance or
+unsupported IRQ assumption. Existing permanent-fault observers cover this state.
+
+New native ordering audit accounts for raw stepper1093: true fast-cancel flag
+writer leaves pl_block NULL, and the next preparation pass returns early or
+clears the flag while loading before the guard. No IRQ caller reenters native
+preparation. Existing real cancellation checks retained; no injected state.
+See TODO/COVERAGE_GAPS. No measured percentage or denominator was changed.
+
+Continue independent supported gaps on74. Preserve unrelated byte-identical
+legacy-description status and frozen/open PR28; never merge. Goal active.
+
 # Native callbacks, sender reports and U/V/W reversals - 2026-10-24
 
 Branch coverage-batch-74 has five new scenarios and five existing-case extensions.
