@@ -359,3 +359,15 @@ registration failures. Per-axis defaults and persistence include ABC. Settings
 family decoding and limits_homing_pulloff are explicit boundary fixtures, not
 executed CORE implementation. Add actual settings/limits/controller homing
 integration and supported additional-axis layouts before full-coverage claims.
+
+## Batch26 selected-source coverage and next batch
+
+Fresh misc report covers7 files,509/527 lines and277/371 branches, not unbuilt
+modules. Pull-off74/74 lines (29/31 branches) covers3/6-axis builds only; U/V/W
+layouts and actual settings/limits homing integration remain. PCA86/97 lines
+(29/42 branches) leaves config/inversion callback behavior; inspect its ABI before
+runtime. ADC49/50 and DAC62/63 lines leave unavailable-device report description,
+with receive/startup error contracts still requiring source review. Prior MCU,
+controller/parser/scheduler and physical checks remain open despite line coverage.
+Prioritize source-supported eventout and probe-relay workflows, then MCP23017
+transports/configurations; do not claim entire miscellaneous plugin covered.

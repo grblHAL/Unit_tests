@@ -1,3 +1,39 @@
+# Latest component checkpoint - 2026-10-25 (batch26)
+
+Goal active. Deliver18 accumulated cases:8 PCA9654E output-bank and10 per-axis
+homing pull-off. One full Windows Clang ASan/UBSan compatible gate passes42 suites,
+740 cases =681 clean +59 documented known, zero unexpected failures/skips. Known
+results now55 correct assertion regressions +4 diagnostic-only cases;3 assertions
+also carry exact diagnostics, counted once. The26 legacy serial reference cases
+retain separate unchanged batch24 validation, not included in740.
+
+PCA tests cover startup/bus/probe failures, all8 physical output bits, duplicate
+successful writes, descriptor boundaries and native enumeration/function/description
+chaining. Retain two correct known descriptor bank-offset assertions: ordinary
+port0 writes bit0, descriptor0 with pin_base2 reads/writes bit2 instead. No unsafe
+shift, invalid ID, private state edit or new sanitizer allowance. Registration is
+modeled from CORE's actual pin_base assignment, not full aggregator execution.
+
+Pull-off tests cover three/six-axis registered settings, defaults, save/load,
+per-axis limits requests, global inherited/default changes and hook failures/
+chaining. Configured Y/Z/A/B/C defaults and persistence execute. Actual settings
+dispatch, limits/planner/stepper implementation and physical homing are boundaries.
+
+One fresh selected-source LLVM report across7 instrumented misc files:509/527
+lines96.6%,277/371 branches74.7%,54/55 functions. Pull-off74/74 lines,29/31 branches;
+PCA86/97 lines,29/42 branches; ADC49/50 and DAC62/63 lines. This excludes unbuilt
+misc modules and alternate configurations: not whole-plugin/repository coverage.
+Fresh counter paths max224. Next largest source groups include event outputs,
+probe relays and MCP23017; PCA inversion ABI and failure/retry contract stay open.
+
+GitHub-resolved Plugins_misc2657119 and CORE b01f481 locks match clean originals.
+Unchanged86 reporting/source helpers and actionlint were not repeated. Latest fork
+workflow listing still contains only Reusable host tests and Core tests; separate
+Plugin/Driver dispatch needs default-branch installation. No hosted/target/hardware
+success or merge claimed. Continue remaining modules and controller integration.
+
+---
+
 # Local per-axis homing pull-off checkpoint - 2026-10-25
 
 Goal active. Ten new cases pass focused Windows Clang ASan/UBSan and strict
