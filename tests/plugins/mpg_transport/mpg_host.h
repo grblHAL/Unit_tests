@@ -29,5 +29,7 @@ extern struct mpg_packet
 void mpg_core_start(void);
 void mpg_core_run(void);
 extern sys_state_t core_state;
-extern unsigned status_reports, mode_reports;
+extern unsigned status_reports, mode_reports, command_calls;
+extern status_code_t command_status;
+extern char last_command[32], command_history[8][32];
 #endif

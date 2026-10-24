@@ -35,23 +35,18 @@ or force private state to enter a path.
   exact callback-count assumption was removed, with all coordinate assertions
   retained and unrestricted chaining separately tested. Establish integration
   contract before classifying that source path.
-- MPG transport29 cases at503b422d0aa92c4d2b6a190e92ce25344bcc629e now pass
-  cumulative batch19. Original .c423/468 lines,160/234 branches; public wire
-  header25/25 lines,10/10 branches. Settings persistence/restore, pending transport,
-  runtime timeout/attempt/payload, stale ACK isolation and both byte-only UART
-  modes covered. Seven further local authoring cases cover delay-time polling, realtime handler
-  lifecycle, muted RX and byte output (7/7 ASan/UBSan/strict;36 registered, pending
-  cumulative validation/delivery). Six further integration cases now link actual
-  CORE registration/claim/mode/broadcast/passive-status APIs (affected suite42/42
-  ASan/UBSan and strict). CORE null console baseline and MPG_BUFFER_SIZE=0 are
-  explicit; full passive command buffering/parser/scheduler remain untested.
-  Tool-ACK contract needs review: stream_mpg_enable retains primary suspend_read
-  and set_enqueue_rt_handler while replacing read/input routing. Do not force
-  ownership or claim manual-tool integration without supported driver behavior.
-  Remaining workflows include normal RX/TX capacity loss/reporting, wire rejection,
-  NVS clamping and failed-claim settings warnings. Never force a memory failure.
-  Selection/broadcast now execute in CORE; actual primary-driver/tool-ACK and
-  physical link remain untested.
+- MPG transport45 cases at503b422d0aa92c4d2b6a190e92ce25344bcc629e, cumulative
+  batch20. Original .c438/468 lines,166/234 branches; wire header25/25 and10/10.
+  Nine cases link original CORE stream/claim/mode/broadcast/status and passive
+  command routing;36 retain capture fixtures. Single/fragmented buffered command
+  controls run in plain/framed modes with128-byte buffer. Retain one correct CORE
+  burst-order regression: all three queued queries see the last shared input.
+  Actual system-command implementation and CORE task allocator/executor remain
+  boundaries; host FIFO matches source append order. No full-controller claim.
+  Manual-tool contract still needs primary-driver review: MPG mode retains primary
+  suspend_read/set_enqueue_rt_handler while replacing read routing. Never force
+  ownership. Remaining normal workflows: RX/TX capacity loss/reporting, wire
+  rejection, NVS clamping and failed-claim settings warnings; hardware untested.
 - PicoHAL babac83b030fdc053b66f711e82f92b6fdfcc455 fails unchanged-source syntax
   compilation against pinned CORE: on_probe_fixture_ptr and grbl.on_probe_fixture
   removed; on_probe_completed argument changed. No obsolete-type aliases, header

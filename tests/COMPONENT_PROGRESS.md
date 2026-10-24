@@ -1,3 +1,46 @@
+# Latest component checkpoint - 2026-10-25 (batch20)
+
+Goal active. Combined16 additional MPG cases:7 callback cases,6 original CORE
+stream integration cases and3 passive command cases. Complete Windows Clang
+ASan/UBSan gate:42 compatible suites,670 cases =614 clean +56 documented known
+results, zero unexpected failures/skips. Known results now52 correct expected
+assertion regressions plus4 diagnostic-only cases;3 assertion cases also carry
+existing exact diagnostics, counted once. No new sanitizer exception or firmware
+source edits. Strict classifier ran for every suite. Unchanged84 reporting helpers
+were not rerun (last full batch17); unchanged workflows need no actionlint rerun.
+Whitespace passes; API source lock matches clean original MPG/CORE checkouts.
+
+Fresh local LLVM MPG .c438/468 lines93.6%,166/234 branches70.9%,47/48 functions;
+wire header25/25 lines and10/10 branches. Adds15 exercised original plugin lines
+since batch19. Counter paths max226 characters; strict profiling checks pass.
+CORE integration executes original source but its coverage is not included in the
+plugin filter: do not infer CORE-wide or controller coverage from these numbers.
+
+Original CORE stream registration/claim ownership, passive filtering, busy refusal,
+mode reader selection/restoration, baud table, broadcast ownership and queued
+passive status now execute. Nine integrated cases supplement36 capture cases.
+Six integration cases explicitly use MPG_BUFFER_SIZE=0; three enable128 bytes for
+command buffering. Single/fragmented commands, realtime filtering, CRLF, blank
+commands, G-code rejection and handler error/recovery controls pass in both modes.
+Host system handler records strings and emits an explicit marker; actual system
+commands, parser, CORE task allocator/executor, primary UART and hardware are not
+linked/executed. Bounded FIFO task delivery matches reviewed grbllib.c append order.
+
+New correct regression m1_core_command_burst: valid framed `$I`, `$G`, `$$` burst
+queues three jobs, each reads the shared overwritten input and delivers `$$`.
+Correct ordered-command assertion retained under one exact WILL_FAIL/known_bug;
+source cause/proposed repair/removal guide in suite KNOWN_BUGS. No malformed wire,
+unsafe memory failure or private test seam. No claim of physical controller fault.
+Manual-tool ownership remains unresolved: CORE MPG mode retains primary suspend
+and handler setters while replacing read routing. Do not force a test contract.
+
+Pinned candidate503b422d0aa92c4d2b6a190e92ce25344bcc629e and
+COREb01f481072edecac33d5e40c25869359a5b3fa1f. Evidence/source lock ignored in
+build-evidence. Deliver together to existing PR29, keep draft/unmerged. Hosted
+workflow installation, remaining components and physical/target checks remain.
+
+---
+
 # Local MPG CORE-stream checkpoint - 2026-10-24 (next combined batch)
 
 Goal active. Six new integration cases use original CORE stream.c, stream_passthru.c,

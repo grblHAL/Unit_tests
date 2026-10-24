@@ -2,7 +2,18 @@
 #include "grbl/gcode.h"
 parser_state_t gc_state;
 sys_state_t core_state = STATE_IDLE;
-unsigned status_reports, mode_reports;
+unsigned status_reports, mode_reports, command_calls;
+status_code_t command_status = Status_OK;
+char last_command[32], command_history[8][32];
+status_code_t system_execute_line(char *line, stream_write_ptr write)
+{
+    CHECK(line && write && strlen(line) < sizeof(last_command));
+    strcpy(last_command, line);
+    CHECK(command_calls < 8);
+    strcpy(command_history[command_calls++], line);
+    write("[host-command]" ASCII_EOL);
+    return command_status;
+}
 static struct
 {
     foreground_task_ptr fn;
@@ -71,7 +82,8 @@ void mpg_core_run(void)
         CHECK(++guard < 64);
         foreground_task_ptr fn = tasks[next].fn;
         void *data = tasks[next].data;
-        tasks[next] = tasks[--pending];
+        pending--;
+        memmove(tasks + next, tasks + next + 1, (pending - next) * sizeof(tasks[0]));
         fn(data);
     }
 }
