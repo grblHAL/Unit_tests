@@ -79,75 +79,72 @@ core/ioports.c,1558,historical-proof-matched,COVERAGE_GAPS I/O audit; unrouted c
 core/ioports.c,1559,historical-proof-matched,COVERAGE_GAPS I/O audit; unrouted callbacks / complete control-function mapping.
 core/kinematics/asymmetric_ganging.c,254,configuration-contract-pending,"Current public homing-cycle Format_AxisMask validation uses system_n_axis=3, rejecting standalone internal motor bit8; plugin normalization only adds it alongside primary. Persisted configuration migration or external caller contract unestablished."
 core/kinematics/delta.c,180,contract-pending,COVERAGE_GAPS delta table; invalid assembly/driver position or incompatible home/floor geometry behavior needs an established contract.
-core/kinematics/delta.c,320,local-regression-pending-measurement,"boot_delta.streamed_move_across_unreachable_interior_stops_at_last_valid_segment: normal streamed reachable endpoints(-250,0,-150)/(250,0,-150) cross unreachable center; actual motors stop near X=-164.857, no fabricated state. ASan/UBSan passes; cumulative coverage pending."
-core/kinematics/delta.c,321,local-regression-pending-measurement,"boot_delta.streamed_move_across_unreachable_interior_stops_at_last_valid_segment: normal streamed reachable endpoints(-250,0,-150)/(250,0,-150) cross unreachable center; actual motors stop near X=-164.857, no fabricated state. ASan/UBSan passes; cumulative coverage pending."
 core/kinematics/delta.c,376,contract-pending,COVERAGE_GAPS delta table; invalid assembly/driver position or incompatible home/floor geometry behavior needs an established contract.
-core/kinematics/delta.c,619,fixture-precondition,COVERAGE_GAPS delta table / TODO four-axis delta homing; real boot attempt fails before auxiliary jog.
-core/kinematics/delta.c,620,fixture-precondition,COVERAGE_GAPS delta table / TODO four-axis delta homing; real boot attempt fails before auxiliary jog.
+core/kinematics/delta.c,619,known-regression-pending-measurement,"Public automatic XYZ home, $22 enables manual homing, $HA genuinely references A, then $20 and A999 jog exercise auxiliary rejection. Correct A-1 retry currently also rejects; separate exact known regression. No sys.homed injection; cumulative measurement pending."
+core/kinematics/delta.c,620,known-regression-pending-measurement,"Public automatic XYZ home, $22 enables manual homing, $HA genuinely references A, then $20 and A999 jog exercise auxiliary rejection. Correct A-1 retry currently also rejects; separate exact known regression. No sys.homed injection; cumulative measurement pending."
 core/kinematics/delta.c,625,contract-pending,COVERAGE_GAPS delta table; invalid assembly/driver position or incompatible home/floor geometry behavior needs an established contract.
-core/kinematics/delta.c,643,fixture-precondition,COVERAGE_GAPS delta table / TODO four-axis delta homing; real boot attempt fails before auxiliary jog.
+core/kinematics/delta.c,643,local-regression-pending-measurement,"Manual A first, actual XYZ homing second establishes all homed bits with correct zero joints. Public soft-limited mixed jog reaches X100/Z-300/A-1; physical pulse-derived joint coordinates agree; X100 exceeds published cuboid maxX1, so native auxiliary loop executes. ASan/UBSan passes; cumulative measurement pending."
 core/kinematics/delta.c,706,guarded-native-routing,"COVERAGE_GAPS delta table; both loop exits imply ok, preempting the subsequent !ok fallback."
-core/kinematics/polar.c,212,unimplemented-public-entry,TODO polar homing audit; installed hooks are behind unimplemented public homing. Historical proof.
-core/kinematics/polar.c,214,unimplemented-public-entry,TODO polar homing audit; installed hooks are behind unimplemented public homing. Historical proof.
-core/kinematics/polar.c,232,unimplemented-public-entry,TODO polar homing audit; installed hooks are behind unimplemented public homing. Historical proof.
-core/kinematics/polar.c,234,unimplemented-public-entry,TODO polar homing audit; installed hooks are behind unimplemented public homing. Historical proof.
-core/kinematics/wall_plotter.c,208,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,213,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,214,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,216,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,217,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,218,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,219,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,220,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,221,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,222,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,223,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,224,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,225,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,226,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,227,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,229,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,234,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,237,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,239,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,240,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,242,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,243,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,244,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,245,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,246,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,247,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,248,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,249,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,250,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,251,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,252,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,253,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,254,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,255,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,257,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,260,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,262,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,264,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,265,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,266,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,267,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,268,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,269,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,270,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,271,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,272,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,273,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,274,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,275,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,276,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,277,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,278,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,279,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,280,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,283,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/kinematics/wall_plotter.c,284,unimplemented-public-entry,TODO wall-plotter homing audit; public home_machine warns and returns false. Historical proof; no implementation substituted.
-core/machine_limits.c,269,local-regression-pending-measurement,boot.reset_during_initial_homing_report_delay_prevents_all_motor_motion: real reset during normal 100ms pre-homing report delay; ASan/UBSan passes; zero pulses/homed axes and $G recovery. Cumulative line measurement pending.
+core/kinematics/polar.c,212,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/polar.c,214,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/polar.c,232,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/polar.c,234,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,208,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,213,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,214,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,216,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,217,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,218,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,219,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,220,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,221,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,222,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,223,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,224,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,225,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,226,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,227,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,229,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,234,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,237,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,239,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,240,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,242,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,243,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,244,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,245,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,246,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,247,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,248,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,249,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,250,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,251,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,252,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,253,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,254,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,255,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,257,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,260,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,262,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,264,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,265,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,266,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,267,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,268,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,269,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,270,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,271,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,272,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,273,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,274,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,275,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,276,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,277,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,278,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,279,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,280,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,283,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
+core/kinematics/wall_plotter.c,284,unimplemented-public-entry,User decision 2026-10-24: all homing including manual $H remains TODO; no supported homing claim or exclusion.
 core/machine_limits.c,502,contract-pending,TODO zero locate feed rate policy; seek reference/homed-state contract unresolved.
 core/modbus.c,231,unimplemented-public-entry,COVERAGE_GAPS current dormant dispatch review; TBA diagnostics function is unregistered.
 core/modbus.c,232,unimplemented-public-entry,COVERAGE_GAPS current dormant dispatch review; TBA diagnostics function is unregistered.
@@ -156,7 +153,7 @@ core/modbus_rtu.c,241,guarded-native-routing,"TODO RTU timeout audit, current tr
 core/modbus_rtu.c,360,contract-pending,TODO RTU reset-in-retry; independent nonabort cancellation of blocking owner unresolved.
 core/modbus_rtu.c,361,contract-pending,TODO RTU reset-in-retry; independent nonabort cancellation of blocking owner unresolved.
 core/motion_control.c,690,user-deferred-todo,User decision2026-10-24: document G76 X-word main taper in TODO; no geometry regression/allowance. Computed height currently has no consuming taper move; scope unresolved.
-core/motion_control.c,715,local-regression-pending-measurement,"spindle_sync.reset_during_g76_preparation_prevents_first_radial_move: public reset at idle preparation before first radial move; ASan/UBSan passes; zero pulses/sync starts, spindle off, position retained. Cumulative coverage pending."
+core/motion_control.c,715,local-regression-pending-measurement,"Hosted400743 shows the earlier idle preparation reset misses715. New compound-Q29 case observes the initial setup rapid queued at a public foreground poll, resets before first radial approach, and verifies zero pulses/sync starts. ASan/UBSan passes0.15s; next cumulative line measurement required."
 core/my_plugin.c,26,harness-no-op,COVERAGE_GAPS weak empty hooks audit; default no-op plugin entry replaced by host/driver.
 core/my_plugin.c,29,harness-no-op,COVERAGE_GAPS weak empty hooks audit; default no-op plugin entry replaced by host/driver.
 core/ngc_expr.c,115,historical-proof-matched,TODO expression dispatch audit; private enum defaults and bypassed EXISTS arm.
@@ -271,7 +268,7 @@ core/system.c,466,historical-proof-matched,TODO HELP dispatch audit; prefix hand
 core/system.c,468,historical-proof-matched,TODO HELP dispatch audit; prefix handler bypasses command-table wrapper. Source file is line-identical to CORE50f3865; caller/header scope remains as stated.
 core/tool_change.c,435,fixture-precondition,TODO legacy boot cannot enter manual fixture-mode handler; startup clears stream suspension; do not reinstall solely for coverage.
 core/tool_change.c,436,fixture-precondition,TODO legacy boot cannot enter manual fixture-mode handler; startup clears stream suspension; do not reinstall solely for coverage.
-core/vfs.c,272,contract-pending,TODO VFS NULL-path caller contract; reachable numeric API fallback but supported NULL meaning unestablished.
+core/vfs.c,272,known-regression-pending-measurement,"Valid vfs_utime path-copy allocation failure reaches NULL mount guard and loses ENOMEM; exact regression, dated KNOWN_BUGS; not yet measured."
 core/vfs.c,415,historical-proof-matched,TODO verified VFS lookup/rename guards; successful rename same mount and validated chdir nonnull path.
 core/vfs.c,482,historical-proof-matched,TODO verified VFS lookup/rename guards; successful rename same mount and validated chdir nonnull path.
 core/vfs.c,779,contract-pending,TODO VFS NULL-path caller contract; reachable numeric API fallback but supported NULL meaning unestablished.

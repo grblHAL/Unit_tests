@@ -10,5 +10,7 @@ int main(void)
     CHECK(strcmp(strgetentry(buffer, "x,y,z", 2, ','), "z") == 0);
     CHECK(strcmp(strgetentry(buffer, "single", 0, ','), "single") == 0);
     CHECK(strcmp(strgetentry(buffer, "x,,z", 1, ','), "") == 0);
+    CHECK(strgetentry(buffer, "X,Y,Z", 0, ',') == buffer);
+    CHECK(strcmp(buffer, "X") == 0);
     return EXIT_SUCCESS;
 }

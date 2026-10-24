@@ -24,5 +24,8 @@ int main(void)
     CHECK(strnistr(labels, "{rpm}", 5) == labels + 14);
     CHECK(strnistr(labels, "{RPM} suffix", 5) == labels + 14);
     CHECK(strnistr(labels, "{rPm]", 5) == NULL);
+    const char *status = "Spindle {RPM} ready";
+    CHECK(strnistr(status, "{rpm}", strlen(status)) == status + 8);
+    CHECK(strcmp(status, "Spindle {RPM} ready") == 0);
     return EXIT_SUCCESS;
 }

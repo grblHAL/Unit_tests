@@ -1101,6 +1101,19 @@ The correct jog/no-motion candidate is retained unregistered in
 Do not set sys.homed manually to bypass this precondition. Existing ordinary
 four-axis delta motion regression and XYZ homing controls remain registered.
 
+Update2026-10-24: an independent supported route now completes automatic XYZ
+homing, enables manual homing with $22, and references A with $HA. No direct
+sys.homed writes. This exposes stationary XYZ coordinate rewriting and rejection
+of a legal A retry; see the dated KNOWN_BUGS entry and two registered boot_delta_aux
+regressions. The original all-four-automatic-switch proposal remains separate.
+
+Further update2026-10-24: reference A first, then home XYZ automatically. This
+public order preserves the correct XYZ zero and a mixed soft-limited jog reaches
+X100/Z-300/A-1, outside the published cuboid(maxX1). Auxiliary guard643 now has
+a passing physical/logical output control. Ordinary cuts with $20 enabled still
+falsely alarm due to the auxiliary checker frame flag; see the separate dated
+KNOWN_BUGS entry. No direct homed/coordinate writes or CORE changes.
+
 ## PWM resolution and low-frequency range policy - 2026-10-23
 
 Terje confirms impossible and unreasonable periods will be rejected. The exact
@@ -1339,10 +1352,11 @@ VFS rename415's second-mount notification contradicts the preceding successful
 same-mount condition. Chdir482's null-mount arm follows successful parse_path;
 get_mount returns cwdmount, an existing mount, or root for every nonnull path.
 These two lines retain the existing lookup/rename proof at current source.
-Do not group get_mount272 or vfs_get_drive779 with those two: a public NULL-path
-call can reach their defensive fallback, but no supported caller/NULL meaning
-has been established. They remain unclassified rather than being called
-unreachable for all public inputs.
+Update 2026-10-24: valid vfs_utime path-copy allocation failure reaches
+get_mount272 and loses ENOMEM; the correct regression and exact known-failure
+allowance are in KNOWN_BUGS. vfs_get_drive779 remains a separate NULL-caller
+question; the established WebUI upload filename is a nonnull array. Neither
+is folded into the rename/chdir proof.
 
 The two ngc_flowctrl default lines811-812, virtual-parameter empty-root942,
 file-reader no-file72 and unused HELP wrapper466/468 retain their earlier
@@ -1793,3 +1807,29 @@ and one terminal response per command without requiring silent success. Clarify
 whether an intermediate inverse failure should report a motion error and how
 parser position should be resynchronized. This is separate from the proven
 physical cutoff, not a confirmed new defect or expected-failure allowance.
+
+
+## Wall-plotter and polar homing scope - 2026-10-24
+
+User decision: keep ALL homing in these modes on TODO, including manual $H
+referencing. Manual entry bypassing an unimplemented automatic-homing stub is
+not permission to test the coordinate hooks as supported homing. No new cases,
+exceptions or coverage exclusions for these paths.
+
+
+## Bounded external IPv4 provider and VFS caller audit - 2026-10-24
+An indexed grblHAL organization search followed by immutable blob reads found 40 active IPv4 descriptors in the following 10 files. All use Setting_NonCoreFn with explicit setter/getter callbacks. Three commented RP2040 descriptors were excluded. This bounded survey found no direct-buffer provider; it is not an exhaustive proof about every external plugin. Do not invent a provider to cover settings3625-3627.
+| Source | Active descriptors | Verified blob |
+|---|---:|---|
+| [grblHAL/STM32F4xx/Src/enet.c](https://github.com/grblHAL/STM32F4xx/blob/a6318ac92f079f49fab91687530f832997396edc/Src/enet.c) | 4 | `8efa34b8cdd12347acbd54bc14f851cfdad1d3ad` |
+| [grblHAL/RP2040/wifi.c](https://github.com/grblHAL/RP2040/blob/2f5bc4a06ecea3b1f78c1644623810f9b6416376/wifi.c) | 4 | `6180dc11cf49deec332c7306c6f23a6a1a3b2dc0` |
+| [grblHAL/ESP32/main/wifi.c](https://github.com/grblHAL/ESP32/blob/0b2d3e1bb7da3b0ae0e03490b71275374eb84c67/main/wifi.c) | 7 | `a91c26d5a465b573842164466d77693d1b9a993f` |
+| [grblHAL/ESP32/main/enet.c](https://github.com/grblHAL/ESP32/blob/0b2d3e1bb7da3b0ae0e03490b71275374eb84c67/main/enet.c) | 3 | `76ab8329792a8c957dd177048639653ad13a0517` |
+| [grblHAL/iMXRT1062/grblHAL_Teensy4/src/enet.c](https://github.com/grblHAL/iMXRT1062/blob/d1f8d1ed904242ee08b0a5583e78f490afd9ae93/grblHAL_Teensy4/src/enet.c) | 4 | `4263b40d2aa528786a0ad4c8e892d020f0c0e919` |
+| [grblHAL/STM32F7xx/Src/enet.c](https://github.com/grblHAL/STM32F7xx/blob/85e6e800b16fb1a46bc00b87b7015489b9d3ec93/Src/enet.c) | 4 | `7fd44bff775b3a001605bf7211d7be8fc168e62c` |
+| [grblHAL/Plugin_networking/wiznet/enet.c](https://github.com/grblHAL/Plugin_networking/blob/0b665ee0c0be5161d5044bdf2dcdf59ad62509f8/wiznet/enet.c) | 4 | `a572892cb6f9951cf4b74b4d82b223b0f4ff6726` |
+| [grblHAL/Plugin_networking/modbus/client.c](https://github.com/grblHAL/Plugin_networking/blob/0b665ee0c0be5161d5044bdf2dcdf59ad62509f8/modbus/client.c) | 1 | `09a2f6b735c82a3b2c4516f1650da3e429c9d7bc` |
+| [grblHAL/Plugins_misc/esp_at.c](https://github.com/grblHAL/Plugins_misc/blob/265711922037cab6b6e47a9560ef11da3a6e5f83/esp_at.c) | 6 | `2bfbdeceade99a922306a9025af45dcd72692974` |
+| [grblHAL/TI_SimpleLink_shared/ethernet/enet.c](https://github.com/grblHAL/TI_SimpleLink_shared/blob/6adcc848946fe69075f6ed062afa31f11c5a4c97/ethernet/enet.c) | 3 | `94eb9dbcd0165355b840716e92a3d126d6f4beb4` |
+
+Plugin_WebUI fs_handlers.c keeps upload.filename in a char[100] array and calls vfs_get_drive only after checking upload. This established caller cannot supply NULL. It does not establish a supported NULL meaning for vfs779. The independently demonstrated vfs_utime allocation failure reaches vfs272, not779. Source: [pinned WebUI caller](https://github.com/grblHAL/Plugin_WebUI/blob/3712523bc98f0bce343b56e03bdf881cc7fd4aa0/fs_handlers.c#L370-L381). Local search/blob manifest: build-asan/provider-audit74-manifest.json.

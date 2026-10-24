@@ -410,9 +410,9 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Measured:** 2026-10-24, clean Terje `2e165a1ac4c74be8e68971972c6577775d856b05`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40070163310)
-measures 17,480/17,756 lines (98.45%) and 12,730/13,834 branches (92.02%).
-The 276 uncovered lines include the following known gaps; this table does not
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40074304720)
+measures 17,483/17,756 lines (98.46%) and 12,737/13,834 branches (92.07%).
+The 273 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable. See the complete measured
 [line/branch inventory](COVERAGE_GAPS.md) before selecting the next workflow.
 
@@ -726,3 +726,152 @@ Suggested upstream repair: map fault functions through configured axis identitie
 including W and secondary XYZ, rather than fixed function ordinals. Keep the
 registered-driver and independent-axis controls; remove this entry and both
 exact expected-failure blocks when the unchanged regression passes. No CORE edit.
+
+
+## Manual auxiliary homing rewrites stationary delta joint coordinates
+
+Confirmed2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`,
+supported four-axis delta configuration with three automatic XYZ home switches
+and a manually referenced auxiliary A axis. Complete actual XYZ homing, enable manual
+homing with the public $22 setting, then issue $HA. Both homing events succeed
+and the homed mask becomes15. No motor pulse occurs during manual A referencing,
+but all three stored delta joint counters change from0 to-6 steps at1000steps/rad.
+A remains at its manually supplied zero.
+
+[Regression](cases/boot_delta_aux/manual_auxiliary_homing_preserves_delta_joint_coordinates.c)
+keeps the correct assertion that selecting A must preserve the other three joint
+coordinates. Physical pulse counts, automatic XYZ homing, manual A completion,
+parser response and absence of command errors are checked before that assertion.
+Raw ASan/UBSan evidence: `build-asan/delta-manual-a74-raw-results.xml` reports
+`joint0/1/2 before=0 after=-6`, then fails coordinate preservation. This coordinate-preservation
+case has its own exact WILL_FAIL/known_bug; no sanitizer allowance or CORE edit.
+
+Native manual homing in motion_control.c marks only the selected manual axis and
+calls kinematics.limits_set_machine_positions with that cycle. Delta's callback
+at kinematics/delta.c527 ignores its cycle argument and unconditionally rewrites
+XYZ using machine.home_angle. A manual A reference therefore changes unrelated
+joint coordinates after the previous real homing callback updates that angle.
+Suggested upstream repair: honor the selected axis mask and establish auxiliary
+coordinates without rewriting stationary XYZ. Keep the unchanged assertion;
+remove this entry and its exact allowance once it passes.
+
+The [independent auxiliary retry regression](cases/boot_delta_aux/manually_homed_auxiliary_axis_rejects_outside_jog_and_allows_inside_retry.c)
+uses the same real homing sequence, enables $20, verifies that A999 rejects with
+TravelExceeded, then requires A-1 to succeed inside the configured[-10,0] travel interval. Current
+CORE rejects both jogs: five success acknowledgements instead of six, A remains0
+and no A pulse occurs. Every input receives a terminal response and $G remains
+usable. Raw evidence: `build-asan/delta-manual-a74-retry-raw-results.xml`.
+This second correct outcome has one separate exact WILL_FAIL; its required80
+A pulses and-1 parser/physical endpoint assertions remain. The XYZ coordinate
+rewrite is directly established; the retry is a separate observed consequence
+of this sequence, not a claim that every auxiliary rejection has the same cause.
+
+
+## Delta soft limits reject a valid cut when a homed auxiliary axis is stationary
+
+Confirmed2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
+Manually reference A before actual XYZ homing so the separate post-XYZ manual
+reference defect is avoided. All four homed bits come from public commands.
+A remains at0 inside its configured[-10,0] interval. A normal1mm vertical cut
+works with soft limits disabled. Enabling $20 then incorrectly raises SoftLimit
+for the next valid1mm vertical cut, despite the auxiliary axis remaining stationary.
+The independent mixed-jog control reaches X100/Z-300/A-1 with the same homed
+configuration and soft limits enabled.
+
+[Correct regression](cases/boot_delta_aux/valid_cartesian_cut_with_stationary_homed_auxiliary_axis_does_not_raise_soft_limit.c)
+requires the first cut to complete, then retains the correct no-false-alarm and
+second-cut endpoint assertions. Its public realtime exit only releases the
+critical alarm loop for diagnosis; it does not make the alarm acceptable.
+Initial raw ASan/UBSan evidence: `build-asan/delta-aux-cut74-raw-results.xml`
+reports `soft_limit=1 acks=5 A=0 XYZpulse0=98/98` for the original isolated cut.
+Only this exact case is WILL_FAIL/known_bug, with no sanitizer allowance.
+
+G-code4036 leaves target validation pending when soft limits are enabled.
+Delta's segmenter passes inverse-transformed motor coordinates to its travel
+checker. At delta.c619 the auxiliary check forwards is_cartesian=false to the
+original Cartesian checker, which returns false whenever that flag is false
+(machine_limits.c698). Auxiliary coordinates themselves are pass-through axes;
+forwarding the delta XYZ frame flag makes every such auxiliary check reject.
+Suggested upstream repair: check pass-through auxiliary axes in their Cartesian
+frame while independently checking transformed XYZ. Preserve the ordinary-cut
+and working mixed-jog controls; remove this entry and its exact allowance when
+the unchanged cut regression passes. CORE remains unmodified.
+
+Strengthened raw control evidence: `build-asan/delta-aux-cut74-control-raw.log`
+confirms the first cut completed (XYZpulse0 increases98->108) before the second
+cut falsely alarms, with7 acknowledgements and A0. Classified four-case evidence
+is `build-asan/delta-aux74-classified-results.xml`; the independent mixed-jog
+control passes with physical/logical motor agreement and a non-cuboid endpoint.
+
+
+## VFS timestamp path allocation failure loses ENOMEM
+
+Confirmed 2026-10-24 on CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
+The [regression](cases/vfs/utime_path_allocation_failure_preserves_errno_skips_backend_and_allows_retry.c)
+uses a valid relative filename under a mounted working directory and rejects only
+its path-copy allocation. `vfs_utime` returns -1 but exposes errno 0 instead of
+ENOMEM. The backend is untouched, the working directory survives, and a retry
+sets the expected timestamp on the expected file. These controls pass before
+the retained errno assertion fails. Raw ASan/UBSan evidence:
+`build-asan/vfs-utime-errno74-raw-results.xml`.
+
+`parse_path` sets ENOMEM, but vfs.c643 forwards its NULL result to `get_mount`,
+whose unconditional errno reset precedes its NULL guard at272. Unlike `vfs_stat`,
+`vfs_utime` does not short-circuit on path allocation failure. Suggested repair:
+retain the parse error before mount lookup. One exact WILL_FAIL/known_bug, no
+sanitizer allowance or CORE changes. Remove the allowance when the unchanged
+assertion passes.
+
+
+## Blocking Modbus reply acknowledges an asynchronous follow-up without queuing it
+
+Confirmed 2026-10-24 on CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
+A successful blocking register-read callback requests the next register through
+public modbus_send(..., false). It returns true, but the follow-up never reaches
+the UART. There is no queue-pressure or interrupt race: the attempt occurs in
+the normal reply observer. A later independent request completes successfully.
+
+[Regression](cases/modbus_rtu/blocking_reply_followup_is_transmitted_if_send_reports_acceptance.c)
+checks the first reply bytes, exactly one follow-up attempt, no unsolicited
+output, and transport recovery before its correct final assertion. It permits
+explicit rejection; a true return requires exactly one transmission and reply.
+Raw ASan/UBSan evidence `build-asan/rtu-followup74-raw-results.xml` reports
+accepted=1, transmissions=0, and successful independent recovery, then fails
+that final assertion. One exact WILL_FAIL/known_bug; no sanitizer allowance.
+
+At modbus_rtu.c329 the asynchronous enqueue guard examines the active packet
+against sync_msg, rather than the new request. During the blocking callback
+packet points to sync_msg and its function byte is nonzero, so all three terms
+are false. Enqueue is skipped, but return !block at337 is true. Suggested
+upstream repair: queue the follow-up safely or report refusal explicitly.
+Keep the unchanged acceptance/delivery assertion and remove this entry and
+allowance once it passes. CORE remains unmodified.
+
+
+## Modbus register replies from valid high-bit server addresses lose completion
+
+Confirmed 2026-10-24 on CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
+The [serial specification](https://www.modbus.org/file/secure/modbusoverserial.pdf)
+section2.2 permits individual server addresses1 through247. Server200 is valid.
+A normal function3 register reply from that server is silently discarded by the
+common decoder, so modbus_message returns Status_OK without its completion
+callback. The same register read at server7 completes before and after it.
+
+[Regression](cases/modbus_rtu/high_bit_server_address_delivers_register_reply_and_preserves_next_request.c)
+uses the real registered RTU transport, scheduler and common decoder. Its driver
+fixture returns a complete CRC-valid reply with the transmitted server address.
+Outgoing frame bytes and CRC are checked; all three replies are consumed, TX3
+and zero CRC errors/timeouts are reported, and both server7 controls deliver
+register0x1234. Only the correct server200 callback assertion then fails.
+Raw ASan/UBSan evidence: `build-asan/rtu-high-address74-raw-results.xml`,
+callbacks=0. This replaces the initial decoder-only regression, preserving one
+case and one exact allowance. It is host UART-callback evidence, not physical
+hardware validation.
+
+modbus.c217 tests msg->adu[0]&0x80, the server address byte, before decoding.
+The exception flag belongs to the function byte msg->adu[1]. The wrong byte
+therefore drops legitimate replies from addresses128..247. Suggested repair:
+classify exception responses by their function field while preserving normal
+address bits. Keep the callback/function/value assertions unchanged. One exact
+WILL_FAIL/known_bug; remove it and this entry when the unchanged regression
+passes. No CORE changes or sanitizer allowance.

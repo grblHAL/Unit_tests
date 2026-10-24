@@ -199,3 +199,39 @@ if(TEST modbus_rtu.blocking_crc_error_reports_crc_code_and_allows_next_request)
   set_tests_properties(modbus_rtu.blocking_crc_error_reports_crc_code_and_allows_next_request
     PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Confirmed CORE2e165a1, 2026-10-24: manual A homing rewrites stationary delta XYZ coordinates.
+if(TEST boot_delta_aux.manual_auxiliary_homing_preserves_delta_joint_coordinates)
+  set_tests_properties(boot_delta_aux.manual_auxiliary_homing_preserves_delta_joint_coordinates
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+# Same public manual-reference sequence also rejects a legal in-range A retry.
+if(TEST boot_delta_aux.manually_homed_auxiliary_axis_rejects_outside_jog_and_allows_inside_retry)
+  set_tests_properties(boot_delta_aux.manually_homed_auxiliary_axis_rejects_outside_jog_and_allows_inside_retry
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+# Confirmed CORE2e165a1, 2026-10-24: delta forwards motor-coordinate flag to Cartesian auxiliary checker.
+if(TEST boot_delta_aux.valid_cartesian_cut_with_stationary_homed_auxiliary_axis_does_not_raise_soft_limit)
+  set_tests_properties(boot_delta_aux.valid_cartesian_cut_with_stationary_homed_auxiliary_axis_does_not_raise_soft_limit
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+# Confirmed CORE2e165a1, 2026-10-24: utime path allocation loses ENOMEM.
+if(TEST vfs.utime_path_allocation_failure_preserves_errno_skips_backend_and_allows_retry)
+  set_tests_properties(vfs.utime_path_allocation_failure_preserves_errno_skips_backend_and_allows_retry
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+# Confirmed CORE2e165a1, 2026-10-24: accepted async follow-up from blocking reply is discarded.
+if(TEST modbus_rtu.blocking_reply_followup_is_transmitted_if_send_reports_acceptance)
+  set_tests_properties(modbus_rtu.blocking_reply_followup_is_transmitted_if_send_reports_acceptance
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()
+
+# Confirmed CORE2e165a1, 2026-10-24: decoder mistakes valid server address high bit for exception.
+if(TEST modbus_rtu.high_bit_server_address_delivers_register_reply_and_preserves_next_request)
+  set_tests_properties(modbus_rtu.high_bit_server_address_delivers_register_reply_and_preserves_next_request
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

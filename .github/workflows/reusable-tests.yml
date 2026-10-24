@@ -174,7 +174,7 @@ jobs:
         env:
           COVERAGE_TITLE: ${{ steps.coverage_build.outcome == 'success' && steps.coverage_tests.outcome == 'success' && steps.coverage_classify.outcome == 'success' && 'Core coverage' || 'Partial core coverage - build or tests failed' }}
           COVERAGE_FILTER: ${{ needs.source.outputs.coverage_filter }}
-        run: python scripts/report_stage.py --job coverage --stage coverage -- gcovr --merge-mode-functions=separate --root . --filter "$COVERAGE_FILTER" --html-details coverage.html --html-title "$COVERAGE_TITLE" --xml coverage.xml --print-summary
+        run: python scripts/report_stage.py --job coverage --stage coverage -- gcovr --merge-mode-functions=separate --root . --filter "$COVERAGE_FILTER" --html-details coverage.html --html-block-ids --html-title "$COVERAGE_TITLE" --xml coverage.xml --json coverage.json --print-summary
       - name: Collect concise coverage diagnostics
         if: always()
         run: python scripts/ci_report.py --job coverage

@@ -1,3 +1,54 @@
+# Verified residual-audit measurement and compound setup reset - 2026-10-24
+
+Frozen2d8b8d0 hosted40074304720 is fullygreen: allfive jobs passed, both artifact
+source locks match harness/CORE2e165a1/filter, allseven coverage stages exit0.
+4453cases:4427clean/26known/0failed/skipped.17483/17756lines98.46% and
+12737/13834branch outcomes92.07%. Exact hit-set comparison with40070163310:
+new machine_limits269 and delta320-321, no lost lines; seven branch outcomes.
+Residual CSV now exactly matches the latest273 missing source/line pairs.
+Badges and measurement references updated; newer local cases are excluded.
+
+Measurement corrected a source-only assumption: the earlier idle G76 preparation
+reset does not cover715. A distinct implemented Q29 compound setup queues its
+initial rapid, then the next public foreground poll requests reset before the
+first radial approach. New focused ASan/UBSan passes0.15s: queued setup observed,
+zero pulses/sync starts/position loss and no later motion. No private flags or
+invented IRQ interleaving. Targets715; next cumulative measurement must prove it.
+New local delta manual-reference/soft-limit cases remain outside this frozen
+report, with1clean control and3correct known regressions classified. No additional
+full gate/push/hosted dispatch for the new local cases. Full objective active.
+
+# Manual-first delta control and false soft-limit cut - 2026-10-24
+
+Reference A before real XYZ homing to avoid the separate post-XYZ manual reference
+bug. Positive control reaches X100/Z-300/A-1 with $20 enabled; published cuboid
+maxX1 proves non-cuboid path, physical pulse-derived/logical motor counters agree.
+Targets643. A normal1mm Z cut with limits off succeeds, then enabling$20 falsely
+alarms on the next valid1mm cut with stationary A0. Auxiliary checker wrongly
+forwards delta motor-frame false to the original Cartesian checker. One new exact
+WILL_FAIL, correct first-cut/no-alarm/second-cut assertions, dated KNOWN_BUGS;
+no CORE changes or sanitizer allowance. Raw strengthened control shows7acks,
+XYZpulse0=108/98 and soft_limit1 before the correct assertion fails.
+Four-case classified ASan/UBSan plus strict summary passes0.55s:1clean control,
+3known regressions,0unexpected failures/skips. No full gate/push/new hosted run.
+These new local cases follow frozen2d8b8d0; retain its sole run40074304720.
+
+# Public manual A reference and delta coordinate defect - 2026-10-24
+
+New shared full-boot fixture homes XYZ with actual switches, enables manual
+homing via$22, then uses$HA for A. No sys.homed/coordinate injection. Physical
+XYZ do not move, but stored XYZ change0->-6steps at1000steps/rad. Correct
+coordinate-preservation regression retained. The independent$20/jog sequence
+rejects A999 correctly but also rejects in-range A-1 (fiveacks instead of six,
+no A pulses); its correct retry/endpoint assertions remain. Both have exact
+WILL_FAIL and one dated KNOWN_BUGS entry; no sanitizer allowance or CORE edit.
+Raw evidence: delta-manual-a74-{raw,retry-raw}-results.xml. Classified2/2 and
+strict summary pass0.38s: two known regressions reproduced, no failures/skips.
+Targets delta619-620; cumulative measurement pending.643 still needs a valid
+outside-cuboid auxiliary traversal after reference/retry behavior is repaired.
+No full gate/push/new hosted dispatch for these local cases. Prior checkpoint
+2d8b8d0 has its single hosted run40074304720; do not duplicate it.
+
 # Residual line audit and supported pre-motion/error cutoffs - 2026-10-24
 
 Branch coverage-batch-74, parent dcd124c2. CORE2e165a1 remains unchanged and clean.
@@ -11894,3 +11945,140 @@ combined diagnostic and rejects unrelated errors.9 matcher helper tests pass
 0.519s; focused direct expected-crash plus IF-frame control pass0.48s.
 Known-bug cause and exception removal guide recorded. This is local authoring
 work, not a new full-suite/hosted checkpoint; no dispatch or coverage claim.
+
+
+## Allocation failure and homing scope - 2026-10-24
+
+Recorded user decision to retain all wall-plotter/polar homing on TODO, manual
+referencing included. Valid VFS timestamp allocation failure returns -1 but loses
+ENOMEM; untouched-backend, retry timestamp and preserved-CWD controls pass.
+Retained correct errno assertion with one exact known failure and dated entry.
+No CORE changes; no full gate or hosted run for this isolated addition.
+
+
+## Two evidenced helper branch gaps and external provider evidence - 2026-10-24
+
+Extended existing entry-extraction and bounded-substring cases for exact missing
+branch outcomes in hosted40074304720. First axis-list entry and complete middle
+placeholder matches assert returned pointers and content. No new fixture/case
+count, no permutation batch. Recorded the bounded40-descriptor/10-file IPv4
+provider survey with immutable primary-source links and blob IDs. Coverage gain
+for local work remains unmeasured.
+
+Focused validation: string-vfs74-results.xml has2 clean passes and1 exact known
+regression, no unexpected failure/skips. Existing delta four-case classified
+evidence and compound-reset evidence remain separate; no new full gate, hosted
+run, commit or coverage increase claimed. CORE stays clean.
+
+
+## Exact branch gap inventory - 2026-10-24
+
+Created COVERAGE_BRANCH_INVENTORY.csv from locked40074304720 XML plus HTML.
+It contains890 unique source/line sites and exactly1,097 missing outcomes.
+Each emitted untaken-ID count matches XML; zero-hit sites whose HTML omits IDs
+are explicit. Expressions come from pinned CORE2e165a1. Line dispositions are
+context, not branch proofs; most sites remain review-pending. No coverage gain
+or goal completion claimed.
+
+First branch selection review: G-code4764/4780 has existing root invocation and
+nested-scope motion controls despite7/10 reported outcomes. Marked both sites
+compiler-mapping-review-pending rather than duplicating these scenarios. No
+new test or run for this already exercised behavior.
+
+
+## Preserve branch mapping at the normal report boundary - 2026-10-24
+
+Observed duplicate branch3/4/5 labels with opposite coverage at G-code4764/4780
+in actual hosted HTML. Added gcovr8.4 JSON output and HTML block IDs to the
+existing report command; coverage* upload already collects them. No new hosted
+run, source filter, merge-mode or instrumentation change. This retains the
+metadata needed to distinguish branch records before adding duplicate G66 tests.
+
+Validation: parsed reusable-tests.yml with PyYAML, checked all three explicit
+report filenames and confirmed the existing coverage* upload matches each.
+Diff check passes. gcovr8.4 option support verified in official documentation;
+the changed hosted invocation remains unexecuted until the next substantial
+batch boundary. No coverage or hosted-success claim from static validation.
+
+
+## Legacy driver preserves ownership when modern banks are rejected - 2026-10-24
+
+New ioports.legacy_driver_rejects_modern_banks_without_losing_existing_io uses
+public legacy registration and real read/write callbacks. A modern digital and
+analog expansion both reject through claim_hal=false while callbacks, counts,
+metadata and the existing output remain intact. A following output transition
+and input read still reach the legacy driver. No rejected-bank callback runs.
+This complements the existing reverse-compatibility rejection; no fake private
+state or unused provider was installed solely to enter a callback.
+
+Focused ASan/UBSan passes0.07s, no allowance. Targets the short-circuit rejection
+at ioports1071/1107; other missing records at those lines remain unproven and
+all gain awaits cumulative measurement. No full gate, push or hosted dispatch.
+
+
+## Accepted Modbus follow-up is silently discarded - 2026-10-24
+
+A blocking read's normal reply observer requests the next register asynchronously.
+CORE returns true but sends no follow-up after100 scheduler polls. First reply
+bytes and a later independent blocking request pass. Retained accept-implies-
+delivery assertion permits explicit refusal; no requirement for reentrant
+blocking sends. Raw rtu-followup74-raw-results.xml confirms accepted1/sent0 and
+recovery before final assertion fails. Exact WILL_FAIL plus dated KNOWN_BUGS;
+no IRQ injection, sanitizer allowance or CORE edit. Gain remains unmeasured.
+
+
+## Valid high-bit Modbus address loses completion - 2026-10-24
+
+Standard server200 read reaches common decoder through the existing registered
+transport fixture. Status_OK and correctly addressed request but zero callback;
+server7 read controls deliver0x1234 before/after. Decoder217 checks the address
+byte's high bit rather than the function exception flag. Correct callback and
+value assertions retained with one exact allowance/dated KNOWN_BUGS entry.
+Primary serial specification section2.2 establishes valid addresses1..247.
+Raw modbus-high-address74-raw-results.xml fails only after the controls. This
+is decoder validation, not physical UART evidence. No CORE edit or claimed gain.
+
+
+## High-address decoder regression promoted to real RTU path - 2026-10-24
+
+Replaced the new decoder-only case with modbus_rtu high-address regression,
+without increasing case/allowance count. Public modbus_message now drives the
+real RTU scheduler and driver UART callbacks. Driver returns the transmitted
+address with valid CRC; request frame CRC checked too. Three replies consumed,
+TX3, zero CRC errors/timeouts and both server7 register controls pass. Server200
+still yields zero common completion callbacks. Raw rtu-high-address74-results
+evidence is rtu-high-address74-raw-results.xml; final correct assertion fails.
+Initial statistics check referenced nonexistent RX field; fixed to use actual
+TX report, observed replies and consumed bytes, after reviewing report_stats.
+No physical hardware claim, CORE edit or duplicate test. Exact allowance follows
+the relocated case; coverage remains pending cumulative measurement.
+
+
+## Accumulated driver/auxiliary checkpoint - 2026-10-24
+
+Nine new cases beyond2d8b8d0 plus two existing helper extensions, covering delta
+manual/auxiliary motion, compound G76 reset, VFS timestamp allocation failure,
+legacy IO ownership and Modbus follow-up/high-address decoding. Six new exact
+known-regression allowances retain correct assertions; no new sanitizer waiver.
+One cumulative build and ASan/UBSan gate passes4,462 cases in147.17s. Strict
+classification:4,427 clean,33 known regressions,2 known sanitizer diagnostics,
+zero unexpected failures/skips. Evidence: build-asan/residual-driver74-results.xml,
+residual-driver74-tests.log and residual-driver74-summary.log. Static workflow
+YAML/artifact checks also pass. Unchanged reporting-helper tests were not rerun.
+
+This gate pins clean CORE2e165a1, not latest upstream. Read-only remote refresh
+found b01f481072edecac33d5e40c25869359a5b3fa1f, a single15-file update. Fetched
+objects and reviewed diff without changing the CORE checkout. It includes
+synchronized-output allocation validation/calloc, tapping macro fallback, RAM
+truncate pointer repair, embedded mount ordering, claimed-pin boolean fix,
+laser restore changes and VFS locate initialization. Next: validate affected
+contracts against that revision and remove only demonstrated resolved allowances.
+Do not dispatch stale-source CI merely to measure this checkpoint. Existing
+PR28 remains open/unmerged at frozen a9f355c; branch73 matches it. Branch74
+remote currently2d8b8d0. No PR merge or overlapping PR is authorized here.
+
+Latest measured coverage remains frozen2d8b8d0/run40074304720:98.46% lines,
+92.07% branch outcomes. This checkpoint has no measured gain yet. Raw line
+inventory273 and branch inventory890sites/1,097outcomes still describe that
+locked source/report. Rebuild inventories only from the next source-matched
+measurement, preserving historical proof scope.
