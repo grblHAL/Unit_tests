@@ -1,41 +1,51 @@
 # Remaining raw CORE coverage
 
-## Latest verified successful matrix
+## Latest verified coverage job; compiler matrix failed
 
-[Run40111349496](https://github.com/petervanderwalt/Unit_tests/actions/runs/40111349496)
-coverage passed on harness59b3ad9f9198d9973cc03b7af983c1d9899abc2d and
+[Run40114356917](https://github.com/petervanderwalt/Unit_tests/actions/runs/40114356917)
+coverage PASSED on harnessd05945e968eab3e3684ebbfcb0cffef5a1ae4218 and
 COREb01f481072edecac33d5e40c25869359a5b3fa1f. Both artifact/report locks and
-filter core/.*\.[ch]$ match; all seven coverage stages exit0, no findings.
-17,491/17,757 lines (**98.50%**) and12,811/13,852 outcomes (**92.48%**):
-266 missing lines and1,041 missing outcomes. Coverage4,492 total/4,469 clean/
-23 known/0 failed/skipped. Against same-source40107107939: zero new/lost lines,
-ten additional outcomes/no loss. Exact new sites: gcode286/5142,
-machine_limits331/332, protocol757, spindle_control1416/1436,
-stepper2 425/429/435. These match all eight authored controller workflows.
-The branch inventory now matches this report; the unchanged line inventory's
-266 exact source/line keys were checked against the new report. No exclusions.
-Evidence: build-asan/hosted40111349496/verified-comparison.json.
+filter core/.*\.[ch]$ match; allseven stages exit0/no findings. Coverage4,498
+cases/4,475 clean/23 known/zero failed or skipped.
+17,491/17,757 lines (**98.50%**) and12,820/13,852 outcomes (**92.55%**):
+266 missing lines and1,032 missing outcomes. Against same-source40111349496:
+zero new/lost lines; nine additional outcomes/no loss. Exact new sites:
+gcode122(two spline outcomes)/4622; ioports1214/1256/1316;
+motion_control1028; ngc_params753; report1581. All match the six basic
+controller workflows delivered in batch75. Both inventories were reconciled;
+the unchanged line inventory's266 source/line keys match the current report.
+Evidence: build-asan/hosted40114356917/verified-comparison.json.
 
-All five source/GCC/Clang/coverage/Results summary jobs completed successfully.
-Compiler artifact locks match59b3ad9/COREb01f481; all stages exit0/no findings.
-Clang4,492 total/4,465 clean/27 known/zero failed or skipped; GCC4,492 total/
-4,468 clean/24 known/zero failed or skipped. All eight new cases individually
-pass Clang. The three existing tapping diagnostics exactly reproduce indices
-29/27/28 at gcode485, with unchanged narrow matching. Assertions after those
-fatal faults remain unvalidated on Clang. README badges now point to this run.
-PR30 is ready for review at validated59b3ad9; no merge performed. Further work should prioritize supported missing lines;
-this batch adds distinct behavior branches but no new executable lines.
+GCC passed with an exact d05945e/b01f481 report lock, allstages0/no findings:
+4,498 total/4,474 clean/24 known/zero failed or skipped. Clang/summary FAILED.
+Exact Clang report lock matches d05945e/b01f481;4,498 total/4,471 clean/24 known/
+3 failed/zero skipped. All six new workflows individually pass without allowances.
+Existing tapping cases report eight-axis index28, unsupported fallback index30,
+and a recursive clean exit without its required diagnostic. Two new local exact
+entries match only the saved28/30 outputs; production runner/first1024 and changed/
+zero-exit controls pass. Recursive clean output correctly remains red. Dated
+KNOWN_BUGS addendum; no matcher implementation/assertion relaxation. No retry
+solely for this diagnostic data.
+This is a verified coverage job, not
+a green matrix. README badges and ready PR30 remain at fully green40111349496
+(harness59b3ad9,98.50% lines/92.48% branches). Never merge PRs.
 
-Six later ordinary-workflow cases pass focused sanitizers: individual switch
-homing with named/sender completion fields, absolute rotary G28 intermediate
-return, cubic/quadratic dynamic laser cuts with blanked rapid, and unhomed
-manual probe without toolsetter selection, and dedicated probe/coolant pin
-configuration saves that preserve auxiliary inversion ownership. They are outside
-the measured head;
-no gains are attributed until a substantial cumulative hosted report exists.
-Successor75 cumulative full ASan/UBSan/strict gate passes4,498 in63.51s:
+Batch75 full local ASan/UBSan/strict gate passed4,498 in63.51s:
 4,473 clean/24 known regressions/1 known diagnostic/zero failures or skips.
-Only the next exact-source hosted report can establish coverage gains.
+A later local extension of the existing PWM overdrive case now checks disabling
+that feature and ordinary running/off PWM output; focused sanitizer/strict1/1
+passes0.28s. It is outside d05945e, so no measured gain is attributed to it.
+
+A later full-boot parking regression also passes focused sanitizer/strict:
+public $HZ and $41=5, M56P0/M2, next-cut door IRQ,640-step retract/restore and
+completed160-step X motion. No synthetic homed/position setup or new allowance.
+It targets gcode5104's initially-active policy; gain remains unmeasured. Do not
+run another full gate/CI for this one case and PWM extension alone.
+
+Two raw Modbus outcomes42/69 have specific current supported-interface evidence:
+RTU/ASCII/TCP cases are all covered; remaining source-block1 switch defaults
+would require another provider interface value. Optional callback absence is
+already covered. No duplicate omission or invented transport test was added.
 
 Current b01 stream_file73 ownership review: native redirect installs a nonnull
 opened file and its reader together at160; close209-214 restores both saved

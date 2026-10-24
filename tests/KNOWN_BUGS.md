@@ -730,3 +730,25 @@ diagnostics and zero-exit output remain rejected. No range/wildcard allowance or
 matcher implementation change. The hosted run remains failed; post-crash
 assertions remain unvalidated. Saved logs are under
 build-asan/hosted40107107939/results-core-clang/build/known-crash-<test>.log.
+
+
+### Tapping diagnostic evidence update - 2026-10-24, run40114356917
+
+[Run40114356917](https://github.com/petervanderwalt/Unit_tests/actions/runs/40114356917)
+at harnessd05945e/COREb01f481 passed source/GCC/coverage but failed Clang and
+summary. All six newly added normal controller workflows pass Clang individually.
+The existing eight-axis tapping handoff reports index28 and unsupported tapping
+fallback reports index30 at core/gcode.c485:32, const27-entry offset table,
+macro_arguments_push top frame and ASan global-buffer-overflow. Two separate
+exact test/index entries record only these actually saved diagnostics. Production
+runner replay and first1024 matching pass; changed index/source/table/function
+and zero-exit diagnostics reject. Matcher implementation and assertions unchanged.
+
+The recursive tapping regression exited0 with no diagnostic in this build.
+Its strict known-crash wrapper correctly remains red: CORE is unchanged and
+other builds still reproduce the fault, so this does not prove a firmware fix.
+No clean-exit allowance, wildcard/range, forced padding, private-state setup or
+new known failure was added. Assertions after fatal faults remain unvalidated.
+Do not rerun CI solely for these manifest additions. Saved logs and replay proof:
+build-asan/hosted40114356917/results-core-clang/build/known-crash-<test>.log,
+verified-exact-diagnostic-replay.json and verified-new-workflows.json.

@@ -4,8 +4,9 @@ Full objective remains meaningful supported CORE line AND branch coverage.
 Goal ACTIVE; never edit CORE or merge PRs. Use Ponytail full and explicit RTK.
 Work in C:/Users/User/Documents/Codex/2026-10-08/https-github-com-petervanderwalt-unit-tests/work/Unit_tests.
 
-Branch coverage-batch-75 contains the six-case validated followup; origin/coverage-batch-74
-and PR30 remain at validated59b3ad9f9198d9973cc03b7af983c1d9899abc2d. PR28 is merged. PR30 is READY FOR REVIEW at this exact pushed head:
+Branch coverage-batch-75 has validated local followups; pushed origin/coverage-batch-75
+remains atd05945e968eab3e3684ebbfcb0cffef5a1ae4218.
+PR30/origin74 remain at validated59b3ad9f9198d9973cc03b7af983c1d9899abc2d. PR28 is merged. PR30 is READY FOR REVIEW at this exact pushed head:
 https://github.com/grblHAL/Unit_tests/pull/30
 PR30 is exact-head validated and marked ready via GitHub; no merge performed. All eight cases and exact diagnostic
 entries below are included in its current pushed head.
@@ -15,6 +16,76 @@ Do not redispatch. All five source/GCC/Clang/coverage/summary jobs passed.
 Continue independent supported workflows; full coverage goal remains ACTIVE.
 CORE clean at b01f481072edecac33d5e40c25869359a5b3fa1f; latest fetched Terje ref
 matches. Do not switch/modify source without a deliberate compatibility pass.
+
+## Batch75 hosted checkpoint and continuing work
+
+Exact-head run40114356917 COMPLETED FAILURE on d05945e/COREb01f481:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/40114356917
+Dispatch accepted2026-10-24T17:03:06Z after checking duplicate heads and the
+three-per-hour ceiling (one prior run in that hour). Saved
+build-asan/batch75-dispatch.json. Do not redispatch on observation timeout.
+Coverage now PASSED and downloaded; both artifact/report locks verified exact
+d05945e/COREb01f481/filter core/.*\.[ch]$, allseven stages exit0/no findings.
+4,498 total/4,475 clean/23 known/zero fail/skip. New locked counts:
+17,491/17,757 lines98.50%;12,820/13,852 branch outcomes92.55%.
+266 missing lines/1,032 missing outcomes. Same-source40111349496 comparison:
+zero new/lost lines; +9 branches/no loss. Exact gains gcode122(two)/4622,
+ioports1214/1256/1316, motion_control1028, ngc_params753, report1581. These
+match all six actual-use regressions. Both inventories reconciled; exact raw
+line keys unchanged266. Saved build-asan/hosted40114356917 coverage/report
+artifacts and verified-comparison.json. GCC PASSED; exact report lock verified d05945e/b01f481, allstages0/no findings.
+GCC4,498 total/4,474 clean/24 known/zero failed or skipped. Saved
+report-core-gcc. Clang/Results summary FAILED; badges stay on
+fully green40111349496 and PR30 stays unchanged. Never report this matrix
+green before exact compiler evidence. Local full4,498 passed63.51s.
+
+Further authoring, outside pushed/measured head: existing spindle_control/
+pwm_laser_overdrive_adds_and_clamps_duty.c now also disables overdrive via
+its public callback, checks the flag/percentage clear and normal running/off
+PWM conversion. Targets spindle_control1043's documented zero-percent branch.
+No new case/helper/exception. Focused ASan/UBSan and strict summary PASSED1/1
+in0.28s, saved build-asan/laser-overdrive-disable-{build,summary}.log and
+laser-overdrive-disable-results.xml. This extension is local/uncommitted and
+outside d05945e/full4,498 gate. Accumulate the next group before any full gate/CI.
+
+Terminal Clang evidence: exact d05945e/b01f481 artifact lock verified; test/
+classify stages fail.4,498 total/4,471 clean/24 known/3 failed/0 skipped.
+All six newly authored workflows individually pass without any known-failure
+labels (verified-new-workflows.json). The failures are the existing tapping
+regressions: eight-axis index28, unsupported fallback index30, and recursive
+case exit0/no diagnostic. The actual XML/logs identify indices28/30, not the
+report summary's source-column32 text. Existing strict wrapper correctly rejects
+the absent recursive diagnostic. No new behavior defect or blanket allowance.
+
+Two local exact test/index entries for actually recorded28/30 pass production
+runner replay and compact first1024 evidence. Changed index/source/table/function
+and zero-exit diagnostic output reject; the actual saved recursive clean output
+still rejects. Matcher implementation and assertions unchanged. Dated KNOWN_BUGS
+addendum; saved report-core-clang/results-core-clang artifacts and
+verified-exact-diagnostic-replay.json. These manifest additions are outside
+pushed d05945e. Do not rerun CI for them alone; recursive case remains a strict
+red outcome until the underlying fault/exception is correctly resolved.
+
+Independent basic work: full-boot program_end_reenables_parking_for_next_cut_
+after_public_m56_disable.c uses public settings/$HZ/G0/M56/M2, physical door IRQ,
+Z retract/restore and next-cut completion. No synthetic homed/position state.
+Focused ASan/UBSan and strict summary PASSED1/1 in0.27s; logs/XML are
+program-end-parking-{build,summary}.log and program-end-parking-results.xml.
+$41=5 is enabled/override-control/initially-active; initial fixture used3,
+which correctly normalizes to7 (initially disabled), so fixture was corrected.
+No CORE defect. Public $HZ establishes actual homed Z; M56P0 disables parking,
+M2 restores active policy, door IRQ during next cut causes640-step retract,
+four parked polls and640-step restore, then exact160-step X endpoint. No
+synthetic homed/position state. Expected missing branch gcode5104; no measured
+gain for this local case or PWM extension until next cumulative checkpoint.
+One new case only; no full gate/hosted run for these followups alone.
+
+Current branch-route refinement (no new tests/count changes): Modbus42/69's
+three supported RTU/ASCII/TCP switch cases are all covered. The missing outcomes
+are switch defaults in source-block1, not omitted optional callbacks. is_up
+true/false counts108/2 and busy callback present/absent28/4; existing reset and
+ASCII cases already exercise omission. Both inventory rows now carry specific
+current evidence so this review is not repeated. No invented transport case.
 
 ## New coverage evidence and ongoing authoring
 
@@ -39,9 +110,9 @@ fully green run. PR30 validated at exacthead and marked ready for review; never 
 Six added actual-use cases pass one cumulative full ASan/UBSan/strict gate:
 4,498 total in63.51s;4,473 clean/24 known regressions/1 known diagnostic/
 zero failed or skipped. Logs/XML: build-asan/batch75-delivery-{build,tests,summary}.log
-and batch75-delivery-results.xml. No unchanged helper rerun. Commit/push75 and
-use one exact-source hosted checkpoint; do not redispatch74. New gains remain
-unmeasured. PR30 stays ready at59b3ad9. The first four cases are local828e4ff:
+and batch75-delivery-results.xml. No unchanged helper rerun. Pushed d05945e; one exact-source hosted checkpoint is running above.
+Do not redispatch74 or75. Gains are now measured in the successful coverage job above; compilers pending.
+PR30 stays ready at59b3ad9. The first four cases are local828e4ff:
 - homing/named_homed_state_tracks_individual_switch_homing_without_combined_cycle:
   public individual-axis configuration/no combined cycle; $HX/$HY/$HZ physically
   finish70/110/150steps. Named and sender |H completion/masks track0/1/3/7;
