@@ -1,3 +1,47 @@
+# Latest component checkpoint - 2026-10-24 (batch18)
+
+Goal remains active. Delivered the accumulated WebUI13 authoring cases together
+with15 new MSP432P401R primary UART cases, rather than a standalone small WebUI
+checkpoint. Separate Plugin/Driver tests choices lock original candidate/CORE/SDK
+sources. No production edits, source guard replacements, concurrent CORE changes
+or merges.
+
+One cumulative Windows Clang ASan/UBSan gate:42 compatible suites,631 cases =
+576 clean +55 documented known results, zero unexpected failures/skips. Known
+results comprise51 correct assertion regressions +4 passed-assertion diagnostic
+cases;3 assertion cases also have exact existing diagnostics, counted once. New
+MSP regression requires RX mute to preserve pending TX interrupts/output. No new
+sanitizer diagnostic allowance. Targeted source-plan helper passes0.027s; actionlint
+and whitespace pass. Unchanged reporting helpers were not rerun; last full84 pass
+is batch17 below. Strict per-suite classification ran for this complete gate.
+
+Fresh local LLVM selected-file/configuration coverage: MSP primary serial108/108
+lines100%,37/41 branches90.2%,16/16 functions. WebUI args38/38 lines100%,41/44
+branches93.2%,3/3 functions; embedded provider3/3 lines100%,1/1 function. Adds149
+exercised executable lines. Fresh counter paths max228 characters; strict profiling
+checks pass. No secondary UART or HTTP backend coverage inferred from percentages.
+
+MSP original driver/board/TI device/CMSIS headers compile. Real CMSIS NVIC functions
+execute against host-owned mapped registers; exactly two CPU interrupt intrinsic
+macros are rebound after normal original header inclusion to observable host calls.
+No source guard or legacy type is replaced. Real CORE stream registration/claim/
+close, connection and tool-ACK suspend backup/restore execute. This does not prove
+CPU interrupt scheduling, target SDK linking or physical UART timing. Secondary
+status-table guard remains source-review-only; never force a memory failure.
+WebUI uses actual CORE VFS with three asset configurations and normal argument
+helpers; server/login/v2/v3/upload/lwIP/browser/controller work remains untested.
+
+Pinned CORE b01f481072edecac33d5e40c25869359a5b3fa1f;
+MSP432P1fa8bc31d8e8669d4d569e768154a0532ec5311e;
+TI/CMSIS header distribution energia/msp432-core7c9a3689dc4dc3c9a7d00fa6cb51c4ed5b260afb;
+WebUI3712523bc98f0bce343b56e03bdf881cc7fd4aa0.
+All API-matched local original checkouts clean. Not a latest official SDK claim.
+Source locks/evidence ignored in build-evidence. PR29 stays draft/unmerged. Hosted
+default-branch workflow installation and physical target checks remain outstanding.
+Remaining legacy driver source-review details and next gaps are in COMPONENT_TODO.
+
+---
+
 # Latest component checkpoint - 2026-10-24 (batch17)
 
 Goal remains active. Added39 cases: ATCi18 and MPG transport21. New separate

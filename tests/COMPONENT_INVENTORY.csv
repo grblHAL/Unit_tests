@@ -12,7 +12,7 @@ plugin,Trinamic,grblHAL/Plugins_motor,partial host tests,plugin_trinamic,TMC2209
 plugin,Laser/PPI,grblHAL/Plugins_laser,partial host tests,plugin_laser_ppi;plugin_laser_cluster,Retain zero-PWM pulse regression; add coolant/overdrive and alternate PPI/cluster configurations with public driver registration.
 plugin,Fans,grblHAL/Plugin_fans,partial host tests,plugin_fans,Add persisted settings reload and delayed program-end workflows.
 plugin,Bluetooth,grblHAL/Plugins_Bluetooth,partial host tests,plugin_bluetooth,Retain highest-STATE-pin and startup-connection regressions; add shared MPG and remaining IRQ/transport configurations.
-plugin,WebUI,grblHAL/Plugin_WebUI,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+plugin,WebUI,grblHAL/Plugin_WebUI,partial host tests,plugin_webui,13 helper/provider cases validated; HTTP/login/v2/v3/storage/lwIP/browser modules remain untested.
 plugin,OpenPNP,grblHAL/Plugin_OpenPNP,partial host tests,plugin_openpnp,Add jerk-enabled configuration and full parser/driver integration; investigate detailed-only reporting contract.
 plugin,Embroidery,grblHAL/Plugin_embroidery,partial host tests,plugin_embroidery_readers,DST/PES readers use real VFS; coordinator rendering and job/needle synchronization remain untested.
 plugin,Miscellaneous,grblHAL/Plugins_misc,partial host tests,plugins_misc,Add BLTouch and remaining I/O expansion/settings workflows.
@@ -32,10 +32,10 @@ third-party plugin,Virtual inputs,siganberg/grblhal-virtual-inputs,partial host 
 driver,STM32H7xx,dresco/STM32H7xx,partial host tests,driver_stm32h7_flash,H743/H723 flash modules tested through simulated HAL; add other SDK/IO/serial modules and board builds.
 driver,ESP32,grblHAL/ESP32,partial host tests,driver_esp32_nvs,Partition-storage module tested through simulated SDK calls only; assess IO/serial helpers and real ESP-IDF board builds separately.
 driver,LPC176x,grblHAL/LPC176x,partial host tests,driver_lpc176x_flash,Host IAP storage tested with padded buffers; resolve CORE allocation/copy-size compatibility and add SDK/board workflows.
-driver,MSP430F5529,grblHAL/MSP430F5529,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
-driver,MSP432E401Y,grblHAL/MSP432E401Y,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
-driver,MSP432P401R,grblHAL/MSP432P401R,source review only,,Driver uses external EEPROM plugin or NVS_None; assess original serial/helpers and required TI SDK before registering tests.
-driver,PSoC5,grblHAL/PSoC5,not yet assessed,,Identify host-testable helpers and required board/SDK; keep compilation separate from behavior and hardware checks.
+driver,MSP430F5529,grblHAL/MSP430F5529,source review only,,External EEPROM plugin/NVS_None; serial uses MSP430 register/interrupt syntax. Pin an actual TI header/toolchain or explicit host hardware adapter before tests.
+driver,MSP432E401Y,grblHAL/MSP432E401Y,source review only,,Support ends CORE20250518 per README. Parent pins shared6adcc848 tested separately in Tiva configuration; actual MSP432E SDK/current-parent build remains untested.
+driver,MSP432P401R,grblHAL/MSP432P401R,partial host tests,driver_msp432p_serial,"Primary UART/CORE stream cases use real pinned TI/CMSIS headers; retain RX-mute TX-stall regression. Secondary guard, RTS, actual target link/hardware remain."
+driver,PSoC5,grblHAL/PSoC5,source review only,,Support ends CORE20250518 per README. Generated project.h/UDB hardware and NVS in driver.c require explicit SDK/controller fixture; do not extract production functions.
 driver,RP2040 (Pi Pico & Pi Pico W),grblHAL/RP2040,partial host tests,driver_rp2040_flash,Flash-copy module tested through simulated SDK calls only; assess littlefs/IO/serial helpers and real Pico SDK board builds separately.
 driver,SAM3X8E (Arduino Due),grblHAL/SAM3X8E,partial host tests,driver_sam3x8e_serial,Retain RX-disable/realtime-route/pinmux regressions and exact callback diagnostic; add other ports and controller/board builds.
 driver,SAMD21,grblHAL/SAMD21,source review only,,Upstream ends support at CORE build20250518; assess actual modules and keep any explicit gitlink reference separate from current CORE.

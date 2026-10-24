@@ -299,11 +299,13 @@ repository's default branch.
 | Plugin tests | `plugin_flexgpio` | I2C expander registration, packets, input edges and configuration |
 | Plugin tests | `plugin_atci` | Keepout checks, jog clipping, rack sensors and M960 regression |
 | Plugin tests | `plugin_mpg_transport` | Framed/plain stream data, acknowledgement, retry and reset behavior |
+| Plugin tests | `plugin_webui` | Argument helpers and embedded assets via real CORE VFS; HTTP backends remain |
 | Driver tests | `driver_imxrt1062_pwm` | Teensy 4.0/4.1/MicroMod PWM register, routing and ownership workflows |
 | Driver tests | `driver_sam3x8e_serial` | Dual UART/USART queues, callbacks, settings and CORE stream suspend |
 | Driver tests | `driver_tm4c123_eeprom` | Aligned EEPROM, CRC storage and transfer failures |
 | Driver tests | `driver_ti_shared_eeprom` | Standalone TI shared EEPROM candidate and CRC regressions |
 | Driver tests | `driver_tm4c123_serial` | Original UART0 queues, realtime dispatch and CORE stream suspend |
+| Driver tests | `driver_msp432p_serial` | Primary UART queues and CORE stream lifecycle with real TI/CMSIS headers |
 
 These are initial host tests, not full plugin/driver coverage or board validation.
 Trinamic also locks and compiles the actual chip library; its UART device is

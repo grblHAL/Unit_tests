@@ -604,5 +604,38 @@
     "test_regex": "^plugin_mpg_transport[.]",
     "coverage_filter": "plugins/mpg_transport/.*\\.[ch]$",
     "diagnostics_directory": "tests/plugins/mpg_transport"
+  },
+  "plugin_webui": {
+    "repository": "grblHAL/Plugin_WebUI",
+    "ref": "main",
+    "path": "plugins/webui",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/webui",
+    "cmake_options": [],
+    "test_regex": "^plugin_webui[.]",
+    "coverage_filter": "plugins/webui/.*\\.[ch]$",
+    "diagnostics_directory": "tests/plugins/webui"
+  },
+  "msp432_sdk": {
+    "repository": "energia/msp432-core",
+    "ref": "7c9a3689dc4dc3c9a7d00fa6cb51c4ed5b260afb",
+    "path": "deps/msp432-sdk",
+    "source_only": true
+  },
+  "driver_msp432p_serial": {
+    "repository": "grblHAL/MSP432P401R",
+    "ref": "master",
+    "path": "drivers/msp432p401r",
+    "dependencies": [
+      "core",
+      "msp432_sdk"
+    ],
+    "cmake_source": "tests/drivers/msp432p_serial",
+    "cmake_options": [],
+    "test_regex": "^driver_msp432p_serial[.]",
+    "coverage_filter": "drivers/msp432p401r/serial\\.c$",
+    "diagnostics_directory": "tests/drivers/msp432p_serial"
   }
 }

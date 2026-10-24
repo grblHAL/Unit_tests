@@ -7,6 +7,25 @@ or force private state to enter a path.
 
 ## Next source families
 
+- Batch18 now validates WebUI13 helper/provider and MSP432P15 primary UART cases
+  together. WebUI measured args/provider41/41 lines,41/44 branches, not HTTP/backend
+  coverage. Primary MSP108/108 lines,37/41 branches uses original driver/board/
+  TI/CMSIS headers and real CORE stream lifecycle. Retain pending-TX loss when
+  disable_rx(true) clears all IE bits; no sanitizer exception.
+- MSP secondary SERIAL2_MOD expands to A2, while its status array uses #if and
+  other declarations use #ifdef. Do not activate that instance or force a status
+  table memory failure; establish/fix the guard contract. RTS bit-band mode,
+  alternate SDK configurations, target link and actual hardware remain untested.
+- Remaining source review: MSP430 d6d11c74b87d4fd456a01dd2f45579dcd7ad6b73 uses
+  external EEPROM and MCU interrupt/register syntax; its CORE gitlink is
+  31f6a4bf04b3136e653c53df586d3351fa9cb7b9. MSP432E
+  eb6371652d2b0bed1e79746e4505a8bd279be8b7 and PSoC5
+  c9d721259783ca578ee1b0c3f6111839610c26a4 READMEs end support at CORE20250518,
+  both pin070f80cc5c0d095ff63d5980795b5a15c5bb0202. MSP432E pins shared6adcc848,
+  whose EEPROM is tested separately with Tiva headers, not that SDK/parent build.
+  PSoC5 needs generated project.h/UART APIs and keeps NVS inside driver.c. Pin
+  original SDK interfaces; never extract firmware functions or silently fall back
+  to legacy CORE. No actual runtime/compile result for these remaining drivers.
 - ATCi18 cases now exercise original registered settings/M-code/travel/sensor
   callbacks at671f145530ec8ec9f5828897477dc0192593b3d8:292/305 lines,156/193
   branches. Retain M960 P0 regression: validate consumes words.p, execute tests
