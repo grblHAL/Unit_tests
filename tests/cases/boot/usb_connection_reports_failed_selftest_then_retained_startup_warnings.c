@@ -2,7 +2,8 @@
 #include "task.h"
 #include "report.h"
 static unsigned fault_turns, forbidden_calls;
-static uint32_t connected_at;
+static uint32_t connected_at, reconnected_at;
+static bool reconnected;
 static void forbidden_startup_task(void *data) { (void)data; forbidden_calls++; }
 static void configure_failed_usb_driver(void)
 {
@@ -41,9 +42,20 @@ static void observe_failed_usb_driver(sys_state_t state)
         const char *second = strstr(failure, "Second fixture warning");
         CHECK(first && second && first < second);
         CHECK(boot_setup_calls == 1 && boot_release_calls == 0);
-        /* Failed startup intentionally stays in its fault loop. Finish only
-           after observing the public connection event and delayed diagnostics. */
-        exit(EXIT_SUCCESS);
+        CHECK(strstr(first + strlen("First fixture warning"), "First fixture warning") == NULL);
+        CHECK(strstr(second + strlen("Second fixture warning"), "Second fixture warning") == NULL);
+        if(!reconnected) {
+            io_stream_properties_t usb = {.flags = {.is_usb = true}};
+            hal.stream.on_linestate_changed(&usb, (serial_linestate_t){0});
+            reconnected_at = engine_ticks;
+            hal.stream.on_linestate_changed(&usb, (serial_linestate_t){.dtr = true});
+            reconnected = true;
+        } else if(strstr(failure + 1, "grblHAL: power on self-test (POS) failed!")) {
+            CHECK(engine_ticks >= reconnected_at + 50);
+            /* The controller remains fault-locked; reconnect repeats its
+               diagnostic without replaying already-consumed startup warnings. */
+            exit(EXIT_SUCCESS);
+        }
     }
 }
 int main(void)

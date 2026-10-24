@@ -159,3 +159,15 @@ if(TEST multi_spindle.starting_secondary_preserves_pending_primary_override_ramp
   set_tests_properties(multi_spindle.starting_secondary_preserves_pending_primary_override_ramp
     PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Exact recovering UBSan in supported 32-channel bank registration; assertions pass.
+if(ENABLE_SANITIZERS AND TEST ioports_32.full_bank_registers_p31_and_routes_highest_channels)
+  set_tests_properties(ioports_32.full_bank_registers_p31_and_routes_highest_channels
+    PROPERTIES LABELS known_sanitizer_bug)
+endif()
+
+# Confirmed CORE2e165a1: raw nonzero mask truncates in one-bit ownership metadata.
+if(TEST ioports.claimed_nonzero_output_retains_ownership_metadata)
+  set_tests_properties(ioports.claimed_nonzero_output_retains_ownership_metadata
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

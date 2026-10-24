@@ -94,6 +94,60 @@ passes; retain paired override, retarget and stop-isolation controls. No sanitiz
 allowance is added. Raw evidence:
 `build-asan/batch74-secondary-start-primary-ramp-raw-results.xml`.
 
+## Claimed nonzero output loses ownership metadata on pin lookup
+
+Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
+The standard two-output driver claims physical output1 through `ioport_claim`.
+A subsequent public pin-info lookup reports `mode.claimed == 0`, although the
+claim is still exclusive: duplicate claim rejection, physical output routing,
+remaining output routing and the cached available count all pass.
+
+`ioports.c703` assigns the raw mask result to a one-bit integer field. For pin1,
+the value2 truncates to0. A boolean comparison against zero would preserve the
+ownership flag. This is an observable metadata defect; no unintended output or
+lost exclusivity is claimed. CORE is unchanged.
+
+[Regression](cases/ioports/claimed_nonzero_output_retains_ownership_metadata.c)
+captures metadata before running routing and duplicate-claim controls, then
+retains the correct ownership/count assertion. One exact `WILL_FAIL` and
+`known_bug` label in `known_bugs.cmake`; no sanitizer allowance. Remove only this
+allowance when the assertion passes. Raw evidence:
+`build-asan/batch74-io32-isolation-raw-results.xml` (original case name).
+
+## Supported 32-channel bank registration and free-port scan exceed integer/map bounds
+
+Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
+`crossbar.h` explicitly accepts `N_AUX_DIN=32` and `N_AUX_DOUT=32`. Registering a
+normal full bank reaches signed `1 << 31` when setting the input and output bus
+masks in [ioports.c994/1007](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/ioports.c#L994).
+UBSan reports `left shift of 1 by 31 places cannot be represented in type 'int'`
+at both lines. The ordinary free-port query also scans for its terminating null
+pin by calling index32; `ioports.c696` reads `map[32]` before validating it,
+producing the exact UBSan index32 diagnostic. Both are undefined behavior. P31 descriptions, highest-channel
+input and on/off output routing assertions all pass on the measured host;
+no incorrect physical output or channel corruption is claimed from UB alone.
+
+[Regression](cases/ioports_32/full_bank_registers_p31_and_routes_highest_channels.c)
+uses a host variant with those supported compile settings and real32-entry
+input/output descriptors. Counts, P31 names, pin lookup, immediate sampling and
+on/off output31 and initial free-port counts are checked. No forged index, over-advertised bank or private
+state is used. This expands a supported configuration absent from the earlier
+24-channel-default host builds; it is not a coverage exclusion.
+
+Suggested maintainer repair: form the bus masks from an unsigned mask-width
+constant before shifting, and reject an index outside the map before lookup.
+No CORE change is included here.
+
+Allowance: exact case, `core/ioports.c` lines994/1007 with the exact signed-one,
+shift31,int-type diagnostic, plus line696 with the exact index32/uint8_t[32]
+diagnostic in
+[known_sanitizer_diagnostics.json](known_sanitizer_diagnostics.json), with a
+sanitizer-only `known_sanitizer_bug` label in [known_bugs.cmake](known_bugs.cmake).
+There is no `WILL_FAIL`; all numerical and routing assertions remain passing.
+Remove this manifest entry and label when diagnostics disappear, retaining the
+32-channel variant and regression. Raw evidence:
+`build-asan/batch74-io32-full-bank-raw-results.xml`.
+
 ## Absent-axis inch conversion shifts by the unavailable axis marker
 
 2026-10-24 reporting correction: GCC names the same unsigned-long type
@@ -245,8 +299,8 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Measured:** 2026-10-24, clean Terje `2e165a1ac4c74be8e68971972c6577775d856b05`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40049122187)
-measures 17,480/17,756 lines (98.45%) and 12,644/13,834 branches (91.40%).
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40050621444)
+measures 17,480/17,756 lines (98.45%) and 12,652/13,834 branches (91.46%).
 The 276 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable. See the complete measured
 [line/branch inventory](COVERAGE_GAPS.md) before selecting the next workflow.

@@ -42,5 +42,22 @@
       177
     ],
     "message_pattern": "shift exponent 255 is too large for (32|64)-bit type '(unsigned long|long unsigned int)'"
+  },
+  {
+    "test": "ioports_32.full_bank_registers_p31_and_routes_highest_channels",
+    "source": "core/ioports.c",
+    "lines": [
+      994,
+      1007
+    ],
+    "message_pattern": "left shift of 1 by 31 places cannot be represented in type 'int'"
+  },
+  {
+    "test": "ioports_32.full_bank_registers_p31_and_routes_highest_channels",
+    "source": "core/ioports.c",
+    "lines": [
+      696
+    ],
+    "message_pattern": "index 32 out of bounds for type '(uint8_t|unsigned char) ?\\[32\\]'( \\(aka 'unsigned char ?\\[32\\]'\\))?"
   }
 ]

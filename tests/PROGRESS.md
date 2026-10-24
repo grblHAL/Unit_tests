@@ -1,3 +1,146 @@
+# Cumulative controller workflow gate - 2026-10-24
+
+Full ASan/UBSan4,409-case gate passes58.13s; strict summary:4,385 clean,
+2 recovering known-sanitizer cases,22 reproduced known regressions,0 failures
+or skips. Source remains clean2e165a1 after fresh CORE fetch. Local branch74
+contains six new cases plus three existing-case extensions. No repeated full gate.
+
+Artifacts: build-asan/batch74-controller-workflows-delivery-{build.log,tests.log,
+results.xml,summary.log}. Separate modal-drilling profile proves both call-level
+outcomes at gcode.c1534 and4780, with local plunge/retract suppression at4764:
+build-asan/modal-drilling-proof74/proof.json. Existing560/800-pulse whole-job
+checks were strengthened with all five actual hole positions and retract endpoints;
+that affected case passes its final focused sanitizer/strict check in0.06s. No fixture/CORE edit.
+Hosted aggregate remains98.45% lines/91.46% branches at8b9dea0 until new exact-head
+measurement. Prepare one cumulative delivery and preserve frozen PR28.
+
+# Modal drilling through actual stepper output - 2026-10-24
+
+New motion-control scenario executes a synchronous registered drilling macro with
+M73 local modal restoration, plunge and retract. Two G66-triggered positions and
+three G66.1 argument-driven positions finish with exactly five calls,560 X pulses,
+800 Z pulses, Z back at0 and caller X7. Local G0/G1 moves do not recursively call
+the parent modal macro; G67 stops future calls and the caller remains absolute.
+G66.1 uses declared X block arguments and macro-side positioning; the initial
+undeclared-X setup rejected correctly and was repaired without a CORE allowance.
+Focused ASan/UBSan passes1/1 in0.07s. No CORE or shared fixture change.
+
+Current accumulated batch: six new scenarios plus three extensions across I/O,
+settings migration, USB reconnect, named-file errors and actual drilling motion.
+The32-channel diagnostic retains exact case/source/line/index/type scope while
+accepting GCC's typedef spacing and Clang's alias rendering. Seven classifier
+self-checks accept these renderings and reject wrong index,type,line or case.
+Preparing one cumulative sanitizer/strict gate; no new hosted run dispatched yet.
+
+# Accumulated workflow source proof - 2026-10-24
+
+Built all eight current successor scenarios together in the existing non-sanitized
+coverage build, including the supported32-channel variant. Per-variant isolated
+CTest groups pass6/6 standard,1/1 full-bank and1/1 long-name. The standard group
+includes the one documented expected metadata regression. Separate profile
+prefixes prevent cross-configuration counter mixing.
+
+Evidence: build-asan/successor-workflows-proof74/proof.json and each variant's
+results.xml/tests.log. Profiles show remap rejection and identical-remap arms,
+PWM frequency and16-bit-period limits, recent-build migration bypasses and both
+USB startup-warning queue arms. The long-name warning's abbreviated suffix is
+verified by its assertion; this compiler emits no branch rows on that expression.
+No aggregate coverage gain is inferred from these local profiles. Full sanitizer
+suite and one hosted cumulative checkpoint remain deferred while the batch grows.
+
+# Maximum-length named-file error recovery - 2026-10-24
+
+Added one real embedded-file protocol scenario in the existing80-character name
+configuration. A complete matching SUB/ENDSUB file is prescanned before its body
+runs; G999 then reports the unsupported-command error. The body receives local
+argument12, the caller regains99, and both remaining body/caller assignments
+are suppressed. The warning abbreviates its maximum-length filename and the
+normal sender $G query still completes. Focused ASan/UBSan1/1 passes0.07s;
+no new allowance, fixture edit or CORE edit. Targets ngc_flowctrl.c442's existing
+bounded warning branch. Successor cumulative validation/hosted measurement pending.
+
+# Verified hosted checkpoint - 2026-10-24
+
+Run40050621444 at8b9dea07341282c2e0e8cf35c2171e07ac394e45 completed all five
+jobs successfully. Both artifact locks match CORE2e165a1 and the core filter;
+exactly seven coverage stages exit0. Measured17,480/17,756 lines98.45% and
+12,652/13,834 branch outcomes91.46%, eight more outcomes than40049122187.
+4,403 cases:4,383 clean,20 known,0 failed/skipped. Successor local work is not
+included. Isolated32-channel and ownership-metadata classifications subsequently
+pass strict reporting:one recovering sanitizer case,one expected regression.
+Full cumulative successor validation is pending; CORE remains untouched.
+
+# Supported full I/O bank and ownership metadata - 2026-10-24
+
+Added the supported 32-input/32-output host variant. Public registration,
+P31 naming, input sampling, output routing and free-port queries retain correct
+assertions. Registration reproduces signed shift31 at ioports.c994/1007;
+free-port enumeration reproduces map[32] at696. Exact recovering diagnostics
+are scoped to this case; no WILL_FAIL or CORE edits.
+
+Isolated ownership metadata using the ordinary two-output fixture: claiming
+physical1 remains exclusive and routes both outputs correctly, but a pin-info
+lookup clears its claimed bit. Correct final assertion has one narrow WILL_FAIL
+and dated KNOWN_BUGS entry. The two-output cached free count remains correct;
+no lost exclusivity or wrong output is claimed. Raw focused evidence is
+batch74-io32-isolation-raw-results.xml. Full cumulative validation is pending.
+
+# USB reconnect repeats failed-startup diagnostic without replaying warnings - 2026-10-24
+
+Extended existing usb_connection_reports_failed_selftest_then_retained_startup_warnings.
+Original wrong-device/deasserted events,50ms delay, warning FIFO and discarded
+plugin task checks remain. After first successful diagnostic, real public USB
+line-state disconnect/reconnect queues a second delayed POS-failure message.
+Both retained warnings appear exactly once; controller remains selftest-alarmed,
+not driver-started, with no plugin callback execution or driver release.
+Targets grbllib.c209 empty retained-warning queue on a normal reconnect rather
+than manually clearing private startup tasks. Focused ASan/UBSan1/1 passes0.07s.
+No CORE/shared fixture edit, allowance or additional case-count padding.
+Current successor: two new scenarios plus three related workflow extensions
+across I/O, settings migration and startup diagnostics. Cumulative gate pending.
+
+# Recent-build settings upgrade preserves custom pendant transport - 2026-10-24
+
+Added settings.recent_build_upgrade_preserves_custom_pendant_baud_and_spindle_values.
+Registered pendant selects460800 via public baud setting. Persisted260904 build
+reload upgrades version to current and saves it, keeps custom baud3 and notifies
+actual driver at460800. Existing millisecond coolant delay50 and distinct spindle/
+PWM tolerances1/4.5 remain unchanged, rather than reapplying250102 conversions.
+Live NVS read confirms current build/baud; second settings_init retains values
+and correct driver baud. Targets settings.c3858/3883 later-build migration arms
+through valid saved schema and ordinary initialization. Focused ASan/UBSan1/1
+passes0.07s. No shared fixture/CORE edits or allowances. Two new cases plus two
+extensions now accumulate across I/O and upgrade workflows; full gate pending.
+
+# Remap reapplication/ownership and timer period limits retain normal routing - 2026-10-24
+
+Extended existing output_remap_swaps_physical_pins: repeat the identical public
+remap and retain original physical routes; claim physical0 then reject remapping
+onto its claimed destination; owned and remaining outputs still toggle physical0/
+physical1 correctly, input bank unchanged. Targets ioports.c1038 no-op and1036
+claimed-destination rejection. Focused ASan/UBSan1/1 passes0.07s.
+
+Extended existing PWM frequency rejection/retry case with10Hz at1MHz, requiring
+100000ticks beyond UINT16_MAX; it correctly rejects.50Hz accepts20000ticks and
+exact duty conversion, then original1kHz retry checks remain. Targets ioports.c1154
+long-period rejection, preserving practical supported-frequency controls and the
+maintainer-confirmed rejection contract. Focused sanitizer1/1 passes0.04s.
+No new case-count padding, CORE edits or allowances. Current successor has one
+new mode-select scenario plus two extensions; keep batching independent work.
+
+# MPG mode-select assignment reserves only its actual input - 2026-10-24
+
+Added ioports.assigned_mpg_select_reserves_input_without_neighbor_reroute.
+Public ioport_set_function assigns real Input_MPGSelect through existing driver
+assignment fixture. Driver called once, function recorded, no unrelated control
+signal capability added. Pin0 stops being generally claimable; pin1 remains
+available, claims successfully and its immediate sample routes to physical1.
+Output bank remains untouched. Targets ioports.c415 legitimate non-control,
+non-probe/motor-fault input assignment rather than invalid function values.
+Focused ASan/UBSan passes1/1 in0.05s. No shared fixture/CORE edits or allowance.
+First local successor after pushed8b9dea0; hosted40050621444 covers the prior
+substantial group. Continue independent modules without isolated full gate/run.
+
 # Reporting/resource/I/O cumulative gate passed - 2026-10-24
 
 Five new cases plus one retained-assertion extension pass one full4403-case
