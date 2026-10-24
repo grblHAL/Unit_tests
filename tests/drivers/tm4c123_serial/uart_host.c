@@ -29,8 +29,15 @@ void GPIOPinTypeUART(uint32_t port, uint8_t mask)
 }
 void GPIOPinWrite(uint32_t port, uint8_t mask, uint8_t value)
 {
+#ifdef TI_SHARED_REFERENCE
+    (void)port;
+    (void)mask;
+    (void)value;
+    CHECK(false);
+#else
     CHECK(port == RTS_PORT && mask == RTS_PIN && (value == 0 || value == RTS_PIN));
     rts = value != 0;
+#endif
 }
 void UARTClockSourceSet(uint32_t base, uint32_t source)
 {
@@ -105,11 +112,19 @@ bool UARTSpaceAvail(uint32_t base)
 }
 static void pin(const periph_pin_t *p)
 {
+#ifdef TI_SHARED_REFERENCE
+    CHECK(p && p->group == PinGroup_UART && p->port == (void *)UART0_BASE);
+#else
     CHECK(p && p->group == PinGroup_UART && p->port == (void *)GPIO_PORTA_BASE);
+#endif
     CHECK((p->pin == 0 && p->function == Input_RX) || (p->pin == 1 && p->function == Output_TX));
     pins++;
 }
+#ifdef TI_SHARED_REFERENCE
+bool protocol_enqueue_realtime_command(char value)
+#else
 bool protocol_enqueue_realtime_command(uint8_t value)
+#endif
 {
     rt_calls++;
     return value == '!';
@@ -129,7 +144,12 @@ void uart_start(void)
 {
     hal.periph_port.register_pin = pin;
     hal.stream_blocking_callback = blocking;
+#ifdef TI_SHARED_REFERENCE
+    serialRegisterStreams();
+    uart_stream = serialInit(115200);
+#else
     uart_stream = serialInit();
+#endif
     CHECK(uart_stream && handler);
 }
 void uart_event(uint32_t flags, uint8_t value)

@@ -1,3 +1,46 @@
+# Latest component checkpoint - 2026-10-25 (batch23)
+
+Goal active. Deliver two new explicit fixed-CORE legacy reference suites plus
+Thermistor normal first boot. One complete Windows Clang ASan/UBSan compatible
+gate:42 suites,699 cases =643 clean +56 documented known results, zero unexpected
+failures/skips. Existing52 correct assertion regressions +4 diagnostic-only cases
+remain;3 assertions also carry exact diagnostics, counted once. Separate reference
+gates: PSoC8 =7 clean +1 correct free-capacity regression (0.45s); TI shared serial9
+clean (1.46s). These17 reference cases are NOT added to compatible699 or any older
+Simulator VFS reference count. No production edits or new sanitizer allowance.
+
+PSoC uses its actual documented070f80 CORE gitlink with declaration-only generated
+UART boundaries; no Cypress SDK claim. New shared serial runs original6adcc848
+primary UART0 with real Tiva header mirror and old CORE types. It is not archived
+TM4C1294 parent shared3e7873 or an MSP432E SDK/parent build. Existing SDK host
+fixture reused with explicit API-signature/metadata branches; current TM4C14
+cases pass the full compatible gate. Shared reference tests cover initialization,
+FIFO/wrap/cancel, full-ring realtime, queued TX/backpressure/recovery, RX disable
+preserving TX and public baud/duplicate-claim rejection. Actual legacy CORE stream
+execution and suspension remain boundaries. Current-CORE syntax rejection for
+both modules recorded without aliases or fallback. SDK/firmware/hardware untested.
+
+Source-only legacy dependency now has shared descriptive key core_20250518_reference;
+manifest choices reject core_ref overrides and exclude dependencies from runnable
+suites. Regression coverage verifies both plans and avoids parent substitution.
+All86 helper checks pass9.465s; actionlint/whitespace pass. New reference choices
+remain subject to default-branch workflow installation; no hosted pass claimed.
+
+Fresh local LLVM: PSoC57/59 lines96.6%,14/16 branches87.5%,12/13 functions;
+TI serial92/108 lines85.2%,31/42 branches73.8%,10/15 functions, both explicit
+reference configurations. Thermistor138/139 lines99.3%,69/74 branches93.2%,12/12
+functions adds1 current-compatible exercised line via real missing-NVS first load.
+Reference coverage never implies current compatibility or whole repository gain.
+Fresh counter paths max216; strict source locks match clean originals. CORE current
+b01f481 and reference070f80 stay separate; Tiva SDKc23bf8ba, PSoCc9d72125,
+shared6adcc848 and Thermistor4fae94b9 locked exactly in ignored build-evidence.
+
+Keep existing PR29 draft/unmerged. MSP430 SDK/compiler investigation remains
+source-only evidence; actual16-bit target runtime, remaining modules and physical/
+controller validation remain open. No goal completion claimed.
+
+---
+
 # Local reference-handler/SDK checkpoint - 2026-10-25
 
 Goal active. Added one PSoC legacy-reference realtime handler lifecycle case:

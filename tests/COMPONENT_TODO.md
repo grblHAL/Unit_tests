@@ -318,3 +318,14 @@ Need a suitable target compiler/emulator or explicitly justified hardware bounda
 before claiming MSP430 execution. No compiler/installer is installed/executed and
 no driver/header is edited. The old driver CORE gitlink31f6a4bf remains distinct
 from the PSoC070f80 reference. Never silently substitute either reference.
+
+## TI shared serial reference - batch23
+
+Nine clean cases execute primary UART0 with legacy070f80 CORE and original Tiva
+headers, separately from current-compatible totals. Current CORE ABI rejects its
+unchanged callbacks. Standalone candidate6adcc848 differs from archived TM4C1294
+parent3e7873; MSP432E parent pins6adcc but uses a different SDK. Never substitute
+that parent or claim it built. Selected .c92/108 lines,31/42 branches; remaining
+public handler/enqueue and suspend paths need the next supported group. Secondary
+UART7/RTS, actual CORE legacy stream/scheduler, physical FIFO/timing and real
+parent firmware remain. Current-compatible shared EEPROM suite remains separate.

@@ -89,4 +89,17 @@ class ComponentSuitesTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "core-ref"):
             resolve_plan(suites, "driver_psoc5_serial_reference", core_ref="next", request=request)
         with self.assertRaisesRegex(ValueError, "no tests registered"):
-            resolve_plan(suites, "psoc5_reference_core", request=request)
+            resolve_plan(suites, "core_20250518_reference", request=request)
+
+    def test_shared_serial_reference_locks_core_and_sdk_without_parent_substitution(self):
+        suites = json.loads((ROOT / "ci/suites.json").read_text())
+        plan = resolve_plan(suites, "driver_ti_shared_serial_reference",
+                            request=lambda repository, endpoint: {"sha": "a" * 40})
+        self.assertEqual([(source["repository"], source["path"]) for source in plan["sources"]],
+                         [("grblHAL/TI_SimpleLink_shared", "drivers/ti_shared"),
+                          ("grblHAL/core", "deps/core-20250518"),
+                          ("yuvadm/tiva-c", "deps/tivaware")])
+        self.assertEqual(plan["dependencies"], ["core_20250518_reference", "tivaware_sdk"])
+        with self.assertRaisesRegex(ValueError, "core-ref"):
+            resolve_plan(suites, "driver_ti_shared_serial_reference", core_ref="next",
+                         request=lambda *args: {"sha": "a" * 40})

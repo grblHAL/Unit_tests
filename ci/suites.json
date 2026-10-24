@@ -638,7 +638,7 @@
     "coverage_filter": "drivers/msp432p401r/serial\\.c$",
     "diagnostics_directory": "tests/drivers/msp432p_serial"
   },
-  "psoc5_reference_core": {
+  "core_20250518_reference": {
     "repository": "grblHAL/core",
     "ref": "070f80cc5c0d095ff63d5980795b5a15c5bb0202",
     "path": "deps/core-20250518",
@@ -649,12 +649,26 @@
     "ref": "master",
     "path": "drivers/psoc5",
     "dependencies": [
-      "psoc5_reference_core"
+      "core_20250518_reference"
     ],
     "cmake_source": "tests/drivers/psoc5_serial_reference",
     "cmake_options": [],
     "test_regex": "^driver_psoc5_serial_reference[.]",
     "coverage_filter": "drivers/psoc5/serial\\.c$",
     "diagnostics_directory": "tests/drivers/psoc5_serial_reference"
+  },
+  "driver_ti_shared_serial_reference": {
+    "repository": "grblHAL/TI_SimpleLink_shared",
+    "ref": "master",
+    "path": "drivers/ti_shared",
+    "dependencies": [
+      "core_20250518_reference",
+      "tivaware_sdk"
+    ],
+    "cmake_source": "tests/drivers/ti_shared_serial_reference",
+    "cmake_options": [],
+    "test_regex": "^driver_ti_shared_serial_reference[.]",
+    "coverage_filter": "drivers/ti_shared/base/serial\\.c$",
+    "diagnostics_directory": "tests/drivers/ti_shared_serial_reference"
   }
 }
