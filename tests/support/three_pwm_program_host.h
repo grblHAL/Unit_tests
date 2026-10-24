@@ -4,6 +4,13 @@ static spindle_pwm_t triple_pwm[3];
 static spindle_pwm_settings_t triple_settings[3];
 static uint_fast16_t triple_output[3];
 static unsigned triple_calls[3];
+static spindle_ptrs_t *triple_configured[3];
+static bool triple_configure(spindle_ptrs_t *spindle)
+{
+    CHECK(spindle->id >= 0 && spindle->id < 3);
+    triple_configured[spindle->id] = spindle;
+    return spindle_configure(spindle);
+}
 static uint8_t triple_slots[] = {2, 3};
 static const setting_detail_t triple_slot_settings[] = {
     {.id = (setting_id_t)(Setting_SpindleEnable0 + 1), .group = Group_Spindle,
@@ -41,7 +48,7 @@ static inline void prepare_three_pwm_program(void)
             .pwm_freq = 1000, .pwm_max_value = 100, .flags = {.pwm_ramped = true}};
         registered_spindles[id] = (spindle_ptrs_t){.type = SpindleType_PWM,
             .ref_id = (uint8_t)(10 * (id + 1)), .cap = {.direction = true, .rpm_range_locked = true},
-            .config = spindle_configure, .get_state = spindle_input, .set_state = triple_set_state,
+            .config = triple_configure, .get_state = spindle_input, .set_state = triple_set_state,
             .get_pwm = triple_get_pwm, .update_pwm = triple_update_pwm};
         CHECK(spindle_precompute_pwm_values(&registered_spindles[id], &triple_pwm[id], &triple_settings[id], 1000000));
         spindle_update_caps(&registered_spindles[id], &triple_pwm[id]);

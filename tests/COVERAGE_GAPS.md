@@ -1,17 +1,17 @@
 # Remaining raw CORE coverage
 
-Verified coverage report: [run40061404353](https://github.com/petervanderwalt/Unit_tests/actions/runs/40061404353),
-harness `4a252c70e769cbdd71cd7be68b8dbd987f548c79`, CORE `2e165a1ac4c74be8e68971972c6577775d856b05`,
+Verified coverage report: [run40062567963](https://github.com/petervanderwalt/Unit_tests/actions/runs/40062567963),
+harness `b29713965f96eebb0a754b83b2f864534c0a85c4`, CORE `2e165a1ac4c74be8e68971972c6577775d856b05`,
 filter `core/.*\.[ch]$`. Both artifact locks match and exactly seven coverage
 stages exit0. All five source/GCC/Clang/coverage/Results summary jobs passed
 at final API inspection.
 
-17,480/17,756 lines (**98.45%**) and12,687/13,834 branch outcomes (**91.71%**)
-were covered:276 raw missing lines and1,147 missing outcomes. Coverage job:
-4,418 cases,4,397 clean/21 known/0 failed/skipped. Against same-source40060050917:
-seven additional branch outcomes with identical covered-line set and denominator.
+17,480/17,756 lines (**98.45%**) and12,693/13,834 branch outcomes (**91.75%**)
+were covered:276 raw missing lines and1,141 missing outcomes. Coverage job:
+4,423 cases,4,400 clean/23 known/0 failed/skipped. Against same-source40061404353:
+six additional branch outcomes with identical covered-line set and denominator.
 
-Success badges show fully green40061404353 (98.45%/91.71%). Local laser-door policy, USB and early-client startup cases are separate from this report.
+Success badges show fully green40062567963 (98.45%/91.75%). Local driver refresh, array-backed slots, M98 and tool-message recovery cases are separate from this report.
 
 Raw coverage does not establish correctness or reachability. See [TODO](TODO.md)
 and [KNOWN_BUGS](KNOWN_BUGS.md) before selecting workflows. Historical audits
@@ -49,11 +49,11 @@ remain pinned to their stated revisions; no source exclusions were added.
 | [core/report.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/report.c) | 5 | 65 | 450-452, 1955-1956 |
 | [core/settings.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/settings.c) | 58 | 124 | 701, 703, 780-781, 839, 925, 928, 1012, 1056, 1140-1141, 1199-1200, 1341, 1351, 1507-1508, 1569, 1577, 1584, 1591, 1594-1596, 1652-1653, 1693-1694, 1901-1902, 1960-1961, 2026-2027, 2175-2177, 2179-2181, 2192-2194, 2196-2198, 2239-2241, 2247-2248, 2957, 2959, 3476-3477, 3625-3627 |
 | [core/sleep.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/sleep.c) | 0 | 1 | none |
-| [core/spindle_control.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/spindle_control.c) | 7 | 29 | 499, 503, 1160-1161, 1172, 1215-1216 |
+| [core/spindle_control.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/spindle_control.c) | 7 | 28 | 499, 503, 1160-1161, 1172, 1215-1216 |
 | [core/state_machine.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/state_machine.c) | 12 | 42 | 157, 449, 502, 524-527, 614-615, 658-659, 819 |
 | [core/stepper.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/stepper.c) | 1 | 12 | 1093 |
 | [core/stepper2.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/stepper2.c) | 0 | 11 | none |
-| [core/stream.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/stream.c) | 3 | 22 | 277, 370, 615 |
+| [core/stream.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/stream.c) | 3 | 17 | 277, 370, 615 |
 | [core/stream_file.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/stream_file.c) | 1 | 9 | 73 |
 | [core/strutils.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/strutils.c) | 0 | 5 | none |
 | [core/system.c](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/system.c) | 2 | 30 | 466, 468 |
@@ -229,3 +229,14 @@ returns before the check or reloads the block and clears the flag first. Native
 IRQ step output does not reenter preparation. Existing public jog cancellation
 and hold/resume checks remain; no flag injection or exclusion was added. See
 [exact ordering audit](TODO.md#fast-cancel-segment-guard-is-cleared-before-its-native-check---2026-10-24).
+
+## Native macro read and response guards - 2026-10-24
+
+On CORE2e165a1, constant local reads in the native setting/parameter/probe/tool/
+Modbus macros use IDs1..30. The public getter returns true for that writable
+range even when unset, without allocation. Missing argument flags and the
+remaining setting/selector/write/transport conditions are separate reachable
+paths. Two Modbus _value2/_value3 exception ternaries additionally sit inside
+an exception-free guard, so their opposite outcomes have no ordinary native
+execution. See [exact calls and limits](TODO.md#native-macro-literal-reads-and-dominated-response-ternaries---2026-10-24).
+No test or source exclusion was added; all outcomes remain in raw coverage.

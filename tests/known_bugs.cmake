@@ -181,3 +181,9 @@ if(TEST state_machine.dynamic_laser_door_resume_with_feed_hold_disable_action_of
   set_tests_properties(state_machine.dynamic_laser_door_resume_with_feed_hold_disable_action_off
     PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Confirmed CORE2e165a1, 2026-10-24: failed synchronized-output allocation is acknowledged.
+if(TEST motion_control.synchronized_output_allocation_failure_rejects_command_and_preserves_queued_cut)
+  set_tests_properties(motion_control.synchronized_output_allocation_failure_rejects_command_and_preserves_queued_cut
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

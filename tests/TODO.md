@@ -1711,3 +1711,37 @@ supported motion paths; do not forge the flag or call private state to hit this
 return. This is a current native caller/order bound, not a guarantee for an
 external plugin that reenters segment preparation from an IRQ. Keep the line
 and branch in the raw denominator; revisit if ordering/callers change upstream.
+
+## Native macro literal reads and dominated response ternaries - 2026-10-24
+
+Verified CORE2e165a1ac4c74be8e68971972c6577775d856b05 against the partial
+branches in coverage run40061404353. ngc_param_get388-412 initializes value0
+and returns true for IDs1..5060, whether a stored node exists or not. It does
+not allocate. All literal local reads in the native macros below use this range:
+
+| Macro | Literal local IDs | Current call lines |
+|---|---|---|
+| macro_set_get_setting | 17,19 | 1204,1211 |
+| macro_ngc_parameter_rw | 4,17,19 | 1234,1236,1240 |
+| macro_select_probe | 17 | 1266 |
+| macro_get_tool_offset | 17,18 | 1281 |
+| macro_modbus_msg | 9,18,1,2,3,24,19 | 1316,1320,1326,1332,1334,1338,1344,1352 |
+
+Their getter-false outcomes cannot be reached through normal native calls,
+including unset locals or allocation failure. This does not classify the whole
+compound condition: missing argument flags, invalid setting IDs, failed probe
+selection, illegal tool/axis values, destination writes and transport rejection
+remain distinct reachable paths with existing public controls. No replacement
+getter, corrupted local table or failed allocation on an allocation-free read
+should be introduced to cover these false arms.
+
+modbus_response_handler1300 admits _value2/_value3 updates only when exception
+is ModBus_NoException. The exception-true ternaries at1302 and1304 are therefore
+dominated by the opposite guard in ordinary callback execution, independently
+of whether num_values is2 or3. No claim is made about unsupported concurrent
+mutation of the same response object. Existing two/three-register, exception,
+timeout and transport-failure G65P7 cases retain their assertions. Do not fabricate
+an inconsistent callback object or call this file-local handler directly.
+
+All these outcomes remain in raw coverage. This is a bounded native source
+finding, not completion of all ngc_params paths or a new confirmed defect.

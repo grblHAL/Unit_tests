@@ -1,3 +1,44 @@
+# Driver/parser allocation recovery batch - 2026-10-24
+
+Five new cases pass one cumulative ASan/UBSan gate: 4,428/4,428 in 58.84s.
+Strict summary: 4,401 clean, two existing recovering sanitizer cases, 25 known
+regressions, zero unexpected failures/skips. Artifacts:
+build-asan/driver-parser-allocation74-delivery-{build.log,tests.log,results.xml,summary.log}.
+Fresh CORE fetch remains clean2e165a1. PR28 stays open/unmerged at frozena9f355c.
+
+Secondary PWM refresh uses the configured pointer retained by the driver's real
+config callback, not the identity-less registration descriptor or an active HAL
+getter mutation. Range/off value/ramp policy changes and restoration affect only
+the secondary slot; actual M3/M5 timing/output and both other drivers are checked.
+Grouped plugin slot settings use a valid normalizer/iterator/function-backed
+provider; public stores swap driver selections and native selectors independently
+route three speeds/directions plus directed/broadcast stop.
+
+M98 prescan rejects exactly one record calloc, propagates OutOfMemory, clears
+cached positions while retaining the file/root value, then retries and clears
+multiple records through public parser initialization. Named-tool realloc failure
+retains sender MSG text and correct tool selection; normal retry reports the
+proper name before the driver's change callback. Exact target wrappers reuse
+existing malloc/calloc/realloc helpers.
+
+Synchronized M62 output-node malloc failure incorrectly returns Status_OK.
+Correct rejection assertion is retained after prior-cut ownership/no-premature-
+activity/retry/exact160-step controls. One exact WILL_FAIL and dated KNOWN_BUGS
+entry describe ignored add_output_command return and cleanup. No error enum,
+rollback requirement, physical hazard or sanitizer suppression invented.
+
+TODO/COVERAGE_GAPS record bounded literal-local getter and dominated Modbus
+response ternary outcomes; reachable compound-condition failures remain in scope.
+No fabricated getters, source changes or exclusions. No helper-script changes.
+
+Run40062567963 is fully green at exactb29713965f96eebb0a754b83b2f864534c0a85c4;
+both locks, CORE/filter and seven coverage stages verified. Badges/current raw
+inventory now show 17,480/17,756 lines98.45%,12,693/13,834 outcomes91.75%.
+276 missing lines/1,141 missing outcomes. Exact covered-line sets are unchanged
+against40061404353, with six more outcomes (spindle_control+1,stream+5).
+4,423 coverage cases:4,400 clean,23 known,zero unexpected failures/skips.
+This new batch requires its own hosted measurement; the full goal is incomplete.
+
 # Laser door policy and stream/startup batch - 2026-10-24
 
 Five new cases on coverage-batch-74 pass one cumulative ASan/UBSan gate:

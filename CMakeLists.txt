@@ -335,6 +335,7 @@ function(add_core_test name module source)
     OR name STREQUAL "report.error_catalog_allocation_failure_retains_every_registered_entry"
     OR name STREQUAL "stream_json.start_allocation_failure_preserves_output_and_allows_retry"
     OR name STREQUAL "stepper2.allocation_failure_adding_motor_preserves_running_motor_and_allows_retry"
+    OR name STREQUAL "ngc_params.m98_prescan_allocation_failure_clears_cached_positions_and_allows_retry"
     OR name STREQUAL "report.group_metadata_fallback_keeps_visible_settings"
     OR name STREQUAL "report.setting_group_fallback_lists_available_groups"
     OR name MATCHES "^report\\.all_settings_sort_allocation_failure_")
@@ -354,6 +355,7 @@ function(add_core_test name module source)
     OR name STREQUAL "report.uart_report_survives_sort_allocation_failure"
     OR name STREQUAL "report.bitfield_metadata_allocation_failure_allows_complete_retry"
     OR name STREQUAL "boot_ngc.abort_message_allocation_failure_retains_exception_and_allows_sender_retry"
+    OR name STREQUAL "motion_control.synchronized_output_allocation_failure_rejects_command_and_preserves_queued_cut"
     OR name STREQUAL "ngc_params.virtual_registration_allocation_failure_preserves_existing_list"
     OR name STREQUAL "ngc_params.named_allocation_failure_preserves_existing_value_and_allows_retry"
     OR name MATCHES "^ngc_params\\.m7[03]_snapshot_")
@@ -364,6 +366,7 @@ function(add_core_test name module source)
     OR name STREQUAL "ngc_params.string_name_allocation_failure_reports_zero_and_allows_retry"
     OR name STREQUAL "ngc_params.named_label_allocation_failure_allows_conditional_retry"
     OR name STREQUAL "ngc_params.named_label_reuse_needs_no_reallocation_under_memory_pressure"
+    OR name STREQUAL "gcode.named_tool_message_reallocation_failure_preserves_sender_text_and_allows_retry"
     OR name STREQUAL "vfs.locate_allocation_failure_does_not_return_previous_job_and_allows_retry")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=realloc)
   endif()

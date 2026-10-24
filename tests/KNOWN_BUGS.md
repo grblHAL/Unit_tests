@@ -26,6 +26,36 @@ in [storage write-failure policy](TODO.md#storage-write-failure-policy), includi
 its observations, existing test exceptions and cleanup links. It is not a
 settled requirement to retry physical writes a specific number of times.
 
+## Synchronized output allocation failure is silently acknowledged
+
+Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
+Publicly registered digital outputs are used by M62 commands attached to ordinary
+queued G1 moves. Rejecting the single output-node malloc for `M62P1` returns
+`Status_OK`, although the command was not queued. A sender cannot distinguish
+this lost output from an accepted synchronized change.
+
+The regression first queues `M62P0`/`G1X1F100`, rejects exactly one allocation for
+`M62P1`, verifies the original planner block and zero motor/output activity, then
+retries after memory recovery and queues `G1X2F100`. Both expected driver outputs
+execute in order and motion finishes exactly 160 X steps. These controls pass;
+the final correct assertion requires an error for the lost command and fails:
+`status=0 failures=1 retry_outputs=2 X_steps=160`. No sanitizer diagnostic occurs.
+The test does not prescribe an error enum or require rolling back earlier moves.
+
+Cause: [gcode.c1005-1026](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/gcode.c#L1005)
+returns false from `add_output_command` when malloc fails, but the parser's
+synchronized-output cases ignore that result. Propagate allocation failure as a
+command error while preserving previously queued motion/output ownership.
+The analog call site has the same unchecked result; this reproduction covers
+registered digital output only and makes no physical-output hazard claim.
+
+[Regression](cases/motion_control/synchronized_output_allocation_failure_rejects_command_and_preserves_queued_cut.c)
+uses the existing narrowly scoped malloc wrapper. Only its exact CTest name has
+`WILL_FAIL`/`known_bug` in [known_bugs.cmake](known_bugs.cmake).
+Raw evidence: `build-asan/synchronized-output-allocation74-raw-results.xml`.
+When fixed, retain the complete rejection/prior-cut/retry assertions, remove the
+single allowance and this entry. No CORE edits or diagnostic suppression.
+
 ## Laser safety-door resume leaves enable off when feed-hold laser disable is off
 
 Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
@@ -333,8 +363,8 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Measured:** 2026-10-24, clean Terje `2e165a1ac4c74be8e68971972c6577775d856b05`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40061404353)
-measures 17,480/17,756 lines (98.45%) and 12,687/13,834 branches (91.71%).
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40062567963)
+measures 17,480/17,756 lines (98.45%) and 12,693/13,834 branches (91.75%).
 The 276 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable. See the complete measured
 [line/branch inventory](COVERAGE_GAPS.md) before selecting the next workflow.
