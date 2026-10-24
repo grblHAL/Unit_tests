@@ -274,10 +274,16 @@ repository's default branch.
 | Plugin tests | `plugin_sdcard_stream` | File input, stream ownership, error/reset recovery and external macro repeats |
 | Driver tests | `driver_simulator_vfs` | File/directory workflows; current CORE compile incompatibility recorded |
 | Plugin tests | `plugin_keypad` | I2C/UART jog commands, cancellation, overrides and NVS restart |
+| Plugin tests | `plugin_networking` | Interface events/enumeration, status reports and service/MAC helpers with real lwIP headers |
+| Plugin tests | `plugin_laser_ppi` | Registered laser PPI spacing, mode changes, shutdown and hardware delegation |
+| Plugin tests | `plugin_laser_cluster` | LightBurn cluster expansion, acknowledgement suppression and stream/reset hooks |
 | Driver tests | `driver_rp2040_flash` | Flash-copy behavior with simulated SDK/IRQ calls |
 | Driver tests | `driver_esp32_nvs` | Partition storage, failures and realtime-handler restoration with simulated SDK calls |
 
 These are initial host tests, not full plugin/driver coverage or board validation.
+Networking locks upstream lwIP headers separately; its common-interface suite
+does not start protocol listeners. Laser tests observe simulated driver pulses
+and byte-stream transformations; no physical laser operation is established.
 Driver SDK boundaries are simulated; no actual Pico SDK/ESP-IDF firmware build or
 physical flash/interrupt timing is established. Keypad tests explicitly compare
 signed/unsigned char builds; the observed extended-key defect is compiler-specific.

@@ -1,4 +1,71 @@
-# Latest component checkpoint - 2026-10-24 (batch5)
+# Latest component checkpoint - 2026-10-24 (batch6)
+
+Full all-plugin/driver/CORE goal remains active across48 inventoried repositories.
+No production sources or concurrent CORE work changed. This isolated branch
+continues PR29, freshly OPEN/draft/unmerged. Fork workflow list still exposes
+only Core tests and Reusable host tests; no hosted component run is claimed.
+
+Added31 cases:11 common networking,12 laser PPI and8 LightBurn cluster cases.
+One cumulative Windows Clang ASan/UBSan gate rebuilds/rechecks all fifteen
+current-compatible suites:198 cases =174 clean +23 correct known assertions
++1 previously scoped fan callback diagnostic. Zero unexpected failures/skips.
+All81 CI/reporting helpers pass11.915s; actionlint/whitespace checks pass.
+Source warnings remain visible under documented rules; fixture warnings stay
+strict. No sanitizer allowances added.
+
+Networking uses the original public event/provider/enumeration API and registered
+NETIF/report hooks. Cases cover Ethernet/STA/AP notifications, unavailable provider,
+enumeration/short-circuit, listening-port/status reports, one hostname, cached
+stream selection across file mode, enabled service labels, MAC conversion and
+idempotent init/hook chaining. Actual lwIP headers are source-locked with a local
+NO_SYS IPv4 architecture/configuration boundary. No actual listeners/packets,
+stack runtime, wireless or Ethernet hardware is exercised by this suite.
+
+PPI tests compile actual CORE spindle registration/selection. Driver step/pulse/
+PWM/RPM callbacks and gc_laser_ppi_enable are simulated public boundaries. Normal
+spacing/width, zero RPM, enabling/disabling, check mode, reset/program-end,
+zero configuration, hardware delegation and callback chaining pass. One correct
+regression demonstrates ppiUpdatePWM requests pulse_on even when PWM becomes
+zero. Driver callback observation does not establish physical emitted energy.
+
+LightBurn tests execute the original decoder with simulated normal/file byte
+sources and real CORE numeric helpers. Valid X/Y/negative moves divide distance,
+preserve feed/power, restore initial S when required and acknowledge one input
+cluster. Paired EOL, fragment reset, source changes and report chaining pass.
+Default unscaled16-value configuration only; not full parser/motion or physical
+LightBurn integration. Coolant/overdrive/alternate PPI and decoder modes remain.
+
+Fresh LOCAL LLVM measured-file/configuration coverage:
+
+| Suite / file | Covered/total lines | Covered/total branch outcomes |
+|---|---:|---:|
+| plugin_networking / networking.c | 157/165 (95.15%) | 84/106 (79.25%) |
+| plugin_laser_ppi / ppi.c | 144/146 (98.63%) | 83/100 (83.00%) |
+| plugin_laser_cluster / lb_clusters.c | 181/209 (86.60%) | 97/141 (68.79%) |
+
+All coverage result sets pass strict profiling-error checks; maximum counter
+paths229/198/203. Uncovered code remains in denominators. These are not whole
+repository/catalogue percentages. Known defects remain despite line coverage.
+
+GitHub-resolved source locks match clean local checkouts and master defaults:
+networking0b665ee0c0be5161d5044bdf2dcdf59ad62509f8,
+laser26934c6c9607e0b5ba4a711516a60d4657bf142c,
+lwIPd08f4773edd0182b7910fc8f046eed82ffcd67c9,
+COREb01f481072edecac33d5e40c25869359a5b3fa1f. Local immutable locks,
+classification and sanitizer logs are in ignored build-evidence/*batch6*, with
+per-suite coverage XML/JSON/HTML and build logs. lwIP is dependency-only and
+cannot be selected as a suite. New choices are in the separate Plugin tests
+workflow, awaiting default-branch installation. No hosted/GCC/hardware pass claim.
+
+Plasma d2f91b5 and motor9229617 sources were fetched unchanged and assessed for
+real registration/dependency requirements; no test suite or runtime support is
+claimed for them yet. RP2040's actual Trinamic-library gitlink was identified.
+Continue THC/material/Trinamic workflows and remaining modules/configurations
+from COMPONENT_TODO.md. The full goal is not complete.
+
+---
+
+# Previous batch5 checkpoint - 2026-10-24
 
 Goal remains active across all48 implementation repositories. No production
 sources or concurrent CORE work changed. The isolated plugin-driver-tests branch

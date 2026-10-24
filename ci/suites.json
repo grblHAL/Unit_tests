@@ -194,5 +194,51 @@
     "test_regex": "^driver_esp32_nvs[.]",
     "coverage_filter": "drivers/esp32/main/nvs\\.c$",
     "diagnostics_directory": "tests/drivers/esp32_nvs"
+  },
+  "plugin_networking": {
+    "repository": "grblHAL/Plugin_networking",
+    "ref": "master",
+    "path": "plugins/networking",
+    "dependencies": [
+      "core",
+      "lwip"
+    ],
+    "cmake_source": "tests/plugins/networking",
+    "cmake_options": [],
+    "test_regex": "^plugin_networking[.]",
+    "coverage_filter": "plugins/networking/networking\\.c$",
+    "diagnostics_directory": "tests/plugins/networking"
+  },
+  "lwip": {
+    "repository": "lwip-tcpip/lwip",
+    "ref": "master",
+    "path": "deps/lwip",
+    "source_only": true
+  },
+  "plugin_laser_ppi": {
+    "repository": "grblHAL/Plugins_laser",
+    "ref": "master",
+    "path": "plugins/laser",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/laser_ppi",
+    "cmake_options": [],
+    "test_regex": "^plugin_laser_ppi[.]",
+    "coverage_filter": "plugins/laser/ppi\\.c$",
+    "diagnostics_directory": "tests/plugins/laser_ppi"
+  },
+  "plugin_laser_cluster": {
+    "repository": "grblHAL/Plugins_laser",
+    "ref": "master",
+    "path": "plugins/laser",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/laser_cluster",
+    "cmake_options": [],
+    "test_regex": "^plugin_laser_cluster[.]",
+    "coverage_filter": "plugins/laser/lb_clusters\\.c$",
+    "diagnostics_directory": "tests/plugins/laser_cluster"
   }
 }

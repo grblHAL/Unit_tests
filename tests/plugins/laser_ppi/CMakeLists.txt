@@ -1,0 +1,10 @@
+cmake_minimum_required(VERSION 3.20)
+project(grblhal_laser_ppi_tests LANGUAGES C)
+include(../../components.cmake)
+foreach(behavior validation unavailable spacing rpm_off pwm_zero disable check_mode parser_reset program_end hardware_delegate zero_configuration hook_chaining)
+ component_case(plugin_laser_ppi.${behavior} ${behavior}.c ppi_host.c "${HARNESS_ROOT}/plugins/laser/ppi.c" "${COMPONENT_CORE_ROOT}/spindle_control.c" "${COMPONENT_CORE_ROOT}/nuts_bolts.c")
+ target_compile_definitions(plugin_laser_ppi.${behavior} PRIVATE PPI_ENABLE=1)
+endforeach()
+set_source_files_properties("${HARNESS_ROOT}/plugins/laser/ppi.c" "${COMPONENT_CORE_ROOT}/spindle_control.c" PROPERTIES COMPILE_OPTIONS -Wno-error)
+
+set_tests_properties(plugin_laser_ppi.pwm_zero PROPERTIES WILL_FAIL TRUE LABELS known_bug)

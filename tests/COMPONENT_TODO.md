@@ -24,9 +24,23 @@ or force private state to enter a path.
   UART init reports allocation success despite failed stream opening; its bool
   contract remains a question, not a classified defect. Coordinate string
   formatting is a fixture boundary, not a tested CORE formatting contract.
-- Assess the next catalogue families (networking, plasma/THC and Trinamic), keeping
-  actual supported registration and transport contracts. Do not force private
-  state merely to enter branches.
+- Networking common events/providers/enumeration/reports now execute with real
+  locked lwIP headers. Actual Telnet/Websocket, DHCP, MQTT, FTP/HTTP/WebDAV and
+  transport implementations remain. Do not equate service labels with listeners.
+- Laser PPI and LightBurn default clusters now have functional callback/stream
+  cases. Retain zero-PWM pulse regression; coolant/overdrive, scaling, alternate
+  spindle selection and full parser/planner integration remain. Review PPI hook
+  ownership on spindle changes before extending that scenario; do not fabricate
+  ppi_spindle or static laser state. Cluster malformed/overflow contracts remain
+  source-review work, not covered by the valid-stream cases.
+- Plasma source d2f91b5 has plasma_init dependencies on registered digital/analog
+  I/O, hal.stepper.output_step and secondary stepper APIs. Establish those valid
+  contracts before THC/material scenarios; do not force private ready state.
+- Trinamic source9229617 includes actual chip HALs from terjeio/Trinamic-library.
+  RP2040 source2f5bc4a has gitlink9b304175318d93818c8967faadc89dd101b17e92
+  for that library (verified ls-tree). Fetch and independently lock the library,
+  inspect transport/registration contracts and add real chip-specific suites.
+  Fetched source alone is not tested support for either family.
 - Simulator VFS fails current-CORE compilation: removed vfs_path_t. The explicit
   driver gitlink reference executes nine cases with three known assertions;
   retain both incompatibility evidence and separate source locks. No fallback.
