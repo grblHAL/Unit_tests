@@ -2,31 +2,40 @@
 
 ## Latest coverage job passed; compiler matrix remains failed
 
-[Run40103625282](https://github.com/petervanderwalt/Unit_tests/actions/runs/40103625282)
-coverage passed on harness58774aa6491f86cee1256dc28844a18a2e75c095 and
-COREb01f481072edecac33d5e40c25869359a5b3fa1f. Artifact/report locks and filter
-match; all seven coverage stages exit0 with no findings. It reports
-17,491/17,757 lines (**98.50%**) and12,791/13,852 branch outcomes (**92.34%**):
-266 missing lines and1,061 missing outcomes. Coverage tests:4,475 total/
-4,452 clean/23 known/0 failed/skipped. Against same-source40093560650 this adds
-zero lines and three outcomes, with no lost lines/outcomes. Exact gains:
-ioports1625 ioports_configure@3:7, state_machine595 state_await_hold@1:5,
-and tool_change140 restore@0:0. Each corresponds to its authored normal workflow.
-No ineffective value permutations or source exclusions were added.
+[Run40107107939](https://github.com/petervanderwalt/Unit_tests/actions/runs/40107107939)
+coverage passed on harness49b18b0cb0e0e4f76d689173355cc0e5721ca55f and
+COREb01f481072edecac33d5e40c25869359a5b3fa1f. Artifact/report locks and
+filter core/.*\.[ch]$ match; all seven coverage stages exit0, no findings.
+17,491/17,757 lines (**98.50%**) and12,801/13,852 outcomes (**92.41%**):
+266 missing lines and1,051 missing outcomes. Coverage4,484 total/4,461 clean/
+23 known/0 failed/skipped. Same-source40103625282 delta: zero new/lost lines,
+ten additional outcomes/no loss. Exact new sites: gcode2998, delta761/907,
+report395/1480/1498, settings2163(three outcomes)/2260. These match the authored
+ordinary workflows. All nine new cases individually pass on Clang.
 
-Inventories match this report, preserving dispositions and function/source-block
-identities. Historical explanations below still require current-caller proof.
-Three further normal reporting/help cases are local and unmeasured.
+The nonblocking MPos case adds no outcome, so its mapping was inspected before
+more offset work. The remaining synchronized MPos path now has a local public
+$10=289/G92/actual-motion regression; gains remain unmeasured. Eight later local
+homing/jog/offset/timer/check-mode/PWM-settings workflows pass full4,492 local
+sanitizer/strict validation and await a new exact-head measurement. Both inventories
+match this report, preserving dispositions and function/source-block identities.
+Historical explanations below still require current-caller proof.
 
 The run completed FAILURE: source/GCC/coverage passed; Clang/summary failed.
-The Clang job FAILED: the eight-axis tapping executable now exits0 without the
-expected diagnostic; recursive tapping reports the same table fault at index27
-instead of the previously observed30. Strict wrappers correctly reject these
-changes. Saved index27 and30 recursive outputs now pass the exact production
-matcher/runner and first1024 checks;17 matcher tests pass. Missing diagnostics
-remain red. Windows and GCC coverage execute the functional assertions normally.
-See KNOWN_BUGS; do not force private bits to make this failure repeatable.
-The run is not green and badges retain fully green40074304720.
+Clang's existing tapping table fault varies across builds. This run reports
+eight-axis index29 and unsupported fallback index27 at the same27-entry table,
+gcode485 and macro_arguments_push. Recursive index27 matches. Two new local
+exact test/index entries pass saved production replay/first1024 and negative
+controls. Different/unseen diagnostics, absent diagnostics and zero-exit output
+remain red; no range/wildcard allowance. Post-crash assertions are unvalidated
+on Clang. Draft PR30 stays unready; badges retain fully green40074304720.
+No CORE edits, exclusions or dummy tests were added.
+
+Current b01 source proof: report_driver_error's queued callback is removed by
+native failed-startup filtering (grbllib407-424/844-861); output_help is bypassed
+by HELP prefix dispatch (system1159-1160 before table dispatch). Nine historical
+line rows now have these specific current-source explanations. Raw counts remain;
+existing public tests cover the actual routes, so no private-entry tests were added.
 
 Working checkout is now upstream `b01f481072edecac33d5e40c25869359a5b3fa1f`.
 The table and percentages below are the prior fully green CORE2e165a1

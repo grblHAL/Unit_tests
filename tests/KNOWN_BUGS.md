@@ -713,3 +713,20 @@ weaken the functional assertions to obtain repeatable crashes. Complete mask
 initialization remains an upstream source hypothesis. Terje origin/master was
 freshly fetched and remainsb01f481. No CORE edits. This run remains failed;
 post-crash assertions remain unvalidated on Clang, and no PR-ready claim follows.
+
+
+### Further observed tapping variants - 2026-10-24
+
+Run40107107939 at harness49b18b0/COREb01f481 reports eight-axis handoff index29
+and unsupported tapping fallback index27 at gcode.c485:32, the same27-entry
+const offset table and macro_arguments_push top frame, followed by ASan
+global-buffer-overflow. Recursive tapping index27 matches its existing entry.
+All nine newly authored ordinary workflows pass on Clang; its only two reported
+failures are these previously unlisted diagnostic variants.
+
+Two additional exact test/index entries recognize these saved outputs. Production
+runner replay and first1024 checks pass; different indices/source lines, missing
+diagnostics and zero-exit output remain rejected. No range/wildcard allowance or
+matcher implementation change. The hosted run remains failed; post-crash
+assertions remain unvalidated. Saved logs are under
+build-asan/hosted40107107939/results-core-clang/build/known-crash-<test>.log.
