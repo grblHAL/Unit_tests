@@ -1,4 +1,11 @@
 #include "psoc_host.h"
+#ifdef LEGACY_CORE_STREAM
+grbl_hal_t hal;
+grbl_t grbl;
+system_t sys;
+settings_t settings;
+parser_state_t gc_state;
+#endif
 const io_stream_t *psoc_stream;
 unsigned starts, rt_calls, clears, sent_count;
 uint8_t sent[256];
@@ -27,6 +34,7 @@ bool protocol_enqueue_realtime_command(char value)
     rt_calls++;
     return value == '!';
 }
+#ifndef LEGACY_CORE_STREAM
 bool stream_connected(void) { return true; }
 bool stream_rx_suspend(stream_rx_buffer_t *buffer, bool suspend)
 {
@@ -35,6 +43,7 @@ bool stream_rx_suspend(stream_rx_buffer_t *buffer, bool suspend)
     CHECK(false);
     return false;
 }
+#endif
 void psoc_start(void)
 {
     psoc_stream = serialInit();

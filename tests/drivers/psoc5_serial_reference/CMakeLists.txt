@@ -12,3 +12,11 @@ foreach(behavior handler_restore initialization rx_fifo rx_capacity wrap flush_c
   target_compile_definitions(${target} PRIVATE RX_BUFFER_SIZE=32)
 endforeach()
 set_tests_properties(driver_psoc5_serial_reference.free_capacity PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+
+set(target driver_psoc5_serial_reference.core_suspend_unsigned)
+component_case(${target} core_suspend.c psoc_host.c "${HARNESS_ROOT}/tests/drivers/legacy_stream_boundaries.c" "${HARNESS_ROOT}/drivers/psoc5/serial.c" "${COMPONENT_CORE_ROOT}/stream.c")
+target_include_directories(${target} PRIVATE "${HARNESS_ROOT}/drivers/psoc5")
+target_include_directories(${target} SYSTEM PRIVATE "${COMPONENT_CORE_ROOT}" "${CMAKE_CURRENT_BINARY_DIR}/include")
+target_compile_definitions(${target} PRIVATE RX_BUFFER_SIZE=32 LEGACY_CORE_STREAM=1)
+target_compile_options(${target} PRIVATE -funsigned-char)
+set_source_files_properties("${COMPONENT_CORE_ROOT}/stream.c" PROPERTIES COMPILE_OPTIONS -Wno-error)

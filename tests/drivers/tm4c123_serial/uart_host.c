@@ -146,7 +146,11 @@ void uart_start(void)
     hal.stream_blocking_callback = blocking;
 #ifdef TI_SHARED_REFERENCE
     serialRegisterStreams();
+#ifdef LEGACY_CORE_STREAM
+    uart_stream = stream_open_instance(0, 115200, NULL, "Legacy host UART");
+#else
     uart_stream = serialInit(115200);
+#endif
 #else
     uart_stream = serialInit();
 #endif

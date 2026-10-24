@@ -329,3 +329,13 @@ that parent or claim it built. Selected .c92/108 lines,31/42 branches; remaining
 public handler/enqueue and suspend paths need the next supported group. Secondary
 UART7/RTS, actual CORE legacy stream/scheduler, physical FIFO/timing and real
 parent firmware remain. Current-compatible shared EEPROM suite remains separate.
+
+## Legacy stream integration authoring
+
+Four pending new reference cases now execute actual070f80 CORE stream registration/
+connection and suspend/ACK/restore for TI and PSoC under explicit char modes. TI's
+signed-char case correctly expects1 acknowledgement but gets0 because old char
+cannot equal0xA3; paired unsigned control passes. Keep the exact assertion/label
+and do not infer MCU compiler defaults. TI12/PSoC9 registered; focused4 authoring
+cases are3 clean +1 known, not a new full reference or compatible gate. Captured
+registration remains in the other cases; protocol/task/hardware remain boundaries.

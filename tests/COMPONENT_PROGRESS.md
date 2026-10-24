@@ -1,3 +1,28 @@
+# Local legacy CORE stream checkpoint - 2026-10-25
+
+Goal active. Four new reference cases pass focused Windows Clang ASan/UBSan and
+strict classification:3 clean +1 correct signed-char portability assertion, zero
+unexpected failures/skips. TI adds handler lifecycle and actual legacy CORE
+registration/open/connect/suspend under explicit signed/unsigned char builds;
+PSoC adds unsigned primary connection/suspend/backup/restore. TI3 cases0.22s;
+PSoC1 case0.08s. No source copies/edits, private ring writes or diagnostic allowance.
+
+Original070f80 CORE's char callback cannot match CMD_TOOL_ACK0xA3 under signed-char:
+0 acknowledgements rather than1. Correct assertion retained in one exact known_bug;
+identical unsigned control accepts ACK and restores original queued input. This
+establishes a host compiler-character portability difference, not an unspecified
+MCU default or physical board failure. Existing PSoC capacity regression remains.
+PSoC now9 and TI shared serial12 registered reference cases, separate from all
+current-compatible totals. The prior delivered baseline remains batch23.
+
+One small shared hardware-independent boundary file supplies unused report/task
+stubs that fail fast; original CORE stream.c executes. Physical UART/FIFO/IRQ,
+full protocol/task execution and SDK firmware builds remain untested. Shared
+fixture has explicit LEGACY_CORE_STREAM branches only for these new targets.
+No new global gate/coverage/hosted claim; accumulate before combined delivery.
+
+---
+
 # Latest component checkpoint - 2026-10-25 (batch23)
 
 Goal active. Deliver two new explicit fixed-CORE legacy reference suites plus
