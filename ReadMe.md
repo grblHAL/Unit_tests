@@ -279,6 +279,8 @@ repository's default branch.
 | Plugin tests | `plugin_laser_cluster` | LightBurn cluster expansion, acknowledgement suppression and stream/reset hooks |
 | Plugin tests | `plugin_trinamic` | TMC2209 UART/settings/restart, dynamic current, warning polling and homing callbacks |
 | Plugin tests | `plugin_plasma` | Materials/imports, EEPROM-backed mode boot, arc retry/loss and up/down height control |
+| Plugin tests | `plugin_bluetooth` | HC-05 AT configuration, stream switching, settings and EEPROM restart |
+| Plugin tests | `plugin_embroidery_readers` | DST/PES metadata and stitch decoding through real VFS reads |
 | Driver tests | `driver_rp2040_flash` | Flash-copy behavior with simulated SDK/IRQ calls |
 | Driver tests | `driver_esp32_nvs` | Partition storage, failures and realtime-handler restoration with simulated SDK calls |
 
@@ -287,7 +289,10 @@ Trinamic also locks and compiles the actual chip library; its UART device is
 simulated. Plasma tests use real CORE I/O/secondary-stepper/spindle/VFS APIs
 with simulated pins, time and controller state. Voltage regulation, full CORE
 suspension and hardware timing remain separate work.
-Networking locks upstream lwIP headers separately; its common-interface suite
+Bluetooth tests simulate HC-05 replies and STATE inputs while using real CORE
+stream/I/O registration; radio and shared-MPG operation remain separate. Embroidery
+reader tests compile Tajima/Brother modules; the job coordinator and physical
+needle control remain untested. Networking locks upstream lwIP headers separately; its common-interface suite
 does not start protocol listeners. Laser tests observe simulated driver pulses
 and byte-stream transformations; no physical laser operation is established.
 Driver SDK boundaries are simulated; no actual Pico SDK/ESP-IDF firmware build or

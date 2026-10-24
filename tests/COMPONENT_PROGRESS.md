@@ -1,4 +1,75 @@
-# Latest component checkpoint - 2026-10-24 (batch8)
+# Latest component checkpoint - 2026-10-24 (batch9)
+
+All-plugin/driver/CORE goal remains active across48 inventoried implementations.
+No production sources or concurrent CORE work changed. Continue existing PR29,
+freshly verified OPEN/draft/unmerged. Fork still registers only Core tests and
+Reusable host tests. No hosted component run or merge is claimed.
+
+Added34 registered cases:21 Bluetooth HC-05 and13 embroidery reader cases. Both
+suites are now selectable in Plugin tests with their own immutable source plans.
+One cumulative Windows Clang ASan/UBSan gate covers all19 compatible suites:
+278 cases =252 clean +25 correct known assertion regressions +1 previously scoped
+fan callback diagnostic. Zero unexpected failures/skips. All81 reporting/helper
+checks pass17.050s; actionlint/whitespace checks pass. No new sanitizer allowance.
+Source warnings remain visible under documented rules; fixtures retain -Werror.
+
+Bluetooth compiles original hc_05.c with actual CORE stream registry/selection,
+I/O registration and EEPROM/CRC. Simulated UART module replies, ticks and STATE
+IRQs exercise all four AT command stages, failure/timeout, custom name, baud and
+handler restoration, manual enable/disable, missing dependencies, port settings,
+claimed-pin rejection, reports and fresh-process persisted auto-configuration.
+Actual CORE selects/restores streams and sends the welcome message; no stream
+switch stub is used. No radio/hardware or full protocol execution is claimed.
+
+Two correct regressions reproduce original source defects and retain exact
+WILL_FAIL/known_bug labels plus dated source/removal guidance in KNOWN_BUGS.md:
+- Factory default selects highest free STATE pin but load rejects it using
+  >= port_max, although CORE port_max is the highest valid index. No setup runs.
+  Other workflow controls explicitly select the valid lower pin through settings.
+- An enabled, boot-high STATE input selects Bluetooth and sends welcome but its
+  connection predicate stays false; setup updates only a local variable.
+
+Reserved options from erased storage are masked to the defined enable bit in
+fixture getter checks; their broader Format_Bool contract remains a TODO. Shared
+MPG mode and IRQ-provider failure notification remain untested, not excluded.
+
+Embroidery compiles original tajima.c/brother.c readers with actual CORE VFS and
+embedded backend. Valid DST/PES fixtures cover metadata/counts/dimensions/palette,
+small/large signed movement, jump/trim/stop/color/end and format fallback/rewind.
+No replacement decoder or private state forcing. Results omit the uncompiled
+embroidery.c job coordinator: rendering, planner/needle synchronization, settings,
+SD hardware and physical stitch timing remain. Mixed-axis flag precedence and
+sequin lifetime need contract review before assertions.
+
+Fresh LOCAL LLVM compiled-file/configuration coverage, strict profiling checks pass:
+
+| Suite | Covered/total lines | Covered/total branch outcomes |
+|---|---:|---:|
+| plugin_bluetooth / HC-05 serial mode | 122/124 (98.39%) | 56/66 (84.85%) |
+| plugin_embroidery_readers / two readers | 168/177 (94.92%) | 96/108 (88.89%) |
+
+Reader detail: Brother62/63 lines and26/28 branches; Tajima106/114 and70/80.
+Both fresh short builds have maximum counter path212. No source exclusions or
+whole-plugin/catalogue claim. No hosted/GCC/firmware/board validation is claimed.
+
+GitHub-resolved locks match clean unchanged sources:
+Bluetooth3fc40665af6d49250f09fec665ec267a988ee148,
+embroidery9a112c3c2509563aa5c745d5773aba5a62046d7c,
+COREb01f481072edecac33d5e40c25869359a5b3fa1f,
+EEPROM0c278db74edc38303b9d86583a7d51a1ec1be51e.
+Ignored build-evidence/*batch9* contains source locks, strict classifications,
+coverage XML/JSON/HTML and validation logs. Prior source compatibility limits and
+known assertions remain unchanged. Full goal is not complete.
+
+Next: remaining supported modules/configurations and additional driver families.
+STM32F4 sourcea6318ac92f079f49fab91687530f832997396edc was fetched/read only;
+flash.c uses linker-address symbols and a32-bit target address contract. Establish
+an appropriate target/linker fixture before runtime assertions; no driver result
+or SDK/board build is inferred from this source review.
+
+---
+
+# Previous batch8 checkpoint - 2026-10-24
 
 Goal remains active across48 inventoried implementation repositories. No production
 sources or concurrent CORE work changed. Existing PR29 verified OPEN/draft/unmerged.

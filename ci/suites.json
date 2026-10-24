@@ -275,5 +275,32 @@
     "test_regex": "^plugin_plasma[.]",
     "coverage_filter": "plugins/plasma/.*\\.c$",
     "diagnostics_directory": "tests/plugins/plasma"
+  },
+  "plugin_bluetooth": {
+    "repository": "grblHAL/Plugins_Bluetooth",
+    "ref": "master",
+    "path": "plugins/bluetooth",
+    "dependencies": [
+      "core",
+      "eeprom_backend"
+    ],
+    "cmake_source": "tests/plugins/bluetooth",
+    "cmake_options": [],
+    "test_regex": "^plugin_bluetooth[.]",
+    "coverage_filter": "plugins/bluetooth/.*\\.c$",
+    "diagnostics_directory": "tests/plugins/bluetooth"
+  },
+  "plugin_embroidery_readers": {
+    "repository": "grblHAL/Plugin_embroidery",
+    "ref": "master",
+    "path": "plugins/embroidery",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/embroidery",
+    "cmake_options": [],
+    "test_regex": "^plugin_embroidery_readers[.]",
+    "coverage_filter": "plugins/embroidery/.*\\.c$",
+    "diagnostics_directory": "tests/plugins/embroidery"
   }
 }

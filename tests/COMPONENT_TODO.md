@@ -7,6 +7,19 @@ or force private state to enter a path.
 
 ## Next source families
 
+- HC-05 serial mode now executes AT success/rejection/timeout, stream switching,
+  settings/report hooks and EEPROM restart through actual CORE stream/I/O APIs.
+  Retain two source regressions: highest valid STATE pin rejected at load, and
+  boot-high input never initializes the connection predicate. Shared MPG mode,
+  failed IRQ registration notification and reserved option bits remain. Factory
+  restore clears only the enable bit; clarify the bool getter contract before
+  treating reserved erased bits as a separate defect.
+- Embroidery DST/PES readers now execute valid metadata/movement/control records
+  through real CORE VFS. The uncompiled embroidery.c coordinator still needs
+  supported settings/file-open/render/job/needle-sync fixtures. Mixed-axis PEC
+  flag precedence, DST sequin-state lifetime and coordinate unit integration
+  require contract review. Do not imply reader coverage includes the coordinator.
+
 - Extend Plugins_spindle beyond the tested GS20/MODVFD single-spindle protocols:
   other VFD commands/feedback, multiple registered spindles and output/stepper
   plugins remain. The actual coordinator/CORE transport/spindle registry and
