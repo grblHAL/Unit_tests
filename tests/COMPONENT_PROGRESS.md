@@ -1,3 +1,27 @@
+# Local PCA9654E output-bank checkpoint - 2026-10-25
+
+Goal active. Eight new cases pass focused Windows Clang ASan/UBSan0.63s and
+strict classification:6 clean +2 documented correct descriptor-offset regressions,
+zero unexpected failures/skips. Original module executes startup configuration/
+inversion/output register order, bus/probe failure, all8 output bits, suppression
+of duplicate successful writes, valid descriptor read/write, public boundary
+rejection and native enumeration/function/description chaining.
+
+Two modeled preceding outputs assign pin_base2 through ioports_add_digital, per
+actual CORE registration contract. Descriptor0 then reads bit2 rather than bit0,
+and descriptor write changes bit2 rather than bit0. Retain both correct assertions
+under exact WILL_FAIL/known_bug; zero-base controls pass. No production edits,
+private pointer/ID changes, unsafe shifts or sanitizer allowance. Actual CORE bank
+aggregation is not executed by this boundary fixture. Inversion configuration's
+callback ABI and I2C-failure/cache semantics remain source review, not claimed.
+
+Misc suite now32 cases;730 compatible is authored, not a new full global gate.
+Latest delivered batch25 remains722 compatible +26 separately validated legacy
+serial references. No new coverage measurement or hosted/hardware success.
+Accumulate remaining supported module work before another combined gate/push.
+
+---
+
 # Latest component checkpoint - 2026-10-25 (batch25)
 
 Goal active. Deliver23 accumulated cases:12 fan persistence/configuration and11

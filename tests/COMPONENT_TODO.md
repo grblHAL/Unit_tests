@@ -340,3 +340,13 @@ an intended RX-only activation contract; never inject disabled IRQs. Physical
 clock/IRQ/FIFO/RTS, full scheduler/protocol, SDK linking and parent firmware remain.
 Standalone6adcc848 is not archived TM4C1294 parent3e7873 or an MSP432E SDK build.
 Current-compatible shared EEPROM evidence remains separate.
+
+## PCA9654E output bank
+
+Eight cases cover original registered callbacks, eight-bit output masks, duplicate
+write suppression, startup/probe failures and enumeration/descriptor updates.
+Retain two correct nonzero-bank-offset descriptor regressions; zero-offset
+controls pass. Registry pin_base assignment is modeled from CORE, not execution
+of its bank aggregator. Review inversion config callback ABI before invoking it;
+failed sends update cache before returning and need an explicit retry/report
+contract. Do not add private state workarounds. Full controller/I2C/hardware open.

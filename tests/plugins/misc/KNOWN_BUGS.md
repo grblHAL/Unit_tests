@@ -19,3 +19,29 @@ Proposed upstream repair: return the accumulated `ok` result, retaining invalid
 port rejection and cached-value update only on successful send. Once repaired,
 remove only this test's WILL_FAIL/known_bug property and this entry, rerun the
 suite and strict classification, and retain all behavior assertions.
+
+## PCA9654E descriptor callbacks use bank-offset pin numbers as device bits - 2026-10-25
+
+Source: Plugins_misc265711922037cab6b6e47a9560ef11da3a6e5f83,
+CORE b01f481072edecac33d5e40c25869359a5b3fa1f.
+
+CORE ioports_add_digital assigns out.pin_base from preceding output banks.
+PCA get_pin_info adds that base to its returned descriptor's pin number. Both
+`digital_out_state` and `digital_out_ll` subsequently use that adjusted pin as
+a local eight-bit register bit, despite descriptor id remaining device-local.
+The bank's digital_out callback uses original aux_out entries and works normally.
+
+Two exact correct regressions model preceding two-output registration at the
+public ioports_add_digital boundary, following CORE's assignment contract:
+- bank_offset_read: ordinary output0 writes device bit0, but its descriptor
+  returns0 rather than1 because it reads bit2.
+- bank_offset_write: descriptor0 writes device bit2 (4) rather than bit0 (1).
+
+Only valid port0 is used; shifts are bounded to bit2. No invalid IDs, private
+state injection, production edit or sanitizer allowance. Zero-base descriptor
+controls pass. Registration is modeled here, not full CORE aggregation execution.
+
+Proposed upstream repair: resolve the local pin using descriptor id in callback
+implementations, retaining global descriptor metadata. Remove these two exact
+WILL_FAIL/known_bug entries only after the unchanged correct assertions pass,
+rerun strict classification and retain zero/nonzero-base controls.
