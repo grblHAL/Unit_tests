@@ -47,6 +47,18 @@ and verified-exact-diagnostic-replay.json. Do not retry CI for this data alone.
 This is not a green matrix; badges/PR30 remain at fully green59b3ad9.
 Later local full-probe/cutter restore work is outside this measurement.
 
+## Local E-stop sender identification extension
+
+Existing boot/estop_release_then_soft_reset_waits_for_explicit_unlock_without_motion.c
+now sends $I while the physical E-stop remains asserted. The native critical-event
+poll loop must report [VER:] while preserving STATE_ESTOP/Alarm_EStop. The same
+workflow then releases the input, resets, observes the retained alarm and explicitly
+unlocks before $G. No movement, driver wake, private state or new allowance.
+Focused ASan/UBSan and strict1/1 pass0.29s; saved estop-identification-build.log,
+estop-identification-results.xml and estop-identification-summary.log. This is a
+functional extension of the existing case, not a measured coverage gain. Outside
+the full4,501 gate; accumulate with the other local workflows before delivery.
+
 ## Further local ordinary sender-status work
 
 Existing report/realtime_full_report_lists_all_registered_probe_inputs.c now
