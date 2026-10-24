@@ -1,6 +1,7 @@
 #pragma once
 #include "support/spindle_sync_parser_host.h"
 static spindle_ptrs_t thread_encoder_driver;
+static void (*configure_thread_encoder_driver)(spindle_ptrs_t *driver);
 static spindle_state_t thread_encoder_state;
 static int32_t thread_minimum_x, thread_maximum_x;
 static void thread_encoder_pulse(stepper_t *stepper)
@@ -41,6 +42,7 @@ static void prepare_encoder_thread_motion(void)
         .cap = {.enable = true, .variable = true, .direction = true, .rpm_range_locked = true},
         .set_state = thread_encoder_output, .get_state = thread_encoder_input,
         .get_data = sync_motion_data, .reset_data = sync_motion_reset_data, .update_rpm = thread_encoder_update};
+    if(configure_thread_encoder_driver) configure_thread_encoder_driver(&thread_encoder_driver);
     CHECK(spindle_register(&thread_encoder_driver, "Encoder spindle") == 0);
     CHECK(spindle_select(0));
     coord_system_data_t coordinates = {0};

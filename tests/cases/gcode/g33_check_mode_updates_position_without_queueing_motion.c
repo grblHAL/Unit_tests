@@ -10,8 +10,9 @@ int main(void)
     CHECK(plan_get_current_block() == NULL);
     CHECK(!sys.override.control.feed_rates_disable);
     CHECK(!sys.override.control.spindle_rpm_disable);
-    CHECK(css_block("G33.1Z2K0.2I2") == Status_OK);
-    NEAR(gc_state.position[Z_AXIS], 2.0f);
+    /* Native rigid tapping is unavailable, including in check mode. */
+    CHECK(css_block("G33.1Z2K0.2I2") == Status_GcodeUnsupportedCommand);
+    NEAR(gc_state.position[Z_AXIS], 1.0f);
     NEAR(gc_state.distance_per_rev, 0.2f);
     CHECK(plan_get_current_block() == NULL);
     CHECK(!sys.override.control.feed_rates_disable);

@@ -68,6 +68,28 @@ class KnownCrashTests(unittest.TestCase):
                     patch("known_crash.subprocess.run", return_value=subprocess.CompletedProcess([], code, output)):
                 self.assertEqual(main(), expected)
 
+    def test_missing_asan_line_requires_exact_ubsan_and_recorded_function(self):
+        prelude = "/repo/core/vfs.c:509:20: runtime error: null store\n"
+        output = OUTPUT.replace(":509:20", "")
+        manifest = [dict(MANIFEST[0], asan_line_optional=True, preceding_ubsan_pattern="null store")]
+        self.assertTrue(matches_known_crash(NAME, prelude + output, manifest))
+        for text in [output, prelude.replace("509", "510") + output,
+                     prelude + output.replace("vfs_chdir", "other"),
+                     prelude + OUTPUT.replace("509", "510"),
+                     prelude + output + "other.c:1:2: runtime error: overflow"]:
+            self.assertFalse(matches_known_crash(NAME, text, manifest))
+
+    def test_unsanitized_fault_requires_exact_marker_and_fault_exit(self):
+        manifest = [dict(MANIFEST[0], unsanitized_marker="reached callback", unsanitized_exit_codes=[-11])]
+        for code, output, expected in [(-11, "reached callback\n", 1), (0, "reached callback", 0),
+                                       (1, "reached callback", 0), (-11, "other callback", 0),
+                                       (-11, "reached callback\nassertion failed", 0)]:
+            with self.subTest(code=code, output=output), patch("sys.argv", ["runner", NAME, "inventory", "executable"]), \
+                    patch("known_crash.Path.read_text", return_value=json.dumps(manifest)), \
+                    patch("known_crash.Path.write_text"), patch("builtins.print"), \
+                    patch("known_crash.subprocess.run", return_value=subprocess.CompletedProcess([], code, output)):
+                self.assertEqual(main(), expected)
+
     def test_linux_core_segv_requires_the_same_source_and_frame(self):
         manifest = [dict(MANIFEST[0], message_pattern="(?:access-violation|SEGV)")]
         self.assertTrue(matches_known_crash(NAME, OUTPUT.replace("access-violation", "SEGV"), manifest))
@@ -90,6 +112,32 @@ SUMMARY: AddressSanitizer: SEGV (<unknown module>)
             self.assertFalse(matches_known_crash(NAME, output.replace(before, after), manifest))
         self.assertFalse(matches_known_crash("other.case", output, manifest))
         self.assertFalse(matches_known_crash(NAME, output + "ERROR: AddressSanitizer: heap-use-after-free", manifest))
+        self.assertFalse(matches_known_crash(NAME, output + "other.c:1:1: runtime error: overflow", manifest))
+
+    def test_recorded_ubsan_prelude_requires_exact_index_source_and_line(self):
+        runtime = "/repo/core/vfs.c:509:20: runtime error: index -1 out of bounds for type 'entry_t[20]'\n"
+        summary = "SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /repo/core/vfs.c:509:20 \n"
+        manifest = [dict(MANIFEST[0], preceding_ubsan_pattern=r"index -1 out of bounds for type 'entry_t\[20\]'")]
+        self.assertTrue(matches_known_crash(NAME, runtime + summary + OUTPUT, manifest))
+        self.assertTrue(matches_known_crash(NAME, runtime + OUTPUT, manifest))
+        for output in [OUTPUT, runtime + runtime + OUTPUT, runtime.replace("-1", "-2") + OUTPUT,
+                       runtime.replace("509", "510") + OUTPUT, runtime.replace("vfs.c", "other.c") + OUTPUT,
+                       runtime + summary.replace("509", "510") + OUTPUT, runtime + summary + summary + OUTPUT,
+                       runtime + OUTPUT + "other.c:1:1: runtime error: overflow"]:
+            self.assertFalse(matches_known_crash(NAME, output, manifest), output)
+        self.assertFalse(matches_known_crash(NAME, runtime + summary + OUTPUT, MANIFEST))
+
+    def test_gcc_asan_frames_can_omit_column_with_exact_ubsan_source(self):
+        runtime = "/repo/core/vfs.c:509:20: runtime error: index -1 out of bounds for type 'entry_t [20]'\n"
+        manifest = [dict(MANIFEST[0], preceding_ubsan_pattern=r"index -1 out of bounds for type 'entry_t ?\[20\]'")]
+        output = runtime + OUTPUT.replace(":509:20", ":509")
+        self.assertTrue(matches_known_crash(NAME, output, manifest))
+        for changed in [output.replace(":509 in", ":510 in"),
+                        output.replace(":509:20: runtime", ":510:20: runtime"),
+                        output.replace("vfs.c", "other.c"),
+                        output.replace("in vfs_chdir", "in other_function"),
+                        output + "other.c:1:1: runtime error: overflow"]:
+            self.assertFalse(matches_known_crash(NAME, changed, manifest), changed)
 
     def test_runner_error_is_not_an_expected_failure(self):
         result = subprocess.run([sys.executable, str(SCRIPTS / "known_crash.py"), NAME,

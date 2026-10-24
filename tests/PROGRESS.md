@@ -1,3 +1,196 @@
+# Batch73 latest-source delivery gate - 2026-10-23
+
+Cumulative4,200-case ASan/UBSan gate passes137.36s:4,156 ordinary passes,
+44 documented regressions reproduced,0 unexpected failures,0 skips. Strict
+summary exits0.75 reporting helpers passed6.932s; ordinary Clang startup pair
+passed0.40s. CORE remains clean50f38659db7b22f4689f3654df2d110d992bcc95.
+Evidence build-asan/batch73-delivery-latest-{results.xml,gate.json,summary.log}.
+Checkpoint includes7 new scenarios,9 verified fixed-exception removals with
+assertions retained,26 named-file regressions, and one exact startup crash.
+Push same73/PR28 and dispatch one hosted check against exact50f3865.
+Do not merge or claim new-source coverage until its exact hosted report passes.
+Full meaningful supported coverage remains incomplete; continue independent work.
+
+# Startup-setting callback regression and control - 2026-10-23
+
+No build/test process was active at heartbeat; resumed batch73 on clean50f3865.
+Public $N0 with a rejecting registered comment callback exposes a new null-store
+defect at gcode.c1154: system startup validation intentionally passes NULL for
+the optional message output, while new rejection cleanup dereferences it.
+Correct error/persisted-line/retry assertions remain after the fault. One exact
+diagnostic wrapper and dated KNOWN_BUGS entry; accepting-callback control passes.
+Both ASan/UBSan and ordinary Clang pairs classify correctly (0.46/0.40s), with
+strict sanitizer summary. Matcher helpers75/75 pass6.932s including wrongline,
+wrongfunction, additionaldiagnostic, marker and exitcode rejection controls.
+Windows missing ASan lines require exact preceding UBSan source/line/function;
+ordinary builds require exact callback-stage output and access-violation exit.
+Logs batch73-startup-comment-* and batch73-startup-ordinary-*; total4,200 cases.
+44 known regressions including this crash; no CORE edits, PRmerge or hostedrun.
+Continue cross-module authoring, then one substantial cumulative delivery gate.
+
+# Continued queue and upload workflows - 2026-10-23
+
+Two new public-API scenarios take registration to4,198 on clean CORE50f3865.
+RTU queues four below-capacity bursts, wraps head/tail multiple times, reuses
+caller stack immediately and verifies each transmitted address/CRC, copied
+context, FIFO reply and final idle state. RAM upload mixes13/1024/17/4096/9byte
+chunks across buffered/direct writes, rejects unsupported growth without data
+loss, reads23byte slices toEOF and seeks back across a flush boundary.
+Both pass ASan/UBSan0.33s; strict summary passes; no new defect allowance.
+Evidence build-asan/batch73-stream-burst-results.xml. Existing latest-source
+full gate plus28 affected-case verification remain valid for their4,196cases.
+Keep accumulating coherent cross-module work; no tiny hosted checkpoint.
+Goal API stillreports blocked from prior state; heartbeat continues authorized
+concrete work without spawning another worker. No CORE edits or PRmerge.
+
+# Latest-source affected-case verification - 2026-10-23
+
+Focused rerun of all28 prior failures passes1.23s:2 ordinary changed-contract
+controls and26 exact known regressions. Strict summary passes. Evidence:
+build-asan/batch73-compat-repair-results.xml and matching summary log.
+Combined with the completed cumulative gate, all4,196 cases are accounted for:
+4,153 ordinary passes and43 documented expected failures. This is combined
+full-gate plus affected-case evidence, not a second full-suite run. Latest source
+introduces the named-file regression; tests preserve correct public behavior.
+No hosted check or new-source percentage claimed. Continue substantial batch73.
+
+# Full latest-source compatibility findings - 2026-10-23
+
+Session3963 finished: build0, 4,196 cases, 4,151 clean,17 known,28 failures.
+26 failures share the new named-file CALL skip/lifecycle regression; correct
+assertions retained with exact WILL_FAIL entries and dated KNOWN_BUGS evidence.
+Two existing expectations updated for deliberate upstream contracts: comment
+rejection now clears normalized text; unavailable G33.1 also rejects in check mode
+without advancing position. No CORE edits. Focused compatibility rerun follows;
+no redundant full gate or hosted dispatch before these changes validate.
+
+# Latest-source compatibility cleanup - 2026-10-23
+
+Clean ignored CORE now50f38659db7b22f4689f3654df2d110d992bcc95. Initial targeted
+27case check exposes9 obsolete allowances. All9 unchanged regression executables
+then directly pass under ASan/UBSan,exit0 withno diagnostics; evidence
+build-asan/batch73-latest-fixed-raw.json. Removed only their9 WILL_FAIL labels,
+7 resolved known-bug sections and directG65 fatal wrapper/manifest entry.
+Retained every correct regression assertion. Fixes cover comment validation,
+2message ownership cases,2MPGpull-up cases,G65empty-flow-stack return,unsupported
+native tapping status,wrong-directory unlink afterOOM,current-drive format routing.
+
+New4-axis delta XYZcontrol passes; A1 endpoint still emitszero steps on50f3865
+(delta source unchanged), precise known regression retained. RTU burst known
+reproduction stillclassified.4,196 registered overall;17 expected reproductions
+remain under selectedsource if the cumulative gate confirms. No CORE edits.
+Initial compatibility process84584 is completed; do not restart it. Full cumulative
+sanitizer/strict gate,including cleaned compatibility cases,is now running in
+unified exec session3963. Inspect that handle and batch73-latest-full logs before
+any retry. This is the one broader gate for the source/header advance and new cases. Prior98.05%/88.53% belongs68eba79 only;
+no new-source coverage claim. Keep related work on73/PR28; do not merge.
+
+# Source advance and delta auxiliary configuration - 2026-10-23
+
+Fetched Terje50f38659db7b22f4689f3654df2d110d992bcc95; clean previous68eba79
+has known fixes now upstream in gcode/flow/VFS/I/O. Moving only the clean ignored
+checkout to that unmodified source for a deliberate compatibility pass; never
+patch CORE. Preserve prior68eba79 coverage/hosted evidence separately.
+
+Two local N_AXIS4 delta realboot cases added using existing host fixtures. XYZ
+control passes0.07s. Auxiliary-only A1 is acknowledged/parserA1 but driverA0 and
+zero pulses; proper endpoint assertion fails, narrow WILL_FAIL and dated known
+entry retained. Boot fixture now exits after acknowledged idle even if defective
+motion never wakes driver, so it reports actual endpoint instead of read-budget
+failure. Delta source unchanged by50f3865; latest-source runtime check pending.
+RTU queue known reproduction classified; no new full gate or hosted dispatch.
+Compatibility build/test process is running in unified exec session84584; poll
+that handle or inspect batch73-latest-compat logs before retrying.
+Next: finish known regressions against50f3865, inspect obsolete exceptions,
+retain passing regressions and remove only runtime-proven fixed entries.
+
+# Continued batch73 RTU backpressure authoring - 2026-10-23
+
+New public-driver burst case confirms16 successful send returns but only7
+transmissions/replies after1000ms of real RTU polling; zero exceptions/rejections.
+Source330 skips full-ring admission then returns true for asynchronous calls.
+Correct accepted/completed and retry assertions retained; dated KNOWN_BUGS entry
+and one exact WILL_FAIL added. Focused sanitizer/strict classification passes0.26s asone known reproduction; no full
+gate, push or hosted dispatch for this isolated case. Total4,194,with25 expected
+reproductions under ASan once the next cumulative gate runs. CORE freshly fetched
+unchanged68eba79. Existing evidence-only badge edits and all local work preserved.
+Continue a substantial group before delivery; goal flag remains blocked but the
+hourly recovery can perform authorized concrete work. No competing worker found.
+
+# CURRENT CHECKPOINT - exact batch73 hosted gate verified - 2026-10-23
+
+PR28 head2c62fee65a8892dbd2f00e3d6064b5f52121b2e0 oncoverage-batch-73 has
+all5 individual hosted jobs terminalsuccess inrun39859126742. Artifacts
+12461368002/12460698374 both lock2c62fee/cleanCORE68eba7906ba60d66c8b55c4adc90cd5e85b5a828/
+corefilter. All7 coverage stagesexit0. Coverage4,193cases/4,170clean/23known/0/0;
+ASan/UBSan local4,169clean/24known because the direct G65 return only faults
+under instrumentation. No failed or skipped cases. GCC formatting repair proved
+on hosted source; prior39852077540 remains a failed historical run.
+
+Verified coverage17,340/17,684 lines98.05%,12,177/13,754 branches88.53%.
+Recovery group adds13branches vs35abd4e,zero additional lines andnone lost.
+CombinedPR28 adds10lines/35branches vs91938f1.344 raw lines remain; known
+unavailable implementation is retained in denominator. README/known-gap snapshot
+updated locally to this passing exact-head report; these evidence-only edits are
+not yet committed, so no redundant hosted run is needed for them alone.
+
+PR28 marked ready for review after this verified gate; not merged. Continue
+supported coverage onthis branch in substantial groups. Goal UI flag is still
+blocked; heartbeat can perform authorized work but exposed goal tools cannot
+reactivate automatic continuation. Recovery remains scheduled hourly.
+
+# CURRENT CHECKPOINT - batch73 recovery gate - 2026-10-22
+
+coverage-batch-73 tracksorigin/coverage-batch-73; pushed35abd4e is draftPR28:
+https://github.com/grblHAL/Unit_tests/pull/28. All local follow-ups preserved.
+CORE remains clean68eba7906ba60d66c8b55c4adc90cd5e85b5a828, freshfetch unchanged.
+
+Hosted39852077540 at35abd4e is completed/failure. GCC's exact G65 global-buffer-
+overflow was rejected only because its ASan top frame/summary omit columns.
+Actual source774,ngc_flowctrl,index-1 UBSan and fault type match. Local matcher
+now accepts optional ASan columns while retaining exact source/line/function/
+fault and required UBSan location.10 matcher checks pass0.457s,including changed
+source,line,function and unrelated diagnostic rejection; real GCC artifact matches.
+The original hosted JUnit remains failed and must not be called green. A new
+exact-head hosted check is required after the combined follow-up delivery.
+
+That run's complete coverage job passed all7 stages; artifacts12458771355/
+12458008457 verify35abd4e/68eba79/corefilter.4,185 cases,4,165clean/20known/0/0
+(non-sanitizer G65 return passes).17,340/17,684 lines and12,164/13,754 branches:
++10lines/+22branches vs91938f1,none lost. Newlines gcode1737/1798/1799/1801/1803,
+ioports834,motion_control593/625,spindle_control636,stepper1464. Overall matrix
+failure means badges remain on earlier successful39837233097:98.00%/88.28%.
+
+Eight additional local cases now register4,193 overall. Focused groups validate:
+RAM handle-allocation recovery; nested leaf without local status callback;
+root-directory calloc failure/retry and existing trailing-slash mount listing;
+partial RTU exception/normal/wrong-device headers followed by valid reply;
+interrupt-only input refusing reads without consuming neighboring input.
+RTU fixture now waits the mandatory post-reply silence before asserting idle.
+
+Two additional confirmed CORE defects have dated KNOWN_BUGS entries and three
+exact WILL_FAIL labels: truncate-to-zero keeps pending RAM upload commands;
+failed digital/analog provider calloc reports success and publishes phantom
+ports. Correct content/count/retry assertions retained. Existing neighbors work
+before bank failure assertions; no nonexistent port is dereferenced. No CORE edit
+or new sanitizer suppression. Latest focused bank classification0.29s passes as
+2 known reproductions. Logs build-asan/batch73-file-*,batch73-bank-allocation-*,
+batch73-driver-recovery-* andbatch73-partial-rtu-repair-*.
+
+Prior full gate at35abd4e:4,185 in134.66s,4,164clean/21known/0failed/0skipped;
+72 helpers passed. Recovery cumulative gate passes4,193 in134.46s:
+4,169clean/24known/0failed/0skipped; build/CTest/strict exits0.73 Python helpers
+pass6.700s. Exact evidence build-asan/batch73-recovery-gate.json and matching
+build/test/summary/helper logs. No repeated full gate is needed for this head.
+Combined checkpoint2c62fee committed andpushed,trackingorigin/coverage-batch-73.
+PR28 updated and remains draft. One updated-head hosted run39859126742 dispatched
+against68eba79; inspect this run rather than restarting it. No new coverage gain
+attributed before its artifact. Do not merge. Completion is unproven.
+
+Recovery heartbeat found goal UI status blocked despite available independent
+work; concrete validation resumed. Goal status cannot be reactivated through
+the exposed update_goal tool. Keep respecting explicit user pauses/usage limits.
+
 # Flow-control error cumulative gate and confirmed backlash wait gain - 2026-10-22
 
 Full4,160-case ASan/UBSan passes82.19s:4,144 clean,16 known,0 failures/skips.
@@ -6474,3 +6667,19 @@ source/harness/filter locks and7 coverage stage exits0 verified.4,169 cases,
 361 raw uncovered. New lines RTCP308/363,flow657/773/774/779. Badges and known-gap
 snapshot updated. Ownership/I/O run39835932809 remainslive at inspection;
 thread group needs its own exact-head hosted report before coverage attribution.
+
+
+### 2026-10-22 - batching correction and direct G65 return authoring
+
+User rejects repeated 3-5-case full gates/hosted dispatches. Local AGENTS now
+requires substantial cross-module authoring before cumulative delivery; never
+full gate/push/dispatch just because a goal turn ends. Continue independent
+work while CI runs; no repeated status polling. Three hosted runs/hour is a
+ceiling, not a cadence. No artificial500-case quota or covered-case duplication.
+Current direct G65 RETURN regression exposes real stack[-1] atflow774 with
+UBSan then fatal ASan. Existing IF-frame return control passes. Shared loader
+extracted without behavior changes; exact fatal inventory/runner handles this
+combined diagnostic and rejects unrelated errors.9 matcher helper tests pass
+0.519s; focused direct expected-crash plus IF-frame control pass0.48s.
+Known-bug cause and exception removal guide recorded. This is local authoring
+work, not a new full-suite/hosted checkpoint; no dispatch or coverage claim.
