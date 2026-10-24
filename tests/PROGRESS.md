@@ -1,45 +1,169 @@
-# Current continuation checkpoint - 2026-10-24
+# Current handoff - 2026-10-24
 
-Active checkout: work/Unit_tests on coverage-batch-74, pushed harness7bf1306,
-COREb01f481. Preserve all local changes. Never edit CORE or merge PRs.
+User reports PR28 MERGED. This supersedes every earlier frozen/open PR28 note.
+Fetch origin/upstream and compare ancestry before preparing the next PR; never
+merge PRs or reset existing changes. Active checkout:
+C:/Users/User/Documents/Codex/2026-10-08/https-github-com-petervanderwalt-unit-tests/work/Unit_tests
+Branch coverage-batch-74; prior pushed head8b189a929cf7ea3b31570961dd75ab7dd8f98e3e.
+Current cumulative delivery adds exact Clang handling, reconciled inventories and
+three normal-use workflows. Full local4,475 sanitizer/strict gate passes67.27s:
+4,450 clean/24 known regressions/1 known diagnostic/0 failures/skips.
+Logs: build-asan/batch74-resume-{build,tests,summary}.log and results.xml.
+Saved hosted diagnostic replay and all16 matcher helpers pass.
+Preparing one new exact-head hosted checkpoint; do not call it green yet.
+CORE clean at b01f481072edecac33d5e40c25869359a5b3fa1f; Terje alone edits it.
+Full objective remains meaningful supported CORE line AND branch coverage.
 
-Hosted40082861198 completed FAILED: source/GCC/coverage passed; Linux Clang
-reported a macro_arguments_push offset-table read beyond27 entries at
-gcode.c:485 during the eight-axis tapping fallback regression. Exact correct
-assertions remain. Local handling is limited to this Linux-Clang sanitizer
-case, with a dated KNOWN_BUGS entry and exact fatal diagnostic manifest; paths
-after the crash remain unvalidated. The actual saved hosted output matches
-that manifest; changed location/index/function and missing diagnostics reject.
-83 reporting helper tests passed after the added matcher regression. Removing
-obsolete RAM crash launchers is part of the same pending repair so normal
-assertion failures cannot be hidden by resolved fault handling.
+## Latest measured result and compiler failure
 
-Coverage job only:17,488/17,757 lines98.49%,12,774/13,852 branches92.22%;
-269 missing lines/1,078 outcomes, both source/harness locks and seven stages
-verified. Overall run is NOT green; badges remain on40074304720. CORE changed,
-so this is not a same-source harness gain. Both residual CSVs now match the current locked b01 report:269 missing lines
-and1,078 missing outcomes with function/source-block/branch identity.267 line
-statements map unchanged from2e; historical caller proofs are explicitly
-unverified. Two new/changed statement targets have local cases pending coverage.
+Run40093560650 on exact pushed8b189a9/COREb01f481 COMPLETED FAILURE:
+source/GCC/coverage passed; Linux Clang and Results summary failed. Coverage
+artifact AND report locks match harness/source/filter; allseven stages exit0.
+17,491/17,757 lines98.50%;12,788/13,852 branch outcomes92.32%.
+266 raw missing lines/1,064 missing outcomes. Same-source40082861198 comparison:
++3 covered lines (fs_embedded252, gcode2647/4862), +14 outcomes, no lost lines.
+Coverage tests4,472 total/4,449 clean/23 known/0 failed/skipped. This is coverage
+job evidence, NOT a green compiler-matrix claim. Keep badges on last fully
+green40074304720 until a complete exact-head run passes.
 
-Ten further local workflow cases cover recursive tapping overflow recovery,
-redirected-file to plain-RAM sender restoration, synchronized analog allocation
-failure/retry, first embedded-mount rollback, shared-limit homing and storage-exhausted RTU
-startup, the O CALL argument-inheritance boundary, interrupted spindle deceleration and
-additional PWM startup without an optional config callback, and the extension/G66 interaction. Focused sanitizer evidence is
-recorded below. Embedded rollback changes unrelated root visibility; retain
-its correct assertion, exact WILL_FAIL and dated bug entry. No fresh cumulative
-coverage measurement includes these ten cases yet. Do not run an
-additional full gate solely for a few more cases. This ten-workflow batch now
-has its single cumulative gate recorded below; preserve the review checkpoint.
+Downloaded evidence: build-asan/hosted40093560650/{coverage-core,
+report-core-coverage,report-core-clang,results-core-clang}; verified-comparison.json
+records the delta. Both residual CSVs now match40093560650:266 missing lines/1,064 missing
+outcomes, preserving dispositions and function/block branch identities.
+COVERAGE_GAPS current measurement is refreshed; historical sections remain pinned.
 
-Regenerated Windows CTest confirms direct executables and no WILL_FAIL for
-both resolved RAM cases and the tapping case; allthree pass0.47s. Actual hosted
-Linux execution of the new wrapper remains pending a substantial checkpoint.
-Next: use the reconciled inventories to author supported remaining regions. Zero locate-feed
-homing, polar/wall homing and G76 main taper remain TODO by user decision.
-AGENTS.md now defines the productive batching and continuation rules; keep
-volatile evidence here rather than accumulating stale agent handoffs.
+Clang has TWO unexpected fatal occurrences of the same gcode.c485 offset-table
+fault: recursive tapping overflow index30, unsupported tapping fallback index28,
+const uint8_t[27], macro_arguments_push top frame + ASan global-buffer-overflow.
+The existing eight-axis index27 wrapper reproduced correctly in this run.
+All correct test assertions remain. Paths after a fatal fault are unvalidated
+on Linux Clang; GCC/coverage/Windows execute those paths successfully.
+
+## Current cumulative work
+
+- Two EXACT additional diagnostic entries (test/index30 and test/index28),
+  Linux-Clang-only CMake launcher list and known_bug/known_crash properties,
+  dated KNOWN_BUGS addendum. No CORE edits or blanket sanitizer acceptance.
+- New isolated matcher regression: all16 test_known_crash.py tests passed0.485s.
+  BOTH actual saved hosted XML outputs now pass production manifest/runner
+  validation and first1024 output matching. Changed source locations and unrelated
+  runtime diagnostics are rejected. All16 matcher tests pass0.626s. Windows
+  reconfiguration confirms allthree direct executables without WILL_FAIL.
+  No shared matcher implementation change was needed.
+- New full-boot servo/GPIO settings ownership case: focused sanitizer/strict
+  passes0.07s. Normal driver_setup dispatches settings notification while CORE
+  owns ioinit_pending; ordinary GPIO receives inversion/open-drain, servo untouched,
+  later public claim/PWM configure succeeds. Target ioports1625; unmeasured.
+- New automatic toolsetter Y-only restoration: focused sanitizer/strict passes
+  0.10s. SameX/differentY,320 Y pulses/zero X pulses, lateral steps only atZ0,
+  physical/logical XYZ restored, reference/handlers and same-tool completion.
+  Target tool_change140; unmeasured. Do not confuse it with G30's two-stage return.
+- Four exact forced pointer-assignment outcomes documented in inventory/GAPS:
+  stream_file96/124/164 and spindle_control594. Keep raw denominator unchanged.
+- NVS mirror save ownership question appended to TODO; no supported in-place
+  provider contract established, so do not manufacture a regression for it.
+- Preserve unrelated phantom M on
+  tests/cases/ioports/legacy_registration_allows_missing_optional_description_callback.c;
+  it was byte-identical to HEAD and intentionally excluded from earlier staging.
+- PROGRESS/GAPS/inventory/TODO edits are local; AGENTS updated for this handoff.
+
+## Normal-use scope and new regression - 2026-10-24
+
+User clarified: basic actual-use regressions only; avoid security-research-style
+behavior, far-fetched inputs and speculative faults. AGENTS records this scope.
+New state_machine.door_without_parking_keeps_configured_coolant_and_resumes_cut
+uses normal driver/control IRQ and queued motion. Parking disabled plus configured
+keep-coolant policy preserves flood, stops spindle, retains Z=-10mm, then resumes
+the complete20mm X cut with1600 pulses and restores spindle. Focused sanitizer
+and strict summary pass0.06s. Targets state_machine595 false outcome;
+coverage gain unmeasured. Existing two local normal-use cases remain preserved.
+No full gate or hosted run repeated for these few additions. No CORE edits.
+Fetch confirms upstream706a552 mergedPR28 (coverage-batch-73); current74 contains
+later work beyond that merged head. CORE origin/master remainsb01f481 clean.
+
+## Validation and next action
+
+Pushed8b189a9's single full local build+ASan/UBSan/strict gate passed4,472 cases
+in147.61s:4,447 clean,24 known regressions,1 known sanitizer diagnostic, no
+unexpected failures/skips. Do not rerun it merely to resume or finish a tiny
+module. New Linux-only launcher changes need focused validation and the next
+substantial exact-head hosted checkpoint; old failed runs stay failed.
+Cumulative4,475 local gate now passed67.27s with strict summary.
+No active local build/test process remains. Hosted40093560650 is terminal:
+DO NOT redispatch that head or wait on it. No newer hosted run was started.
+
+Saved diagnostic validation and inventory refresh are complete. Continue
+substantial cross-module public-workflow authoring. Group the local cases with
+further useful work before one cumulative gate/push and hosted measurement.
+A coherent new PR may follow PR28's merge after current-head validation; check
+actual ancestry rather than creating an overlapping PR or changing old heads.
+No test-count quota, dummy-value permutations, private-state injection, source
+exclusions or synthetic scheduler races. Correct failures get narrow allowances
+and dated KNOWN_BUGS entries, then independent work continues.
+
+Maintainer TODO decisions: G76 main taper, ALL polar/wall homing, zero locate
+feed homing; named files must prescan before execution. Preserve hidden-mount
+owner/full-path access policy. No completion claim from tests/commits/PRs.
+Historical sections below are evidence only and never override this checkpoint.
+
+## Full-boot servo/GPIO settings ownership - 2026-10-24
+
+Second local workflow after pushed8b189a9 registers a mixed digital bank with
+one driver-owned servo PWM mode and one ordinary output. Normal driver_setup
+receives CORE's true ioinit_pending state and dispatches the settings-change
+hook; the test never sets that private flag. Saved inversion/open-drain apply
+to the ordinary output while the servo callback remains untouched. Subsequent
+public ioport_claim and digital PWM configuration reach that same servo pin
+at50Hz, proving it remains usable. Sender report completes without error.
+Focused ASan/UBSan and strict summary pass0.07s; no new defect or allowance.
+
+This targets ioports1625's servo exclusion during settings load. It does not
+claim allthree remaining outcomes at that compound site are covered. Initial
+fixture missed the driver's setup notification and the PWM API's required
+claim/capability; both were repaired through normal driver/public API paths.
+Two new local workflow files now await a substantial next-batch gate. No
+full gate, push or extra hosted run for this small group; keep40093560650 as
+the sole hosted checkpoint for8b189a9.
+
+## Y-only toolsetter restoration - 2026-10-24
+
+One new local case after pushed8b189a9 targets tool_change140's missing true
+outcome when X already matches but Y needs restoring. Automatic toolsetter
+G59.3 is atX2/Y1 while the original point isX2/Y3. Real probing establishes
+the reference; restore returns to original XYZ with320 Y pulses and zero X
+pulses. Existing pulse observer requires Z=0 on every lateral step. Probe
+contact/reference, command/control handler restoration and a public same-tool
+request confirm completion without repeating motion. Focused ASan/UBSan and
+strict summary pass0.10s, no new defect or allowance.
+
+G30 manual change was unsuitable for this specific target: its initial
+acknowledgement returns XY before touch-off, so it does not leave Y different
+at restore. The case uses the normal automatic toolsetter path instead. No
+manual-only observer contract is imposed on the HAL-level automatic workflow.
+No cumulative gate/push/hosted dispatch for this single addition; contribution
+to current residual coverage is unmeasured.
+
+Existing hosted40093560650 was checked once during this work: exact8b189a9,
+source job success; GCC/Clang/coverage job handles remained in_progress. Do not
+restart or redispatch based on a later observation timeout. Continue useful
+independent authoring and inspect this same run at a useful checkpoint.
+
+## Four forced pointer outcomes and NVS owner contract - 2026-10-24
+
+Independent post-push review checked current source against retained JSON.
+stream_file96/124/164 missing block2/branch3 outcomes and spindle_control594
+_get_ramp block3/branch5 each test a pointer assignment after guarding that
+same pointer nonnull, without an intervening call. Updated exact CSV statuses
+and COVERAGE_GAPS explanation: four forced operands, no exclusions, no new
+percentage/coverage claim and no private mutation or synthetic race test.
+
+NVS162's remaining source-pointer equality is a distinct owner-contract
+question: copying advances source before comparison with driver mirror base.
+Public RAM-location metadata alone does not authorize assuming in-place
+provider-save semantics. TODO records the need for an actual caller/contract,
+not a confirmed defect or universal dead-code claim. Continue other supported
+workflow gaps; do not repeatedly rediscover these four structural outcomes.
+No additional build, full suite, push or hosted dispatch for this audit.
 
 ## Cumulative delivery gate - 2026-10-24
 
@@ -56,9 +180,8 @@ The production fatal runner also recognizes the actual saved Linux-Clang fault
 and its first1024 output characters, returning its exact deliberate1. Linux
 execution of that CMake-specific launcher still needs the hosted checkpoint.
 This local full gate does not change failed hosted40082861198 or coverage
-percentages. Prepare one cumulative commit/push, leave frozenPR28 untouched,
-and run one exact-source hosted checkpoint; continue independent work while
-it runs. No full-gate repetition absent a shared change or unresolved failure.
+percentages. Committed/pushed8b189a9 and dispatched sole exact-source run40093560650;
+frozenPR28 remains untouched. Continue independent work while it runs. No full-gate repetition absent a shared change or unresolved failure.
 
 ## Extension/G66 integration and live PR checkpoint - 2026-10-24
 

@@ -5,7 +5,25 @@ The objective remains meaningful full CORE line and branch coverage across
 supported configurations. Never edit CORE or merge PRs. Use Ponytail full and
 explicit RTK for supported commands. Preserve all existing local changes.
 
+## Task scope and handoff
+
+This is C firmware functional unit testing and coverage for grblHAL CORE.
+Sanitizers, allocation-failure fixtures and expected-failure regressions validate
+controller behavior; the task does not request penetration testing or exploitation.
+Describe the actual test work plainly and keep it within that functional scope.
+
+For a new chat, read this file and only the current TOP checkpoint of
+tests/PROGRESS.md first, then inspect live Git/source status and the relevant
+inventory rows. Do not reload the full historical chat or archived handoffs.
+Keep volatile PR/run/source state in PROGRESS, replacing stale top statements.
+A user-reported merged PR supersedes older frozen-PR notes; verify remotes and
+compare ancestry before preparing the next PR. Never merge PRs yourself.
+A new chat must check actual active workers before starting a competing runner.
+Do not assume goal state or an automation transfers automatically between chats.
+
 ## Choose work that can add useful coverage
+
+New tests must cover basic regressions in actual controller use. Avoid security-research-style cases, far-fetched inputs and speculative faults. Prioritize ordinary jobs, settings, tool changes and hold/resume workflows.
 
 - Read the current checkpoint in tests/PROGRESS.md, current Git status and the
   source-matched coverage inventory. Recheck actual source and harness revisions;

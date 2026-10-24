@@ -1870,3 +1870,15 @@ User decision: keep zero locate feed rate and seek/pull-off-only homed-state
 semantics on TODO. Do not assert either successful referencing or mandatory
 setting rejection until the intended contract is established. The raw missing
 line remains counted; no forced homing state or coverage exclusion.
+
+
+## Driver NVS mirror save ownership - 2026-10-24
+
+COREb01f481 nvs_buffer.c162 compares the already advanced source pointer
+with hal.nvs.driver_area.mem_address after copying. The field documents
+the RAM location but not whether providers may mutate it in place and
+request a save using that same buffer. Find a real provider/caller or
+ask Terje for this ownership contract before adding a mirror-mutation
+regression. Do not infer a confirmed defect or global unreachability
+from the pointer comparison alone. Existing normal owner persistence
+and exhausted-storage controls remain; no source change or exclusion.

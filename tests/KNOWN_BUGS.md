@@ -676,3 +676,20 @@ One exact WILL_FAIL/known_bug retains all correct assertions. Suggested upstream
 repair: initialize every omitted parameter through30 before pushing scope.
 Keep the regression and remove only its allowance and this entry after the
 unchanged assertions pass. No CORE edits or sanitizer suppression.
+
+
+### Additional Linux Clang tapping occurrences - 2026-10-24
+
+Run40093560650 at harness8b189a9/COREb01f481 reproduces the same table read in
+spindle_sync.recursive_tapping_macro_overflow_restores_scope_and_allows_next_cut
+(index30) and spindle_sync.unsupported_rigid_tapping_preserves_position_and_next_supported_sync_move
+(index28). Both diagnostics identify the27-entry table, gcode.c485 and the
+macro_arguments_push top frame, followed by ASan global-buffer-overflow. The
+existing eight-axis index27 exception reproduced correctly in this run.
+
+Two additional exact test/index entries and Linux-Clang-only launchers retain
+all correct assertions; assertions after these crashes remain unvalidated on
+that platform. Hosted GCC/coverage and local Windows Clang execute them without
+these faults. Different indices, locations or unrelated diagnostics remain red;
+no blanket sanitizer acceptance. Remove each entry/launcher/label when its
+unchanged regression passes after an upstream fix. No CORE edits.

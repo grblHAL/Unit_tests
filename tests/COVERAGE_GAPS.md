@@ -1,26 +1,24 @@
 # Remaining raw CORE coverage
 
-## Coverage job passed; Clang diagnostic handling pending
+## Latest coverage job passed; compiler matrix remains failed
 
-[Run40082861198](https://github.com/petervanderwalt/Unit_tests/actions/runs/40082861198)
-coverage job passed on harness7bf13067978f81622c4d7e0981b4f24b761775d5 and
-COREb01f481072edecac33d5e40c25869359a5b3fa1f. Both artifact locks and the core
-filter match; exactly seven coverage stages exit0. It reports17,488/17,757
-lines (**98.49%**) and12,774/13,852 outcomes (**92.22%**):269 missing lines and
-1,078 missing outcomes. Coverage tests:4,462 total,4,441 clean,21 known,0 failed
-or skipped. The run completed with source, GCC and coverage passing, but Clang
-failed on the tapping macro argument-table bounds fault at gcode.c:485. Exact
-Linux-Clang diagnostic handling is pending locally; this run remains failed.
-Badges remain on the prior fully green run.
+[Run40093560650](https://github.com/petervanderwalt/Unit_tests/actions/runs/40093560650)
+coverage passed on harness8b189a929cf7ea3b31570961dd75ab7dd8f98e3e and
+COREb01f481072edecac33d5e40c25869359a5b3fa1f. Artifact locks and filter match;
+all seven coverage stages exit0. It reports17,491/17,757 lines (**98.50%**)
+and12,788/13,852 branch outcomes (**92.32%**):266 missing lines and1,064
+missing outcomes. Coverage tests:4,472 total/4,449 clean/23 known/0 failed/skipped.
+Against same-source40082861198 this adds3 lines and14 outcomes, with no lost lines.
+Both CSV inventories now match this report while preserving dispositions and
+function/source-block branch identities. Historical explanations below still
+require current-caller proof; they are not blanket reachability claims.
 
-CORE changed between these reports; raw count/percentage differences are not
-a same-source harness gain. The raw JSON/block IDs are now retained. Fresh
-public targets include analog synchronized-output allocation rejection at
-gcode2647 and first embedded-mount allocation rollback at fs_embedded252.
-Both CSV inventories now match the current b01 coverage job:269 missing lines
-and1,078 missing outcomes. Branch keys retain function/source-block identity.
-Mapped historical explanations are explicitly unverified for current callers.
-The historical table and audit narrative below still describe source2e.
+The overall run remains FAILED due to two additional Linux-Clang tapping table
+bounds diagnostics. Both saved outputs now pass production manifest/runner checks,
+including the first1024 output characters and changed/unrelated-fault rejection.
+All16 matcher tests pass. Windows configuration retains direct executable tests
+without WILL_FAIL. No new hosted validation has run; badges retain the last fully
+green40074304720. Assertions after a fatal fault remain unvalidated on Clang.
 
 Working checkout is now upstream `b01f481072edecac33d5e40c25869359a5b3fa1f`.
 The table and percentages below are the prior fully green CORE2e165a1
@@ -660,3 +658,23 @@ physical-completion-before-callback contract is asserted. G67 cancels subsequent
 invocations. Focused sanitizer evidence is recorded in PROGRESS. Contribution
 to the duplicate branch records at current gcode4762/4778 awaits cumulative
 coverage measurement; no complete mapping or percentage gain is claimed.
+
+
+### Forced list-pointer assignment outcomes - 2026-10-24
+
+On COREb01f481, four missing outcomes in run40082861198 follow a nonnull
+short-circuit guard of the very pointer subsequently assigned. stream_file96,
+124 and164 each miss function-specific block2/branch3; spindle_control594
+misses _get_ramp block3/branch5. There is no intervening function call between
+the pointer test and assignment. Native sequential ownership cannot make the
+assignment false. Existing traversals cover empty/nonempty and interior list
+movement; private concurrent list corruption is not a supported workflow.
+The CSV records these exact four outcomes as forced-pointer-assignment, with
+all outcomes retained in raw coverage. This proves only these operands, not
+that all branches in those modules or all provider interactions are covered.
+
+The remaining nvs_buffer162 source-pointer comparison is separate: copying
+increments source before comparing it with driver_area.mem_address. The public
+field documents where RAM resides, but that alone does not establish an
+in-place write/save contract. Locate an actual owner or obtain a maintainer
+contract before introducing a mirror mutation test or classifying a defect.

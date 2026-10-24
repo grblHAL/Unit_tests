@@ -135,9 +135,12 @@ if(TEST fs_embedded.allocation_failure_first_mount_preserves_root_mode_and_allow
 endif()
 
 # Confirmed COREb01f481 on hosted Linux Clang: exact macro argument table bounds fault.
-if(HOST_TAPPING_KNOWN_CRASH AND TEST eight_axis.rigid_tapping_fallback_receives_a_axis_arguments_and_restores_caller_scope)
-  set_tests_properties(eight_axis.rigid_tapping_fallback_receives_a_axis_arguments_and_restores_caller_scope
-    PROPERTIES WILL_FAIL TRUE LABELS "known_bug;known_crash")
+if(HOST_TAPPING_KNOWN_CRASH)
+  foreach(tapping_case IN LISTS HOST_TAPPING_CRASH_CASES)
+    if(TEST ${tapping_case})
+      set_tests_properties(${tapping_case} PROPERTIES WILL_FAIL TRUE LABELS "known_bug;known_crash")
+    endif()
+  endforeach()
 endif()
 
 # Confirmed COREb01f481, 2026-10-24: 29-argument CALL omits initialization of inherited local30.

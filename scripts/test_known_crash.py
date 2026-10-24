@@ -209,6 +209,26 @@ SUMMARY: AddressSanitizer: global-buffer-overflow /repo/core/gcode.c:485:32 in m
             self.assertFalse(matches_known_crash(name, output.replace(old, new), manifest))
         self.assertFalse(matches_known_crash(name, output + "other.c:1:1: runtime error: overflow", manifest))
 
+    def test_additional_tapping_faults_require_the_test_specific_index(self):
+        cases = {
+            "spindle_sync.recursive_tapping_macro_overflow_restores_scope_and_allows_next_cut": 30,
+            "spindle_sync.unsupported_rigid_tapping_preserves_position_and_next_supported_sync_move": 28,
+        }
+        for name, index in cases.items():
+            with self.subTest(name=name):
+                manifest = [dict(kind="fatal_asan", test=name, source="core/gcode.c", lines=[485],
+                    function="macro_arguments_push", message_pattern="global-buffer-overflow",
+                    preceding_ubsan_pattern=rf"index {index} out of bounds for type 'const uint8_t\[27\]' \(aka 'const unsigned char\[27\]'\)")]
+                output = (f"/repo/core/gcode.c:485:32: runtime error: index {index} out of bounds for type 'const uint8_t[27]' (aka 'const unsigned char[27]')\n"
+                    "SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /repo/core/gcode.c:485:32\n"
+                    "ERROR: AddressSanitizer: global-buffer-overflow on address 0x123\n"
+                    "    #0 0x456 in macro_arguments_push /repo/core/gcode.c:485:32\n"
+                    "SUMMARY: AddressSanitizer: global-buffer-overflow /repo/core/gcode.c:485:32 in macro_arguments_push\n")
+                self.assertTrue(matches_known_crash(name, output, manifest))
+                self.assertFalse(matches_known_crash("other.case", output, manifest))
+                self.assertFalse(matches_known_crash(name, output.replace(f"index {index}", "index 27"), manifest))
+                self.assertFalse(matches_known_crash(name, output.replace(":485", ":486"), manifest))
+
     def test_runner_error_is_not_an_expected_failure(self):
         result = subprocess.run([sys.executable, str(SCRIPTS / "known_crash.py"), NAME,
                                  "missing-inventory.json", "missing-executable"], capture_output=True)

@@ -10,6 +10,11 @@ if(NOT MSVC)
 endif()
 option(ENABLE_COVERAGE "Instrument tested core modules for coverage (GCC or Clang)" OFF)
 option(ENABLE_SANITIZERS "Enable address and undefined behavior checks" OFF)
+set(HOST_TAPPING_CRASH_CASES
+  eight_axis.rigid_tapping_fallback_receives_a_axis_arguments_and_restores_caller_scope
+  spindle_sync.recursive_tapping_macro_overflow_restores_scope_and_allows_next_cut
+  spindle_sync.unsupported_rigid_tapping_preserves_position_and_next_supported_sync_move
+)
 set(HOST_TAPPING_KNOWN_CRASH OFF)
 if(ENABLE_SANITIZERS AND CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_C_COMPILER_ID STREQUAL "Clang")
   set(HOST_TAPPING_KNOWN_CRASH ON)
@@ -447,7 +452,7 @@ function(add_core_test name module source)
   if(HOST_FS_MOUNT_RESULT_DECLARATION AND name IN_LIST HOST_MOUNT_RESULT_CASES)
     target_compile_definitions(test_${name} PRIVATE HOST_FS_MOUNT_RESULT_API=1)
   endif()
-  if(HOST_TAPPING_KNOWN_CRASH AND name STREQUAL "eight_axis.rigid_tapping_fallback_receives_a_axis_arguments_and_restores_caller_scope")
+  if(HOST_TAPPING_KNOWN_CRASH AND name IN_LIST HOST_TAPPING_CRASH_CASES)
     find_package(Python3 REQUIRED COMPONENTS Interpreter)
     add_test(NAME ${name} COMMAND "${Python3_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/scripts/known_crash.py"
       "${name}" "${CMAKE_SOURCE_DIR}/tests/known_sanitizer_diagnostics.json" "$<TARGET_FILE:test_${name}>")
