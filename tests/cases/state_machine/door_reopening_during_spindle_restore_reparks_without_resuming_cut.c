@@ -17,5 +17,11 @@ int main(void)
     CHECK(!parking_spindle_state.on && !parking_coolant.flood);
     CHECK(physical_position[X_AXIS] == stopped_x && physical_position[Z_AXIS] == -160);
     CHECK(!sys.step_control.execute_sys_motion && plan_get_current_block() != NULL);
+    close_and_resume_parking();
+    finish_powered_parking();
+    CHECK(!parking_door_open && !parking_reopen_on_restore);
+    CHECK(parking_spindle_state.on && parking_coolant.flood);
+    NEAR(parking_spindle_rpm, 5000);
+    CHECK(parking_spindle_on_z == -640 && parking_coolant_on_z == -640);
     return EXIT_SUCCESS;
 }

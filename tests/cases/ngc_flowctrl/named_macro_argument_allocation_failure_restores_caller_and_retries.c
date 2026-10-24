@@ -31,13 +31,7 @@ int main(void)
     CHECK(gc_execute_block(call) == Status_OK);
     CHECK(hal.stream.file != NULL && ngc_call_level() == 1);
     CHECK(ngc_param_get(1, &value)); NEAR(value, 12);
-    const char *body = "G21\n";
-    for(unsigned i = 0; body[i]; i++) CHECK(hal.stream.read() == body[i]);
-    char units[] = "G21";
-    CHECK(gc_execute_block(units) == Status_OK);
-    CHECK(grbl.report.status_message(Status_OK) == Status_OK);
-    CHECK(hal.stream.read() == ASCII_EOF);
-    CHECK(grbl.on_file_end(hal.stream.file, Status_OK) == Status_OK);
+    execute_static_macro_file();
     CHECK(file_closes == 2 && hal.stream.file == NULL && hal.stream.read == previous_read);
     CHECK(ngc_call_level() == 0);
     CHECK(ngc_param_get(1, &value)); NEAR(value, 99);

@@ -7,7 +7,7 @@
 #include <string.h>
 void modbus_rtu_init(int8_t instance, int8_t direction);
 static uint8_t tx_bytes[MODBUS_MAX_ADU_SIZE], rx_bytes[MODBUS_MAX_ADU_SIZE];
-static uint16_t tx_length, rx_length, rx_position;
+static uint16_t tx_length, rx_length, rx_position, pending_tx_bytes;
 static unsigned tx_calls, rx_calls, exceptions;
 static unsigned option_report_calls;
 static bool option_report_new;
@@ -16,7 +16,7 @@ static void original_options(bool newopt) { option_report_calls++; option_report
 static uint8_t exception_code;
 static modbus_message_t reply;
 static bool baud_rate(uint32_t baud) { CHECK(baud == 19200); return true; }
-static uint16_t tx_count(void) { return 0; }
+static uint16_t tx_count(void) { return pending_tx_bytes; }
 static uint16_t rx_count(void) { return rx_length - rx_position; }
 static int32_t read_serial(void) { return rx_position < rx_length ? rx_bytes[rx_position++] : SERIAL_NO_DATA; }
 static void flush_tx(void) { }

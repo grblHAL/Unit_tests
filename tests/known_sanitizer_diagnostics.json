@@ -1,20 +1,76 @@
 [
   {
+    "test": "ioports_32.full_bank_registers_p31_and_routes_highest_channels",
+    "source": "core/ioports.c",
+    "lines": [
+      696
+    ],
+    "message_pattern": "index 32 out of bounds for type '(uint8_t|unsigned char) ?\\[32\\]'( \\(aka 'unsigned char ?\\[32\\]'\\))?"
+  },
+  {
     "kind": "fatal_asan",
-    "test": "system.startup_comment_rejection_preserves_saved_line_and_allows_retry",
+    "test": "eight_axis.rigid_tapping_fallback_receives_a_axis_arguments_and_restores_caller_scope",
     "source": "core/gcode.c",
     "lines": [
-      1154
+      485
     ],
-    "function": "gc_normalize_block",
-    "message_pattern": "(?:access-violation|SEGV)",
-    "preceding_ubsan_pattern": "store to null pointer of type 'char \\*'",
-    "asan_line_optional": true,
-    "unsanitized_marker": "startup-comment-rejection: returning plugin error",
-    "unsanitized_exit_codes": [
-      -11,
-      3221225477,
-      -1073741819
-    ]
+    "function": "macro_arguments_push",
+    "message_pattern": "global-buffer-overflow",
+    "preceding_ubsan_pattern": "index 27 out of bounds for type 'const uint8_t\\[27\\]' \\(aka 'const unsigned char\\[27\\]'\\)"
+  },
+  {
+    "kind": "fatal_asan",
+    "test": "eight_axis.rigid_tapping_fallback_receives_a_axis_arguments_and_restores_caller_scope",
+    "source": "core/gcode.c",
+    "lines": [
+      485
+    ],
+    "function": "macro_arguments_push",
+    "message_pattern": "global-buffer-overflow",
+    "preceding_ubsan_pattern": "index 29 out of bounds for type 'const uint8_t\\[27\\]' \\(aka 'const unsigned char\\[27\\]'\\)"
+  },
+  {
+    "kind": "fatal_asan",
+    "test": "spindle_sync.recursive_tapping_macro_overflow_restores_scope_and_allows_next_cut",
+    "source": "core/gcode.c",
+    "lines": [
+      485
+    ],
+    "function": "macro_arguments_push",
+    "message_pattern": "global-buffer-overflow",
+    "preceding_ubsan_pattern": "index 30 out of bounds for type 'const uint8_t\\[27\\]' \\(aka 'const unsigned char\\[27\\]'\\)"
+  },
+  {
+    "kind": "fatal_asan",
+    "test": "spindle_sync.recursive_tapping_macro_overflow_restores_scope_and_allows_next_cut",
+    "source": "core/gcode.c",
+    "lines": [
+      485
+    ],
+    "function": "macro_arguments_push",
+    "message_pattern": "global-buffer-overflow",
+    "preceding_ubsan_pattern": "index 27 out of bounds for type 'const uint8_t\\[27\\]' \\(aka 'const unsigned char\\[27\\]'\\)"
+  },
+  {
+    "kind": "fatal_asan",
+    "test": "spindle_sync.unsupported_rigid_tapping_preserves_position_and_next_supported_sync_move",
+    "source": "core/gcode.c",
+    "lines": [
+      485
+    ],
+    "function": "macro_arguments_push",
+    "message_pattern": "global-buffer-overflow",
+    "preceding_ubsan_pattern": "index 28 out of bounds for type 'const uint8_t\\[27\\]' \\(aka 'const unsigned char\\[27\\]'\\)"
+  },
+  {
+    "kind": "fatal_asan",
+    "test": "spindle_sync.unsupported_rigid_tapping_preserves_position_and_next_supported_sync_move",
+    "source": "core/gcode.c",
+    "lines": [
+      485
+    ],
+    "function": "macro_arguments_push",
+    "message_pattern": "global-buffer-overflow",
+    "preceding_ubsan_pattern": "index 27 out of bounds for type 'const uint8_t\\[27\\]' \\(aka 'const unsigned char\\[27\\]'\\)"
   }
 ]

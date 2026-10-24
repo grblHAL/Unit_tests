@@ -7,7 +7,10 @@ int main(void)
         {"G76Z-1I-1", Status_GcodeValueOutOfRange},
         {"G76Z-1J0.5", Status_GcodeValueOutOfRange},
         {"G76Z-1K1", Status_GcodeValueOutOfRange},
-        {"G76Z-1P1", Status_GcodeValueOutOfRange}
+        {"G76Z-1P1", Status_GcodeValueOutOfRange},
+        {"G76Z-1P-1I-1J0.5K1", Status_NegativeValue},
+        {"G76Z-1P1I-1J-0.5K1", Status_NegativeValue},
+        {"G76Z-1P1I-1J0.5K-1", Status_NegativeValue}
     };
     for(unsigned i = 0; i < sizeof(cases) / sizeof(cases[0]); i++) {
         CHECK(sync_parser_block(cases[i].text) == cases[i].error);
@@ -21,5 +24,12 @@ int main(void)
     CHECK(physical_position[X_AXIS] == 880 && axis_pulses[X_AXIS] == 80);
     CHECK(physical_position[Z_AXIS] == 0 && axis_pulses[Z_AXIS] == 0);
     CHECK(sys.alarm == Alarm_None && !sys.abort);
+    CHECK(sync_parser_block("G76Z-1P1I-1J0.5K1") == Status_OK);
+    CHECK(protocol_buffer_synchronize());
+    CHECK(physical_position[X_AXIS] == 880 && physical_position[Z_AXIS] == -80);
+    CHECK(axis_pulses[X_AXIS] == 640 && axis_pulses[Z_AXIS] == 240);
+    CHECK(axis_pulses[Y_AXIS] == 0 && sync_encoder_resets == 2);
+    CHECK(thread_encoder_state.on && sync_motion_feedback.rpm == 100);
+    CHECK(sys.alarm == Alarm_None && !sys.abort && plan_get_current_block() == NULL);
     return EXIT_SUCCESS;
 }

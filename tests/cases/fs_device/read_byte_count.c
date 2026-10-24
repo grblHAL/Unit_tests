@@ -31,6 +31,9 @@ int main(void)
     size_t count = vfs_read(buffer, 1, 3, file);
     CHECK(strcmp(buffer, "abc") == 0);
     CHECK(vfs_eof(file));
+    char untouched[] = "keep";
+    CHECK(vfs_read(untouched, 1, sizeof(untouched), file) == 0);
+    CHECK(strcmp(untouched, "keep") == 0 && consumed == 3);
     backend_close(file);
     fprintf(stderr, "Read byte count: %zu (expected 3)\n", count);
     CHECK(count == 3);

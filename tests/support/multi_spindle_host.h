@@ -10,11 +10,12 @@ static spindle_ptrs_t registered_spindles[3];
 static spindle_state_t actual_spindle_states[3];
 static float actual_spindle_rpm[3];
 static unsigned spindle_config_calls[3], spindle_output_calls[3];
+static bool spindle_configuration_unavailable[3];
 static bool spindle_configure(spindle_ptrs_t *spindle)
 {
     CHECK(spindle->id >= 0 && spindle->id < 3);
     spindle_config_calls[spindle->id]++;
-    return true;
+    return !spindle_configuration_unavailable[spindle->id];
 }
 static void spindle_output(spindle_ptrs_t *spindle, spindle_state_t state, float rpm)
 {

@@ -5,17 +5,17 @@ static spindle_ptrs_t default_boot_drivers[2];
 static spindle_pwm_t unused_pwm_context;
 static unsigned default_boot_configs[2], default_boot_outputs[2];
 static float unused_pwm_minimum, unused_pwm_maximum;
-static bool unused_pwm_locked;
+static bool unused_pwm_locked, unused_pwm_unavailable;
 static bool configure_default_boot_spindle(spindle_ptrs_t *spindle)
 {
     CHECK(spindle->id >= 0 && spindle->id < 2);
     default_boot_configs[spindle->id]++;
-    if(spindle->id == 1) CHECK(default_boot_outputs[0] > 0);
+    if(spindle->id == 1) CHECK(unused_pwm_unavailable ? default_boot_outputs[0] == 0 : default_boot_outputs[0] > 0);
     if(spindle->id == 0) {
         unused_pwm_minimum = spindle->rpm_min;
         unused_pwm_maximum = spindle->rpm_max;
     }
-    return true;
+    return spindle->id != 0 || !unused_pwm_unavailable;
 }
 static void default_boot_output(spindle_ptrs_t *spindle, spindle_state_t state, float rpm)
 {
@@ -78,7 +78,8 @@ static void run_vfd_default_boot(bool locked)
     CHECK(boot_setup_calls == 1 && boot_release_calls == 1);
     CHECK(spindle_get(0)->id == 1 && settings.spindle.ref_id == 20);
     CHECK(default_boot_configs[0] == 1 && default_boot_configs[1] == 1);
-    CHECK(default_boot_outputs[0] >= 1 && default_boot_outputs[1] >= 1);
+    CHECK(unused_pwm_unavailable ? default_boot_outputs[0] == 0 : default_boot_outputs[0] >= 1);
+    CHECK(default_boot_outputs[1] >= 1);
     NEAR(unused_pwm_minimum, locked ? 100 : 200);
     NEAR(unused_pwm_maximum, locked ? 12000 : 24000);
     CHECK(strstr(engine_output, "[GC:") != NULL);

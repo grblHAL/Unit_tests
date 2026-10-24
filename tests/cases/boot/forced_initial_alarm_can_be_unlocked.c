@@ -4,11 +4,14 @@
 int main(void)
 {
     boot_force_alarm = true;
-    boot_program = "$X\n$G\n";
+    boot_startup_program = "G91";
+    boot_program = "$X\n$X\n$G\n";
     CHECK(grbl_enter() == 0);
     CHECK(sys.driver_started);
     CHECK(strstr(engine_output, "[MSG:'$H'|'$X' to unlock]") != NULL);
     CHECK(strstr(engine_output, "[GC:G0 G54 G17 G21 G90") != NULL);
-    CHECK(sys.alarm == Alarm_None);
+    CHECK(sys.alarm == Alarm_None && state_get() == STATE_IDLE);
+    CHECK(!gc_state.modal.distance_incremental);
+    CHECK(strstr(engine_output, "error:") == NULL);
     return EXIT_SUCCESS;
 }

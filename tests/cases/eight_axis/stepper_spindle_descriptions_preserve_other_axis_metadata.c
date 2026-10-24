@@ -8,7 +8,10 @@ int main(void)
     CHECK(strcmp(grbl.on_setting_get_description(Setting_AxisMaxRate + A_AXIS), "Max RPM for stepper spindle.") == 0);
     CHECK(strcmp(grbl.on_setting_get_description(Setting_AxisAcceleration + A_AXIS), "Acceleration in revolutions/sec^2.") == 0);
     CHECK(strcmp(grbl.on_setting_get_description(Setting_AxisMaxTravel + A_AXIS), "This setting is ignored for stepper spindles.") == 0);
-    CHECK(strcmp(grbl.on_setting_get_description(Setting_AxisStepsPerMM + X_AXIS), "original description") == 0);
+    const setting_id_t unchanged[] = {Setting_AxisStepsPerMM, Setting_AxisMaxRate,
+        Setting_AxisAcceleration, Setting_AxisMaxTravel};
+    for(unsigned i = 0; i < sizeof(unchanged) / sizeof(unchanged[0]); i++)
+        CHECK(strcmp(grbl.on_setting_get_description(unchanged[i] + X_AXIS), "original description") == 0);
     CHECK(strcmp(grbl.on_setting_get_description((setting_id_t)(Setting_AxisStepperCurrent + A_AXIS)), "original description") == 0);
     return EXIT_SUCCESS;
 }

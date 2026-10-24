@@ -32,7 +32,7 @@ static status_code_t protocol_file_end(vfs_file_t *file, status_code_t status)
     stream_redirect_close(file);
     return status;
 }
-static void run_protocol_file(const char *program)
+static inline void run_protocol_file(const char *program)
 {
     prepare_file_stream(program);
     sys.cold_start = false;

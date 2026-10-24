@@ -38,6 +38,7 @@ int main(void)
     items[0].type = (setting_type_t)(Setting_MaxType + 1);
     expect_rejected(); items[0].type = Setting_NonCore;
     items[0].value = NULL; expect_rejected(); items[0].value = &first_value;
+    items[1].value = NULL; expect_rejected(); items[1].value = &second_value;
     items[0].type = Setting_NonCoreFn;
     items[0].value = (void *)set_value;
     expect_rejected();

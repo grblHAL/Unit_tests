@@ -3,10 +3,12 @@
 int main(void)
 {
     prepare_auto_reports();
-    sys.flags.auto_reporting = false;
+    CHECK(protocol_enqueue_realtime_command(CMD_AUTO_REPORTING_TOGGLE));
+    CHECK(!sys.flags.auto_reporting);
     advance_report_time(100);
     CHECK(!(sys.rt_exec_state & EXEC_STATUS_REPORT));
-    sys.flags.auto_reporting = true;
+    CHECK(protocol_enqueue_realtime_command(CMD_AUTO_REPORTING_TOGGLE));
+    CHECK(sys.flags.auto_reporting);
     advance_report_time(100);
     CHECK(!(sys.rt_exec_state & EXEC_STATUS_REPORT));
     advance_report_time(100);

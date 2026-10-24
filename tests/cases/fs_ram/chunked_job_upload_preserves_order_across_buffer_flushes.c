@@ -7,7 +7,8 @@
 int main(void)
 {
     static uint8_t program[5159], actual[5159];
-    const size_t chunks[] = {13, 1024, 17, 4096, 9};
+    /* Consecutive short packets share the buffer before larger packets flush it. */
+    const size_t chunks[] = {6, 7, 1024, 17, 4096, 9};
     for(size_t i = 0; i < sizeof(program); i++) program[i] = (uint8_t)(i * 37 + i / 71);
     fs_ram_mount();
     vfs_file_t *file = vfs_open("/ram/chunked-job", "w");

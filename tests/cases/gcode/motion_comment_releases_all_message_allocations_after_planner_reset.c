@@ -28,6 +28,13 @@ int main(void)
 {
     prepare_motion_program();
     observe_allocations = true;
+    char header[] = "%(MSG,Program header)";
+    CHECK(gc_execute_block(header) == Status_OK);
+    char next[] = "G90";
+    CHECK(gc_execute_block(next) == Status_OK);
+    CHECK(allocation_count == 1 && allocations[0] == NULL);
+    char footer[] = "%";
+    CHECK(gc_execute_block(footer) == Status_OK);
     queue_motion_program("G1X10F100(MSG,Future move)");
     CHECK(plan_reset());
     observe_allocations = false;
