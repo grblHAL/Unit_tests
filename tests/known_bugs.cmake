@@ -153,3 +153,9 @@ if(TEST stream.mpg_disable_after_network_disconnect_restores_null_console)
   set_tests_properties(stream.mpg_disable_after_network_disconnect_restores_null_console
     PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
+
+# Confirmed CORE2e165a1, 2026-10-24: another spindle's start cancels a pending override ramp.
+if(TEST multi_spindle.starting_secondary_preserves_pending_primary_override_ramp)
+  set_tests_properties(multi_spindle.starting_secondary_preserves_pending_primary_override_ramp
+    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+endif()

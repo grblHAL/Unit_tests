@@ -1,3 +1,121 @@
+# Reporting/resource/I/O cumulative gate passed - 2026-10-24
+
+Five new cases plus one retained-assertion extension pass one full4403-case
+ASan/UBSan gate60.42s after rebuilding all shared spindle-fixture consumers.
+Strict summary:4381clean/1exact recovering UBSan/21known regressions/0unexpected
+failed/skipped. Correct ramp cancellation assertion remains one exact known bug;
+no broad sanitizer allowance. No unchanged reporting helper reruns.
+Fresh CORE fetch remains clean2e165a1. Priord8c3986 run40049122187 all five jobs
+passed; exact locks/seven stages0 support98.45%lines/91.40%branches. Badges and
+measured paragraph updated only after terminal success. New coverage pending.
+PR28 remains open/unmerged at frozena9f355c; do not merge or create overlapping
+master PR. Deliver substantial group on existing74 with one guarded hosted run;
+continue independent coverage. No completion claim from this passing checkpoint.
+
+# Configuration claim retry extended; grouped profiles verify current targets - 2026-10-24
+
+Existing ioports.driver_claim_failure_preserves_ownership_and_allows_routed_retry
+now routes its failed claim and successful retry through ioports_cfg.claim.
+All original driver-count, unchanged ownership/description, mapped pin and output
+assertions retained. Focused sanitizer1/1 passes0.06s, no new quota case.
+
+Built all five new workflows plus extension together for isolated profiles,
+separated by actual core variant. Ordinary cases return0; documented secondary
+start defect returns1 at the exact retained target assertion. Proof retained at
+build-asan/reporting-io-spindle-proof74/{proof.json,host_core,host_core_multi_spindle}.
+Observed targets: broadcast285 suppression and ordinary delivery; single-port518
+termination; configuration531 driver claim failure and retry; secondary enable192
+failure/success; ramp596 allocation failure and712 startup fallback. Override627
+allocation-failure arm is NOT exercised and remains unclaimed. No aggregate
+percentage inferred from these local profiles or cross-compiler branch IDs.
+No CORE edits/new allowances. Cumulative shared-fixture gate remains pending.
+
+# Single-relay configuration searches stop at zero and retain ownership - 2026-10-24
+
+Added ioports.single_output_configuration_stops_search_and_restores_named_relay.
+Real registered one-output bank produces n_ports1/port_max0. Initial search finds0;
+next-from0 stops unassigned rather than wrapping. A saved relay description still
+finds0 at that boundary; claim succeeds, second claimant rejects without output,
+and original owner's on/off commands reach physical pin0. No input bank exists.
+Targets ioports.c518 single-port termination arm through actual registered count.
+Focused ASan/UBSan passes1/1 in0.05s. Post-claim search expectation was corrected:
+ioport_find_free explicitly permits claimed-port lookup; exclusivity is tested
+via claim rejection instead. No invented defect/allowance or CORE change.
+Five local successor workflows now span reporting, spindle recovery/resources,
+a confirmed ordinary ramp defect and I/O configuration. Cumulative gate pending.
+
+# d8c3986 coverage gains verified while compiler jobs run - 2026-10-24
+
+Run40049122187 completed coverage job, both exact harness/CORE2e165a1/filter
+locks verified, exactly seven stages0.4398hosted:4379clean/19known/0failed/skips.
+17480/17756lines98.45%,12644/13834outcomes91.40%; +8outcomes against7d0dff6,
+identical covered-line set and denominator. Updated measured gap inventory to
+276lines/1190outcomes with per-source counts. Source passed; GCC/Clang still
+in_progress at actual API inspection, so prior successful badges remain.
+Four local successor cases (including new correct ramp-cancellation regression)
+are not in this measurement. No duplicate workflow or completion claim.
+
+# Confirmed secondary start cancels primary's pending override ramp - 2026-10-24
+
+Registered normal PWM primary runs6000; public120% override advances to observed
+intermediate PWM660. Ordinary secondary M3S8000 then leaves primary660 instead
+of computed719 after ten deadlines, although primary target state remains120%/
+about7200. Later125% override recovers correctly and secondary stays8000.
+No race/saturation/private pointer mutation or measured shaft-speed claim.
+Source spindle_ramp's wildcard task_delete removes the first matching task,
+which belongs to primary. Correct captured-target assertion remains after
+passing recovery controls. Raw sanitizer0.07s failure has no diagnostic.
+Dated KNOWN_BUGS cause/repair/cleanup entry plus one exact WILL_FAIL/known_bug.
+Classified focused group/strict summary:2clean/1known/0failed/skipped,0.17s;
+retarget and stop isolation remain passing. No CORE/sanitizer allowance changes.
+Expected regressions now21 on Windows plus unchanged1recovering UBSan.
+Four local scenarios continue independently; confirmed defects are not blockers.
+
+# Secondary PWM ramp allocation failure falls back and later ramps recover - 2026-10-24
+
+Added multi_spindle.secondary_ramp_allocation_failure_applies_output_and_allows_override_retry.
+Two precomputed/registered normal PWM drivers start through public G-code. One
+scoped heap rejection occurs only during secondary M3S8000; exactly one allocation
+fails. Command succeeds with requested secondary output, primary6000 output-call
+count unchanged. After allocation resumes, independent primary120%/secondary80%
+overrides both ramp through multiple outputs to7200/6400 and stop scheduling
+updates after completion. No artificial scheduler fill, private ramp mutation or
+registered-pointer edits. Targets spindle_control.c596 allocation failure and
+normal startup fallback before successful ramp allocation retry.
+Focused ASan/UBSan passes1/1 in0.06s. Exact case linker wrapping reuses existing
+tracked allocation fixture; no new helper/library or allowance. Three local
+successor scenarios now accumulate; broad shared-fixture rebuild stays pending
+until the next substantial cumulative gate. CORE remains untouched.
+
+# Failed secondary initialization leaves slot free and primary output intact - 2026-10-24
+
+Added multi_spindle.failed_secondary_configuration_leaves_slot_free_and_primary_running.
+Real registered driver config reads simulated hardware availability, without
+mutating any registered pointer. Primary M3S3000 remains running and receives
+no extra output call when secondary enable fails. Slot1 stays disabled/NULL.
+After hardware recovery the same public enable returns slot1; M4S4200$1 and
+M5$1 affect only secondary, preserving primary3000 and its output-call count.
+Targets spindle_control.c192 failed activation of a free slot. Fixture's default
+availability remains true. New case plus independent-state and slot-capacity
+controls pass focused ASan/UBSan3/3 in0.15s. Full affected-module rebuild remains
+part of next cumulative gate; do not claim full successor validation yet.
+No CORE edits or allowances. Two local successor workflows now span reporting
+and spindle recovery while hosted40049122187 covers the delivered prior batch.
+
+# Reboot-configured pendant auto reports remain independent of broadcasts - 2026-10-24
+
+Added boot.pendant_autoreports_continue_while_primary_broadcasts_skip_pendant.
+Registers actual primary/pendant streams before boot, applies public703=100 in
+setup, and lets native startup initialize mpg_auto_reporting. Two scheduled
+pendant idle reports arrive through foreground timers. A normal write_all
+broadcast reaches primary output but leaves pendant buffer unchanged; primary
+keeps input ownership, no takeover/errors/alarm. No internal report flag forced.
+Targets stream.c285's configured-MPG broadcast exclusion while preserving its
+own periodic-report positive control. Focused ASan/UBSan passes1/1 in0.06s.
+No CORE/shared fixture edit or new exception. First local successor after
+pushedd8c3986; hosted40049122187 covers the prior six-workflow group only.
+Continue supported cross-module work rather than another small full gate/run.
+
 # Reset/handover cumulative gate passed; prior checkpoint fully green - 2026-10-24
 
 Six new workflows pass the one full4398-case ASan/UBSan gate in58.36s.

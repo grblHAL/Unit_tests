@@ -59,6 +59,41 @@ regression passes; retain serial, null-console, reconnect and pendant controls.
 No sanitizer allowance is added. Raw evidence:
 `build-asan/batch74-null-console-release-raw-results.xml`.
 
+## Starting a secondary PWM spindle cancels the primary override ramp
+
+Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
+With two registered normal PWM spindles, start primary at6000 RPM and request
+120% override. After observing its first intermediate PWM output, start the
+secondary at8000 RPM. The primary output remains at660 instead of its computed
+target719 after ten further task deadlines, while its override percentage and
+calculated RPM still report120% and about7200. The target uses the driver's
+normal float/quantization mapping; no rounding defect or measured shaft RPM is
+claimed. Both spindles remain logically on. A later primary125% override reaches
+its correct target without changing secondary output.
+
+[Regression](cases/multi_spindle/starting_secondary_preserves_pending_primary_override_ramp.c)
+uses existing registered PWM fixtures, ordinary M3 commands and the public
+override API. It observes an actual intermediate output before the second start;
+there is no interrupt race, pool saturation or private state injection. Recovery
+and secondary-output controls pass before the final correct captured-target
+assertion fails. Raw ASan/UBSan run reports `before=660 after=660 target=719`
+without sanitizer diagnostics.
+
+Cause: [spindle_control.c714](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/spindle_control.c#L714)
+starts the new spindle ramp with `task_delete(spindle_ramp_task, NULL)`.
+[grbllib.c664](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/grbllib.c#L664)
+treats NULL data as a wildcard and deletes the first matching delayed task,
+which belongs to the primary override in this supported sequence.
+
+Suggested maintainer repair: cancel only the ramp context being replaced,
+retaining other spindles' pending tasks. No CORE change is included here.
+
+Exception: one exact `WILL_FAIL`/`known_bug` in
+[known_bugs.cmake](known_bugs.cmake). Remove it once the unchanged regression
+passes; retain paired override, retarget and stop-isolation controls. No sanitizer
+allowance is added. Raw evidence:
+`build-asan/batch74-secondary-start-primary-ramp-raw-results.xml`.
+
 ## Absent-axis inch conversion shifts by the unavailable axis marker
 
 2026-10-24 reporting correction: GCC names the same unsigned-long type
@@ -210,8 +245,8 @@ or change the coverage denominator. Existing public rejection tests still run.
 `WILL_FAIL` is reserved for a runnable regression with a meaningful assertion.
 
 **Measured:** 2026-10-24, clean Terje `2e165a1ac4c74be8e68971972c6577775d856b05`.
-The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40047406632)
-measures 17,480/17,756 lines (98.45%) and 12,636/13,834 branches (91.34%).
+The successful [exact-source report](https://github.com/petervanderwalt/Unit_tests/actions/runs/40049122187)
+measures 17,480/17,756 lines (98.45%) and 12,644/13,834 branches (91.40%).
 The 276 uncovered lines include the following known gaps; this table does not
 claim that every remaining line is unavailable. See the complete measured
 [line/branch inventory](COVERAGE_GAPS.md) before selecting the next workflow.
