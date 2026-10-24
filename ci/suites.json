@@ -637,5 +637,24 @@
     "test_regex": "^driver_msp432p_serial[.]",
     "coverage_filter": "drivers/msp432p401r/serial\\.c$",
     "diagnostics_directory": "tests/drivers/msp432p_serial"
+  },
+  "psoc5_reference_core": {
+    "repository": "grblHAL/core",
+    "ref": "070f80cc5c0d095ff63d5980795b5a15c5bb0202",
+    "path": "deps/core-20250518",
+    "source_only": true
+  },
+  "driver_psoc5_serial_reference": {
+    "repository": "grblHAL/PSoC5",
+    "ref": "master",
+    "path": "drivers/psoc5",
+    "dependencies": [
+      "psoc5_reference_core"
+    ],
+    "cmake_source": "tests/drivers/psoc5_serial_reference",
+    "cmake_options": [],
+    "test_regex": "^driver_psoc5_serial_reference[.]",
+    "coverage_filter": "drivers/psoc5/serial\\.c$",
+    "diagnostics_directory": "tests/drivers/psoc5_serial_reference"
   }
 }

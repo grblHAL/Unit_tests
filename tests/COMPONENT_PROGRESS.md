@@ -1,3 +1,35 @@
+# Local legacy-reference/first-boot checkpoint - 2026-10-25
+
+Goal active. PSoC5 now has an explicit registered Driver-tests reference choice
+with fixed documented CORE070f80 dependency in deps/core-20250518. Seven original
+serial-source cases pass Windows Clang ASan/UBSan0.50s with strict classification:
+6 clean +1 correct free-capacity assertion, zero unexpected failures/skips.
+Candidatec9d721259783ca578ee1b0c3f6111839610c26a4 and reference CORE API-match clean
+originals; actual driver gitlink confirms the pin. Current CORE b01f481 unchanged
+serial syntax check rejects historical callback signatures. No type aliases or
+production edits; no automatic legacy fallback. These seven results are separate
+from42 current-compatible suites / batch22's698-case delivered baseline.
+
+Reference uses declaration-only generated UART symbols with bounded FIFO/TX/IRQ
+host callbacks; no actual Cypress SDK or UDB/firmware claim. Actual legacy CORE
+stream execution/suspend, driver.c/NVS and hardware remain untested. Dependency
+and forwarding headers are system includes; fixture warnings remain strict.
+One correct RX free-capacity assertion retains31 usable bytes versus32 reported;
+separate normal capacity/full-ring realtime controls pass. No diagnostic allowance.
+
+Thermistor also adds one ordinary missing-NVS first-boot case, focused1/1 pass0.09s:
+normal first load restores/persists disabled defaults once, claims/reads no sensor
+and keeps the existing report chain. No repeated-load recursion invoked.
+Thermistor now18 registered cases, pending combined delivery/measurement.
+
+Manifest/Driver workflow expose only the reference test suite; fixed CORE is
+source-only and not selectable, core_ref overrides reject. Regression tests lock
+that distinction and preserve ordinary candidate/current-CORE selection. All85
+reporting/source-plan helpers pass9.751s; actionlint and whitespace pass. No new
+full compatible gate, coverage or hosted result; accumulate before next delivery.
+
+---
+
 # Latest component checkpoint - 2026-10-25 (batch22)
 
 Goal active. Combined11 new plugin settings/configuration cases: Interlock6,

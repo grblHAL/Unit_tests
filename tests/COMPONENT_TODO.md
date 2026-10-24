@@ -23,9 +23,11 @@ or force private state to enter a path.
   c9d721259783ca578ee1b0c3f6111839610c26a4 READMEs end support at CORE20250518,
   both pin070f80cc5c0d095ff63d5980795b5a15c5bb0202. MSP432E pins shared6adcc848,
   whose EEPROM is tested separately with Tiva headers, not that SDK/parent build.
-  PSoC5 needs generated project.h/UART APIs and keeps NVS inside driver.c. Pin
-  original SDK interfaces; never extract firmware functions or silently fall back
-  to legacy CORE. No actual runtime/compile result for these remaining drivers.
+  PSoC5 now has seven explicit fixed-CORE reference cases outside compatible
+  totals; six clean plus one free-capacity regression. Current CORE stream ABI
+  rejects unchanged callbacks. Generated UART APIs remain declaration-only host
+  boundaries, not real SDK/UDB validation; driver.c/NVS stay untested. Never silently
+  fall back or extract production functions. MSP430/MSP432E runtime remains open.
 - ATCi18 cases now exercise original registered settings/M-code/travel/sensor
   callbacks at671f145530ec8ec9f5828897477dc0192593b3d8:292/305 lines,156/193
   branches. Retain M960 P0 regression: validate consumes words.p, execute tests

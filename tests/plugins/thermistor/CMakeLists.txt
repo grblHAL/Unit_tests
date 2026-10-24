@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 project(grblhal_thermistor_tests LANGUAGES C)
 include(../../components.cmake)
-foreach(behavior pending_port settings_restore room_temperature report_changes sensor_limits calibration calibration_rejections overtemp_threshold overtemp_recovery alarm_disabled alarm_command unassigned claim_failure initialization_failure series_resistance debug_query options)
+foreach(behavior first_boot pending_port settings_restore room_temperature report_changes sensor_limits calibration calibration_rejections overtemp_threshold overtemp_recovery alarm_disabled alarm_command unassigned claim_failure initialization_failure series_resistance debug_query options)
   component_case(plugin_thermistor.${behavior} ${behavior}.c therm_host.c "${COMPONENT_CORE_ROOT}/nuts_bolts.c" "${HARNESS_ROOT}/plugins/thermistor/thermistor.c")
   target_compile_definitions(plugin_thermistor.${behavior} PRIVATE THERMISTOR_ENABLE=1)
 endforeach()

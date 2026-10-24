@@ -306,8 +306,13 @@ repository's default branch.
 | Driver tests | `driver_ti_shared_eeprom` | Standalone TI shared EEPROM candidate and CRC regressions |
 | Driver tests | `driver_tm4c123_serial` | Original UART0 queues, realtime dispatch and CORE stream suspend |
 | Driver tests | `driver_msp432p_serial` | Primary UART queues and CORE stream lifecycle with real TI/CMSIS headers |
+| Driver tests | `driver_psoc5_serial_reference` | Explicit legacy CORE reference; PSoC UART callbacks, not current-CORE/SDK validation |
 
 These are initial host tests, not full plugin/driver coverage or board validation.
+The PSoC5 reference locks its documented20250518 CORE dependency separately and
+rejects `core_ref` overrides; it never falls back from current CORE or contributes
+to current-compatible totals. Its generated UART APIs are host declarations, not
+Cypress SDK/firmware validation.
 Trinamic also locks and compiles the actual chip library; its UART device is
 simulated. Plasma tests use real CORE I/O/secondary-stepper/spindle/VFS APIs
 with simulated pins, time and controller state. Voltage regulation, full CORE

@@ -18,9 +18,9 @@ class ComponentSuitesTests(unittest.TestCase):
                 def request(repository, endpoint):
                     calls.append((repository, endpoint))
                     return {"sha": ("b" if repository == "grblHAL/core" else "a" if repository == suites[name]["repository"] else "c") * 40}
-                plan = resolve_plan(suites, name, ref="candidate", core_ref="compatible-core", request=request)
+                plan = resolve_plan(suites, name, ref="candidate", core_ref="compatible-core" if "core" in suites[name]["dependencies"] else "", request=request)
                 self.assertEqual(calls, [(suites[name]["repository"], "commits/candidate")] + [(suites[dependency]["repository"], "commits/" + ("compatible-core" if dependency == "core" else suites[dependency]["ref"])) for dependency in suites[name]["dependencies"]])
-                self.assertEqual([source["sha"] for source in plan["sources"]], ["a" * 40] + [("b" if dependency == "core" else "c") * 40 for dependency in suites[name]["dependencies"]])
+                self.assertEqual([source["sha"] for source in plan["sources"]], ["a" * 40] + [("b" if suites[dependency]["repository"] == "grblHAL/core" else "c") * 40 for dependency in suites[name]["dependencies"]])
                 self.assertEqual(plan["host_bits"], suites[name].get("host_bits", 64))
                 self.assertEqual(len({source["path"] for source in plan["sources"]}), 1 + len(suites[name]["dependencies"]))
                 self.assertNotEqual(plan["cmake_source"], ".")
@@ -74,3 +74,19 @@ class ComponentSuitesTests(unittest.TestCase):
         self.assertEqual((finding["file"], finding["line"]), ("deps/littlefs/lfs.c", 42))
         link = source_link(finding, {"sources": [{"path": "deps/littlefs", "repository": "littlefs-project/littlefs", "sha": "c" * 40}]})
         self.assertIn("littlefs-project/littlefs/blob/" + "c" * 40 + "/lfs.c#L42", link)
+
+    def test_fixed_psoc_reference_never_uses_current_core(self):
+        suites = json.loads((ROOT / "ci/suites.json").read_text())
+        calls = []
+        def request(repository, endpoint):
+            calls.append((repository, endpoint))
+            return {"sha": "a" * 40}
+        plan = resolve_plan(suites, "driver_psoc5_serial_reference", request=request)
+        self.assertEqual(calls, [("grblHAL/PSoC5", "commits/master"),
+                                ("grblHAL/core", "commits/070f80cc5c0d095ff63d5980795b5a15c5bb0202")])
+        self.assertEqual([source["path"] for source in plan["sources"]],
+                         ["drivers/psoc5", "deps/core-20250518"])
+        with self.assertRaisesRegex(ValueError, "core-ref"):
+            resolve_plan(suites, "driver_psoc5_serial_reference", core_ref="next", request=request)
+        with self.assertRaisesRegex(ValueError, "no tests registered"):
+            resolve_plan(suites, "psoc5_reference_core", request=request)
