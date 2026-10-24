@@ -289,6 +289,10 @@ repository's default branch.
 | Driver tests | `driver_stm32h7_flash` | H743/H723 flash-word writes, tail padding and bank selection |
 | Driver tests | `driver_stm32f1_flash` | Page erase/retry and halfword storage failure handling |
 | Driver tests | `driver_stm32f3_flash` | Flash-size register geometry, page storage and halfword failure regression |
+| Plugin tests | `plugin_auxp` | Digital output change reports and reset/chaining |
+| Plugin tests | `plugin_interlock` | Forward/inverse spindle interlock requests and settings |
+| Plugin tests | `plugin_pneumaseal` | Air-seal state, spindle and delayed-off lifecycle |
+| Plugin tests | `plugin_thermistor` | ADC reports, calibration and thermal alarm requests |
 | Driver tests | `driver_imxrt1062_pwm` | Teensy 4.0/4.1/MicroMod PWM register, routing and ownership workflows |
 | Driver tests | `driver_sam3x8e_serial` | Dual UART/USART queues, callbacks, settings and CORE stream suspend |
 

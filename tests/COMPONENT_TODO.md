@@ -7,6 +7,23 @@ or force private state to enter a path.
 
 ## Next source families
 
+- Four third-party suites now run unchanged sources: AUXP selected file45/45
+  lines and24/24 branches; Interlock173/185 lines,67/84 branches; PneumaSeal
+  128/141 lines,43/52 branches; Thermistor133/139 lines,68/74 branches. Remaining
+  Interlock lines include settings getters and inverse-disable handling;
+  PneumaSeal includes port setter/getter and integer getters; Thermistor includes
+  port getter/availability and guarded conversion paths. Full public settings
+  parser integration is still absent; captured registered callbacks only are tested.
+- Interlock observes alarm/reset requests and suppresses writes at host boundaries;
+  real controller shutdown, ISR ordering, other slot counts and multi-spindle scope
+  remain. Unreadable monitoring deliberately follows source-documented fail-open.
+- PneumaSeal delayed task requests/explicit expiry do not validate real scheduler
+  timing or air pressure. Keep claimed-port remapping and programmed M5 ordering.
+- Thermistor repeated settings-load hook ownership needs contract review; do not
+  reproduce recursive callback failure. Invalid sensor samples interrupting the
+  advertised consecutive alarm readings, and malformed/trailing calibration
+  parameters remain unclassified. No new known runtime exception is registered.
+
 - SAM3X8E serial now has dual-port queue/IRQ/callback/settings/suspend cases using
   actual SDK/device/board headers and CORE stream APIs. Retain three functional
   regression groups and exact secondary callback signature diagnostic. Primary

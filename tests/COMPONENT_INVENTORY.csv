@@ -16,18 +16,18 @@ plugin,WebUI,grblHAL/Plugin_WebUI,not yet assessed,,Review source contracts and 
 plugin,OpenPNP,grblHAL/Plugin_OpenPNP,partial host tests,plugin_openpnp,Add jerk-enabled configuration and full parser/driver integration; investigate detailed-only reporting contract.
 plugin,Embroidery,grblHAL/Plugin_embroidery,partial host tests,plugin_embroidery_readers,DST/PES readers use real VFS; coordinator rendering and job/needle synchronization remain untested.
 plugin,Miscellaneous,grblHAL/Plugins_misc,partial host tests,plugins_misc,Add BLTouch and remaining I/O expansion/settings workflows.
-third-party plugin,Add status of digital aux outputs to real-time report,Avatario34/auxp,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+third-party plugin,Add status of digital aux outputs to real-time report,Avatario34/auxp,partial host tests,plugin_auxp,Full selected-file host coverage; add real parser/report integration and physical output checks.
 third-party plugin,'Datron like' RGB indicator lights,5ocworkshop/grblhal-rgb-plugin,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
 third-party plugin,Control panel,dresco/Plugin_panel,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
 third-party plugin,CRC ensured MPG communication,nickshl/grblHAL_mpg_transport,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
 third-party plugin,FlexGPIO I2C I/O expander,Expatria-Technologies/plugin_FlexGPIO,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
 third-party plugin,Homing acceleration,Sienci-Labs/grbhal-homingaccel-plugin,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
-third-party plugin,Interlock,gcormier/grblhal-interlock,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+third-party plugin,Interlock,gcormier/grblhal-interlock,partial host tests,plugin_interlock,Forward/inverse request paths tested; add settings getters/parser and null hooks/other slot counts plus real controller shutdown validation.
 third-party plugin,PicoHAL,Expatria-Technologies/Plugins_picoHAL,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
-third-party plugin,Pneumaseal,gcormier/grblhal-pneumaseal,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+third-party plugin,Pneumaseal,gcormier/grblhal-pneumaseal,partial host tests,plugin_pneumaseal,Lifecycle tested with remapped port and simulated tasks; add settings getters/parser and real scheduler/controller integration.
 third-party plugin,Sienci ATCi,Sienci-Labs/sienci-atci-plugin,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
 third-party plugin,Sienci Lights,Sienci-Labs/grblhal-rgb-plugin,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
-third-party plugin,Thermistor,gcormier/grblhal-thermistor,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+third-party plugin,Thermistor,gcormier/grblhal-thermistor,partial host tests,plugin_thermistor,Conversion/calibration/alarm requests tested; review reload hook ownership and command/sampling contracts plus actual analog hardware.
 third-party plugin,Virtual inputs,siganberg/grblhal-virtual-inputs,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
 driver,STM32H7xx,dresco/STM32H7xx,partial host tests,driver_stm32h7_flash,H743/H723 flash modules tested through simulated HAL; add other SDK/IO/serial modules and board builds.
 driver,ESP32,grblHAL/ESP32,partial host tests,driver_esp32_nvs,Partition-storage module tested through simulated SDK calls only; assess IO/serial helpers and real ESP-IDF board builds separately.

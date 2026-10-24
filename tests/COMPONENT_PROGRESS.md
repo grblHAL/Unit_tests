@@ -1,3 +1,43 @@
+# Latest component checkpoint - 2026-10-24 (batch13)
+
+Goal remains active. Added50 unchanged-source third-party plugin cases in separate
+behavior files: AUXP7, Interlock13, PneumaSeal15 and Thermistor15. Added four
+Plugin tests workflow choices with immutable candidate/CORE plans. Default branches
+are main, not master. No production source or concurrent CORE edits, no merge.
+
+One cumulative Windows Clang ASan/UBSan gate:31 compatible suites,454 cases =
+419 clean +35 documented known results, zero unexpected failures/skips. This is
+34 correct expected assertion regressions plus1 fan-only diagnostic; two SAM
+assertion cases also retain exact callback diagnostics without double counting.
+All50 new cases clean, no new exception/diagnostic allowance. All84 CI/reporting
+helpers pass15.879s; actionlint and whitespace checks pass. Clang23's original
+Interlock default-const-field initialization warning stays visible/nonfatal only
+for that source; fixtures remain strict.
+
+Fresh local LLVM selected-file coverage:
+- AUXP45/45 lines100%,24/24 branches100%,5/5 functions.
+- Interlock173/185 lines93.5%,67/84 branches79.8%,19/23 functions.
+- PneumaSeal128/141 lines90.8%,43/52 branches82.7%,20/26 functions.
+- Thermistor133/139 lines95.7%,68/74 branches91.9%,10/12 functions.
+These add479 exercised lines across510 selected executable lines. Fresh counter
+paths max215 characters; strict profiling checks pass. No full-plugin, complete
+settings parser, physical sensor/solenoid or actual emergency-stop timing claim.
+Port/settings/NVS/task/alarm boundaries are explicit host simulations; original
+CORE formatting is linked where used. No private plugin state is modified.
+
+Pinned CORE remains b01f481072edecac33d5e40c25869359a5b3fa1f.
+AUXP ded4a654f9ad17eec449431a51310b44f6da86c9;
+Interlock5893ea35645c334ec96333ccd0519eac03128ee6;
+PneumaSeal3127ab8c15982569d7e89822a9e1095cdce89cbb;
+Thermistor4fae94b9b553604f2f41222bbc04fa45669c2bdf.
+All local upstream/CORE HEADs API-matched and clean. Source locks, classification,
+coverage and helper evidence are ignored under build-evidence. Remaining settings
+getters/parser integration and lifecycle contract questions are in COMPONENT_TODO.
+PR29 remains draft/unmerged. Hosted component workflows still require default-
+branch installation; no hosted Linux/GCC or hardware result is claimed.
+
+---
+
 # Latest component checkpoint - 2026-10-24 (batch12)
 
 Goal remains active across48 inventoried implementations. Added62 driver cases:

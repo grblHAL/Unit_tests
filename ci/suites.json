@@ -426,5 +426,57 @@
     "test_regex": "^driver_sam3x8e_serial[.]",
     "coverage_filter": "drivers/sam3x8e/grblHAL_Due/src/serial\\.c$",
     "diagnostics_directory": "tests/drivers/sam3x8e_serial"
+  },
+  "plugin_auxp": {
+    "repository": "Avatario34/auxp",
+    "ref": "main",
+    "path": "plugins/auxp",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/auxp",
+    "cmake_options": [],
+    "test_regex": "^plugin_auxp[.]",
+    "coverage_filter": "plugins/auxp/.*\\.c$",
+    "diagnostics_directory": "tests/plugins/auxp"
+  },
+  "plugin_interlock": {
+    "repository": "gcormier/grblhal-interlock",
+    "ref": "main",
+    "path": "plugins/interlock",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/interlock",
+    "cmake_options": [],
+    "test_regex": "^plugin_interlock[.]",
+    "coverage_filter": "plugins/interlock/.*\\.c$",
+    "diagnostics_directory": "tests/plugins/interlock"
+  },
+  "plugin_pneumaseal": {
+    "repository": "gcormier/grblhal-pneumaseal",
+    "ref": "main",
+    "path": "plugins/pneumaseal",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/pneumaseal",
+    "cmake_options": [],
+    "test_regex": "^plugin_pneumaseal[.]",
+    "coverage_filter": "plugins/pneumaseal/.*\\.c$",
+    "diagnostics_directory": "tests/plugins/pneumaseal"
+  },
+  "plugin_thermistor": {
+    "repository": "gcormier/grblhal-thermistor",
+    "ref": "main",
+    "path": "plugins/thermistor",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/thermistor",
+    "cmake_options": [],
+    "test_regex": "^plugin_thermistor[.]",
+    "coverage_filter": "plugins/thermistor/.*\\.c$",
+    "diagnostics_directory": "tests/plugins/thermistor"
   }
 }
