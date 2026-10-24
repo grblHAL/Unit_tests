@@ -16,3 +16,7 @@ extern unsigned reads, sends, irq_claims;
 extern uint16_t sample, output_value;
 extern uint8_t device_registers[22];
 void start_inputs(void);
+
+extern bool accept_irq;
+void fire_mcp_irq(uint16_t flags, uint16_t levels);
+void run_mcp_irq(void);

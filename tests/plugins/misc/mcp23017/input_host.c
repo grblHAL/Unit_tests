@@ -5,6 +5,11 @@ io_digital_t ports;
 unsigned reads, sends, irq_claims;
 uint16_t sample, output_value;
 uint8_t device_registers[22];
+bool accept_irq;
+uint16_t irq_flags, irq_levels;
+static irq_callback_ptr hardware_irq;
+static foreground_task_ptr pending;
+static void *pending_data;
 static void enumerate(bool low_level, pin_info_ptr callback, void *data)
 {
     (void)low_level;
@@ -17,7 +22,8 @@ static bool irq_claim(irq_type_t type, uint_fast8_t id, irq_callback_ptr callbac
 {
     CHECK(type == IRQ_I2C_Strobe && id == 0 && callback);
     irq_claims++;
-    return false;
+    hardware_irq = callback;
+    return accept_irq;
 }
 void start_inputs(void)
 {
@@ -47,10 +53,20 @@ bool i2c_send(i2c_address_t address, uint8_t *data, size_t size, bool block)
 bool i2c_transfer(i2c_transfer_t *transfer, bool read)
 {
     CHECK(read && transfer->address == 0x20 && transfer->cmd_bytes == 1);
-    CHECK(transfer->cmd == INPUT_REGISTER && transfer->count == INPUT_COUNT / 8 && transfer->data);
-    transfer->data[0] = sample & 255;
+    CHECK(transfer->count == INPUT_COUNT / 8 && transfer->data);
+    uint16_t value;
+    if (transfer->cmd == INPUT_REGISTER)
+        value = sample;
+    else if (transfer->cmd == 0x0e + (MCP23017_ENABLE == 1))
+        value = irq_flags;
+    else
+    {
+        CHECK(transfer->cmd == 0x10 + (MCP23017_ENABLE == 1));
+        value = irq_levels;
+    }
+    transfer->data[0] = value & 255;
     if (transfer->count == 2)
-        transfer->data[1] = sample >> 8;
+        transfer->data[1] = value >> 8;
     reads++;
     return true;
 }
@@ -80,11 +96,28 @@ void ioport_save_output_settings(xbar_t *pin, gpio_out_config_t *config)
 }
 bool task_add_immediate(foreground_task_ptr fn, void *data)
 {
-    (void)fn;
-    (void)data;
-    CHECK(false);
-    return false;
+    CHECK(accept_irq && !pending && fn && data == NULL);
+    pending = fn;
+    pending_data = data;
+    return true;
 }
+void fire_mcp_irq(uint16_t flags, uint16_t levels)
+{
+    CHECK(accept_irq && hardware_irq && !pending);
+    CHECK((flags & ~((1u << INPUT_COUNT) - 1)) == 0);
+    irq_flags = flags;
+    irq_levels = levels;
+    CHECK(hardware_irq(0, false) && pending);
+}
+void run_mcp_irq(void)
+{
+    CHECK(pending);
+    foreground_task_ptr fn = pending;
+    pending = NULL;
+    fn(pending_data);
+    CHECK(!pending);
+}
+
 bool protocol_execute_realtime(void)
 {
     CHECK(false);

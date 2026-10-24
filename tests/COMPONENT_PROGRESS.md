@@ -1,3 +1,41 @@
+# Latest component checkpoint - 2026-10-25 (batch29)
+
+Goal active. Deliver23 accumulated MCP23017 cases across ENABLE1 mixed8/8,
+ENABLE2 output-only16 and ENABLE3 input-only16. One full Windows Clang ASan/UBSan
+compatible gate passes42 suites,800 cases =737 clean +63 documented known, zero
+unexpected failures/skips. Known results now59 correct assertion regressions +4
+diagnostic-only cases;3 assertions also carry exact diagnostics, counted once.
+Unchanged26 legacy serial reference cases retain separate batch24 validation.
+
+Output bit/packet ordering, duplicate writes, descriptors/nonzero bank offsets,
+startup failures, input samples/enumeration and mixed isolation execute. Polling-
+only driver capability rejects IRQ registration/edge waits without transport work.
+Accepted IRQ callback queues original deferred reads; valid flags/capture data
+route to distinct user ports, empty flags do not dispatch and detach before queued
+execution prevents callback delivery. IRQ fixture holds one deferred task at a
+time; it does not test bursts, actual CORE scheduling or MCU electrical interrupts.
+
+Four correct known assertions cover rising/falling in mixed/input-only modes.
+Matching edge passes; opposite edge still increments callback count because source
+clears the flag then calls handler unconditionally. Keep exact WILL_FAIL/known_bug
+entries, source/removal guide and correct assertions. No new sanitizer allowance,
+unsafe data/ID injection or production edits. Blocking waits/config ABI, transport
+failure/local uninitialized reads and hardware remain untested/source-reviewed.
+
+Fresh selected-source LLVM report spans11 misc files:1119/1235 lines90.6%,552/756
+branches73.0%,109/114 functions. Expanded denominator differs from prior10-file
+report and excludes unbuilt modules/configurations; no whole-plugin claim.
+Strict coverage classification passes102 misc cases (95 clean +7 known assertions),
+fresh counter paths max224. Exact source details remain in ignored batch29 reports.
+
+GitHub-resolved Plugins_misc2657119 and CORE b01f481 locks match clean originals.
+Unchanged86 helper/actionlint checks were not rerun. Fresh fork workflow listing
+still exposes only reusable/core entries; Plugin/Driver manual dispatch awaits
+default-branch installation. Keep PR29 draft/unmerged; no hosted GCC/Linux,
+actual controller/target linking or physical hardware success claimed. Continue.
+
+---
+
 # Local MCP23017 mixed/input checkpoint - 2026-10-25
 
 Goal active. Nine new cases pass Windows Clang ASan/UBSan0.55s and strict

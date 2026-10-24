@@ -45,3 +45,27 @@ Proposed upstream repair: resolve the local pin using descriptor id in callback
 implementations, retaining global descriptor metadata. Remove these two exact
 WILL_FAIL/known_bug entries only after the unchanged correct assertions pass,
 rerun strict classification and retain zero/nonzero-base controls.
+
+## MCP23017 calls opposite-direction edge handlers - 2026-10-25
+
+Source: Plugins_misc265711922037cab6b6e47a9560ef11da3a6e5f83,
+CORE b01f481072edecac33d5e40c25869359a5b3fa1f.
+
+The registered IRQ handler queues original mcp23017_irq, which reads INTF/INTCAP.
+For rising/falling-only registrations it correctly clears an opposite-level flag,
+but then calls the saved callback unconditionally inside the original flagged
+branch. The filtered event is therefore still delivered to consumers.
+
+Four correct irq_rising/irq_falling cases cover both mixed ENABLE1 (8-bit) and
+input-only ENABLE3 (16-bit). Each first accepts a matching event, then delivers
+an opposite captured level for the same enabled pin and asserts the callback
+count remains1. Actual count2 fails at the final correct assertion. Distinct
+routing/empty-flag/detach controls pass. These use only public registration and
+the driver's captured IRQ callback plus bounded deferred execution, with valid
+flag bits. No private state or invalid indexes are injected.
+
+Retain the four exact WILL_FAIL/known_bug labels without sanitizer allowances.
+Proposed repair: invoke a callback only when its flag remains set after direction
+filtering, preserving event-bit/wait handling and callback user-port mapping.
+After repair, retain assertions, remove those four exact properties and this
+entry, then rerun both configurations plus strict reporting. No source edits here.
