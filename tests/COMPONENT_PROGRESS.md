@@ -1,3 +1,27 @@
+# Local MCP23017 active-handler wait checkpoint - 2026-10-25
+
+Goal active. Four new mixed/input-only cases pass focused Windows Clang ASan/
+UBSan0.27s and strict classification, all clean with zero unexpected failures/
+skips. Existing IRQ_Mode_Change registration/user-port11 survives a successful
+rise wait and a separate wait timeout: GPINTEN remains enabled, descriptor keeps
+its configured mode and a later captured low event reaches the registered handler.
+Matching wait event also delivers normally. Public registration and source IRQ/
+deferred paths execute; no private callback or mode writes are used.
+
+These establish observable enabled-mask/handler retention, not independent proof
+of internal edge-mode restoration: the documented opposite-edge callback defect
+limits what subsequent callback delivery alone can distinguish. Keep correct
+regression assertions elsewhere and do not weaken their known labels. Actual
+CORE scheduling, hardware IRQ timing and transport failures remain untested.
+
+No new exception/diagnostic allowance or production edit. Four authoring cases
+are not a new full gate or coverage report. Misc114 cases,812 compatible authored;
+latest delivered batch29 remains800 plus26 separate legacy references. Together
+with earlier wait cases,12 local cases accumulate toward the next combined batch.
+Continue configuration/module and actual controller integration work.
+
+---
+
 # Local MCP23017 blocking-wait checkpoint - 2026-10-25
 
 Goal active. Eight new blocking-wait cases plus prior17 affected input/IRQ cases

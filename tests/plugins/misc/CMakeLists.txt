@@ -198,7 +198,7 @@ foreach(mode 1 3)
 endforeach()
 
 foreach(mode 1 3)
-  foreach(behavior wait_levels wait_timeout_abort wait_edges wait_edge_timeout)
+  foreach(behavior wait_levels wait_timeout_abort wait_edges wait_edge_timeout wait_active_handler wait_active_timeout)
     set(target plugins_misc.mcp23017_${mode}_${behavior})
     component_case(${target} mcp23017/${behavior}.c mcp23017/input_host.c "${HARNESS_ROOT}/plugins/misc/mcp23017.c")
     target_include_directories(${target} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/mcp23017")
