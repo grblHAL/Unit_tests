@@ -339,3 +339,14 @@ cannot equal0xA3; paired unsigned control passes. Keep the exact assertion/label
 and do not infer MCU compiler defaults. TI12/PSoC9 registered; focused4 authoring
 cases are3 clean +1 known, not a new full reference or compatible gate. Captured
 registration remains in the other cases; protocol/task/hardware remain boundaries.
+
+## Pending secondary UART reference coverage
+
+Five new UART7 cases (SERIAL2_MOD) add isolated RX/wrap/cancel, realtime-at-capacity,
+per-port handlers and public mute/re-enable. Affected TI17-case sanitizer/strict
+gate is15 clean +2 known. Secondary metadata returns instance0 despite registry1;
+retain the exact correct assertion. Current TM4C14-case gate still has only its
+existing known result after fixture changes. No new global/coverage measurement.
+UART7 tests explicitly call disable_rx(false); missing startup interrupt enabling
+is source-review-only pending intended RX-only activation contract. No disabled
+IRQ is injected. Physical clock/IRQ/UART, RTS and parent firmware remain untested.

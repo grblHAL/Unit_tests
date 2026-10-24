@@ -28,3 +28,13 @@ endforeach()
 set_source_files_properties("${COMPONENT_CORE_ROOT}/stream.c" PROPERTIES COMPILE_OPTIONS -Wno-error)
 
 set_tests_properties(driver_ti_shared_serial_reference.stream_suspend_signed PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+
+foreach(behavior secondary_metadata secondary_io secondary_wrap_capacity secondary_handlers secondary_disable)
+  set(target driver_ti_shared_serial_reference.${behavior})
+  component_case(${target} ${behavior}.c "${host}/uart_host.c" reference_boundaries.c "${HARNESS_ROOT}/drivers/ti_shared/base/serial.c")
+  target_include_directories(${target} PRIVATE "${host}" "${HARNESS_ROOT}/drivers/ti_shared/base")
+  target_include_directories(${target} SYSTEM PRIVATE "${HARNESS_ROOT}/deps/tivaware" "${COMPONENT_CORE_ROOT}" "${CMAKE_CURRENT_BINARY_DIR}/include")
+  target_compile_definitions(${target} PRIVATE TI_SHARED_REFERENCE=1 SERIAL2_MOD=1 OVERRIDE_MY_MACHINE=1 BOARD_CNC_BOOSTERPACK=1 PART_TM4C1294NCPDT CNC_BOOSTERPACK_A4998=1)
+endforeach()
+
+set_tests_properties(driver_ti_shared_serial_reference.secondary_metadata PROPERTIES WILL_FAIL TRUE LABELS known_bug)

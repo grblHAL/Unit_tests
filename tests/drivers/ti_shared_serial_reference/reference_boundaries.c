@@ -2,7 +2,12 @@
 io_stream_details_t *reference_streams;
 void stream_register_streams(io_stream_details_t *details)
 {
-    CHECK(details && details->n_streams == 1 && !reference_streams);
+    CHECK(details && !reference_streams);
+#ifdef SERIAL2_MOD
+    CHECK(details->n_streams == 2);
+#else
+    CHECK(details->n_streams == 1);
+#endif
     reference_streams = details;
 }
 bool stream_connected(void) { return true; }

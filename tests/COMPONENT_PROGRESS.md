@@ -1,3 +1,30 @@
+# Local TI secondary-UART checkpoint - 2026-10-25
+
+Goal active. Added5 source-supported SERIAL2_MOD/UART7 cases:4 clean +1 correct
+metadata regression. Full affected TI legacy reference suite17 cases passes
+Windows Clang ASan/UBSan1.28s and strict classification:15 clean +2 known, zero
+unexpected failures/skips. Existing current-compatible TM4C12314 cases also pass
+0.69s after shared SDK fixture expansion (13 clean +1 unchanged known result).
+No new sanitizer allowance, CORE/SDK/driver edits or weakened assertion.
+
+Dual-port bounded SDK model separates UART0/UART7 masks/inputs/handlers and checks
+original GPIOA/PC4/PC5/UART clock/pin constants. Tests cover independent RX,
+flush/cancel/wrap, full-ring realtime, separate installed handlers/public enqueue,
+and secondary mute/re-enable without affecting primary RX. Secondary TX remains
+unsupported/fail-fast. Every RX control explicitly enables via disable_rx(false);
+serial2Init startup enablement is not force-classified. Returned secondary
+io_stream_t reports0 while registered property advertises1; retain correct
+instance1 assertion under exact known_bug, with source/removal guide in suite docs.
+
+TI now17 reference cases; PSoC9 pending reference cases remain from prior local
+checkpoint. No addition to current-compatible699-case delivered baseline. A short
+owned build path avoids the long Windows object path warning; no build deletion
+or restart of live work. Original sources/dependency checkouts remain clean.
+No new coverage measurement, global gate or hosted result. Keep accumulating
+before next combined delivery; full MCU/parent/SDK startup and hardware remain.
+
+---
+
 # Local legacy CORE stream checkpoint - 2026-10-25
 
 Goal active. Four new reference cases pass focused Windows Clang ASan/UBSan and
