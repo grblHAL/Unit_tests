@@ -1626,3 +1626,31 @@ G95 hold/resume and synchronized motion/reset controls retain their scope.
 Keep the missing outcome in the raw denominator. Do not directly invoke this
 callback with a saved block after clearing its planner solely for coverage.
 Revisit if native scheduling, block retirement or getter contracts change.
+
+## Successful setting stores always have a registered save callback - 2026-10-24
+
+CORE2e165a1 settings.c3658 retains a false branch for a missing owner save
+callback. The global owner initializes save to _settings_write_global at2747.
+settings_claim_save at2784-2792 only replaces it for a nonnull argument.
+settings_register at2755 requires !!details->save before appending an external
+owner at2772-2773. Thus valid native/registered setting stores reach3658 with a
+save callback. Existing invalid_plugin_metadata_rejects_owner_and_allows_corrected_registration
+explicitly rejects a provider missing save, leaves both IDs undiscoverable, and
+later verifies corrected registration and public store/query. Do not register a
+provider and then erase its callback solely for this branch. This proof assumes
+providers retain accepted registration metadata; arbitrary later plugin mutation
+is outside the established workflow. Raw branch remains measured, not excluded.
+
+## Imperial coordinate formatter position flag has no native false caller - 2026-10-24
+
+On CORE2e165a1, report.c103's X-axis/position/diameter condition retains an
+uncovered false position outcome. The formatter selector at203 assigns only
+get_axis_values_metric or get_axis_values_imperial to the file-local pointer.
+All nine pointer call sites (551,561,574,654,667,679,1340,1362,1516) pass true.
+The sole explicit false call is scaling output621, which directly calls the
+metric formatter. Both concrete formatters and the selector are file-local;
+there is no exported arbitrary-position callback. Existing lathe-coordinate
+reporting covers metric/inch diameter conversion; the new M72 extensions verify
+G7/G8 sender modes. Do not add a private imperial(false) call for this outcome.
+This proves a native caller bound, not a platform-wide impossibility after
+source changes. Keep the outcome in the raw measured denominator.

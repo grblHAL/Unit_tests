@@ -349,6 +349,7 @@ function(add_core_test name module source)
     OR name STREQUAL "report.pins_report_survives_sort_allocation_failure"
     OR name STREQUAL "report.uart_report_survives_sort_allocation_failure"
     OR name STREQUAL "report.bitfield_metadata_allocation_failure_allows_complete_retry"
+    OR name STREQUAL "boot_ngc.abort_message_allocation_failure_retains_exception_and_allows_sender_retry"
     OR name STREQUAL "ngc_params.virtual_registration_allocation_failure_preserves_existing_list"
     OR name STREQUAL "ngc_params.named_allocation_failure_preserves_existing_value_and_allows_retry"
     OR name MATCHES "^ngc_params\\.m7[03]_snapshot_")

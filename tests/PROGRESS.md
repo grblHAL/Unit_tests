@@ -1,3 +1,51 @@
+# Native callbacks, sender reports and U/V/W reversals - 2026-10-24
+
+Branch coverage-batch-74 has five new scenarios and five existing-case extensions.
+Full ASan/UBSan4,414-case delivery gate passes60.65s; strict summary:4,390 clean,
+2 recovering known-sanitizer cases,22 reproduced known regressions,0 failed/skipped.
+No new allowances, shared fixture edits or CORE changes. Fresh origin/upstream/
+CORE fetch confirms clean/latest2e165a1ac4c74be8e68971972c6577775d856b05.
+
+New supported workflows:
+- Native unknown G65 without an external fallback rejects while preserving
+  root#24=99 and queued80-pulse motion; built-in P3 then succeeds.
+- Real boot captures a driver macro before parser initialization. Custom N42/P100
+  dispatches once; built-in P3 stays native. Caller scope and $G query recover.
+  Ordinary operation comment is accepted without a prior optional observer.
+- ABORT message allocation fails exactly once; the exception still reports.
+  $G clears COMPATIBILITY_LEVEL0's error latch before retry. Retry prints one
+  message and the same exception; a final query works without an alarm.
+- Normal0x80 status queries after M8/M9 flush native coolant-change flags and
+  report override/accessory state in order; final driver/parser coolant is off.
+- Driver release callback returns true once for another parser pass, then false
+  to exit. Two welcome/query passes preserve $10=64, reset G91/F200 to G90/F0,
+  and require only one hardware setup.
+
+Extensions retain existing assertions: both M72 lathe scenarios check emitted
+G7/G8; tool-table reports cover random ATC's zero and negative entries while
+retaining names,pockets and pacing; active base UART refuses close/reclaim and
+keeps its handler. U/V/W mapping now executes a reversing job with independent
+physical minima -80/-160/-240,320/640/960 pulses and all final coordinates0;
+XYZ never move. Exact negative W update is reached through ordinary G-code.
+
+Gate artifacts: build-asan/batch74-native-observers-delivery-{build.log,tests.log,
+results.xml,summary.log}. Focused cases and grouped profiles passed during
+construction. Source proofs: native-macro-chain-proof74,report-ownership-proof74,
+native-coolant-status-proof74,reversal-restart-proof74 under build-asan. Profiles
+are separated by host variant. LLVM emits no branch rows on G7/G8 or W direction;
+those outcomes remain runtime assertions. No local aggregate gain is claimed.
+
+Source audits in TODO/COVERAGE_GAPS retain raw branches: registered setting
+owners require save callbacks; imperial formatter's nine native selector calls
+all pass position=true, while scaling explicitly uses metric(false).
+
+Latest fully verified hosted baseline40054135733 at8a8bea3 remains98.45% lines /
+91.51% branches,17,480/17,756 and12,660/13,834. All five jobs and both source locks
+verified; seven coverage stages exit0. This successor is not yet measured.
+Deliver one cumulative checkpoint and keep working; no repeated full gate or
+unchanged helper runs. Preserve unrelated legacy-description status and frozen
+PR28; do not create an overlapping master PR or merge anything. Goal active.
+
 # Cumulative controller workflow gate - 2026-10-24
 
 Full ASan/UBSan4,409-case gate passes58.13s; strict summary:4,385 clean,
