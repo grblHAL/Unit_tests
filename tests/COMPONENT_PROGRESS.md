@@ -4,6 +4,58 @@ Goal: meaningful functional tests across all plugin/driver catalogue implementat
 and CORE. Never edit CORE/plugin/driver production sources or merge PRs. Preserve
 other work and use substantial batches. CORE coverage continues in its active chat.
 
+## Current validated checkpoint
+
+Draft https://github.com/grblHAL/Unit_tests/pull/29 is OPEN/draft, not merged
+(fresh API check). Branch plugin-driver-tests tracks origin/plugin-driver-tests;
+initial checkpoint200ecaf was already published. Tested implementation:
+6bcfb404aacdaf39a1ff69150dd372ff1b134129; a documentation-only checkpoint records these results.
+Do not touch the concurrent CORE checkout or merge the PR.
+
+61 Windows Clang ASan/UBSan cases pass strict classification:48 clean,
+12 correct expected-failure regressions,1 exact known recovering fan-setting
+callback diagnostic; no unexpected failures/skips. Suite times: misc0.81s,
+EEPROM1.56s, fans0.88s, Simulator0.38s, OpenPNP0.51s. All81 CI helpers pass9.590s;
+actionlint also passes. No production source was edited.
+
+The batch adds OpenPNP, real EEPROM-backed littlefs format/write/unmount/remount/
+read with settings-region preservation, upper-bank CRC blocks, persisted fan
+ports, delayed program end, callback chaining and RGB/RGBW/servo readback.
+Dependency-only littlefs is independently locked and cannot be selected as a
+suite. Correct regressions additionally record M42 fractional output ports and
+littlefs physical read/program failures reported as success.
+
+One misc coverage attempt lost a counter file at Windows path length263 and is
+REJECTED. Both reporters now fail Clang/GCC profiling errors even for known tests;
+positive/negative helper controls and the saved real failure prove this. Verified
+misc coverage uses the shorter attached-workspace build-plugin-cov directory
+(max counter path226), reading this isolated branch's source. All five accepted
+coverage JUnit files have zero counter errors and pass strict classification.
+
+Latest LOCAL LLVM measured coverage (instrumented files/configurations only):
+
+| Suite | Covered/total lines | Covered/total branch outcomes |
+|---|---:|---:|
+| plugins_misc | 238/243 (97.94%) | 178/238 (74.79%) |
+| plugin_eeprom | 156/156 (100.00%) | 52/58 (89.66%) |
+| plugin_fans | 184/190 (96.84%) | 101/119 (84.87%) |
+| plugin_openpnp | 141/148 (95.27%) | 86/113 (76.11%) |
+| driver_simulator | 48/54 (88.89%) | 19/26 (73.08%) |
+
+These are not full repository/catalogue coverage: uncompiled files/configurations
+remain in the inventory. Same-source/configuration misc gains20 lines/31 outcomes
+and fans22 lines/18 outcomes over the initial checkpoint. EEPROM additionally
+instruments its littlefs adapter, so its denominator expanded; do not present its
+percentage change as a like-for-like gain. Known defects remain despite coverage.
+
+PR29 remains draft: the fork only registered Core tests and Reusable host tests
+at the last workflow-list check. New manual workflows require default-branch
+installation; no hosted component success or hardware verification is claimed.
+Do not repeatedly dispatch/poll unavailable workflows. Continue substantial
+independent batches from COMPONENT_TODO.md, starting Simulator VFS and the next
+catalogue implementations. Keep the full goal active; this checkpoint is not
+completion. Local logs/locks/HTML/XML/JSON remain in ignored build directories.
+
 ## Current branch and source locks
 
 `plugin-driver-tests`, isolated from concurrent `coverage-batch-74` authoring,
@@ -16,8 +68,10 @@ checkout; original source checkouts and all existing work remain preserved.
 | plugin_eeprom | grblHAL/Plugin_EEPROM | 0c278db74edc38303b9d86583a7d51a1ec1be51e |
 | plugin_fans | grblHAL/Plugin_fans | c5c3613c8d311b43427ec32d551a1e62a5a68531 |
 | driver_simulator | grblHAL/Simulator | 150e3f935e4b7cab7b90263b6b90b78912d9158d |
+| plugin_openpnp | grblHAL/Plugin_OpenPNP | 76dbbc1420dd9773b1008a21f9d97b266f564bc9 |
 
-CORE dependency: b01f481072edecac33d5e40c25869359a5b3fa1f. Sources are unchanged.
+CORE dependency: b01f481072edecac33d5e40c25869359a5b3fa1f.
+littlefs dependency: 6cb4e86540eca0d9ba62500a298385c9d863c8be. Sources are unchanged.
 Separate manual-only Plugin tests and Driver tests Actions callers reuse the
 compiler/sanitizer/coverage/reporter workflow. Each resolves immutable candidate
 and CORE revisions and uses separate artifacts, diagnostics and coverage filters.

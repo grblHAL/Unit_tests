@@ -57,4 +57,4 @@ path lost one .gcda file; that old report is rejected. Both classifiers now
 reject Clang/GCC profiling errors even on expected-failure tests. Verified misc
 coverage uses the shorter build-plugin-cov directory in the original attached
 workspace, with maximum counter path226; it reads the isolated branch's source.
-Other five-suite coverage result sets were checked for counter errors as well.
+All five suites' accepted coverage result sets were checked for counter errors.
