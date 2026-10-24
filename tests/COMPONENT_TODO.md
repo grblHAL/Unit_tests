@@ -270,7 +270,8 @@ or force private state to enter a path.
   packets. Retain DAC write-failure status regression. ADC receive failure is
   source-review-only: local result bytes are uninitialized when I2C fails; do not
   manufacture unsafe reads. DAC startup transfer failure and physical behavior
-  remain. BLTouch and other miscellaneous files remain untested.
+  remain. BLTouch startup/probe/manual/reset cases now execute; other
+  miscellaneous files and remaining BLTouch configurations remain untested.
 - Fans: fan_spindle_set_state is initialized NULL and its only later assignment
   is commented out (fans.c65/241); the fallback at229-232 is unavailable without
   implementation changes. Do not assign that private pointer in a test.
@@ -428,3 +429,15 @@ edge defect limits independent observation of internal mode restoration. Actual
 elapsed time, configuration ABI and transport failures remain untested. Registration/I2C are captured boundaries, not actual CORE aggregation
 or physical registers. Review config callback ABI and failed receive handling
 before runtime; no source edits or new diagnostic exceptions.
+
+## BLTouch probe accessory
+
+Seven cases execute startup servo claim/remapping/stow, no-argument M401/M402,
+duplicate suppression, probe start/completion with native chaining/select,
+rejected start, native-probe auto-deploy bypass, deferred reset stow, BLTEST/
+BLRESET scheduling/cancellation and failed-claim warning. Actual CORE nuts_bolts
+numeric/format/delay helpers link unchanged; HAL delay and task boundaries are
+models, not physical servo timing. Remaining S/D/R validation and consumed-word
+flow, high-speed/auto-deploy configuration, no-readback fallback, toolsetter/
+reports and actual controller/servo hardware remain. Do not infer complete
+BLTouch support from this selected configuration.

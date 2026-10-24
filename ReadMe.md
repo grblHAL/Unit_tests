@@ -263,7 +263,7 @@ repository's default branch.
 
 | Workflow | Suite | Initial tested behavior |
 |---|---|---|
-| Plugin tests | `plugins_misc` | M220/M150/M280, analog/digital expanders, probe relays, homing pull-off and event outputs |
+| Plugin tests | `plugins_misc` | M220/M150/M280, analog/digital expanders, BLTouch/probe relays, homing pull-off and event outputs |
 | Plugin tests | `plugin_eeprom` | I2C EEPROM/FRAM page/block storage |
 | Plugin tests | `plugin_fans` | One/two/three/four-fan commands, saved settings, delayed shutdown, spindle links and reports |
 | Driver tests | `driver_simulator` | Simulator EEPROM storage |

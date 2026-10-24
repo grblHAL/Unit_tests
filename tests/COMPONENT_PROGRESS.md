@@ -1,3 +1,38 @@
+# Latest component checkpoint - 2026-10-25 (batch30)
+
+Goal active. Deliver19 accumulated cases:12 MCP23017 wait/handler and7 BLTouch
+cases. One full Windows Clang ASan/UBSan compatible gate passes42 suites,819 cases
+=756 clean +63 documented known, zero unexpected failures/skips. Known results
+remain59 correct assertion regressions +4 diagnostic-only cases;3 assertions also
+carry exact diagnostics, counted once. No new known result or sanitizer allowance.
+Unchanged26 legacy serial references retain separate batch24 validation.
+
+MCP waits cover level/edge success, timeout, abort, previously disabled IRQ masks
+and registered-handler retention across completion/timeout in mixed/input-only
+builds. Existing edge-filter defect limits independent observation of internal
+mode restoration through callbacks. BLTouch covers remapped servo claim/startup
+stow, no-argument M401/M402 and duplicate commands, probe hooks/select/rejection,
+native-probe bypass, deferred reset stow, BLTEST/BLRESET scheduling/cancellation
+and claim failure. Actual original CORE nuts_bolts numeric/format/delay helpers
+execute; realtime/delay/task/port boundaries remain modeled driver services.
+
+Fresh selected-source LLVM report spans12 misc files:1243/1373 lines90.5%,620/866
+branches71.6%,122/128 functions. BLTouch101/138 lines; expanded denominator differs
+from prior11-file report. Strict coverage classification passes121 misc cases
+(114 clean +7 unchanged known assertions); fresh counter paths max224. Unbuilt
+modules, alternate layouts, BLTouch S/D/R/high-speed/no-readback modes and physical
+servo timing remain open. No whole-plugin/repository coverage claim.
+
+GitHub-resolved Plugins_misc2657119 and CORE b01f481 locks match clean originals.
+No production header/source edits, private state modifications or weakened
+assertions. Unchanged86 helper/actionlint checks were not rerun. Latest workflow
+availability remains batch29's reusable/core-only listing; Plugin/Driver manual
+dispatch needs default-branch installation. Keep PR29 draft/unmerged. No hosted
+GCC/Linux, target linking, controller motion or hardware success claimed. Continue
+remaining modules and actual CORE/driver integration on the same branch.
+
+---
+
 # Local MCP23017 active-handler wait checkpoint - 2026-10-25
 
 Goal active. Four new mixed/input-only cases pass focused Windows Clang ASan/
