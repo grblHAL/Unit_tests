@@ -47,6 +47,18 @@ and verified-exact-diagnostic-replay.json. Do not retry CI for this data alone.
 This is not a green matrix; badges/PR30 remain at fully green59b3ad9.
 Later local full-probe/cutter restore work is outside this measurement.
 
+## Local background USB connection regression
+
+Existing stream/base_usb_without_connection_callback_restores_output_after_network_handoff.c
+now raises USB DTR while a registered Telnet connection owns the active stream.
+After the full200ms welcome delay, neither connection receives a stray banner;
+Telnet ownership, realtime handler and connection-change count are preserved.
+The existing broadcast/disconnect/reconnect/USB restoration checks remain.
+Focused ASan/UBSan and strict1/1 pass0.28s; saved usb-background-dtr-{build,summary}.log
+and usb-background-dtr-results.xml. Targets stream327's inactive-USB condition,
+without changing stream flags privately. No measured gain or allowance claimed.
+Accumulate with the other local workflows before the next full gate/push/CI.
+
 ## Local E-stop sender identification extension
 
 Existing boot/estop_release_then_soft_reset_waits_for_explicit_unlock_without_motion.c
