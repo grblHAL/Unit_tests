@@ -6,8 +6,8 @@ plugin,Keypad,grblHAL/Plugin_I2C_keypad,not yet assessed,,Review source contract
 plugin,Networking,grblHAL/Plugin_networking,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
 plugin,Odometer,grblHAL/Plugin_odometer,partial host tests,plugin_odometer,Review remaining branch outcomes and portable report formatting; restart and reset backup tested with actual EEPROM backend.
 plugin,Plasma/THC,grblHAL/Plugin_plasma,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
-plugin,SD card,grblHAL/Plugin_SD_card,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
-plugin,Spindle,grblHAL/Plugins_spindle,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+plugin,SD card,grblHAL/Plugin_SD_card,partial host tests,plugin_sdcard_stream,Retain EOF regressions; littlefs current-CORE compile failure recorded. Add FATFS/SD lifecycle and remaining stream ownership configurations.
+plugin,Spindle,grblHAL/Plugins_spindle,partial host tests,plugin_spindle_vfd,GS20/MODVFD single-spindle cases tested; add other VFD protocols and output/selection/stepper variants with real registration.
 plugin,Trinamic,grblHAL/Plugins_motor,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
 plugin,Laser/PPI,grblHAL/Plugins_laser,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
 plugin,Fans,grblHAL/Plugin_fans,partial host tests,plugin_fans,Add persisted settings reload and delayed program-end workflows.

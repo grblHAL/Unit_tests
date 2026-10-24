@@ -128,5 +128,32 @@
     "test_regex": "^plugin_encoder[.]",
     "coverage_filter": "plugins/encoder/.*\\.[ch]$",
     "diagnostics_directory": "tests/plugins/encoder"
+  },
+  "plugin_spindle_vfd": {
+    "repository": "grblHAL/Plugins_spindle",
+    "ref": "master",
+    "path": "plugins/spindle",
+    "dependencies": [
+      "core",
+      "eeprom_backend"
+    ],
+    "cmake_source": "tests/plugins/spindle_vfd",
+    "cmake_options": [],
+    "test_regex": "^plugin_spindle_vfd[.]",
+    "coverage_filter": "plugins/spindle/vfd/.*\\.c$",
+    "diagnostics_directory": "tests/plugins/spindle_vfd"
+  },
+  "plugin_sdcard_stream": {
+    "repository": "grblHAL/Plugin_SD_card",
+    "ref": "master",
+    "path": "plugins/sdcard",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/sdcard_stream",
+    "cmake_options": [],
+    "test_regex": "^plugin_sdcard_stream[.]",
+    "coverage_filter": "plugins/sdcard/(fs_stream|macros)\\.c$",
+    "diagnostics_directory": "tests/plugins/sdcard_stream"
   }
 }

@@ -7,8 +7,18 @@ or force private state to enter a path.
 
 ## Next source families
 
-- Assess Plugins_spindle (registered Modbus transactions) and Plugin_SD_card
-  (stream ownership/job recovery), reusing valid CORE host fixtures where useful.
+- Extend Plugins_spindle beyond the tested GS20/MODVFD single-spindle protocols:
+  other VFD commands/feedback, multiple registered spindles and output/stepper
+  plugins remain. The actual coordinator/CORE transport/spindle registry and
+  EEPROM-backed settings fixtures are reusable; retain real protocol differences.
+- SD streaming has13 cases with real CORE VFS/stream/macro modules. Add remaining
+  read ownership/job recovery paths, WebUI and full parser parameter/ATC fixtures
+  only under supported configurations. The EOF extra-line assertions remain.
+  FATFS/SD detection and YMODEM are separate untested implementations. Original
+  fs_littlefs.c fails current-CORE syntax checking on removed vfs_path_t; record
+  an explicit compatible reference before adapter runtime work, never alias it.
+- Assess the next catalogue family (I2C keypad) and real host-testable RP2040/
+  ESP32 driver helpers; do not treat firmware builds as hardware validation.
 - Simulator VFS fails current-CORE compilation: removed vfs_path_t. The explicit
   driver gitlink reference executes nine cases with three known assertions;
   retain both incompatibility evidence and separate source locks. No fallback.

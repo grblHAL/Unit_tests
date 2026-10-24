@@ -270,6 +270,8 @@ repository's default branch.
 | Plugin tests | `plugin_openpnp` | Digital/analog I/O, ADC scaling, position reports and synchronization |
 | Plugin tests | `plugin_odometer` | Pulse distance, elapsed/spindle time, EEPROM restart and reset backup |
 | Plugin tests | `plugin_encoder` | Registered encoder ownership, override commands and persisted settings |
+| Plugin tests | `plugin_spindle_vfd` | GS20/MODVFD commands, feedback, exceptions and EEPROM restart |
+| Plugin tests | `plugin_sdcard_stream` | File input, stream ownership, error/reset recovery and external macro repeats |
 | Driver tests | `driver_simulator_vfs` | File/directory workflows; current CORE compile incompatibility recorded |
 
 These are initial host tests, not full plugin/driver coverage or board validation.
@@ -311,7 +313,10 @@ fallback. A passing reference run does not establish current-CORE compatibility.
 
 The EEPROM suite also locks the actual littlefs dependency and tests a complete
 format/write/unmount/remount/read workflow without touching the settings region.
-Odometer and encoder also lock the actual EEPROM backend for persistent storage.
+Odometer, encoder and VFD suites also lock the actual EEPROM backend for
+persistent storage. SD streaming uses real CORE VFS/stream modules with a
+read-only host filesystem; it does not establish FATFS/SD hardware or littlefs
+adapter compatibility. The latter currently fails its CORE API compile check.
 Dependency-only registry entries use `source_only: true`: they are fetched at an
 exact resolved revision and cannot be selected as test suites.
 

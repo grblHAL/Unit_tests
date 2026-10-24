@@ -1,4 +1,71 @@
-# Latest component checkpoint - 2026-10-24
+# Latest component checkpoint - 2026-10-24 (batch4)
+
+Goal remains active across all48 inventoried implementation repositories. No
+production sources or concurrent CORE work changed. Isolated plugin-driver-tests
+continues the existing OPEN/draft/unmerged PR29. Fresh fork API still registers
+only Core tests and Reusable host tests; no hosted component success is claimed.
+
+Added41 cases:28 GS20/MODVFD cases and13 SD streaming cases. One cumulative
+Windows Clang ASan/UBSan gate rebuilds/rechecks all nine current-compatible suites:
+124 cases =105 clean +18 correct assertion regressions +1 previously scoped fan
+callback diagnostic. Zero unexpected failures/skips. A subsequent fixture-only
+cancellation assertion verifies EXEC_MOTION_CANCEL before simulating the stop;
+its affected connection-change case and strict summary pass0.11s. All81 helpers pass9.626s;
+actionlint and whitespace checks pass. Original-source compiler warnings remain
+visible under documented production-source rules; fixtures retain -Werror.
+
+VFD tests use original coordinator/protocols, real CORE spindle registration,
+selection, at-speed math and Modbus API dispatch. A registered RTU fixture verifies
+exact requests and returns replies/rejections/exceptions. Tests cover CW/CCW/stop,
+asynchronous speed updates, query throttling, measured RPM, exception thresholds
+and success reset, cold-start alarm deferral, settings/report hook chaining,
+missing transport/storage, down-bus recovery and custom registers/conversions.
+Two-process EEPROM-backed restarts verify saved protocol settings without copying
+private serialized layouts. Initial feedback equality was replaced with0.01 RPM
+float tolerance; exact Modbus byte assertions remain.
+
+SD tests use original fs_stream.c/macros.c with real CORE VFS, stream, redirect
+and embedded read-only filesystem mounted at / via public VFS calls. Job byte
+streaming/completion, final newline, status-error recovery, reset, tool-change
+ack/suspend/resume, rejected startup, filtered/all listings, progress, realtime
+input filtering, connection-change termination and external M98-style macro repeat
+are observed. Parameter-local G65, expression ATC and physical SD are not claimed.
+Two correct known assertions reproduce extra EOF blank lines in already terminated
+job input and dumps. Unterminated job/dump controls pass. No new sanitizer waivers.
+
+The separate original SD littlefs adapter syntax check fails against current CORE
+on removed vfs_path_t (fs_littlefs.c58/64), after resolving real CORE/littlefs
+headers. No source alias/fallback masks it. Streaming success does not establish
+adapter or FATFS/SD hardware compatibility. Simulator reference-only results from
+batch3 below remain separate and unchanged.
+
+Fresh LOCAL LLVM coverage (only compiled original files/configurations):
+
+| Suite | Covered/total lines | Covered/total branch outcomes |
+|---|---:|---:|
+| plugin_spindle_vfd | 288/320 (90.00%) | 81/136 (59.56%) |
+| plugin_sdcard_stream | 394/591 (66.67%) | 174/378 (46.03%) |
+
+All coverage cases pass strict result/profile-error checks; max counter paths
+226/209. Unused supported paths remain counted. No catalogue-wide percentages.
+Coverage includes coordinator plus GS20/MODVFD and stream/macros configurations;
+other files/configurations remain in COMPONENT_INVENTORY.csv/COMPONENT_TODO.md.
+
+GitHub-resolved locks match clean source checkouts: spindle
+8a3ae47f5a218834da9c742424c3dd22c5629fdb, SD card
+d0fe753d622e79a60e54e729ba83f7207276114c, CORE
+b01f481072edecac33d5e40c25869359a5b3fa1f, EEPROM backend
+0c278db74edc38303b9d86583a7d51a1ec1be51e. Local evidence is retained in ignored
+build-evidence/*batch4* plus per-suite coverage HTML/XML/JSON and compile logs.
+Both suites are selectable in the separate Plugin tests workflow after default
+branch installation; no merge/hosted/hardware/GCC completion claim.
+
+Next: remaining VFD protocols, supported SD adapter/job paths, I2C keypad and
+host-testable driver helpers. The full goal is not complete.
+
+---
+
+# Previous batch3 checkpoint - 2026-10-24
 
 Continuing the active all-plugin/driver/CORE goal on isolated plugin-driver-tests.
 No production source edits or merges. The separate CORE chat remains untouched.
