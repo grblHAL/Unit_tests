@@ -265,7 +265,12 @@ or force private state to enter a path.
 - Misc: test valid servo-capability/ownership filtering and invalid selection
   through the parser, after confirming capability meaning in real drivers.
   RGB validation still has channel/brightness-specific errors to exercise.
-  BLTouch and the other miscellaneous source files are not yet compiled/tested.
+  MCP3221/MCP4725 now execute startup/probe failure, registered analog callbacks,
+  native enumeration chaining, function/description changes and12-bit samples/
+  packets. Retain DAC write-failure status regression. ADC receive failure is
+  source-review-only: local result bytes are uninitialized when I2C fails; do not
+  manufacture unsafe reads. DAC startup transfer failure and physical behavior
+  remain. BLTouch and other miscellaneous files remain untested.
 - Fans: fan_spindle_set_state is initialized NULL and its only later assignment
   is commented out (fans.c65/241); the fallback at229-232 is unavailable without
   implementation changes. Do not assign that private pointer in a test.

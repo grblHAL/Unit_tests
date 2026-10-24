@@ -1,3 +1,36 @@
+# Latest component checkpoint - 2026-10-25 (batch25)
+
+Goal active. Deliver23 accumulated cases:12 fan persistence/configuration and11
+MCP3221 ADC/MCP4725 DAC cases. One full Windows Clang ASan/UBSan compatible gate
+passes42 suites,722 cases =665 clean +57 documented known, zero unexpected
+failures/skips. Known results now53 correct assertion regressions +4 diagnostic-
+only cases;3 assertions also carry exact diagnostics and are counted once.
+The26 legacy serial reference cases retain separate batch24 validation, unchanged.
+
+New analog cases run original registered callbacks with bounded synchronous I2C:
+startup/probe failures,12-bit sample/packet boundaries, initial DAC state, bank
+metadata/remapping descriptions and native enumeration chaining. DAC failed send
+correctly retains cached output but returns true; keep correct false assertion
+in exact WILL_FAIL/known_bug with source/removal guide. Recovery write succeeds.
+No new sanitizer allowance, production source edit or unsafe receive-failure run.
+ADC failed receive leaves local bytes uninitialized by source review; that path
+stays unexecuted pending upstream contract/repair. Host registration is captured,
+not actual CORE bank aggregation. Physical I2C/device behavior stays unverified.
+
+Fan21 cases now include one/two/three/four configurations, saved port/delay first
+load and delayed shutdown cancellation by reset/new command. Existing setter
+diagnostic unchanged. Fresh batch25 selected one/two/four coverage before adding
+three-fan builds:184/190 lines,102/119 branches,23/24 functions. No new analog or
+three-fan coverage measurement. Final descriptor assertions tightened after the
+global gate and both affected cases pass0.17s; strict classification clean.
+
+GitHub-resolved source locks match clean unchanged Plugins_misc2657119, fans
+c5c3613 and CORE b01f481. Unchanged86 helper/actionlint checks were not rerun.
+Draft PR29 remains unmerged; no hosted GCC/Linux or target/hardware success claim.
+Continue remaining modules and actual controller integration on this branch.
+
+---
+
 # Local fan configuration checkpoint - 2026-10-25
 
 Goal active. Nine new cases build original fans.c with FANS_ENABLE1/3/4 and pass

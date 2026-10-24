@@ -265,7 +265,7 @@ repository's default branch.
 |---|---|---|
 | Plugin tests | `plugins_misc` | M220 feed override, M150 RGB, M280 servo |
 | Plugin tests | `plugin_eeprom` | I2C EEPROM/FRAM page/block storage |
-| Plugin tests | `plugin_fans` | Fan commands, shutdown, spindle links and reports |
+| Plugin tests | `plugin_fans` | One/two/three/four-fan commands, saved settings, delayed shutdown, spindle links and reports |
 | Driver tests | `driver_simulator` | Simulator EEPROM storage |
 | Plugin tests | `plugin_openpnp` | Digital/analog I/O, ADC scaling, position reports and synchronization |
 | Plugin tests | `plugin_odometer` | Pulse distance, elapsed/spindle time, EEPROM restart and reset backup |
