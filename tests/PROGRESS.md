@@ -4,13 +4,71 @@ Full objective remains meaningful supported CORE line AND branch coverage.
 Goal ACTIVE; never edit CORE or merge PRs. Use Ponytail full and explicit RTK.
 Work in C:/Users/User/Documents/Codex/2026-10-08/https-github-com-petervanderwalt-unit-tests/work/Unit_tests.
 
-Branch coverage-batch-74 is pushed49b18b0cb0e0e4f76d689173355cc0e5721ca55f and
-tracks origin/coverage-batch-74. PR28 is merged. Draft PR30 has this exact head:
+Branch coverage-batch-74 has a local followup group; origin/coverage-batch-74
+and PR30 remain at validated59b3ad9f9198d9973cc03b7af983c1d9899abc2d. PR28 is merged. PR30 is READY FOR REVIEW at this exact pushed head:
 https://github.com/grblHAL/Unit_tests/pull/30
-PR30 is NOT ready; no merge performed. Later local cases/config entries below
-are not included in its current pushed head.
+PR30 is exact-head validated and marked ready via GitHub; no merge performed. All eight cases and exact diagnostic
+entries below are included in its current pushed head.
+Exact-head hosted40111349496 COMPLETED SUCCESS against COREb01f481:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/40111349496
+Do not redispatch. All five source/GCC/Clang/coverage/summary jobs passed.
+Continue independent supported workflows; full coverage goal remains ACTIVE.
 CORE clean at b01f481072edecac33d5e40c25869359a5b3fa1f; latest fetched Terje ref
 matches. Do not switch/modify source without a deliberate compatibility pass.
+
+## New coverage evidence and ongoing authoring
+
+Hosted40111349496 coverage PASSED, exact harness59b3ad9/COREb01f481/filter
+verified in both artifact locks, allseven stages exit0/no findings:
+17,491/17,757 lines98.50%;12,811/13,852 branches92.48%.
+266 missing lines/1,041 missing outcomes. +10 outcomes/zero new or lost lines
+against40107107939; no lost branches. Exact sites: gcode286/5142,
+machine_limits331/332, protocol757, spindle_control1416/1436, stepper2 425/429/435.
+Coverage4,492 total/4,469 clean/23 known/0 failed/skipped. Inventories reconciled;
+line inventory exact266 keys unchanged. Saved build-asan/hosted40111349496
+coverage/report artifacts and verified-comparison.json. GCC/Clang/Results summary now PASSED; all five jobs completed successfully.
+Both compiler report locks verified exact59b3ad9/b01f481; allstages exit0, nofindings.
+Clang4,492/4,465clean/27known; GCC4,492/4,468clean/24known; zerofail/skip.
+All eight new cases individually pass Clang. Existing exact tapping diagnostics
+reproduce29/27/28; post-crash assertions remain unvalidated. Saved compiler reports,
+Clang XML/logs and verified-new-workflows.json. README badges updated to this
+fully green run. PR30 validated at exacthead and marked ready for review; never merge.
+
+## Local ordinary-workflow followup; not in measured head
+
+Four cases now pass focused ASan/UBSan (4,496 registered verified via CTest listing; latest full
+suite remains4,492). Keep accumulating before the next full gate/push/CI:
+- homing/named_homed_state_tracks_individual_switch_homing_without_combined_cycle:
+  public individual-axis configuration/no combined cycle; $HX/$HY/$HZ physically
+  finish70/110/150steps. Named and sender |H completion/masks track0/1/3/7;
+  completion becomes true only after Z. Normal foreground servicing between commands.
+- eight_axis/absolute_g28_rotary_return_keeps_intermediate_move_with_wrap_enabled:
+  public rotary/wrap settings and G28.1 saveA10; actual move toA90, then
+  G90G28A0 travels100degrees through the intermediate point to saved10. It does
+  not substitute the relative-mode shortest-angle shortcut. Other axes stay still.
+  Initial270degree setup exceeded the shared fixture's cumulative poll budget;
+  shorter90degree setup exercises the same distinct absolute-return contract.
+- gcode/dynamic_laser_spline_job_powers_both_curve_types_and_blanks_rapid:
+  real registered PWM driver/stepper execute cubic and quadratic cuts; both
+  produce powered motor steps at exact endpoints. Following rapidX3 adds no
+  powered steps; M5 shuts off. No fixture-private motion state injection.
+- motion_control/unhomed_manual_probe_keeps_hand_probe_without_toolsetter_selection:
+  public G38.2Z1F100 before homing with installed provider; no toolsetter callback,
+  contact latched40steps, physical axis decelerates before requested80, logical/
+  physical/pulse counts agree; probe disarmed and no alarm. Initial assertion
+  wrongly equated contact latch and stopped position; corrected to normal
+  deceleration contract. No CORE defect/allowance.
+
+Saved individual CTest XMLs are combined without rerunning into
+build-asan/batch74-followup-focused-results.xml; strict summary passes4clean,
+zero failures/skips. No new coverage claim, exception or unchanged helper rerun.
+Expected new branch targets: gcode122/4622, ngc_params753, report1581,
+motion_control1028. Gains require next cumulative hosted report.
+Current stream_file73 review is now specific native reader/file-pairing proof:
+read installs both at160; close209-214 restores both. Only those two native
+stream_set_file callers exist. External NULL-file/retained-reader meaning is
+unestablished; no private stale-reader invocation added. Raw line remains.
+All existing unrelated workflow/reporting/driver scaffold edits remain excluded.
 
 ## Current local delivery validation
 
@@ -21,10 +79,10 @@ build-asan/batch74-controller-workflows-{build,tests,summary}.log and
 batch74-controller-workflows-results.xml. No unchanged helper rerun.
 New exact diagnostic entries also pass saved production replay/first1024 and
 changed/absent/clean-exit negative controls. CORE fresh fetch stillb01f481 clean.
-Preparing commit/push and one new locked hosted checkpoint; do not report
-new gains or green matrix until it completes. Unrelated changes stay excluded.
+Committed/pushed59b3ad9; one exact-head hosted checkpoint completed successfully as recorded above.
+Unrelated edits excluded.
 
-## Exact latest hosted result
+## Prior hosted result (superseded by successful40111349496 above)
 
 Run40107107939 COMPLETED FAILURE on49b18b0/COREb01f481:
 https://github.com/petervanderwalt/Unit_tests/actions/runs/40107107939
@@ -45,13 +103,13 @@ Badges remain on fully green40074304720; this failed matrix is not green.
 Evidence: build-asan/hosted40107107939/{coverage-core,report-core-coverage,
 report-core-clang,results-core-clang}, verified-comparison.json and last-status.json.
 
-Current-head local full ASan/UBSan/strict gate PASSED4,484 in148.53s:
+Previous49b18b0 local full ASan/UBSan/strict gate PASSED4,484 in148.53s:
 4,459 clean/24 known regressions/1 known diagnostic/0 failed/skipped.
 Logs/XML: build-asan/batch74-normal-workflows-{build,tests,summary}.log and
 batch74-normal-workflows-results.xml.17 matcher helpers previously passed;
-matcher implementation is unchanged. No active local runner or newer hosted run.
+matcher implementation is unchanged. No active local runner. New exact-head run is listed above.
 
-## Existing Clang tapping fault and local exact entries
+## Prior Clang tapping fault and current exact entries
 
 Clang4,484 total/4,457 clean/25 known/2 failed. Eight-axis handoff now reports
 index29, unsupported fallback index27; recursive index27 matches. All identify
@@ -66,7 +124,7 @@ matcher implementation change. KNOWN_BUGS addendum records the evidence. Keep
 all correct assertions; post-crash paths remain unvalidated on Clang. No CORE edit.
 Do not force padding/private state or weaken assertions for a repeatable fault.
 
-## Validated next actual-use group (preparing delivery after49b18b0)
+## Current pushed actual-use group (after49b18b0)
 
 - homing.autosquare_minimum_tolerance_allows_normal_switch_separation:
   public1%/min2mm/max5mm permits normal0.5mm switch gap; motors release at70/110
@@ -96,16 +154,16 @@ Do not force padding/private state or weaken assertions for a repeatable fault.
   registered enable0/PWM0 board restores valid defaults with no direction pin;
   public getter reports direction -1, and configuration writes no output.
   Targets spindle1416. Both PWM cases sanitizer/strict pass0.10s together in
-  secondary-pwm-normal-ports-results.xml. Eight local cases now form the next
-  substantial controller-workflow group; one cumulative pre-push gate is next.
+  secondary-pwm-normal-ports-results.xml. Eight cases form the current
+  pushed group; the cumulative full4,492 gate passes63.97s.
 Both pass focused sanitizer/strict0.07s each: timer-finite-reversal-results.xml
 and check-mode-prescan-end-results.xml in build-asan. These two were validated before the later PWM cases.
 Earlier four focused sanitizer/strict checks pass: autosquare pair0.12s, jog0.07s,
 synchronized MPos0.07s. XML: autosquare-tolerances-results.xml,
 jog-mist-override-results.xml and mpos-synchronized-offset-results.xml in build-asan.
 No new CORE defect/exception or measured coverage gain for these cases.
-Full4,492 sanitizer/strict gate now passes63.97s; next is the cumulative
-commit/push and one hosted measurement. No CORE edits or new defect assertions.
+Full4,492 sanitizer/strict gate passes63.97s; committed/pushed59b3ad9 with
+one hosted measurement now running. No CORE edits or new defect assertions.
 
 ## Current-source line gap proof (no artificial tests)
 
