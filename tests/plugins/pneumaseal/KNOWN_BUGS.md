@@ -4,3 +4,6 @@ Eighteen original-source lifecycle cases with real CORE declarations. Host NVS, 
 timeouts/masks plus pending port changes across reload. The advertised reboot
 requirement is checked; no actual reboot or physical port reassignment is proved.
 No known assertion/diagnostic exceptions. Full settings parser/task scheduler/physical air-pressure behavior remain untested.
+
+Cumulative batch22 validates18 cases; selected-source140/141 lines and43/52
+branches. The inactive-port early return is not forced via private state.

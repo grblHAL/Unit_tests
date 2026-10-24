@@ -1,3 +1,40 @@
+# Latest component checkpoint - 2026-10-25 (batch22)
+
+Goal active. Combined11 new plugin settings/configuration cases: Interlock6,
+PneumaSeal3 and Thermistor2. One complete Windows Clang ASan/UBSan gate:42
+compatible suites,698 cases =642 clean +56 documented known results, zero
+unexpected failures/skips. Known results remain52 correct expected assertions
+plus4 diagnostic-only cases;3 assertion cases also carry exact diagnostics and
+are counted once. No new allowances, weakened assertions, CORE or plugin edits.
+Strict classification ran every suite. Unchanged84 reporting helpers last passed
+batch17; unchanged workflows not relinted. Whitespace passes.
+
+Fresh local LLVM selected-source coverage: Interlock185/185 lines100%,72/84
+branches85.7%,23/23 functions (+12 lines); PneumaSeal140/141 lines99.3%,43/52
+branches82.7%,26/26 functions (+12 lines); Thermistor137/139 lines98.6%,68/74
+branches91.9%,12/12 functions (+4 lines). Adds28 exercised lines; fresh counter
+paths max215 characters. Full physical safety, whole repositories, controller
+shutdown, settings-parser validation and actual scheduler behavior not established.
+
+Interlock covers registered readback/save/load/restore, inverse-slot disable,
+direction/polarity, default4/4 and supported1/2 plus2/1 forward/inverse layouts.
+PneumaSeal covers registered getters, persisted timeout/mask values, restore and
+pending port changes without abandoning/reclaiming the remapped active output.
+Thermistor covers port availability/getter/reboot flag, pending disable, restore
+of resistance/calibration/alarm defaults and continued monitoring on the existing
+claimed port. Repeated Thermistor load-hook ownership and invalid-sample alarm
+counting remain unclassified; no recursive failure or arbitrary threshold contract
+is forced. Host ports, alarm/reset requests, NVS and timing remain boundaries.
+
+API source locks match clean originals: Interlock5893ea35645c334ec96333ccd0519eac03128ee6;
+PneumaSeal3127ab8c15982569d7e89822a9e1095cdce89cbb;
+Thermistor4fae94b9b553604f2f41222bbc04fa45669c2bdf;
+COREb01f481072edecac33d5e40c25869359a5b3fa1f. Locks/evidence ignored in
+build-evidence. Deliver on existing PR29, keep draft/unmerged. Hosted workflow
+installation, remaining components and physical/controller checks remain open.
+
+---
+
 # Local PneumaSeal settings checkpoint - 2026-10-25 (next combined batch)
 
 Goal active. Three additional settings lifecycle cases pass focused Windows Clang

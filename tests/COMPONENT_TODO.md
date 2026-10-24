@@ -117,28 +117,26 @@ or force private state to enter a path.
   primary serial is now tested with pinned SDK as described above; this older
   note does not override the delivered primary-UART evidence.
 
-- Four third-party suites now run unchanged sources: AUXP selected file45/45
-  lines and24/24 branches; Interlock173/185 lines,67/84 branches; PneumaSeal
-  128/141 lines,43/52 branches; Thermistor133/139 lines,68/74 branches.
-  Six new local Interlock cases cover registered settings readback/persistence/
-  restore, inverse disable, direction/polarity and supported1/2 plus2/1 slot
-  configurations (6/6 ASan/UBSan and strict;19 registered). Pending cumulative
-  delivery and measurement; prior coverage figure above remains historical.
-  Three further local PneumaSeal cases now cover registered getters/persistence/
-  restore and pending port configuration (3/3 ASan/UBSan/strict;18 registered).
-  Public io_port_cfg delegation remains simulated; actual port remapping and full
-  settings parser need integration. Thermistor includes
-  port getter/availability and guarded conversion paths. Full public settings
-  parser integration is still absent; captured registered callbacks only are tested.
-- Interlock observes alarm/reset requests and suppresses writes at host boundaries;
-  real controller shutdown, ISR ordering, further slot counts and multi-spindle scope
-  remain. Unreadable monitoring deliberately follows source-documented fail-open.
-- PneumaSeal delayed task requests/explicit expiry do not validate real scheduler
-  timing or air pressure. Keep claimed-port remapping and programmed M5 ordering.
-- Thermistor repeated settings-load hook ownership needs contract review; do not
-  reproduce recursive callback failure. Invalid sensor samples interrupting the
-  advertised consecutive alarm readings, and malformed/trailing calibration
-  parameters remain unclassified. No new known runtime exception is registered.
+- AUXP selected source remains45/45 lines and24/24 branches. Batch22 updates
+  Interlock185/185 lines,72/84 branches (19 cases), PneumaSeal140/141 and43/52
+  (18 cases), Thermistor137/139 and68/74 (17 cases). Registered settings getters,
+  persistence/restore and pending reboot-required port changes now execute.
+  Interlock adds supported forward/inverse1/2 and2/1 layouts alongside4/4.
+  Full public settings parser and real CORE port aggregation remain absent.
+- Interlock observes alarm/reset requests and suppresses host writes; actual
+  controller shutdown, ISR ordering, further slot counts and multi-spindle scope
+  remain. Unreadable monitoring follows source-documented fail-open behavior.
+- PneumaSeal timers are explicitly delivered, not real scheduler/air-pressure
+  validation. Its only unexecuted line returns from solenoid_set when active_port
+  is unassigned; callbacks are installed only after successful claim. Never force
+  private ps_active/active_port. Actual io_port_cfg claims/remapping still need
+  controller integration beyond the captured provider.
+- Thermistor repeated settings-load hook ownership needs review; do not reproduce
+  recursive callback failure. A fresh missing-NVS first load (without fixture's
+  pre-restore) is a remaining ordinary startup workflow for the next group. The
+  r_ntc<=0 return follows positive voltage/resistance guards; do not invent invalid
+  constants. Invalid samples interrupting advertised consecutive alarm readings
+  and malformed/trailing calibration arguments remain unclassified.
 
 - SAM3X8E serial now has dual-port queue/IRQ/callback/settings/suspend cases using
   actual SDK/device/board headers and CORE stream APIs. Retain three functional
