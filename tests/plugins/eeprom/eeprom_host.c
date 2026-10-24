@@ -3,7 +3,7 @@ grbl_hal_t hal;
 bool start_ok = true, probe_ok = true;
 unsigned starts, probes, transfers, delays, fail_transfer;
 uint8_t memory[131072];
-struct transaction transactions[128];
+struct transaction transactions[2048];
 unsigned page_size(void)
 {
 #if EEPROM_ENABLE == 16
@@ -28,7 +28,7 @@ bool i2c_transfer(i2c_transfer_t *transfer, bool read)
  CHECK(transfer->word_addr_bytes == 2); CHECK(transfer->address == 0x50 || (EEPROM_ENABLE == 1024 && transfer->address == 0x51));
  address = ((transfer->address & 1) << 16) | transfer->word_addr;
 #endif
- CHECK(transfers < 128); CHECK(address + transfer->count <= sizeof(memory));
+ CHECK(transfers < 2048); CHECK(address + transfer->count <= sizeof(memory));
  transactions[transfers++] = (struct transaction){address, transfer->count, read};
  if(fail_transfer && transfers == fail_transfer) return false;
  if(!read) CHECK((address % page_size()) + transfer->count <= page_size());

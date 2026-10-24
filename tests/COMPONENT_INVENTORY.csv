@@ -1,6 +1,6 @@
 kind,name,repository,status,suite,next_action
 core,CORE,grblHAL/core,existing suite,core,Continue source-matched CORE inventory in its separate active checkout.
-plugin,EEPROM,grblHAL/Plugin_EEPROM,partial host tests,plugin_eeprom,Add littlefs adapter and checksum transfer error propagation.
+plugin,EEPROM,grblHAL/Plugin_EEPROM,partial host tests,plugin_eeprom,Propagate physical and checksum transfer errors; exercise FRAM/littlefs combinations and bank-boundary reads.
 plugin,Encoder,grblHAL/Plugin_encoder,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
 plugin,Keypad,grblHAL/Plugin_I2C_keypad,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
 plugin,Networking,grblHAL/Plugin_networking,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
@@ -13,7 +13,7 @@ plugin,Laser/PPI,grblHAL/Plugins_laser,not yet assessed,,Review source contracts
 plugin,Fans,grblHAL/Plugin_fans,partial host tests,plugin_fans,Add persisted settings reload and delayed program-end workflows.
 plugin,Bluetooth,grblHAL/Plugins_Bluetooth,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
 plugin,WebUI,grblHAL/Plugin_WebUI,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
-plugin,OpenPNP,grblHAL/Plugin_OpenPNP,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
+plugin,OpenPNP,grblHAL/Plugin_OpenPNP,partial host tests,plugin_openpnp,Add jerk-enabled configuration and full parser/driver integration; investigate detailed-only reporting contract.
 plugin,Embroidery,grblHAL/Plugin_embroidery,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.
 plugin,Miscellaneous,grblHAL/Plugins_misc,partial host tests,plugins_misc,Add BLTouch and remaining I/O expansion/settings workflows.
 third-party plugin,Add status of digital aux outputs to real-time report,Avatario34/auxp,not yet assessed,,Review source contracts and register real host tests before adding an Actions choice.

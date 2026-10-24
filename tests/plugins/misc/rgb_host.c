@@ -9,10 +9,10 @@ static void masked0(uint16_t device, rgb_color_t color, rgb_color_mask_t mask) {
 static void flush0(void) { rgb_flushes[0]++; }
 static void flush1(void) { rgb_flushes[1]++; }
 static uint8_t set_intensity(uint8_t value) { uint8_t old = intensity; intensity = value; intensity_calls++; return old; }
-void prepare_rgb(bool masked)
+void prepare_rgb(bool masked, bool white)
 {
  prepare_hooks();
- hal.rgb0 = (rgb_ptr_t){.out = out0, .out_masked = masked ? masked0 : NULL, .write = flush0, .num_devices = 3, .flags.is_strip = On};
- hal.rgb1 = (rgb_ptr_t){.out = out1, .write = flush1, .set_intensity = set_intensity, .num_devices = 2, .flags.is_strip = On};
+ hal.rgb0 = (rgb_ptr_t){.out = out0, .out_masked = masked ? masked0 : NULL, .write = flush0, .cap = {.R = 255, .G = 255, .B = 255, .W = white ? 255 : 0}, .num_devices = 3, .flags.is_strip = On};
+ hal.rgb1 = (rgb_ptr_t){.out = out1, .write = flush1, .set_intensity = set_intensity, .cap = {.R = 255, .G = 255, .B = 255}, .num_devices = 2, .flags.is_strip = On};
  rgb_led_init();
 }

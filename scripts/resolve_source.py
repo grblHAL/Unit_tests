@@ -60,7 +60,7 @@ def resolve(suite, repository="", ref="", pr="", request=api):
 
 
 def resolve_plan(suites, suite_name, repository="", ref="", pr="", core_ref="", request=api, source_base_ref="", source_base_repository=""):
-    if suite_name not in suites:
+    if suite_name not in suites or suites[suite_name].get("source_only", False):
         raise ValueError("Suite has no tests registered: " + suite_name)
     source = resolve(suites[suite_name], repository, ref, pr, request)
     if source_base_repository and not source_base_ref:

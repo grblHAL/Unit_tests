@@ -41,7 +41,8 @@
     "ref": "master",
     "path": "plugins/eeprom",
     "dependencies": [
-      "core"
+      "core",
+      "littlefs"
     ],
     "cmake_source": "tests/plugins/eeprom",
     "cmake_options": [],
@@ -61,5 +62,24 @@
     "test_regex": "^plugin_fans[.]",
     "coverage_filter": "plugins/fans/.*\\.[ch]$",
     "diagnostics_directory": "tests/plugins/fans"
+  },
+  "plugin_openpnp": {
+    "repository": "grblHAL/Plugin_OpenPNP",
+    "ref": "master",
+    "path": "plugins/openpnp",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/openpnp",
+    "cmake_options": [],
+    "test_regex": "^plugin_openpnp[.]",
+    "coverage_filter": "plugins/openpnp/.*\\.[ch]$",
+    "diagnostics_directory": "tests/plugins/openpnp"
+  },
+  "littlefs": {
+    "repository": "littlefs-project/littlefs",
+    "ref": "master",
+    "path": "deps/littlefs",
+    "source_only": true
   }
 }

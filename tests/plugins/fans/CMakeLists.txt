@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 project(grblhal_fan_tests LANGUAGES C)
 include(../../components.cmake)
-foreach(behavior commands reset_and_end spindle_delay reports initialization_failure unavailable_ports)
+foreach(behavior commands reset_and_end spindle_delay reports initialization_failure unavailable_ports port_settings delayed_program_end hook_chaining)
   component_case(plugin_fans.${behavior} ${behavior}.c fan_host.c "${HARNESS_ROOT}/tests/plugins/misc/misc_host.c" "${HARNESS_ROOT}/core/nuts_bolts.c" "${HARNESS_ROOT}/plugins/fans/fans.c")
   target_compile_definitions(plugin_fans.${behavior} PRIVATE FANS_ENABLE=2)
   target_include_directories(plugin_fans.${behavior} PRIVATE "${HARNESS_ROOT}/plugins/fans" "${HARNESS_ROOT}/tests/plugins/misc")

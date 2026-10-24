@@ -1,7 +1,7 @@
 #include "rgb_host.h"
 int main(void)
 {
- prepare_rgb(true);
+ prepare_rgb(true, false);
  parser_block_t block = {0}; block.user_mcode = RGB_WriteLEDs;
  block.words.r = block.words.u = On; block.values.r = 80; block.values.u = 30;
  grbl.user_mcode.execute(STATE_IDLE, &block);

@@ -267,6 +267,7 @@ repository's default branch.
 | Plugin tests | `plugin_eeprom` | I2C EEPROM/FRAM page/block storage |
 | Plugin tests | `plugin_fans` | Fan commands, shutdown, spindle links and reports |
 | Driver tests | `driver_simulator` | Simulator EEPROM storage |
+| Plugin tests | `plugin_openpnp` | Digital/analog I/O, ADC scaling, position reports and synchronization |
 
 These are initial host tests, not full plugin/driver coverage or board validation.
 See [component progress](tests/COMPONENT_PROGRESS.md) and the
@@ -299,6 +300,11 @@ complete board builds and electrical/timing behavior need separate SDK/hardware
 checks. [ci/callers/plugin.yml.example](ci/callers/plugin.yml.example) remains
 an upstream caller template; each invocation needs a unique `run_label`.
 
+The EEPROM suite also locks the actual littlefs dependency and tests a complete
+format/write/unmount/remount/read workflow without touching the settings region.
+Dependency-only registry entries use `source_only: true`: they are fetched at an
+exact resolved revision and cannot be selected as test suites.
+
 ### Source registry fields and a future plugin example
 
 The registry contains metadata, not source code or submodule commit hashes:
@@ -307,7 +313,8 @@ The registry contains metadata, not source code or submodule commit hashes:
 |---|---|
 | `repository`, `ref` | Public source repository and default branch/tag |
 | `path` | Ignored checkout directory inside this workspace |
-| `dependencies` | Other registered source suites to fetch, such as `core` |
+| `dependencies` | Registered source entries to fetch, such as `core` or `littlefs` |
+| `source_only` | `true` for a dependency checkout that has no selectable test suite |
 | `cmake_source`, `cmake_options` | CMake project directory and configure arguments |
 | `test_regex` | CTest names included in this suite; selecting zero tests fails |
 | `coverage_filter` | gcovr file filter for this suite's measured code |

@@ -7,7 +7,7 @@ on:
       suite:
         description: Registered suite
         type: choice
-        options: [plugins_misc, plugin_eeprom, plugin_fans]
+        options: [plugins_misc, plugin_eeprom, plugin_fans, plugin_openpnp]
         default: plugins_misc
       source_repository:
         description: 'Source owner/repo or GitHub URL (blank = suite default)'

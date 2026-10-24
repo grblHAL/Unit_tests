@@ -12,16 +12,16 @@ ROOT = Path(__file__).resolve().parent.parent
 class ComponentSuitesTests(unittest.TestCase):
     def test_component_plans_lock_candidate_and_core_separately(self):
         suites = json.loads((ROOT / "ci/suites.json").read_text())
-        for name in suites.keys() - {"core"}:
+        for name in (key for key in suites.keys() - {"core"} if not suites[key].get("source_only")):
             with self.subTest(suite=name):
                 calls = []
                 def request(repository, endpoint):
                     calls.append((repository, endpoint))
-                    return {"sha": ("b" if repository == "grblHAL/core" else "a") * 40}
+                    return {"sha": ("b" if repository == "grblHAL/core" else "a" if repository == suites[name]["repository"] else "c") * 40}
                 plan = resolve_plan(suites, name, ref="candidate", core_ref="compatible-core", request=request)
-                self.assertEqual(calls, [(suites[name]["repository"], "commits/candidate"), ("grblHAL/core", "commits/compatible-core")])
-                self.assertEqual([source["sha"] for source in plan["sources"]], ["a" * 40, "b" * 40])
-                self.assertEqual(len({source["path"] for source in plan["sources"]}), 2)
+                self.assertEqual(calls, [(suites[name]["repository"], "commits/candidate")] + [(suites[dependency]["repository"], "commits/" + ("compatible-core" if dependency == "core" else suites[dependency]["ref"])) for dependency in suites[name]["dependencies"]])
+                self.assertEqual([source["sha"] for source in plan["sources"]], ["a" * 40] + [("b" if dependency == "core" else "c") * 40 for dependency in suites[name]["dependencies"]])
+                self.assertEqual(len({source["path"] for source in plan["sources"]}), 1 + len(suites[name]["dependencies"]))
                 self.assertNotEqual(plan["cmake_source"], ".")
                 self.assertIsNone(re.search(plan["test_regex"], "boot.normal_startup"))
                 self.assertIsNotNone(re.search(plan["test_regex"], name + ".case"))
@@ -62,3 +62,14 @@ class ComponentSuitesTests(unittest.TestCase):
                     self.assertEqual(counts["known"], int(accepted))
                     self.assertEqual(counts["failed"], int(not accepted))
                     self.assertEqual(bool(findings), not accepted)
+
+    def test_dependency_source_is_not_selectable_as_a_test_suite(self):
+        suites = json.loads((ROOT / "ci/suites.json").read_text())
+        with self.assertRaisesRegex(ValueError, "no tests registered"):
+            resolve_plan(suites, "littlefs", request=lambda *args: self.fail("network requested"))
+
+    def test_dependency_diagnostic_links_to_locked_dependency(self):
+        finding = build_failure("build", "/repo/deps/littlefs/lfs.c:42:3: error: incompatible callback")
+        self.assertEqual((finding["file"], finding["line"]), ("deps/littlefs/lfs.c", 42))
+        link = source_link(finding, {"sources": [{"path": "deps/littlefs", "repository": "littlefs-project/littlefs", "sha": "c" * 40}]})
+        self.assertIn("littlefs-project/littlefs/blob/" + "c" * 40 + "/lfs.c#L42", link)

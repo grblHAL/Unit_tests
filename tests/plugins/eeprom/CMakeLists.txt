@@ -20,3 +20,26 @@ target_include_directories(plugin_eeprom.fram_roundtrip PRIVATE "${HARNESS_ROOT}
 set_tests_properties(plugin_eeprom.16_read_failure plugin_eeprom.32_read_failure plugin_eeprom.128_read_failure plugin_eeprom.1024_read_failure
   plugin_eeprom.32_checksum_write_failure plugin_eeprom.128_checksum_write_failure plugin_eeprom.1024_checksum_write_failure
   PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+
+component_case(plugin_eeprom.upper_bank_block upper_bank_block.c eeprom_host.c "${HARNESS_ROOT}/plugins/eeprom/eeprom_24AAxxx.c" "${HARNESS_ROOT}/core/crc.c")
+target_compile_definitions(plugin_eeprom.upper_bank_block PRIVATE EEPROM_ENABLE=1024 EEPROM_IS_FRAM=0)
+target_include_directories(plugin_eeprom.upper_bank_block PRIVATE "${HARNESS_ROOT}/plugins/eeprom")
+
+if(NOT EXISTS "${HARNESS_ROOT}/deps/littlefs/lfs.h")
+  message(FATAL_ERROR "Fetch the plugin_eeprom source lock including littlefs first")
+endif()
+file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include/littlefs")
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/include/littlefs/lfs.h" "#include \"${HARNESS_ROOT}/deps/littlefs/lfs.h\"\n")
+foreach(behavior filesystem_roundtrip partition_alignment read_failure program_failure)
+  if(behavior STREQUAL "filesystem_roundtrip" OR behavior STREQUAL "partition_alignment")
+    set(backend eeprom_host.c lfs_physical.c "${HARNESS_ROOT}/plugins/eeprom/eeprom_24AAxxx.c" "${HARNESS_ROOT}/core/crc.c")
+  else()
+    set(backend lfs_failure_host.c)
+  endif()
+  component_case(plugin_eeprom.lfs_${behavior} lfs_${behavior}.c ${backend} "${HARNESS_ROOT}/plugins/eeprom/eeprom_lfs_hal.c" "${HARNESS_ROOT}/deps/littlefs/lfs.c" "${HARNESS_ROOT}/deps/littlefs/lfs_util.c")
+  target_compile_definitions(plugin_eeprom.lfs_${behavior} PRIVATE EEPROM_ENABLE=128 EEPROM_IS_FRAM=0 LITTLEFS_ENABLE=1)
+  target_include_directories(plugin_eeprom.lfs_${behavior} PRIVATE "${HARNESS_ROOT}/plugins/eeprom" "${HARNESS_ROOT}/deps/littlefs")
+endforeach()
+set_source_files_properties("${HARNESS_ROOT}/plugins/eeprom/eeprom_lfs_hal.c" PROPERTIES COMPILE_OPTIONS -Wno-unused-parameter)
+
+set_tests_properties(plugin_eeprom.lfs_read_failure plugin_eeprom.lfs_program_failure PROPERTIES WILL_FAIL TRUE LABELS known_bug)

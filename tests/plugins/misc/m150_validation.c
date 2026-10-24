@@ -1,7 +1,7 @@
 #include "rgb_host.h"
 int main(void)
 {
- prepare_rgb(false); CHECK(grbl.user_mcode.check(RGB_WriteLEDs) == UserMCode_NoValueWords);
+ prepare_rgb(false, false); CHECK(grbl.user_mcode.check(RGB_WriteLEDs) == UserMCode_NoValueWords);
  parser_block_t block = {0}; block.user_mcode = RGB_WriteLEDs;
  CHECK(grbl.user_mcode.validate(&block) == Status_GcodeValueWordMissing);
  block.words.r = On; block.values.r = 42.5f;
