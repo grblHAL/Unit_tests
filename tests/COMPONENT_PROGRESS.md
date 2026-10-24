@@ -1,3 +1,29 @@
+# Local per-axis homing pull-off checkpoint - 2026-10-25
+
+Goal active. Ten new cases pass focused Windows Clang ASan/UBSan and strict
+classification:7 three-axis cases0.42s +3 six-axis cases0.25s, all clean with
+zero unexpected failures/skips. Original homing_pulloff.c registers settings,
+restores first-boot defaults, updates per-axis limits requests, persists/reloads
+all axes and retains hook chains. Global setting changes update matching inherited
+distances while preserving custom axes; unchanged global value avoids extra writes.
+Explicit restore uses current global default plus configured axis defaults.
+Allocation/registration failure leaves existing hooks intact. Reports chain.
+
+Six-axis builds cover Y/Z/A/B/C compile-time defaults and each axis's update/
+persistence independently. X12 is the pinned source's own unconditional default,
+not a hardware recommendation. Public settings-family decoding, NVS and limits
+requests are host boundaries; actual CORE settings dispatcher, limits machinery,
+planner/stepper homing and physical pull-off are NOT executed. No production
+source edit, new exception or diagnostic allowance; original checkout clean.
+
+Misc suite42 cases;740 compatible is authored, not a fresh full global gate.
+Latest delivered batch25 remains722 compatible +26 separate legacy references.
+Together with the local PCA group this accumulates18 cases for the next combined
+delivery. No new coverage/hosted/hardware claim. Continue remaining module and
+controller integration work on the existing branch.
+
+---
+
 # Local PCA9654E output-bank checkpoint - 2026-10-25
 
 Goal active. Eight new cases pass focused Windows Clang ASan/UBSan0.63s and

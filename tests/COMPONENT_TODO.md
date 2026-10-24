@@ -350,3 +350,12 @@ controls pass. Registry pin_base assignment is modeled from CORE, not execution
 of its bank aggregator. Review inversion config callback ABI before invoking it;
 failed sends update cache before returning and need an explicit retry/report
 contract. Do not add private state workarounds. Full controller/I2C/hardware open.
+
+## Per-axis homing pull-off
+
+Ten three/six-axis host cases now exercise original settings registration,
+restore/save/load, axis updates, inherited global changes, callbacks and allocation/
+registration failures. Per-axis defaults and persistence include ABC. Settings
+family decoding and limits_homing_pulloff are explicit boundary fixtures, not
+executed CORE implementation. Add actual settings/limits/controller homing
+integration and supported additional-axis layouts before full-coverage claims.
