@@ -57,9 +57,35 @@ Catalogue snapshots: grblHAL/plugins f642e7f82fcf91077048cea7833dbdff6afde743;
 grblHAL/drivers 9f443d40ccb7060b8bdcaece2b67100e5c2dfc25. Reconcile future
 catalogue additions before claiming all implementations are accounted for.
 
-Next: cumulative local component sanitizer/strict validation and CI-helper gate,
-source-filtered coverage, then one coherent commit/delivery checkpoint. Hosted
-validation has not run for this branch. New manual workflows require installation
-on the default branch before GitHub exposes their dispatch controls; do not merge
-them yourself or claim hosted success. Continue highest-value source workflows
-while hosted workflow availability is pending. No full-coverage claim is made.
+## Initial validation checkpoint
+
+43 Windows Clang ASan/UBSan component cases classified strictly: 33 clean,
+9 correct expected-failure regressions, 1 exact known recovering fan-setting
+function-type diagnostic; zero unexpected failures or skipped cases. Individual
+suite wall times: misc0.85s, EEPROM1.74s, fans0.58s, Simulator0.52s.
+CI helpers78/78 passed7.271s. YAML parsing and checksum-verified actionlint1.7.7
+passed for the new callers/reusable workflow. Live resolver plus preservation
+checks verified all four candidate/CORE locks against unchanged local checkouts.
+Sandbox temp-directory failures were infrastructure-only; retry with a workspace
+temp directory passed. No production source changes were needed.
+
+Local LLVM coverage measurements (same source revisions above):
+
+| Suite | Covered/total measured lines | Covered/total branch outcomes |
+|---|---:|---:|
+| plugins_misc | 218/243 (89.71%) | 147/238 (61.76%) |
+| plugin_eeprom | 134/136 (98.53%) | 46/50 (92.00%) |
+| plugin_fans | 162/190 (85.26%) | 83/119 (69.75%) |
+| driver_simulator | 48/54 (88.89%) | 19/26 (73.08%) |
+
+These denominators contain instrumented files/configurations only; they do NOT
+include uncompiled implementations in these repositories or the full catalogue.
+Inventory/report missing-file rows remain essential. Windows LLVM results are
+not substituted for hosted Linux GCC/Clang evidence. Local build-evidence and
+build-coverage-* directories retain logs, source locks and HTML/XML/JSON reports.
+
+Next: publish one focused initial-support draft PR against current upstream,
+then continue the highest-value remaining fan/misc workflows and additional
+catalogue implementations. New manual workflows require installation on the
+default branch before GitHub exposes dispatch controls; do not merge them
+yourself or claim hosted success. No hosted run or full-coverage claim is made.
