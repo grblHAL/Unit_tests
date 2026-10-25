@@ -1,3 +1,88 @@
+# Combined auxiliary-macro/Trinamic validation - 2026-10-25 (batch39)
+
+Goal active. Complete51 current-CORE-compatible plugin/driver host suites pass
+Windows Clang ASan/UBSan and strict reporting:1072 cases =1008 clean +64 documented
+known, zero unexpected failures/skips.23 cases since delivered38:5 auxiliary
+macros +6 TMC2209 public report/configuration +12 TMC2130/TMC5160 SPI-chip cases.
+87 helpers pass18.728s; Plugin/Driver/reusable actionlint passes. Main CORE and
+historical reference suites stay separate/excluded. Known categories unchanged:
+60 correct assertions +4 diagnostic-only (3 assertions also diagnosed, count once).
+No production edit, new allowance, assertion weakening or merge.
+
+Fresh short-build LLVM selected source/configuration results:
+- Keypad52 cases =47 clean +5 known:439/493 lines89.0%,204/298 branches68.5%,
+  38/47 functions. Auxiliary configs expand macros.c to167/209 lines79.9%,83/142
+  branches58.5%; prior MACROS_ENABLE2-only124/151 and54/93 are a narrower compiled
+  scope. keypad.c remains218/230 and109/144; default LED54/54 and12/12.
+- Trinamic41 clean, selected plugin file across tested UART/SPI/runtime profiles:
+  771/1011 lines76.3%,403/660 branches61.1%,42/48 functions. First measurement of
+  this expanded three-chip profile union; no whole-library or physical-bus claim.
+- Maximum counter paths236/229 chars in new build-ka39/tm39. Earlier embroidery,
+  storage and coolant results remain separately dated; no stale counters reused.
+
+SPI callbacks retain logical register images before physical framing. Original
+chip/HAL/common library code, plugin and EEPROM execute; status headers, actual
+board adapter/CS/daisy-chain/pipeline/IRQ/DMA timing, SPI-chip dynamic polling and
+homing remain unverified. UART CRC/IFCNT model unchanged. Forwarding headers use
+content-preserving CONFIGURE;14 timestamps preserved and next Ninja build idle.
+
+Protocol-display polling stays unexecuted: source/header-only native layout places
+its override member at byte49, requiring alignment2. No packing/private-state
+workaround, target fault claim or runtime exception. Auxiliary action getter type
+also remains a source-only CORE callback contract gap; matching setter is used.
+
+Fresh GitHub locks match clean keypadc3493309/motor9229617c/COREb01f4810/
+Trinamic-library9b304175/EEPROM0c278db7; all51 gated suites snapshot48 clean source
+checkouts with exact SHAs. Fork Actions still lists only reusable/core workflows;
+separate Plugin/Driver dispatch awaits default-branch installation. Keep existing
+PR29 draft/unmerged; prepare one cumulative delivery then continue broader gaps.
+
+# Trinamic reports/configuration checkpoint - 2026-10-25 (batch39, local)
+
+Goal active. Six new original TMC2209/plugin/library cases cover complete and
+axis-filtered M122 reports, M911 warning/over-temperature fields and M912 latch
+clearing, M913 mm/min-to-register threshold conversion/disable, M919 selected-axis
+chopper settings/query, and rejected chopper values without writes. Complete29
+Trinamic cases pass Windows Clang ASan/UBSan1.89s and strict29 clean after shared
+command-fixture refactor. New command helper preserves CORE consumed-word restore
+and only executes when public validation succeeds. No private driver state,
+production changes, new exceptions or weakened assertions.
+
+Trinamic forwarding headers now use content-preserving file(CONFIGURE) rather
+than unconditional file(WRITE). Verified14 unchanged header timestamps survive
+reconfiguration; following Ninja build reports no work. EEPROM/CRC and original
+UART register datagrams execute; parser/motor iteration and physical UART remain
+explicit host boundaries. Other chips/bridges, SG streaming and developer modes
+are still unfinished. No new source percentage until the combined measurement.
+
+Batch39 now11 local cases (aux macros5 +Trinamic6),1060 registered. Latest complete
+source-locked51-suite validation remains delivered38 at db1c68cc:1049 cases =985
+clean +64 known. Continue substantial supported work before full gate/push;
+existing PR29 stays draft/unmerged and separate Actions installation remains open.
+
+# Auxiliary macro authoring checkpoint - 2026-10-25 (batch39, local)
+
+Goal active. Five new original-source cases cover two auxiliary pin mappings,
+falling-edge/deferred execution, IRQ-to-foreground idle recheck, realtime button
+actions during active state, IRQ failure with usable M810, and MACROS_ENABLE1
+with no available ports. Original CORE ioports/crossbar and EEPROM execute.
+Complete52-case keypad suite passes ASan/UBSan2.15s and strict47 clean +5 existing
+known. No new allowance or production edits. Integer setting setters match the
+CORE callback type; the getter signature remains a source-only contract gap.
+
+Protocol display syntax-only compilation succeeds. Header-only native inspection
+finds message buffer offset45 with override alignment2, spindle-override member
+at field offset4: original polling assignment would target byte49. Polling was
+not executed; no sanitizer/target-board failure is claimed. No packing/header or
+private-state workaround added. Keep protocol runtime/connection recovery open.
+
+Latest delivered38 is db1c68ccd292ca365cffb3438a0898363d501bed, existing tracking
+branch and draft/open/unmerged PR29 with exact-head body readback. Worktree was
+clean before this group. Batch39 has5 local cases,1054 registered; latest full
+51-suite gate remains1049 (985 clean +64 known), source coverage remains38.
+Accumulate substantial further supported work before a full gate/push. Separate
+Plugin/Driver dispatch remains unavailable on default branch as verified38.
+
 # Combined keypad/embroidery validation - 2026-10-25 (batch38)
 
 Goal active. Complete51 current-source plugin/driver suites pass Windows Clang

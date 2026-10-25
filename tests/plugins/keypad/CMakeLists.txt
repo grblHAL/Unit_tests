@@ -52,3 +52,20 @@ foreach(behavior blocks separator keypress state_guard reset error no_storage sa
 endforeach()
 
 set_tests_properties(plugin_keypad.macro_keypress_signed PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+
+foreach(file ioports.c crossbar.c)
+ set_source_files_properties("${COMPONENT_CORE_ROOT}/${file}" PROPERTIES COMPILE_OPTIONS -Wno-error)
+endforeach()
+foreach(behavior execution state_guard actions irq_failure no_ports)
+ set(target plugin_keypad.macro_aux_${behavior})
+ component_case(${target} macro_aux_${behavior}.c macro_host.c ${macro_sources}
+ "${COMPONENT_CORE_ROOT}/ioports.c" "${COMPONENT_CORE_ROOT}/crossbar.c")
+ target_include_directories(${target} PRIVATE "${HARNESS_ROOT}/plugins/keypad" "${HARNESS_ROOT}/tests/plugins/eeprom" "${HARNESS_ROOT}/plugins/eeprom")
+ if(behavior STREQUAL "no_ports")
+  set(macro_mode 1)
+ else()
+  set(macro_mode 3)
+ endif()
+ target_compile_definitions(${target} PRIVATE KEYPAD_ENABLE=2 MACROS_ENABLE=${macro_mode} MACRO_1_AUXIN=0 MACRO_2_AUXIN=1 EEPROM_ENABLE=128 EEPROM_IS_FRAM=1 NVS_SIZE=8192 NVS_SIZE_MAX=16384)
+ target_compile_options(${target} PRIVATE -funsigned-char "SHELL:-include \"${CMAKE_CURRENT_SOURCE_DIR}/macro_platform.h\"")
+endforeach()

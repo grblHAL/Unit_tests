@@ -286,7 +286,7 @@ repository's default branch.
 | Plugin tests | `plugin_laser_coolant` | Start confirmation, delayed shutoff, coolant-loss IRQs and virtual sensor callbacks |
 | Plugin tests | `plugin_laser_overdrive` | M129 availability/validation, CORE PWM overdrive calculation and reset/program cleanup |
 | Plugin tests | `plugin_laser_cluster` | LightBurn cluster expansion, acknowledgement suppression and stream/reset hooks |
-| Plugin tests | `plugin_trinamic` | TMC2209 UART/settings/restart, dynamic current, warning polling and homing callbacks |
+| Plugin tests | `plugin_trinamic` | TMC2209 UART/reports/runtime; TMC2130/TMC5160 SPI-register startup, current, microsteps and recovery |
 | Plugin tests | `plugin_plasma` | Materials/imports, EEPROM-backed mode boot, arc retry/loss and up/down height control |
 | Plugin tests | `plugin_bluetooth` | HC-05 AT configuration, stream switching, settings and EEPROM restart |
 | Plugin tests | `plugin_embroidery_readers` | DST/PES decoding, coordinator conversion and streamed needle/motion requests through real VFS reads |
@@ -324,8 +324,9 @@ dependency separately and reject `core_ref` overrides. They never fall back from
 current CORE or contribute to current-compatible totals. PSoC generated UART APIs
 are host declarations, not Cypress SDK/firmware validation; shared serial tests
 use Tiva headers without claiming an MSP432E or archived TM4C1294 parent build.
-Trinamic also locks and compiles the actual chip library; its UART device is
-simulated. Plasma tests use real CORE I/O/secondary-stepper/spindle/VFS APIs
+Trinamic locks and compiles the actual chip library. TMC2209 UART devices and
+TMC2130/TMC5160 SPI register callbacks are simulated; physical wire/CS/pipeline
+timing and electrical measurements remain untested. Plasma tests use real CORE I/O/secondary-stepper/spindle/VFS APIs
 with simulated pins, time and controller state. Voltage regulation, full CORE
 suspension and hardware timing remain separate work.
 Bluetooth tests simulate HC-05 replies and STATE inputs while using real CORE

@@ -25,3 +25,9 @@ void tmc_poll(void);
 void tmc_block(unsigned axis);
 void tmc_mask(setting_id_t id, uint8_t value);
 void tmc_sensitivity(setting_id_t base, unsigned axis, float value);
+
+status_code_t tmc_command(parser_block_t *block);
+
+#if TRINAMIC_ENABLE == 2130 || TRINAMIC_ENABLE == 5160
+void tmc_spi_prepare(void);
+#endif

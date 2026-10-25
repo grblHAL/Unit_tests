@@ -13,7 +13,11 @@ or force private state to enter a path.
   new denominators visible. Batch38 adds10 original macro cases with EEPROM,
   registered strings, M810/key execution and stream/status/reset recovery. One
   correct signed-char macro-key regression is retained alongside its passing
-  unsigned peer. Do not call macro ID0
+  unsigned peer. Batch39 adds5 real-CORE auxiliary-input/action/IRQ-failure and
+  no-port cases. The action getter signature differs from CORE and remains
+  unvalidated. Protocol polling is source-only: native message offset45 plus
+  spindle override field4 is not aligned to required2 bytes; do not execute or
+  bypass it with packing/private-state flags. Do not call macro ID0
   (source indexes macro-1) or bypass its string bounds. Protocol display and shared
   MPG still need original-source integration; current30 keypad cases stay intact.
 

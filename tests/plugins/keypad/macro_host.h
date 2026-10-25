@@ -15,3 +15,12 @@ void macro_run_mcode(unsigned index);
 void macro_read_text(char *buffer, size_t size);
 int32_t macro_serial_read(void);
 void macros_init(void);
+
+#if MACROS_ENABLE & 1
+extern unsigned macro_inputs, macro_realtime_count;
+extern uint8_t macro_realtime[16];
+extern bool macro_irq_ok;
+void macro_pin(unsigned physical, bool high);
+void macro_run_tasks(void);
+void macro_action(unsigned index, unsigned action);
+#endif

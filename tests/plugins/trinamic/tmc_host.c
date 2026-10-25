@@ -11,7 +11,9 @@ uint32_t tmc_registers[3][128];
 uint8_t tmc_addresses[3];
 bool tmc_bus_ok = true, tmc_storage_ok = true, tmc_setup_ok = true, tmc_custom_address;
 char tmc_output[4096];
+#if TRINAMIC_ENABLE == 2209
 static uint8_t ifcnt[3];
+#endif
 static bool setup(settings_t *value)
 {
     CHECK(value == &settings);
@@ -72,6 +74,7 @@ static void postinit(motor_map_t motor, const tmchal_t *driver)
     CHECK(motor.id < 3 && driver);
     tmc_drivers[motor.id] = driver;
 }
+#if TRINAMIC_ENABLE == 2209
 void tmc_uart_write(trinamic_motor_t driver, TMC_uart_write_datagram_t *packet)
 {
     CHECK(driver.id < 3 && packet->msg.sync == 5 && packet->msg.slave == driver.address &&
@@ -111,6 +114,7 @@ TMC_uart_write_datagram_t *tmc_uart_read(trinamic_motor_t driver, TMC_uart_read_
     tmc_crc8(response.data, 8);
     return &response;
 }
+#endif
 nvs_address_t nvs_alloc(size_t size)
 {
     CHECK(size && size < 1024);
@@ -153,6 +157,9 @@ axes_signals_t gc_claim_axis_words(parser_block_t *block, axes_signals_t validat
 void tmc_prepare(void)
 {
     prepare_eeprom();
+#if TRINAMIC_ENABLE == 2130 || TRINAMIC_ENABLE == 5160
+    tmc_spi_prepare();
+#endif
     CHECK(i2c_eeprom_init());
     hal.delay_ms = delay;
     hal.driver_setup = setup;
@@ -191,12 +198,21 @@ void tmc_axis_command(user_mcode_t code, unsigned axis, float value)
     else
         block.words.z = On;
     block.values.xyz[axis] = value;
-    CHECK(grbl.user_mcode.check(code) != UserMCode_Unsupported);
-    uint64_t before = block.words.mask;
-    CHECK(grbl.user_mcode.validate(&block) == Status_OK);
-    block.words.mask = before ^ block.words.mask;
-    grbl.user_mcode.execute(STATE_IDLE, &block);
+    CHECK(tmc_command(&block) == Status_OK);
 }
+status_code_t tmc_command(parser_block_t *block)
+{
+    CHECK(block && grbl.user_mcode.check(block->user_mcode) != UserMCode_Unsupported);
+    uint64_t supplied = block->words.mask;
+    status_code_t status = grbl.user_mcode.validate(block);
+    if (status == Status_OK)
+    {
+        block->words.mask = supplied ^ block->words.mask;
+        grbl.user_mcode.execute(STATE_IDLE, block);
+    }
+    return status;
+}
+
 bool protocol_execute_realtime(void)
 {
     CHECK(false);
