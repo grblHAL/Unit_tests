@@ -310,6 +310,7 @@ repository's default branch.
 | Plugin tests | `plugin_mpg_transport` | Framed/plain transport; CORE stream claim, mode selection, broadcast and passive status/command routing |
 | Plugin tests | `plugin_webui` | Argument helpers and embedded assets via real CORE VFS; HTTP backends remain |
 | Driver tests | `driver_imxrt1062_pwm` | Teensy 4.0/4.1/MicroMod PWM register, routing and ownership workflows |
+| Driver tests | `driver_stm32f7_serial` | Original F756 SDK one/three-stream queues, IRQ routing, format and CORE stream lifecycle |
 | Driver tests | `driver_stm32f4_serial` | Original ST/CMSIS one/three-stream queues, IRQ routing, format and CORE stream lifecycle |
 | Driver tests | `driver_sam3x8e_serial` | Dual UART/USART queues, callbacks, settings and CORE stream suspend |
 | Driver tests | `driver_tm4c123_eeprom` | Aligned EEPROM, CRC storage and transfer failures |

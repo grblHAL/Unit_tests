@@ -823,5 +823,18 @@
     "test_regex": "^driver_stm32f4_serial[.]",
     "coverage_filter": "drivers/stm32f4/Src/serial\\.c$",
     "diagnostics_directory": "tests/drivers/stm32f4_serial"
+  },
+  "driver_stm32f7_serial": {
+    "repository": "grblHAL/STM32F7xx",
+    "ref": "master",
+    "path": "drivers/stm32f7",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/drivers/stm32f7_serial",
+    "cmake_options": [],
+    "test_regex": "^driver_stm32f7_serial[.]",
+    "coverage_filter": "drivers/stm32f7/Src/serial\\.c$",
+    "diagnostics_directory": "tests/drivers/stm32f7_serial"
   }
 }

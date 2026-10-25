@@ -34,3 +34,21 @@ First selected-source coverage324/345 lines93.9%,104/122 branches85.2%,53/57
 functions. Unexecuted functions: serial1Write, serial1SuspendInput, serial2RxCancel
 and serial2Write. Coverage includes only compiled serial.c configurations, not
 SDK/whole-driver source. Full52-suite gate passes1159 cases; no full-driver claim.
+
+## Local follow-up - batch45
+
+Two ordinary cases add all-stream binary writes and secondary tool-ACK suspend
+while the third stream is cancelled/reused. Together they execute the four
+previously unexecuted public callback functions; no new coverage count is claimed
+until a fresh report. All23 affected F4 sanitizer/strict cases pass1.54s after
+extracting unchanged unused CORE fail-fast callbacks to serial_core_host.c.
+Broader gate/updated coverage are pending; baseline report remains batch44.
+
+## Fresh follow-up measurement - batch45
+
+Both new cases are in the full53-suite1184 gate. F4 serial23 clean; updated
+same-source/config coverage341/345 lines and108/122 branches,57/57 functions:
++17 lines/+4 branch outcomes from44. Selected missing lines are driver claim-guard
+returns(standard CORE open filters claimed providers first) and third RX-disable.
+No private flags are changed or guard lines excluded; broader configurations and
+real hardware remain unvalidated.

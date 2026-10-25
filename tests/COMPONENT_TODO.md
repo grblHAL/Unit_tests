@@ -785,3 +785,21 @@ Next ordinary gaps: secondary binary write/suspend and third binary write/cancel
 (serial1Write/serial1SuspendInput/serial2Write/serial2RxCancel have no hits).
 Other pin mappings, RS485, actual error/interrupt timing, controller/ARM builds
 and hardware remain independent required work. No SDK/whole-driver coverage claim.
+
+## STM32F7 serial and F4 ordinary follow-up - batch45 local
+
+F7 USART3 primary11 clean cases use actual ST F756 HAL/CMSIS/generic headers and
+CORE streams, with separate ISR/RDR/TDR hardware model. F4 adds binary writes on
+all ports and secondary tool-ACK suspend plus third cancellation/reuse; affected
+F423+F711 strict-clean. Updated coverage/full gate pending. Add remaining native
+F7 port mappings and supported baud-change queue/IRQ contract; no IRQ forced into
+an empty queue. ARM firmware/controller/hardware and other driver modules remain.
+
+## Serial checkpoint45 measured continuation
+
+Full53-suite1184 passes. F4 serial341/345 lines and108/122 branches(+17/+4 from44);
+F7 first353/357 and108/122. Both57/57 functions. Remaining selected source includes
+third-stream RX-disable and claim-guard returns; standard CORE open prefilters
+claimed streams, so do not mutate provider/private flags for coverage. Review
+legitimate driver-provider calls separately. Other maps/MCUs, RS485/errors, F7
+baud-change IRQ lifecycle, controller/ARM/physical work remain required scope.

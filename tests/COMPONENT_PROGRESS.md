@@ -1,3 +1,57 @@
+# Combined F7/F4 serial gate - 2026-10-25 (batch45)
+
+Goal active. All53 current-CORE-compatible suites pass fresh Windows Clang
+ASan/UBSan plus strict:1184 =1119 clean +65 documented known, zero unexpected or
+skipped.25 new cases since c55401b/batch44:23 original-header F7 cases plus2 F4
+multi-stream follow-ups. Both serial suites23/23 clean. Seven affected component-
+plan/report helpers pass0.065s; Driver/reusable actionlint passes. Broader unchanged
+87 helpers last passed40. Main CORE and historical reference suites excluded.
+
+Fresh selected-source LLVM coverage:
+- F4 serial341/345 lines98.8%,108/122 branches88.5%,57/57 functions. Same source/
+  CORE/configuration denominator as44: +17 lines/+4 branches from binary writes,
+  secondary tool-ACK suspend and third cancel/reuse. No SDK/whole-driver claim.
+- First F7 serial353/357 lines98.9%,108/122 branches88.5%,57/57 functions. Native
+  F756 ST/CMSIS/main/driver/generic headers and CORE streams execute; primary
+  USART3 GPIOD8/9, original fixed secondary USART6 GPIOC6/7, third USART1 GPIOA9/10.
+  Tests retain original map; only supported SERIAL2_PORT1 is added for three streams.
+- Fresh build-st45/sf45 counter paths max217 chars; no stale counters reused.
+
+Shared serial_core_host.c extracts unchanged fail-fast unused CORE callbacks;
+F4/F7 hardware models remain separate, with native SR/DR vs ISR/RDR/TDR/M0 APIs.
+Both cover queue/full/wrap/binary/cancel, independent realtime handlers and traffic,
+RX mute/TX preservation, baud/parity, ownership and CORE tool-ACK lifecycle. No
+production edit, source conversion, type/API alias, new allowance or merge.
+Remaining selected lines: three driver claim-guard returns(CORE prefilters
+claimed providers) and third RX-disable branch; don't force private flags.
+F7 baud-change queue/IRQ contract remains source-only; no empty-queue IRQ forced.
+
+Fresh GitHub resolution matches F4a6318ac9/F785e6e800/COREb01f4810.53 suites
+snapshot48 clean original checkouts; SDK headers live in candidate revisions.
+GPIO/NVIC/PCLK/register/IRQ boundaries are host models. Full controller/parser/
+ARM firmware/physical timing/hardware and broader driver configurations remain.
+New F7 option is in separate Driver workflow. Keep PR29 draft/unmerged and goal
+active; hosted dispatch awaits default-branch workflow installation.
+
+# Batch45 F7 serial and F4 follow-up local validation - 2026-10-25
+
+Goal active.13 new cases:11 original-header STM32F7 primary USART3 cases plus2
+ordinary F4 multi-stream binary/tool-ACK/cancel workflows. Affected F711=11clean
+0.58s and F423=23clean1.54s pass ASan/UBSan and strict;34 total, zero known/
+unexpected/skipped. Seven component-plan/report helpers pass0.065s; Driver/
+reusable actionlint passes. Unchanged fail-fast unused CORE callbacks moved from F4
+fixture to serial_core_host.c; both link actual CORE stream/VFS and use separate
+native register/IRQ/GPIO/clock providers. No production edit or allowance.
+
+F7 original F756 HAL/CMSIS/main/driver/generic map uses USART3 GPIOD8/9, native
+ISR/RDR/TDR/M0 declarations. Local driver85e6e800 clean, COREb01f4810 unchanged.
+Windows-only ERROR/LPTR collisions resolved on OS side, preserving original SDK
+names. F7 baud-change queue/IRQ semantics remain a source-review contract; no
+unsafe/pending-empty IRQ reproduction. Actual ARM link/controller/hardware open.
+New driver_stm32f7_serial suite registered in Driver workflow. Full gate and fresh
+coverage pending; no total-suite or new source-count claim. Delivered baseline
+c55401b/batch44 remains1159. Keep local for cumulative checkpoint.
+
 # Combined STM32F4 serial gate - 2026-10-25 (batch44)
 
 Goal active. All52 current-CORE-compatible suites pass fresh Windows Clang
