@@ -281,7 +281,7 @@ repository's default branch.
 | Plugin tests | `plugin_sdcard_fatfs` | Original FatFs/SD lifecycle, macro calls and file-stream commands on RAM-backed FAT12 media; file I/O and recovery |
 | Driver tests | `driver_simulator_vfs` | File/directory workflows; current CORE compile incompatibility recorded |
 | Plugin tests | `plugin_keypad` | I2C/UART jog commands, overrides and NVS restart; LED outputs and stored macro execution/recovery |
-| Plugin tests | `plugin_networking` | Interface events/enumeration, status reports and service/MAC helpers with real lwIP headers |
+| Plugin tests | `plugin_networking` | Interface reports, Telnet/CORE stream routing and multipart file-upload parsing |
 | Plugin tests | `plugin_laser_ppi` | Registered laser PPI spacing, mode changes, shutdown and hardware delegation |
 | Plugin tests | `plugin_laser_coolant` | Start confirmation, delayed shutoff, coolant-loss IRQs and virtual sensor callbacks |
 | Plugin tests | `plugin_laser_overdrive` | M129 availability/validation, CORE PWM overdrive calculation and reset/program cleanup |
@@ -334,8 +334,11 @@ Bluetooth tests simulate HC-05 replies and STATE inputs while using real CORE
 stream/I/O registration; radio and shared-MPG operation remain separate. Embroidery
 tests compile Tajima/Brother readers and the job coordinator. Conversion and
 streamed stepper/trigger workflows use captured planner/spindle boundaries; actual
-planner motion, needle mechanics and physical timing remain untested. Networking locks upstream lwIP headers separately; its common-interface suite
-does not start protocol listeners. Laser tests observe simulated driver pulses
+planner motion, needle mechanics and physical timing remain untested. Networking
+locks upstream lwIP headers separately. Telnet tests run original daemon callbacks
+and real CORE stream routing with simulated TCP/pbuf boundaries; multipart tests
+parse ordinary uploads. No live TCP stack, HTTP upload server or network hardware
+is exercised. Laser tests observe simulated driver pulses
 and byte-stream transformations; no physical laser operation is established.
 Driver SDK boundaries are simulated; no actual Pico SDK/ESP-IDF/STM32/NXP firmware
 build or physical flash/interrupt timing is established. STM32 storage suites use 32-bit host targets. LPC keeps 32-bit physical flash

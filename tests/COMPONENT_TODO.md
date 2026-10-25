@@ -253,8 +253,11 @@ or force private state to enter a path.
   contract remains a question, not a classified defect. Coordinate string
   formatting is a fixture boundary, not a tested CORE formatting contract.
 - Networking common events/providers/enumeration/reports now execute with real
-  locked lwIP headers. Actual Telnet/Websocket, DHCP, MQTT, FTP/HTTP/WebDAV and
-  transport implementations remain. Do not equate service labels with listeners.
+  locked lwIP headers. Batch42 adds11 original Telnet daemon cases using real CORE stream routing
+  and explicit TCP/pbuf host boundaries plus6 ordinary multipart parser cases.
+  Combined selected source480/585 lines and256/368 branches; common source remains
+  157/165 and84/106. Telnet199/276 and72/120; parser124/144 and100/142. Websocket, DHCP, MQTT, FTP/HTTP/WebDAV,
+  real lwIP transport and remaining daemon configurations remain. Do not equate service labels with listeners.
 - Laser PPI and LightBurn default clusters now have functional callback/stream
   cases. Retain zero-PWM pulse regression; coolant/overdrive, scaling, alternate
   spindle selection and full parser/planner integration remain. Review PPI hook

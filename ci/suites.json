@@ -207,7 +207,7 @@
     "cmake_source": "tests/plugins/networking",
     "cmake_options": [],
     "test_regex": "^plugin_networking[.]",
-    "coverage_filter": "plugins/networking/networking\\.c$",
+    "coverage_filter": "plugins/networking/(networking|telnetd|multipartparser)\\.c$",
     "diagnostics_directory": "tests/plugins/networking"
   },
   "lwip": {

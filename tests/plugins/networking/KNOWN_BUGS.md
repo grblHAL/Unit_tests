@@ -11,7 +11,46 @@ Cases use the public networking event/provider/enumeration API and registered
 NETIF/report hooks. Driver information and stream/file state are simulated host
 boundaries. They cover Ethernet/STA/AP reports, availability changes, enumeration
 short-circuiting, enabled service labels, MAC formatting and hook chaining.
-Service mask is Telnet/Websocket/DNS/mDNS; their listener implementations are not
-compiled here. MQTT, FTP, HTTP/WebDAV, DHCP server and protocol transports remain.
+The original interface-only cases use Telnet/Websocket/DNS/mDNS service labels;
+those cases do not establish listener behavior. MQTT, FTP, HTTP/WebDAV, DHCP server and protocol transports remain.
 Original warnings stay visible under -Wno-error while fixtures keep -Werror.
 No sanitizer allowances or full networking-repository coverage claim.
+
+## Telnet daemon host integration - batch42
+
+Eleven additional cases compile unchanged telnetd.c with the same locked original
+lwIP headers and actual CORE stream/passthrough/VFS/formatting modules. Connection
+selection/restoration and ring operations run through CORE and the daemon. Native
+TCP callbacks are captured and delivered by a deterministic host provider; there
+are no sockets, packets on a network, TCP engine, allocator or Ethernet device.
+Valid nonempty one/two-pbuf chains have process-local lifetime; provider free/ACK
+counts check normal input ownership without claiming lwIP allocator semantics.
+
+Cases cover accept/stop, chained G-code input, realtime dispatch, cancellation and
+flush/reuse, binary output, retry after ERR_CONN, output-full abort/recovery, MPG
+input discard, orderly peer close, link-down notification and bind rejection.
+All22 combined networking cases pass Clang ASan/UBSan and strict classification
+with no exceptions. Original daemon unused arguments get a narrow source-only
+warning rule; fixture code stays -Werror. No source/CORE edits.
+
+Selected coverage now includes networking.c/telnetd.c/multipartparser.c:
+480/585 lines and256/368 branches across28 clean cases. Interface source remains
+157/165 lines and84/106 branches; Telnet199/276 and72/120; multipart124/144 and
+100/142. This expanded denominator is separate from the old interface-only report. TCP allocation/listen failures, timeout,
+keepalive/RTOS variants, actual stack/controller/parser and physical links remain.
+Do not pass a null PCB/session or malformed/empty pbuf to enter unavailable paths.
+The partial-write compaction indexes from len+1 by source review; its transport
+contract needs review before any runtime case. No unsafe reproduction is included.
+
+## Multipart parser host support - batch42
+
+Six cases call unchanged multipartparser.c through its public initialization,
+callbacks and execute API. Capture assertions verify body/part/header/data order,
+normal file metadata and exact contents. One-byte transport delivery splits both
+headers and boundaries; other cases cover form plus file, binary octets, empty
+files and absent optional callbacks. Six focused sanitizer cases pass0.35s.
+No internal parser state is changed or copied. All boundaries are short ordinary
+valid values. No malformed/oversized inputs, upload filesystem, HTTP listener,
+request authentication, target transport or physical-device claim is included.
+Combined selected-source filter includes networking.c/telnetd.c/multipartparser.c;
+its denominator must remain separate from the old interface-only report.

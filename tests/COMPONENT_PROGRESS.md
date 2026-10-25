@@ -1,3 +1,54 @@
+# Combined networking source gate - 2026-10-25 (batch42)
+
+Goal active. All51 current-CORE-compatible host suites pass fresh Windows Clang
+ASan/UBSan and strict:1128 =1063 clean +65 documented known, zero unexpected or
+skipped.17 new networking cases since e5648be/batch41:11 Telnet daemon plus6
+multipart upload parser.28 networking cases are clean. No firmware/CORE edit,
+assertion weakening, sanitizer allowance or merge. Seven affected component-plan/
+report helper checks pass0.051s; unchanged broader87/actionlint last passed40.
+Main CORE and historical explicit references excluded from this gate.
+
+Fresh selected-source coverage480/585 lines82.1%,256/368 branches69.6%,42/48
+functions. networking.c unchanged157/165 lines,84/106 branches; telnetd.c199/276,
+72/120,24/29 functions; multipartparser.c124/144,100/142,3/3 functions. New
+source files add323 executed lines/172 branch outcomes while denominator expands
+by420 lines/262 branches. This is not an aggregate percentage-gain claim. Corrected
+the local baseline typo:41/41 belongs to WebUI helpers; networking was157/165.
+New build-nt42 counters max225 chars; no stale counters reused.
+
+Fresh GitHub resolution matches networking0b665ee0/COREb01f4810/lwIPd08f4773;
+all51-suite48 original checkouts verified clean/exact. Native TCP callbacks/pbuf
+lifetime and hardware boundaries are simulated, real CORE stream routing executes.
+Multipart uses public callbacks only with normal short valid boundaries and binary/
+empty files. No live stack, HTTP upload filesystem, authentication, physical link,
+full controller/parser or hardware success claimed. Partial-write compaction and
+null/malformed inputs remain source-only; do not force unsafe paths.
+
+Fresh fork Actions list still contains only reusable/core workflows. Separate
+Plugin/Driver manual dispatch waits default-branch installation; no redundant
+unavailable dispatch. Keep PR29 draft/unmerged; continue remaining implementation,
+configuration, SDK/controller and hardware gaps. Goal remains incomplete.
+
+# Batch42 original Telnet daemon local validation - 2026-10-25
+
+Goal active.11 new daemon cases plus existing11 common network cases pass22/22
+Clang ASan/UBSan and strict classification1.33s, zero known/unexpected/skipped.
+Seven component-plan/report helper checks pass0.062s after directing temporary
+files into the writable evidence directory; sandbox default-temp access failed.
+Original telnetd.c runs actual CORE stream connect/disconnect/passthrough/VFS;
+original pinned lwIP headers define native callbacks and TCP/pbuf structures.
+Host provider simulates TCP ACK/write/output/close/callback delivery and valid
+nonempty pbuf lifetime; no network stack/allocator/socket/physical claim.
+
+Cases cover connection/stop, chained input, realtime commands, cancel/flush/reuse,
+binary TX, recoverable provider-write error, output-full abort/recovery, MPG discard,
+remote close, link loss and bind rejection. No source edit or allowance. Fresh
+combined coverage pending: filter now includes networking.c and telnetd.c, so the
+old157/165 interface-only report is narrower. Cumulative gate pending; delivered
+baseline stays e5648be/batch41,1111. No isolated push/hosted run for this authoring
+group. Source-review partial-write compaction concern remains unexecuted; null/
+malformed pbuf/session paths are not forced. Continue other supported gaps.
+
 # Combined driver/expander gate - 2026-10-25 (batch41)
 
 Goal active. All51 current-CORE-compatible suites pass fresh Windows Clang
