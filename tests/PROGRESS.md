@@ -88,6 +88,25 @@ Evidence hosted40121790962/{report-core-clang,results-core-clang,verified-clang.
 verified-new-workflows.json,verified-exact-diagnostic-replay.json}. No CI retry for
 these entries alone; post-fatal assertions remain unvalidated.
 
+## Further local laser-off positioning hold/resume workflow
+
+Added state_machine/laser_off_positioning_hold_resume_preserves_zero_output_until_explicit_m3.c.
+A normal G1X20M5S500 positioning move is held with the public hold-action setting0.
+Four held polls retain position and zero output. Resume finishes all1,600 X pulses
+with the driver off/zero at every step-service call and every recorded PWM update.
+A later explicit G1X21M3S500 cut powers the actual driver and reaches1,680 pulses,
+proving the preceding zero-output checks are not an inactive fixture.
+
+Uses existing registered PWM/stepper/hold fixtures and public hold/cycle-start
+commands. Initial control observation watched only PWM updates; constant-power
+set_state output is now included through the existing driver-level observer.
+No CORE defect, new allowance, host variant or private-state injection.
+Focused ASan/UBSan and strict1/1 pass0.28s; saved laser-off-hold-{build,summary}.log
+and laser-off-hold-results.xml. Expected target: spindle_control888's state.on
+false arm in native hold restoration. No measured gain claimed. Outside the
+full4,504 gate/ed5b142 report. Accumulate with the two other local workflows;
+no small full-run/hosted cycle or diagnostic-only dispatch.
+
 ## Further local queued work-offset reporting workflow
 
 Added report/queued_g92_transition_reports_forced_work_offset_with_feed_override.c.
