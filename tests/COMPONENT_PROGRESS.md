@@ -1,3 +1,32 @@
+# Local VFD recovery gap checkpoint - 2026-10-25
+
+Goal active.17 new cases address source-reviewed recovery gaps after batch33
+measurement: H100 seven, Huanyang v1 six, Huanyang v2 two, Nowforever two.
+Shared rejected-mode/startup-exception cases now clear discovery requests before
+injecting the next transport result, preserving existing assertions and enabling
+valid execution for discovery protocols. No transport backend change.
+
+Partial H100/Huanyang v1 discovery rejects the minimum-frequency transaction,
+verifies range remains unlocked, then retries discovery on first start and
+reaches programmed speed. Reused scenarios exercise H100 async exception
+threshold/reset, cold-start deferred alarm, settings/report hooks and bus-down
+selection. Huanyang v1 RPM/current exception contexts execute independently;
+repeated current errors interleaved with successful RPM replies preserve valid
+speed and avoid cumulative alarm because successful RPM resets the counter.
+Recovery then accepts both replies. Huanyang v2/Nowforever now execute rejected
+mode and deferred cold-start failure, beyond their prior feedback error cases.
+
+Focused32-case Windows Clang ASan/UBSan gate passes1.57s and strict classification
+all clean, including existing scenarios affected by clearing discovery packets.
+97 VFD/896 compatible authored; no fresh full global gate or coverage claimed.
+Last delivered batch33 remains879/42 suites with63 documented known, and
+VFD80 clean/888of940 lines282of417 branches. No production edits, assertions
+weakened, new known failures or sanitizer allowances. Accumulate other spindle
+implementations before another substantial gate/push. Actual hardware, native
+bus timing, controller integration and hosted runs remain unverified.
+
+---
+
 # Combined VFD delivery checkpoint - 2026-10-25 (batch33)
 
 Goal active. Full current-compatible Windows Clang ASan/UBSan/strict gate passes

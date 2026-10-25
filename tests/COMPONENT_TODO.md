@@ -534,3 +534,12 @@ review should use batch33 HTML before authoring: Huanyang async exceptions and
 partial discovery, H100 exceptions/provider state, shared wrapper selection/
 settings/multi-spindle configurations; preserve existing assertions and source.
 Target/SDK firmware and physical wire/drive timing remain distinct unchecked work.
+
+## VFD recovery gap follow-up
+
+17 new source-reviewed cases pass focused32 ASan/UBSan/strict including reused
+rejected-mode/startup cases with discovery request accounting corrected. H100
+partial discovery/exceptions/hooks/provider recovery and Huanyang v1 partial
+range discovery/RPM-current exception recovery execute. No source modification
+or allowance. Shared multi-spindle selection/settings variants still open;
+spindle onoff/PWM/offset/stepper/select sources remain next larger module gaps.

@@ -29,8 +29,8 @@ endforeach()
 set_source_files_properties("${HARNESS_ROOT}/plugins/spindle/vfd/gs20.c" "${HARNESS_ROOT}/plugins/spindle/vfd/modvfd.c" "${HARNESS_ROOT}/plugins/spindle/vfd/spindle.c" "${COMPONENT_CORE_ROOT}/spindle_control.c" PROPERTIES COMPILE_OPTIONS -Wno-error)
 set_source_files_properties("${COMPONENT_CORE_ROOT}/modbus.c" PROPERTIES COMPILE_OPTIONS -Wno-error)
 
-foreach(behavior discovery commands feedback limits retry reset four_poles no_transport no_storage)
-  if(behavior MATCHES "^no_")
+foreach(behavior discovery commands feedback limits retry reset four_poles no_transport no_storage mode_rejected async_exceptions exception_reset cold_exception settings_hooks bus_down partial_discovery)
+  if(behavior MATCHES "^(no_transport|no_storage|mode_rejected|async_exceptions|exception_reset|cold_exception|settings_hooks|bus_down|partial_discovery)$")
     set(test_source ${behavior}.c)
   else()
     set(test_source h100_${behavior}.c)
@@ -63,7 +63,7 @@ foreach(behavior commands feedback configured_hz update_rpm mode_rejected async_
 endforeach()
 set_source_files_properties("${HARNESS_ROOT}/plugins/spindle/vfd/yl620.c" PROPERTIES COMPILE_OPTIONS -Wno-error)
 
-foreach(behavior commands feedback reset retry async_exceptions exception_reset settings_hooks no_transport no_storage bus_down)
+foreach(behavior commands feedback reset retry mode_rejected cold_exception async_exceptions exception_reset settings_hooks no_transport no_storage bus_down)
   if(behavior MATCHES "^(commands|feedback|reset|retry)$")
     set(test_source huanyang2_${behavior}.c)
   else()
@@ -80,7 +80,7 @@ foreach(behavior commands feedback reset retry async_exceptions exception_reset 
 endforeach()
 set_source_files_properties("${HARNESS_ROOT}/plugins/spindle/vfd/huanyang2.c" PROPERTIES COMPILE_OPTIONS -Wno-error)
 
-foreach(behavior commands feedback reset retry limits async_exceptions exception_reset settings_hooks no_transport no_storage bus_down)
+foreach(behavior commands feedback reset retry limits mode_rejected cold_exception async_exceptions exception_reset settings_hooks no_transport no_storage bus_down)
   if(behavior MATCHES "^(commands|feedback|reset|retry|limits)$")
     set(test_source nowforever_${behavior}.c)
   else()
@@ -97,7 +97,7 @@ foreach(behavior commands feedback reset retry limits async_exceptions exception
 endforeach()
 set_source_files_properties("${HARNESS_ROOT}/plugins/spindle/vfd/nowforever.c" PROPERTIES COMPILE_OPTIONS -Wno-error)
 
-foreach(behavior commands feedback reset retry zero_calibration load no_current_rating settings_hooks no_transport no_storage bus_down)
+foreach(behavior commands feedback reset retry zero_calibration load no_current_rating partial_discovery async_exceptions exception_reset mode_rejected cold_exception amps_recovery settings_hooks no_transport no_storage bus_down)
   if(behavior MATCHES "^(commands|feedback|reset|retry|zero_calibration|load|no_current_rating)$")
     set(test_source huanyang1_${behavior}.c)
   else()

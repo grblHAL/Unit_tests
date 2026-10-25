@@ -3,6 +3,7 @@ int main(void)
 {
     vfd_prepare(true);
     vfd_start();
+    vfd_clear_requests();
     sys.cold_start = true;
     vfd_exception = 1;
     vfd_motor->set_state(vfd_motor, (spindle_state_t){.on = On}, 6000);
