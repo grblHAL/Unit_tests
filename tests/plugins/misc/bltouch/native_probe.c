@@ -1,7 +1,11 @@
 #include "bltouch_host.h"
 int main(void)
 {
+#ifdef TEST_TOOLSETTER
+    native_toolsetter = true;
+#else
     native_probe = true;
+#endif
     load_bltouch();
     float target[N_AXIS] = {0};
     plan_line_data_t data = {0};

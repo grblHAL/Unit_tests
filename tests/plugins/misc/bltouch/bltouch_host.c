@@ -6,6 +6,9 @@ grbl_t grbl;
 settings_t settings;
 system_t sys;
 bool claims_ok = true, probe_ok = true, native_probe;
+bool readback_enabled = true, native_toolsetter, no_previous_probe_hooks;
+unsigned option_calls, plugin_reports;
+char plugin_name[32];
 float angle, last_delay;
 char bltouch_output[256];
 unsigned outputs, delays, resets, starts, completed, selections, warnings;
@@ -24,7 +27,7 @@ bool ioports_enumerate(io_port_type_t type, io_port_direction_t dir, pin_cap_t c
                        ioports_enumerate_callback_ptr callback, void *data)
 {
     CHECK(type == Port_Analog && dir == Port_Output && caps.servo_pwm && caps.claimable);
-    xbar_t servo = {.id = 0, .get_value = read_angle};
+    xbar_t servo = {.id = 0, .get_value = readback_enabled ? read_angle : NULL};
     return callback(&servo, 4, data);
 }
 xbar_t *ioport_claim(io_port_type_t type, io_port_direction_t dir, uint8_t *port,
@@ -78,10 +81,16 @@ static bool select_probe(probe_id_t id)
     selections++;
     return true;
 }
-static void options(bool newopt) { (void)newopt; }
+static void options(bool newopt)
+{
+    (void)newopt;
+    option_calls++;
+}
 void report_plugin(const char *name, const char *version)
 {
-    CHECK(name && strcmp(version, "0.06") == 0);
+    CHECK(name && strcmp(version, "0.06") == 0 && strlen(name) < sizeof(plugin_name));
+    strcpy(plugin_name, name);
+    plugin_reports++;
 }
 void report_warning(void *message)
 {
@@ -153,8 +162,9 @@ void load_bltouch(void)
     hal.delay_ms = delay_ms;
     hal.probe.select = select_probe;
     hal.driver_cap.probe2 = native_probe;
-    grbl.on_probe_start = probe_start;
-    grbl.on_probe_completed = probe_completed;
+    hal.driver_cap.toolsetter = native_toolsetter;
+    grbl.on_probe_start = no_previous_probe_hooks ? NULL : probe_start;
+    grbl.on_probe_completed = no_previous_probe_hooks ? NULL : probe_completed;
     grbl.on_report_options = options;
     bltouch_init();
     CHECK(startup);

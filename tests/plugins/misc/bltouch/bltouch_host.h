@@ -18,3 +18,7 @@ extern foreground_task_ptr delayed_task;
 
 extern char bltouch_output[256];
 status_code_t dispatch_bltouch(parser_block_t *block);
+
+extern bool readback_enabled, native_toolsetter, no_previous_probe_hooks;
+extern unsigned option_calls, plugin_reports;
+extern char plugin_name[32];

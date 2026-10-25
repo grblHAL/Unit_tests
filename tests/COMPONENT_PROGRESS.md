@@ -1,3 +1,28 @@
+# Local BLTouch optional-provider checkpoint - 2026-10-25
+
+Goal active. Five new cases plus all10 prior BLTouch cases pass focused Windows
+Clang ASan/UBSan1.04s and strict classification:14 clean +1 unchanged fractional-D
+assertion, zero unexpected failures/skips. Original source's no-readback fallback
+remembers commanded angle and suppresses repeated stow/deploy writes and delays.
+Available/unavailable option reporting chains the previous handler and emits the
+correct plugin identity without output changes. Native toolsetter capability
+bypasses automatic deployment while retaining manual commands. Missing prior
+probe-start/completed hooks still permit deploy/stow through the installed hooks.
+
+Fixture choices represent optional driver providers/capabilities assigned before
+plugin initialization, not private plugin state. Actual CORE numeric/delay helpers
+remain unchanged and executing; servo readback/output, port claims, reports and
+tasks are captured host boundaries. No production edits, new exception/diagnostic
+allowance or weakened assertion. Physical servo/relay timing, actual CORE parser/
+controller integration and remaining configurations remain open.
+
+BLTouch15, misc129 and827 compatible are authored totals, not a new full global
+gate. Latest delivered batch31 remains822 compatible plus26 separate legacy
+references. No fresh coverage measurement or hosted/hardware claim; accumulate
+related supported workflows before next combined gate/push. Goal stays active.
+
+---
+
 # Latest component checkpoint - 2026-10-25 (batch31)
 
 Goal active. Corrected an M-code dispatch fixture error and added3 BLTouch option/

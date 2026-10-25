@@ -438,9 +438,11 @@ duplicate suppression, probe start/completion with native chaining/select,
 rejected start, native-probe auto-deploy bypass, deferred reset stow, BLTEST/
 BLRESET scheduling/cancellation and failed-claim warning. Actual CORE nuts_bolts
 numeric/format/delay helpers link unchanged; HAL delay and task boundaries are
-models, not physical servo timing. Remaining S/D/R validation and consumed-word
-flow, high-speed/auto-deploy configuration, no-readback fallback, toolsetter/
-reports and actual controller/servo hardware remain. Do not infer complete
+models, not physical servo timing. S/D/R validation, faithful consumed-word flow and high-speed/auto-deploy options
+now execute, with the fractional-D rejection kept as a correct known failure.
+No-readback caching, native-toolsetter bypass, optional probe hooks and available/
+unavailable report chains now execute too. Toolsetter-specific planner flags,
+check-mode policy and actual controller/servo hardware remain. Do not infer complete
 BLTouch support from this selected configuration.
 
 ## M-code consumed-word contract correction
