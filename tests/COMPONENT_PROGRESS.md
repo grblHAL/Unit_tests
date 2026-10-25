@@ -1,3 +1,40 @@
+# Combined VFD delivery checkpoint - 2026-10-25 (batch33)
+
+Goal active. Full current-compatible Windows Clang ASan/UBSan/strict gate passes
+879 cases across42 suites:816 clean +63 documented known, zero unexpected
+failures/skips.43 added original-source VFD cases:11 YL620 +10 Huanyang v2 +
+11 Nowforever +11 Huanyang v1. All80 VFD cases pass clean in this combined gate;
+fresh separate coverage execution also passes80 clean4.42s. Initial authoring
+fixture failures are superseded by both complete results. No new allowances,
+production source edits, assertion weakening or CORE/PR merges.
+
+Fresh local LLVM coverage of8 selected VFD .c files:888/940 lines94.5%,
+282/417 branches67.6%,109/115 functions94.8%. Prior batch32 built4 selected
+files401/452 lines and121/199 branches. Added protocol sources expand the
+denominator; this is not a whole-plugin/repository or same-denominator gain.
+Previously built files retain coverage; shared wrapper improves93/117 to115/121
+lines and24/54 to34/54 branches by executing load reporting. Conditional source
+line denominator changes with compiled features. All seven protocol .c files now
+execute host scenarios; alternate configurations and full integration remain.
+
+Per-new-source lines/branches:YL62093/97 and26/39;Huanyang v2 110/113 and35/51;
+Nowforever119/122 and42/59;Huanyang v1 143/152 and48/69. Original sources remain
+clean at spindle8a3ae47f/COREb01f4810/EEPROM0c278db7; fresh GitHub-resolved locks
+match each local revision. Coverage counters use fresh build-vf33, max223chars;
+no stale counters or unbuilt-source denominator claims. Evidence is ignored
+build-evidence/*batch33* and short build results-batch33.xml files.
+
+87 reporting/source helper checks and26 separate legacy reference cases retain
+batch32 evidence: unchanged helpers/shared-header generation/reference code,
+not rerun or folded into879. No new miscellaneous measurement; its batch32
+coverage remains separately dated. Fresh fork Actions listing still exposes
+only reusable/core workflows. Separate Plugin/Driver manual dispatch awaits
+default-branch installation; no hosted GCC/Linux success claimed. Keep PR29
+draft/unmerged. Actual full controller jobs, target/SDK link, VFD serial timing,
+board hardware and remaining modules/configurations remain open.
+
+---
+
 # Local Huanyang v1 VFD checkpoint - 2026-10-25
 
 Goal active. Eleven new original-source Huanyang v1 cases cover four-parameter

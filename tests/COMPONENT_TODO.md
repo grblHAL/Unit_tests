@@ -524,3 +524,13 @@ Current and RPM async exceptions share a counter; dedicated mixed-response
 exception/recovery scenarios remain for source-contract review. Realtime report
 interval behavior and missing earlier report hook are not full-controller proof.
 Physical bus silence/timing, motor load and RS485 electrical behavior unverified.
+
+## VFD cumulative source measurement - batch33
+
+Full compatible879/42-suite ASan/UBSan/strict passes, VFD80 clean; fresh selected
+coverage888/940 lines and282/417 branches across8 .c files. All seven VFD
+protocol implementations have functional host cases. Remaining reachable source
+review should use batch33 HTML before authoring: Huanyang async exceptions and
+partial discovery, H100 exceptions/provider state, shared wrapper selection/
+settings/multi-spindle configurations; preserve existing assertions and source.
+Target/SDK firmware and physical wire/drive timing remain distinct unchecked work.
