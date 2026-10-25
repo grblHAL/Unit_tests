@@ -684,5 +684,19 @@
     "test_regex": "^plugin_spindle_onoff[.]",
     "coverage_filter": "plugins/spindle/onoff\\.c$",
     "diagnostics_directory": "tests/plugins/spindle_onoff"
+  },
+  "plugin_spindle_pwm": {
+    "repository": "grblHAL/Plugins_spindle",
+    "ref": "master",
+    "path": "plugins/spindle",
+    "dependencies": [
+      "core",
+      "eeprom_backend"
+    ],
+    "cmake_source": "tests/plugins/spindle_pwm",
+    "cmake_options": [],
+    "test_regex": "^plugin_spindle_pwm[.]",
+    "coverage_filter": "plugins/spindle/pwm\\.c$",
+    "diagnostics_directory": "tests/plugins/spindle_pwm"
   }
 }

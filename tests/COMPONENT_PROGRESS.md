@@ -1,3 +1,33 @@
+# Local PWM resource tests and activation incompatibility - 2026-10-25
+
+Goal active. New selectable plugin_spindle_pwm executes six provider-rejection
+cases: no analog bank, non-PWM-capable analog pin and absent NVS allocation,
+each with direction/no-direction compile variants. Real CORE ioports/crossbar,
+secondary-spindle settings registration and original EEPROM/CRC compile. Six
+active cases pass Windows Clang ASan/UBSan0.22s and strict classification clean.
+Manifest/Plugin workflow/README registration included; component suite helper7
+checks and actionlint pass. No new diagnostic allowance or known runtime label.
+
+Initial12-case authoring run: six resource cases passed, six activation cases
+failed with null context.pwm access in CORE spindle_control.c122. Source review:
+original pwm.c declares SpindleType_PWM without context.pwm; spindleConfig
+forwards driver configuration without establishing the required CORE PWM object.
+No fixture/private context injection, production edit, cast or header bypass.
+The six activation scenarios (three files x two direction variants) are moved
+unchanged to unregistered tests/proposals/spindle_pwm. They remain unfinished,
+not passing cases/coverage. Do not rerun unsafe activation on unchanged sources.
+The passing provider subset does not fulfill PWM activation/controller support.
+
+Original plugin8a3ae47f/COREb01f4810 source contract remains incompatible for
+this activation path; fix belongs upstream. Hardware PWM timing, target SDK and
+full controller execution remain unverified.44 compatible/provider suites and
+914 authored registered cases; last complete delivered gate remains batch33
+879 across42 suites. Six PWM proposals excluded. Pending local additions35
+including17 VFD +12 onoff +6 PWM resource tests. Continue other spindle modules
+and broader driver work; full goal remains active.
+
+---
+
 # Local on/off spindle suite checkpoint - 2026-10-25
 
 Goal active. New selectable plugin_spindle_onoff suite adds12 original-source

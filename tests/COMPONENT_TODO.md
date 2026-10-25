@@ -553,3 +553,12 @@ Physical GPIO direction/enable ordering, controller job lifecycle, duplicate
 on/dir port assignment policy and true process restart remain to assess. Source
 warning for unrecognized set_port ID is not executed; valid registered settings
 cover intended public contract. PWM/offset/stepper/select modules remain open.
+
+## PWM source activation contract
+
+Provider-only suite6/6 ASan/UBSan/strict passes. Six activation proposals remain
+unregistered after actual initial null context failure; source confirms plugin
+SpindleType_PWM object lacks context required by CORE activation at line122.
+Do not inject host context, modify production sources or rerun unsafe path.
+Upstream compatibility resolution is required before claims of PWM/controller
+support. Other spindle and driver modules remain available independent work.
