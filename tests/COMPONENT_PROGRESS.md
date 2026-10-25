@@ -1,3 +1,33 @@
+# Local cloned PWM spindle checkpoint - 2026-10-25
+
+Goal active. Eight original pwm_clone.c scenarios pass Windows Clang
+ASan/UBSan0.67s and strict classification all clean. Real CORE precomputes the
+base driver's PWM context using its public API before registration; original
+clone plugin provides its own context/conversion. Real CORE spindle registry,
+secondary settings and EEPROM/CRC execute. Tests capture primary-on routing
+to direction, clone-on routing to enable, reverse-state bookkeeping, RPM/PWM
+conversion at1MHz/1000Hz, off state, stop-before-switch and prior selected hooks,
+settings-driven conversion update, missing base/direction/update and storage.
+
+Initial8-case run failed four host checks because startup callback handling
+assumed warning only. CORE queues secondary PWM initialization; fixture now
+uses bounded startup queue executed after settings load. Complete8 rerun clean
+supersedes those fixture failures. Default primary10000RPM/secondary2000RPM
+are explicit normal startup configurations. No hidden context repair/private
+plugin state, source edit, known allowance or weakened assertion. This clone
+success does not fix incompatible pwm.c activation or tool-setting proposals.
+
+Registered plugin_spindle_clone manifest/manual Plugin workflow/README/inventory.
+Metadata7 helper checks/actionlint pass.47 registered suites/938 authored cases;
+last delivered batch34 full gate remains930/46 plus87 helpers. Eight local cases
+have no fresh cumulative/coverage/hosted claim. Laser-mode variants, configured
+range metadata refresh, full controller parser, actual PWM timer/electrical
+waveforms and physical motors remain unverified. Next stepper module requires
+original CORE stepper2 and four-axis HAL; broad remaining drivers/configurations
+and SDK hardware remain unfinished. Goal stays active.
+
+---
+
 # Combined spindle delivery gate - 2026-10-25 (batch34)
 
 Goal active. Full registered Windows Clang ASan/UBSan/strict gate passes930 cases

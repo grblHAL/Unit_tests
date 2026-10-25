@@ -593,3 +593,13 @@ independent supported work: clone source with real driver PWM precompute/registr
 and four-axis HAL callbacks. Tool setter/PWM context contracts remain upstream
 incompatibilities, not completed support. Native controller jobs and remaining
 board/SDK/hardware configurations remain required separate work.
+
+## Cloned spindle host suite
+
+Eight strict-clean sanitizer scenarios execute original pwm_clone.c with real
+CORE precompute/registration/settings and EEPROM. Startup secondary init must
+be queued until after settings load, matching CORE. Physical routing is captured
+at driver callback boundary; real PWM timing/full parser not claimed. Laser
+mode and range metadata refresh are pending; provider base must be properly
+initialized through public API, never fabricate missing context for pwm.c.
+Stepper module with actual CORE stepper2/four-axis HAL remains next source gap.

@@ -726,5 +726,19 @@
     "test_regex": "^plugin_spindle_offset[.]",
     "coverage_filter": "plugins/spindle/offset\\.c$",
     "diagnostics_directory": "tests/plugins/spindle_offset"
+  },
+  "plugin_spindle_clone": {
+    "repository": "grblHAL/Plugins_spindle",
+    "ref": "master",
+    "path": "plugins/spindle",
+    "dependencies": [
+      "core",
+      "eeprom_backend"
+    ],
+    "cmake_source": "tests/plugins/spindle_clone",
+    "cmake_options": [],
+    "test_regex": "^plugin_spindle_clone[.]",
+    "coverage_filter": "plugins/spindle/pwm_clone\\.c$",
+    "diagnostics_directory": "tests/plugins/spindle_clone"
   }
 }
