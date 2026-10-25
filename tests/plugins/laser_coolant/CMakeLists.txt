@@ -6,7 +6,7 @@ foreach(file ioports.c crossbar.c nuts_bolts.c crc.c strutils.c)
   list(APPEND sources "${COMPONENT_CORE_ROOT}/${file}")
   set_source_files_properties("${COMPONENT_CORE_ROOT}/${file}" PROPERTIES COMPILE_OPTIONS -Wno-error)
 endforeach()
-foreach(behavior start timeout delayed_off cancel_off reset_off lost_signal parameters reports no_inputs no_storage claimed)
+foreach(behavior start timeout delayed_off cancel_off reset_off lost_signal parameters reports no_inputs no_storage claimed port_validation port_mapping temperature_disabled irq_capability persist_write persist_read)
   set(target plugin_laser_coolant.${behavior})
   component_case(${target} ${behavior}.c coolant_host.c "${HARNESS_ROOT}/plugins/laser/coolant.c"
     "${HARNESS_ROOT}/plugins/eeprom/eeprom_24AAxxx.c" "${HARNESS_ROOT}/tests/plugins/eeprom/eeprom_host.c" ${sources})
@@ -17,3 +17,8 @@ foreach(behavior start timeout delayed_off cancel_off reset_off lost_signal para
   target_compile_definitions(${target} PRIVATE LASER_COOLANT_ENABLE=1 NGC_EXPRESSIONS_ENABLE=1 EEPROM_ENABLE=128 EEPROM_IS_FRAM=1 NVS_SIZE=8192 NVS_SIZE_MAX=16384)
 endforeach()
 set_source_files_properties("${HARNESS_ROOT}/plugins/laser/coolant.c" PROPERTIES COMPILE_OPTIONS -Wno-error)
+
+file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/persistent")
+set_tests_properties(plugin_laser_coolant.persist_write PROPERTIES FIXTURES_SETUP coolant_nvs)
+set_tests_properties(plugin_laser_coolant.persist_read PROPERTIES FIXTURES_REQUIRED coolant_nvs)
+set_tests_properties(plugin_laser_coolant.persist_write plugin_laser_coolant.persist_read PROPERTIES WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/persistent")

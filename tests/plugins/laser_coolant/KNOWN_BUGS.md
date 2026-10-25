@@ -1,6 +1,6 @@
 # Known defects and scope
 
-Eleven selected original coolant cases pass with no runtime allowances. Source
+Seventeen selected original coolant cases pass with no runtime allowances. Source
 Plugins_laser26934c6c9607e0b5ba4a711516a60d4657bf142c and
 COREb01f481072edecac33d5e40c25869359a5b3fa1f remain unchanged.
 
@@ -24,3 +24,12 @@ and no whole thermal-protection success or confirmed defect allowance is claimed
 No analog-bank-only configuration is executed without a valid port contract.
 Native parser/controller jobs, actual coolant flow/electrical IRQs, thermal
 response, driver timing and physical safety remain unverified.
+
+Six additional cases validate actual CORE port setters/getters and remapping
+with two digital/analog input pins. Fractional/unavailable ports reject; selected
+aux1 routes virtual reads and IRQ registration to physical1 after claims. Valid
+disabled temperature port omits its virtual provider. Falling-only input rejects
+required Change capability. Two processes save original EEPROM mapping/delays,
+then load the image without restoring defaults and exercise the saved settings.
+This verifies valid persisted restart only; erased/corrupt recovery and WIP
+thermal reporting/protection remain unverified.

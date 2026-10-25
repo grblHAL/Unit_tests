@@ -1,3 +1,30 @@
+# Local coolant port mapping and restart checkpoint - 2026-10-25
+
+Goal active. Six new cases bring coolant suite to17. Complete17-case Windows
+Clang ASan/UBSan run passes0.99s and strict classification all clean after shared
+input fixture expansion. Actual CORE setters/getters reject fractional and
+unavailable aux ports; valid saved aux1 mapping routes digital/analog reads and
+falling IRQ to physical1 after claims. Disabled temperature input (-1) omits
+its virtual provider while coolant still operates. Falling-only pin rejects
+required Change capability; original plugin does not install coolant hooks.
+
+Two real processes save complete original EEPROM image with mapped ports and
+on/off delays. Fresh reader loads without restoring defaults, uses physical1,
+waits via configured2s timeout and schedules6000ms off callback. Original
+EEPROM/CRC and plugin settings remain unchanged; no decoding/injection of
+private NVS layout or manufactured plugin state. Existing11 cases remain clean.
+No new runtime failure, allowance, weakened assertion or production edit.
+
+Two-port callbacks remain boundary models for sensors/IRQ/scheduler; physical
+flow/electrical timing/full native controller not claimed. Valid restart is now
+verified; erased/corrupt recovery and WIP thermal monitor flag remain separate
+unfinished contracts.50 suites/982 authored cases, last delivered batch35 full
+gate976/50 plus87 helpers. Six local cases pending substantial next batch; no
+fresh coverage/global/hosted claim. Continue remaining modules/configurations,
+never private thermal-state forcing. Full goal stays active.
+
+---
+
 # Combined clone/stepper/laser delivery - 2026-10-25 (batch35)
 
 Goal active. Complete50 current-source plugin/driver host suites pass Windows

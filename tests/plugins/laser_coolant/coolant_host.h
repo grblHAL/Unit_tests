@@ -22,3 +22,10 @@ void coolant_run_delayed(void);
 void coolant_edge(bool state);
 float coolant_param(const char *name);
 void laser_coolant_init(void);
+
+extern unsigned coolant_inputs, coolant_digital_port, coolant_analog_port, coolant_irq_physical;
+extern bool coolant_restore_image, coolant_change_cap;
+extern float coolant_wait_timeout;
+status_code_t coolant_port(setting_id_t id, float value);
+float coolant_get_port(setting_id_t id);
+bool coolant_has_param(const char *name);

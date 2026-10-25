@@ -666,3 +666,11 @@ erased-default contract are still WIP/uncertain, never force private state.
 Remaining source configurations, native controller integration and broader
 networking/storage/driver modules remain required. Separate hosted dispatch
 unavailable until default-branch workflow installation; keep working independently.
+
+## Coolant mapped restart follow-up
+
+Six new cases, all17 strict-clean sanitizer after shared input expansion. Actual
+CORE port validation/mapping, optional temperature disable and Change capability
+rejection execute. Two-process original EEPROM restart verifies valid aux1 and
+delay settings; no private stored-byte decoding. Erased/corrupt recovery, thermal
+monitor WIP, actual scheduler/IRQ timing and physical controller remain open.
