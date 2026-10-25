@@ -1,3 +1,55 @@
+# Combined storage delivery checkpoint - 2026-10-25 (batch36)
+
+Goal active. Complete51 current-source plugin/driver host suites pass Windows
+Clang ASan/UBSan/strict:1003 cases =940 clean +63 documented known, zero
+unexpected failures/skips.27 cases since delivered35:6 coolant mapping/restart
++21 FatFs/SD adapter/controller/file-stream integration. Fresh87 reporting/source
+helper checks pass20.718s; Plugin/Driver actionlint passes. No production edits,
+new allowances, weaker assertions or merges. Main CORE and historical reference
+suites remain separately tracked, excluded from1003.
+
+Fresh selected local LLVM coverage, two clean coverage executions:
+- Coolant17 clean:109/124 lines87.9%,48/68 branches70.6%,13/14 functions.
+  Same source/denominator as batch35: +16 lines/+6 branches (93/124,42/68).
+- FatFs/SD21 clean:452/843 lines53.6%,155/516 branches30.0%,57/87 functions.
+  First measured selected four-file configuration; no prior same-denominator gain.
+  fs_fatfs107/118 lines90.7%,28/46 branches60.9%,21/21 functions.
+  sdcard106/107 lines99.1%,47/62 branches75.8%,15/15 functions.
+  fs_stream226/513 lines44.1%,78/350 branches22.3%,19/41 functions.
+  macros13/105 lines12.4%,2/58 branches3.4%,2/10 functions.
+All compiled source denominators remain visible; no whole-module/configuration/
+repository percentage claim. Macro/stream regions remain substantial unfinished
+work. Root-stat special branch confirmed0 hits by fresh XML; source-only unsafe
+timestamp concern was not exercised or hidden through a diagnostic allowance.
+
+Actual adapter, FatFs ff.c/ffunicode.c/ffconf.h, CORE VFS/stream/stream_file and
+plugin SD/stream/macros run on valid2880-sector FAT12 disk. Native mount/detect/
+startup/custom hooks, ordinary file operations, sector-read recovery and modeled
+controller M30/tool/reset/error handlers execute. Older embedded13 gate retains
+11 clean+2 correct known EOF regressions unchanged; source/shared fixture change
+included full cumulative validation. No native parser/planner/physical SD claim.
+
+Fresh source locks match SDd0fe753d622e79a60e54e729ba83f7207276114c,
+laser26934c6c9607e0b5ba4a711516a60d4657bf142c,
+COREb01f481072edecac33d5e40c25869359a5b3fa1f,
+STM32F4a6318ac92f079f49fab91687530f832997396edc and
+EEPROM0c278db74edc38303b9d86583a7d51a1ec1be51e where applicable.
+Source-only FatFs dependency cannot be selected as a suite. All51 gated suites'
+candidates/dependencies snapshot48 clean Git checkouts/exact SHAs. Fresh short
+lc36/fa36 counters max234chars; evidence ignored build-evidence/*batch36* and
+per-build results-batch36.xml. No stale report or unbuilt-source denominator.
+
+Coolant valid mapped restart verified; erased recovery and thermal WIP remain.
+FatFs root-stat/cwd concerns, littlefs ABI, PWM missing context/tool-setting ABI/
+tooltable proposals remain unresolved and separate. No unsafe reproduction or
+private state forcing. Actual SD/SPI/IRQ timing, motors/laser/coolant response,
+full controller/SDK firmware and broad remaining configurations remain open.
+Fresh fork Actions listing still only reusable/core workflows. Separate Plugin/
+Driver manual dispatch awaits default-branch installation; keep PR29 draft/
+unmerged and never claim hosted GCC/Linux success. Full goal stays active.
+
+---
+
 # Local actual-disk file-stream integration checkpoint - 2026-10-25
 
 Goal active. Seven new FatFs-backed file-stream cases bring suite to21. Complete

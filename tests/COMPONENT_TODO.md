@@ -703,3 +703,14 @@ Modeled controller M30 completion is separate from unterminated EOF smoke;
 existing mixed/trailing EOF assertions remain unchanged. Reset/reopen, tool ack,
 progress and writable commands covered with stored files. Native parser/motion,
 macro expression variants, physical media and broader drivers remain open.
+
+## Batch36 measured storage gaps
+
+Full1003/51 current-source suites plus87 helpers pass. Same-source coolant adds
+16 lines/6 branches. Storage first measured452/843 lines across adapter/controller/
+stream/macros; retain low stream226/513 and macro13/105 denominators. Rank normal
+macro call/return/resource-lifecycle and stream command workflows next using real
+FatFs/backend, then broader driver/modules. Root-stat special branch0 fresh hits;
+unsafe timestamp/cwd source concerns stay source-only, not repeated reproducers.
+Native parser/controller, alternate filesystem/API versions, physical media and
+board SDK/hardware remain separate required scope; hosted dispatch unavailable.
