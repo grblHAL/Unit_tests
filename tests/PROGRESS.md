@@ -1,6 +1,7 @@
 # Current checkpoint - 2026-10-25
 
-Goal ACTIVE: meaningful full supported CORE line AND branch coverage. Never edit
+User requested coverage expansion stop on2026-10-25. Finish the final PR and
+pause the goal; full supported coverage has not been proved. Never edit
 CORE or merge PRs. Basic actual-use regressions only; Ponytail full and explicit
 RTK. Passing gates or PR checkpoints do not complete this goal.
 
@@ -87,6 +88,23 @@ No matcher/assertion/flag/padding/wildcard/range change. Dated KNOWN_BUGS addend
 Evidence hosted40121790962/{report-core-clang,results-core-clang,verified-clang.json,
 verified-new-workflows.json,verified-exact-diagnostic-replay.json}. No CI retry for
 these entries alone; post-fatal assertions remain unvalidated.
+
+## Final user-requested closeout
+
+No further authoring or coverage chasing. Added COVERAGE_CLOSEOUT.md summarizing
+unfinished/deferred features, disabled/unrouted paths, unresolved contracts and
+all remaining evidence limits. The remaining1,016 branch outcomes are not all
+proved impossible. Latest measured coverage stays98.50% lines/92.67% branches.
+Four local workflows since ed5b142 include the probe-selector status case: actual
+G65P5Q1 selects the registered toolsetter and reports ID1 once via ordinary status,
+without a protection event or movement. Focused sanitizer/strict pass0.30s.
+Saved probe-selector-status-{build,summary}.log and results.xml. No new allowance.
+Final cumulative local ASan/UBSan4,508 gate passes152.20s; strict classification:
+4,482 clean/25 known regressions/one known diagnostic/zero failed or skipped.
+Saved final-closeout-{build,tests,summary}.log and final-closeout-results.xml.
+Commit/push the closeout and create the requested final draft PR with the failed
+hosted matrix stated, then pause the active goal. No additional hosted run or
+coverage expansion is requested. Do not call full supported coverage achieved.
 
 ## Further local laser-off positioning hold/resume workflow
 

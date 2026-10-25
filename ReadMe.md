@@ -10,6 +10,9 @@ They cover the core across the tested configurations; they do not include board
 drivers or plugins. When updating the badges, use the line and branch totals in
 `coverage.xml` from a fully successful run, and update both run links together.
 
+The [coverage closeout](tests/COVERAGE_CLOSEOUT.md) records the stopping point,
+unfinished features and remaining gaps; it does not claim 100% coverage.
+
 Host tests compile actual source from an ordinary `core` checkout. No CNC
 controller is needed. Each new behavior lives in `tests/cases/<module>/<case>.c`
 and appears individually in CTest and GitHub Actions. Shared mocks live in
