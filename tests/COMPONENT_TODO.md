@@ -7,6 +7,19 @@ or force private state to enter a path.
 
 ## Next source families
 
+- Batch49 adds28 ESP-AT workflows in misc/esp_at:26 clean plus the correct
+  reserved-slot capacity and NETIF-listener-port regressions. Original CORE
+  stream/IO/EEPROM and networking are linked; modem/I2C/task delivery are host
+  models. Registered control outputs and tool-ACK suspension now pass, as do six
+  networking cases including prior-provider delegation. Remaining provider WiFi/
+  DHCP/hostname fields, notifications/extended input, full controller and physical
+  transport remain. IPv4 setter integration stays
+  unregistered after its native terminator-scan boundary finding; see SCOPE.md.
+  Do not repeat unsafe execution or hide it with larger/padded caller storage,
+  alternate parser/private state, source edits or sanitizer allowances.
+  First cumulative gate passes1281; ESP-AT first coverage444/524 lines and180/280
+  branches. Original setter remains compiled/uncovered; no source exclusion.
+
 - WebUI batch48 adds22 original common file-handler workflows with v2/v3
   response formats and real CORE VFS/JSON/RAM files plus FatFs. Ordinary CRUD,
   listing/free-space, download routing, chained fragmented binary/empty uploads,

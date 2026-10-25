@@ -1,3 +1,69 @@
+# Batch49 cumulative ESP-AT gate - 2026-10-25
+
+Goal active. One fresh full Windows Clang ASan/UBSan plus strict gate passes1281
+cases across56 current-CORE-compatible suites:1212 clean +69 documented known,
+zero unexpected failures/skips.28 new ESP-AT cases beyond delivered f616781:
+26 clean +2 correct known assertions. Known categories65 assertions +4 diagnostic-
+only, with3 overlaps counted once;7 diagnostic-bearing cases unchanged. Main
+CORE and historical reference suites remain separate/excluded. No production
+source edit, copied algorithm, private-state/ABI alias or sanitizer allowance.
+
+The22 standalone cases now include registered CORE port function assignment and
+Boot0/reset order, incomplete-pair fallback and actual CORE tool-ACK suspension/
+queue restore. Six ETHERNET-enabled cases link original networking.c and lwIP
+headers for AP/STA flags/IP events, disconnect flags, active-stream report routing,
+initial server-stop rejection and prior-provider delegation. The correct listener
+assertion catches NETIF reporting0 after actual startup commands requested23.
+It is one exact WILL_FAIL/known_bug; the reserved-slot capacity assertion is the
+other. Modem/task/I2C/digital output delivery remain explicit host boundaries;
+no physical radio/socket/scheduler-timing claim. All48 original source checkouts
+are clean at recorded revisions; the five-source misc plan is locked separately.
+
+Seven affected component/source-plan helper tests pass0.057s after adding EEPROM,
+networking and lwIP dependencies. Broader91 helpers last passed batch48; unchanged
+helper code is not rerun. Fresh selected misc coverage1716/1897 lines90.5%,
+841/1146 branches73.4%,156/164 functions. New esp_at.c adds444/524 lines84.7%,
+180/280 branches64.3%,33/36 functions; previous selected files retain their exact
+batch32 totals. Thus+444covered/+524executable lines and+180covered/+280branches.
+Coverage execution passes157 cases (147clean/10known), counters fresh/max229chars.
+The unregistered IPv4 setter stays counted among uncovered executable code; no
+source exclusion or padding is used. Other module/configuration/controller paths
+remain open. PR29 remains draft/unmerged; deliver on the same feature branch.
+Fork exposes only Core/Reusable workflows; Plugin/Driver dispatch and hosted
+Linux checks remain unavailable pending default-branch installation. Keep goal
+active after this checkpoint; safe remaining configurations/modules are open.
+
+# Batch49 ESP-AT authoring checkpoint - 2026-10-25
+
+Goal active; local uncommitted work beyond delivered f616781.19 new ESP-AT cases
+pass focused ASan/UBSan plus strict1.26s:18 clean and1 documented correct capacity
+regression; zero unexpected failures/skips. Seven affected source-plan helpers
+pass0.065s after adding the existing source-only EEPROM backend dependency.
+No full gate/coverage/push/CI for this partial batch. Delivered baseline remains
+1253 cases across56 suites; don't claim a new cumulative count/coverage yet.
+
+Original misc265711922037cab6b6e47a9560ef11da3a6e5f83, COREb01f481 and EEPROM
+0c278db link actual stream/passthrough/IO ports/crossbar/VFS/CRC/storage code.
+Public registered settings/provider lifecycle and an explicitly claimed UART
+drive AP/STA/static startup, echo retry, existing-server shutdown, config-error/
+disabled/unavailable paths, stream connect/normal RX/binary TX/realtime routing,
+disconnect/reconnect, station disconnect, prompt-timeout recovery, full/wrap/
+flush/cancel and settings reload/checksum recovery. UART modem replies, I2C
+bytes and scheduler delivery remain host boundaries; no physical WiFi claim.
+
+The capacity function reports32 for the empty32-byte ring, whose producer
+reserves one slot. The correct31 assertion alone is WILL_FAIL/known_bug; a
+separate clean test retains31 bytes in order and drops the next. No sanitizer
+allowance or weakened assertion. See misc/KNOWN_BUGS.md for repair/removal guide.
+
+A normal IPv4 setter authoring check encountered an ASan boundary diagnostic in
+the original validator; source review records its terminator-scan contract gap.
+That invocation was removed and not executed again. It stays unregistered in
+misc/esp_at/SCOPE.md with no padding/source fix/crash allowance. Saved-settings
+reload and getter/default-address checks pass independently. Networking events,
+control pins, extra input/configuration/controller/hardware paths remain open.
+Continue substantial supported regions before the next cumulative gate.
+
 # Batch48 cumulative host gate - 2026-10-25
 
 Goal active. All56 current-CORE-compatible suites pass one fresh Windows Clang

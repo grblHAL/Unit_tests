@@ -272,7 +272,7 @@ Use `--compiler /path/to/arm-none-eabi-gcc` if it is outside `PATH`.
 
 | Workflow | Suite | Initial tested behavior |
 |---|---|---|
-| Plugin tests | `plugins_misc` | M220/M150/M280, analog/digital expanders, BLTouch/probe relays, homing pull-off and event outputs |
+| Plugin tests | `plugins_misc` | M220/M150/M280, expanders, probes, homing/event outputs and ESP-AT startup/session/storage/networking through real CORE streams/ports |
 | Plugin tests | `plugin_eeprom` | I2C EEPROM/FRAM page/block storage |
 | Plugin tests | `plugin_fans` | One/two/three/four-fan commands, saved settings, delayed shutdown, spindle links and reports |
 | Driver tests | `driver_simulator` | Simulator EEPROM storage |

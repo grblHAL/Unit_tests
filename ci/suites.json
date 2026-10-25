@@ -15,7 +15,10 @@
     "ref": "master",
     "path": "plugins/misc",
     "dependencies": [
-      "core"
+      "core",
+      "eeprom_backend",
+      "plugin_networking",
+      "lwip"
     ],
     "cmake_source": "tests/plugins/misc",
     "cmake_options": [],
