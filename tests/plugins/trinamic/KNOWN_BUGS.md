@@ -1,6 +1,6 @@
 # Known defects and scope
 
-No runtime defect is classified for these tested Trinamic plugin scenarios. Original
+One correct TMC2240 UART transport-routing regression is retained below. Original
 motor source9229617c1d8a3cc7a71fd584896500a779978b02, CORE
 b01f481072edecac33d5e40c25869359a5b3fa1f and actual Trinamic library
 9b304175318d93818c8967faadc89dd101b17e92 are unchanged. The library is pinned
@@ -24,8 +24,8 @@ provider returns an invalid non-null reply as expected by the library boundary;
 actual inspected RP2040/ESP32 UART transports return static reply buffers and
 mark address0xFF on timeout. No unproven null reply contract is force-entered.
 
-Three-axis non-I2C builds compile TMC2209 UART plus TMC2130/TMC5160 SPI
-register-callback configurations. TMC2240/TMC2660, I2C bridges, SG-stream/developer
+Three-axis non-I2C builds compile TMC2209 UART plus TMC2130/TMC2240/TMC5160 SPI and TMC2660 SPI20
+register-callback configurations. TMC2240 UART, I2C bridges, SG-stream/developer
 variants and physical timing remain. Additional TMC2209 runtime cases
 enable polling and dynamic current: hold/block/idle current transitions, quiet
 polls, repeated/recovered over-temperature warnings, moving hold requests and
@@ -60,3 +60,38 @@ daisy-chain/pipelining/IRQ/DMA timing or the actual board adapter. Status payloa
 is a valid idle standstill image; returned SPI status-header behavior and dynamic
 fault/poll/homing/current variants on these SPI chips remain unvalidated. Library
 source coverage is not included in the plugin-only coverage filter.
+
+Batch40 adds six TMC2240 SPI and six TMC2660 SPI20 cases,53 total registered.
+TMC2660 uses a separate native20-bit datagram fixture and a valid idle response;
+its lack of StealthChop is verified through public command capability queries.
+SPI microsteps check the emitted register field, not just shadow configuration.
+Offline2660 setup has five outer startup cycles, each attempting25 retries on
+three motors:375 requested ten-ms delays plus five100ms startup delays. A first
+single-cycle fixture expectation was corrected from source and the affected case
+rerun; no defect/allowance is added. These virtual request counts do not establish
+a500ms wall-clock timeout. Existing non2660 timing expectations remain strict.
+
+## TMC2240 UART startup writes COOLCONF over SPI - 2026-10-25
+
+`plugin_trinamic.2240_uart_transport` builds original library/plugin with their
+native TRINAMIC_UART_ENABLE1/TMC_UART1 configuration. The UART provider checks
+request CRC and provides normal reply CRC/IFCNT; a separate SPI recorder counts
+unexpected calls without applying those writes to the UART device. First normal
+startup execution reached three enabled motors and failed the correct assertion
+`tmc_unexpected_spi == 0`. Only this named case is WILL_FAIL/known_bug, no sanitizer
+allowance or production fix. Other TMC2240 UART scenarios are not registered or
+claimed as validated.
+
+Source cause: plugin trinamic_driver_config invokes the HAL coolconf callback;
+original tmc2240hal.c317 calls tmc_spi_write unconditionally, while surrounding
+helpers use the selected tmc2240_write wrapper. A maintainer repair should route
+COOLCONF through the selected transport, then remove this property and extend
+normal UART scenarios. The SPI recorder is an explicit driver boundary, not an
+SPI-to-UART alias or an implementation of the missing transfer.
+
+The original TMC2209 UART model also gains a CRC-noise/recovery case: bad reply
+checksums prevent startup; restoring valid replies and public driver reset/status
+recovery enables current commands again. Actual library CRC checking/IFCNT and
+EEPROM execute.55 cases now registered,54 clean +1 correct assertion regression
+in the complete local sanitizer/strict component check. Physical UART and full
+board/controller correctness remain unverified.

@@ -11,9 +11,12 @@ uint32_t tmc_registers[3][128];
 uint8_t tmc_addresses[3];
 bool tmc_bus_ok = true, tmc_storage_ok = true, tmc_setup_ok = true, tmc_custom_address;
 char tmc_output[4096];
-#if TRINAMIC_ENABLE == 2209
+bool tmc_crc_ok = true;
+unsigned tmc_unexpected_spi;
+#if TRINAMIC_ENABLE == 2209 || (TRINAMIC_ENABLE == 2240 && TRINAMIC_UART_ENABLE)
 static uint8_t ifcnt[3];
 #endif
+unsigned tmc_retry_delays;
 static bool setup(settings_t *value)
 {
     CHECK(value == &settings);
@@ -54,9 +57,11 @@ static void output(const char *text)
 }
 static void delay(uint32_t ms, delay_callback_ptr callback)
 {
-    CHECK(!callback && (ms == 100 || ms == 7));
+    CHECK(!callback && (ms == 100 || ms == 7 || (TRINAMIC_ENABLE == 2660 && ms == 10)));
     if (ms == 100)
         tmc_delays++;
+    else if (ms == 10)
+        tmc_retry_delays++;
 }
 static void iterator(motor_iterator_callback_ptr callback)
 {
@@ -74,7 +79,7 @@ static void postinit(motor_map_t motor, const tmchal_t *driver)
     CHECK(motor.id < 3 && driver);
     tmc_drivers[motor.id] = driver;
 }
-#if TRINAMIC_ENABLE == 2209
+#if TRINAMIC_ENABLE == 2209 || (TRINAMIC_ENABLE == 2240 && TRINAMIC_UART_ENABLE)
 void tmc_uart_write(trinamic_motor_t driver, TMC_uart_write_datagram_t *packet)
 {
     CHECK(driver.id < 3 && packet->msg.sync == 5 && packet->msg.slave == driver.address &&
@@ -104,7 +109,12 @@ TMC_uart_write_datagram_t *tmc_uart_read(trinamic_motor_t driver, TMC_uart_read_
     response.msg.sync = 5;
     response.msg.slave = tmc_bus_ok ? 255 : 0;
     response.msg.addr = packet->msg.addr;
-    uint32_t value = (packet->msg.addr.value & 127) == TMC2209Reg_IFCNT
+#if TRINAMIC_ENABLE == 2209
+    const uint8_t ifcnt_register = TMC2209Reg_IFCNT;
+#else
+    const uint8_t ifcnt_register = TMC2240Reg_IFCNT;
+#endif
+    uint32_t value = (packet->msg.addr.value & 127) == ifcnt_register
                          ? ifcnt[driver.id]
                          : tmc_registers[driver.id][(packet->msg.addr.value & 127)];
     response.data[3] = value >> 24;
@@ -112,7 +122,18 @@ TMC_uart_write_datagram_t *tmc_uart_read(trinamic_motor_t driver, TMC_uart_read_
     response.data[5] = value >> 8;
     response.data[6] = value;
     tmc_crc8(response.data, 8);
+    if (!tmc_crc_ok)
+        response.msg.crc ^= 1;
     return &response;
+}
+#endif
+#if TRINAMIC_ENABLE == 2240 && TRINAMIC_UART_ENABLE
+TMC_spi_status_t tmc_spi_write(trinamic_motor_t driver, TMC_spi_datagram_t *packet)
+{
+    CHECK(driver.id < 3 && packet);
+    // Record the wrong transport without applying it to the UART device model.
+    tmc_unexpected_spi++;
+    return 0;
 }
 #endif
 nvs_address_t nvs_alloc(size_t size)
@@ -157,8 +178,11 @@ axes_signals_t gc_claim_axis_words(parser_block_t *block, axes_signals_t validat
 void tmc_prepare(void)
 {
     prepare_eeprom();
-#if TRINAMIC_ENABLE == 2130 || TRINAMIC_ENABLE == 5160
+#if TRINAMIC_ENABLE == 2130 || TRINAMIC_ENABLE == 5160 ||                                          \
+    (TRINAMIC_ENABLE == 2240 && !TRINAMIC_UART_ENABLE)
     tmc_spi_prepare();
+#elif TRINAMIC_ENABLE == 2660
+    tmc_spi20_prepare();
 #endif
     CHECK(i2c_eeprom_init());
     hal.delay_ms = delay;

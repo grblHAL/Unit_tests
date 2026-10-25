@@ -64,6 +64,29 @@ static float pin_value(xbar_t *pin)
     CHECK(pin && pin->id < 3);
     return plasma_inputs[pin->id];
 }
+float plasma_voltage = 120;
+#if PLASMA_ANALOG
+static xbar_t voltage_pin;
+static xbar_t *voltage_info(io_port_direction_t dir, uint8_t port)
+{
+    return dir == Port_Input && port == 0 ? &voltage_pin : NULL;
+}
+static void voltage_description(io_port_direction_t dir, uint8_t port, const char *text)
+{
+    CHECK(dir == Port_Input && port == 0);
+    voltage_pin.description = text;
+}
+static float voltage_value(xbar_t *pin)
+{
+    CHECK(pin && pin->id == 0);
+    return plasma_voltage;
+}
+static int32_t voltage_wait(uint8_t port, wait_mode_t mode, float timeout)
+{
+    CHECK(port == 0 && mode == WaitMode_Immediate && timeout == 0);
+    return (int32_t)plasma_voltage;
+}
+#endif
 nvs_address_t nvs_alloc(size_t size)
 {
     static nvs_address_t next = 2048;
@@ -149,6 +172,21 @@ void plasma_prepare(unsigned inputs, bool output_step)
                                  .wait_on_input = read_input};
         CHECK(ioports_add_digital(&digital));
     }
+#if PLASMA_ANALOG
+    static io_ports_data_t analog_ports;
+    static io_analog_t analog;
+    voltage_pin = (xbar_t){.id = 0,
+                           .function = Input_Analog_Aux0,
+                           .cap.input = On,
+                           .cap.analog = On,
+                           .get_value = voltage_value};
+    analog_ports.in.n_ports = 1;
+    analog = (io_analog_t){.ports = &analog_ports,
+                           .get_pin_info = voltage_info,
+                           .set_pin_description = voltage_description,
+                           .wait_on_input = voltage_wait};
+    CHECK(ioports_add_analog(&analog));
+#endif
 }
 void plasma_load(void)
 {

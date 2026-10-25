@@ -31,3 +31,6 @@ void plasma_set(setting_id_t id, float value);
 void plasma_boot(void);
 void plasma_tick(unsigned ms);
 void plasma_feed(float programmed, float actual);
+
+extern float plasma_voltage;
+void plasma_set_port(setting_id_t id, float value);

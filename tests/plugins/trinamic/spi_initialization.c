@@ -12,6 +12,10 @@ int main(void)
         CHECK(config->motor.id == motor && config->motor.axis == motor);
 #if TRINAMIC_ENABLE == 2130
         CHECK(config->r_sense == 110);
+#elif TRINAMIC_ENABLE == 2240
+        CHECK(config->r_sense == 12);
+#elif TRINAMIC_ENABLE == 2660
+        CHECK(config->r_sense == 50);
 #elif TRINAMIC_ENABLE == 5160
         CHECK(config->r_sense == 75);
 #endif

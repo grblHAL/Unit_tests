@@ -117,6 +117,21 @@ void plasma_set(setting_id_t id, float value)
     }
     CHECK(false);
 }
+void plasma_set_port(setting_id_t id, float value)
+{
+    CHECK(plasma_details);
+    for (unsigned i = 0; i < plasma_details->n_settings; i++)
+    {
+        const setting_detail_t *detail = &plasma_details->settings[i];
+        if (detail->id == id)
+        {
+            CHECK(detail->type == Setting_NonCoreFn && detail->datatype == Format_Decimal);
+            CHECK(((setting_set_float_ptr)detail->value)(id, value) == Status_OK);
+            return;
+        }
+    }
+    CHECK(false);
+}
 int32_t plasma_wait_input(uint8_t port, wait_mode_t mode, float timeout)
 {
     CHECK(port < 3);

@@ -5,6 +5,8 @@ void tmc_spi_prepare(void)
     {
 #if TRINAMIC_ENABLE == 2130
         tmc_registers[i][TMC2130Reg_DRV_STATUS] = (TMC2130_drv_status_reg_t){.stst = 1}.value;
+#elif TRINAMIC_ENABLE == 2240
+        tmc_registers[i][TMC2240Reg_DRV_STATUS] = (TMC2240_drv_status_reg_t){.stst = 1}.value;
 #elif TRINAMIC_ENABLE == 5160
         tmc_registers[i][TMC5160Reg_DRV_STATUS] = (TMC5160_drv_status_reg_t){.stst = 1}.value;
 #endif

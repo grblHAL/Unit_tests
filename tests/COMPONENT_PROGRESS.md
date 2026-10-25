@@ -1,3 +1,92 @@
+# Combined chip/voltage-control validation - 2026-10-25 (batch40)
+
+Goal active. Complete51 current-CORE-compatible host suites pass Windows Clang
+ASan/UBSan and strict:1093 cases =1028 clean +65 documented known, zero unexpected
+failures/skips.21 cases since delivered39:12 TMC2240 SPI/TMC2660 SPI20 basic cases,
+TMC2209 CRC recovery, one correct TMC2240 UART wrong-SPI regression, and5 plasma
+voltage workflows +2 NVS boot fixture cases.87 helpers pass22.909s; Plugin/Driver/
+reusable actionlint passes. Main CORE and historical reference suites excluded.
+Known categories now61 correct assertions +4 diagnostic-only;3 assertions also
+diagnosed and counted once. Diagnostic-bearing total7 unchanged. No production
+edit, assertion weakening, sanitizer allowance or merge.
+
+Fresh short-build selected source/configuration LLVM results:
+- Plasma30 clean:547/869 lines62.9%,274/553 branches49.5%,41/58 functions.
+  thc.c451/764 lines59.0%,222/474 branches46.8%; LinuxCNC51/56 and27/42;
+  SheetCam45/49 and25/37. Last same-source/CORE/denominator report was batch8 at
+  457/869 and222/553: +90 lines/+52 branches across intervening authoring, not
+  attributed solely to this batch's7 cases. Electrical calibration remains untested.
+- Trinamic55 =54 clean +1 known: selected plugin782/1021 lines76.6%,413/666
+  branches62.0%,42/48 functions. Expanded2240/2660/UART profile union; previous
+  three-chip771/1011 and403/660 is narrower. Library source not in this filter.
+- New build-th40/tm40 counter paths <=227/229 chars; no stale counters reused.
+
+Voltage uses real CORE analog-port claims, registered setter, original EEPROM
+fresh-process mode boot, PID and secondary-stepper pulses. Driver voltage/time/
+controller remain explicit models. Powermax is original-source disabled by
+PLASMA_ENABLE&&0 and was not forced on. Physical regulation/full controller and
+pierce/cut-height planner integration remain unfinished.
+
+TMC2240 UART startup first failed the correct no-SPI assertion: original HAL
+COOLCONF calls SPI directly. Only named .2240_uart_transport is expected failure;
+record-only SPI callback never forwards to UART. Wider2240 UART work remains open.
+TMC2660 retry assertion includes five outer startup cycles and375 ten-ms requests;
+virtual request counts are not a500ms wall-clock guarantee. Original UART CRC and
+SPI register callback boundaries remain explicit, actual board transport untested.
+
+Fresh locks match clean plasmad2f91b58/motor9229617c/COREb01f4810/library9b304175/
+EEPROM0c278db7. All51 suites snapshot48 clean source SHAs. Fork Actions still only
+lists reusable/core workflows; separate Plugin/Driver dispatch awaits default
+installation. Keep PR29 draft/unmerged; one cumulative delivery then continue gaps.
+
+# UART CRC/routing checkpoint - 2026-10-25 (batch40, local)
+
+Goal active. Two further cases: TMC2209 reply-CRC failure/recovery passes; original
+TMC2240 UART startup makes an unexpected SPI write and fails the retained correct
+zero-SPI assertion before allowance. Only plugin_trinamic.2240_uart_transport is
+WILL_FAIL/known_bug. No sanitizer waiver or source edit. A separate record-only
+SPI provider detects wrong transport; it never forwards that write to UART.
+The wider TMC2240 UART case list remains unregistered/unvalidated. Source points
+to tmc2240hal.c317 bypassing the selected tmc2240_write wrapper during COOLCONF.
+
+All55 Trinamic cases now pass Windows Clang ASan/UBSan3.92s with strict54 clean
++1 documented known. This refresh includes prior retry-count repair and all
+shared UART/SPI/SPI20 fixtures. Production/SDK source remains unchanged; native UART
+configuration symbols are used, no ABI/header aliases. Existing SPI/2209 assertions
+remain intact. Runtime packet and physical/controller boundaries remain explicit.
+
+Batch40 now14 new local cases beyond39;1086 registered. Latest full51-suite gate
+remains1072 (1008 clean+64 known), coverage39. New known categories pending full
+gate are61 correct assertions +4 diagnostic-only,7 diagnostic-bearing unchanged.
+Continue other supported regions before full gate/push; no hosted dispatch.
+
+# TMC2240/TMC2660 authoring checkpoint - 2026-10-25 (batch40, local)
+
+Goal active.12 additional original chip/library cases: six TMC2240 SPI and six
+TMC2660 SPI20 startup/current/settings/microstep/offline-recovery/capability
+workflows. First focused12/12 pass ASan/UBSan0.78s. Shared53-case component run
+passes52; new retry-count assertion initially assumed a single startup pass.
+Source onDriverSetup repeats five passes. Corrected strict assertion verifies
+five100ms startup requests plus375 ten-ms retries; affected1/1 rerun passes0.07s
+with strict reporting. No new full53-case aggregate claimed after that repair.
+No production edits, known allowances or removed assertions.
+
+A separate SPI20 fixture captures actual20-bit register addresses/payload and
+returns a valid idle status. SPI profile now includes2240 with native12kOhm R_REF;
+2660 uses50mOhm sense and advertises no StealthChop command. Microstep cases check
+actual register mres3 for32 microsteps on all SPI chips, preserving unrelated
+motor configuration. No physical wire/CS/pipeline/status-measurement claim.
+Existing UART/SPI32 fixtures remain, with ten-ms delays allowed only for2660.
+TMC2240 UART, chip fault/poll/homing variants, bridges and actual board drivers
+remain unfinished. Startup wall-clock budgeting is not established by virtual
+requested-delay counts.
+
+Latest delivered39 bf14751c80452761592c2616eabef5e4a9a7e262 is tracked/pushed;
+PR29 exact-head body was read back draft/open/unmerged. Worktree was clean before
+this group. Trinamic now53 cases,1084 cumulative registered. Full51-suite gate
+remains1072/1008 clean+64 known from39, coverage remains39. Continue substantial
+work before next full gate/push; separate Actions installation remains open.
+
 # Combined auxiliary-macro/Trinamic validation - 2026-10-25 (batch39)
 
 Goal active. Complete51 current-CORE-compatible plugin/driver host suites pass

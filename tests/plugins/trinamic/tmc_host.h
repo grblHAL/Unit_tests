@@ -28,6 +28,16 @@ void tmc_sensitivity(setting_id_t base, unsigned axis, float value);
 
 status_code_t tmc_command(parser_block_t *block);
 
-#if TRINAMIC_ENABLE == 2130 || TRINAMIC_ENABLE == 5160
+#if TRINAMIC_ENABLE == 2130 || TRINAMIC_ENABLE == 5160 ||                                          \
+    (TRINAMIC_ENABLE == 2240 && !TRINAMIC_UART_ENABLE)
 void tmc_spi_prepare(void);
 #endif
+
+#if TRINAMIC_ENABLE == 2660
+void tmc_spi20_prepare(void);
+#endif
+extern unsigned tmc_retry_delays;
+
+extern bool tmc_crc_ok;
+
+extern unsigned tmc_unexpected_spi;

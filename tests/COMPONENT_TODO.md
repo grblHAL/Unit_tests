@@ -262,8 +262,10 @@ or force private state to enter a path.
 - Plasma has materials/imports and fresh-process EEPROM boots into Arc-ok and
   Up/down modes. Actual registered spindle callbacks, public timers, ARC input,
   retries/loss, secondary Z step output, velocity lock and reset now execute.
-  Voltage/PID regulation, pierce/cut-height planner moves, full CORE suspension,
-  PowerMax and expression integration remain. Never set private init_ok or state
+  Batch40 adds Voltage/PID host cases with real analog registration, EEPROM boot,
+  correction direction/band, velocity lock, reset, calibration report and arc loss.
+  Pierce/cut-height planner moves, full CORE suspension and expression integration
+  remain. Powermax is disabled by original PLASMA_ENABLE&&0; do not force it on. Never set private init_ok or state
   handlers. Material add currently always returns true even if malloc fails
   (source598-622); public allocation-failure semantics remain unclassified.
 - TMC2209 compiles actual plugin + library9b304175318d93818c8967faadc89dd101b17e92
