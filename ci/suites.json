@@ -9,5 +9,878 @@
     "test_regex": ".*",
     "coverage_filter": "core/.*\\.[ch]$",
     "diagnostics_directory": "tests"
+  },
+  "plugins_misc": {
+    "repository": "grblHAL/Plugins_misc",
+    "ref": "master",
+    "path": "plugins/misc",
+    "dependencies": [
+      "core",
+      "eeprom_backend",
+      "plugin_networking",
+      "lwip"
+    ],
+    "cmake_source": "tests/plugins/misc",
+    "cmake_options": [],
+    "test_regex": "^plugins_misc[.]",
+    "coverage_filter": "plugins/misc/.*\\.c$",
+    "diagnostics_directory": "tests/plugins/misc"
+  },
+  "driver_simulator": {
+    "repository": "grblHAL/Simulator",
+    "ref": "master",
+    "path": "drivers/simulator",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/drivers/simulator",
+    "cmake_options": [],
+    "test_regex": "^driver_simulator[.]",
+    "coverage_filter": "drivers/simulator/.*\\.c$",
+    "diagnostics_directory": "tests/drivers/simulator"
+  },
+  "plugin_eeprom": {
+    "repository": "grblHAL/Plugin_EEPROM",
+    "ref": "master",
+    "path": "plugins/eeprom",
+    "dependencies": [
+      "core",
+      "littlefs"
+    ],
+    "cmake_source": "tests/plugins/eeprom",
+    "cmake_options": [],
+    "test_regex": "^plugin_eeprom[.]",
+    "coverage_filter": "plugins/eeprom/.*\\.[ch]$",
+    "diagnostics_directory": "tests/plugins/eeprom"
+  },
+  "plugin_fans": {
+    "repository": "grblHAL/Plugin_fans",
+    "ref": "master",
+    "path": "plugins/fans",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/fans",
+    "cmake_options": [],
+    "test_regex": "^plugin_fans[.]",
+    "coverage_filter": "plugins/fans/.*\\.[ch]$",
+    "diagnostics_directory": "tests/plugins/fans"
+  },
+  "plugin_openpnp": {
+    "repository": "grblHAL/Plugin_OpenPNP",
+    "ref": "master",
+    "path": "plugins/openpnp",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/openpnp",
+    "cmake_options": [],
+    "test_regex": "^plugin_openpnp[.]",
+    "coverage_filter": "plugins/openpnp/.*\\.[ch]$",
+    "diagnostics_directory": "tests/plugins/openpnp"
+  },
+  "littlefs": {
+    "repository": "littlefs-project/littlefs",
+    "ref": "master",
+    "path": "deps/littlefs",
+    "source_only": true
+  },
+  "driver_simulator_vfs": {
+    "repository": "grblHAL/Simulator",
+    "ref": "master",
+    "path": "drivers/simulator",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/drivers/simulator_vfs",
+    "cmake_options": [],
+    "test_regex": "^driver_simulator_vfs[.]",
+    "coverage_filter": "drivers/simulator/src/fs_posix\\.c$",
+    "diagnostics_directory": "tests/drivers/simulator_vfs"
+  },
+  "plugin_odometer": {
+    "repository": "grblHAL/Plugin_odometer",
+    "ref": "master",
+    "path": "plugins/odometer",
+    "dependencies": [
+      "core",
+      "eeprom_backend"
+    ],
+    "cmake_source": "tests/plugins/odometer",
+    "cmake_options": [],
+    "test_regex": "^plugin_odometer[.]",
+    "coverage_filter": "plugins/odometer/.*\\.[ch]$",
+    "diagnostics_directory": "tests/plugins/odometer"
+  },
+  "eeprom_backend": {
+    "repository": "grblHAL/Plugin_EEPROM",
+    "ref": "master",
+    "path": "plugins/eeprom",
+    "source_only": true
+  },
+  "plugin_encoder": {
+    "repository": "grblHAL/Plugin_encoder",
+    "ref": "master",
+    "path": "plugins/encoder",
+    "dependencies": [
+      "core",
+      "eeprom_backend"
+    ],
+    "cmake_source": "tests/plugins/encoder",
+    "cmake_options": [],
+    "test_regex": "^plugin_encoder[.]",
+    "coverage_filter": "plugins/encoder/.*\\.[ch]$",
+    "diagnostics_directory": "tests/plugins/encoder"
+  },
+  "plugin_spindle_vfd": {
+    "repository": "grblHAL/Plugins_spindle",
+    "ref": "master",
+    "path": "plugins/spindle",
+    "dependencies": [
+      "core",
+      "eeprom_backend"
+    ],
+    "cmake_source": "tests/plugins/spindle_vfd",
+    "cmake_options": [],
+    "test_regex": "^plugin_spindle_vfd[.]",
+    "coverage_filter": "plugins/spindle/vfd/.*\\.c$",
+    "diagnostics_directory": "tests/plugins/spindle_vfd"
+  },
+  "plugin_sdcard_stream": {
+    "repository": "grblHAL/Plugin_SD_card",
+    "ref": "master",
+    "path": "plugins/sdcard",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/sdcard_stream",
+    "cmake_options": [],
+    "test_regex": "^plugin_sdcard_stream[.]",
+    "coverage_filter": "plugins/sdcard/(fs_stream|macros)\\.c$",
+    "diagnostics_directory": "tests/plugins/sdcard_stream"
+  },
+  "plugin_keypad": {
+    "repository": "grblHAL/Plugin_I2C_keypad",
+    "ref": "master",
+    "path": "plugins/keypad",
+    "dependencies": [
+      "core",
+      "plugin_eeprom"
+    ],
+    "cmake_source": "tests/plugins/keypad",
+    "cmake_options": [],
+    "test_regex": "^plugin_keypad[.]",
+    "coverage_filter": "plugins/keypad/(keypad|macros|display/i2c_leds)\\.c$",
+    "diagnostics_directory": "tests/plugins/keypad"
+  },
+  "driver_rp2040_flash": {
+    "repository": "grblHAL/RP2040",
+    "ref": "master",
+    "path": "drivers/rp2040",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/drivers/rp2040_flash",
+    "cmake_options": [],
+    "test_regex": "^driver_rp2040_flash[.]",
+    "coverage_filter": "drivers/rp2040/flash\\.c$",
+    "diagnostics_directory": "tests/drivers/rp2040_flash"
+  },
+  "driver_esp32_nvs": {
+    "repository": "grblHAL/ESP32",
+    "ref": "master",
+    "path": "drivers/esp32",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/drivers/esp32_nvs",
+    "cmake_options": [],
+    "test_regex": "^driver_esp32_nvs[.]",
+    "coverage_filter": "drivers/esp32/main/nvs\\.c$",
+    "diagnostics_directory": "tests/drivers/esp32_nvs"
+  },
+  "plugin_networking": {
+    "repository": "grblHAL/Plugin_networking",
+    "ref": "master",
+    "path": "plugins/networking",
+    "dependencies": [
+      "core",
+      "lwip",
+      "sdcard_source",
+      "fatfs_stm32f4"
+    ],
+    "cmake_source": "tests/plugins/networking",
+    "cmake_options": [],
+    "test_regex": "^plugin_networking[.]",
+    "coverage_filter": "plugins/networking/(networking|telnetd|multipartparser|http_upload)\\.c$",
+    "diagnostics_directory": "tests/plugins/networking"
+  },
+  "lwip": {
+    "repository": "lwip-tcpip/lwip",
+    "ref": "master",
+    "path": "deps/lwip",
+    "source_only": true
+  },
+  "plugin_laser_ppi": {
+    "repository": "grblHAL/Plugins_laser",
+    "ref": "master",
+    "path": "plugins/laser",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/laser_ppi",
+    "cmake_options": [],
+    "test_regex": "^plugin_laser_ppi[.]",
+    "coverage_filter": "plugins/laser/ppi\\.c$",
+    "diagnostics_directory": "tests/plugins/laser_ppi"
+  },
+  "plugin_laser_cluster": {
+    "repository": "grblHAL/Plugins_laser",
+    "ref": "master",
+    "path": "plugins/laser",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/laser_cluster",
+    "cmake_options": [],
+    "test_regex": "^plugin_laser_cluster[.]",
+    "coverage_filter": "plugins/laser/lb_clusters\\.c$",
+    "diagnostics_directory": "tests/plugins/laser_cluster"
+  },
+  "plugin_trinamic": {
+    "repository": "grblHAL/Plugins_motor",
+    "ref": "master",
+    "path": "plugins/motor",
+    "dependencies": [
+      "core",
+      "trinamic_library",
+      "eeprom_backend"
+    ],
+    "cmake_source": "tests/plugins/trinamic",
+    "cmake_options": [],
+    "test_regex": "^plugin_trinamic[.]",
+    "coverage_filter": "plugins/motor/trinamic\\.c$",
+    "diagnostics_directory": "tests/plugins/trinamic"
+  },
+  "trinamic_library": {
+    "repository": "terjeio/Trinamic-library",
+    "ref": "9b304175318d93818c8967faadc89dd101b17e92",
+    "path": "deps/trinamic",
+    "source_only": true
+  },
+  "plugin_plasma": {
+    "repository": "grblHAL/Plugin_plasma",
+    "ref": "master",
+    "path": "plugins/plasma",
+    "dependencies": [
+      "core",
+      "eeprom_backend"
+    ],
+    "cmake_source": "tests/plugins/plasma",
+    "cmake_options": [],
+    "test_regex": "^plugin_plasma[.]",
+    "coverage_filter": "plugins/plasma/.*\\.c$",
+    "diagnostics_directory": "tests/plugins/plasma"
+  },
+  "plugin_bluetooth": {
+    "repository": "grblHAL/Plugins_Bluetooth",
+    "ref": "master",
+    "path": "plugins/bluetooth",
+    "dependencies": [
+      "core",
+      "eeprom_backend"
+    ],
+    "cmake_source": "tests/plugins/bluetooth",
+    "cmake_options": [],
+    "test_regex": "^plugin_bluetooth[.]",
+    "coverage_filter": "plugins/bluetooth/.*\\.c$",
+    "diagnostics_directory": "tests/plugins/bluetooth"
+  },
+  "plugin_embroidery_readers": {
+    "repository": "grblHAL/Plugin_embroidery",
+    "ref": "master",
+    "path": "plugins/embroidery",
+    "dependencies": [
+      "core",
+      "plugin_eeprom"
+    ],
+    "cmake_source": "tests/plugins/embroidery",
+    "cmake_options": [],
+    "test_regex": "^plugin_embroidery_readers[.]",
+    "coverage_filter": "plugins/embroidery/.*\\.c$",
+    "diagnostics_directory": "tests/plugins/embroidery"
+  },
+  "driver_stm32f4_flash": {
+    "repository": "grblHAL/STM32F4xx",
+    "ref": "master",
+    "path": "drivers/stm32f4",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/drivers/stm32f4_flash",
+    "cmake_options": [],
+    "host_bits": 32,
+    "test_regex": "^driver_stm32f4_flash[.]",
+    "coverage_filter": "drivers/stm32f4/Src/flash\\.c$",
+    "diagnostics_directory": "tests/drivers/stm32f4_flash"
+  },
+  "driver_stm32f7_flash": {
+    "repository": "grblHAL/STM32F7xx",
+    "ref": "master",
+    "path": "drivers/stm32f7",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/drivers/stm32f7_flash",
+    "cmake_options": [],
+    "host_bits": 32,
+    "test_regex": "^driver_stm32f7_flash[.]",
+    "coverage_filter": "drivers/stm32f7/Src/flash\\.c$",
+    "diagnostics_directory": "tests/drivers/stm32f7_flash"
+  },
+  "driver_lpc176x_flash": {
+    "repository": "grblHAL/LPC176x",
+    "ref": "master",
+    "path": "drivers/lpc176x",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/drivers/lpc176x_flash",
+    "cmake_options": [],
+    "host_bits": 64,
+    "test_regex": "^driver_lpc176x_flash[.]",
+    "coverage_filter": "drivers/lpc176x/src/flash\\.c$",
+    "diagnostics_directory": "tests/drivers/lpc176x_flash"
+  },
+  "driver_stm32h7_flash": {
+    "repository": "dresco/STM32H7xx",
+    "ref": "master",
+    "path": "drivers/stm32h7",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/drivers/stm32h7_flash",
+    "cmake_options": [],
+    "host_bits": 32,
+    "test_regex": "^driver_stm32h7_flash[.]",
+    "coverage_filter": "drivers/stm32h7/Src/flash\\.c$",
+    "diagnostics_directory": "tests/drivers/stm32h7_flash"
+  },
+  "driver_stm32f1_flash": {
+    "repository": "grblHAL/STM32F1xx",
+    "ref": "master",
+    "path": "drivers/stm32f1",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/drivers/stm32f1_flash",
+    "cmake_options": [],
+    "host_bits": 32,
+    "test_regex": "^driver_stm32f1_flash[.]",
+    "coverage_filter": "drivers/stm32f1/Src/flash\\.c$",
+    "diagnostics_directory": "tests/drivers/stm32f1_flash"
+  },
+  "driver_stm32f3_flash": {
+    "repository": "grblHAL/STM32F3xx",
+    "ref": "master",
+    "path": "drivers/stm32f3",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/drivers/stm32f3_flash",
+    "cmake_options": [],
+    "host_bits": 32,
+    "test_regex": "^driver_stm32f3_flash[.]",
+    "coverage_filter": "drivers/stm32f3/Src/flash\\.c$",
+    "diagnostics_directory": "tests/drivers/stm32f3_flash"
+  },
+  "teensy_sdk": {
+    "repository": "PaulStoffregen/cores",
+    "ref": "7f107ee0a309f3813ed13f0d8f615497eca2ee49",
+    "path": "deps/teensy",
+    "source_only": true
+  },
+  "arduino_sam_sdk": {
+    "repository": "arduino/ArduinoCore-sam",
+    "ref": "790ff2c852bf159787a9966bddee4d9f55352d15",
+    "path": "deps/arduino-sam",
+    "source_only": true
+  },
+  "driver_imxrt1062_pwm": {
+    "repository": "grblHAL/iMXRT1062",
+    "ref": "master",
+    "path": "drivers/imxrt1062",
+    "dependencies": [
+      "core",
+      "teensy_sdk"
+    ],
+    "cmake_source": "tests/drivers/imxrt1062_pwm",
+    "cmake_options": [],
+    "test_regex": "^driver_imxrt1062_pwm[.]",
+    "coverage_filter": "drivers/imxrt1062/grblHAL_Teensy4/src/pwm\\.c$",
+    "diagnostics_directory": "tests/drivers/imxrt1062_pwm"
+  },
+  "driver_sam3x8e_serial": {
+    "repository": "grblHAL/SAM3X8E",
+    "ref": "master",
+    "path": "drivers/sam3x8e",
+    "dependencies": [
+      "core",
+      "arduino_sam_sdk"
+    ],
+    "cmake_source": "tests/drivers/sam3x8e_serial",
+    "cmake_options": [],
+    "test_regex": "^driver_sam3x8e_serial[.]",
+    "coverage_filter": "drivers/sam3x8e/grblHAL_Due/src/serial\\.c$",
+    "diagnostics_directory": "tests/drivers/sam3x8e_serial"
+  },
+  "plugin_auxp": {
+    "repository": "Avatario34/auxp",
+    "ref": "main",
+    "path": "plugins/auxp",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/auxp",
+    "cmake_options": [],
+    "test_regex": "^plugin_auxp[.]",
+    "coverage_filter": "plugins/auxp/.*\\.c$",
+    "diagnostics_directory": "tests/plugins/auxp"
+  },
+  "plugin_interlock": {
+    "repository": "gcormier/grblhal-interlock",
+    "ref": "main",
+    "path": "plugins/interlock",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/interlock",
+    "cmake_options": [],
+    "test_regex": "^plugin_interlock[.]",
+    "coverage_filter": "plugins/interlock/.*\\.c$",
+    "diagnostics_directory": "tests/plugins/interlock"
+  },
+  "plugin_pneumaseal": {
+    "repository": "gcormier/grblhal-pneumaseal",
+    "ref": "main",
+    "path": "plugins/pneumaseal",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/pneumaseal",
+    "cmake_options": [],
+    "test_regex": "^plugin_pneumaseal[.]",
+    "coverage_filter": "plugins/pneumaseal/.*\\.c$",
+    "diagnostics_directory": "tests/plugins/pneumaseal"
+  },
+  "plugin_thermistor": {
+    "repository": "gcormier/grblhal-thermistor",
+    "ref": "main",
+    "path": "plugins/thermistor",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/thermistor",
+    "cmake_options": [],
+    "test_regex": "^plugin_thermistor[.]",
+    "coverage_filter": "plugins/thermistor/.*\\.c$",
+    "diagnostics_directory": "tests/plugins/thermistor"
+  },
+  "plugin_virtual_inputs": {
+    "repository": "siganberg/grblhal-virtual-inputs",
+    "ref": "main",
+    "path": "plugins/virtual_inputs",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/virtual_inputs",
+    "cmake_options": [],
+    "test_regex": "^plugin_virtual_inputs[.]",
+    "coverage_filter": "plugins/virtual_inputs/.*\\.c$",
+    "diagnostics_directory": "tests/plugins/virtual_inputs"
+  },
+  "plugin_homingaccel": {
+    "repository": "Sienci-Labs/grbhal-homingaccel-plugin",
+    "ref": "main",
+    "path": "plugins/homingaccel",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/homingaccel",
+    "cmake_options": [],
+    "test_regex": "^plugin_homingaccel[.]",
+    "coverage_filter": "plugins/homingaccel/.*\\.c$",
+    "diagnostics_directory": "tests/plugins/homingaccel"
+  },
+  "tivaware_sdk": {
+    "repository": "yuvadm/tiva-c",
+    "ref": "c23bf8ba7a82b20421aa04d4df3f77501c5883ea",
+    "path": "deps/tivaware",
+    "source_only": true
+  },
+  "driver_tm4c123_eeprom": {
+    "repository": "grblHAL/TM4C123",
+    "ref": "master",
+    "path": "drivers/tm4c123",
+    "dependencies": [
+      "core",
+      "tivaware_sdk"
+    ],
+    "cmake_source": "tests/drivers/tm4c123_eeprom",
+    "cmake_options": [],
+    "test_regex": "^driver_tm4c123_eeprom[.]",
+    "coverage_filter": "drivers/tm4c123/eeprom\\.c$",
+    "diagnostics_directory": "tests/drivers/tm4c123_eeprom"
+  },
+  "driver_ti_shared_eeprom": {
+    "repository": "grblHAL/TI_SimpleLink_shared",
+    "ref": "master",
+    "path": "drivers/ti_shared",
+    "dependencies": [
+      "core",
+      "tivaware_sdk"
+    ],
+    "cmake_source": "tests/drivers/ti_shared_eeprom",
+    "cmake_options": [],
+    "test_regex": "^driver_ti_shared_eeprom[.]",
+    "coverage_filter": "drivers/ti_shared/base/eeprom\\.c$",
+    "diagnostics_directory": "tests/drivers/ti_shared_eeprom"
+  },
+  "driver_tm4c123_serial": {
+    "repository": "grblHAL/TM4C123",
+    "ref": "master",
+    "path": "drivers/tm4c123",
+    "dependencies": [
+      "core",
+      "tivaware_sdk"
+    ],
+    "cmake_source": "tests/drivers/tm4c123_serial",
+    "cmake_options": [],
+    "test_regex": "^driver_tm4c123_serial[.]",
+    "coverage_filter": "drivers/tm4c123/serial\\.c$",
+    "diagnostics_directory": "tests/drivers/tm4c123_serial"
+  },
+  "plugin_rgb_sienci": {
+    "repository": "Sienci-Labs/grblhal-rgb-plugin",
+    "ref": "SLB32_DEV",
+    "path": "plugins/rgb_sienci",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/rgb_sienci",
+    "cmake_options": [],
+    "test_regex": "^plugin_rgb_sienci[.]",
+    "coverage_filter": "plugins/rgb_sienci/.*\\.c$",
+    "diagnostics_directory": "tests/plugins/rgb_sienci"
+  },
+  "plugin_flexgpio": {
+    "repository": "Expatria-Technologies/plugin_FlexGPIO",
+    "ref": "main",
+    "path": "plugins/flexgpio",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/flexgpio",
+    "cmake_options": [],
+    "test_regex": "^plugin_flexgpio[.]",
+    "coverage_filter": "plugins/flexgpio/.*\\.c$",
+    "diagnostics_directory": "tests/plugins/flexgpio"
+  },
+  "plugin_atci": {
+    "repository": "Sienci-Labs/sienci-atci-plugin",
+    "ref": "main",
+    "path": "plugins/atci",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/atci",
+    "cmake_options": [],
+    "test_regex": "^plugin_atci[.]",
+    "coverage_filter": "plugins/atci/.*\\.[ch]$",
+    "diagnostics_directory": "tests/plugins/atci"
+  },
+  "plugin_mpg_transport": {
+    "repository": "nickshl/grblHAL_mpg_transport",
+    "ref": "master",
+    "path": "plugins/mpg_transport",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/mpg_transport",
+    "cmake_options": [],
+    "test_regex": "^plugin_mpg_transport[.]",
+    "coverage_filter": "plugins/mpg_transport/.*\\.[ch]$",
+    "diagnostics_directory": "tests/plugins/mpg_transport"
+  },
+  "plugin_webui": {
+    "repository": "grblHAL/Plugin_WebUI",
+    "ref": "main",
+    "path": "plugins/webui",
+    "dependencies": [
+      "core",
+      "plugin_networking",
+      "lwip",
+      "sdcard_source",
+      "fatfs_stm32f4"
+    ],
+    "cmake_source": "tests/plugins/webui",
+    "cmake_options": [],
+    "test_regex": "^plugin_webui[.]",
+    "coverage_filter": "plugins/webui/.*\\.[ch]$",
+    "diagnostics_directory": "tests/plugins/webui"
+  },
+  "msp432_sdk": {
+    "repository": "energia/msp432-core",
+    "ref": "7c9a3689dc4dc3c9a7d00fa6cb51c4ed5b260afb",
+    "path": "deps/msp432-sdk",
+    "source_only": true
+  },
+  "driver_msp432p_serial": {
+    "repository": "grblHAL/MSP432P401R",
+    "ref": "master",
+    "path": "drivers/msp432p401r",
+    "dependencies": [
+      "core",
+      "msp432_sdk"
+    ],
+    "cmake_source": "tests/drivers/msp432p_serial",
+    "cmake_options": [],
+    "test_regex": "^driver_msp432p_serial[.]",
+    "coverage_filter": "drivers/msp432p401r/serial\\.c$",
+    "diagnostics_directory": "tests/drivers/msp432p_serial"
+  },
+  "core_20250518_reference": {
+    "repository": "grblHAL/core",
+    "ref": "070f80cc5c0d095ff63d5980795b5a15c5bb0202",
+    "path": "deps/core-20250518",
+    "source_only": true
+  },
+  "driver_psoc5_serial_reference": {
+    "repository": "grblHAL/PSoC5",
+    "ref": "master",
+    "path": "drivers/psoc5",
+    "dependencies": [
+      "core_20250518_reference"
+    ],
+    "cmake_source": "tests/drivers/psoc5_serial_reference",
+    "cmake_options": [],
+    "test_regex": "^driver_psoc5_serial_reference[.]",
+    "coverage_filter": "drivers/psoc5/serial\\.c$",
+    "diagnostics_directory": "tests/drivers/psoc5_serial_reference"
+  },
+  "driver_ti_shared_serial_reference": {
+    "repository": "grblHAL/TI_SimpleLink_shared",
+    "ref": "master",
+    "path": "drivers/ti_shared",
+    "dependencies": [
+      "core_20250518_reference",
+      "tivaware_sdk"
+    ],
+    "cmake_source": "tests/drivers/ti_shared_serial_reference",
+    "cmake_options": [],
+    "test_regex": "^driver_ti_shared_serial_reference[.]",
+    "coverage_filter": "drivers/ti_shared/base/serial\\.c$",
+    "diagnostics_directory": "tests/drivers/ti_shared_serial_reference"
+  },
+  "plugin_spindle_onoff": {
+    "repository": "grblHAL/Plugins_spindle",
+    "ref": "master",
+    "path": "plugins/spindle",
+    "dependencies": [
+      "core",
+      "eeprom_backend"
+    ],
+    "cmake_source": "tests/plugins/spindle_onoff",
+    "cmake_options": [],
+    "test_regex": "^plugin_spindle_onoff[.]",
+    "coverage_filter": "plugins/spindle/onoff\\.c$",
+    "diagnostics_directory": "tests/plugins/spindle_onoff"
+  },
+  "plugin_spindle_pwm": {
+    "repository": "grblHAL/Plugins_spindle",
+    "ref": "master",
+    "path": "plugins/spindle",
+    "dependencies": [
+      "core",
+      "eeprom_backend"
+    ],
+    "cmake_source": "tests/plugins/spindle_pwm",
+    "cmake_options": [],
+    "test_regex": "^plugin_spindle_pwm[.]",
+    "coverage_filter": "plugins/spindle/pwm\\.c$",
+    "diagnostics_directory": "tests/plugins/spindle_pwm"
+  },
+  "plugin_spindle_select": {
+    "repository": "grblHAL/Plugins_spindle",
+    "ref": "master",
+    "path": "plugins/spindle",
+    "dependencies": [
+      "core",
+      "eeprom_backend"
+    ],
+    "cmake_source": "tests/plugins/spindle_select",
+    "cmake_options": [],
+    "test_regex": "^plugin_spindle_select[.]",
+    "coverage_filter": "plugins/spindle/select\\.c$",
+    "diagnostics_directory": "tests/plugins/spindle_select"
+  },
+  "plugin_spindle_offset": {
+    "repository": "grblHAL/Plugins_spindle",
+    "ref": "master",
+    "path": "plugins/spindle",
+    "dependencies": [
+      "core",
+      "eeprom_backend"
+    ],
+    "cmake_source": "tests/plugins/spindle_offset",
+    "cmake_options": [],
+    "test_regex": "^plugin_spindle_offset[.]",
+    "coverage_filter": "plugins/spindle/offset\\.c$",
+    "diagnostics_directory": "tests/plugins/spindle_offset"
+  },
+  "plugin_spindle_clone": {
+    "repository": "grblHAL/Plugins_spindle",
+    "ref": "master",
+    "path": "plugins/spindle",
+    "dependencies": [
+      "core",
+      "eeprom_backend"
+    ],
+    "cmake_source": "tests/plugins/spindle_clone",
+    "cmake_options": [],
+    "test_regex": "^plugin_spindle_clone[.]",
+    "coverage_filter": "plugins/spindle/pwm_clone\\.c$",
+    "diagnostics_directory": "tests/plugins/spindle_clone"
+  },
+  "plugin_spindle_stepper": {
+    "repository": "grblHAL/Plugins_spindle",
+    "ref": "master",
+    "path": "plugins/spindle",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/spindle_stepper",
+    "cmake_options": [],
+    "test_regex": "^plugin_spindle_stepper[.]",
+    "coverage_filter": "plugins/spindle/stepper\\.c$",
+    "diagnostics_directory": "tests/plugins/spindle_stepper"
+  },
+  "plugin_laser_coolant": {
+    "repository": "grblHAL/Plugins_laser",
+    "ref": "master",
+    "path": "plugins/laser",
+    "dependencies": [
+      "core",
+      "eeprom_backend"
+    ],
+    "cmake_source": "tests/plugins/laser_coolant",
+    "cmake_options": [],
+    "test_regex": "^plugin_laser_coolant[.]",
+    "coverage_filter": "plugins/laser/coolant\\.c$",
+    "diagnostics_directory": "tests/plugins/laser_coolant"
+  },
+  "plugin_laser_overdrive": {
+    "repository": "grblHAL/Plugins_laser",
+    "ref": "master",
+    "path": "plugins/laser",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/laser_overdrive",
+    "cmake_options": [],
+    "test_regex": "^plugin_laser_overdrive[.]",
+    "coverage_filter": "plugins/laser/co2\\.c$",
+    "diagnostics_directory": "tests/plugins/laser_overdrive"
+  },
+  "fatfs_stm32f4": {
+    "repository": "grblHAL/STM32F4xx",
+    "ref": "master",
+    "path": "drivers/stm32f4",
+    "source_only": true
+  },
+  "plugin_sdcard_fatfs": {
+    "repository": "grblHAL/Plugin_SD_card",
+    "ref": "master",
+    "path": "plugins/sdcard",
+    "dependencies": [
+      "core",
+      "fatfs_stm32f4"
+    ],
+    "cmake_source": "tests/plugins/sdcard_fatfs",
+    "cmake_options": [],
+    "test_regex": "^plugin_sdcard_fatfs[.]",
+    "coverage_filter": "plugins/sdcard/(fs_fatfs|sdcard|fs_stream|macros)\\.c$",
+    "diagnostics_directory": "tests/plugins/sdcard_fatfs"
+  },
+  "sdcard_source": {
+    "repository": "grblHAL/Plugin_SD_card",
+    "ref": "master",
+    "path": "plugins/sdcard",
+    "source_only": true
+  },
+  "driver_stm32f4_serial": {
+    "repository": "grblHAL/STM32F4xx",
+    "ref": "master",
+    "path": "drivers/stm32f4",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/drivers/stm32f4_serial",
+    "cmake_options": [],
+    "test_regex": "^driver_stm32f4_serial[.]",
+    "coverage_filter": "drivers/stm32f4/Src/serial\\.c$",
+    "diagnostics_directory": "tests/drivers/stm32f4_serial"
+  },
+  "driver_stm32f7_serial": {
+    "repository": "grblHAL/STM32F7xx",
+    "ref": "master",
+    "path": "drivers/stm32f7",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/drivers/stm32f7_serial",
+    "cmake_options": [],
+    "test_regex": "^driver_stm32f7_serial[.]",
+    "coverage_filter": "drivers/stm32f7/Src/serial\\.c$",
+    "diagnostics_directory": "tests/drivers/stm32f7_serial"
+  },
+  "driver_stm32f3_serial": {
+    "repository": "grblHAL/STM32F3xx",
+    "ref": "master",
+    "path": "drivers/stm32f3",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/drivers/stm32f3_serial",
+    "cmake_options": [],
+    "test_regex": "^driver_stm32f3_serial[.]",
+    "coverage_filter": "drivers/stm32f3/Src/serial\\.c$",
+    "diagnostics_directory": "tests/drivers/stm32f3_serial"
+  },
+  "driver_stm32f1_serial": {
+    "repository": "grblHAL/STM32F1xx",
+    "ref": "master",
+    "path": "drivers/stm32f1",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/drivers/stm32f1_serial",
+    "cmake_options": [],
+    "test_regex": "^driver_stm32f1_serial[.]",
+    "coverage_filter": "drivers/stm32f1/Src/serial\\.c$",
+    "diagnostics_directory": "tests/drivers/stm32f1_serial"
+  },
+  "driver_stm32h7_serial": {
+    "repository": "dresco/STM32H7xx",
+    "ref": "master",
+    "path": "drivers/stm32h7",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/drivers/stm32h7_serial",
+    "cmake_options": [],
+    "test_regex": "^driver_stm32h7_serial[.]",
+    "coverage_filter": "drivers/stm32h7/Src/serial\\.c$",
+    "diagnostics_directory": "tests/drivers/stm32h7_serial"
   }
 }

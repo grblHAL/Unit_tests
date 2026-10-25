@@ -10,12 +10,12 @@ import xml.etree.ElementTree as ET
 
 
 def location(text):
-    match = re.search(r"((?:[A-Za-z]:)?[^\n]*?(?:core/|tests/|plugins/|scripts/)[^: \n]+):(\d+)(?::\d+)?", text.replace("\\", "/"))
+    match = re.search(r"((?:[A-Za-z]:)?[^\n]*?(?:core/|tests/|plugins/|drivers/|deps/|scripts/)[^: \n]+):(\d+)(?::\d+)?", text.replace("\\", "/"))
     if not match:
         cmake = re.search(r"(CMakeLists\.txt):(\d+)", text)
         return (cmake[1], int(cmake[2])) if cmake else ("", None)
     path = match[1]
-    for prefix in ("core/", "tests/", "plugins/", "scripts/"):
+    for prefix in ("core/", "tests/", "plugins/", "drivers/", "deps/", "scripts/"):
         marker = re.search(r"(?:^|/)" + re.escape(prefix), path)
         if marker:
             path = path[marker.end() - len(prefix):]
@@ -73,6 +73,11 @@ def test_findings(path, diagnostics):
         output = "\n".join(case.findtext(tag, "") for tag in ("system-out", "system-err"))
         if case.find("skipped") is not None:
             counts["skipped"] += 1
+            continue
+        profile_errors = [line for line in output.splitlines() if line.lstrip().startswith(("profiling:", "libgcov profiling error:"))]
+        if profile_errors:
+            findings.append(finding("coverage", name, "Coverage counter data could not be saved; check writable output paths and rerun coverage.", "\n".join(profile_errors)))
+            counts["failed"] += 1
             continue
         unexpected = []
         fatal = any(p.get("name") == "cmake_labels" and "known_crash" in p.get("value", "").split(";") for p in case.findall("./properties/property"))
@@ -181,6 +186,10 @@ def main():
         needs = json.loads(os.environ.get("NEEDS_JSON", "{}"))
         expected = {"source": ["source"], "test": ["gcc", "clang"], "coverage": ["coverage"]}
         for job, status in needs.items():
+            if job == "arm-modules" and status.get("result") == "skipped":
+                from check_arm_modules import STM32
+                if lock.get("path") not in {"drivers/" + family for family in (*STM32, "lpc176x")}:
+                    continue
             present = {r["job"] for r in reports}
             if job != "source" and needs.get("source", {}).get("result") != "success":
                 continue

@@ -52,6 +52,19 @@ class SanitizerExpectationTests(unittest.TestCase):
             self.assertIn("1 passed with known sanitizer diagnostics", summary.stdout)
             self.assertFalse(target.exists())
 
+    def test_known_assertion_with_diagnostic_is_counted_once_and_labelled_honestly(self):
+        findings, counts, summary = self.reports(
+            "/repo/core/code.c:7:1: runtime error: negation of minimum",
+            label="known_bug;known_sanitizer_bug")
+        self.assertEqual(findings, [])
+        self.assertEqual(counts, dict(total=1, clean=0, known=1, skipped=0, failed=0))
+        self.assertEqual(summary.returncode, 0, summary.stderr)
+        self.assertIn("0 clean passes", summary.stdout)
+        self.assertIn("0 passed with known sanitizer diagnostics", summary.stdout)
+        self.assertIn("1 known regressions reproduced", summary.stdout)
+        self.assertIn("Known defect and sanitizer diagnostic reproduced", summary.stdout)
+        self.assertNotIn("Assertions passed", summary.stdout)
+
     def test_fixed_diagnostic_requires_exception_cleanup(self):
         findings, counts, summary = self.reports()
         self.assertEqual(counts["failed"], 1)

@@ -1,0 +1,20 @@
+cmake_minimum_required(VERSION 3.20)
+project(grblhal_odometer_tests LANGUAGES C)
+include(../../components.cmake)
+foreach(behavior motion_time spindle_foreground settings_reclaim reset_previous previous_unavailable unsupported_storage full_storage options persist_write persist_read)
+  component_case(plugin_odometer.${behavior} ${behavior}.c odometer_host.c
+    "${HARNESS_ROOT}/plugins/odometer/odometer.c" "${HARNESS_ROOT}/plugins/eeprom/eeprom_24AAxxx.c"
+    "${HARNESS_ROOT}/tests/plugins/eeprom/eeprom_host.c" "${HARNESS_ROOT}/tests/plugins/eeprom/lfs_physical.c"
+    "${COMPONENT_CORE_ROOT}/crc.c" "${COMPONENT_CORE_ROOT}/nuts_bolts.c" "${COMPONENT_CORE_ROOT}/strutils.c")
+  target_include_directories(plugin_odometer.${behavior} PRIVATE "${HARNESS_ROOT}/tests/plugins/eeprom" "${HARNESS_ROOT}/plugins/eeprom")
+  target_compile_definitions(plugin_odometer.${behavior} PRIVATE ODOMETER_ENABLE=1 EEPROM_ENABLE=128 EEPROM_IS_FRAM=1 NVS_SIZE=8192 NVS_SIZE_MAX=16384)
+  if(MINGW)
+    target_compile_options(plugin_odometer.${behavior} PRIVATE -include "${HARNESS_ROOT}/tests/include/windows_string_compat.h")
+  endif()
+endforeach()
+set_source_files_properties("${HARNESS_ROOT}/plugins/odometer/odometer.c" PROPERTIES COMPILE_OPTIONS "-Wno-unused-parameter;-Wno-error=format")
+set_source_files_properties("${COMPONENT_CORE_ROOT}/strutils.c" PROPERTIES COMPILE_OPTIONS -Wno-error)
+file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/odometer-persistent")
+set_tests_properties(plugin_odometer.persist_write PROPERTIES FIXTURES_SETUP odometer_nvs)
+set_tests_properties(plugin_odometer.persist_read PROPERTIES FIXTURES_REQUIRED odometer_nvs)
+set_tests_properties(plugin_odometer.persist_write plugin_odometer.persist_read PROPERTIES WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/odometer-persistent")

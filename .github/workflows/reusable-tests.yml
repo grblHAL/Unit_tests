@@ -48,6 +48,7 @@ jobs:
     outputs:
       harness_sha: ${{ steps.harness.outputs.sha }}
       coverage_filter: ${{ steps.resolve.outputs.coverage_filter }}
+      host_bits: ${{ steps.resolve.outputs.host_bits }}
     steps:
       - name: Checkout test harness
         uses: actions/checkout@v7
@@ -89,6 +90,37 @@ jobs:
             report-source.json
             source-lock.json
             logs/
+  arm-modules:
+    needs: source
+    if: contains(fromJSON('["driver_stm32f1_flash","driver_stm32f1_serial","driver_stm32f3_flash","driver_stm32f3_serial","driver_stm32f4_flash","driver_stm32f4_serial","driver_stm32f7_flash","driver_stm32f7_serial","driver_stm32h7_flash","driver_stm32h7_serial","driver_lpc176x_flash"]'), inputs.suite)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout test harness
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ inputs.harness_repository }}
+          ref: ${{ needs.source.outputs.harness_sha }}
+          persist-credentials: false
+      - uses: actions/download-artifact@v7
+        with:
+          name: source-lock-${{ inputs.run_label }}
+      - name: Fetch locked sources
+        run: python scripts/report_stage.py --job arm-modules --stage fetch -- python scripts/prepare_sources.py
+      - name: Install ARM compiler and C headers
+        run: |
+          python scripts/report_stage.py --job arm-modules --stage tooling -- sudo apt-get update
+          python scripts/report_stage.py --job arm-modules --stage tooling -- sudo apt-get install -y --no-install-recommends gcc-arm-none-eabi libnewlib-arm-none-eabi
+      - name: Compile original ARM modules (no link or execution)
+        run: python scripts/report_stage.py --job arm-modules --stage build -- python scripts/check_arm_modules.py
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: report-${{ inputs.run_label }}-arm-modules
+          path: |
+            source-lock.json
+            build-arm-modules/
+            report-arm-modules.json
+            logs/
   test:
     needs: source
     runs-on: ubuntu-latest
@@ -108,6 +140,11 @@ jobs:
           name: source-lock-${{ inputs.run_label }}
       - name: Fetch locked sources
         run: python scripts/report_stage.py --job "${{ matrix.compiler }}" --stage fetch -- python scripts/prepare_sources.py
+      - name: Install 32-bit host runtime
+        if: needs.source.outputs.host_bits == '32'
+        run: |
+          python scripts/report_stage.py --job "${{ matrix.compiler }}" --stage tooling -- sudo apt-get update
+          python scripts/report_stage.py --job "${{ matrix.compiler }}" --stage tooling -- sudo apt-get install -y gcc-multilib libclang-rt-dev
       - name: Configure
         id: test_configure
         env:
@@ -157,6 +194,11 @@ jobs:
       - name: Fetch locked sources
         run: python scripts/report_stage.py --job coverage --stage fetch -- python scripts/prepare_sources.py
       - run: python scripts/report_stage.py --job coverage --stage tooling -- pip install gcovr==8.4
+      - name: Install 32-bit host runtime
+        if: needs.source.outputs.host_bits == '32'
+        run: |
+          python scripts/report_stage.py --job coverage --stage tooling -- sudo apt-get update
+          python scripts/report_stage.py --job coverage --stage tooling -- sudo apt-get install -y gcc-multilib libclang-rt-dev
       - id: coverage_configure
         run: python scripts/report_stage.py --job coverage --stage configure -- python scripts/configure_suite.py --mode coverage --compiler gcc
       - id: coverage_build
@@ -172,7 +214,7 @@ jobs:
         id: coverage_report
         if: always() && !cancelled() && steps.coverage_configure.outcome == 'success' && steps.coverage_tests.outcome != 'skipped'
         env:
-          COVERAGE_TITLE: ${{ steps.coverage_build.outcome == 'success' && steps.coverage_tests.outcome == 'success' && steps.coverage_classify.outcome == 'success' && 'Core coverage' || 'Partial core coverage - build or tests failed' }}
+          COVERAGE_TITLE: ${{ steps.coverage_build.outcome == 'success' && steps.coverage_tests.outcome == 'success' && steps.coverage_classify.outcome == 'success' && format('{0} coverage', inputs.suite) || format('Partial {0} coverage - build or tests failed', inputs.suite) }}
           COVERAGE_FILTER: ${{ needs.source.outputs.coverage_filter }}
         run: python scripts/report_stage.py --job coverage --stage coverage -- gcovr --merge-mode-functions=separate --root . --filter "$COVERAGE_FILTER" --html-details coverage.html --html-title "$COVERAGE_TITLE" --xml coverage.xml --print-summary
       - name: Collect concise coverage diagnostics
@@ -204,7 +246,7 @@ jobs:
   diagnosis:
     name: CI diagnosis
     if: always()
-    needs: [source, test, coverage]
+    needs: [source, arm-modules, test, coverage]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
