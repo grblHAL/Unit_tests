@@ -261,13 +261,14 @@ not evaluated as shell commands. Core-only calls should leave `core_ref` empty.
 Each row has its own compile, line and branch badges, including work still to be
 added. **Local pass** means the host suite compiled; documented known test
 regressions can still remain. It does not mean hosted CI, firmware linking or
-hardware passed. Coverage is the **last measured local snapshot** of selected
+hardware passed. Coverage is the **last verified snapshot** of selected
 files/configurations, not the whole plugin. Grey means no verified result to publish yet, not 0%.
 Legacy reference results are separate from current-CORE support.
 
-Snapshot: 25 October 2026. Initial hosted misc/H7 runs found a Linux work-directory
-collision; the harness fix separates executable and scratch paths. Those runs
-are not hosted passes. [Counts, source revisions and scope](tests/COMPONENT_BADGES.csv).
+Snapshot: 25 October 2026. Misc plugins and STM32H7 serial passed hosted GCC,
+Clang and coverage after fixing a Linux scratch-directory collision. Their badges
+link to those runs; all other measured rows retain local results.
+[Counts, source revisions and scope](tests/COMPONENT_BADGES.csv).
 Update each component from its successful source-matched report; do not average
 percentages across suites or copy the overall Plugin/Driver workflow status into
 individual rows.
@@ -301,7 +302,7 @@ individual rows.
 | [WebUI](https://github.com/grblHAL/Plugin_WebUI) | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 91.4%](https://img.shields.io/badge/lines-91.4%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 71.3%](https://img.shields.io/badge/branches-71.3%25-blue)](tests/COMPONENT_BADGES.csv) |
 | [OpenPNP](https://github.com/grblHAL/Plugin_OpenPNP) | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: not measured](https://img.shields.io/badge/lines-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) | [![branches: not measured](https://img.shields.io/badge/branches-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) |
 | [Embroidery](https://github.com/grblHAL/Plugin_embroidery) | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 86.4%](https://img.shields.io/badge/lines-86.4%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 76.1%](https://img.shields.io/badge/branches-76.1%25-blue)](tests/COMPONENT_BADGES.csv) |
-| [Miscellaneous](https://github.com/grblHAL/Plugins_misc) | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 90.5%](https://img.shields.io/badge/lines-90.5%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 73.4%](https://img.shields.io/badge/branches-73.4%25-blue)](tests/COMPONENT_BADGES.csv) |
+| [Miscellaneous](https://github.com/grblHAL/Plugins_misc) | [![compile: hosted pass](https://img.shields.io/badge/compile-hosted%20pass-brightgreen)](https://github.com/grblHAL/Unit_tests/actions/runs/40180256798) | [![lines: 89.7%](https://img.shields.io/badge/lines-89.7%25-blue)](https://github.com/grblHAL/Unit_tests/actions/runs/40180256798) | [![branches: 73.2%](https://img.shields.io/badge/branches-73.2%25-blue)](https://github.com/grblHAL/Unit_tests/actions/runs/40180256798) |
 | [Add status of digital aux outputs to real-time report](https://github.com/Avatario34/auxp) | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 100.0%](https://img.shields.io/badge/lines-100.0%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 100.0%](https://img.shields.io/badge/branches-100.0%25-blue)](tests/COMPONENT_BADGES.csv) |
 | ['Datron like' RGB indicator lights](https://github.com/5ocworkshop/grblhal-rgb-plugin) | [![compile: incompatible](https://img.shields.io/badge/compile-incompatible-orange)](tests/COMPONENT_BADGES.csv) | [![lines: not measured](https://img.shields.io/badge/lines-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) | [![branches: not measured](https://img.shields.io/badge/branches-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) |
 | [Control panel](https://github.com/dresco/Plugin_panel) | [![compile: incompatible](https://img.shields.io/badge/compile-incompatible-orange)](tests/COMPONENT_BADGES.csv) | [![lines: not measured](https://img.shields.io/badge/lines-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) | [![branches: not measured](https://img.shields.io/badge/branches-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) |
@@ -321,7 +322,7 @@ individual rows.
 | Driver / suite | Compile | Lines | Branches |
 |---|---|---|---|
 | [STM32H7xx](https://github.com/dresco/STM32H7xx) — `driver_stm32h7_flash` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 100.0%](https://img.shields.io/badge/lines-100.0%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 100.0%](https://img.shields.io/badge/branches-100.0%25-blue)](tests/COMPONENT_BADGES.csv) |
-| [STM32H7xx](https://github.com/dresco/STM32H7xx) — `driver_stm32h7_serial` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 98.9%](https://img.shields.io/badge/lines-98.9%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 88.5%](https://img.shields.io/badge/branches-88.5%25-blue)](tests/COMPONENT_BADGES.csv) |
+| [STM32H7xx](https://github.com/dresco/STM32H7xx) — `driver_stm32h7_serial` | [![compile: hosted pass](https://img.shields.io/badge/compile-hosted%20pass-brightgreen)](https://github.com/grblHAL/Unit_tests/actions/runs/40180258607) | [![lines: 98.8%](https://img.shields.io/badge/lines-98.8%25-blue)](https://github.com/grblHAL/Unit_tests/actions/runs/40180258607) | [![branches: 89.1%](https://img.shields.io/badge/branches-89.1%25-blue)](https://github.com/grblHAL/Unit_tests/actions/runs/40180258607) |
 | [ESP32](https://github.com/grblHAL/ESP32) | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: not measured](https://img.shields.io/badge/lines-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) | [![branches: not measured](https://img.shields.io/badge/branches-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) |
 | [LPC176x](https://github.com/grblHAL/LPC176x) | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 100.0%](https://img.shields.io/badge/lines-100.0%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 100.0%](https://img.shields.io/badge/branches-100.0%25-blue)](tests/COMPONENT_BADGES.csv) |
 | [MSP430F5529](https://github.com/grblHAL/MSP430F5529) | [![compile: not added](https://img.shields.io/badge/compile-not%20added-lightgrey)](tests/COMPONENT_BADGES.csv) | [![lines: not measured](https://img.shields.io/badge/lines-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) | [![branches: not measured](https://img.shields.io/badge/branches-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) |
