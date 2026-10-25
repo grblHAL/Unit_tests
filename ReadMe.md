@@ -1,279 +1,12 @@
 # Unit tests for grblHAL
 
-[![Core tests](https://github.com/grblHAL/Unit_tests/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/grblHAL/Unit_tests/actions/workflows/tests.yml)
-[![Core line coverage: 98.50%](https://img.shields.io/badge/core_lines-98.50%25-brightgreen)](https://github.com/petervanderwalt/Unit_tests/actions/runs/40179484951)
-[![Core branch coverage: 92.69%](https://img.shields.io/badge/core_branches-92.69%25-green)](https://github.com/petervanderwalt/Unit_tests/actions/runs/40179484951)
+## Core
 
-Coverage badges show a verified successful report, not a live measurement of
-every source revision. Click either percentage for its run and coverage artifact.
-They cover the core across the tested configurations; they do not include board
-drivers or plugins. When updating the badges, use the line and branch totals in
-`coverage.xml` from a fully successful run, and update both run links together.
-
-The [coverage closeout](tests/COVERAGE_CLOSEOUT.md) records the stopping point,
-unfinished features and remaining gaps; it does not claim 100% coverage.
-
-Host tests compile actual source from an ordinary `core` checkout. No CNC
-controller is needed. Each new behavior lives in `tests/cases/<module>/<case>.c`
-and appears individually in CTest and GitHub Actions. Shared mocks live in
-`tests/support/`; unexpected mock calls fail explicitly.
-
-[Plugin and driver coverage badges](#plugin-and-driver-coverage) include planned components.
-
-## Known issues
-
-[Known coverage gaps](tests/KNOWN_BUGS.md#known-coverage-gaps) explicitly tracks
-unimplemented and unreachable regions, their source evidence and what would make
-them testable. They remain uncovered in the measured totals; placeholder failures
-do not count as code coverage.
-
-[Pending core features](tests/TODO.md) contains the detailed implementation and
-contract questions.
-
-[Known core defects](tests/KNOWN_BUGS.md) lists each confirmed defect and the date
-it was marked known, with suggested core fixes and validation/exception-removal
-guidance. Suggestions are proposals until tested against the selected core revision.
-Their labelled regressions reproduce the defect; they are not counted as ordinary
-passes in the Actions summary. A fixed core forces review of each exception.
-Recovering sanitizer errors are also checked: the narrow
-[known diagnostic manifest](tests/known_sanitizer_diagnostics.json) links to the
-defect and removal instructions. Affected assertion passes are shown separately;
-unrecognized sanitizer diagnostics fail the reporting step.
-Fatal ASan regressions may use a named `known_crash` wrapper with exact test,
-source line, top frame and fault matching. For GCC NULL calls that omit the CORE
-frame, the inventory instead requires PC zero and the exact captured harness
-caller chain. They appear as known reproductions;
-assertions after the crash did not run. The wrapper retains full process output
-in `build/known-crash-<test>.log`. Fixes, changed/additional faults and runner
-errors fail and require exception review. Non-sanitizer builds retain direct tests.
-
-Feature compile regressions also check configurations where a known upstream
-build defect prevents runtime tests.
-
-## Run locally
-
-Install CMake, Python 3 and GCC or GNU-compatible Clang for the full suite.
-Visual Studio's MSVC runs only the standalone modules: other core headers use
-GNU extensions and are explicitly skipped. A portable llvm-mingw compiler works
-on Windows without installing or changing the system toolchain.
-
-For a Windows GNU-compatible Clang/Ninja build:
-
-```powershell
-cmake -S . -B build-clang -G Ninja -DCMAKE_C_COMPILER=C:/path/to/llvm-mingw/bin/clang.exe -DCMAKE_BUILD_TYPE=Debug
-cmake --build build-clang --parallel
-ctest --test-dir build-clang --output-on-failure --output-junit results.xml
-python scripts/summary.py tests build-clang/results.xml
-```
-
-For sanitizers, add `-DENABLE_SANITIZERS=ON` to configure. On Windows, put the
-compiler's `bin` directory on `PATH` so its sanitizer DLL can load.
-
-```sh
-git clone https://github.com/grblHAL/Unit_tests.git
-cd Unit_tests
-python scripts/resolve_source.py
-python scripts/prepare_sources.py
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
-cmake --build build --config Debug --parallel
-ctest --test-dir build -C Debug --output-on-failure
-```
-
-Checks remain active in Release builds; they do not depend on C `assert()`.
-The existing `src/driver.c` firmware entry point is not part of the host tests.
-
-## Source selection and upstream CI
-
-There are no tracked submodules. [ci/suites.json](ci/suites.json) is a small JSON
-registry of suites, source repositories/default branches, dependency suites,
-CMake configuration, test selection and coverage filters. The core default is
-`grblHAL/core` at `master`. Nothing requires updating commit hashes in this repo.
-Current-source runs can reveal new build incompatibilities as well as assertion
-failures; an older suite does not promise a green result against new code.
-Each run resolves branches to exact SHAs once, records them in `source-lock.json`,
-and uses that same lock in all jobs. Test-harness source is also locked once.
-A rerun against moving master can select newer code; use an archived SHA for an
-exact reproduction. The historical coverage snapshots describe their recorded
-core revision, not today's upstream master.
-
-In Actions > Core tests > Run workflow, select the test-suite branch and inputs.
-The repository field accepts `terjeio/grblHAL_core` or
-`https://github.com/terjeio/grblHAL_core` (a trailing `/` or `.git` is accepted).
-Put a branch, tag or commit SHA in the separate ref field:
-
-Manual runs show the selected source in the Actions list immediately, for example
-`Core tests: terjeio/grblHAL_core @ master` or
-`Core tests: grblHAL/core @ PR #1037`. A supplied SHA appears in place of the
-branch. The title shows the requested source; the source-lock artifact records
-the exact resolved commit. Repository URLs are displayed as entered.
-
-| Candidate | source_repository | source_ref | source_pr |
+| Component | Compile | Lines | Branches |
 |---|---|---|---|
-| Current upstream core | blank | blank | blank |
-| Upstream branch/tag/commit | blank | branch, tag or SHA | blank |
-| Upstream PR, including fork PR | blank | blank | PR number |
-| Fork branch | `owner/core` | branch or SHA | blank |
+| [Core](https://github.com/grblHAL/core) | [![compile: hosted pass](https://img.shields.io/badge/compile-hosted%20pass-brightgreen)](https://github.com/petervanderwalt/Unit_tests/actions/runs/40179484951) | [![lines: 98.50%](https://img.shields.io/badge/lines-98.50%25-brightgreen)](https://github.com/petervanderwalt/Unit_tests/actions/runs/40179484951) | [![branches: 92.69%](https://img.shields.io/badge/branches-92.69%25-green)](https://github.com/petervanderwalt/Unit_tests/actions/runs/40179484951) |
 
-PR selection tests the head commit, not a synthetic merge. Source summaries and
-artifacts identify the repository, source SHA and harness SHA. Manual dispatch
-requires the workflow on the default branch and write access to this test repo.
-
-```sh
-gh workflow run tests.yml --repo grblHAL/Unit_tests --ref master -f source_pr=123
-gh workflow run tests.yml --repo grblHAL/Unit_tests --ref master -f source_repository=yourname/core -f source_ref=my-fix
-```
-
-### Read a failed run
-
-Open the **CI diagnosis** job summary first. It groups matching GCC, Clang and
-coverage findings and shows the first useful compiler error or test diagnostic,
-source links, affected jobs and a focused CTest reproduction command. Numeric
-expected/actual values are shown when the test emits them; otherwise the report
-shows its failing expression. New tests should print the triggering input and
-measured versus expected values when an assertion alone is ambiguous. Full command
-logs and JSON findings are in the `report-<suite>-<job>` artifacts; individual
-JUnit results and coverage HTML remain available in the existing artifacts.
-
-Unexpected assertion/sanitizer failures are suspected regressions until their
-contract and fixture are checked. A changed known regression links to its cleanup
-instructions: it may be a fixed regression, but a different crash is not a fix.
-Setup/build failures are reported even when tests never execute. Missing reports
-and failed jobs cannot produce a successful diagnosis.
-
-After a successful configure, independent build targets and all registered tests
-are attempted even if some targets fail to build. Unbuilt tests remain explicit
-failures; no registrations or source regions are excluded. Download annotated HTML/XML
-from the coverage artifact to investigate remaining gaps. Its HTML title and job
-summary mark the data as **partial coverage**: crashed or aborted tests may not
-flush their counters or reach later assertions. The run stays failed. Partial
-results are not a passing baseline, and changed-code coverage assessment waits
-for a successful build and test run. Fix the reported failures before drawing conclusions
-about newly added code without tests.
-
-Changed-code coverage is a **warning**, not a required coverage threshold. A source
-PR automatically supplies its base repository and SHA. The upstream caller templates
-supply the PR base or the previous source commit for pushes. For a branch/SHA run,
-provide an explicit baseline:
-
-```sh
-gh workflow run tests.yml --repo grblHAL/Unit_tests --ref master \
-  -f source_repository=yourname/core -f source_ref=my-fix \
-  -f source_base_repository=grblHAL/core -f source_base_ref=master
-```
-
-Both revisions are resolved once. Coverage compares the candidate with their Git
-merge base and lists added executable C lines with zero hits. Covered feature
-variants are combined before checking hits. Changed C files absent from coverage
-are listed separately: check CMake inclusion and feature flags before concluding
-that tests are missing. This assessment covers the selected suite's coverage
-filter; it does not establish test quality, header/configuration coverage or full
-coverage of all dependencies. Without a baseline, coverage data, or reachable
-history, the report explicitly says changed-code coverage was not assessed.
-
-### Which revision gets tested?
-
-There are two independent selections:
-
-- **Test harness:** this repository's tests, fixtures, workflows and exception
-  inventory. The caller selects it with `harness_repository` / `harness_ref`.
-- **Source under test:** core or plugin code. The caller passes the push/PR SHA;
-  manual runs can select a branch, tag, commit or PR number.
-
-A core PR does not need a commit in this test repository. A fork PR does not
-need merging into upstream core. Once the caller is installed, pushing another
-commit to that PR starts another upstream run automatically. The caller tests
-PR head code; it does not test GitHub's synthetic merge commit. To check a merge
-candidate explicitly, provide its published SHA in a manual run.
-
-GitHub's **Re-run jobs** retains the upstream caller event SHA, but source defaults
-and branch-based dependencies are resolved again if the source-resolution job
-reruns. For exact reproduction, use the saved source SHAs and harness SHA.
-
-### Caller installation for Terje
-
-[ci/callers/core.yml](ci/callers/core.yml) is the complete core caller. After this
-branch is published, copy it to `.github/workflows/host-tests.yml` in core.
-It calls [reusable-tests.yml](.github/workflows/reusable-tests.yml) on pushes,
-PRs and manual runs, passing the PR head repository/SHA for fork PRs and the
-pushed commit otherwise. GCC, Clang and coverage run as jobs of the upstream
-workflow, so results appear on the upstream PR itself. No dispatch token,
-webhook or write-back status bot is needed.
-
-The caller explicitly identifies the test harness because a reusable workflow
-inherits the caller's GitHub context: a bare checkout would fetch core instead
-of this repository. Keep its `uses` ref and `harness_ref` on the same reviewed
-release tag or SHA; the supplied branch ref is for rollout testing. SHA pinning
-the **test harness** is optional and separate from automatically testing each
-new **source** commit. Publish a reviewed harness version before configuring
-required PR checks. Enable Actions/reusable-workflow access in the upstream repo;
-GitHub may require approval for first-time fork contributors. Use `pull_request`,
-not `pull_request_target`, and do not pass inherited secrets. Candidate source
-runs only on hosted runners with read-only contents permission; fetch credentials
-are not persisted. These templates target public source repositories.
-
-### Install and verify the core caller
-
-1. Review/publish this CI branch in the chosen public test-harness repository.
-   For the initial rollout, the supplied caller uses
-   `grblHAL/Unit_tests` at `master`.
-2. Copy [ci/callers/core.yml](ci/callers/core.yml) into the core repository as
-   `.github/workflows/host-tests.yml`. If hosting the harness elsewhere, update
-   both `jobs.core.uses` and `harness_repository`; keep `uses` and `harness_ref`
-   on the same harness version. No Personal Access Token is needed.
-3. Commit the caller on a core branch and open a PR. Check its Actions run:
-   the `source` job should record the PR head repository and commit, followed by
-   GCC, Clang and coverage jobs. Compare the recorded SHA with the PR's latest
-   commit, including a fork PR.
-4. Push another commit to that PR and verify a new run tests its new SHA. Merge
-   the caller so later core pushes and PRs receive the same checks.
-5. Once the complete suite is passing for supported core and the chosen harness
-   version, configure required checks using their actual names from the upstream
-   run. Keep them optional while resolving existing compatibility/known-defect
-   cleanup failures. Updates to the harness's tests can be deployed independently
-   by advancing its branch/tag or updating the caller's reviewed harness version.
-
-The workflow runs in the **core repository's Actions context**, consuming that
-repository's runner allocation. Artifacts and logs live on that upstream run.
-It does not create a separate run in this test repository or post a bot comment.
-
-### Reusable workflow inputs
-
-| Input | Purpose | Default |
-|---|---|---|
-| `harness_repository` | Repository containing these tests/workflows | Required |
-| `harness_ref` | Harness branch, tag or commit | Required |
-| `suite` | Key in the harness's source registry | `core` |
-| `source_repository` | Candidate source repository, including a fork | Registry repository |
-| `source_ref` | Candidate branch, tag or commit | Registry branch |
-| `source_pr` | PR number in `source_repository`; cannot combine with `source_ref` | Empty |
-| `core_ref` | Core dependency branch/tag/SHA for a plugin suite | Core registry branch |
-| `run_label` | Unique artifact suffix for this invocation | `core` |
-
-Manual **Core tests** exposes candidate repository/ref/PR inputs and optional
-comparison-base repository/ref inputs. The upstream caller/reusable workflow
-supports the full set. A different candidate
-repository needs an explicit ref or PR number. Unknown suites and ambiguous
-PR/ref combinations fail before building. Caller inputs are passed as data,
-not evaluated as shell commands. Core-only calls should leave `core_ref` empty.
-
-### Plugin and driver coverage
-
-Each row has its own compile, line and branch badges, including work still to be
-added. **Local pass** means the host suite compiled; documented known test
-regressions can still remain. It does not mean hosted CI, firmware linking or
-hardware passed. Coverage is the **last verified snapshot** of selected
-files/configurations, not the whole plugin. Grey means no verified result to publish yet, not 0%.
-Legacy reference results are separate from current-CORE support.
-
-Snapshot: 25 October 2026. Misc plugins and STM32H7 serial passed hosted GCC,
-Clang and coverage after fixing a Linux scratch-directory collision. Their badges
-link to those runs; all other measured rows retain local results.
-[Counts, source revisions and scope](tests/COMPONENT_BADGES.csv).
-Update each component from its successful source-matched report; do not average
-percentages across suites or copy the overall Plugin/Driver workflow status into
-individual rows.
-
-#### Plugins
+## Plugins
 
 | Plugin / suite | Compile | Lines | Branches |
 |---|---|---|---|
@@ -283,20 +16,20 @@ individual rows.
 | [Networking](https://github.com/grblHAL/Plugin_networking) | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 84.2%](https://img.shields.io/badge/lines-84.2%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 70.6%](https://img.shields.io/badge/branches-70.6%25-blue)](tests/COMPONENT_BADGES.csv) |
 | [Odometer](https://github.com/grblHAL/Plugin_odometer) | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: not measured](https://img.shields.io/badge/lines-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) | [![branches: not measured](https://img.shields.io/badge/branches-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) |
 | [Plasma/THC](https://github.com/grblHAL/Plugin_plasma) | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 62.9%](https://img.shields.io/badge/lines-62.9%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 49.5%](https://img.shields.io/badge/branches-49.5%25-blue)](tests/COMPONENT_BADGES.csv) |
-| [SD card](https://github.com/grblHAL/Plugin_SD_card) — `plugin_sdcard_stream` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: not measured](https://img.shields.io/badge/lines-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) | [![branches: not measured](https://img.shields.io/badge/branches-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) |
-| [SD card](https://github.com/grblHAL/Plugin_SD_card) — `plugin_sdcard_fatfs` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 75.2%](https://img.shields.io/badge/lines-75.2%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 55.4%](https://img.shields.io/badge/branches-55.4%25-blue)](tests/COMPONENT_BADGES.csv) |
-| [Spindle](https://github.com/grblHAL/Plugins_spindle) — `plugin_spindle_vfd` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 96.8%](https://img.shields.io/badge/lines-96.8%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 72.2%](https://img.shields.io/badge/branches-72.2%25-blue)](tests/COMPONENT_BADGES.csv) |
-| [Spindle](https://github.com/grblHAL/Plugins_spindle) — `plugin_spindle_onoff` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 94.9%](https://img.shields.io/badge/lines-94.9%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 80.0%](https://img.shields.io/badge/branches-80.0%25-blue)](tests/COMPONENT_BADGES.csv) |
-| [Spindle](https://github.com/grblHAL/Plugins_spindle) — `plugin_spindle_pwm` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 5.3%](https://img.shields.io/badge/lines-5.3%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 3.1%](https://img.shields.io/badge/branches-3.1%25-blue)](tests/COMPONENT_BADGES.csv) |
-| [Spindle](https://github.com/grblHAL/Plugins_spindle) — `plugin_spindle_select` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 65.3%](https://img.shields.io/badge/lines-65.3%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 54.8%](https://img.shields.io/badge/branches-54.8%25-blue)](tests/COMPONENT_BADGES.csv) |
-| [Spindle](https://github.com/grblHAL/Plugins_spindle) — `plugin_spindle_offset` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 96.9%](https://img.shields.io/badge/lines-96.9%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 93.3%](https://img.shields.io/badge/branches-93.3%25-blue)](tests/COMPONENT_BADGES.csv) |
-| [Spindle](https://github.com/grblHAL/Plugins_spindle) — `plugin_spindle_clone` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 98.6%](https://img.shields.io/badge/lines-98.6%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 70.8%](https://img.shields.io/badge/branches-70.8%25-blue)](tests/COMPONENT_BADGES.csv) |
-| [Spindle](https://github.com/grblHAL/Plugins_spindle) — `plugin_spindle_stepper` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 95.0%](https://img.shields.io/badge/lines-95.0%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 73.1%](https://img.shields.io/badge/branches-73.1%25-blue)](tests/COMPONENT_BADGES.csv) |
+| [SD card](https://github.com/grblHAL/Plugin_SD_card) / `plugin_sdcard_stream` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: not measured](https://img.shields.io/badge/lines-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) | [![branches: not measured](https://img.shields.io/badge/branches-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) |
+| [SD card](https://github.com/grblHAL/Plugin_SD_card) / `plugin_sdcard_fatfs` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 75.2%](https://img.shields.io/badge/lines-75.2%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 55.4%](https://img.shields.io/badge/branches-55.4%25-blue)](tests/COMPONENT_BADGES.csv) |
+| [Spindle](https://github.com/grblHAL/Plugins_spindle) / `plugin_spindle_vfd` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 96.8%](https://img.shields.io/badge/lines-96.8%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 72.2%](https://img.shields.io/badge/branches-72.2%25-blue)](tests/COMPONENT_BADGES.csv) |
+| [Spindle](https://github.com/grblHAL/Plugins_spindle) / `plugin_spindle_onoff` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 94.9%](https://img.shields.io/badge/lines-94.9%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 80.0%](https://img.shields.io/badge/branches-80.0%25-blue)](tests/COMPONENT_BADGES.csv) |
+| [Spindle](https://github.com/grblHAL/Plugins_spindle) / `plugin_spindle_pwm` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 5.3%](https://img.shields.io/badge/lines-5.3%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 3.1%](https://img.shields.io/badge/branches-3.1%25-blue)](tests/COMPONENT_BADGES.csv) |
+| [Spindle](https://github.com/grblHAL/Plugins_spindle) / `plugin_spindle_select` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 65.3%](https://img.shields.io/badge/lines-65.3%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 54.8%](https://img.shields.io/badge/branches-54.8%25-blue)](tests/COMPONENT_BADGES.csv) |
+| [Spindle](https://github.com/grblHAL/Plugins_spindle) / `plugin_spindle_offset` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 96.9%](https://img.shields.io/badge/lines-96.9%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 93.3%](https://img.shields.io/badge/branches-93.3%25-blue)](tests/COMPONENT_BADGES.csv) |
+| [Spindle](https://github.com/grblHAL/Plugins_spindle) / `plugin_spindle_clone` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 98.6%](https://img.shields.io/badge/lines-98.6%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 70.8%](https://img.shields.io/badge/branches-70.8%25-blue)](tests/COMPONENT_BADGES.csv) |
+| [Spindle](https://github.com/grblHAL/Plugins_spindle) / `plugin_spindle_stepper` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 95.0%](https://img.shields.io/badge/lines-95.0%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 73.1%](https://img.shields.io/badge/branches-73.1%25-blue)](tests/COMPONENT_BADGES.csv) |
 | [Trinamic](https://github.com/grblHAL/Plugins_motor) | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 76.6%](https://img.shields.io/badge/lines-76.6%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 62.0%](https://img.shields.io/badge/branches-62.0%25-blue)](tests/COMPONENT_BADGES.csv) |
-| [Laser/PPI](https://github.com/grblHAL/Plugins_laser) — `plugin_laser_ppi` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: not measured](https://img.shields.io/badge/lines-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) | [![branches: not measured](https://img.shields.io/badge/branches-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) |
-| [Laser/PPI](https://github.com/grblHAL/Plugins_laser) — `plugin_laser_cluster` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: not measured](https://img.shields.io/badge/lines-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) | [![branches: not measured](https://img.shields.io/badge/branches-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) |
-| [Laser/PPI](https://github.com/grblHAL/Plugins_laser) — `plugin_laser_coolant` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 87.9%](https://img.shields.io/badge/lines-87.9%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 70.6%](https://img.shields.io/badge/branches-70.6%25-blue)](tests/COMPONENT_BADGES.csv) |
-| [Laser/PPI](https://github.com/grblHAL/Plugins_laser) — `plugin_laser_overdrive` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 100.0%](https://img.shields.io/badge/lines-100.0%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 79.2%](https://img.shields.io/badge/branches-79.2%25-blue)](tests/COMPONENT_BADGES.csv) |
+| [Laser/PPI](https://github.com/grblHAL/Plugins_laser) / `plugin_laser_ppi` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: not measured](https://img.shields.io/badge/lines-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) | [![branches: not measured](https://img.shields.io/badge/branches-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) |
+| [Laser/PPI](https://github.com/grblHAL/Plugins_laser) / `plugin_laser_cluster` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: not measured](https://img.shields.io/badge/lines-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) | [![branches: not measured](https://img.shields.io/badge/branches-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) |
+| [Laser/PPI](https://github.com/grblHAL/Plugins_laser) / `plugin_laser_coolant` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 87.9%](https://img.shields.io/badge/lines-87.9%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 70.6%](https://img.shields.io/badge/branches-70.6%25-blue)](tests/COMPONENT_BADGES.csv) |
+| [Laser/PPI](https://github.com/grblHAL/Plugins_laser) / `plugin_laser_overdrive` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 100.0%](https://img.shields.io/badge/lines-100.0%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 79.2%](https://img.shields.io/badge/branches-79.2%25-blue)](tests/COMPONENT_BADGES.csv) |
 | [Fans](https://github.com/grblHAL/Plugin_fans) | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 96.8%](https://img.shields.io/badge/lines-96.8%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 85.7%](https://img.shields.io/badge/branches-85.7%25-blue)](tests/COMPONENT_BADGES.csv) |
 | [Bluetooth](https://github.com/grblHAL/Plugins_Bluetooth) | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 98.4%](https://img.shields.io/badge/lines-98.4%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 84.8%](https://img.shields.io/badge/branches-84.8%25-blue)](tests/COMPONENT_BADGES.csv) |
 | [WebUI](https://github.com/grblHAL/Plugin_WebUI) | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 91.4%](https://img.shields.io/badge/lines-91.4%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 71.3%](https://img.shields.io/badge/branches-71.3%25-blue)](tests/COMPONENT_BADGES.csv) |
@@ -317,169 +50,117 @@ individual rows.
 | [Thermistor](https://github.com/gcormier/grblhal-thermistor) | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 99.3%](https://img.shields.io/badge/lines-99.3%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 93.2%](https://img.shields.io/badge/branches-93.2%25-blue)](tests/COMPONENT_BADGES.csv) |
 | [Virtual inputs](https://github.com/siganberg/grblhal-virtual-inputs) | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 100.0%](https://img.shields.io/badge/lines-100.0%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 93.0%](https://img.shields.io/badge/branches-93.0%25-blue)](tests/COMPONENT_BADGES.csv) |
 
-#### Drivers
+## Drivers
 
 | Driver / suite | Compile | Lines | Branches |
 |---|---|---|---|
-| [STM32H7xx](https://github.com/dresco/STM32H7xx) — `driver_stm32h7_flash` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 100.0%](https://img.shields.io/badge/lines-100.0%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 100.0%](https://img.shields.io/badge/branches-100.0%25-blue)](tests/COMPONENT_BADGES.csv) |
-| [STM32H7xx](https://github.com/dresco/STM32H7xx) — `driver_stm32h7_serial` | [![compile: hosted pass](https://img.shields.io/badge/compile-hosted%20pass-brightgreen)](https://github.com/grblHAL/Unit_tests/actions/runs/40180258607) | [![lines: 98.8%](https://img.shields.io/badge/lines-98.8%25-blue)](https://github.com/grblHAL/Unit_tests/actions/runs/40180258607) | [![branches: 89.1%](https://img.shields.io/badge/branches-89.1%25-blue)](https://github.com/grblHAL/Unit_tests/actions/runs/40180258607) |
+| [STM32H7xx](https://github.com/dresco/STM32H7xx) / `driver_stm32h7_flash` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 100.0%](https://img.shields.io/badge/lines-100.0%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 100.0%](https://img.shields.io/badge/branches-100.0%25-blue)](tests/COMPONENT_BADGES.csv) |
+| [STM32H7xx](https://github.com/dresco/STM32H7xx) / `driver_stm32h7_serial` | [![compile: hosted pass](https://img.shields.io/badge/compile-hosted%20pass-brightgreen)](https://github.com/grblHAL/Unit_tests/actions/runs/40180258607) | [![lines: 98.8%](https://img.shields.io/badge/lines-98.8%25-blue)](https://github.com/grblHAL/Unit_tests/actions/runs/40180258607) | [![branches: 89.1%](https://img.shields.io/badge/branches-89.1%25-blue)](https://github.com/grblHAL/Unit_tests/actions/runs/40180258607) |
 | [ESP32](https://github.com/grblHAL/ESP32) | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: not measured](https://img.shields.io/badge/lines-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) | [![branches: not measured](https://img.shields.io/badge/branches-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) |
 | [LPC176x](https://github.com/grblHAL/LPC176x) | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 100.0%](https://img.shields.io/badge/lines-100.0%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 100.0%](https://img.shields.io/badge/branches-100.0%25-blue)](tests/COMPONENT_BADGES.csv) |
 | [MSP430F5529](https://github.com/grblHAL/MSP430F5529) | [![compile: not added](https://img.shields.io/badge/compile-not%20added-lightgrey)](tests/COMPONENT_BADGES.csv) | [![lines: not measured](https://img.shields.io/badge/lines-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) | [![branches: not measured](https://img.shields.io/badge/branches-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) |
 | [MSP432E401Y](https://github.com/grblHAL/MSP432E401Y) | [![compile: not added](https://img.shields.io/badge/compile-not%20added-lightgrey)](tests/COMPONENT_BADGES.csv) | [![lines: not measured](https://img.shields.io/badge/lines-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) | [![branches: not measured](https://img.shields.io/badge/branches-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) |
 | [MSP432P401R](https://github.com/grblHAL/MSP432P401R) | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 100.0%](https://img.shields.io/badge/lines-100.0%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 90.2%](https://img.shields.io/badge/branches-90.2%25-blue)](tests/COMPONENT_BADGES.csv) |
-| [PSoC5](https://github.com/grblHAL/PSoC5) — `driver_psoc5_serial_reference` | [![compile: legacy only](https://img.shields.io/badge/compile-legacy%20only-yellow)](tests/COMPONENT_BADGES.csv) | [![lines: 100.0%](https://img.shields.io/badge/lines-100.0%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 87.5%](https://img.shields.io/badge/branches-87.5%25-blue)](tests/COMPONENT_BADGES.csv) |
+| [PSoC5](https://github.com/grblHAL/PSoC5) / `driver_psoc5_serial_reference` | [![compile: legacy only](https://img.shields.io/badge/compile-legacy%20only-yellow)](tests/COMPONENT_BADGES.csv) | [![lines: 100.0%](https://img.shields.io/badge/lines-100.0%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 87.5%](https://img.shields.io/badge/branches-87.5%25-blue)](tests/COMPONENT_BADGES.csv) |
 | [RP2040 (Pi Pico & Pi Pico W)](https://github.com/grblHAL/RP2040) | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: not measured](https://img.shields.io/badge/lines-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) | [![branches: not measured](https://img.shields.io/badge/branches-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) |
 | [SAM3X8E (Arduino Due)](https://github.com/grblHAL/SAM3X8E) | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 99.3%](https://img.shields.io/badge/lines-99.3%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 92.6%](https://img.shields.io/badge/branches-92.6%25-blue)](tests/COMPONENT_BADGES.csv) |
 | [SAMD21](https://github.com/grblHAL/SAMD21) | [![compile: not added](https://img.shields.io/badge/compile-not%20added-lightgrey)](tests/COMPONENT_BADGES.csv) | [![lines: not measured](https://img.shields.io/badge/lines-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) | [![branches: not measured](https://img.shields.io/badge/branches-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) |
-| [STM32F1xx](https://github.com/grblHAL/STM32F1xx) — `driver_stm32f1_flash` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 100.0%](https://img.shields.io/badge/lines-100.0%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 100.0%](https://img.shields.io/badge/branches-100.0%25-blue)](tests/COMPONENT_BADGES.csv) |
-| [STM32F1xx](https://github.com/grblHAL/STM32F1xx) — `driver_stm32f1_serial` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 96.6%](https://img.shields.io/badge/lines-96.6%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 82.5%](https://img.shields.io/badge/branches-82.5%25-blue)](tests/COMPONENT_BADGES.csv) |
-| [STM32F3xx](https://github.com/grblHAL/STM32F3xx) — `driver_stm32f3_flash` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 100.0%](https://img.shields.io/badge/lines-100.0%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 100.0%](https://img.shields.io/badge/branches-100.0%25-blue)](tests/COMPONENT_BADGES.csv) |
-| [STM32F3xx](https://github.com/grblHAL/STM32F3xx) — `driver_stm32f3_serial` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 100.0%](https://img.shields.io/badge/lines-100.0%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 93.8%](https://img.shields.io/badge/branches-93.8%25-blue)](tests/COMPONENT_BADGES.csv) |
-| [STM32F4xx](https://github.com/grblHAL/STM32F4xx) — `driver_stm32f4_flash` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 100.0%](https://img.shields.io/badge/lines-100.0%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 100.0%](https://img.shields.io/badge/branches-100.0%25-blue)](tests/COMPONENT_BADGES.csv) |
-| [STM32F4xx](https://github.com/grblHAL/STM32F4xx) — `driver_stm32f4_serial` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 98.8%](https://img.shields.io/badge/lines-98.8%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 88.5%](https://img.shields.io/badge/branches-88.5%25-blue)](tests/COMPONENT_BADGES.csv) |
-| [STM32F7xx](https://github.com/grblHAL/STM32F7xx) — `driver_stm32f7_flash` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 100.0%](https://img.shields.io/badge/lines-100.0%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 100.0%](https://img.shields.io/badge/branches-100.0%25-blue)](tests/COMPONENT_BADGES.csv) |
-| [STM32F7xx](https://github.com/grblHAL/STM32F7xx) — `driver_stm32f7_serial` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 98.9%](https://img.shields.io/badge/lines-98.9%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 88.5%](https://img.shields.io/badge/branches-88.5%25-blue)](tests/COMPONENT_BADGES.csv) |
-| [Simulator](https://github.com/grblHAL/Simulator) — `driver_simulator` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: not measured](https://img.shields.io/badge/lines-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) | [![branches: not measured](https://img.shields.io/badge/branches-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) |
-| [Simulator](https://github.com/grblHAL/Simulator) — `driver_simulator_vfs` | [![compile: incompatible](https://img.shields.io/badge/compile-incompatible-orange)](tests/COMPONENT_BADGES.csv) | [![lines: not measured](https://img.shields.io/badge/lines-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) | [![branches: not measured](https://img.shields.io/badge/branches-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) |
-| [TM4C123](https://github.com/grblHAL/TM4C123) — `driver_tm4c123_eeprom` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 96.1%](https://img.shields.io/badge/lines-96.1%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 85.0%](https://img.shields.io/badge/branches-85.0%25-blue)](tests/COMPONENT_BADGES.csv) |
-| [TM4C123](https://github.com/grblHAL/TM4C123) — `driver_tm4c123_serial` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 100.0%](https://img.shields.io/badge/lines-100.0%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 91.7%](https://img.shields.io/badge/branches-91.7%25-blue)](tests/COMPONENT_BADGES.csv) |
+| [STM32F1xx](https://github.com/grblHAL/STM32F1xx) / `driver_stm32f1_flash` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 100.0%](https://img.shields.io/badge/lines-100.0%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 100.0%](https://img.shields.io/badge/branches-100.0%25-blue)](tests/COMPONENT_BADGES.csv) |
+| [STM32F1xx](https://github.com/grblHAL/STM32F1xx) / `driver_stm32f1_serial` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 96.6%](https://img.shields.io/badge/lines-96.6%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 82.5%](https://img.shields.io/badge/branches-82.5%25-blue)](tests/COMPONENT_BADGES.csv) |
+| [STM32F3xx](https://github.com/grblHAL/STM32F3xx) / `driver_stm32f3_flash` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 100.0%](https://img.shields.io/badge/lines-100.0%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 100.0%](https://img.shields.io/badge/branches-100.0%25-blue)](tests/COMPONENT_BADGES.csv) |
+| [STM32F3xx](https://github.com/grblHAL/STM32F3xx) / `driver_stm32f3_serial` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 100.0%](https://img.shields.io/badge/lines-100.0%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 93.8%](https://img.shields.io/badge/branches-93.8%25-blue)](tests/COMPONENT_BADGES.csv) |
+| [STM32F4xx](https://github.com/grblHAL/STM32F4xx) / `driver_stm32f4_flash` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 100.0%](https://img.shields.io/badge/lines-100.0%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 100.0%](https://img.shields.io/badge/branches-100.0%25-blue)](tests/COMPONENT_BADGES.csv) |
+| [STM32F4xx](https://github.com/grblHAL/STM32F4xx) / `driver_stm32f4_serial` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 98.8%](https://img.shields.io/badge/lines-98.8%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 88.5%](https://img.shields.io/badge/branches-88.5%25-blue)](tests/COMPONENT_BADGES.csv) |
+| [STM32F7xx](https://github.com/grblHAL/STM32F7xx) / `driver_stm32f7_flash` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 100.0%](https://img.shields.io/badge/lines-100.0%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 100.0%](https://img.shields.io/badge/branches-100.0%25-blue)](tests/COMPONENT_BADGES.csv) |
+| [STM32F7xx](https://github.com/grblHAL/STM32F7xx) / `driver_stm32f7_serial` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 98.9%](https://img.shields.io/badge/lines-98.9%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 88.5%](https://img.shields.io/badge/branches-88.5%25-blue)](tests/COMPONENT_BADGES.csv) |
+| [Simulator](https://github.com/grblHAL/Simulator) / `driver_simulator` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: not measured](https://img.shields.io/badge/lines-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) | [![branches: not measured](https://img.shields.io/badge/branches-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) |
+| [Simulator](https://github.com/grblHAL/Simulator) / `driver_simulator_vfs` | [![compile: incompatible](https://img.shields.io/badge/compile-incompatible-orange)](tests/COMPONENT_BADGES.csv) | [![lines: not measured](https://img.shields.io/badge/lines-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) | [![branches: not measured](https://img.shields.io/badge/branches-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) |
+| [TM4C123](https://github.com/grblHAL/TM4C123) / `driver_tm4c123_eeprom` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 96.1%](https://img.shields.io/badge/lines-96.1%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 85.0%](https://img.shields.io/badge/branches-85.0%25-blue)](tests/COMPONENT_BADGES.csv) |
+| [TM4C123](https://github.com/grblHAL/TM4C123) / `driver_tm4c123_serial` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 100.0%](https://img.shields.io/badge/lines-100.0%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 91.7%](https://img.shields.io/badge/branches-91.7%25-blue)](tests/COMPONENT_BADGES.csv) |
 | [TM4C1294](https://github.com/grblHAL/TM4C1294) | [![compile: not added](https://img.shields.io/badge/compile-not%20added-lightgrey)](tests/COMPONENT_BADGES.csv) | [![lines: not measured](https://img.shields.io/badge/lines-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) | [![branches: not measured](https://img.shields.io/badge/branches-not%20measured-lightgrey)](tests/COMPONENT_BADGES.csv) |
 | [iMXRT1062 (Teensy 4.x)](https://github.com/grblHAL/iMXRT1062) | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 100.0%](https://img.shields.io/badge/lines-100.0%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 83.8%](https://img.shields.io/badge/branches-83.8%25-blue)](tests/COMPONENT_BADGES.csv) |
-| [TI SimpleLink shared EEPROM and UART](https://github.com/grblHAL/TI_SimpleLink_shared) — `driver_ti_shared_eeprom` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 96.1%](https://img.shields.io/badge/lines-96.1%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 85.0%](https://img.shields.io/badge/branches-85.0%25-blue)](tests/COMPONENT_BADGES.csv) |
-| [TI SimpleLink shared EEPROM and UART](https://github.com/grblHAL/TI_SimpleLink_shared) — `driver_ti_shared_serial_reference` | [![compile: legacy only](https://img.shields.io/badge/compile-legacy%20only-yellow)](tests/COMPONENT_BADGES.csv) | [![lines: 97.1%](https://img.shields.io/badge/lines-97.1%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 80.0%](https://img.shields.io/badge/branches-80.0%25-blue)](tests/COMPONENT_BADGES.csv) |
+| [TI SimpleLink shared EEPROM and UART](https://github.com/grblHAL/TI_SimpleLink_shared) / `driver_ti_shared_eeprom` | [![compile: local pass](https://img.shields.io/badge/compile-local%20pass-brightgreen)](tests/COMPONENT_BADGES.csv) | [![lines: 96.1%](https://img.shields.io/badge/lines-96.1%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 85.0%](https://img.shields.io/badge/branches-85.0%25-blue)](tests/COMPONENT_BADGES.csv) |
+| [TI SimpleLink shared EEPROM and UART](https://github.com/grblHAL/TI_SimpleLink_shared) / `driver_ti_shared_serial_reference` | [![compile: legacy only](https://img.shields.io/badge/compile-legacy%20only-yellow)](tests/COMPONENT_BADGES.csv) | [![lines: 97.1%](https://img.shields.io/badge/lines-97.1%25-blue)](tests/COMPONENT_BADGES.csv) | [![branches: 80.0%](https://img.shields.io/badge/branches-80.0%25-blue)](tests/COMPONENT_BADGES.csv) |
 
-### Plugin and driver tests
+Host tests compile original source with simulated hardware callbacks. Badge
+percentages cover selected files and configurations. **Local pass** and
+**hosted pass** describe host builds; known regressions are tracked separately.
+Grey badges mark work not added or measured. **Legacy only** uses an older CORE.
+[Component revisions and scope](tests/COMPONENT_BADGES.csv).
 
-Actions has separate manual **Plugin tests** and **Driver tests** workflows.
-Choose an implementation suite, optional candidate repository/ref/PR, and
-optional `core_ref`. Each run records both source revisions, runs GCC/Clang with
-sanitizers, measures that implementation's code, and publishes its own test
-results, known defects, diagnostics and coverage artifacts. **Core tests** remains
-separate. New dispatch workflows become available after installation on the
-repository's default branch.
+## Issues and coverage gaps
 
-STM32 F1/F3/F4/F7/H7 and LPC176x runs also have an **arm-modules** job.
-It compiles the original serial module and full vendor UART unit (plus LPC
-IOCON) for selected Cortex-M targets with `arm-none-eabi-gcc`. Its artifacts
-record the same source lock, compiler version, commands, source/object hashes
-and ELF architecture. These compile checks are separate from unit-test counts
-and coverage; they do not link firmware or run on a controller. Locally, after
-fetching one of these driver locks, run `python scripts/check_arm_modules.py`.
-Use `--compiler /path/to/arm-none-eabi-gcc` if it is outside `PATH`.
+- [Known CORE defects and fix guidance](tests/KNOWN_BUGS.md)
+- [Pending features and contract questions](tests/TODO.md)
+- [Coverage gaps](tests/COVERAGE_GAPS.md) and [coverage closeout](tests/COVERAGE_CLOSEOUT.md)
+- [Plugin and driver backlog](tests/COMPONENT_INVENTORY.csv) and [progress](tests/COMPONENT_PROGRESS.md)
+- Component defects: `tests/plugins/<name>/KNOWN_BUGS.md` or `tests/drivers/<name>/KNOWN_BUGS.md`
 
-| Workflow | Suite | Initial tested behavior |
-|---|---|---|
-| Plugin tests | `plugins_misc` | M220/M150/M280, expanders, probes, homing/event outputs and ESP-AT startup/session/storage/networking through real CORE streams/ports |
-| Plugin tests | `plugin_eeprom` | I2C EEPROM/FRAM page/block storage |
-| Plugin tests | `plugin_fans` | One/two/three/four-fan commands, saved settings, delayed shutdown, spindle links and reports |
-| Driver tests | `driver_simulator` | Simulator EEPROM storage |
-| Plugin tests | `plugin_openpnp` | Digital/analog I/O, ADC scaling, position reports and synchronization |
-| Plugin tests | `plugin_odometer` | Pulse distance, elapsed/spindle time, EEPROM restart and reset backup |
-| Plugin tests | `plugin_encoder` | Registered encoder ownership, override commands and persisted settings |
-| Plugin tests | `plugin_spindle_vfd` | GS20/MODVFD/H100/YL620/Huanyang v1/v2/Nowforever commands and feedback; load reporting and protocol recovery |
-| Plugin tests | `plugin_spindle_onoff` | On/off and direction outputs; persisted port settings and resource conflicts |
-| Plugin tests | `plugin_spindle_pwm` | Resource rejection only; PWM activation proposals blocked by missing source context |
-| Plugin tests | `plugin_spindle_select` | M-code selection and binding checks; tool-threshold ABI proposals unregistered |
-| Plugin tests | `plugin_spindle_offset` | Requested offset/return motion and G92 behavior at the host motion boundary |
-| Plugin tests | `plugin_spindle_clone` | Primary/clone signal routing, CORE PWM conversion, switching and provider rejection |
-| Plugin tests | `plugin_spindle_stepper` | Original CORE secondary-stepper polling/timer callbacks, position sync and motor claims |
-| Plugin tests | `plugin_sdcard_stream` | File input, stream ownership, error/reset recovery and external macro repeats |
-| Plugin tests | `plugin_sdcard_fatfs` | Original FatFs/SD lifecycle, macro calls and file-stream commands on RAM-backed FAT12 media; file I/O and recovery |
-| Driver tests | `driver_simulator_vfs` | File/directory workflows; current CORE compile incompatibility recorded |
-| Plugin tests | `plugin_keypad` | I2C/UART jog commands, overrides and NVS restart; LED outputs and stored macro execution/recovery |
-| Plugin tests | `plugin_networking` | Interface reports, Telnet/CORE streams and multipart uploads through VFS/FatFs |
-| Plugin tests | `plugin_laser_ppi` | Registered laser PPI spacing, mode changes, shutdown and hardware delegation |
-| Plugin tests | `plugin_laser_coolant` | Start confirmation, delayed shutoff, coolant-loss IRQs and virtual sensor callbacks |
-| Plugin tests | `plugin_laser_overdrive` | M129 availability/validation, CORE PWM overdrive calculation and reset/program cleanup |
-| Plugin tests | `plugin_laser_cluster` | LightBurn cluster expansion, acknowledgement suppression and stream/reset hooks |
-| Plugin tests | `plugin_trinamic` | TMC2209 UART/reports/runtime; TMC2130/TMC5160 SPI-register startup, current, microsteps and recovery |
-| Plugin tests | `plugin_plasma` | Materials/imports, EEPROM-backed mode boot, arc retry/loss and up/down/voltage PID height control |
-| Plugin tests | `plugin_bluetooth` | HC-05 AT configuration, stream switching, settings and EEPROM restart |
-| Plugin tests | `plugin_embroidery_readers` | DST/PES decoding, coordinator conversion and streamed needle/motion requests through real VFS reads |
-| Driver tests | `driver_rp2040_flash` | Flash-copy behavior with simulated SDK/IRQ calls |
-| Driver tests | `driver_esp32_nvs` | Partition storage, failures and realtime-handler restoration with simulated SDK calls |
-| Driver tests | `driver_stm32f4_flash` | Flash read/write, erase retry and failure handling with simulated HAL calls |
-| Driver tests | `driver_stm32f7_flash` | Flash read/write and halfword failure regression with simulated HAL calls |
-| Driver tests | `driver_lpc176x_flash` | IAP storage, failures and IRQ restoration in a mapped host flash region |
-| Driver tests | `driver_stm32h7_flash` | H743/H723 flash-word writes, tail padding and bank selection |
-| Driver tests | `driver_stm32f1_flash` | Page erase/retry and halfword storage failure handling |
-| Driver tests | `driver_stm32f3_flash` | Flash-size register geometry, page storage and halfword failure regression |
-| Plugin tests | `plugin_auxp` | Digital output change reports and reset/chaining |
-| Plugin tests | `plugin_interlock` | Forward/inverse spindle interlock requests and settings |
-| Plugin tests | `plugin_pneumaseal` | Air-seal state, spindle and delayed-off lifecycle |
-| Plugin tests | `plugin_thermistor` | ADC reports, calibration and thermal alarm requests |
-| Plugin tests | `plugin_virtual_inputs` | Real CORE probe registration, virtual contacts, commands and reset |
-| Plugin tests | `plugin_homingaccel` | Per-axis homing override requests, restoration, units and persistence |
-| Plugin tests | `plugin_rgb_sienci` | Legacy/advanced RGB state, override, animation and tool-change callbacks |
-| Plugin tests | `plugin_flexgpio` | I2C expander registration, packets, input edges and configuration |
-| Plugin tests | `plugin_atci` | Keepout checks, jog clipping, rack sensors and M960 regression |
-| Plugin tests | `plugin_mpg_transport` | Framed/plain transport; CORE stream claim, mode selection, broadcast and passive status/command routing |
-| Plugin tests | `plugin_webui` | Argument/assets plus v2/v3 file listing and upload handlers through real CORE VFS/JSON and FatFs; HTTP transport and board storage remain |
-| Driver tests | `driver_imxrt1062_pwm` | Teensy 4.0/4.1/MicroMod PWM register, routing and ownership workflows |
-| Driver tests | `driver_stm32f7_serial` | Original F756 SDK one/three-stream queues, IRQ routing, format and CORE stream lifecycle |
-| Driver tests | `driver_stm32h7_serial` | Native H743 one/three-stream workflows and H723 initialization with original SDK prescaler data |
-| Driver tests | `driver_stm32f1_serial` | Original F103 SDK USART1 baud, queues and CORE stream lifecycle |
-| Driver tests | `driver_stm32f3_serial` | Original F303 SDK fixed USART3/115200 queues and CORE stream lifecycle |
-| Driver tests | `driver_stm32f4_serial` | Original ST/CMSIS one/three-stream queues, IRQ routing, format and CORE stream lifecycle |
-| Driver tests | `driver_sam3x8e_serial` | Dual UART/USART queues, callbacks, settings and CORE stream suspend |
-| Driver tests | `driver_tm4c123_eeprom` | Aligned EEPROM, CRC storage and transfer failures |
-| Driver tests | `driver_ti_shared_eeprom` | Standalone TI shared EEPROM candidate and CRC regressions |
-| Driver tests | `driver_tm4c123_serial` | Original UART0 queues, realtime dispatch and CORE stream suspend |
-| Driver tests | `driver_msp432p_serial` | Primary UART queues and CORE stream lifecycle with real TI/CMSIS headers |
-| Driver tests | `driver_psoc5_serial_reference` | Explicit legacy CORE reference; PSoC UART callbacks, not current-CORE/SDK validation |
-| Driver tests | `driver_ti_shared_serial_reference` | Standalone shared UART0 with fixed legacy CORE/Tiva headers; not a parent firmware build |
+## GitHub Actions
 
-These are initial host tests, not full plugin/driver coverage or board validation.
-The explicit PSoC5/TI-shared serial references lock the selected20250518 CORE
-dependency separately and reject `core_ref` overrides. They never fall back from
-current CORE or contribute to current-compatible totals. PSoC generated UART APIs
-are host declarations, not Cypress SDK/firmware validation; shared serial tests
-use Tiva headers without claiming an MSP432E or archived TM4C1294 parent build.
-Trinamic locks and compiles the actual chip library. TMC2209 UART devices and
-TMC2130/TMC2240/TMC5160 SPI and TMC2660 SPI20 register callbacks are simulated; physical wire/CS/pipeline
-timing and electrical measurements remain untested. Plasma tests use real CORE I/O/secondary-stepper/spindle/VFS APIs
-with simulated pins, voltage, time and controller state. Voltage PID uses the
-original secondary-stepper implementation; full CORE suspension, real electrical
-calibration and hardware timing remain separate work.
-Bluetooth tests simulate HC-05 replies and STATE inputs while using real CORE
-stream/I/O registration; radio and shared-MPG operation remain separate. Embroidery
-tests compile Tajima/Brother readers and the job coordinator. Conversion and
-streamed stepper/trigger workflows use captured planner/spindle boundaries; actual
-planner motion, needle mechanics and physical timing remain untested. Networking
-locks upstream lwIP headers separately. Telnet tests run original daemon callbacks
-and real CORE stream routing with simulated TCP/pbuf boundaries; multipart tests
-parse ordinary uploads. File-upload handlers read back actual VFS/FatFs files
-over RAM media. No live TCP stack, HTTP upload server or network hardware
-is exercised. Laser tests observe simulated driver pulses
-and byte-stream transformations; no physical laser operation is established.
-Driver SDK boundaries are simulated; no actual Pico SDK/ESP-IDF/STM32/NXP firmware
-build or physical flash/interrupt timing is established. STM32 storage suites use 32-bit host targets. LPC keeps 32-bit physical flash
-addresses with native-width RAM pointers. Linux jobs install multilib runtimes
-only when the locked suite requests them. LPC's padded-source case does not establish safety
-for a normal unpadded CORE allocation. Teensy PWM uses actual SDK register
-headers with simulated memory and pin-mux lookup. SAM serial uses actual device/
-Arduino headers and CORE streams with simulated clocks/NVIC/IRQ delivery. SDK
-revisions are locked separately; these are not Arduino/ARM firmware builds. Keypad tests explicitly compare
-signed/unsigned char builds; extended-key and macro-key defects are compiler-specific.
-Macro cases use registered settings and original EEPROM. LED register writes and
-macro parser/transport callbacks remain driver/controller boundaries; auxiliary
-macros, protocol-display runtime and physical devices are not established by them.
-See [component progress](tests/COMPONENT_PROGRESS.md) and the
-[repository backlog](tests/COMPONENT_INVENTORY.csv) for remaining work. Each suite
-has its own `KNOWN_BUGS.md`; keep correct regression assertions when removing
-expected-failure handling for an upstream fix.
+Open **Actions**, choose **Core tests**, **Plugin tests** or **Driver tests**,
+then select **Run workflow**. Choose the harness branch to run; for plugins and
+drivers, also choose a registered `suite`.
 
-The [plugins](https://github.com/grblHAL/plugins) and
-[drivers](https://github.com/grblHAL/drivers) overviews are catalogues. Register
-actual implementation repositories in `ci/suites.json`. Add a standalone CMake
-project under `tests/plugins/<name>` or `tests/drivers/<name>` before adding its
-suite to a workflow's choices. Unknown suites and zero selected tests fail.
+| Input | Use |
+|---|---|
+| `source_repository` | Source `owner/repo` or GitHub URL; blank uses the suite default |
+| `source_ref` | Branch, tag or commit SHA; blank uses the default branch |
+| `source_pr` | PR number in the selected repository; leave `source_ref` blank |
+| `core_ref` | CORE dependency branch, tag or SHA for plugin/driver suites |
+| `source_base_ref`, `source_base_repository` | Optional comparison base for changed-code coverage; available in **Core tests** |
 
-For a local run in a fresh checkout:
+Defaults are in [ci/suites.json](ci/suites.json); CORE defaults to
+`grblHAL/core` at `master`. A different source repository requires an explicit
+ref or PR number. PR selection tests its head commit, including fork PRs.
+Each run records exact harness and source commits in `source-lock.json`.
+Use commit SHAs to repeat the same source selection.
 
 ```sh
-python scripts/resolve_source.py --suite plugin_eeprom --core-ref CORE_SHA
+gh workflow run tests.yml --repo grblHAL/Unit_tests --ref master -f source_pr=123
+
+gh workflow run plugins.yml --repo grblHAL/Unit_tests --ref master \
+  -f suite=plugin_eeprom -f source_ref=my-fix -f core_ref=CORE_SHA
+```
+
+Replace `CORE_SHA` with a real commit, or omit `core_ref` to use the default.
+Manual runs require write access. GCC and Clang run sanitizer tests; GCC also
+publishes coverage. Selected ARM driver suites include module compile checks.
+These checks do not replace firmware builds or controller testing.
+
+### Reusable workflow inputs
+
+Call [reusable-tests.yml](.github/workflows/reusable-tests.yml) from another
+repository's workflow. Start with [the CORE caller](ci/callers/core.yml) or
+[the plugin caller template](ci/callers/plugin.yml.example). The run appears
+in the calling repository's Actions and PR checks.
+
+| Input | Set it to |
+|---|---|
+| `harness_repository` | Tests repository, normally `grblHAL/Unit_tests` (required) |
+| `harness_ref` | Same branch, tag or SHA as the reusable workflow's `uses: ...@ref` (required) |
+| `suite` | Key in [ci/suites.json](ci/suites.json); defaults to `core` |
+| `source_repository` | Repository containing the code to test; blank uses the suite default |
+| `source_ref` | Source branch, tag or SHA; omit when using `source_pr` |
+| `source_pr` | PR number in the selected source repository |
+| `source_base_ref` | Optional comparison-base branch, tag or SHA |
+| `source_base_repository` | Base repository; defaults to the selected source repository |
+| `core_ref` | CORE dependency revision for a plugin/driver suite; leave blank for CORE tests |
+| `run_label` | Unique artifact name suffix when calling more than once; defaults to `core` |
+
+The harness revision selects the tests; the source revision selects the code
+being tested. Keep the workflow `uses` ref and `harness_ref` on the same version.
+No dispatch token or inherited secrets are needed.
+
+## Run locally
+
+Install Python 3, CMake and GCC or GNU-compatible Clang. Windows builds can use
+llvm-mingw with Ninja; MSVC supports only standalone modules.
+
+```sh
+git clone https://github.com/grblHAL/Unit_tests.git
+cd Unit_tests
+python scripts/resolve_source.py
 python scripts/prepare_sources.py
 python scripts/configure_suite.py --mode sanitizers --compiler clang
 python scripts/build_suite.py
@@ -487,118 +168,16 @@ python scripts/run_suite.py test
 python scripts/run_suite.py summary
 ```
 
-Replace `CORE_SHA` with a real core commit, or omit `core_ref` to select the
-configured default. Use a fresh checkout when switching locked sources: source
-preparation preserves existing directories rather than overwriting them.
-Host callbacks validate original component behavior against CORE interfaces;
-complete board builds and electrical/timing behavior need separate SDK/hardware
-checks. [ci/callers/plugin.yml.example](ci/callers/plugin.yml.example) remains
-an upstream caller template; each invocation needs a unique `run_label`.
-
-Simulator VFS currently fails to compile against CORE `b01f481` because its
-`vfs_path_t` dependency was removed. Its separate reference run uses the
-Simulator gitlink CORE `4ec1ae44b857a70d2f9298344feac4b43ed0eb6b`: select that
-exact `core_ref` in a fresh checkout to reproduce it. There is no automatic
-fallback. A passing reference run does not establish current-CORE compatibility.
-
-The EEPROM suite also locks the actual littlefs dependency and tests a complete
-format/write/unmount/remount/read workflow without touching the settings region.
-Odometer, encoder and VFD suites also lock the actual EEPROM backend for
-persistent storage. SD streaming uses real CORE VFS/stream modules with a
-read-only host filesystem; it does not establish FATFS/SD hardware or littlefs
-adapter compatibility. The latter currently fails its CORE API compile check.
-Dependency-only registry entries use `source_only: true`: they are fetched at an
-exact resolved revision and cannot be selected as test suites.
-
-### Source registry fields and a future plugin example
-
-The registry contains metadata, not source code or submodule commit hashes:
-
-| Field | Meaning |
-|---|---|
-| `repository`, `ref` | Public source repository and default branch/tag |
-| `path` | Ignored checkout directory inside this workspace |
-| `dependencies` | Registered source entries to fetch, such as `core` or `littlefs` |
-| `source_only` | `true` for a dependency checkout that has no selectable test suite |
-| `cmake_source`, `cmake_options` | CMake project directory and configure arguments |
-| `test_regex` | CTest names included in this suite; selecting zero tests fails |
-| `coverage_filter` | gcovr file filter for this suite's measured code |
-| `diagnostics_directory` | Directory with the suite's diagnostic exception inventory |
-
-Example entry **after adding a real plugin host project and tests**:
-
-```json
-"example_plugin": {
-  "repository": "OWNER/ACTUAL_PLUGIN_REPOSITORY",
-  "ref": "master",
-  "path": "plugins/example_plugin",
-  "dependencies": ["core"],
-  "cmake_source": "tests/plugins/example_plugin",
-  "cmake_options": [],
-  "test_regex": "^example_plugin[.]",
-  "coverage_filter": "plugins/example_plugin/.*\\.c$",
-  "diagnostics_directory": "tests/plugins/example_plugin"
-}
-```
-
-These are placeholders, not an existing plugin suite. Its CMake project must
-build the original plugin source against the fetched core and arrange host mocks,
-CTest names and sanitizer/coverage instrumentation. `dependencies` fetches source;
-it does not automatically link that source or run the dependency's entire suite.
-The diagnostics directory must supply the manifest used by `scripts/summary.py`.
-Register explicit additional dependencies if a plugin needs other repositories.
-The current resolver supports the listed direct dependencies; it does not recurse
-through arbitrary dependency graphs.
-
-## Read results and reproduce a run
-
-Expand the upstream **source** job summary to see the harness SHA and every
-resolved source SHA. Download artifacts from that same run:
-
-- `source-lock-<run_label>`: immutable source selections and suite configuration.
-- `results-<run_label>-gcc` / `results-<run_label>-clang`: source lock, JUnit
-  results and `LastTest.log`, with individual test names and failures.
-- `coverage-<run_label>`: source lock, HTML/XML coverage and available test logs.
-
-The result summary distinguishes clean passes, passes with known sanitizer
-warnings, reproduced known defects, failures and skips.
-Failed known regressions include a **see known bugs; it may be a fixed regression**
-link to the tested harness revision, plus instructions to confirm the result,
-retain the test, remove its precise exception and delete the resolved defect entry.
-A different crash/failure must be investigated before declaring a fix. Ordinary
-failures include reproduction and source-contract/fixture review guidance; intended
-API changes need corresponding test updates rather than weakened assertions.
-Coverage gaps include guidance to add behavioral tests or fix missing build/feature
-instrumentation. The report does not claim a file is newly added or untested just
-because it is missing from coverage; detecting newly uncovered additions requires
-an explicit baseline diff, which is not implemented yet. A build failure is a
-failed run even if no JUnit report could be produced; inspect the failed build
-step first. Coverage percentages describe the selected suite/configurations.
-A green core run does not establish plugin or physical-board coverage.
-
-For an exact local reproduction, check out the recorded harness SHA in a fresh
-clone, place the downloaded `source-lock.json` at its root, then:
+For another suite or source, pass the selection to `resolve_source.py`:
 
 ```sh
-python scripts/prepare_sources.py
-python scripts/configure_suite.py --mode sanitizers --compiler clang
-cmake --build build --parallel 2
-python scripts/run_suite.py test
-python scripts/run_suite.py summary
+python scripts/resolve_source.py --suite plugin_eeprom --ref my-fix --core-ref CORE_SHA
 ```
 
-On Windows, use GNU-compatible Clang on PATH with Ninja installed and set the
-CMake generator before configuring, for example in PowerShell:
-
-```powershell
-$env:CMAKE_GENERATOR = "Ninja"
-```
-
-The source-fetch helper refuses dirty or mismatched existing checkouts; use the
-fresh clone for this reproduction. Downloaded locks are run records, not tracked
-pins. They include build settings, so inspect them before using a lock from
-outside a trusted run. A source or harness commit must remain reachable from
-its repository for a future fresh fetch.
+Use a fresh checkout when switching locked sources; preparation refuses to
+overwrite dirty or mismatched source directories. On Windows, put the compiler's
+`bin` directory on `PATH` for sanitizer DLLs and set
+`$env:CMAKE_GENERATOR = "Ninja"` before configuring.
 
 ## Retest a core fix locally
 
@@ -722,21 +301,9 @@ both GCC and Clang sanitizer jobs and the coverage job in GitHub Actions. If the
 new core introduces an additional defect, add a separate correctly expected
 regression and dated known-bug entry; do not silently waive it.
 
-## GitHub Actions
-
-`.github/workflows/tests.yml` currently runs by manual dispatch only while
-upstream core trails the candidate fixes. In **Actions > Core tests > Run workflow**,
-set `source_repository=terjeio/grblHAL_core` and choose the branch or SHA to test.
-Reusable workflows and upstream caller templates remain available for source PRs.
-Restore the `push` and `pull_request` triggers once the fixes reach upstream core.
-GCC and Clang run the tests with address/undefined-behavior sanitizers. A separate
-GCC job publishes HTML and XML coverage as an Actions artifact. Coverage describes
-the instrumented modules in this configuration. The summary lists every core C source file and emitted header bodies, including gaps. No separately managed
-credential or external reporting service is required.
-
 ## Measure coverage locally
 
-Use a separate coverage build without sanitizers. Install the same reporter as CI:
+Use a separate build without sanitizers. Install the CI reporter:
 `python -m pip install gcovr==8.4`.
 
 ```sh
@@ -747,59 +314,44 @@ gcovr --merge-mode-functions=separate --root . --filter 'core/.*\.[ch]$' --html-
 python scripts/summary.py coverage coverage.xml
 ```
 
-For GNU-compatible Clang, select `clang` (or its full Windows path) when configuring
-and add `--gcov-executable "C:/path/to/llvm-mingw/bin/llvm-cov.exe gcov"` to gcovr.
-Core coverage includes executable C source and header bodies emitted by the
-selected configurations. This does not inventory optional code that no configured
-build emits. Changed-code warnings include added executable header lines and
-identify changed files absent from the report without assuming they lack tests.
-Older C-source-only percentages use a different denominator.
+For Clang, select `clang` when configuring and add
+`--gcov-executable "llvm-cov gcov"` to gcovr. Coverage combines the configured
+feature variants, including emitted header code. Use a new build directory for
+a fresh measurement. On Windows, verify `.gcda` files are produced; long paths
+can prevent LLVM from writing them even when tests pass.
 
-For authoritative totals, use the hosted Linux coverage job. LLVM on Windows can
-omit profile files at long build paths even when tests pass. If measuring locally,
-verify that executed test objects produce `.gcda` files before trusting totals.
+## Adding tests
 
-Open `coverage.html` to inspect uncovered lines and branches. For a fresh measurement,
-use a new build directory so old execution counts cannot carry over.
+Compile original source; do not copy implementations into tests. Use public
+commands and APIs, shared fixtures, and assertions about observable behavior.
+Keep unrelated behaviors in separate files. Include useful expected/actual
+values when an assertion alone would be ambiguous.
 
-The host variants currently exercise the default configuration, legacy protocol
-compatibility level 1, parameter-disabled builds where the selected CORE supports them (including boot and reset), NGC expressions with default and extended (`NGC_MAX_PARAM_LENGTH=80`) named-parameter/macro labels, non-modal lathe U/V/W commands with NGC expressions, cutter-compensation parsing and plugin interfaces, G187 acceleration profiles, jerk acceleration with and without G187 profiles, coordinate rotation with NGC expressions, default Mach3-style and alternate Fanuc-style G51 scaling (`MACH3_SCALING=0`), spindle synchronization with simulated encoder feedback (including normal boot and streamed G95 programs),
-CoreXY, polar, wall-plotter, three/four/five-axis delta and five-axis RTCP kinematics, backlash
-compensation, four-axis asymmetric ganging with and without auto-squaring,
-seven-axis XYZABCU, the eight-axis maximum, six-axis UVW remapping, and three registered spindles
-with two and three active spindle slots, a four-slot persistent tool table with and without NGC expressions, fixed X/Y/Z tool-offset axes (`TOOL_LENGTH_OFFSET_AXIS`), optional spindle PWM linearization, and enabled PID logging. All variants run in one
-CTest suite; coverage merges their executed source lines. The five-axis delta
-fixture streams mixed cuts and independent auxiliary reversals, checking emitted
-steps and public machine-position conversion. It does not establish auxiliary
-homing behavior. Compatibility levels
-1, 2 and 10 have runtime reporting tests. Levels 2 and 10 also exercise normal
-boot/reset, coordinate availability and legacy settings; their coordinate-report
-compile checks remain. The `separate` function
-merge mode retains functions compiled at different locations under feature guards. Current CORE revisions that force NGC parameters on omit the parameter-disabled
-cases during configuration; those cases are not counted as executed coverage.
-Other feature combinations still need tests. A green suite or a covered module does not establish full coverage;
-use the source-by-source coverage table to choose the next behavior to test.
-The table inventories both `.c` and `.h` files; uninstrumented headers may
-contain declarations only.
+- **CORE:** add `tests/cases/<module>/<case>.c`; CMake discovers it automatically.
+  Add required module dependencies in `add_core_test()`.
+- **Plugin or driver:** add a CMake project under `tests/plugins/<name>` or
+  `tests/drivers/<name>`, register its suite in [ci/suites.json](ci/suites.json),
+  then add the suite to the matching workflow's choices. Reuse an existing
+  component project as a starting point.
+- **Regression:** retain the correct assertions. Document confirmed defects and
+  narrow exceptions in the suite's `KNOWN_BUGS.md`; remove exceptions after a fix
+  using the steps above.
 
-## Add tests incrementally
+### Source registry
 
-1. Add isolated modules and boundary/error cases first (string utilities, parsing
-   helpers, expressions). Compile their original `.c` files; do not copy functions.
-2. Introduce a small mock HAL for settings/NVS, streams, spindle and coolant.
-   Record calls and inject failures, without claiming hardware timing coverage.
-3. Test G-code parsing with accepted/rejected commands, modal state and units.
-4. Test planner geometry, limits, queued blocks and feed calculations.
-5. Add protocol/state-machine sequences: reset, hold/resume, alarms and probing.
-6. Add representative axis/feature configurations and hardware integration tests.
+| Field | Purpose |
+|---|---|
+| `repository`, `ref` | Source repository and default branch/tag |
+| `path` | Ignored source checkout directory |
+| `dependencies` | Direct registry entries to fetch; source must still be linked explicitly |
+| `source_only` | Dependency checkout with no selectable test suite |
+| `cmake_source`, `cmake_options` | CMake project and configure arguments |
+| `test_regex` | CTest names selected by the suite; zero selected tests fails |
+| `coverage_filter` | gcovr filter for measured source files |
+| `diagnostics_directory` | Suite directory containing its exception inventory |
+| `host_bits` | Optional 32-bit host build; defaults to 64 |
 
-Create `tests/cases/<module>/<case>.c`; CMake discovers each case automatically.
-Add module dependencies in `add_core_test()` when needed.
-Each regression should name the triggering input and check the expected behavior.
-Avoid tests that merely reproduce the implementation. Core changes belong in
-their own repository; this repository commits tests and source-selection metadata.
-
-PID tests currently specify existing sample-rate behavior. Deadband and
-`p_max_error` are not asserted as supported features; the implementation does not
-apply them. Zero sample rate needs an upstream-defined contract before testing
-an expected result.
+Register implementation repositories from the [plugin](https://github.com/grblHAL/plugins)
+and [driver](https://github.com/grblHAL/drivers) catalogues. Dependencies are
+resolved directly; arbitrary nested dependency graphs are not supported.
+Firmware fixes belong in the source repository.
