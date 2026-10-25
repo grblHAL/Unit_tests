@@ -562,3 +562,12 @@ SpindleType_PWM object lacks context required by CORE activation at line122.
 Do not inject host context, modify production sources or rerun unsafe path.
 Upstream compatibility resolution is required before claims of PWM/controller
 support. Other spindle and driver modules remain available independent work.
+
+## Spindle selection contract follow-up
+
+Seven independent selection/M-code/provider cases pass strict. Four tool/
+persistence candidates unregistered after actual tool setter signature mismatch
+was rejected by strict reporting despite ordinary CTest green. CORE public
+Format_Int16 uses uint_fast16_t; original callback takes uint32_t. Do not hide
+with source-specific casts or count restart validated. Original assertions
+remain proposals; native controller/SDK/hardware and remaining modules stay open.

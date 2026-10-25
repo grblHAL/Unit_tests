@@ -273,6 +273,7 @@ repository's default branch.
 | Plugin tests | `plugin_spindle_vfd` | GS20/MODVFD/H100/YL620/Huanyang v1/v2/Nowforever commands and feedback; load reporting and protocol recovery |
 | Plugin tests | `plugin_spindle_onoff` | On/off and direction outputs; persisted port settings and resource conflicts |
 | Plugin tests | `plugin_spindle_pwm` | Resource rejection only; PWM activation proposals blocked by missing source context |
+| Plugin tests | `plugin_spindle_select` | M-code selection and binding checks; tool-threshold ABI proposals unregistered |
 | Plugin tests | `plugin_sdcard_stream` | File input, stream ownership, error/reset recovery and external macro repeats |
 | Driver tests | `driver_simulator_vfs` | File/directory workflows; current CORE compile incompatibility recorded |
 | Plugin tests | `plugin_keypad` | I2C/UART jog commands, cancellation, overrides and NVS restart |

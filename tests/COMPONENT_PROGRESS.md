@@ -1,3 +1,32 @@
+# Local spindle selection and tool-setting contract - 2026-10-25
+
+Goal active. Seven independent original-source selection cases pass fresh
+Windows Clang ASan/UBSan/strict, all clean. Two basic spindles register through
+actual CORE; original select.c M-code/settings/setup hooks execute. P/Q selection,
+default return, invalid/missing/both words, duplicate/out-of-range/disabled
+binding rejection, prior M-code chaining, reports, no storage and failed setup
+are covered. Command helper restores CORE consumed-word validation handoff.
+
+Initial ordinary11/11 CTest was misleading: strict reporting found three UBSan
+function-type mismatches and classified8 clean/3 failed. Original tool-threshold
+setter uses uint32_t; its registered Format_Int16 dispatch calls
+setting_set_int_ptr(uint_fast16_t), confirmed CORE settings.h1098/settings.c3648.
+Four dependent tool/persistence source files now remain unregistered proposals,
+not verified restart support. Assertions retained; no source-specific cast,
+production edit, sanitizer allowance or unsafe rerun on unchanged pins. Public
+metadata contract, not a driver-provided private object, needs upstream repair.
+
+Manifest/Plugin workflow/README/inventory register the seven active cases only.
+Component metadata7 checks and workflow actionlint passed. N_SPINDLE2/
+N_SYS_SPINDLE1 only; actual controller/parser/motion/hardware, tool selection,
+process restart and multi-system variants remain unfinished. Source pins remain
+spindle8a3ae47f/COREb01f4810.45 suites/921 authored active cases, last full
+batch33 delivered879/42. Pending42:17 VFD +12 onoff +6 PWM provider +7 select.
+Offset/stepper/clone and other driver work remain independent next steps. Goal
+stays active; no new coverage, global gate or hosted success claimed.
+
+---
+
 # Local PWM resource tests and activation incompatibility - 2026-10-25
 
 Goal active. New selectable plugin_spindle_pwm executes six provider-rejection
