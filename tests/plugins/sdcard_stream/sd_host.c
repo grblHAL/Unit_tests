@@ -1,4 +1,7 @@
 #include "sd_host.h"
+#if TEST_FATFS_STREAM
+#include "fatfs_host.h"
+#endif
 system_t sys;
 grbl_hal_t hal;
 grbl_t grbl;
@@ -13,6 +16,7 @@ static sys_commands_t *commands;
 static foreground_task_ptr tasks[8];
 static void *task_data[8];
 static unsigned task_count;
+#if !TEST_FATFS_STREAM
 static const embedded_file_t job = {.name = "job.nc", .size = 11, .data = "G1X1\nM30\nXX"};
 static const embedded_file_t mixed = {.name = "mixed.ngc", .size = 10, .data = "A\r\nB\n\rC\rD\n"};
 static const embedded_file_t binary = {.name = "readme.bin", .size = 3, .data = "BIN"};
@@ -20,6 +24,7 @@ static const embedded_file_t hidden = {
     .name = "hidden.nc", .size = 3, .st_mode = {.hidden = On}, .data = "M2\n"};
 static const embedded_file_t macro = {.name = "P100.macro", .size = 3, .data = "M2\n"};
 static const embedded_file_t *files[] = {&job, &mixed, &binary, &hidden, &macro, NULL};
+#endif
 static void output(const char *text)
 {
     CHECK(strlen(sd_output) + strlen(text) < sizeof(sd_output));
@@ -133,6 +138,9 @@ size_t gc_macro_get_pos(macro_id_t id, vfs_file_t *file)
 }
 void sd_mount(void)
 {
+#if TEST_FATFS_STREAM
+    fatfs_prepare();
+#else
     CHECK(fs_embedded_mount(files));
     vfs_drives_t *dh = vfs_drives_open();
     CHECK(dh);
@@ -144,6 +152,7 @@ void sd_mount(void)
     vfs_drives_close(dh);
     CHECK(backend);
     CHECK(vfs_mount(NULL, "/", backend, (vfs_st_mode_t){.read_only = On}));
+#endif
 }
 void sd_prepare(bool mount)
 {

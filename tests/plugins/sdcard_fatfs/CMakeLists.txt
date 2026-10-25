@@ -26,3 +26,14 @@ foreach(behavior mount detect automount_failure early_mount absent_pin custom_ev
   endif()
 endforeach()
 set_source_files_properties("${HARNESS_ROOT}/plugins/sdcard/sdcard.c" PROPERTIES COMPILE_OPTIONS -Wno-error)
+
+set(stream_sources "${HARNESS_ROOT}/plugins/sdcard/fs_stream.c" "${HARNESS_ROOT}/plugins/sdcard/macros.c"
+  "${COMPONENT_CORE_ROOT}/stream.c" "${COMPONENT_CORE_ROOT}/stream_file.c")
+set_source_files_properties(${stream_sources} PROPERTIES COMPILE_OPTIONS -Wno-error)
+foreach(behavior job eof_tail reset error_reopen tool_change progress writable_commands)
+  set(target plugin_sdcard_fatfs.stream_${behavior})
+  component_case(${target} stream_${behavior}.c fatfs_host.c "${HARNESS_ROOT}/tests/plugins/sdcard_stream/sd_host.c" ${sources} ${stream_sources})
+  target_include_directories(${target} PRIVATE "${fatfs}" "${HARNESS_ROOT}/plugins/sdcard")
+  target_compile_definitions(${target} PRIVATE STM32_PLATFORM TEST_FATFS_STREAM=1 NGC_EXPRESSIONS_ENABLE=0)
+  target_compile_options(${target} PRIVATE "SHELL:-include \"${CMAKE_CURRENT_SOURCE_DIR}/fatfs_platform.h\"")
+endforeach()

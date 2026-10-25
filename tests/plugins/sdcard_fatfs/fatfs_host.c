@@ -1,5 +1,7 @@
 #include "fatfs_host.h"
+#if !TEST_FATFS_STREAM
 grbl_hal_t hal;
+#endif
 static uint8_t disk[2880][512];
 static FATFS volume;
 static fatfs_dev_t device;
@@ -67,15 +69,17 @@ DRESULT disk_ioctl(BYTE drive, BYTE command, void *buffer)
     }
 }
 DWORD get_fattime(void) { return ((2026 - 1980) << 25) | (10 << 21) | (25 << 16) | (12 << 11); }
+#if !TEST_FATFS_STREAM
 bool stream_await_tx_clear(const io_stream_t *stream)
 {
     (void)stream;
     CHECK(false);
     return false;
 }
+#endif
 void fatfs_prepare_media(void)
 {
-    // Standard 1.44MiB FAT12 volume: two9-sector FATs,224 root entries,512-byte sectors.
+    // Standard 2880-sector FAT12 volume: two9-sector FATs,224 root entries,512-byte sectors.
     uint8_t *boot = disk[0];
     boot[0] = 0xeb;
     boot[1] = 0x3c;
@@ -116,6 +120,7 @@ void fatfs_put_file(const char *name, const void *data, size_t size)
     vfs_close(file);
 }
 
+#if !TEST_FATFS_STREAM
 bool protocol_execute_realtime(void)
 {
     CHECK(false);
@@ -131,3 +136,5 @@ bool state_door_reopened(void)
     CHECK(false);
     return false;
 }
+
+#endif

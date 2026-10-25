@@ -1,3 +1,36 @@
+# Local actual-disk file-stream integration checkpoint - 2026-10-25
+
+Goal active. Seven new FatFs-backed file-stream cases bring suite to21. Complete
+21-case Windows Clang ASan/UBSan run passes1.36s and strict classification all
+clean. Original fs_stream/macros plus CORE stream/stream_file run on actual
+FatFs/VFS disk. Existing serial fixture reused with explicit backend selection;
+no copied stream logic. Normal LF job bytes hand off to modeled controller M30
+completion, missing-terminator EOF appends newline/completes, reset/error reopen
+preserves stored file, tool-change suspend/ack restores input, progress matches
+stored file position and writable commands create/delete directories/files.
+
+Shared old fixture/driver changes validated by full13 embedded cases0.70s:
+11 clean +2 existing known regressions, strict no unexpected failures. Original
+mixed/trailing EOF assertions and allowances remain untouched. Modeled M30/error
+callbacks are controller boundaries, not native parser/motion execution; this
+integration does not claim that existing EOF defects are fixed. No new known
+result, sanitizer allowance, source edit or weakened assertion.
+
+FatFs native platform header orders original headers consistently; supported
+FF configuration supplied by actual SDK header on all stream compile units.
+No API aliases/context injection or edited FatFs config. Duplicated legacy
+boundary stubs are omitted only when actual CORE stream implementation links.
+Coverage filter includes fs_fatfs/sdcard/fs_stream/macros; expanded denominator
+will be measured at substantial checkpoint. Metadata7 helpers pass.
+
+51 current-source host suites/1003 authored. Last delivered batch35 remains
+976/50 plus87 helpers; pending27 cases:6 coolant +21 FatFs/SD. No fresh measured
+coverage/global/hosted claim. Actual SD media/IRQ/SPI, full controller/parser,
+macro/NGC variants, root-stat/cwd source concerns and broad remaining drivers
+stay unfinished. Goal active; continue substantial batch before delivery.
+
+---
+
 # Local SD mount/detect lifecycle checkpoint - 2026-10-25
 
 Goal active. Seven new original sdcard.c cases bring FatFs/SD suite to14.
@@ -30,7 +63,7 @@ legacy/alternate filesystems and other modules stay open. Full goal stays active
 
 Goal active. Seven new FatFs scenarios pass Windows Clang ASan/UBSan0.44s
 and strict classification all clean. Original fs_fatfs.c, CORE VFS and actual
-STM32F4 FatFs ff.c/ffunicode.c/ffconf.h execute against a valid1.44MiB FAT12
+STM32F4 FatFs ff.c/ffunicode.c/ffconf.h execute against a valid2880-sector FAT12
 block device. Cases cover multisector file roundtrip/seek/eof, directory/system
 entry filtering, truncate/rename/delete, regular-file timestamps, cwd/free-space,
 missing objects and normal sector-read error/reopen recovery. No copied FatFs

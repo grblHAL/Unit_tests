@@ -694,3 +694,12 @@ custom callbacks/report subscriptions execute. No physical GPIO/SPI/media timing
 or streamed full-controller job. Current source coverage filter includes both
 adapter and SD layer; record expanded denominator at next cumulative checkpoint.
 Remaining storage/driver configurations and root-stat/cwd source concerns remain.
+
+## Actual FatFs file-stream integration
+
+Seven new cases,21 strict-clean sanitizer; shared embedded13 cases retain11
+clean/2 known. Actual disk/VFS/CORE stream and plugin stream/macros execute.
+Modeled controller M30 completion is separate from unterminated EOF smoke;
+existing mixed/trailing EOF assertions remain unchanged. Reset/reopen, tool ack,
+progress and writable commands covered with stored files. Native parser/motion,
+macro expression variants, physical media and broader drivers remain open.
