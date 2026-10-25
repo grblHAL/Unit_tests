@@ -10,8 +10,8 @@ C:/Users/User/Documents/Codex/2026-10-08/https-github-com-petervanderwalt-unit-t
 ## Current Git and delivery boundary
 
 - Branch coverage-batch-75, pushed/tracking ed5b142c589b3545de7e9f6e756854dbe2d1fba3.
-  Later local documentation and three exact diagnostic-data entries reconcile the
-  completed report below; no later C work or matcher change.
+  Local evidence commit d30f189 reconciles the completed report and three exact
+  diagnostic entries. Later ordinary idle-lock reset work is below; no matcher change.
 - CORE clean, HEAD and freshly fetched origin/master both
   b01f481072edecac33d5e40c25869359a5b3fa1f.
 - PR28 merged. PR30 is open, ready, unmerged at59b3ad9f9198d9973cc03b7af983c1d9899abc2d:
@@ -87,6 +87,23 @@ No matcher/assertion/flag/padding/wildcard/range change. Dated KNOWN_BUGS addend
 Evidence hosted40121790962/{report-core-clang,results-core-clang,verified-clang.json,
 verified-new-workflows.json,verified-exact-diagnostic-replay.json}. No CI retry for
 these entries alone; post-fatal assertions remain unvalidated.
+
+## Further local ordinary reset workflow
+
+Added boot/sender_reset_with_permanent_idle_lock_stops_step_timer_before_restart.c.
+The existing actual-homing/positioning/reset fixture now also covers a machine
+configured with permanent motor idle lock ($1=255). A normal sender reset during
+queued positioning stops the real step timer before the public on_reset observer
+runs, keeps enable output asserted at that instant and queues the normal release
+delay. Captured motor pulses/positions remain unchanged through warm restart;
+parser position remains synchronized and $G answers. No motion-state injection,
+new host variant or allowance. The reset observer chains the installed callback.
+
+Focused ASan/UBSan and strict1/1 pass0.35s; saved idle-locked-reset-{build,summary}.log
+and idle-locked-reset-results.xml. Expected target: stepper267 pending-alarm arm
+under permanent idle lock. No measured gain claimed. Outside the full4,504 gate
+and ed5b142 hosted measurement. Accumulate independent useful workflows before
+another full gate/push/CI; do not dispatch for this case or diagnostic data alone.
 
 ## Existing tapping diagnostics and previous failed matrix
 
