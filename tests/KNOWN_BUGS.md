@@ -833,3 +833,13 @@ table overflow with index28 in the eight-axis fallback and index29 in both
 spindle-sync regressions. Record only those observed signatures, retaining
 the exact test, 27-entry table, source line, function and ASan category.
 Assertions after the fatal diagnostic remain unvalidated. No CORE change.
+
+### PR30 final diagnostic replay - 2026-10-25
+
+Run40180255067 passed source, GCC and coverage. Clang classified4,491/4,492,
+with one changed known signature: recursive tapping index28 at gcode.c485,
+const27-entry table and macro_arguments_push top frame, followed by ASan
+global-buffer-overflow. This signature was already inventoried and validated
+in PR31. Add that exact entry here; saved-output replay through the production
+runner and first1024 bytes passes. Wrong source locations still reject.
+No full rebuild for this data-only repair; do not call the hosted run green.
