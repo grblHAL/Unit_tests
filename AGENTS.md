@@ -1,3 +1,22 @@
+# README maintenance
+
+Keep the README focused on badge tables, important issue/backlog links, running
+workflows, source selection, local retesting and adding tests. Keep snapshot
+dates, rollout history, detailed component status and badge-update instructions
+here or in the linked inventories. Do not add run-log reading tutorials or
+personal caller-installation notes to the README.
+
+Badge snapshot moved from README: 25 October 2026. CORE badges use successful
+run 40179484951; misc plugins use 40180256798 and STM32H7 serial uses 40180258607.
+Other measured component rows retain local results. These component hosted runs
+validated the Linux scratch-path fix after earlier executable/directory collisions.
+Per-component counts, source revisions and scope are in tests/COMPONENT_BADGES.csv.
+Legacy references are separate from current CORE compatibility; host results do
+not establish firmware or hardware coverage. Update each row independently from
+a successful source-matched report, keeping counts and provenance. Do not average
+suites or copy aggregate workflow status into component rows. Update CORE line
+and branch badges and run links together from the same successful coverage.xml.
+
 # Productive coverage continuation - 2026-10-24
 
 This policy supersedes historical batch, branch and validation instructions.
