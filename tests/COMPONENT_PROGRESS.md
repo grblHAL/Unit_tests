@@ -1,3 +1,58 @@
+# Combined F1/F3 serial gate - 2026-10-25 (batch46)
+
+Goal active. All55 current-CORE-compatible suites pass fresh Windows Clang
+ASan/UBSan and strict classification:1206 =1139 clean +67 documented known,
+zero unexpected/skipped.22 new cases since32b24d2/batch45: F112=11clean+1known;
+F310=9clean+1known. Two correct reserved-slot count regressions added, with exact
+WILL_FAIL/known_bug labels and maintainer repair/cleanup notes. No firmware/CORE
+edit, assertion weakening, diagnostic allowance or merge. Known categories now
+63 correct assertions +4 diagnostic-only(3 assertions also diagnosed/count once);
+diagnostic-bearing total7 unchanged. Seven affected helpers pass0.071s; Driver/
+reusable actionlint passes. Broader unchanged87 helpers last passed40. Main CORE
+and historical reference suites excluded.
+
+First selected-source LLVM coverage:
+- F1 serial115/119 lines96.6%,33/40 branches82.5%,19/20 functions. Primary F103xB
+  USART1 GPIOA9/10 uses separate native TX/RX GPIO modes and configurable baud.
+  serialRxCount is unexecuted; secondary/remapped ports and other configs remain.
+- F3 serial93/93 lines100%,30/32 branches93.8%,14/14 functions. Original F303xC
+  fixed115200 USART3 GPIOB10/11; only advertised callbacks tested. This is one
+  compiled serial configuration, not whole-driver/SDK/board coverage.
+- New build-s146/s346 counter paths max211 chars; no stale counters reused.
+
+Original ST HAL/CMSIS/main/driver/generic headers and actual CORE streams/VFS run.
+RX/full/wrap/cancel, realtime/tool-ACK lifecycle, TX/full/blocking recovery, supported
+baud/mute/ownership paths execute. F1/F3 producers reserve one slot but free-space
+functions report RX_BUFFER_SIZE-BUFCOUNT. Correct empty32-vs31 assertions first
+failed unlabelled; no memory fault was used. Paired FIFO controls preserve31 bytes
+and drop the next input. Production repair belongs to maintainers.
+
+Fresh GitHub locks match F1c2236235/F39a40877b/COREb01f4810; SDK headers contained
+in candidate revisions.55 suites snapshot48 clean original checkouts. Register/
+GPIO/NVIC/PCLK/IRQ side effects are models. Other maps/MCUs/RS485/errors, pending-
+baud contracts, full controller/parser/ARM link/hardware remain open. Both new
+suites are in separate Driver choices. Keep PR29 draft/unmerged and goal active;
+manual hosted dispatch still awaits default-branch workflow installation.
+
+# Batch46 fixed STM32F3 serial local validation - 2026-10-25
+
+Goal active.10 new original-header F303xC serial cases: first unlabelled ASan/UBSan
+run0.60s passes9 controls and fails one correct free-capacity assertion. Seven
+component-plan/report helpers pass0.066s; Driver/reusable actionlint passes. Original
+producer reserves one ring slot, but serialRxFree reports32 instead of31 empty.
+Only driver_stm32f3_serial.capacity gets exact WILL_FAIL/known_bug; focused recheck
+strict1 known0.05s, no diagnostic or new sanitizer allowance. Correct assertion
+and paired actual FIFO/wrap/full controls remain. No production source edits.
+
+Original main/driver/generic-map/ST HAL/CMSIS plus actual CORE stream/VFS run;
+USART3 GPIOB10/11 is fixed115200. Supported callback inventory is preserved:
+no invented baud/format/write_n/count/mute callbacks. Cases cover GPIO/clock/IRQ,
+RX/cancel/realtime/tool-ACK, binary bytes via write_char, full/blocking TX recovery
+and public ownership/fixed-baud guards. Driver9a40877b clean; COREb01f4810 unchanged.
+GPIO/NVIC/register/IRQ/PCLK36MHz are models, not ARM/controller/hardware proof.
+New driver_stm32f3_serial is in Driver workflow. Coverage/full gate pending;
+delivered32b24d2/batch45 remains1184. Keep local for a substantial checkpoint.
+
 # Combined F7/F4 serial gate - 2026-10-25 (batch45)
 
 Goal active. All53 current-CORE-compatible suites pass fresh Windows Clang

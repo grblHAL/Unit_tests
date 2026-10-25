@@ -803,3 +803,22 @@ third-stream RX-disable and claim-guard returns; standard CORE open prefilters
 claimed streams, so do not mutate provider/private flags for coverage. Review
 legitimate driver-provider calls separately. Other maps/MCUs, RS485/errors, F7
 baud-change IRQ lifecycle, controller/ARM/physical work remain required scope.
+
+## STM32F3 fixed serial - batch46 local
+
+Native F303xC/main/driver/generic headers compile unchanged serial.c with actual
+CORE streams.9 ordinary cases clean; correct reserved-slot free-space regression
+is narrowly labelled, with no sanitizer allowance. Only supported fixed115200
+USART3 callbacks tested; no replacement baud/format/write_n/count/mute APIs.
+Coverage/full gate, other original serial/RS485/IO configurations, ARM/controller/
+hardware work remain. Source9a40877b unchanged; proposed free-count fix belongs
+to maintainer, never production-source edits here.
+
+## F1/F3 measured checkpoint46
+
+Full55-suite1206 passes with67 known(two new correct reserved-slot count regressions).
+First F1 primary serial115/119 lines and33/40 branches,19/20 functions; ordinary
+serialRxCount callback remains unexecuted. F3 fixed serial93/93 and30/32,14/14
+functions. These are compiled serial variants only. Add supported secondary/remap/
+RS485/error and controller/ARM/hardware scope; preserve known assertions and never
+mutate private flags or copy production algorithms to bypass implementation gaps.
