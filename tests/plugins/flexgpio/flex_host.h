@@ -20,3 +20,6 @@ void flex_event(uint8_t port, bool state);
 
 extern bool inject_inputs;
 extern uint32_t delay_bits;
+
+extern bool abort_on_realtime;
+extern unsigned realtime_calls, delay_calls;

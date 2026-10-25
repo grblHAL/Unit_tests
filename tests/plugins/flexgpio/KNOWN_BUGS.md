@@ -25,7 +25,7 @@ its resolved exact manifest entry and known_sanitizer_bug label after review.
 
 # Scope
 
-Twenty-five original-source cases use real CORE driver-option/type declarations for
+Thirty-one original-source cases use real CORE driver-option/type declarations for
 three-axis operation and six-axis registration/value/failure controls. Public registered digital
 bank descriptors are captured; full CORE ioports remapping/claim aggregation is not
 executed. Host I2C packets, task delivery, MCU IRQ/claim callbacks, persistence and
@@ -38,3 +38,7 @@ startup configuration-send alarm; these cases need no sanitizer allowance. Origi
 assignment-condition and const-field initialization warnings remain visible under
 narrow source-only warning rules; fixtures stay strict. Full-controller integration,
 multiple port-bank offsets, no-IRQ configuration and physical expander timing remain.
+Batch41 adds public input/output function assignment and abort during all four
+edge/level wait modes for three/six axes. Cancellation preserves the installed
+change callback/user-port mapping; a later edge still dispatches. Virtual delays
+and realtime requests are counted; no controller scheduler timing is claimed.

@@ -95,11 +95,12 @@ or force private state to enter a path.
   covered. Live state changing before queued animation callback remains reachable
   via state_get; default/fallback branches need contract review rather than
   invented state values. Actual CORE scheduler/parser/hardware still untested.
-- FlexGPIO25 cases atbc8dab40162b49718179bffe973c4533fc73436f cover269/272 lines,
-  126/150 branches, cumulative batch19. Public pin value callbacks run across both
+- FlexGPIO25 cases atbc8dab40162b49718179bffe973c4533fc73436f cover270/272 lines,
+  128/150 branches in batch41 (previous batch19:269/272 and
+  126/150). Public pin value callbacks run across both
   axis configurations; config-send failure and read recovery preserve valid
-  snapshots/edges. Remaining executable paths include output function assignment
-  through public descriptor and wait cancellation. Registered banks remain captured,
+  snapshots/edges. Batch41 adds public input/output function assignment and cancellation of
+  edge/level waits, including IRQ restoration, in both axis configurations. Registered banks remain captured,
   not actual CORE ioports aggregation/remapping; multiple bank offsets, no-MCU-IRQ,
   controller/physical I2C timing remain. Retain IRQ-disable/pull-mode regressions
   and four scoped Clang callback diagnostics with no suppression.
@@ -167,8 +168,8 @@ or force private state to enter a path.
   private ps_active/active_port. Actual io_port_cfg claims/remapping still need
   controller integration beyond the captured provider.
 - Thermistor repeated settings-load hook ownership needs review; do not reproduce
-  recursive callback failure. A fresh missing-NVS first load (without fixture's
-  pre-restore) is a remaining ordinary startup workflow for the next group. The
+  recursive callback failure. The existing first_boot case already exercises missing NVS without pre-restore;
+  retain its default-save/unassigned/no-monitor checks. The
   r_ntc<=0 return follows positive voltage/resistance guards; do not invent invalid
   constants. Invalid samples interrupting advertised consecutive alarm readings
   and malformed/trailing calibration arguments remain unclassified.
@@ -177,8 +178,9 @@ or force private state to enter a path.
   actual SDK/device/board headers and CORE stream APIs. Retain three functional
   regression groups and exact secondary callback signature diagnostic. Primary
   SERIAL_PORT0 appears to omit its status array entry; do not force a memory
-  failure or add an obsolete-type alias. Other port/format/error IRQ states,
-  metadata detail and full controller jobs remain. Six further local authoring
+  failure or add an obsolete-type alias. Batch41 adds primary USART2/secondary USART1 queues/lifecycle and original
+  pin metadata for all tested pairings. Other format/error IRQ states and full
+  controller jobs remain. Six further local authoring
   cases now cover supported parity transitions, primary public realtime enqueue
   and simultaneous independent two-port RX/TX (6/6 ASan/UBSan and strict;41
   registered), now cumulative batch21. Selected-source276/278 lines,100/108

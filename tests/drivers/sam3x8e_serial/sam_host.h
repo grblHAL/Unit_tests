@@ -20,3 +20,5 @@ void sam_drain(unsigned instance);
 uint32_t sam_irq_mask(unsigned instance);
 uint32_t sam_last_tx(unsigned instance);
 void sam_mask_clear(unsigned instance);
+
+extern periph_pin_t sam_registered_pins[4];

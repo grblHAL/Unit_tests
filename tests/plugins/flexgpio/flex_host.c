@@ -5,7 +5,8 @@ system_t sys;
 io_digital_t bank;
 bool start_ok = true, probe_ok = true, send_ok = true, receive_ok = true, claim_ok = true;
 unsigned sends, receives, alarms, warnings, saved, chains, events;
-bool inject_inputs;
+bool inject_inputs, abort_on_realtime;
+unsigned realtime_calls, delay_calls;
 uint32_t delay_bits;
 uint8_t event_port;
 bool event_value;
@@ -150,13 +151,20 @@ static void enumerate(bool low_level, pin_info_ptr fn, void *data)
 static void delay(uint32_t ms, delay_callback_ptr callback)
 {
     CHECK(ms == 50 && !callback);
+    delay_calls++;
     if (inject_inputs)
     {
         inject_inputs = false;
         flex_irq(delay_bits);
     }
 }
-bool protocol_execute_realtime(void) { return true; }
+bool protocol_execute_realtime(void)
+{
+    realtime_calls++;
+    if (abort_on_realtime)
+        sys.abort = true;
+    return !sys.abort;
+}
 void flex_prepare(void)
 {
     hal.driver_reset = reset;

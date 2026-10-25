@@ -1,3 +1,59 @@
+# Combined driver/expander gate - 2026-10-25 (batch41)
+
+Goal active. All51 current-CORE-compatible suites pass fresh Windows Clang
+ASan/UBSan plus strict classification:1111 =1046 clean +65 documented known,
+zero unexpected failures/skips. Eighteen new cases since70a8299/batch40:6 FlexGPIO
+and12 SAM3X8E serial. No new allowance, diagnostic, firmware edit or merge.
+Existing87 helpers/actionlint last verified batch40; reporting/workflows unchanged,
+so not redundantly rerun. Main CORE and historical reference suites excluded.
+
+Fresh short-build LLVM selected-source coverage:
+- FlexGPIO270/272 lines99.3%,128/150 branches85.3%,21/21 functions. Same source,
+  CORE and denominator as batch19: +1 line/+2 branches.31 cases:29 ordinary
+  passes+2 known assertions under coverage; sanitizer strict26 clean+5 known.
+- SAM3X8E276/278 lines99.3%,100/108 branches92.6%,39/39 functions, unchanged
+  from batch21.53 cases:46 clean+7 existing known. New hardware-port pairing
+  exercises distinct compile-time wiring with no selected-source count gain.
+- Fresh build-fl41/sa41 counters max210/209 chars; no stale counters reused.
+
+Fresh GitHub resolution matches clean FlexGPIObc8dab40/SAM2321092b/COREb01f4810/
+Arduino-SAM790ff2c8. All51-suite dependencies verified48 clean original checkouts.
+Fork workflow listing still exposes only reusable/core: separate Plugin/Driver
+manual runs await default-branch installation. No hosted GCC/Linux, ARM firmware
+link or physical-device success claimed. Keep existing PR29 draft/unmerged.
+Next continue real CORE aggregation, remaining plugins/transports/driver variants
+and supported controller workflows; counts do not establish goal completion.
+
+# Batch41 driver and expander local validation - 2026-10-25
+
+Goal active. Eighteen new cases remain local:6 FlexGPIO and12 SAM3X8E serial.
+Affected suite sanitizer/strict checks pass84 cases =72 clean +12 documented
+known; no unexpected failures/skips or changed diagnostics. FlexGPIO31=26+5;
+SAM53=46+7. Full current-CORE gate/coverage not yet run; last delivered baseline
+70a8299/batch40 remains1093. Do not add these18 to a full-suite validation claim.
+
+SAM adds supported primary USART2/secondary USART1 wiring for initialization,
+FIFO/wrap/cancel, queued/full/blocked TX, duplex isolation and claim/reclaim.
+Three metadata cases verify original registered SDK pins/ports/directions/groups
+for all tested pairings. Fixture peripheral/IRQ selection now follows compile-time
+SERIAL_PORT/SERIAL1_PORT. Focused12/12 pass0.77s; affected full53 strict pass.
+Existing-1/1 pairings and all7 known outcomes remain. Port0's status-array guard
+remains source-only; no aliases, production edits, physical timing or ARM build
+claim. Keep accumulating supported work before cumulative delivery.
+
+# Batch41 local FlexGPIO authoring - 2026-10-25
+
+Goal active. Six new cases cover public input/output function assignment and
+abort during edge/level waits in three/six-axis builds. Fresh focused ASan/UBSan
+6/6 passes0.39s; XML checked for diagnostics with none. The fixture now exposes
+realtime cancellation and counts delay/realtime requests. Abort ends each60-second
+requested wait after one virtual50ms delay and restores the existing change IRQ;
+a subsequent edge still reaches the original user-port callback.
+No production changes or new allowances. These six remain local: no full gate,
+coverage measurement, push or hosted run for this small group. Delivered baseline
+remains70a8299/batch40,1093 cases. Continue related supported regions before the
+next cumulative checkpoint. Physical expander/controller aggregation remain open.
+
 # Combined chip/voltage-control validation - 2026-10-25 (batch40)
 
 Goal active. Complete51 current-CORE-compatible host suites pass Windows Clang

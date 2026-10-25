@@ -20,6 +20,7 @@ parser_state_t gc_state;
 uint32_t SystemCoreClock = 84000000;
 const io_stream_t *sam_stream[2];
 unsigned sam_clocks, sam_pins, sam_irqs;
+periph_pin_t sam_registered_pins[4];
 static void (*handlers[64])(void);
 bool sam_mux_dirty, sam_allow_blocking;
 unsigned sam_block_calls, sam_sent_count[2];
@@ -56,7 +57,8 @@ uint32_t pmc_enable_periph_clk(uint32_t id)
 static void pin(const periph_pin_t *p)
 {
     CHECK(p && (p->function == Input_RX || p->function == Output_TX));
-    sam_pins++;
+    CHECK(sam_pins < 4);
+    memcpy(&sam_registered_pins[sam_pins++], p, sizeof(*p));
 }
 void sam_sync(void)
 {
@@ -206,7 +208,9 @@ bool task_run_on_startup(foreground_task_ptr fn, void *data)
 static Usart *usart(unsigned instance)
 {
     CHECK(instance < 2);
-    return instance == 1 ? USART2 : USART1;
+    unsigned port = instance == 1 ? SERIAL1_PORT : SERIAL_PORT;
+    CHECK(port == 1 || port == 2);
+    return port == 1 ? USART1 : USART2;
 }
 static IRQn_Type irq_number(unsigned instance)
 {
@@ -214,7 +218,9 @@ static IRQn_Type irq_number(unsigned instance)
     if (!instance)
         return UART_IRQn;
 #endif
-    return instance == 1 ? USART2_IRQn : USART1_IRQn;
+    unsigned port = instance == 1 ? SERIAL1_PORT : SERIAL_PORT;
+    CHECK(port == 1 || port == 2);
+    return port == 1 ? USART1_IRQn : USART2_IRQn;
 }
 static bool primary_uart(unsigned instance) { return SERIAL_PORT < 0 && instance == 0; }
 void sam_busy(unsigned instance, bool busy)
