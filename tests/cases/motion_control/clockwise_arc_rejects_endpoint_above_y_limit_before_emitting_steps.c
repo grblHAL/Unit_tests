@@ -1,0 +1,21 @@
+#include "support/soft_limit_motion_host.h"
+int main(void)
+{
+    prepare_soft_limit_motion();
+    queue_motion_program("G0X-6Y-0.5");
+    CHECK(protocol_buffer_synchronize());
+    CHECK(physical_position[X_AXIS] == -480 && physical_position[Y_AXIS] == -40);
+    unsigned x_before = axis_pulses[X_AXIS], y_before = axis_pulses[Y_AXIS];
+    // Exact radius5: start vector(4,3), end vector(-3,4), center(-10,-3.5).
+    char arc[] = "G2X-13Y0.5I-4J-3F100";
+    CHECK(gc_execute_block(arc) == Status_OK);
+    if(!sys.abort) CHECK(protocol_buffer_synchronize());
+    fprintf(stderr, "Arc limit: alarm=%u seen=%u endpoint=(%ld,%ld), allowed Y<=0\n",
+        (unsigned)sys.alarm, (unsigned)soft_alarm_seen,
+        (long)physical_position[X_AXIS], (long)physical_position[Y_AXIS]);
+    CHECK(soft_alarm_seen && sys.alarm == Alarm_SoftLimit);
+    CHECK(physical_position[X_AXIS] == -480 && physical_position[Y_AXIS] == -40);
+    CHECK(axis_pulses[X_AXIS] == x_before && axis_pulses[Y_AXIS] == y_before);
+    CHECK(sys.abort && !sys.position_lost && plan_get_current_block() == NULL);
+    return EXIT_SUCCESS;
+}

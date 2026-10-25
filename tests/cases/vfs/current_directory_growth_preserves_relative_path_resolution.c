@@ -10,6 +10,6 @@ int main(void)
     char expected[144] = "/"; memset(expected + 1, 'b', 120);
     strcpy(expected + 121, "/file");
     CHECK(strcmp(operation_path, expected) == 0);
-    CHECK(vfs_chdir("/") == 0); cleanup_operations();
+    cleanup_operations();
     return EXIT_SUCCESS;
 }

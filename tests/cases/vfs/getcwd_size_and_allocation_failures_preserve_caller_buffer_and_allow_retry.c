@@ -12,6 +12,10 @@ int main(void)
     CHECK(strcmp(directory, "unchanged") == 0);
     CHECK(vfs_getcwd(directory, sizeof(directory)) == directory && vfs_errno == 0);
     CHECK(strcmp(directory, "/store/jobs") == 0);
+    char *bounded = vfs_getcwd(NULL, sizeof(directory));
+    CHECK(bounded != NULL && vfs_errno == 0);
+    CHECK(strcmp(bounded, "/store/jobs") == 0);
+    free(bounded);
     cleanup_operations();
     return EXIT_SUCCESS;
 }

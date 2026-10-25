@@ -1,3 +1,10 @@
+# RAM nonzero truncation confirmed - 2026-10-23
+
+The ordinary upload/shrink/seek/read candidate is now reproduced and tracked in
+[KNOWN_BUGS](KNOWN_BUGS.md#ram-nonzero-truncate-loses-the-retained-file-allocation).
+Its correct public workflow remains registered with one narrow failure allowance;
+continue independent coverage work. Zero-truncate/replacement controls still pass.
+
 # Pending core features and maintainer follow-ups
 
 Pending implementation and design questions are separate from confirmed defects.
@@ -526,11 +533,11 @@ Sources: [slot getter](https://github.com/terjeio/grblHAL_core/blob/ad57c788e15f
 - `ioports.c`: the `Settings_IoPort_OD_Enable` setting registration is commented
   out. Existing ordinary tests verify that setting writes are disabled. Do not
   invoke its private setter to cover its dormant configuration/getter cases.
-- `gcode.c`: M48/M49 branches for `spindle_id == -1` are not reached by normal
-  override blocks: `is_single_spindle_block()` does not address a spindle for
-  those commands, and the remaining dollar word is rejected. M51 explicitly
-  requires one spindle. Keep default/per-spindle workflow tests; do not forge
-  parser state to execute the dormant all-spindle loops.
+- `gcode.c` correction2026-10-23: standalone M48/M49 do not consume a broadcast
+  selector, but accepted M3M48$-1 and M3M49$-1 do. The earlier audit missed this
+  normal combined-modal block. Runtime tests now cover both; M48's wrong disable
+  bits have a correct named regression in KNOWN_BUGS. M51 still requires one
+  spindle. Do not carry the old standalone-only proof over to combined commands.
 
 These are reachability observations, not confirmed firmware defects or requests
 for new features. Keep them in the reported denominator; revisit if the public
@@ -552,6 +559,10 @@ without checking the macro-file contract and identifying the exact stalled path.
 
 ## G76 X-word main taper: confirm implementation scope
 
+User decision 2026-10-24: keep this on TODO. Do not register a main-taper
+geometry regression or expected-failure allowance while implementation scope
+is unresolved. This decision does not bless straight passes as tapered output.
+
 **Source review 2026-10-19, Terje 16c7dff3aa9614322cfc2b47a2109cc9196ccca4.**
 `gcode.c` computes `thread.main_taper_height` and a pitch correction when G76 has
 an X word. `motion_control.c` rescales that height, but no generated threading
@@ -564,16 +575,23 @@ motion as a correctly tapered thread to improve a coverage percentage.
 
 ## Settings coverage: obsolete private dispatch cases
 
-**Reviewed 2026-10-19, Terje 16c7dff3aa9614322cfc2b47a2109cc9196ccca4.**
+**Reviewed 2026-10-23, Terje 50f38659db7b22f4689f3654df2d110d992bcc95.**
 `Setting_HomingDirMask` and `Setting_SteppersEnergize` register `get_axis_mask`,
 so their older cases inside private `get_int` are not reachable through the
 registered settings API. Their public setting/query behavior already has tests.
-Likewise the safety-door delay settings have no availability callback, automatic
-and MPG report intervals register no availability callback, and the timezone
-setting registration is commented out. Those corresponding cases inside private
-`is_setting_available` cannot be reached through these current registrations.
-Do not replace registry entries or invoke static handlers to cover these obsolete
-paths. Leave them visible in coverage; revisit if core registrations change.
+DoorSpindleOnDelay, DoorCoolantOnDelay, AutoReportInterval and MPG report
+interval descriptors register no availability callback; TimeZoneOffset is
+commented out. Their private `is_setting_available` cases remain unrouted.
+Do not replace registry entries or invoke static handlers to cover these paths.
+Keep them visible in the raw denominator; revisit if registrations change.
+
+Existing public motor-hold write/read/persistence tests remain; malformed integer
+rejection also verifies driver and stored-state preservation followed by a
+successful retry. Description allocation recovery uses the registered plugin query.
+DoorOptions does register its availability callback: public-store controls cover
+parking with and without a board-provided door input, including reload. A
+registered at-speed VFD reaches SpindleAtSpeedTolerance availability without a
+separate encoder. These supported paths do not make the unrouted cases reachable.
 
 ## Bare G38 command: confirm whether modal-only selection is intentional
 
@@ -704,22 +722,6 @@ Keep these defensive/unemitted paths in raw reporting; revisit if public dispatc
 changes. This is reachability evidence, not a request to remove source lines.
 
 
-## Settings dispatch cases not wired by public metadata
-
-**Reviewed:** 2026-10-22, clean Terje fab8d1c. The saved partial map lists
-settings.c2181-2187 and2198-2204 in is_setting_available. DoorSpindleOnDelay,
-DoorCoolantOnDelay and AutoReportInterval registrations pass NULL for
-is_available, so ordinary queries do not call those switch cases. TimeZoneOffset
-registration is commented out. The get_int SteppersEnergize case at1789-1791
-is also unused: the registered setting routes reads to get_axis_mask instead.
-
-Do not call private setters/getters with unrelated IDs or replace metadata just
-to enter these cases. Keep them in the raw source denominator and revisit if
-registrations change. Existing public motor-hold write/read/persistence tests
-remain; malformed integer rejection now also verifies driver and stored-state
-preservation followed by a successful retry. Description allocation recovery
-is tested through the ordinary registered plugin query.
-
 
 ## Fault-axis inline fallback is guarded at the CORE caller
 
@@ -746,10 +748,19 @@ the old direct-default-backend child-stat test: its callback-free child was
 never a usable provider for public stat, which requires fstat. Do not call a
 missing child callback just to cover the removed fallback. No CORE edits.
 
-Hidden embedded mount navigation is a separate maintainer contract question:
-68eba79 allows chdir while all embedded entries are hidden. Existing directory
-listing assertions pass; two old rejection assertions remain named expected
-failures pending confirmation whether hidden means invisible or inaccessible.
+**Maintainer clarification 2026-10-23:** hidden mounts/files belong to the
+components that added them; hidden files require full paths. Terje plans to
+block CWD into hidden mounts. The two existing hidden-CWD rejection allowances
+therefore retain their intended assertions; the policy is no longer unresolved.
+Full-path hidden reads and listing suppression remain required passing controls.
+See KNOWN_BUGS for the existing CWD regressions.
+
+Mount registration should return true on success. At pinned CORE50f3865,
+`vfs_mount()` already returns a success boolean and existing cases assert it;
+`fs_embedded_mount()` is declared/implemented void. Track its success-return API
+as maintainer-planned work; do not fabricate a return assertion against a void
+API or change CORE. Once exposed, cover initial and appended registrations,
+including allocation failure, through that public return value.
 
 
 ## Delayed-task fallback after atomic selection (68eba79)
@@ -804,9 +815,9 @@ whole-owner rejection (neither setting is discoverable), corrected registration
 and ordered reporting of both valid values. Do not mutate already registered
 metadata or bypass settings_register to claim that fallback covered. Raw source
 coverage retains the lines; no global-table reachability claim is made here.
-Further registration branch coverage can extend the same scenario for missing
-persistence/getter callbacks and invalid group/description metadata, rather than
-adding duplicate aliases for each boolean guard.
+The existing `invalid_plugin_metadata_rejects_owner_and_allows_corrected_registration`
+scenario now also covers missing persistence/getter callbacks and invalid type,
+group and description metadata. Do not add duplicate aliases for these guards.
 
 ## Legacy version repair and checksum repair are separate startup paths
 
@@ -969,3 +980,905 @@ G65/G66 unsupported-fraction rejection is independently reachable with a valid
 registered provider and has a queued-motion/retry case. Revisit provider absence
 if an upstream-supported configuration or lifecycle stops installing the built-in
 handler; disabling NGC parameters is no longer supported by the selected source.
+
+## RTU timeout-state residual and reset-in-retry contract - 2026-10-23
+
+Reviewed clean CORE `50f38659db7b22f4689f3654df2d110d992bcc95` against the
+previous exact-source report's RTU residuals. `ModBus_TimeoutException` is assigned
+only in the synchronous AwaitReply timeout arm: asynchronous timeouts instead
+set Silent and clear packet immediately (modbus_rtu.c175-195). The later
+`case ModBus_TimeoutException` test of `packet->async` therefore cannot be true
+under the supported transport transitions. Existing async timeout and blocking
+timeout/retry scenarios exercise their observable behavior. Retain the raw line;
+do not change packet flags during a callback to cover it.
+
+The reset-in-Retry fallback (modbus_rtu.c358-361) is different: it requires a
+non-aborting reset while a synchronous retry owner is active. Before registering
+a retry-cancellation assertion, confirm whether driver reset is permitted to
+cancel such a blocking transaction independently of protocol abort. A callback
+that only resets state to Silent does not itself release `is_blocking`; polling
+through a synthetic timeout would not establish a supported cancellation contract.
+Existing abort reset and active nonabort reset controls remain valid. This is a
+contract/reachability audit, not an allowance or source exclusion.
+
+## Report-clear observer fallback is bypassed by the public dispatcher
+
+Reviewed 2026-10-23, clean CORE `50f38659db7b22f4689f3654df2d110d992bcc95`,
+source-locked report39900281002. `report_add_realtime(Report_ClearAll)` clears
+the primary stream flags and returns immediately (report.c3003-3005). Its later
+observer condition `flags.value || report == Report_ClearAll` at3032 therefore
+cannot take the ClearAll alternative. Likewise MPG's zero-flags clearing arm
+(stream.c614) is not reached through this public dispatch. Ordinary primary and
+pendant status-consumption tests preserve independent pending flag sets; the
+existing realtime_flags_clear test covers the observable primary clear behavior.
+
+Confirm whether explicit clear is intended to fan out to report observers before
+registering a pendant-clear regression. Do not call the chained callback with
+zero manually or mutate its private pending state merely to cover the arm. The
+lines/outcomes remain in raw coverage. This is a reachability/contract note, not
+a confirmed defect or a test allowance.
+
+
+## Parking restore restart flag and callback handler ordering
+
+**Reviewed:** 2026-10-23, clean CORE50f38659db7b22f4689f3654df2d110d992bcc95.
+The uncovered `park.flags.restoring` true arm in state_restore (state_machine.c
+818-819) cannot run through the present public event dispatcher. The flag is
+set only inside state_restore_conditions (95), whose only caller (837) first
+sets stateHandler=state_await_resumed (834). A door interrupt processed during
+that callback therefore reaches state_await_resumed's restart_retract, not the
+old state_restore handler. After the call returns, restoring is false again.
+Do not invoke the private old handler or mutate the flag to hit this arm.
+
+Existing real door-during-spindle-output workflow now also closes/resumes a
+second time, completes the original X/Z endpoint and verifies restored spindle
+and coolant. Its original repark/no-cut assertions remain. Revisit the raw
+branch only if upstream changes handler ordering or restore callback dispatch;
+no source exclusion or expected-failure allowance applies.
+
+
+## Named file prescan before execution - maintainer contract 2026-10-23
+
+Terje clarified: scan a named file first to establish a matching ENDSUB. Do not
+execute body statements on the first pass; fail without executing the body if
+that terminator is absent. The earlier KNOWN_BUGS proposal to enable execution
+immediately after opening was wrong and has been withdrawn.
+
+Valid shared named-file fixtures now contain explicit matching SUB/ENDSUB pairs.
+Direct lifecycle tests distinguish the first ENDSUB (rewind, scope still active)
+from executed RETURN/ENDSUB (close and restore caller). Validate skipped first-
+pass side effects, one execution after validation, missing-terminator rejection,
+and normal nested/reopen/error cleanup. Do not classify deliberate prescan as a
+CORE defect. Old implicit-EOF success assumptions need contract correction.
+
+## Scheduler saturation stress proposal - maintainer review 2026-10-23
+
+Withdraw the spindle full-task-pool scenario from registered coverage and the
+confirmed-defect list. It deliberately fills every slot with synthetic future
+plugin tasks; no real plugin workload or applicable timing window was established.
+Public API reachability alone does not establish an ordinary controller workflow.
+The unregistered proposal is `proposals/full_task_pool_override_fallback_allows_later_ramped_retarget.c`.
+Only reconsider after demonstrating a supported plugin workload and accounting
+for the existing ramp-task deletion/replacement slot. No CORE change is requested.
+
+## Public setting dispatch guards in residual coverage - 2026-10-23
+
+Audit against clean CORE50f3865 and report39908773015: settings.c839,1012,
+1056,1340/1350 and1568/1576/1583 are defensive setter rejection paths behind
+setting_get_details/is_setting_available capability checks. Normal public stores
+reject unavailable settings before those setters execute. Do not obtain a detail
+then remove driver capabilities, or invoke its private callback, solely to cover
+the second guard. Existing unavailable-setting tests retain the public outcome.
+The get/set callback default arms likewise require IDs absent from their routing
+tables. Keep these raw uncovered; no source/branch exclusion is introduced.
+
+Public control wiring still had a reachable clear-inversion arm: the new assigned
+FeedHold workflow now toggles both polarity and pull mode through real settings
+stores, preserving debounce and the neighboring input. No private mask forcing.
+
+## Port-setting capability mask semantics - 2026-10-23
+
+CORE50f3865 ioports.c `_set_value` accepts any overlapping requested capability
+bit, whereas `_claim` and the free-port search require the full requested mask.
+Current core secondary-PWM selectors request one capability bit. Before adding
+an expected failure for a compound filter, establish a supported plugin requiring
+that exact combination and confirm the setter's intended any/all semantics.
+Do not present this source-level discrepancy as a confirmed controller defect.
+Registered single-capability, claim-ownership and singleton-bank controls remain.
+
+## Four-axis delta homing precondition - 2026-10-23
+
+The public auxiliary jog rejection candidate cannot yet establish its homed
+precondition with the existing full-boot delta fixture. On CORE50f3865, actual
+`$H` invokes the completion observer with cycle mask15, success0 and homed0;
+the jog is not reached. Evidence: build-asan/batch74-delta-aux-diagnostic-results.xml.
+The board advertises all four home switches and cycle bits. Delta's homing
+transform writes only XYZ targets and its machine-position callback restores
+only XYZ. Establish the supported auxiliary homing configuration and switch
+model before classifying a firmware defect or requiring post-home A soft limits.
+The correct jog/no-motion candidate is retained unregistered in
+[proposals](proposals/delta_auxiliary_jog_after_homing_requires_supported_homing_fixture.c).
+Do not set sys.homed manually to bypass this precondition. Existing ordinary
+four-axis delta motion regression and XYZ homing controls remain registered.
+
+Update2026-10-24: an independent supported route now completes automatic XYZ
+homing, enables manual homing with $22, and references A with $HA. No direct
+sys.homed writes. This exposes stationary XYZ coordinate rewriting and rejection
+of a legal A retry; see the dated KNOWN_BUGS entry and two registered boot_delta_aux
+regressions. The original all-four-automatic-switch proposal remains separate.
+
+Further update2026-10-24: reference A first, then home XYZ automatically. This
+public order preserves the correct XYZ zero and a mixed soft-limited jog reaches
+X100/Z-300/A-1, outside the published cuboid(maxX1). Auxiliary guard643 now has
+a passing physical/logical output control. Ordinary cuts with $20 enabled still
+falsely alarm due to the auxiliary checker frame flag; see the separate dated
+KNOWN_BUGS entry. No direct homed/coordinate writes or CORE changes.
+
+## PWM resolution and low-frequency range policy - 2026-10-23
+
+Terje confirms impossible and unreasonable periods will be rejected. The exact
+minimum useful period remains to be specified;100 or1,000timer ticks were discussed
+rather than accepting any frequency that produces a nonzero period. Those correspond
+to about1% or0.1% duty steps respectively; no threshold is agreed or asserted by
+the tests. The existing2MHz/1MHz regression only rejects zero computed ticks;
+it does not request impossible output or define a practical PWM operating range.
+
+Keep practical low-frequency servo support separate:50Hz at a1MHz timer clock
+needs20,000ticks and fits a16bit period. At20MHz it needs400,000ticks, requiring
+a lower timer clock/prescaler or a wider period representation. The helper is
+passed the timer clock; board drivers must supply the clock actually selected.
+Preserve existing50Hz normal/inverted/disabled-output controls. Before adding
+threshold tests, agree which layer selects prescalers, what minimum resolution
+it promises, and whether the rule differs for servo and general PWM outputs.
+No CORE edits or new expected-failure thresholds.
+
+## Legacy boot cannot enter manual fixture-mode handler - 2026-10-23
+
+CORE50f3865 grbllib.c320-322 explicitly clears hal.stream.suspend_read after
+driver_init when COMPATIBILITY_LEVEL>0. Normal tc_init therefore leaves the
+manual tool-change handler uninstalled. A valid persisted mode2/3 record from
+compatibility0 is retained, but ordinary serial T3M6 rejects earlier with error20;
+the candidate did not reach tool_change.c435-436. Evidence:
+build-asan/batch74-saved-tool-mode-diagnostic-results.xml (mode2 retained,
+handler0, error20, subsequent setting/status queries succeed). The unfinished
+candidate cases were withdrawn, not marked as firmware failures. Do not reinstall
+suspend_read after startup's explicit removal solely to cover these guards.
+Existing public mode-setting rejection controls remain. Revisit if legacy startup
+advertises supported manual stream suspension or the maintainer defines a real
+board/plugin lifecycle that installs it later.
+
+
+## Probe no-axis rejection guard reachability - 2026-10-23
+
+On CORE50f3865 public G38.2F100 returns Status_OK with no axis target. This is
+modal-only selection, not an actual probe cycle. gcode.c3368 validates motion
+only for AxisCommand_MotionMode; the no-axis block does not enter that path,
+so the later no-axis probe guard at3919 is not reached by this ordinary input.
+An exploratory expected-rejection assertion was withdrawn, not WILL_FAIL-ed.
+Existing G38.2X0F100 invalid-target/recovery control passes with the same real
+probe fixture. Keep the raw line in coverage; do not force parser axis_command
+or misclassify normal modal selection as a probe safety defect. Revisit only
+if another supported public axis-command path reaches the guard without axes.
+
+
+## Repeat default for reentrant modal macro replacement - 2026-10-23
+
+With a synchronous public macro provider, outer G66.1P100A7 supplies repeats1,
+but the provider submitting another G66.1P100A7 receives repeats0 at scope2.
+Explicit G66.1P100A7L1 at both levels receives1 and reaches the ordinary call
+stack limit, unwinds cleanly, preserves caller#1 and allows a subsequent G65.
+Confirm whether omitted L during an active G66.1 replacement should inherit or
+default to1, and whether this synchronous replacement is a supported provider
+contract, before classifying the repeat discrepancy as a defect. The overflow
+regression requests L1 explicitly and retains its exact callback assertions.
+No WILL_FAIL or CORE change for this unresolved repeat-default question.
+
+
+## Assigned-control zero-mask fallback is unreachable for valid pin functions - 2026-10-23
+
+CORE50f3865 ioports.c1542 gates control-setting reconfiguration on function <
+Input_Probe. crossbar.h45-59 defines the contiguous named control functions
+starting Input_Reset=0 through Input_ProbeOvertravel; crossbar.c206-212 returns
+1 shifted by that function for every value below Input_Probe. Therefore the
+else fallback at ioports.c1550-1551 requires a zero mask which no valid function
+admitted by the preceding gate can produce. Input_Aux and limit/home functions
+are >=Input_Probe and cannot enter this branch. Existing assigned-FeedHold
+setting workflows exercise both inversion/pull directions and preserve debounce.
+Retain both raw uncovered lines; no invalid enum or forged callback result.
+Revisit if the control-function range or xbar_fn_to_signals_mask mapping changes.
+
+
+## Flow dispatcher default has no recognized command - 2026-10-23
+
+CORE50f3865 ngc_flowctrl.c read_command assigns exactly17 recognized operations;
+a source-set comparison confirms every assigned operation has a case in the
+public ngc_flowctrl dispatcher. Unknown words return FlowControlSyntaxError
+before that switch. NGCFlowCtrl_NoOp is a stack sentinel, never a successful
+read_command result. Thus dispatcher default811-812 cannot be reached with
+public command text. Existing unknown_command syntax test remains the public
+rejection control. Keep both raw lines, no private enum forcing or exclusion.
+Revisit when a recognized operation is added without its dispatch case.
+
+## Zero-length driver dirty fallback requires unallocated writes - 2026-10-23
+
+CORE50f3865 nvs_buffer.c366 clears a pending driver dirty flag when the driver
+area size is0. Valid nvs_alloc success first adds NVS_CRC_BYTES and records the
+resulting nonzero area extent at315-319, even for a requested payload size0.
+The driver dirty flag is set by memcpy_to_ram only for a changed write at/above
+the configured driver address. An oversized failed allocation can leave that
+address initialized with size0, but it returns0; writing there afterward is
+writing an unallocated region, not a supported driver workflow. Existing
+oversized-request/small-retry and driver-payload retry tests cover valid use.
+Do not write after failed allocation or mutate driver_area/dirty flags to cover
+this fallback. It remains raw uncovered; reconsider if a supported area-release
+API can shrink a previously dirty driver area before physical synchronization.
+
+
+## Late CSS mode restore assignment is preempted by spindle prefix copy - 2026-10-23
+
+CORE50f3865 gcode.h527-534 places rpm_mode before the final hal member of
+spindle_t. get_state_restore_commands first compares/copies every spindle prefix
+through offsetof(spindle_t,hal) at gcode.c507-516. If rpm_mode differs, that copy
+already restores it. No intervening statement changes spindle mode before the
+later G96/G97 comparison at572, so its assignment573 cannot execute for ordinary
+snapshots. If the prefix matches, rpm_mode already matches as well. Keep this
+line in raw coverage; do not corrupt modal arrays or interpose a private callback.
+
+New ordinary registered-VFD controls prove M70/M72 restores CSS/RPM mode before
+real radial cuts: restored CSS ramps to the expected radius-dependent endpoint
+speed; restored G97 keeps300RPM through every motor pulse. These tests do not
+change CSS S/D between two G96 commands and do not resolve the separate CSS
+surface-speed/RPM-cap snapshot ownership policy. Revisit the dead late assignment
+if spindle layout, prefix copying or restore ordering changes upstream.
+
+
+## Step-frequency validation remains disabled - 2026-10-23
+
+CORE50f3865 settings.c787-796 validate_pulse_width has its complete frequency/
+pulse-width rejection expression commented out and unconditionally returns
+Status_OK. Consequently the failure outcomes in set_pulse_width808/810 and
+set_axis_setting1521/1535 cannot execute through public setting stores on this
+source. Retain these raw missing outcomes. Existing driver-minimum pulse tests
+exercise a separate registered validation rule, and file-end max-step-rate
+sanity checks remain real supported controls. Do not invent a rejection contract
+or turn the commented expression into a test expectation; revisit when upstream
+enables validation.
+
+## Tool-change check-mode message release is behind an opposite guard - 2026-10-23
+
+CORE50f3865 gcode.c4252 enters tool-change execution only when
+`!gc_parser_flags.check_mode`. Its nested check at4259 therefore cannot take
+the message-free arm at4260 during ordinary execution. Existing M6 check-mode
+tests verify no driver/tool change; normal M6 message tests verify prompt output.
+Do not toggle check mode from a synchronizing callback solely to cover this
+line. Keep it in the raw denominator; this is a source guard audit, not a
+new confirmed defect or an exclusion.
+
+## Built-in parameter macro outer read failure cannot occur for literal local4 - 2026-10-23
+
+CORE50f3865 ngc_params.c1235 calls ngc_param_get with constant local parameter4,
+not the user-selected source index. ngc_param_get388-412 returns true for every
+valid writable index even if no node exists, supplying0 in that case. Thus the
+outer else1247 is not reached by a public G65P3 call; source/destination errors
+are tested by the registered zero/readonly index controls. Keep this raw line
+without injecting a replacement getter or corrupting the parameter table.
+
+## Polar homing residuals have no public homing implementation - 2026-10-23
+
+CORE50f3865 polar_init installs limits hooks at274-276, then sets
+home_machine to polar_homing_cycle at281. That handler249-254 only reports
+"Homing is not implemented!" and returns false. The measured missing lines
+212,214,232,234 belong to the unused axis-mask/empty-position hooks. Existing
+polar.unsupported_homing_reports_warning_without_moving_axes verifies the
+public rejection and unchanged step counters. Keep these4 lines raw; adding
+direct hook invocations solely to improve the percentage would not test a
+supported controller homing workflow.
+
+## Buffered NVS warning equality is skipped by an even retry counter - 2026-10-23
+
+CORE50f3865 nvs_buffer_sync_physical starts its static unsigned retries at0.
+In the memcpy_to_nvs path each still-dirty synchronization increments it once
+at388 and again in the comparison at390. The comparison therefore sees only
+even values, including after unsigned wrap, and cannot equal5. The alternate
+flash path sets4 and decrements to0 before returning; it cannot introduce an
+odd starting value for the buffered path. Consequently391-392 are raw gaps
+that repeated ordinary buffered failures cannot cover. Existing payload/version/
+coordinate retry-and-recovery tests retain their correct persistence assertions.
+
+This is source reachability evidence only. It does not impose a five-attempt
+warning policy or add a new confirmed defect/expected failure while that policy
+remains unresolved. Do not spend tests cycling failures to reach the equality,
+mutate the private retry counter, or exclude these lines from coverage.
+
+## Parser check-mode message cleanup is preempted by normal normalization - 2026-10-23
+
+CORE50f3865 gc_execute_block snapshots STATE_CHECK_MODE at1289, clears any old
+message at1292-1294 and calls gc_normalize_block at1297. Normalization's comment
+handling gate1125 skips both message allocation and plugin comment callbacks
+while state is CHECK_MODE. No asynchronous service runs between that snapshot
+and normalization. The message-and-check-mode cleanup1357-1358 therefore has
+no ordinary input reaching it. The existing dry-run comment case now also
+executes G91(MSG,Change tool) through the full public parser, checking modal
+update, no queue, no output, no message ownership and no plugin callbacks.
+Do not prefill parser-owned message state or change modes from a callback to
+reach this defensive cleanup. Retain both raw uncovered lines.
+
+## Sync-motion initialization encoder guard repeats public validation - 2026-10-23
+
+CORE50f3865 init_sync_motion1044-1045 rejects a missing get_data callback.
+Public synchronized-motion validation already rejects it at3404 (G33/G33.1)
+and3417 (G76), before execution reaches initialization. Its only execution
+callers are the G33, G33.1 and G76 cases at4821/4841/4869; G84 does not call
+this helper. Do not remove get_data after validating a block solely to reach the
+second guard. Retain1045 as a raw gap; revisit if a supported execution caller
+can initialize sync motion without the earlier validation.
+
+## Counted public settings guards and unused availability cases - 2026-10-23
+
+Rechecked CORE50f3865 registration entries against measured settings.c gaps.
+The15 lines2173-2175,2177-2179,2190-2192,2194-2196,2237-2239 are availability
+handlers for door spindle/coolant delays, autoreport interval, timezone and MPG
+autoreport interval. The four implemented descriptors register NULL availability;
+timezone's descriptor is commented out. MPG baud rate is different: its
+availability callback is registered and must not be grouped with these15 lines.
+
+Nine setter rejection lines839,1012,1056,1340,1350,1568,1576,1583,1590 repeat
+registration/capability gates: ganged direction, probe pullup, E-Stop unlock,
+manual tool options/distance, backlash build support, autosquare and per-axis
+homing rates. The disabled-backlash descriptor is compiled out; the others are
+hidden by their registered availability checks before the setter. The existing
+public per-axis mode-switch test explicitly verifies disabled metadata/store
+rejection without notification after returning to shared rates.
+
+PWM bounds925/928 are preceded by Format_XBitfield validation: the descriptor
+contains four labels for one spindle and five otherwise, matching the setter's
+15/31 maximum. validate_int rejects larger values before the setter. Mode's
+default1140-1141 likewise follows a three-label Format_RadioButtons descriptor
+(Normal/Laser/Lathe), rejecting out-of-range values before set_mode. Do not call
+private setters or alter registered descriptors to reach these four lines.
+
+These28 lines remain raw uncovered. This does not classify all58 settings gaps;
+the other30 lines retain their individual review status. No CORE change,
+source exclusion, invented enum, or new defect allowance.
+
+## Counted protocol/backend residuals after public-sleep coverage - 2026-10-23
+
+Rechecked CORE50f3865 against report39969171772. Modbus diagnostics231-233 is
+explicitly TBA; cmds[8].function is0 and rx_packet223 requires a nonzero function
+before switching. Public command lookup also requires that property. Keep these
+three unimplemented lines raw; do not fabricate an accepted diagnostics provider.
+
+VFS rename415's second-mount notification contradicts the preceding successful
+same-mount condition. Chdir482's null-mount arm follows successful parse_path;
+get_mount returns cwdmount, an existing mount, or root for every nonnull path.
+These two lines retain the existing lookup/rename proof at current source.
+Update 2026-10-24: valid vfs_utime path-copy allocation failure reaches
+get_mount272 and loses ENOMEM; the correct regression and exact known-failure
+allowance are in KNOWN_BUGS. vfs_get_drive779 remains a separate NULL-caller
+question; the established WebUI upload filename is a nonnull array. Neither
+is folded into the rename/chdir proof.
+
+The two ngc_flowctrl default lines811-812, virtual-parameter empty-root942,
+file-reader no-file72 and unused HELP wrapper466/468 retain their earlier
+command-set, built-in-root, reader-restoration and HELP-prefix-routing proofs.
+Counts checked against the exact current XML; source lines remain included.
+No new test, exception or CORE edit for these already preempted paths.
+
+## G33.1 continuation is reachable through a real initialization error - 2026-10-23
+
+Do not classify gcode4849-4857 as wholly unreachable merely because the weak
+mc_rigid_tapping returns UnsupportedCommand. A normal M5 then G33.1 with an
+encoder causes init_sync_motion to return SpindleNotRunning first; the later
+status!=UnsupportedCommand condition enters the macro continuation on that error.
+The correct stopped-spindle regression is registered and documented in KNOWN_BUGS.
+Running-spindle weak/native support remains a separate unimplemented feature.
+No substitute tapping geometry or forced private status was introduced.
+
+## Secondary PWM and parser repeated validation: counted guards - 2026-10-23
+
+CORE50f3865 spindle_control1160-1161 is preempted by registration1471-1473:
+unsupported PWM inversion is removed from the public bitfield before stores.
+Existing secondary_pwm_rejects_signal_inversion_not_supported_by_driver verifies
+value4 rejects before change notification, while supported on/direction bits3
+still store correctly. PWM options1172 repeats the public five-bit limit; the
+existing invalid-options case rejects33 without changing configuration.
+The private get_int default1215-1216 has only its two registered setting IDs,
+SpindlePWMOptions1 and SpindleInvertMask1, both handled explicitly.
+
+Parser gcode2888 is preceded by the same YZ+active-compensation check at2754-2755.
+The existing YZ-enable/XY-retry control verifies Conflict before the cutter plugin
+is called. G10's missing-P/L guard3055 is inside values.l>0; values initialize0,
+and assigning positive L also sets words.l. An omitted L cannot enter that
+branch. Neither path needs invalid parser locals to test its public rejection.
+
+The NGC-only post-reader NaN guard1489 retains its earlier reader proof: failed
+ngc_read_real_value returns before it, and the deliberate valueless-word NaN is
+excluded by this guard. Keep that line raw without introducing an invalid enum.
+
+These eight exact missing lines remain in the denominator. They are separate
+from the newly demonstrated reachable G33.1 initialization-error continuation;
+no blanket claim that tapping continuation is unreachable is justified.
+
+## Remaining settings defaults: routing sets, types and no-table stub - 2026-10-23
+
+CORE50f3865 registration/case comparison (preprocessor alternatives retained)
+checks set/get_axis_mask18 IDs each, set_homing_feedrates2, set_float4,
+set_axis_setting9, get_float18, get_int38 and is_setting_available52. All have
+explicit cases except get_int's deprecated SpindlePWMBehaviour. Its descriptor
+availability is constant false; the store's compatibility bypass3562 selects
+its setter only. Do not invoke its hidden getter to claim a controller workflow.
+Evidence: build-asan/batch74-settings-routing-audit.json, including that exception.
+
+The19 missing routing/default lines are701/703,780-781,1198-1199,1506-1507,
+1593-1595,1651-1652,1692-1693,1899-1900,2245-2246. Axis offsets normalize to
+registered base IDs; no registry callback routes a different valid ID here.
+The formatted direct-value default1958-1959 follows explicit handling of every
+setting_datatype_t member. Integer validation default3474-3475 likewise has no
+remaining valid datatype: Decimal/String/Password/IPv4 are dispatched separately
+by setting_validate_me, and every integer/list/mask type has a case.
+
+The integer direct-value getter fallback2024-2025 is distinct: calling it with
+valid noninteger metadata is possible. Current CORE callers in ngc_expr766 and
+ngc_params1219 check the type first; spindle_get_num350 reads registered selector
+settings. No supported plugin caller requiring this mismatch is established.
+This is caller-scope evidence, not a claim the public helper cannot return0 for
+a deliberate mismatch. Keep the existing function-callback mismatch control.
+
+With N_TOOLS=0, settings_set_tool_data2955/2957 is an intentional success/no-op
+stub. Public G10 L1/L10/L11 rejects no-table use during validation before the
+only current CORE set_tool execution call4077. No persistence feature is supplied
+by invoking that no-op directly; retain the two raw lines as a no-table stub.
+
+Finally, direct-value storage default3623-3625 is not universally unreachable for
+valid enum values: Format_IPv4 is readable as a direct buffer, but the store only
+copies String/Password and otherwise requires a function provider for IPv4.
+Current provider tests use a registered setter for network-library validation.
+Establish an actual supported direct-buffer IPv4 provider and its write contract
+before demanding copying or registering a defect. Keep these three lines pending;
+do not invent malformed enums or a fake network provider to force the fallback.
+
+All58 measured settings lines are now individually grouped, including this
+explicitly pending provider question. This is a source audit, not a coverage gain
+or proof of overall supported-scope completion. All remain in the denominator.
+
+## Counted parser alphabet, named IDs and spindle broadcast guards - 2026-10-23
+
+CORE50f3865 gcode parameter selector1977-2180 covers every A-Z/$ character after
+outer G/M dispatch; unsupported axes still have explicit rejection cases. Earlier
+letter validation rejects other characters. Named read-only registry has63 IDs,
+each handled by ngc_named_param_get_by_id. Evidence:
+build-asan/batch74-parser-routing-audit.json. Defaults gcode2180 and
+ngc_params772-773 therefore need inputs outside their accepted dispatch sets.
+
+Correction after actual same-block tests: six M48/M49 broadcast lines2689/
+2691-2692,2702/2704-2705 are reachable through M3M48$-1 and M3M49$-1, even
+though standalone override commands do not consume that selector. M49 passes;
+M48 wrongly retains disabled speed overrides and now has a correct named
+regression. The three M51 lines2718/2720-2721 remain behind a required single
+selector, including when M3 shares the block. Do not label the six demonstrated
+lines unreachable or retain the older standalone-only proof for them.
+
+## Normal M6 stream pause is a reachable no-handler workflow - 2026-10-23
+
+CORE50f3865 tc_init550-566 deliberately clears hal.tool.change for mode0
+(Normal/ToolChange_Disabled), while a normal UART can still supply suspend_read.
+M6 parsing accepts that combination and gcode4291-4294 performs the plain
+stream-suspended tool-change pause. Do not confuse mode0 with manual touch-off
+modes, which install a tool.change handler, or compatibility builds that explicitly
+remove stream suspension. No handler was nulled after initialization in this test.
+
+New full-boot case uses public $341=0, G0X1, T3M6, waits four stable polls,
+delivers real driver CMD_TOOL_ACK, waits four more, then CMD_CYCLE_START. The
+next G1X2 completes with tool3 selected, stream/handler restored, exact160 X
+pulses and no Y/Z movement. Native stream_rx_suspend implements the backup and
+handoff; sender gates prevent later job lines from arriving before resume.
+Sanitizer pass0.30s: batch74-normal-m6-stream-results.xml. Targeted local profile
+confirms all four raw lines4291-4294 execute; the companion broadcast cases hit
+2689/2691-2692 and2702/2704-2705. Evidence:
+build-asan/batch74-broadcast-normal-m6-line-proof.json (10 unique lines, source
+hashes, worktree status and expected exit code recorded). Global totals await
+hosted measurement of this later batch; no CORE edits or new M6 allowance.
+
+Normal M6 door-interlock companion (2026-10-23): the UART/control fixture now
+checks completion with the door open. The tool is selected and stream restored,
+but the next motion stays at80 X pulses for four open-door polls and four more
+after physical closure. A second cycle start permits160-pulse completion. Both
+normal/resume cases pass grouped sanitizers0.37s. Shared fixture preserves the
+original no-door assertions; no private state or new expected failure.
+
+## Native motion, canned and override dispatch defaults - 2026-10-23
+
+CORE50f3865/header mapping check confirms all28 non-None motion_mode_t values
+have execution cases; MotionMode_None is excluded by the enclosing guard4720.
+Conditional lathe parsing/execution use the same feature guards. The eight G-code
+values that set canned_cycle_active (73,81-86,89) exactly match the eight canned
+initialization cases. All six override_mode_t values likewise have cases; the
+M-word parser only assigns48/49/50/51/53/56 before enabling its override group.
+Evidence: build-asan/batch74-native-dispatch-audit.json, including values/cases.
+
+Thus native command parsing does not reach defaults gcode2736-2737,3606-3607,
+4964-4965. Do not inject invalid modal/override state or invent a new canned
+command to cover them. These six raw lines remain included. This is narrower
+than the corrected spindle broadcast audit: real accepted same-block commands
+still reach the explicit M48/M49 cases and are tested separately.
+
+## Native backend stubs and startup residuals counted - 2026-10-23
+
+CORE50f3865 fs_device.opendir always returns NULL; vfs_opendir only creates its
+wrapper after backend success. Thus no valid public device directory reaches
+fs_closedir190/192. Embedded unlink/dirop133/135/138/140 only return-1; the native
+mount is hidden/read-only and mount_modifiable rejects both before dispatch.
+A public owner could change mount flags, so these four are unsupported native
+write operations, not a claim of impossibility under every owner reconfiguration.
+No actual writable embedded-owner contract is established; no forced handle or
+private callback is warranted just to visit a fixed rejection stub.
+
+Scheduler fallback grbllib590-594 retains the atomic-selection proof: task_get_due
+returns tasks.delayed with IRQs masked, and no callback intervenes before the
+identity comparison. Rechecked current source; do not violate IRQ masking.
+Detailed incompatible-driver diagnostic140/144-147/149-150 remains filtered from
+failed startup, which retains report_warning only. Its reporting policy is still
+a maintainer question, as in the earlier failed-startup audit; do not call its
+private formatter or add a new expected-failure demand for diagnostic wording.
+
+Weak board_ports_init92/95 and my_plugin_init26/29 are empty default hooks.
+The host substitutes driver_init and omits driver-owned expander/plugin init;
+these functions have no observable action to assert. Record this harness/no-op
+scope limit, not a proof that production boards cannot call them. Leave all four
+raw, without inflating coverage with direct empty-hook calls.
+
+Device registration's unmatched stream-type case59 needs a real claimable,
+modbus-ready non-Serial/Bluetooth provider before its node naming can be tested.
+Current native serial/Bluetooth tests already exercise supported names/claims.
+Do not invent a Telnet/WebSocket transport merely to trigger that default.
+
+## Reporting and restore fallbacks: current caller limits - 2026-10-23
+
+Rechecked CORE50f3865. report450-452's N/A branch requires a NULL setting value;
+settings_register rejects such plugin descriptors before linking them. Existing
+invalid-metadata/retry/reporting tests cover the public result. This registration
+proof does not claim every possible native/global descriptor is validated by that
+API; do not turn it into a universal metadata proof or mutate a linked descriptor.
+Tab metadata1955-1956 retains its valid-datatype mapping proof: all external types
+have cases, while Int8/Int16 normalize to Integer. No invented enum is needed.
+
+Hold snapshot state_machine157 calls gc_spindle_get with loop indices
+N_SYS_SPINDLE-1 down to0. Current gc_spindle_get returns the corresponding modal
+array address for each nonnegative index (or slot0 for the single-spindle build),
+so its outer NULL result arm does not run. Optional disabled drivers are represented
+by a nonnull spindle object with hal=NULL; existing primary-only hold tests cover
+that distinct path. Do not replace the getter or use an out-of-range index.
+
+Restore flag819 retains the handler-order proof: state_restore installs
+state_await_resumed before calling state_restore_conditions; a door event while
+restoring therefore reaches the new handler, and the flag is false after return.
+The existing door-reopen/output-restoration workflow checks the real sequence.
+Likewise stream614's zero-report callback cannot follow public Report_ClearAll:
+report_add_realtime returns immediately after clearing primary flags. Explicit
+observer-clear fanout is a separate unresolved contract; no callback is called
+with fabricated flags to cover it. All eight raw lines remain included.
+
+## Updated M6 check-mode message cleanup routing - 2026-10-23
+
+On clean upstream2e165a1ac4c74be8e68971972c6577775d856b05, M6 now has an
+explicit check-mode message-free arm at gcode.c4313-4315. This removes the old
+nested contradictory guard, but does not establish an ordinary message owner:
+gc_execute_block snapshots check mode at1299, frees/clears an old message at
+1302-1304, and normalizes at1307. Normalization1123 skips message allocation
+and comment-provider callbacks in STATE_CHECK_MODE. The earlier cleanup1366
+also discards any message in check mode. Tool-name message lookup4266 is confined
+to the non-check-mode arm. No native callback between snapshot and normalization
+supplies a supported mode transition here.
+
+Retain existing passing M6 dry-run and comment controls. Do not inject
+parser-owned messages or toggle modes from callbacks just to reach4314.
+This is a native-routing review, not proof about arbitrary external mutation;
+retain the raw denominator and recheck after ownership changes.
+
+## Nested mount listing contract not established - 2026-10-23
+
+CORE2e165a1 native mount callers register only/dev,/embedded,/ram. The public
+mount interface accepts a path, but no nested-parent lookup/listing contract
+was established from native callers. vfs_opendir533-535 selects descendants by
+prefix; readdir565-567 derives the synthetic name from the whole mount path.
+Do not classify hypothetical nested-parent names or routing as a confirmed
+CORE defect without a supported provider contract. Existing immediate-child,
+hidden-mount and direct-path cases remain the coverage basis. No new test or
+exception added merely to exercise the same lines with an invented hierarchy.
+
+
+## Bound stepper spindle rotary-option transition needs provider contract - 2026-10-23
+
+Reviewed exact CORE2e165a1 and current metadata tests. stepper2.c220 installs
+unit/description wrappers only when cfg_as_rotary is false at bind time.
+Both wrappers recheck that flag at130/168. Existing tests cover native binding
+with either initial option, bound/unbound axes, previous providers present or
+absent and real settings iteration. A later flag change could reach additional
+wrapper outcomes, but current CORE only declares Setting_StepperSpindle_Options
+677 in settings.h and its settings field. Full native-source search finds no
+registered descriptor or setter for this option, only the three stepper2 reads.
+Establish the actual stepper-spindle plugin's supported setting/rebind lifecycle
+before requiring a mid-binding metadata transition. Do not mutate the field
+after binding solely to hit branches or register a speculative defect. This
+bounded native-provider finding does not claim the transition impossible for
+external plugins. Retain raw outcomes and existing initialization controls.
+
+
+## Connection lookup terminal fallback has no normal selected-stream caller - 2026-10-24
+
+Reviewed exact CORE2e165a1 stream.c connection_is_up callers388/397/403/409.
+In the serial arm, stream_select has already inserted a successful candidate
+through add_connection before connection_is_up examines it. A disconnected
+selection uses a retained predecessor, not the removed connection. Thus a
+serial descriptor without is_connected still has a matching registered entry.
+The network arms inspect hal.stream; successful stream selection normalizes
+its optional is_connected pointer to a non-NULL base/default callback before
+returning. Their ordinary selected-stream path therefore takes the direct
+callback return instead of falling through an exhausted lookup list.
+
+The missing terminal return at277 remains in the raw denominator. This is
+bounded evidence for completed native stream registration/selection, not proof
+about plugins that mutate a selected stream's identity or clear callbacks later.
+Do not remove a live callback or forge an unmatched descriptor to exercise this
+private fallback. Existing real disconnected-console/reconnect, USB callback
+absence, network handoff and pendant restore cases remain the controls.
+
+
+## RPM refresh empty-planner fallback ownership - 2026-10-24
+
+Reviewed exact CORE2e165a1. The sole missing planner.c742 outcome is the
+false return of plan_update_velocity_profile_parameters after a changed RPM.
+The public plan_sync_velocity callback receives a planner-block pointer from
+stepper.c909 only after plan_get_current_block/system-motion lookup returned
+nonnull. Its unchanged-RPM arm requeues that same pointer at planner.c745.
+Native preparation cancels all pending plan_sync_velocity tasks at stepper.c1431
+when a units-per-revolution block completes, before discarding that block at1449.
+st_go_idle cancels the tasks at264, and st_reset begins by calling st_go_idle
+at738. Native reset paths call st_reset after plan_reset, with no task execution
+between those adjacent calls (grbllib485-486 and protocol595-596).
+
+These are bounded native ownership/call-order facts, not a guarantee about
+arbitrary plugins calling plan_sync_velocity with a retired block, driver getter
+side effects or an unproven interrupt mutation. Existing measured-RPM changes,
+G95 hold/resume and synchronized motion/reset controls retain their scope.
+Keep the missing outcome in the raw denominator. Do not directly invoke this
+callback with a saved block after clearing its planner solely for coverage.
+Revisit if native scheduling, block retirement or getter contracts change.
+
+## Successful setting stores always have a registered save callback - 2026-10-24
+
+CORE2e165a1 settings.c3658 retains a false branch for a missing owner save
+callback. The global owner initializes save to _settings_write_global at2747.
+settings_claim_save at2784-2792 only replaces it for a nonnull argument.
+settings_register at2755 requires !!details->save before appending an external
+owner at2772-2773. Thus valid native/registered setting stores reach3658 with a
+save callback. Existing invalid_plugin_metadata_rejects_owner_and_allows_corrected_registration
+explicitly rejects a provider missing save, leaves both IDs undiscoverable, and
+later verifies corrected registration and public store/query. Do not register a
+provider and then erase its callback solely for this branch. This proof assumes
+providers retain accepted registration metadata; arbitrary later plugin mutation
+is outside the established workflow. Raw branch remains measured, not excluded.
+
+## Imperial coordinate formatter position flag has no native false caller - 2026-10-24
+
+On CORE2e165a1, report.c103's X-axis/position/diameter condition retains an
+uncovered false position outcome. The formatter selector at203 assigns only
+get_axis_values_metric or get_axis_values_imperial to the file-local pointer.
+All nine pointer call sites (551,561,574,654,667,679,1340,1362,1516) pass true.
+The sole explicit false call is scaling output621, which directly calls the
+metric formatter. Both concrete formatters and the selector are file-local;
+there is no exported arbitrary-position callback. Existing lathe-coordinate
+reporting covers metric/inch diameter conversion; the new M72 extensions verify
+G7/G8 sender modes. Do not add a private imperial(false) call for this outcome.
+This proves a native caller bound, not a platform-wide impossibility after
+source changes. Keep the outcome in the raw measured denominator.
+
+## Secondary stepper idle-run guard: native polling versus timer contract - 2026-10-24
+
+CORE2e165a1 stepper2.c429 retains a prev_state != State_Idle outcome.
+The foreground public st2_motor_run at450-465 calls _motor_run only when polling
+is enabled and profile.state != State_Idle. Repeated idle polling cannot reach
+_motor_run with prev_state==Idle; existing finite/idle/stop tests already check
+public no-step behavior. The other call is the registered timer callback435-440.
+Normal completion stops the timer. A callback delivered after that stop would
+need a real driver's late/in-flight IRQ contract; none is established here.
+Do not manually fire a stopped timer solely for this outcome or call the private
+helper. This is a foreground caller bound and unresolved timer lifecycle point,
+not a claim that all hardware forbids late callbacks, a confirmed defect or an
+exclusion from the raw branch denominator.
+
+## Failed-driver query is preempted by the deliberate permanent fault loop - 2026-10-24
+
+Resolved on CORE2e165a1 with source and a debugger attached only to the spawned
+host test. The main thread is in task_execute -> task_execute_on_startup
+(grbllib.c882) -> protocol_exec_rt_system626 -> protocol_execute_realtime ->
+protocol_main_loop238. grbllib.c875-883 deliberately ends failed startup with
+while(true) task_execute(false). It does not return to normal command dispatch.
+
+protocol_main_loop reads the $G newline, then calls protocol_execute_realtime
+before executing the buffered line. EXEC_RT_COMMAND enters that permanent fault
+loop, explaining why neither step-enable callback variant nor a registered
+Serial console produces a first modal-report write. system.c964's generic
+allow_blocking flag does not bypass this separate startup policy. No late IRQ,
+command-registration cycle, missing-enable defect or timeout exception follows.
+
+Evidence: build-asan/failed-init-query-debug-stack74.log; preceding bounded
+controls remain in failed-init-query-*74.log. The incorrect expected-query
+proposal was removed. Existing failed-init/setup fault-loop scenarios already
+observe safe permanent alarm behavior and discarded plugin work. The separate
+failed_driver_init_skips_setup case still covers a missing enable callback with
+its original immediate host-exit path, which preempts that permanent loop.
+Do not register another query-success test without an upstream fault-loop
+contract/implementation change. All raw coverage remains included.
+
+## Fast-cancel segment guard is cleared before its native check - 2026-10-24
+
+CORE2e165a1 stepper.c1093 remains a raw missing return. exec_fast_hold can become
+true only at820 in st_update_plan_block_parameters(true); that function leaves
+pl_block NULL (already NULL, or cleared at836 after marking recalculation).
+All native true calls come from state_cycle455, reached by foreground realtime
+motion-cancel handling. Other planner/state callers pass false. IRQ step output
+does not call st_prep_buffer or this parameter-update function.
+
+On the next st_prep_buffer pass, full-buffer/end-motion exits cannot reach1092.
+Once its segment loop runs, pl_block==NULL enters the block-load/recalculation
+arm: no planner block returns at906, otherwise exec_fast_hold is cleared at1088
+before the check at1092. Thus native serialized execution cannot take1093.
+Existing real jog-cancel/resume and fast short-segment controls exercise the
+supported motion paths; do not forge the flag or call private state to hit this
+return. This is a current native caller/order bound, not a guarantee for an
+external plugin that reenters segment preparation from an IRQ. Keep the line
+and branch in the raw denominator; revisit if ordering/callers change upstream.
+
+## Native macro literal reads and dominated response ternaries - 2026-10-24
+
+Verified CORE2e165a1ac4c74be8e68971972c6577775d856b05 against the partial
+branches in coverage run40061404353. ngc_param_get388-412 initializes value0
+and returns true for IDs1..5060, whether a stored node exists or not. It does
+not allocate. All literal local reads in the native macros below use this range:
+
+| Macro | Literal local IDs | Current call lines |
+|---|---|---|
+| macro_set_get_setting | 17,19 | 1204,1211 |
+| macro_ngc_parameter_rw | 4,17,19 | 1234,1236,1240 |
+| macro_select_probe | 17 | 1266 |
+| macro_get_tool_offset | 17,18 | 1281 |
+| macro_modbus_msg | 9,18,1,2,3,24,19 | 1316,1320,1326,1332,1334,1338,1344,1352 |
+
+Their getter-false outcomes cannot be reached through normal native calls,
+including unset locals or allocation failure. This does not classify the whole
+compound condition: missing argument flags, invalid setting IDs, failed probe
+selection, illegal tool/axis values, destination writes and transport rejection
+remain distinct reachable paths with existing public controls. No replacement
+getter, corrupted local table or failed allocation on an allocation-free read
+should be introduced to cover these false arms.
+
+modbus_response_handler1300 admits _value2/_value3 updates only when exception
+is ModBus_NoException. The exception-true ternaries at1302 and1304 are therefore
+dominated by the opposite guard in ordinary callback execution, independently
+of whether num_values is2 or3. No claim is made about unsupported concurrent
+mutation of the same response object. Existing two/three-register, exception,
+timeout and transport-failure G65P7 cases retain their assertions. Do not fabricate
+an inconsistent callback object or call this file-local handler directly.
+
+All these outcomes remain in raw coverage. This is a bounded native source
+finding, not completion of all ngc_params paths or a new confirmed defect.
+
+## Valueless integer L word plugin contract - 2026-10-24
+
+CORE2e165a1 core_handlers.h documents UserMCode_NoValueWords for floating-point
+parameter words, with NAN passed to the plugin validator. gcode.c2061 also has
+an L-integer NAN-to-0xFF conversion. Establish whether a valueless L is a supported
+plugin request or only a defensive/internal sentinel before registering a case
+solely for that partial branch. Existing valueless-float controls remain; no
+integer-plugin behavior, defect, private state or source exclusion is invented.
+
+
+## Blocking Modbus receive-callback length contract - 2026-10-24
+
+On CORE2e165a1, a valid blocking RTU response callback receives correct ADU bytes
+but rx_length0: the receive loop decrements packet->msg.rx_length to0; only the
+async completion arm restores rx_len before its callback (modbus_rtu.c231).
+The public modbus_message_t field and callback have no length semantics comment.
+Existing blocking tests use known response bytes. Establish whether
+blocking observers are promised the original/received length before registering
+a separate length defect. The blocking CRC regression checks actual response
+bytes and transport recovery; no new receive-length assertion or allowance.
+
+
+## Rotary return inner check-mode guard is dominated - 2026-10-24
+
+CORE2e165a1 gcode.c4666 checks !gc_parser_flags.check_mode inside the4644
+rotary-wrap arm, which already requires !gc_parser_flags.check_mode. This flag
+is a stack-local snapshot initialized at1299; neither called function receives
+its address, and intervening code does not assign it. The inner false outcome
+is not reachable through supported check-mode entry, even if callbacks change
+the global controller mode. Keep the raw branch denominator; do not mutate
+stack locals or reenter parsing to manufacture that outcome. Existing G28
+check-mode controls and actual wrapped motor-return cases remain the basis.
+
+
+## Delta interior cutoff reporting policy - 2026-10-24
+
+A real streamed move between reachable endpoints(-250,0,-150) and(250,0,-150)
+with default rod lengths crosses an unreachable interior. The native segmenter
+stops safely near X=-164.857; the physical-cutoff regression asserts that stop
+and one terminal response per command without requiring silent success. Clarify
+whether an intermediate inverse failure should report a motion error and how
+parser position should be resynchronized. This is separate from the proven
+physical cutoff, not a confirmed new defect or expected-failure allowance.
+
+
+## Wall-plotter and polar homing scope - 2026-10-24
+
+User decision: keep ALL homing in these modes on TODO, including manual $H
+referencing. Manual entry bypassing an unimplemented automatic-homing stub is
+not permission to test the coordinate hooks as supported homing. No new cases,
+exceptions or coverage exclusions for these paths.
+
+
+## Bounded external IPv4 provider and VFS caller audit - 2026-10-24
+An indexed grblHAL organization search followed by immutable blob reads found 40 active IPv4 descriptors in the following 10 files. All use Setting_NonCoreFn with explicit setter/getter callbacks. Three commented RP2040 descriptors were excluded. This bounded survey found no direct-buffer provider; it is not an exhaustive proof about every external plugin. Do not invent a provider to cover settings3625-3627.
+| Source | Active descriptors | Verified blob |
+|---|---:|---|
+| [grblHAL/STM32F4xx/Src/enet.c](https://github.com/grblHAL/STM32F4xx/blob/a6318ac92f079f49fab91687530f832997396edc/Src/enet.c) | 4 | `8efa34b8cdd12347acbd54bc14f851cfdad1d3ad` |
+| [grblHAL/RP2040/wifi.c](https://github.com/grblHAL/RP2040/blob/2f5bc4a06ecea3b1f78c1644623810f9b6416376/wifi.c) | 4 | `6180dc11cf49deec332c7306c6f23a6a1a3b2dc0` |
+| [grblHAL/ESP32/main/wifi.c](https://github.com/grblHAL/ESP32/blob/0b2d3e1bb7da3b0ae0e03490b71275374eb84c67/main/wifi.c) | 7 | `a91c26d5a465b573842164466d77693d1b9a993f` |
+| [grblHAL/ESP32/main/enet.c](https://github.com/grblHAL/ESP32/blob/0b2d3e1bb7da3b0ae0e03490b71275374eb84c67/main/enet.c) | 3 | `76ab8329792a8c957dd177048639653ad13a0517` |
+| [grblHAL/iMXRT1062/grblHAL_Teensy4/src/enet.c](https://github.com/grblHAL/iMXRT1062/blob/d1f8d1ed904242ee08b0a5583e78f490afd9ae93/grblHAL_Teensy4/src/enet.c) | 4 | `4263b40d2aa528786a0ad4c8e892d020f0c0e919` |
+| [grblHAL/STM32F7xx/Src/enet.c](https://github.com/grblHAL/STM32F7xx/blob/85e6e800b16fb1a46bc00b87b7015489b9d3ec93/Src/enet.c) | 4 | `7fd44bff775b3a001605bf7211d7be8fc168e62c` |
+| [grblHAL/Plugin_networking/wiznet/enet.c](https://github.com/grblHAL/Plugin_networking/blob/0b665ee0c0be5161d5044bdf2dcdf59ad62509f8/wiznet/enet.c) | 4 | `a572892cb6f9951cf4b74b4d82b223b0f4ff6726` |
+| [grblHAL/Plugin_networking/modbus/client.c](https://github.com/grblHAL/Plugin_networking/blob/0b665ee0c0be5161d5044bdf2dcdf59ad62509f8/modbus/client.c) | 1 | `09a2f6b735c82a3b2c4516f1650da3e429c9d7bc` |
+| [grblHAL/Plugins_misc/esp_at.c](https://github.com/grblHAL/Plugins_misc/blob/265711922037cab6b6e47a9560ef11da3a6e5f83/esp_at.c) | 6 | `2bfbdeceade99a922306a9025af45dcd72692974` |
+| [grblHAL/TI_SimpleLink_shared/ethernet/enet.c](https://github.com/grblHAL/TI_SimpleLink_shared/blob/6adcc848946fe69075f6ed062afa31f11c5a4c97/ethernet/enet.c) | 3 | `94eb9dbcd0165355b840716e92a3d126d6f4beb4` |
+
+Plugin_WebUI fs_handlers.c keeps upload.filename in a char[100] array and calls vfs_get_drive only after checking upload. This established caller cannot supply NULL. It does not establish a supported NULL meaning for vfs779. The independently demonstrated vfs_utime allocation failure reaches vfs272, not779. Source: [pinned WebUI caller](https://github.com/grblHAL/Plugin_WebUI/blob/3712523bc98f0bce343b56e03bdf881cc7fd4aa0/fs_handlers.c#L370-L381). Local search/blob manifest: build-asan/provider-audit74-manifest.json.
+
+
+## Upstream conditional axis enums and tapping fallback - 2026-10-24
+
+CORE b01f481 scopes individual ABC/UVW pin enums to configured axes. The old
+unconfigured-ABC runtime rejection case cannot name identifiers that no longer
+exist in a UVW build, so it is registered only for older headers. Configured
+UVW mapping, inversion and grouped-enable controls remain. This is obsolete
+API fixture handling, not a CORE source exclusion.
+
+Native G33.1 now returns Unhandled to invoke macro331. Earlier source2e
+unsupported-stub/defect-only continuation notes remain historical. The new
+eight-axis callback-handoff case verifies A/I/K/Z scope and override cleanup.
+The unsupported-cycle recovery case now installs a provider that explicitly
+declines the operation, preserving its no-motion and next-G33 assertions.
+Wall-plotter/polar homing and G76 main taper remain on user-requested TODO.
+
+
+## Bounded external caller follow-up - 2026-10-24
+
+Indexed grblHAL organization searches for device_fs_add_stream and
+gc_set_tool_offset found only CORE definitions/declarations and the native
+tool-change caller. No external non-UART device naming or other tool-offset
+mode caller was demonstrated by this search. This is not exhaustive evidence
+about unindexed/private plugins, and does not upgrade either contract question
+to a universal unreachable proof. Avoid inventing such providers for coverage.
+Evidence: build-asan/device-fs-callers-b01-search.json and
+build-asan/tool-offset-callers-b01-search.json; indexed CORE snapshot4ec1ae44.
+Selected b01 definitions and native callers were reviewed separately.
+
+
+## Zero homing locate feed rate decision - 2026-10-24
+
+User decision: keep zero locate feed rate and seek/pull-off-only homed-state
+semantics on TODO. Do not assert either successful referencing or mandatory
+setting rejection until the intended contract is established. The raw missing
+line remains counted; no forced homing state or coverage exclusion.
+
+
+## Driver NVS mirror save ownership - 2026-10-24
+
+COREb01f481 nvs_buffer.c162 compares the already advanced source pointer
+with hal.nvs.driver_area.mem_address after copying. The field documents
+the RAM location but not whether providers may mutate it in place and
+request a save using that same buffer. Find a real provider/caller or
+ask Terje for this ownership contract before adding a mirror-mutation
+regression. Do not infer a confirmed defect or global unreachability
+from the pointer comparison alone. Existing normal owner persistence
+and exhausted-storage controls remain; no source change or exclusion.

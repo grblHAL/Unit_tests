@@ -12,5 +12,10 @@ int main(void)
     CHECK(pwm_data.pwm_overdrive == 600);
     CHECK(pwm_data.compute_value(&pwm_data, 9000, false) == 900);
     CHECK(pwm_data.pwm_overdrive == 900);
+    pwm_data.set_laser_overdrive(&pwm_data, 0);
+    CHECK(!pwm_data.flags.laser_off_overdrive);
+    NEAR(pwm_data.off_overdrive_pct, 0);
+    CHECK(pwm_data.compute_value(&pwm_data, 5000, false) == 500);
+    CHECK(pwm_data.compute_value(&pwm_data, 0, false) == pwm_data.off_value);
     return EXIT_SUCCESS;
 }

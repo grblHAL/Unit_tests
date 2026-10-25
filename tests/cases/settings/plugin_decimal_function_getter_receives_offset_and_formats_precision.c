@@ -5,9 +5,14 @@ static float read_decimal(setting_id_t id) { CHECK(id == (setting_id_t)1003); re
 int main(void)
 {
     engine_prepare();
-    const setting_detail_t setting = {.id = (setting_id_t)1001, .type = Setting_NonCoreFn,
+    setting_detail_t setting = {.id = (setting_id_t)1001, .type = Setting_NonCoreFn,
         .datatype = Format_Decimal, .format = "0.000", .get_value = (void *)read_decimal};
     CHECK(strcmp(setting_get_value(&setting, 2), "12.375") == 0);
-    NEAR(setting_get_float_value(&setting, 2), 12.375f); CHECK(read_calls == 2);
+    const char *default_formats[] = {NULL, "0"};
+    for(unsigned i = 0; i < sizeof(default_formats) / sizeof(default_formats[0]); i++) {
+        setting.format = default_formats[i];
+        CHECK(strcmp(setting_get_value(&setting, 2), "12.4") == 0);
+    }
+    NEAR(setting_get_float_value(&setting, 2), 12.375f); CHECK(read_calls == 4);
     return EXIT_SUCCESS;
 }

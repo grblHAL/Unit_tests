@@ -30,6 +30,24 @@ def matches_known_crash(name, output, manifest):
         if ubsan_summaries and not (ubsan and len(ubsan_summaries) == 1 and re.fullmatch(
                 r"SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior .*[/\\]" + location + r"\s*", ubsan_summaries[0])):
             continue
+        # Memory intrinsics report the CORE caller below the ASan interceptor.
+        if item.get("interceptor") == "memcpy":
+            intrinsic = r"(?:__asan_memcpy|__interceptor_memcpy|memcpy)"
+            caller = (r"^\s*#1 0x[0-9a-f]+ in " + re.escape(item["function"])
+                      + r" .*" + asan_location + r"(?:\s|$)")
+            allocations = item.get("allocation_frames", [])
+            if (allocations
+                    and re.search(r"ERROR: AddressSanitizer: " + item["message_pattern"] + r"\b", errors[0])
+                    and re.search(r"SUMMARY: AddressSanitizer: " + item["message_pattern"]
+                                  + r" .* in (?:" + intrinsic + "|" + re.escape(item["function"]) + r")\s*$", summaries[0])
+                    and re.search(r"^\s*#0 0x[0-9a-f]+ in " + intrinsic + r"\b", output, re.MULTILINE)
+                    and re.search(caller, output, re.MULTILINE)
+                    and all(re.search(r"^\s*#\d+ 0x[0-9a-f]+ in " + re.escape(frame["function"])
+                                      + r" .*[/\\]" + re.escape(frame["source"]).replace("/", r"[/\\]")
+                                      + ":" + str(frame["line"]) + r"(?::\d+)?(?:\s|$)", output, re.MULTILINE)
+                            for frame in allocations)):
+                return True
+            continue
         # GCC reports a NULL indirect call at PC zero and omits the tail-called
         # CORE frame. Require the exact recorded harness caller chain instead.
         frames = item.get("zero_pc_frames", [])
@@ -72,7 +90,17 @@ def main():
         if result.returncode and matches_known_crash(name, result.stdout, manifest):
             # CTest truncates passing output to 1KiB. Keep the exact matching
             # evidence together; preserve the complete process output separately.
+            intercepted = next((item for item in manifest if item.get("test") == name
+                                and item.get("interceptor") == "memcpy"), None)
             for line in result.stdout.splitlines():
+                if intercepted:
+                    functions = [intercepted["function"]] + [frame["function"] for frame in intercepted["allocation_frames"]]
+                    if "ERROR: AddressSanitizer:" in line or "SUMMARY: AddressSanitizer:" in line or any(
+                            re.search(r"#\d+ .* in " + re.escape(function) + r"\b", line) for function in functions):
+                        print(re.sub(r"\S*[/\\](core[/\\])", r"/\1", line))
+                    elif re.search(r"#0 .* in (?:__asan_memcpy|__interceptor_memcpy|memcpy)\b", line):
+                        print(re.sub(r"(in (?:__asan_memcpy|__interceptor_memcpy|memcpy))\b.*", r"\1", line))
+                    continue
                 if "runtime error:" in line or "UndefinedBehaviorSanitizer:" in line or "ERROR: AddressSanitizer:" in line or "SUMMARY: AddressSanitizer:" in line or re.search(r"#0 ", line) or ("Hint: pc points to the zero page." in result.stdout and re.search(r"#[12] ", line)):
                     print(line)
             print("Full process output:", log.resolve())

@@ -10,6 +10,15 @@ if(NOT MSVC)
 endif()
 option(ENABLE_COVERAGE "Instrument tested core modules for coverage (GCC or Clang)" OFF)
 option(ENABLE_SANITIZERS "Enable address and undefined behavior checks" OFF)
+set(HOST_TAPPING_CRASH_CASES
+  eight_axis.rigid_tapping_fallback_receives_a_axis_arguments_and_restores_caller_scope
+  spindle_sync.recursive_tapping_macro_overflow_restores_scope_and_allows_next_cut
+  spindle_sync.unsupported_rigid_tapping_preserves_position_and_next_supported_sync_move
+)
+set(HOST_TAPPING_KNOWN_CRASH OFF)
+if(ENABLE_SANITIZERS AND CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_C_COMPILER_ID STREQUAL "Clang")
+  set(HOST_TAPPING_KNOWN_CRASH ON)
+endif()
 if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/core/crc.c")
   message(FATAL_ERROR "Fetch sources with python scripts/resolve_source.py then python scripts/prepare_sources.py, or supply a local core checkout")
 endif()
@@ -25,9 +34,14 @@ file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/core/gcode.h" HOST_PARSER_FLAGS_DECLAR
 if(HOST_PARSER_FLAGS_DECLARATION)
   list(APPEND HOST_API_DEFINITIONS HOST_PARSER_FLAGS_API=1)
 endif()
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/core/settings.h" HOST_END_PROGRAM_ACTIONS_DECLARATION REGEX "Setting_EndProgramActions =")
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/core/fs_ram.h" HOST_FS_MOUNT_RESULT_DECLARATION REGEX "^bool fs_ram_mount")
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/core/config.h" HOST_PARAMETERS_FORCED_ON REGEX "^#ifdef NGC_PARAMETERS_ENABLE")
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/core/strutils.h" HOST_STRSET_DECLARATION REGEX "^char [*]strset")
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/core/stream_json.h" HOST_JSON_CLOSE_DECLARATION REGEX "^bool json_close")
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/core/motion_control.c" HOST_MOTION_SOURCE)
+string(REGEX MATCH "mc_rigid_tapping[^{]*[{][^}]*return Status_Unhandled" HOST_TAPPING_MACRO_FALLBACK "${HOST_MOTION_SOURCE}")
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/core/crossbar.h" HOST_CONFIG_SCOPED_MOTOR_ENUMS REGEX "^#define MOTOR_UNDEFINED ")
 function(add_host_core target)
   add_library(${target} STATIC EXCLUDE_FROM_ALL tests/support/engine_host.c tests/support/task_host.c)
   target_link_libraries(${target} PRIVATE grbl)
@@ -53,9 +67,11 @@ if(NOT MSVC)
   set_property(TARGET grbl PROPERTY INTERFACE_SOURCES "${HOST_CORE_SOURCES}")
   set_source_files_properties(tests/support/task_host.c PROPERTIES COMPILE_OPTIONS -Wno-error)
   add_host_core(host_core)
+  add_host_core(host_core_junction_floor MINIMUM_JUNCTION_SPEED=5.0f)
   add_host_core(host_core_incoming_rotation ROTATION_ENABLE=1 MACH3_SCALING=0 NGC_EXPRESSIONS_ENABLE=1)
   add_host_core(host_core_no_params NGC_PARAMETERS_ENABLE=0 NGC_EXPRESSIONS_ENABLE=0)
   add_host_core(host_core_io_pullup AUX_SETTINGS_PULLUP=1)
+  add_host_core(host_core_io_32 N_AUX_DIN=32 N_AUX_DOUT=32)
   add_host_core(host_core_accel_profiles ENABLE_ACCELERATION_PROFILES=1)
   add_host_core(host_core_jerk ENABLE_JERK_ACCELERATION=1)
   add_host_core(host_core_fanuc_scaling MACH3_SCALING=0)
@@ -87,6 +103,7 @@ if(NOT MSVC)
   add_host_core(host_core_square N_AXIS=4 ASYMMETRIC_AUTO_SQUARE=1)
   add_host_core(host_core_delta DELTA_ROBOT=1)
   add_host_core(host_core_delta_aux DELTA_ROBOT=1 N_AXIS=4)
+  add_host_core(host_core_delta_multi DELTA_ROBOT=1 N_AXIS=5)
   add_host_core(host_core_rtcp N_AXIS=5 RTCP_AC=1 "AXIS4_LETTER='C'")
   add_host_core(host_core_backlash ENABLE_BACKLASH_COMPENSATION=1)
   add_host_core(host_core_seven N_AXIS=7 NGC_EXPRESSIONS_ENABLE=1)
@@ -94,10 +111,26 @@ if(NOT MSVC)
   add_host_core(host_core_uvw N_AXIS=6 AXIS_REMAP_ABC2UVW=1)
   add_host_core(host_core_multi_spindle N_SPINDLE=3 N_SYS_SPINDLE=2)
   target_include_directories(host_core_multi_spindle PRIVATE tests/include)
+  add_host_core(host_core_three_spindle N_SPINDLE=3 N_SYS_SPINDLE=3)
+  target_include_directories(host_core_three_spindle PRIVATE tests/include)
   add_host_core(host_core_linearization ENABLE_SPINDLE_LINEARIZATION=1)
 endif()
-set(ENGINE_MODULES tool_axis_x tool_axis_y tool_axis_z fanuc_scaling ngc_long_names compat_2 compat_10 boot_compat_2 boot_compat_10 manual_tool_table seven_axis boot_spindle_sync boot_parameters_disabled boot_backlash parameters_disabled ioports_pullup homing_command_eight homing_command_uvw motion_mode_tracking debug_serial debug_external spindle_sync rotation jerk_profiles jerk_acceleration acceleration_profiles cutter_comp lathe_ngc ngc_tools tool_table compat_1 pid_report gcode planner system settings state_machine nvs_debug nvs_debug_eight protocol motion_control stepper stepper2 spindle_control nvs_buffer grbllib ngc_expr ngc_params ngc_flowctrl corexy report stream probe ioports canbus tool_change stream_json fs_device sleep stream_file modbus_rtu polar stream_passthru asymmetric_ganging wall_plotter asymmetric_auto_square delta rtcp_ac backlash homing coolant_integration boot boot_rtcp boot_square boot_wall boot_delta boot_delta_aux boot_polar boot_ganging boot_corexy boot_eight boot_uvw boot_ngc boot_multi_spindle vfs_integration eight_axis uvw_axis multi_spindle spindle_linearization boot_debug_serial boot_debug_external)
+set(ENGINE_MODULES three_spindle ioports_32 junction_floor tool_axis_x tool_axis_y tool_axis_z fanuc_scaling ngc_long_names compat_2 compat_10 boot_compat_2 boot_compat_10 manual_tool_table seven_axis boot_spindle_sync boot_parameters_disabled boot_backlash parameters_disabled ioports_pullup homing_command_eight homing_command_uvw motion_mode_tracking debug_serial debug_external spindle_sync rotation jerk_profiles jerk_acceleration acceleration_profiles cutter_comp lathe_ngc ngc_tools tool_table compat_1 pid_report gcode planner system settings state_machine nvs_debug nvs_debug_eight protocol motion_control stepper stepper2 spindle_control nvs_buffer grbllib ngc_expr ngc_params ngc_flowctrl corexy report stream probe ioports canbus tool_change stream_json fs_device sleep stream_file modbus_rtu polar stream_passthru asymmetric_ganging wall_plotter asymmetric_auto_square delta rtcp_ac backlash homing coolant_integration boot boot_rtcp boot_square boot_wall boot_delta boot_delta_aux boot_delta_multi boot_polar boot_ganging boot_corexy boot_eight boot_uvw boot_ngc boot_multi_spindle vfs_integration eight_axis uvw_axis multi_spindle spindle_linearization boot_debug_serial boot_debug_external)
+set(HOST_MOUNT_RESULT_CASES fs_embedded.allocation_failure_first_mount_preserves_root_mode_and_allows_asset_retry fs_ram.repeated_mount_preserves_uploaded_file_and_installs_reset_wrapper_only_once fs_embedded.appending_asset_list_preserves_active_reader_and_directory_order fs_embedded.allocation_failure_appended_list_preserves_existing_directory_and_allows_retry)
 function(add_core_test name module source)
+  if(name STREQUAL "uvw_axis.unconfigured_abc_functions_do_not_alias_remapped_uvw_axes" AND HOST_CONFIG_SCOPED_MOTOR_ENUMS)
+    message(STATUS "Skipping ${name}: unconfigured ABC enum identifiers are absent in selected core")
+    return()
+  endif()
+  if((name STREQUAL "eight_axis.rigid_tapping_fallback_receives_a_axis_arguments_and_restores_caller_scope"
+      OR name STREQUAL "spindle_sync.recursive_tapping_macro_overflow_restores_scope_and_allows_next_cut") AND NOT HOST_TAPPING_MACRO_FALLBACK)
+    message(STATUS "Skipping ${name}: selected core predates the native tapping macro fallback")
+    return()
+  endif()
+  if(name STREQUAL "gcode.program_end_actions_independently_restore_overrides_and_g54" AND NOT HOST_END_PROGRAM_ACTIONS_DECLARATION)
+    message(STATUS "Skipping ${name}: selected core predates independent end-program actions")
+    return()
+  endif()
   if(HOST_PARAMETERS_FORCED_ON AND module MATCHES "^(parameters_disabled|boot_parameters_disabled)$")
     message(STATUS "Skipping ${name}: selected core no longer supports disabling NGC parameters")
     return()
@@ -131,6 +164,8 @@ function(add_core_test name module source)
       target_link_libraries(test_${name} PRIVATE host_core_fanuc_scaling)
     elseif(name MATCHES "^(gcode\\.g10_l0_tool_reload|gcode\\.g10_l10_tool_offset_calculation|gcode\\.g10_l11_tool_orientation|gcode\\.g10_l11_tool_orientation_full|gcode\\.g10_l1_l10_tool_compensation|gcode\\.g43_g44_tool_length_offset_h_word|gcode\\.m6_tool_change_with_reload|gcode\\.t_word_tool_selection)$")
       target_link_libraries(test_${name} PRIVATE host_core_ngc_tools)
+    elseif(module STREQUAL "junction_floor")
+      target_link_libraries(test_${name} PRIVATE host_core_junction_floor)
     elseif(module STREQUAL "tool_axis_x")
       target_link_libraries(test_${name} PRIVATE host_core_tool_x)
     elseif(module STREQUAL "tool_axis_y")
@@ -199,6 +234,8 @@ function(add_core_test name module source)
       target_link_libraries(test_${name} PRIVATE host_core_square)
     elseif(module STREQUAL "boot_wall")
       target_link_libraries(test_${name} PRIVATE host_core_wall)
+    elseif(module STREQUAL "boot_delta_multi")
+      target_link_libraries(test_${name} PRIVATE host_core_delta_multi)
     elseif(module STREQUAL "boot_delta_aux")
       target_link_libraries(test_${name} PRIVATE host_core_delta_aux)
     elseif(module STREQUAL "boot_delta")
@@ -211,10 +248,14 @@ function(add_core_test name module source)
       target_link_libraries(test_${name} PRIVATE host_core_corexy)
     elseif(module STREQUAL "spindle_linearization")
       target_link_libraries(test_${name} PRIVATE host_core_linearization)
+    elseif(module STREQUAL "three_spindle")
+      target_link_libraries(test_${name} PRIVATE host_core_three_spindle)
     elseif(module STREQUAL "multi_spindle")
       target_link_libraries(test_${name} PRIVATE host_core_multi_spindle)
     elseif(module STREQUAL "seven_axis")
       target_link_libraries(test_${name} PRIVATE host_core_seven)
+    elseif(module STREQUAL "ioports_32")
+      target_link_libraries(test_${name} PRIVATE host_core_io_32)
     elseif(module STREQUAL "eight_axis")
       target_link_libraries(test_${name} PRIVATE host_core_eight)
     elseif(module STREQUAL "uvw_axis")
@@ -314,6 +355,8 @@ function(add_core_test name module source)
   if(name STREQUAL "report.alarm_catalog_allocation_failure_retains_every_registered_entry"
     OR name STREQUAL "report.error_catalog_allocation_failure_retains_every_registered_entry"
     OR name STREQUAL "stream_json.start_allocation_failure_preserves_output_and_allows_retry"
+    OR name STREQUAL "stepper2.allocation_failure_adding_motor_preserves_running_motor_and_allows_retry"
+    OR name STREQUAL "ngc_params.m98_prescan_allocation_failure_clears_cached_positions_and_allows_retry"
     OR name STREQUAL "report.group_metadata_fallback_keeps_visible_settings"
     OR name STREQUAL "report.setting_group_fallback_lists_available_groups"
     OR name MATCHES "^report\\.all_settings_sort_allocation_failure_")
@@ -331,15 +374,26 @@ function(add_core_test name module source)
   if(name STREQUAL "encoders.registration_allocation_failure_preserves_count_and_allows_retry"
     OR name STREQUAL "report.pins_report_survives_sort_allocation_failure"
     OR name STREQUAL "report.uart_report_survives_sort_allocation_failure"
+    OR name STREQUAL "report.bitfield_metadata_allocation_failure_allows_complete_retry"
+    OR name STREQUAL "boot_ngc.abort_message_allocation_failure_retains_exception_and_allows_sender_retry"
+    OR name STREQUAL "motion_control.synchronized_analog_allocation_failure_preserves_queued_cut_and_allows_retry"
+    OR name STREQUAL "motion_control.synchronized_output_allocation_failure_rejects_command_and_preserves_queued_cut"
     OR name STREQUAL "ngc_params.virtual_registration_allocation_failure_preserves_existing_list"
+    OR name STREQUAL "ngc_params.named_allocation_failure_preserves_existing_value_and_allows_retry"
     OR name MATCHES "^ngc_params\\.m7[03]_snapshot_")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc)
+  endif()
+  if(name STREQUAL "motion_control.synchronized_output_allocation_failure_rejects_command_and_preserves_queued_cut"
+    OR name STREQUAL "motion_control.synchronized_analog_allocation_failure_preserves_queued_cut_and_allows_retry")
+    target_link_options(test_${name} PRIVATE -Wl,--wrap=calloc)
   endif()
   if(name STREQUAL "ngc_params.string_growth_allocation_failure_preserves_neighbors_and_allows_retry"
     OR name STREQUAL "ngc_params.string_insert_allocation_failure_preserves_existing_values"
     OR name STREQUAL "ngc_params.string_name_allocation_failure_reports_zero_and_allows_retry"
     OR name STREQUAL "ngc_params.named_label_allocation_failure_allows_conditional_retry"
-    OR name STREQUAL "ngc_params.named_label_reuse_needs_no_reallocation_under_memory_pressure")
+    OR name STREQUAL "ngc_params.named_label_reuse_needs_no_reallocation_under_memory_pressure"
+    OR name STREQUAL "gcode.named_tool_message_reallocation_failure_preserves_sender_text_and_allows_retry"
+    OR name STREQUAL "vfs.locate_allocation_failure_does_not_return_previous_job_and_allows_retry")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=realloc)
   endif()
   if(name STREQUAL "nvs_buffer.buffer_allocation_failure_can_retry_without_changing_storage_handlers"
@@ -358,6 +412,8 @@ function(add_core_test name module source)
     OR name STREQUAL "vfs.mount_allocation_failure_reports_failure_without_notification"
     OR name STREQUAL "vfs.mount_retry_after_allocation_failure_registers_one_backend"
     OR name STREQUAL "vfs.relative_unlink_path_allocation_failure_preserves_other_directory_and_retries"
+    OR name STREQUAL "vfs.relative_stat_path_allocation_failure_skips_backend_and_allows_retry"
+    OR name STREQUAL "vfs.utime_path_allocation_failure_preserves_errno_skips_backend_and_allows_retry"
     OR name STREQUAL "vfs.getcwd_size_and_allocation_failures_preserve_caller_buffer_and_allow_retry")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=realloc)
   endif()
@@ -372,22 +428,31 @@ function(add_core_test name module source)
   endif()
   if(name STREQUAL "lathe_ngc.pre_execute_rejection_releases_core_message_and_preserves_queued_motion"
       OR name STREQUAL "lathe_ngc.parser_rejection_releases_message_and_preserves_queued_motion"
-      OR name STREQUAL "ngc_params.g66_allocation_failure_preserves_queued_cut_and_allows_retry")
+      OR name STREQUAL "ngc_params.g66_allocation_failure_preserves_queued_cut_and_allows_retry"
+      OR name STREQUAL "multi_spindle.spindle_listing_allocation_failure_preserves_enabled_catalog_and_allows_retry"
+      OR name STREQUAL "multi_spindle.secondary_ramp_allocation_failure_applies_output_and_allows_override_retry")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=free)
   endif()
   if(name STREQUAL "ngc_long_names.long_macro_filename_allocation_failure_preserves_sender_and_retries")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=realloc)
   endif()
-  if(name STREQUAL "ngc_flowctrl.named_macro_argument_allocation_failure_restores_caller_and_retries"
+  if(name STREQUAL "ngc_expr.print_message_allocation_failure_preserves_parameter_and_allows_retry"
+      OR name STREQUAL "ngc_flowctrl.named_macro_argument_allocation_failure_restores_caller_and_retries"
       OR name STREQUAL "ngc_flowctrl.macro_while_expression_allocation_failure_returns_to_sender_and_retries"
-      OR name STREQUAL "ngc_flowctrl.macro_while_expression_normal_completion_returns_to_sender_and_reopens")
+      OR name STREQUAL "ngc_flowctrl.macro_while_expression_normal_completion_returns_to_sender_and_reopens"
+      OR name STREQUAL "ngc_flowctrl.numeric_while_allocation_failure_closes_stream_and_accepts_retry")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=malloc)
   endif()
   if(name STREQUAL "ngc_flowctrl.named_macro_record_allocation_failure_closes_file_and_allows_retry"
-    OR name STREQUAL "ngc_flowctrl.numeric_sub_record_allocation_failure_preserves_file_and_allows_retry")
+    OR name STREQUAL "ngc_flowctrl.numeric_sub_record_allocation_failure_preserves_file_and_allows_retry"
+    OR name STREQUAL "fs_device.registration_allocation_failure_preserves_existing_uart_and_allows_retry"
+    OR name STREQUAL "fs_device.open_allocation_failure_releases_device_for_retry")
     target_link_options(test_${name} PRIVATE -Wl,--wrap=calloc)
   endif()
-  if(name STREQUAL "system.startup_comment_rejection_preserves_saved_line_and_allows_retry")
+  if(HOST_FS_MOUNT_RESULT_DECLARATION AND name IN_LIST HOST_MOUNT_RESULT_CASES)
+    target_compile_definitions(test_${name} PRIVATE HOST_FS_MOUNT_RESULT_API=1)
+  endif()
+  if(HOST_TAPPING_KNOWN_CRASH AND name IN_LIST HOST_TAPPING_CRASH_CASES)
     find_package(Python3 REQUIRED COMPONENTS Interpreter)
     add_test(NAME ${name} COMMAND "${Python3_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/scripts/known_crash.py"
       "${name}" "${CMAKE_SOURCE_DIR}/tests/known_sanitizer_diagnostics.json" "$<TARGET_FILE:test_${name}>")

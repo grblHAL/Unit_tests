@@ -9,5 +9,9 @@ int main(void)
     CHECK(!protocol_enqueue_realtime_command('$'));
     CHECK(!protocol_enqueue_realtime_command(CMD_STATUS_REPORT_LEGACY));
     CHECK(sys.rt_exec_state == 0);
+    CHECK(!protocol_enqueue_realtime_command(CMD_CYCLE_START_LEGACY));
+    CHECK(sys.rt_exec_state == 0);
+    CHECK(!protocol_enqueue_realtime_command(CMD_FEED_HOLD_LEGACY));
+    CHECK(sys.rt_exec_state == 0);
     return EXIT_SUCCESS;
 }

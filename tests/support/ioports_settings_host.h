@@ -1,11 +1,12 @@
 #pragma once
 #include "support/ioports_host.h"
 static unsigned input_config_calls[2], output_config_calls[2];
+static bool input_config_result = true, output_config_result = true;
 static gpio_in_config_t captured_input[2];
 static gpio_out_config_t captured_output[2];
 static inline void io_settings_changed(settings_t *current, settings_changed_flags_t changed) { CHECK(current == &settings); (void)changed; }
-static inline bool configure_input(xbar_t *pin, xbar_cfg_ptr_t data, bool persistent) { CHECK(pin->id < 2 && !persistent); captured_input[pin->id] = *data.gpio_in_config; input_config_calls[pin->id]++; return true; }
-static inline bool configure_output(xbar_t *pin, xbar_cfg_ptr_t data, bool persistent) { CHECK(pin->id < 2 && !persistent); captured_output[pin->id] = *data.gpio_out_config; output_config_calls[pin->id]++; return true; }
+static inline bool configure_input(xbar_t *pin, xbar_cfg_ptr_t data, bool persistent) { CHECK(pin->id < 2 && !persistent); captured_input[pin->id] = *data.gpio_in_config; input_config_calls[pin->id]++; return input_config_result; }
+static inline bool configure_output(xbar_t *pin, xbar_cfg_ptr_t data, bool persistent) { CHECK(pin->id < 2 && !persistent); captured_output[pin->id] = *data.gpio_out_config; output_config_calls[pin->id]++; return output_config_result; }
 static inline void prepare_io_settings(void)
 {
     engine_prepare();

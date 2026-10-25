@@ -11,5 +11,10 @@ int main(void)
     CHECK(option_report_calls == 2 && !option_report_new);
     CHECK(strstr(engine_output, "MODBUS") != NULL);
     CHECK(strstr(engine_output, "[PLUGIN:MODBUS v") != NULL);
+    engine_output[0] = '\0';
+    char help[] = "$HELP missingdevice";
+    CHECK(system_execute_line(help, hal.stream.write) == Status_OK);
+    CHECK(strcmp(engine_output, ASCII_EOL "N/A" ASCII_EOL) == 0);
+    CHECK(modbus_isup().rtu && tx_calls == 0);
     return EXIT_SUCCESS;
 }

@@ -17,8 +17,11 @@ int main(void)
     hal.port.claim = claim_with_failure;
     const char *description = digital_pins[Port_Output][0].description;
     CHECK(ioports_unclaimed(Port_Digital, Port_Output) == 2);
+    io_port_cfg_t configuration = {0};
+    CHECK(ioports_cfg(&configuration, Port_Digital, Port_Output) == &configuration);
+    CHECK(configuration.n_ports == 2 && configuration.port_max == 1);
     uint8_t port = 0;
-    CHECK(ioport_claim(Port_Digital, Port_Output, &port, "Vacuum") == NULL);
+    CHECK(configuration.claim(&configuration, &port, "Vacuum", (pin_cap_t){0}) == NULL);
     CHECK(port == IOPORT_UNASSIGNED && driver_claim_calls == 1);
     CHECK(ioports_unclaimed(Port_Digital, Port_Output) == 2);
     CHECK(hal.port.num_digital_out == 2);
@@ -28,7 +31,7 @@ int main(void)
 
     reject_claim = false;
     port = 0;
-    CHECK(ioport_claim(Port_Digital, Port_Output, &port, "Vacuum") == &digital_pins[Port_Output][0]);
+    CHECK(configuration.claim(&configuration, &port, "Vacuum", (pin_cap_t){0}) == &digital_pins[Port_Output][0]);
     CHECK(driver_claim_calls == 2 && port != IOPORT_UNASSIGNED);
     CHECK(ioports_unclaimed(Port_Digital, Port_Output) == 1);
     CHECK(hal.port.num_digital_out == 1);
