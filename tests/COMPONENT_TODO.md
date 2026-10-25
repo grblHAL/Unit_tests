@@ -655,3 +655,14 @@ No full native parser/PSU/laser response claim. Inactive-spindle overdrive reten
 and alternate flags/configurations remain; avoid unsafe oversized conversion
 reproductions. Pending46 cases across clone/stepper/coolant/overdrive form next
 substantial cumulative validation/source-measurement boundary.
+
+## Batch35 measured next work
+
+Full976/50 current-source plugin-driver suites and87 helpers pass; all48 local
+source checkouts snapshot clean/exact SHAs. First measured clone71/72,stepper
+153/161,coolant93/124,overdrive66/66 lines. Next reachable coolant work includes
+public port setter/getter and valid saved mapping variations; thermal flag and
+erased-default contract are still WIP/uncertain, never force private state.
+Remaining source configurations, native controller integration and broader
+networking/storage/driver modules remain required. Separate hosted dispatch
+unavailable until default-branch workflow installation; keep working independently.

@@ -1,3 +1,53 @@
+# Combined clone/stepper/laser delivery - 2026-10-25 (batch35)
+
+Goal active. Complete50 current-source plugin/driver host suites pass Windows
+Clang ASan/UBSan/strict:976 cases =913 clean +63 documented known, zero
+unexpected failures/skips.46 new cases:clone9,stepper18,coolant11,overdrive8.
+Fresh87 reporting/source helper checks pass16.612s; Plugin/Driver actionlint
+passes. No production edits, weakened assertions, new diagnostic allowances or
+PR merges. Main CORE suite stays in separate active checkout; historical
+PSoC/TI/Simulator VFS references remain separately dated, excluded from976.
+
+Fresh selected local LLVM source coverage, four clean coverage executions:
+- pwm_clone.c71/72 lines98.6%,17/24 branches70.8%,8/8 functions;9 clean.
+- stepper.c153/161 lines95.0%,49/67 branches73.1%,14/16 functions;18 clean.
+- coolant.c93/124 lines75%,42/68 branches61.8%,11/14 functions;11 clean.
+- co2.c66/66 lines100%,38/48 branches79.2%,9/9 functions;8 clean.
+These are first measured selected configurations, not full-module/all-config or
+repository coverage. Coolant thermal WIP/default recovery stays visible in the
+denominator. Prior VFD910/940 lines301/417 branches remains batch34 evidence;
+not remeasured or summed into a new whole-spindle claim.
+
+Four fresh source locks match clean original spindle8a3ae47f,laser26934c6c,
+COREb01f4810,EEPROM0c278db7 (EEPROM only clone/coolant). All50 gated suites'
+candidates/dependencies additionally snapshot48 clean Git checkouts with exact
+SHAs in ignored all-sources-batch35.json. Fresh short cl35/st35/lc35/lo35
+coverage counters max225chars. No stale counters, source exclusions or claimed
+physical timing. Evidence ignored build-evidence/*batch35* and per-build XML.
+
+Clone uses genuine driver-owned CORE PWM precompute/update-caps, with startup
+queue after settings load; primary/clone routing and mode changes execute.
+Stepper compiles actual CORE secondary engine and captures pulses; deterministic
+timer callbacks and coarse polling are boundary models, not MCU timing. Integer/
+fractional position sync, unit hooks, speed changes and reset execute. Live
+IRQ-backed reversal still needs independent asynchronous delivery.
+
+Coolant checks real port claims/EEPROM, start/timeout/delayed cancellation/IRQ
+loss and virtual sensor callbacks. Valid stored defaults are created through
+original restore; erased recovery is not validated. Thermal can_monitor stays
+false and upstream marks thermal features WIP. Overdrive runs original M129
+hooks and real CORE calculation/clamping/reset/completion. Native parser/
+scheduler/stepper electrical behavior and motor/laser/flow response unverified.
+
+PWM activation missing-context, tool-setting ABI and tooltable proposals remain
+unregistered/incomplete; no unsafe reexecution or fixture workaround. Fresh
+fork Actions listing still only reusable/core workflows. Separate Plugin/Driver
+manual dispatch awaits default-branch installation; keep PR29 draft/unmerged.
+No hosted GCC/Linux, actual board SDK link or full controller/hardware success.
+Other modules/configurations and physical integration remain; goal stays active.
+
+---
+
 # Local CO2 laser overdrive checkpoint - 2026-10-25
 
 Goal active. Eight original co2.c cases pass Windows Clang ASan/UBSan0.45s
