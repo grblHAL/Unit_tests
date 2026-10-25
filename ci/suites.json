@@ -862,5 +862,18 @@
     "test_regex": "^driver_stm32f1_serial[.]",
     "coverage_filter": "drivers/stm32f1/Src/serial\\.c$",
     "diagnostics_directory": "tests/drivers/stm32f1_serial"
+  },
+  "driver_stm32h7_serial": {
+    "repository": "dresco/STM32H7xx",
+    "ref": "master",
+    "path": "drivers/stm32h7",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/drivers/stm32h7_serial",
+    "cmake_options": [],
+    "test_regex": "^driver_stm32h7_serial[.]",
+    "coverage_filter": "drivers/stm32h7/Src/serial\\.c$",
+    "diagnostics_directory": "tests/drivers/stm32h7_serial"
   }
 }

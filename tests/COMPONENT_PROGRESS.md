@@ -1,3 +1,57 @@
+# Combined H7 serial gate - 2026-10-25 (batch47)
+
+Goal active. All56 current-CORE-compatible suites pass fresh Windows Clang
+ASan/UBSan plus strict:1230 =1163 clean +67 documented known, zero unexpected or
+skipped.24 new H7 cases since9de67a5/batch46, all clean:23 H743 primary/three-
+stream workflows plus H723 native initialization. No source/CORE edit, type/API/
+instruction aliases, copied driver algorithm, assertion weakening or allowance.
+Known categories63 correct assertions +4 diagnostic-only(3 overlap/count once),
+diagnostic-bearing7 unchanged. Seven affected helpers pass0.061s; Driver/reusable
+actionlint passes. Broader unchanged87 helpers last passed40. Main CORE and
+historical reference suites excluded.
+
+First selected serial.c coverage353/357 lines98.9%,108/122 branches88.5%,57/57
+functions. Original H743/H723 ST HAL/CMSIS/main/driver/generic headers and actual
+CORE stream/passthrough/VFS/formatting execute. H743 primary USART3 D8/9, original
+secondary USART6 C6/7(AF7), added supported third USART1 A9/10 cover independent
+handlers/traffic, queue/full/wrap/cancel/binary, RX mute/TX preservation, baud/
+parity, ownership and CORE tool-ACK. H723 full workflows are not inferred from
+its one init case. Fresh build-sh47 counters max217 chars; no stale counters reused.
+
+H7 UART macro needs the SDK's immutable UARTPrescTable. Full UART HAL unit requires
+ARM-only exclusive-access intrinsics and remains uncompiled by the host suite.
+CMake compiles only its original data declaration verbatim from candidate source;
+no SDK function/algorithm is extracted. Equality self-check records original
+SDK line229 and SHA256 in sdk-prescaler-batch47.json. Source is a configure dependency;
+changed declaration shape fails rather than fabricating data. Actual macro/BRR
+writes execute;1042 at115200 verified. No ARM HAL or SDK coverage claim.
+
+Fresh GitHub lock H7bfe5d4f6/COREb01f4810;56 suites snapshot48 clean original
+checkouts. Register domains/GPIO/NVIC/IRQ/PCLK120MHz are host models. Remaining
+selected guard/third RX-disable branches, primary-USART6 AF8-vs-SDK-AF7 source
+contract, other maps/MCUs, FIFO/error/pending-baud/controller/ARM/hardware scope
+remain. New H7 suite in separate Driver workflow; keep PR29 draft/unmerged and
+goal active. Hosted dispatch still awaits default-branch workflow installation.
+
+# Batch47 H7 serial local validation - 2026-10-25
+
+Goal active.24 original H7 serial cases pass Windows Clang ASan/UBSan and strict
+1.19s, all clean. H743 primary/three-stream3/6/1 workflows plus H723 native init
+use original ST HAL/CMSIS/main/driver/generic-map headers and actual CORE streams.
+H7 AF7/FIFO flags/RCC register domains are native, with explicit host register/
+GPIO/NVIC/IRQ/PCLK120MHz models. H723 full stream workflow/hardware is not claimed.
+
+The original SDK UART unit cannot compile natively because of ARM exclusive-
+access intrinsics. CMake reuses only its original immutable prescaler-data
+statement in a generated unit; no source function/algorithm is extracted, no
+instruction/type/API aliases are supplied. It tracks the SDK file as configure
+dependency and fails on changed declaration shape. Actual UART macro/BRR1042 at
+115200 executes. ARM HAL routines remain explicitly untested; no SDK coverage.
+
+New driver_stm32h7_serial is in separate Driver workflow. No source/CORE edits or
+allowances. Coverage and full gate pending; delivered9de67a5/batch46 remains1206.
+Other ports/MCUs/RS485/FIFO/error/pending-baud/controller/ARM/hardware scope remains.
+
 # Combined F1/F3 serial gate - 2026-10-25 (batch46)
 
 Goal active. All55 current-CORE-compatible suites pass fresh Windows Clang

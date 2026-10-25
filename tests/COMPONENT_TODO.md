@@ -822,3 +822,23 @@ serialRxCount callback remains unexecuted. F3 fixed serial93/93 and30/32,14/14
 functions. These are compiled serial variants only. Add supported secondary/remap/
 RS485/error and controller/ARM/hardware scope; preserve known assertions and never
 mutate private flags or copy production algorithms to bypass implementation gaps.
+
+## H7 native serial/data boundary - batch47
+
+H74323 stream cases and H723 initialization pass24/24 sanitizer/strict using
+original SDK/board headers and CORE streams. Prescaler data is reused verbatim
+from its original immutable SDK declaration; full ARM HAL UART unit is unavailable
+natively because of exclusive-access intrinsics. No CPU replacement or copied
+algorithm. Add actual ARM HAL/build evidence separately. Other H723 workflows,
+primary-USART6 AF8/source-vs-SDK AF7 contract, remaps/RS485, hardware FIFO/error/
+pending-baud timing, controller/hardware remain. Fresh coverage/full gate pending.
+
+## H7 measured checkpoint47
+
+Full56-suite1230 passes,67 known unchanged. First selected serial353/357 lines and
+108/122 branches,57/57 functions for H743 one/three-stream plus H723 init only.
+Original SDK immutable prescaler-data declaration is reused and equality-checked;
+ARM HAL routines remain outside host execution. Selected guard/third RX-disable,
+other H723 workflows and maps/MCUs, AF8-vs-AF7 source contract, real FIFO/error/
+pending-baud/controller/ARM/hardware validation remain. No source exclusions or
+private-queue forcing; keep goal active beyond selected-source coverage.

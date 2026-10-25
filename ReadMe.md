@@ -311,6 +311,7 @@ repository's default branch.
 | Plugin tests | `plugin_webui` | Argument helpers and embedded assets via real CORE VFS; HTTP backends remain |
 | Driver tests | `driver_imxrt1062_pwm` | Teensy 4.0/4.1/MicroMod PWM register, routing and ownership workflows |
 | Driver tests | `driver_stm32f7_serial` | Original F756 SDK one/three-stream queues, IRQ routing, format and CORE stream lifecycle |
+| Driver tests | `driver_stm32h7_serial` | Native H743 one/three-stream workflows and H723 initialization with original SDK prescaler data |
 | Driver tests | `driver_stm32f1_serial` | Original F103 SDK USART1 baud, queues and CORE stream lifecycle |
 | Driver tests | `driver_stm32f3_serial` | Original F303 SDK fixed USART3/115200 queues and CORE stream lifecycle |
 | Driver tests | `driver_stm32f4_serial` | Original ST/CMSIS one/three-stream queues, IRQ routing, format and CORE stream lifecycle |
