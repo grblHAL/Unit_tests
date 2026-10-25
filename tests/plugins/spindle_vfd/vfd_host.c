@@ -11,6 +11,7 @@ bool vfd_bus_up = true, vfd_storage_ok = true;
 unsigned vfd_reject, vfd_exception;
 uint16_t vfd_feedback = 10000;
 uint16_t vfd_max_rpm = 24000;
+uint16_t vfd_rpm_50hz = 3000, vfd_max_amps = 100, vfd_amps = 25;
 uint16_t vfd_poles = 2, vfd_min_frequency = 100;
 #if TEST_NOWFOREVER
 uint16_t vfd_max_frequency = 40000;
@@ -27,14 +28,22 @@ static bool bus_up(void) { return vfd_bus_up; }
 static void flush(void) { vfd_flushes++; }
 static void silence(const modbus_silence_timeout_t *timeout)
 {
+#if TEST_HUANYANG1
+    CHECK(timeout && timeout->b2400 == 16 && timeout->b4800 == 8);
+    CHECK(timeout->b9600 == 6 && timeout->b19200 == 6 && timeout->b38400 == 6 && timeout->b115200 == 6);
+#else
     CHECK(timeout == NULL);
+#endif
     vfd_silences++;
 }
 static uint32_t ticks(void) { return vfd_ticks; }
 static bool send_message(modbus_message_t *message, const modbus_callbacks_t *callbacks, bool block)
 {
     CHECK(vfd_requests < 64);
-#if TEST_NOWFOREVER
+#if TEST_HUANYANG1
+    CHECK(message->tx_length == (message->adu[1] == ModBus_WriteCoil ? 7 :
+                                message->adu[1] == ModBus_ReadHoldingRegisters ? 6 : 8));
+#elif TEST_NOWFOREVER
     CHECK(message->tx_length == (message->adu[1] == ModBus_WriteRegisters ? 11 : 8));
 #else
     CHECK(message->tx_length == 8);
@@ -50,6 +59,31 @@ static bool send_message(modbus_message_t *message, const modbus_callbacks_t *ca
     else
     {
         modbus_message_t reply = *message;
+#if TEST_HUANYANG1
+        if (message->adu[1] == ModBus_ReadCoils || message->adu[1] == ModBus_ReadInputRegisters)
+        {
+            CHECK(message->rx_length == 8 && message->adu[2] == 3);
+            uint16_t value = 0;
+            if (message->adu[1] == ModBus_ReadCoils)
+            {
+                switch (message->adu[3])
+                {
+                    case 0x90: value = vfd_rpm_50hz; break;
+                    case 0x0b: value = vfd_min_frequency; break;
+                    case 0x05: value = vfd_max_frequency; break;
+                    case 0x8e: value = vfd_max_amps; break;
+                    default: CHECK(false);
+                }
+            }
+            else
+            {
+                CHECK(message->adu[3] == 1 || message->adu[3] == 2);
+                value = message->adu[3] == 1 ? vfd_feedback : vfd_amps;
+            }
+            reply.adu[4] = value >> 8;
+            reply.adu[5] = value & 255;
+        }
+#else
         if (message->adu[1] == ModBus_ReadHoldingRegisters)
         {
 #if TEST_NOWFOREVER
@@ -101,6 +135,7 @@ static bool send_message(modbus_message_t *message, const modbus_callbacks_t *ca
             reply.adu[4] = vfd_feedback & 255;
             reply.adu[5] = reply.adu[6] = 0;
         }
+#endif
 #endif
         callbacks->on_rx_packet(&reply);
     }

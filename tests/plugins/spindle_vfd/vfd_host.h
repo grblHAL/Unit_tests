@@ -10,6 +10,7 @@ extern uint32_t vfd_ticks;
 extern bool vfd_bus_up, vfd_storage_ok;
 extern unsigned vfd_reject, vfd_exception;
 extern uint16_t vfd_feedback, vfd_max_rpm;
+extern uint16_t vfd_rpm_50hz, vfd_max_amps, vfd_amps;
 extern modbus_message_t vfd_messages[64];
 extern bool vfd_blocking[64];
 void vfd_init(void);

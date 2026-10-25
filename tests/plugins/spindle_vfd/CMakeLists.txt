@@ -96,3 +96,20 @@ foreach(behavior commands feedback reset retry limits async_exceptions exception
   target_compile_definitions(${target} PRIVATE SPINDLE_ENABLE=1048576 VFD_ENABLE=1 TEST_NOWFOREVER=1 TEST_MODVFD=0 EEPROM_ENABLE=128 EEPROM_IS_FRAM=1 NVS_SIZE=8192 NVS_SIZE_MAX=16384)
 endforeach()
 set_source_files_properties("${HARNESS_ROOT}/plugins/spindle/vfd/nowforever.c" PROPERTIES COMPILE_OPTIONS -Wno-error)
+
+foreach(behavior commands feedback reset retry zero_calibration load no_current_rating settings_hooks no_transport no_storage bus_down)
+  if(behavior MATCHES "^(commands|feedback|reset|retry|zero_calibration|load|no_current_rating)$")
+    set(test_source huanyang1_${behavior}.c)
+  else()
+    set(test_source ${behavior}.c)
+  endif()
+  set(target plugin_spindle_vfd.huanyang1_${behavior})
+  component_case(${target} ${test_source} vfd_host.c
+    "${HARNESS_ROOT}/plugins/spindle/vfd/huanyang.c" "${HARNESS_ROOT}/plugins/spindle/vfd/spindle.c"
+    "${COMPONENT_CORE_ROOT}/spindle_control.c" "${COMPONENT_CORE_ROOT}/modbus.c"
+    "${HARNESS_ROOT}/plugins/eeprom/eeprom_24AAxxx.c" "${HARNESS_ROOT}/tests/plugins/eeprom/eeprom_host.c"
+    "${COMPONENT_CORE_ROOT}/crc.c" "${COMPONENT_CORE_ROOT}/nuts_bolts.c")
+  target_include_directories(${target} PRIVATE "${HARNESS_ROOT}/plugins" "${HARNESS_ROOT}/tests/plugins/eeprom" "${HARNESS_ROOT}/plugins/eeprom")
+  target_compile_definitions(${target} PRIVATE SPINDLE_ENABLE=2 VFD_ENABLE=1 TEST_HUANYANG1=1 TEST_MODVFD=0 EEPROM_ENABLE=128 EEPROM_IS_FRAM=1 NVS_SIZE=8192 NVS_SIZE_MAX=16384)
+endforeach()
+set_source_files_properties("${HARNESS_ROOT}/plugins/spindle/vfd/huanyang.c" PROPERTIES COMPILE_OPTIONS -Wno-error)

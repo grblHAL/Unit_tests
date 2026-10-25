@@ -1,3 +1,32 @@
+# Local Huanyang v1 VFD checkpoint - 2026-10-25
+
+Goal active. Eleven new original-source Huanyang v1 cases cover four-parameter
+discovery, direction/stop commands, RPM conversion and duplicate suppression,
+RPM/current polling,150ms cached feedback, reset refresh, failed-first-read
+retry, zero RPM calibration fallback, settings/report hooks and absent/down
+providers. Two cases exercise public realtime load reporting:25% then50%,
+unchanged suppression and requested full report; absent current rating reports
+zero without division. No private spindle state or production source edits.
+
+Shared fixture explicitly checks protocol-specific6/7/8-byte request lengths,
+returns bounded parameter/current replies and validates requested bus silence
+settings16/8/6ms by baud group. All78 existing+new cases pass Windows Clang
+ASan/UBSan4.77s and strict classification. Two subsequently added load cases
+pass focused0.19s, strict2 clean.80 registered total; no new global80-case run
+claimed. No new failures, known exceptions or diagnostic allowances. Previous
+Nowforever command repair is included in the successful78-case combined check.
+
+Pending local additions43 beyond delivered batch32;879 compatible authored.
+Last full global gate remains836 plus26 separate references and87 helper checks.
+All seven selected VFD protocol implementations now have host behavior cases;
+this does not prove all configurations or full protocol coverage. Source-matched
+fresh coverage and cumulative delivery validation remain due. Real ACK timing,
+RS485 behavior, electrical drive/load response, full parser/controller jobs and
+hosted GCC/Linux are unverified. Continue broader source coverage, never CORE
+edits or PR merges. Full goal remains active.
+
+---
+
 # Local Nowforever VFD checkpoint - 2026-10-25
 
 Goal active. Eleven new original-source Nowforever scenarios cover frequency
