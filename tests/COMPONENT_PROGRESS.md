@@ -1,3 +1,51 @@
+# Combined upload/filesystem gate - 2026-10-25 (batch43)
+
+Goal active. All51 current-CORE-compatible suites pass fresh Windows Clang
+ASan/UBSan plus strict:1138 =1073 clean +65 documented known, zero unexpected or
+skipped.10 new upload handler cases since b4acbe1/batch42; all38 networking cases
+clean. Seven affected source-plan/report helpers pass0.056s, including rejection
+of selecting the SD dependency as a test suite. Unchanged broader87/actionlint
+last passed40. Main CORE and historical reference suites excluded.
+
+Fresh expanded selected networking coverage599/709 lines84.5%,297/421 branches
+70.5%,56/62 functions. New http_upload.c119/124 lines96.0%,41/53 branches77.4%,
+14/14 functions. Prior three files unchanged: common157/165 and84/106; Telnet
+199/276 and72/120; multipart124/144 and100/142. New source adds119 executed lines
+and41 branch outcomes while denominator expands124 lines/53 branches; do not
+call this a same-scope percentage gain. Fresh build-nt43 counters max225 chars.
+
+Real CORE VFS/original SD adapter/STM32F4 FatFs engine/config/lwIP def.c execute
+over existing RAM sectors. Exact text/binary/empty-file readback, one-byte upload,
+path/size/filename routing, interrupted cleanup, sequential reuse, backend rejection,
+missing-directory non-output with existing-file preservation and case-insensitive
+headers pass. No production edit, copied algorithm, assertion weakening or new
+allowance. Standalone suite now declares SD and FatFs source dependencies.
+
+Fresh GitHub locks match networking0b665ee0/COREb01f4810/lwIPd08f4773/SDd0fe753d/
+STM32F4a6318ac9. All48 original checkouts remain clean/exact. Live HTTP listener,
+request scheduling/authentication, concurrency, real TCP/media/controller and board
+hardware remain open. OpenPNP jerk mode needs actual parser axis-claim integration;
+existing callback fixture is not that proof. Keep PR29 draft/unmerged and goal
+active. Separate hosted dispatch still requires default-branch workflow installation.
+
+# Batch43 real filesystem upload local validation - 2026-10-25
+
+Goal active.8 original http_upload.c cases pass focused Clang ASan/UBSan and strict
+0.53s, zero known/unexpected/skipped. Seven source-plan/report helper checks pass
+0.056s, including rejection of selecting the SD dependency as a test suite.
+Actual CORE VFS, original SD FatFs adapter,
+STM32F4 FatFs engine/config and lwIP def.c run over existing RAM sector media.
+Cases read back ordinary text/binary/empty files, one-byte fragments, path/size/
+filename callback routing, interrupted-file cleanup, sequential reuse and backend
+rejection. No copied production behavior or source edits; filesystem calls are real.
+
+Networking lock adds source-only sdcard_source plus fatfs_stm32f4, alongside CORE/
+lwIP, so standalone Actions builds fetch every implementation used. Candidate stays
+Plugin_networking. Coverage filter adds http_upload.c; fresh expanded denominator
+and full gate pending. Delivered baseline b4acbe1/batch42 remains1128 cases.
+Keep these8 local and accumulate supported implementation work before delivery.
+No HTTP listener/request scheduler/authentication/physical-media success claimed.
+
 # Combined networking source gate - 2026-10-25 (batch42)
 
 Goal active. All51 current-CORE-compatible host suites pass fresh Windows Clang

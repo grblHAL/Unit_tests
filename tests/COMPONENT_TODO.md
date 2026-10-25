@@ -257,7 +257,10 @@ or force private state to enter a path.
   and explicit TCP/pbuf host boundaries plus6 ordinary multipart parser cases.
   Combined selected source480/585 lines and256/368 branches; common source remains
   157/165 and84/106. Telnet199/276 and72/120; parser124/144 and100/142. Websocket, DHCP, MQTT, FTP/HTTP/WebDAV,
-  real lwIP transport and remaining daemon configurations remain. Do not equate service labels with listeners.
+  real lwIP transport and remaining daemon configurations remain. Batch43 adds10
+  ordinary HTTP-upload handler/VFS/FatFs cases over RAM media; handler119/124 lines
+  and41/53 branches, expanded total599/709 and297/421. Listener/request scheduling,
+  authentication/concurrency and physical storage remain. Do not equate service labels with listeners.
 - Laser PPI and LightBurn default clusters now have functional callback/stream
   cases. Retain zero-PWM pulse regression; coolant/overdrive, scaling, alternate
   spindle selection and full parser/planner integration remain. Review PPI hook
@@ -754,3 +757,11 @@ FatFs/backend, then broader driver/modules. Root-stat special branch0 fresh hits
 unsafe timestamp/cwd source concerns stay source-only, not repeated reproducers.
 Native parser/controller, alternate filesystem/API versions, physical media and
 board SDK/hardware remain separate required scope; hosted dispatch unavailable.
+
+## OpenPNP jerk fixture contract
+
+Original OpenPNP jerk validation/execution uses actual gc_claim_axis_words from
+CORE gcode.c, including remembered claimed axes. Existing callback fixture does
+not link that parser. Do not copy the axis-claim algorithm or provide a matching
+mock to claim parser integration. Add supported full-parser fixtures before
+validating this feature; production sources remain unchanged.

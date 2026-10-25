@@ -202,12 +202,14 @@
     "path": "plugins/networking",
     "dependencies": [
       "core",
-      "lwip"
+      "lwip",
+      "sdcard_source",
+      "fatfs_stm32f4"
     ],
     "cmake_source": "tests/plugins/networking",
     "cmake_options": [],
     "test_regex": "^plugin_networking[.]",
-    "coverage_filter": "plugins/networking/(networking|telnetd|multipartparser)\\.c$",
+    "coverage_filter": "plugins/networking/(networking|telnetd|multipartparser|http_upload)\\.c$",
     "diagnostics_directory": "tests/plugins/networking"
   },
   "lwip": {
@@ -802,5 +804,11 @@
     "test_regex": "^plugin_sdcard_fatfs[.]",
     "coverage_filter": "plugins/sdcard/(fs_fatfs|sdcard|fs_stream|macros)\\.c$",
     "diagnostics_directory": "tests/plugins/sdcard_fatfs"
+  },
+  "sdcard_source": {
+    "repository": "grblHAL/Plugin_SD_card",
+    "ref": "master",
+    "path": "plugins/sdcard",
+    "source_only": true
   }
 }

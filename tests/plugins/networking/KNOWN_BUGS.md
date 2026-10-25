@@ -54,3 +54,29 @@ valid values. No malformed/oversized inputs, upload filesystem, HTTP listener,
 request authentication, target transport or physical-device claim is included.
 Combined selected-source filter includes networking.c/telnetd.c/multipartparser.c;
 its denominator must remain separate from the old interface-only report.
+
+## HTTP file-upload handler - batch43
+
+Ten cases compile unchanged http_upload.c and multipartparser.c with actual CORE
+VFS, the existing SD FatFs adapter and original STM32F4 FatFs engine/configuration.
+Only disk sectors remain RAM-backed host media. Real lwIP def.c supplies string
+comparison; no copied upload/parser/filesystem algorithm or fake VFS calls.
+Original driver_opts selects HTTP/SD/FatFs using declared feature options.
+
+Cases read back exact text/binary/empty files, upload one byte at a time, process
+path/size fields and an ordinary filename callback, remove an interrupted partial
+file through request cleanup, reuse sequential requests and reject the unavailable
+non-FatFs backend. Initial eight focused Clang ASan/UBSan plus strict cases pass0.53s; missing-
+directory and header-case controls pass0.17s. Combined38 networking cases pass
+the full batch43 sanitizer/strict gate with no exceptions.
+Known diagnostics/assertions remain unchanged; no production source edits.
+
+The source lock now includes explicit sdcard_source and fatfs_stm32f4 dependencies
+alongside networking/CORE/lwIP. sdcard_source is not a selectable test suite. The
+selected coverage filter adds http_upload.c:119/124 lines and41/53 branches;
+combined599/709 lines and297/421 branches. Batch42's480/585 report remains the
+older narrower scope. Missing-directory failure produces no file or uploaded
+bytes and preserves an existing file; parser completion alone is not asserted
+as successful persistence. Actual HTTP
+listener, client request lifecycle, authentication, physical media and concurrent
+uploads remain untested; these cases invoke registered request cleanup directly.

@@ -32,3 +32,20 @@ foreach(behavior file fragmented form_and_file binary_file empty_file optional_c
  component_case(${target} multipart/${behavior}.c multipart/multipart_host.c "${HARNESS_ROOT}/plugins/networking/multipartparser.c")
  target_include_directories(${target} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/multipart" "${HARNESS_ROOT}/plugins/networking")
 endforeach()
+
+set(upload_fatfs "${HARNESS_ROOT}/drivers/stm32f4/FatFs")
+set(upload_sources "${HARNESS_ROOT}/plugins/networking/http_upload.c" "${HARNESS_ROOT}/plugins/networking/multipartparser.c"
+ "${HARNESS_ROOT}/plugins/sdcard/fs_fatfs.c" "${upload_fatfs}/ff.c" "${upload_fatfs}/ffunicode.c" "${HARNESS_ROOT}/deps/lwip/src/core/def.c"
+ "${COMPONENT_CORE_ROOT}/vfs.c" "${COMPONENT_CORE_ROOT}/strutils.c" "${COMPONENT_CORE_ROOT}/nuts_bolts.c")
+set_source_files_properties("${HARNESS_ROOT}/plugins/networking/http_upload.c" PROPERTIES COMPILE_OPTIONS -Wno-unused-parameter)
+set_source_files_properties("${HARNESS_ROOT}/plugins/sdcard/fs_fatfs.c" "${upload_fatfs}/ff.c" "${upload_fatfs}/ffunicode.c" PROPERTIES COMPILE_OPTIONS -Wno-error)
+foreach(behavior file fragmented binary empty route interrupted sequential backend missing_directory header_case)
+ set(target plugin_networking.upload_${behavior})
+ component_case(${target} upload/${behavior}.c upload/upload_host.c "${HARNESS_ROOT}/tests/plugins/sdcard_fatfs/fatfs_host.c" ${upload_sources})
+ target_include_directories(${target} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/upload" "${HARNESS_ROOT}/tests/plugins/sdcard_fatfs" "${upload_fatfs}" "${HARNESS_ROOT}/plugins/sdcard" "${HARNESS_ROOT}/plugins" "${HARNESS_ROOT}/plugins/networking" "${HARNESS_ROOT}/deps/lwip/src/include")
+ target_include_directories(${target} BEFORE PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/upload")
+ target_compile_definitions(${target} PRIVATE STM32_PLATFORM SDCARD_ENABLE=1 HTTP_ENABLE=1 ETHERNET_ENABLE=1)
+ if(MINGW)
+  target_compile_options(${target} PRIVATE "SHELL:-include \"${HARNESS_ROOT}/tests/include/windows_string_compat.h\"" "SHELL:-include windows.h")
+ endif()
+endforeach()

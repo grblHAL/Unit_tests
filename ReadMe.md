@@ -281,7 +281,7 @@ repository's default branch.
 | Plugin tests | `plugin_sdcard_fatfs` | Original FatFs/SD lifecycle, macro calls and file-stream commands on RAM-backed FAT12 media; file I/O and recovery |
 | Driver tests | `driver_simulator_vfs` | File/directory workflows; current CORE compile incompatibility recorded |
 | Plugin tests | `plugin_keypad` | I2C/UART jog commands, overrides and NVS restart; LED outputs and stored macro execution/recovery |
-| Plugin tests | `plugin_networking` | Interface reports, Telnet/CORE stream routing and multipart file-upload parsing |
+| Plugin tests | `plugin_networking` | Interface reports, Telnet/CORE streams and multipart uploads through VFS/FatFs |
 | Plugin tests | `plugin_laser_ppi` | Registered laser PPI spacing, mode changes, shutdown and hardware delegation |
 | Plugin tests | `plugin_laser_coolant` | Start confirmation, delayed shutoff, coolant-loss IRQs and virtual sensor callbacks |
 | Plugin tests | `plugin_laser_overdrive` | M129 availability/validation, CORE PWM overdrive calculation and reset/program cleanup |
@@ -337,7 +337,8 @@ streamed stepper/trigger workflows use captured planner/spindle boundaries; actu
 planner motion, needle mechanics and physical timing remain untested. Networking
 locks upstream lwIP headers separately. Telnet tests run original daemon callbacks
 and real CORE stream routing with simulated TCP/pbuf boundaries; multipart tests
-parse ordinary uploads. No live TCP stack, HTTP upload server or network hardware
+parse ordinary uploads. File-upload handlers read back actual VFS/FatFs files
+over RAM media. No live TCP stack, HTTP upload server or network hardware
 is exercised. Laser tests observe simulated driver pulses
 and byte-stream transformations; no physical laser operation is established.
 Driver SDK boundaries are simulated; no actual Pico SDK/ESP-IDF/STM32/NXP firmware

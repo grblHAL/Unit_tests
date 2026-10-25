@@ -66,8 +66,9 @@ class ComponentSuitesTests(unittest.TestCase):
 
     def test_dependency_source_is_not_selectable_as_a_test_suite(self):
         suites = json.loads((ROOT / "ci/suites.json").read_text())
-        with self.assertRaisesRegex(ValueError, "no tests registered"):
-            resolve_plan(suites, "littlefs", request=lambda *args: self.fail("network requested"))
+        for source in ("littlefs", "sdcard_source"):
+            with self.subTest(source=source), self.assertRaisesRegex(ValueError, "no tests registered"):
+                resolve_plan(suites, source, request=lambda *args: self.fail("network requested"))
 
     def test_dependency_diagnostic_links_to_locked_dependency(self):
         finding = build_failure("build", "/repo/deps/littlefs/lfs.c:42:3: error: incompatible callback")
