@@ -614,7 +614,11 @@
     "ref": "main",
     "path": "plugins/webui",
     "dependencies": [
-      "core"
+      "core",
+      "plugin_networking",
+      "lwip",
+      "sdcard_source",
+      "fatfs_stm32f4"
     ],
     "cmake_source": "tests/plugins/webui",
     "cmake_options": [],

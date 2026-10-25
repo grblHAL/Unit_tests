@@ -49,3 +49,7 @@ foreach(behavior file fragmented binary empty route interrupted sequential backe
   target_compile_options(${target} PRIVATE "SHELL:-include \"${HARNESS_ROOT}/tests/include/windows_string_compat.h\"" "SHELL:-include windows.h")
  endif()
 endforeach()
+
+component_case(plugin_networking.mqtt_client_ids mqtt_client_ids.c net_host.c "${HARNESS_ROOT}/plugins/networking/networking.c" "${COMPONENT_CORE_ROOT}/nuts_bolts.c")
+target_include_directories(plugin_networking.mqtt_client_ids PRIVATE "${HARNESS_ROOT}/plugins/networking" "${HARNESS_ROOT}/deps/lwip/src/include")
+target_compile_definitions(plugin_networking.mqtt_client_ids PRIVATE ETHERNET_ENABLE=1 WIFI_ENABLE=1 TELNET_ENABLE=1 WEBSOCKET_ENABLE=1 DNS_ENABLE=1 MDNS_ENABLE=1 MQTT_ENABLE=1 HTTP_ENABLE=0 FTP_ENABLE=0 SSDP_ENABLE=0 FS_ENABLE=0 MODBUS_ENABLE=0)

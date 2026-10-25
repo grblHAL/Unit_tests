@@ -1,3 +1,78 @@
+# Batch48 cumulative host gate - 2026-10-25
+
+Goal active. All56 current-CORE-compatible suites pass one fresh Windows Clang
+ASan/UBSan plus strict gate:1253 =1186 clean +67 documented known; zero unexpected
+failures/skips.23 new clean cases beyond delivered37d6188:22 WebUI file workflows
+and one MQTT client-ID helper (three valid vectors). No production source edits,
+copied algorithms, private-state/type aliases or new diagnostic allowances.
+Known categories remain63 assertions +4 diagnostic-only with3 overlaps counted
+once;7 diagnostic-bearing cases unchanged. Main CORE/reference suites excluded.
+
+WebUI file cases use original common handler plus original upload/multipart/SD/
+FatFs and actual CORE VFS/RAM-files/JSON.11 workflows compile under each v2/v3.
+Ordinary listing/free-space, directory lifecycle, delete/missing preservation,
+quiet response, download/drive selection, chained fragmented binary and empty
+uploads, maintenance attributes, hidden-file policy and context cleanup pass.
+HTTP request/status/pbuf delivery and disk sectors are explicit host boundaries.
+The fixture corrects its initial trailing-slash expectation to CORE normalization
+and fixes TZ=UTC0 for deterministic FAT-local-to-UTC formatting; no firmware defect.
+
+Fresh WebUI selected coverage266/291 lines91.4%,149/209 branches71.3%,19/19
+functions. Newly instrumented fs_handlers.c contributes225/250 lines90.0% and
+108/165 branches65.5%,15/15 functions; remaining server/login/commands/flash/
+wrapper/transport/browser/hardware scope is open. Counters are fresh, max224chars.
+Networking39 cases pass fresh coverage execution:611/726 lines84.2% and303/429
+branches70.6%,57/63 functions. MQTT-enabled networking.c becomes169/182 lines
+and90/114 branches; overall delta+12covered/+17executable lines and+6covered/
++8branches versus batch43. Its other selected files retain prior totals. No
+MQTT broker/connection claim; native address alignment contract remains open.
+Counter paths max227chars.91 helpers passed after ARM/report changes;7 affected
+component-plan helpers pass after WebUI dependencies0.054s.
+Actionlint passes. All48 source checkouts are clean at exact recorded revisions.
+PR29 remains draft/unmerged; deliver this substantial checkpoint on the same branch.
+Fork still exposes only Core/Reusable workflows; no hosted run can be claimed.
+
+# Batch48 original ARM module compilation - 2026-10-25
+
+Goal active; local cumulative work only. New repeatable check compiles15 complete
+original driver/SDK modules across F103/F303/F407/F756/H743/H723/LPC176x using the
+installed ARM GCC14.2.1, original SDK/CMSIS and CORE b01f481. All15 are verified
+ELF32 ARM relocatable objects; zero source edits or native fixture substitutions.
+LPC has18 original SDK-header warnings; STM32 zero. Revisions/scope are recorded
+in tests/drivers/ARM_MODULES.md; detailed locks/hashes/commands/results are under
+build-evidence/arm-repeatable-batch48. Full H7 HAL target compilation now passes,
+but ARM routine execution, firmware linking and hardware remain unvalidated.
+
+Existing Driver runs gain a separate arm-modules job for selected STM32/LPC
+sources, reusing the resolved lock and reporting compile artifacts independently
+from unit cases/coverage. Aggregate diagnostics reject a skipped required ARM
+job, allowing intentional skips for other sources.91 CI helpers pass14.262s,
+including4 added infrastructure checks; Driver/reusable actionlint passes.
+No hosted claim: fork default-branch workflow installation is still pending.
+No full gate/push for this partial batch; delivered batch47 remains1230 cases,
+with one clean local MQTT helper case pending cumulative integration/coverage.
+LPC runtime FIFO side effects need faithful emulation or hardware; no fake RX loop.
+Additional unregistered Due ARM probe: full original SDK USART unit compiles,
+driver serial fails original newlib st_mtime/CORE VFS header interaction plus
+known secondary callback signature (GCC14). Keep source/headers unchanged;
+ARM_MODULES.md records the exact boundary. No added test or allowance.
+
+# Batch48 MQTT source contract/client IDs - 2026-10-25
+
+Goal active. Source/caller review found a native settings-alignment gap before
+MQTT connection callbacks. Read-only type probe reports embedded address offset98
+and IPv4 alignment4(modulo2); original F4/H7/ESP network_settings_t callers use it.
+Drivers store binary IPv4 bytes, not a textual IP string. No misaligned access,
+broker execution, private context, padding/packing/type alias or source fix.
+MQTT callback integration remains unregistered pending maintainer contract.
+Evidence/probe kept in tests/plugins/networking/proposals/MQTT.md/mqtt_layout.c.
+
+One independent original networking.c client-ID helper case(three normal vectors)
+passes ASan/UBSan/strict1/1 in0.10s. It compiles MQTT1 headers but invokes no MQTT
+connection/message API. New coverage/full gate pending; delivered37d6188/batch47
+remains1230 cases. Keep local and accumulate other supported workflows before
+another cumulative gate/push. Broker/transport/RTOS/IPv6/hardware scope remains.
+
 # Combined H7 serial gate - 2026-10-25 (batch47)
 
 Goal active. All56 current-CORE-compatible suites pass fresh Windows Clang

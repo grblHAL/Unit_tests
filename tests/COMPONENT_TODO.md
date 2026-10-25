@@ -7,6 +7,28 @@ or force private state to enter a path.
 
 ## Next source families
 
+- WebUI batch48 adds22 original common file-handler workflows with v2/v3
+  response formats and real CORE VFS/JSON/RAM files plus FatFs. Ordinary CRUD,
+  listing/free-space, download routing, chained fragmented binary/empty uploads,
+  maintenance attributes and cleanup are checked. HTTP/server/authentication,
+  command execution, flash mounts, endpoint wrappers, real stack and physical
+  storage remain. Keep host request/disk boundaries explicit; no source edits.
+  First selected common handler225/250 lines and108/165 branches; investigate
+  remaining reachable ordinary status outcomes at the next substantial batch.
+  Do not force hidden root-stat/format/private-state or unsafe long-path paths.
+
+- Batch48 adds15 original ARM module compile checks for six driver families;
+  see drivers/ARM_MODULES.md. The reusable script passes locally and Driver CI
+  wiring/helper checks pass, but hosted installation/toolchain remains pending.
+  Firmware linking and ARM/controller execution remain open. LPC RX/TX register
+  side effects cannot be modeled by plain RAM; use faithful FIFO emulation or
+  hardware before registering serial runtime cases. Do not replace SDK accessors
+  or race a thread against an artificial RX loop.
+  Original Due headers with installed ARM GCC14 reveal newlib st_mtime/CORE VFS
+  macro interaction and the existing callback mismatch; full SDK USART compiles,
+  driver serial does not. Keep this target probe unregistered pending supported
+  build contract; no source/header replacement or macro/callback workaround.
+
 - Keypad batch38 adds7 default PCA9654E LED display cases (state/output/register
   writes, callbacks/reports, missing bus/device, write recovery). No physical LED
   or alternate-provider claim. Coverage filter adds display/i2c_leds.c, so keep
@@ -842,3 +864,13 @@ ARM HAL routines remain outside host execution. Selected guard/third RX-disable,
 other H723 workflows and maps/MCUs, AF8-vs-AF7 source contract, real FIFO/error/
 pending-baud/controller/ARM/hardware validation remain. No source exclusions or
 private-queue forcing; keep goal active beyond selected-source coverage.
+
+## MQTT native integration contract - batch48
+
+Read-only native type/caller evidence: embedded network_settings_t.mqtt.ip offset98
+versus ip_addr_t alignment4. F4/H7/ESP pass that object; mqtt.c casts it directly.
+Driver setters store binary bytes. Keep broker paths unregistered until supported
+address alignment/transport semantics are established. No padding/packing/aliases
+or specially aligned standalone settings to hide caller layout, no unsafe runtime
+reproduction. Client-ID helper alone has a new clean case; callbacks/return/retry/
+subscription-context and real broker/stack/hardware remain unvalidated.

@@ -80,3 +80,15 @@ bytes and preserves an existing file; parser completion alone is not asserted
 as successful persistence. Actual HTTP
 listener, client request lifecycle, authentication, physical media and concurrent
 uploads remain untested; these cases invoke registered request cleanup directly.
+
+## MQTT settings contract and client IDs - batch48 local
+
+One independent MQTT-enabled helper case checks ordinary MAC-derived client IDs
+and the empty-MAC default, using original networking.c and locked lwIP headers.
+Focused sanitizer/strict1/1 passes0.10s; no connection or message engine claim.
+Broker callback integration stays unregistered: native type-layout evidence puts
+network_settings_t.mqtt.ip at offset98 while ip_addr_t requires alignment4.
+Original F4/H7/ESP callers pass that embedded object and mqtt.c casts the address.
+See proposals/MQTT.md and its read-only probe. No misaligned read, broker action,
+packing/padding/alias workaround, source edit or new allowance is included.
+Combined coverage/full gate pending; earlier selected counts remain separately dated.

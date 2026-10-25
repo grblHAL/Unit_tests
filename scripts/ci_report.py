@@ -186,6 +186,10 @@ def main():
         needs = json.loads(os.environ.get("NEEDS_JSON", "{}"))
         expected = {"source": ["source"], "test": ["gcc", "clang"], "coverage": ["coverage"]}
         for job, status in needs.items():
+            if job == "arm-modules" and status.get("result") == "skipped":
+                from check_arm_modules import STM32
+                if lock.get("path") not in {"drivers/" + family for family in (*STM32, "lpc176x")}:
+                    continue
             present = {r["job"] for r in reports}
             if job != "source" and needs.get("source", {}).get("result") != "success":
                 continue

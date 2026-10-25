@@ -261,6 +261,15 @@ results, known defects, diagnostics and coverage artifacts. **Core tests** remai
 separate. New dispatch workflows become available after installation on the
 repository's default branch.
 
+STM32 F1/F3/F4/F7/H7 and LPC176x runs also have an **arm-modules** job.
+It compiles the original serial module and full vendor UART unit (plus LPC
+IOCON) for selected Cortex-M targets with `arm-none-eabi-gcc`. Its artifacts
+record the same source lock, compiler version, commands, source/object hashes
+and ELF architecture. These compile checks are separate from unit-test counts
+and coverage; they do not link firmware or run on a controller. Locally, after
+fetching one of these driver locks, run `python scripts/check_arm_modules.py`.
+Use `--compiler /path/to/arm-none-eabi-gcc` if it is outside `PATH`.
+
 | Workflow | Suite | Initial tested behavior |
 |---|---|---|
 | Plugin tests | `plugins_misc` | M220/M150/M280, analog/digital expanders, BLTouch/probe relays, homing pull-off and event outputs |
@@ -308,7 +317,7 @@ repository's default branch.
 | Plugin tests | `plugin_flexgpio` | I2C expander registration, packets, input edges and configuration |
 | Plugin tests | `plugin_atci` | Keepout checks, jog clipping, rack sensors and M960 regression |
 | Plugin tests | `plugin_mpg_transport` | Framed/plain transport; CORE stream claim, mode selection, broadcast and passive status/command routing |
-| Plugin tests | `plugin_webui` | Argument helpers and embedded assets via real CORE VFS; HTTP backends remain |
+| Plugin tests | `plugin_webui` | Argument/assets plus v2/v3 file listing and upload handlers through real CORE VFS/JSON and FatFs; HTTP transport and board storage remain |
 | Driver tests | `driver_imxrt1062_pwm` | Teensy 4.0/4.1/MicroMod PWM register, routing and ownership workflows |
 | Driver tests | `driver_stm32f7_serial` | Original F756 SDK one/three-stream queues, IRQ routing, format and CORE stream lifecycle |
 | Driver tests | `driver_stm32h7_serial` | Native H743 one/three-stream workflows and H723 initialization with original SDK prescaler data |

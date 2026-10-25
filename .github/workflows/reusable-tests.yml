@@ -90,6 +90,37 @@ jobs:
             report-source.json
             source-lock.json
             logs/
+  arm-modules:
+    needs: source
+    if: contains(fromJSON('["driver_stm32f1_flash","driver_stm32f1_serial","driver_stm32f3_flash","driver_stm32f3_serial","driver_stm32f4_flash","driver_stm32f4_serial","driver_stm32f7_flash","driver_stm32f7_serial","driver_stm32h7_flash","driver_stm32h7_serial","driver_lpc176x_flash"]'), inputs.suite)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout test harness
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ inputs.harness_repository }}
+          ref: ${{ needs.source.outputs.harness_sha }}
+          persist-credentials: false
+      - uses: actions/download-artifact@v7
+        with:
+          name: source-lock-${{ inputs.run_label }}
+      - name: Fetch locked sources
+        run: python scripts/report_stage.py --job arm-modules --stage fetch -- python scripts/prepare_sources.py
+      - name: Install ARM compiler and C headers
+        run: |
+          python scripts/report_stage.py --job arm-modules --stage tooling -- sudo apt-get update
+          python scripts/report_stage.py --job arm-modules --stage tooling -- sudo apt-get install -y --no-install-recommends gcc-arm-none-eabi libnewlib-arm-none-eabi
+      - name: Compile original ARM modules (no link or execution)
+        run: python scripts/report_stage.py --job arm-modules --stage build -- python scripts/check_arm_modules.py
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: report-${{ inputs.run_label }}-arm-modules
+          path: |
+            source-lock.json
+            build-arm-modules/
+            report-arm-modules.json
+            logs/
   test:
     needs: source
     runs-on: ubuntu-latest
@@ -215,7 +246,7 @@ jobs:
   diagnosis:
     name: CI diagnosis
     if: always()
-    needs: [source, test, coverage]
+    needs: [source, arm-modules, test, coverage]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
