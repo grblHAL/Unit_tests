@@ -10,6 +10,7 @@ uint32_t vfd_ticks;
 bool vfd_bus_up = true, vfd_storage_ok = true;
 unsigned vfd_reject, vfd_exception;
 uint16_t vfd_feedback = 10000;
+uint16_t vfd_max_rpm = 24000;
 uint16_t vfd_poles = 2, vfd_min_frequency = 100, vfd_max_frequency = 4000;
 unsigned vfd_resets;
 modbus_message_t vfd_messages[64];
@@ -41,6 +42,14 @@ static bool send_message(modbus_message_t *message, const modbus_callbacks_t *ca
         modbus_message_t reply = *message;
         if (message->adu[1] == ModBus_ReadHoldingRegisters)
         {
+#if TEST_HUANYANG2
+            CHECK(message->rx_length == 8);
+            uint16_t reg = (message->adu[2] << 8) | message->adu[3];
+            CHECK(reg == 0xb005 || reg == 0x700c);
+            uint16_t value = reg == 0xb005 ? vfd_max_rpm : vfd_feedback;
+            reply.adu[4] = value >> 8;
+            reply.adu[5] = value & 255;
+#else
             CHECK(message->rx_length == 7);
             uint16_t value = vfd_feedback;
 #if TEST_H100
@@ -58,6 +67,7 @@ static bool send_message(modbus_message_t *message, const modbus_callbacks_t *ca
             reply.adu[2] = 2;
             reply.adu[3] = value >> 8;
             reply.adu[4] = value & 255;
+#endif
         }
 #if TEST_H100
         else if (message->adu[1] == ModBus_ReadInputRegisters)

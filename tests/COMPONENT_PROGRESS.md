@@ -1,3 +1,29 @@
+# Local Huanyang v2 VFD checkpoint - 2026-10-25
+
+Goal active. Ten new Huanyang v2 scenarios execute original protocol code with
+real CORE spindle registration/Modbus and EEPROM-backed settings. Discovery
+reads maximum RPM; forward/reverse/stop, nonblocking updates and unchanged-speed
+suppression check packet words. Feedback uses RPM directly and the shared150ms
+poll interval. Driver reset defers discovery and refreshed maximum RPM changes
+speed scaling; rejected initial discovery recovers on first start. Reused async
+exception threshold/recovery, settings/report hooks, missing transport/storage
+and bus-down scenarios execute against this protocol.
+
+The shared transport fixture adds the protocol-specific eight-byte holding
+response layout with explicit compile selection. All58 VFD cases pass Windows
+Clang ASan/UBSan3.53s and strict classification:58 clean, zero known/unexpected/
+skipped. Existing GS20/MODVFD/H100/YL620 cases included after shared fixture change.
+No production source changes, sanitizer allowances or new known failures.
+
+Pending local work now21 new VFD cases beyond delivered batch32:857 compatible
+authored, not a fresh global gate or coverage result. Batch32 remains last full
+compatible836 plus26 separate reference cases and87 helper checks. Actual serial
+ACK timing, physical VFD behavior, full controller/parser integration and hosted
+GCC/Linux remain unchecked. Accumulate other supported regions before one
+combined delivery gate. Full goal remains active.
+
+---
+
 # Local YL620A VFD protocol checkpoint - 2026-10-25
 
 Goal active. Eleven new YL620 cases pass focused Windows Clang ASan/UBSan0.64s

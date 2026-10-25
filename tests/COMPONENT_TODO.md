@@ -493,3 +493,11 @@ RPM/Hz, feedback/polling, mode rejection, exception thresholds, hooks and provid
 failures using the shared real CORE registration/Modbus fixture. Transport/backend
 is unchanged. Other protocol families, full job/parser execution and physical
 RS485/VFD behavior remain; no new coverage measurement or global gate yet.
+
+## Huanyang v2 VFD protocol
+
+Ten scenarios and all58 VFD cases pass local Clang ASan/UBSan/strict after shared
+transport response layout extension. Discovery/max-RPM scaling, direction/stop,
+feedback poll caching, reset refresh and first-start discovery retry execute.
+No new failures/allowances. Huanyang v1/Nowforever and physical/controller jobs
+remain; selected host behavior does not establish wire timing/hardware success.

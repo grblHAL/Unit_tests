@@ -9,7 +9,7 @@ extern unsigned vfd_requests, vfd_flushes, vfd_silences, vfd_alarms, vfd_previou
 extern uint32_t vfd_ticks;
 extern bool vfd_bus_up, vfd_storage_ok;
 extern unsigned vfd_reject, vfd_exception;
-extern uint16_t vfd_feedback;
+extern uint16_t vfd_feedback, vfd_max_rpm;
 extern modbus_message_t vfd_messages[64];
 extern bool vfd_blocking[64];
 void vfd_init(void);

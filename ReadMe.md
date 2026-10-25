@@ -270,7 +270,7 @@ repository's default branch.
 | Plugin tests | `plugin_openpnp` | Digital/analog I/O, ADC scaling, position reports and synchronization |
 | Plugin tests | `plugin_odometer` | Pulse distance, elapsed/spindle time, EEPROM restart and reset backup |
 | Plugin tests | `plugin_encoder` | Registered encoder ownership, override commands and persisted settings |
-| Plugin tests | `plugin_spindle_vfd` | GS20/MODVFD/H100 commands and feedback; GS20/MODVFD exceptions and EEPROM restart |
+| Plugin tests | `plugin_spindle_vfd` | GS20/MODVFD/H100/YL620/Huanyang2 commands and feedback; protocol recovery and EEPROM restart |
 | Plugin tests | `plugin_sdcard_stream` | File input, stream ownership, error/reset recovery and external macro repeats |
 | Driver tests | `driver_simulator_vfs` | File/directory workflows; current CORE compile incompatibility recorded |
 | Plugin tests | `plugin_keypad` | I2C/UART jog commands, cancellation, overrides and NVS restart |
