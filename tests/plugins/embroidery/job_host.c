@@ -8,10 +8,13 @@ unsigned job_warnings, job_resets;
 char job_output[4096];
 job_motion_t job_motions[64];
 unsigned job_motion_count, job_cancels, job_completions, job_feedback;
-bool job_spindle_on;
+bool job_spindle_on, job_mist_on;
+unsigned job_mist_writes;
 uint_fast16_t job_planner_free = 16;
-static ioport_interrupt_callback_ptr needle_irq;
-static uint8_t needle_port;
+static ioport_interrupt_callback_ptr input_irq[2];
+static uint8_t input_user[2];
+bool job_break_sensor;
+static unsigned input_count = 1;
 static uint32_t job_ticks = 1000;
 static spindle_ptrs_t needle_spindle;
 int32_t job_serial_read(void) { return SERIAL_NO_DATA; }
@@ -21,6 +24,12 @@ static void set_spindle(spindle_ptrs_t *spindle, spindle_state_t state, float rp
 {
     CHECK(spindle == &needle_spindle && rpm == (state.on ? 1.0f : 0.0f));
     job_spindle_on = state.on;
+}
+static void set_coolant(coolant_state_t state)
+{
+    CHECK(!state.flood);
+    job_mist_on = state.mist;
+    job_mist_writes++;
 }
 static void program_completed(program_flow_t flow, bool check)
 {
@@ -47,9 +56,40 @@ void job_sync(bool enabled)
 }
 void job_needle(void)
 {
-    CHECK(needle_irq);
+    CHECK(input_irq[0]);
     job_ticks += 100;
-    needle_irq(needle_port, false);
+    input_irq[0](input_user[0], false);
+}
+void job_break(void)
+{
+    CHECK(input_irq[1]);
+    input_irq[1](input_user[1], false);
+}
+void job_advance(uint32_t milliseconds) { job_ticks += milliseconds; }
+void job_delay(uint16_t milliseconds)
+{
+    CHECK(job_settings);
+    for (unsigned i = 0; i < job_settings->n_settings; i++)
+        if (job_settings->settings[i].id == Setting_UserDefined_4)
+        {
+            CHECK(job_settings->settings[i].datatype == Format_Int16);
+            *(uint16_t *)job_settings->settings[i].value = milliseconds;
+            return;
+        }
+    CHECK(false);
+}
+unsigned job_syncs, job_holds;
+static sys_state_t job_state = STATE_IDLE;
+static foreground_task_ptr pending_tasks[8];
+static void *pending_data[8];
+static unsigned pending_count;
+static void set_bits(volatile uint_fast16_t *value, uint_fast16_t bits) { *value |= bits; }
+void job_run_tasks(void)
+{
+    unsigned count = pending_count;
+    pending_count = 0;
+    for (unsigned i = 0; i < count; i++)
+        pending_tasks[i](pending_data[i]);
 }
 static void write_text(const char *text)
 {
@@ -58,31 +98,31 @@ static void write_text(const char *text)
 }
 static void previous_options(bool newopt) { (void)newopt; }
 static void previous_reset(void) { job_resets++; }
-static void previous_state(sys_state_t state) { (void)state; }
+static void previous_state(sys_state_t state) { job_state = state; }
 static void previous_realtime(sys_state_t state) { (void)state; }
-static xbar_t trigger_pin;
+static xbar_t trigger_pin[2];
 static xbar_t *pin_info(io_port_direction_t dir, uint8_t port)
 {
-    return dir == Port_Input && port == 0 ? &trigger_pin : NULL;
+    return dir == Port_Input && port < input_count ? &trigger_pin[port] : NULL;
 }
 static void pin_description(io_port_direction_t dir, uint8_t port, const char *text)
 {
-    CHECK(dir == Port_Input && port == 0);
-    trigger_pin.description = text;
+    CHECK(dir == Port_Input && port < input_count);
+    trigger_pin[port].description = text;
 }
 static int32_t pin_wait(uint8_t port, wait_mode_t mode, float timeout)
 {
-    CHECK(port == 0 && mode == WaitMode_Immediate && timeout == 0);
+    CHECK(port < input_count && mode == WaitMode_Immediate && timeout == 0);
     return 0;
 }
 static bool pin_irq(uint8_t physical, uint8_t user, pin_irq_mode_t mode,
                     ioport_interrupt_callback_ptr handler)
 {
-    CHECK(physical == 0 && user < N_AUX_DIN_MAX);
+    CHECK(physical < input_count && user < N_AUX_DIN_MAX);
     CHECK((mode == IRQ_Mode_None && handler == NULL) ||
           (mode == IRQ_Mode_Falling && handler != NULL));
-    needle_irq = handler;
-    needle_port = user;
+    input_irq[physical] = handler;
+    input_user[physical] = user;
     return true;
 }
 void job_prepare(void)
@@ -94,6 +134,8 @@ void job_prepare(void)
                                .read = job_serial_read,
                                .cancel_read_buffer = cancel_read};
     hal.get_elapsed_ticks = elapsed_ticks;
+    hal.coolant.set_state = set_coolant;
+    hal.set_bits_atomic = set_bits;
     needle_spindle.set_state = set_spindle;
     grbl.on_program_completed = program_completed;
     grbl.report.feedback_message = feedback;
@@ -103,9 +145,13 @@ void job_prepare(void)
     grbl.on_execute_realtime = previous_realtime;
     static io_ports_data_t ports;
     static io_digital_t digital;
-    trigger_pin = (xbar_t){.id = 0, .function = Input_Aux0, .cap.input = On};
-    trigger_pin.cap.irq_mode = IRQ_Mode_RisingFalling;
-    ports.in.n_ports = 1;
+    input_count = job_break_sensor ? 2 : 1;
+    for (unsigned i = 0; i < input_count; i++)
+    {
+        trigger_pin[i] = (xbar_t){.id = i, .function = Input_Aux0 + i, .cap.input = On};
+        trigger_pin[i].cap.irq_mode = IRQ_Mode_RisingFalling;
+    }
+    ports.in.n_ports = input_count;
     digital = (io_digital_t){.ports = &ports,
                              .get_pin_info = pin_info,
                              .set_pin_description = pin_description,
@@ -116,6 +162,24 @@ void job_prepare(void)
     if (job_settings)
     {
         job_settings->restore();
+        if (job_break_sensor)
+        {
+            unsigned found = 0;
+            for (unsigned i = 0; i < job_settings->n_settings; i++)
+            {
+                const setting_detail_t *detail = &job_settings->settings[i];
+                if (detail->id == Setting_UserDefined_2 || detail->id == Setting_UserDefined_7)
+                {
+                    CHECK(detail->datatype == Format_Decimal && detail->type == Setting_NonCoreFn);
+                    CHECK(((setting_set_float_ptr)detail->value)(
+                              detail->id, detail->id == Setting_UserDefined_2 ? 0 : 1) ==
+                          Status_OK);
+                    found++;
+                }
+            }
+            CHECK(found == 2);
+            job_settings->save();
+        }
         job_settings->load();
     }
 }
@@ -200,10 +264,10 @@ bool task_run_on_startup(foreground_task_ptr task, void *data)
 }
 bool task_add_immediate(foreground_task_ptr task, void *data)
 {
-    (void)task;
-    (void)data;
-    CHECK(false);
-    return false;
+    CHECK(task && pending_count < 8);
+    pending_tasks[pending_count] = task;
+    pending_data[pending_count++] = data;
+    return true;
 }
 status_code_t mc_line(float *target, plan_line_data_t *data)
 {
@@ -221,11 +285,13 @@ void plan_data_init(plan_line_data_t *data)
     data->spindle.hal = &needle_spindle;
 }
 uint_fast16_t plan_get_block_buffer_available(void) { return job_planner_free; }
-void protocol_buffer_synchronize(void) { CHECK(false); }
+void protocol_buffer_synchronize(void) { job_syncs++; }
 bool protocol_execute_realtime(void)
 {
-    CHECK(false);
-    return false;
+    CHECK(sys.rt_exec_state & EXEC_FEED_HOLD);
+    job_holds++;
+    grbl.on_state_change(STATE_HOLD);
+    return true;
 }
 bool protocol_exec_rt_system(void)
 {
@@ -273,7 +339,7 @@ bool protocol_enqueue_realtime_command(uint8_t c)
     CHECK(false);
     return false;
 }
-sys_state_t state_get(void) { return STATE_IDLE; }
+sys_state_t state_get(void) { return job_state; }
 void report_add_realtime(report_tracking_t report)
 {
     (void)report;

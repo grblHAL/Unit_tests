@@ -25,7 +25,7 @@ foreach(file ioports.c crossbar.c stream.c crc.c)
  set_source_files_properties("${COMPONENT_CORE_ROOT}/${file}" PROPERTIES COMPILE_OPTIONS -Wno-error)
 endforeach()
 set_source_files_properties("${HARNESS_ROOT}/plugins/embroidery/embroidery.c" PROPERTIES COMPILE_OPTIONS -Wno-error)
-foreach(behavior dst pes no_storage jump stream_stepper stream_trigger stream_capacity)
+foreach(behavior dst pes no_storage jump stream_stepper stream_trigger stream_capacity stream_refill stream_early_trigger stream_thread_change stream_jump stream_trim stream_delay stream_thread_break)
  set(target plugin_embroidery_readers.coordinator_${behavior})
  component_case(${target} coordinator_${behavior}.c job_host.c ${job_sources} ${sources}
  "${HARNESS_ROOT}/plugins/embroidery/tajima.c" "${HARNESS_ROOT}/plugins/embroidery/brother.c")

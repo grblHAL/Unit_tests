@@ -161,12 +161,13 @@
     "ref": "master",
     "path": "plugins/keypad",
     "dependencies": [
-      "core"
+      "core",
+      "plugin_eeprom"
     ],
     "cmake_source": "tests/plugins/keypad",
     "cmake_options": [],
     "test_regex": "^plugin_keypad[.]",
-    "coverage_filter": "plugins/keypad/keypad\\.c$",
+    "coverage_filter": "plugins/keypad/(keypad|macros|display/i2c_leds)\\.c$",
     "diagnostics_directory": "tests/plugins/keypad"
   },
   "driver_rp2040_flash": {

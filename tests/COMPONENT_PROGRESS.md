@@ -1,3 +1,103 @@
+# Combined keypad/embroidery validation - 2026-10-25 (batch38)
+
+Goal active. Complete51 current-source plugin/driver suites pass Windows Clang
+ASan/UBSan and strict reporting:1049 cases =985 clean +64 documented known,
+zero unexpected failures/skips.24 cases since delivered37:7 streamed embroidery
+recovery/timing +7 LED display +10 macro cases including one correct signed-char
+regression.87 helpers pass18.886s; Plugin/Driver/reusable actionlint passes. Main
+CORE/historical reference suites remain separate and excluded. No firmware edit,
+merge, weakened assertion or diagnostic allowance. One new exact known assertion
+brings categories to60 correct assertions +4 diagnostic-only cases;3 assertions
+also carry diagnostics and count once. Seven diagnostic-bearing cases unchanged.
+
+Fresh local LLVM selected source/configuration measurements:
+- Keypad47 cases =42 clean +5 known:396/435 lines91.0%,175/249 branches70.3%,
+  36/41 functions. Existing keypad.c218/230 lines,109/144 branches. Newly compiled
+  LED54/54 lines,12/12 branches (default PCA9654E only),7/7 functions; macro124/151
+  lines82.1%,54/93 branches58.1%,15/19 functions (MACROS_ENABLE2). These expanded
+  denominators are not directly comparable to the old keypad.c-only percentage.
+- Embroidery27 clean:502/581 lines86.4%,233/306 branches76.1%,32/39 functions.
+  Coordinator334/404 lines82.7%,137/198 branches69.2%,23/30 functions. Same
+  original source/configuration denominator as37: +118 lines/+53 branches.
+  Brother62/63 lines,26/28 branches; Tajima106/114,70/80 remain unchanged.
+- Fresh counters use new build-ka38/em38, maximum paths236/235 chars. Existing
+  storage36 result634/843 lines/286 of516 branches remains separately dated37.
+
+Macro signed-char keypress first failed unlabelled at the correct CMD_MACRO_0
+acceptance assertion; unchanged same assertion passes unsigned-char peer. Only
+plugin_keypad.macro_keypress_signed is added WILL_FAIL/known_bug. Actual EEPROM
+and registered string settings/M810/status/reset hooks execute; parser/keypad
+callback table/synchronization remain host boundaries. Macro ID0/private entry
+and oversized strings are not invoked. Aux macro and protocol-display runtime
+remain open; protocol display passes syntax-only current-CORE check (not runtime).
+
+Fresh GitHub-resolved locks match clean keypadc3493309/embroidery9a112c3c/
+COREb01f4810/EEPROM0c278db7. Keypad explicitly adds EEPROM dependency and
+coverage filter now includes keypad/macros/default LED files. All51 gated suites
+snapshot48 clean candidate/dependency SHAs. Fresh fork Actions still lists only
+reusable/core workflows; separate Plugin/Driver dispatch awaits default-branch
+installation. Keep PR29 draft/unmerged. Prepare one cumulative checkpoint, then
+continue broader plugin/driver configurations and hardware/controller gaps.
+
+# Keypad LED module authoring checkpoint - 2026-10-25 (batch38, local)
+
+Goal active. Seven new cases compile unchanged keypad display/i2c_leds.c using
+DISPLAY_ENABLE17/default PCA9654E. Focused7/7 pass Windows Clang ASan/UBSan0.53s
+and strict reporting7 clean: output register encoding/state transitions, preserved
+spindle/coolant hooks, report chaining, optional callbacks, startup/probe failures
+and complete-state write recovery. Startup sends config/inversion with blocking
+writes; runtime writes are nonblocking. Stock keypad cases/known properties are
+unchanged. Coverage filter now includes the LED source; no new percentage is
+claimed until its selected-file denominator is freshly measured.
+
+Fixture I2C and spindle-selection callbacks are explicit driver boundaries.
+No physical LED, actual CORE spindle registry, protocol display, alternate LED
+provider or full target/controller success is claimed. No production edits,
+new allowances or hosted run. Batch38 now14 cases beyond delivered37:7 embroidery
++7 LEDs;1039 registered in51 suites. Continue macros/protocol/other supported
+source families before cumulative gate and delivery. Latest complete gate is1025.
+
+# Embroidery delayed-stop/thread-break checkpoint - 2026-10-25 (batch38, local)
+
+Goal active. Two additional cases cover250ms delayed spindle shutdown (still on
+at249ms, off at250ms while awaiting needle) and thread-break startup filtering,
+hold/recovery/resume after14 stitches, retaining final1.6mm cumulative position.
+All27 embroidery cases pass Windows Clang ASan/UBSan with strict27 clean; shared
+one/two-input fixture and existing conversion/stream cases are rebuilt together.
+The two-input fixture initially let default needle selection chooseaux1, causing
+break-port conflict; registered float setters now select needleaux0/breakaux1,
+then original EEPROM save/load and real CORE claims activate both callbacks.
+No private port/context writes or production edits. Virtual ticks, planner motion
+capture and controller hold execution remain explicit host boundaries.
+
+Batch38 now7 new local cases (1032 registered); latest full51-suite1025-case gate
+and source coverage remain delivered37. No push/hosted dispatch or new exception.
+Continue other supported gaps before the next substantial cumulative gate.
+
+# Embroidery queue/hold authoring checkpoint - 2026-10-25 (batch38, local)
+
+Goal active. Five new original-coordinator cases cover18-stitch queue refill/
+wrap with54 ordered motion requests, early needle IRQ during active motion,
+PES thread-change hold/resume, jump look-ahead/mist output and idle completion,
+and trim hold/resume retaining accumulated XY targets. All25 embroidery cases
+pass Windows Clang ASan/UBSan1.40s and strict reporting25 clean. No production
+edits or expected-failure additions. Bounded foreground task execution and
+hold-state transitions now explicitly model controller callbacks; planner,
+spindle and physical timing remain host boundaries.
+
+A first single-stitch-before-jump output assertion failed. Source arms jump
+output through look-ahead while already stitching. That short-sequence proposal
+is preserved unregistered for contract review; independent two-stitch look-ahead
+assertions pass, with no guessed output timing accepted as covered. No repeat of
+the uncertain short sequence. Original DST stop-color proposal stays unregistered.
+
+Batch37 delivered a13fc670fcfaa651743b2cf13406fdce9e51d4b7 to the existing
+tracking branch and draft/open/unmerged PR29, exact head/body read back. Worktree
+was clean before this group. Latest full gate remains1025/51 from batch37;
+1030 now registered including these5 local cases. Coverage stays the fresh37
+measurement below. Accumulate additional supported work before full gate/push;
+separate Actions remain unavailable on default branch as verified at delivery37.
+
 # Combined storage/embroidery validation - 2026-10-25 (batch37)
 
 Goal active. All51 current-source host suites pass Windows Clang ASan/UBSan

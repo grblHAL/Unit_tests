@@ -280,7 +280,7 @@ repository's default branch.
 | Plugin tests | `plugin_sdcard_stream` | File input, stream ownership, error/reset recovery and external macro repeats |
 | Plugin tests | `plugin_sdcard_fatfs` | Original FatFs/SD lifecycle, macro calls and file-stream commands on RAM-backed FAT12 media; file I/O and recovery |
 | Driver tests | `driver_simulator_vfs` | File/directory workflows; current CORE compile incompatibility recorded |
-| Plugin tests | `plugin_keypad` | I2C/UART jog commands, cancellation, overrides and NVS restart |
+| Plugin tests | `plugin_keypad` | I2C/UART jog commands, overrides and NVS restart; LED outputs and stored macro execution/recovery |
 | Plugin tests | `plugin_networking` | Interface events/enumeration, status reports and service/MAC helpers with real lwIP headers |
 | Plugin tests | `plugin_laser_ppi` | Registered laser PPI spacing, mode changes, shutdown and hardware delegation |
 | Plugin tests | `plugin_laser_coolant` | Start confirmation, delayed shutoff, coolant-loss IRQs and virtual sensor callbacks |
@@ -343,7 +343,10 @@ for a normal unpadded CORE allocation. Teensy PWM uses actual SDK register
 headers with simulated memory and pin-mux lookup. SAM serial uses actual device/
 Arduino headers and CORE streams with simulated clocks/NVIC/IRQ delivery. SDK
 revisions are locked separately; these are not Arduino/ARM firmware builds. Keypad tests explicitly compare
-signed/unsigned char builds; the observed extended-key defect is compiler-specific.
+signed/unsigned char builds; extended-key and macro-key defects are compiler-specific.
+Macro cases use registered settings and original EEPROM. LED register writes and
+macro parser/transport callbacks remain driver/controller boundaries; auxiliary
+macros, protocol-display runtime and physical devices are not established by them.
 See [component progress](tests/COMPONENT_PROGRESS.md) and the
 [repository backlog](tests/COMPONENT_INVENTORY.csv) for remaining work. Each suite
 has its own `KNOWN_BUGS.md`; keep correct regression assertions when removing

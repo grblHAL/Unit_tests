@@ -25,10 +25,43 @@ I2C start/probe/strobe and UART registration are simulated public driver
 boundaries. Real CORE override queues and CRC/math helpers are compiled. NVS is
 an opaque CRC-backed RAM provider; restart uses two processes and persisted
 provider bytes without copying the plugin's private serialized structure. These
-are not physical I2C/UART, full parser/motion, MPG-sharing, macros or LED/display
-checks. The coordinate-system formatting helper is a host boundary; no coordinate
+are not physical I2C/UART, full parser/motion, MPG-sharing or macro checks.
+The independent LED-display cases below use their own driver boundary. The coordinate-system formatting helper is a host boundary; no coordinate
 cycle result is claimed.
 
 UART keypad_init returns allocation success even when opening its stream fails.
 The failed-transport case verifies no settings registration; intended
 bool semantics need a maintainer contract before calling this a defect.
+
+## I2C LED display module
+
+Seven cases compile original display/i2c_leds.c with DISPLAY_ENABLE17 and the
+default PCA9654E provider. The fixture captures original two-byte register writes,
+blocking startup config/inversion, nonblocking complete-state updates, prior
+state/spindle/coolant/report callbacks, bus/probe failure and write recovery.
+A successful driver write is not physical LED evidence. Spindle selection is the
+public provider callback boundary, not the CORE registry/controller. The stock
+keypad.c fixtures and four correct signed-char regressions are unchanged.
+
+The protocol display/i2c_interface.c, alternate non-PCA LED provider, repeated
+selection of an already-wrapped spindle, real bus timing and target build remain
+unvalidated. No settings, SDK header or source alias bypass is introduced.
+
+## Macro key is also lost with signed char - 2026-10-25
+
+`plugin_keypad.macro_keypress_signed` retains the same correct key-start assertion
+as its passing unsigned-char peer. First unlabelled execution failed at the public
+keypress preview accepting CMD_MACRO_0 (0xB0). Original macros.c keypress_preview
+receives char and compares it to positive MACRO_KEY0 in a switch, so signed char
+cannot match. The macro never starts. This separate original module shares the
+keypad.c portability cause above; no target-wide failure is claimed.
+
+Only this exact signed-char case is WILL_FAIL/known_bug. No sanitizer allowance
+or source patch is added. Keep the assertion and remove the property when both
+char profiles accept the same ordinary macro key. Nine other macro cases use an
+explicit unsigned-char profile and original EEPROM/CRC plus registered string
+settings, M810/preview, error and reset hooks. Controller parsing/synchronization
+and keypad callback table are host boundaries; actual keypad transport is tested
+separately in the stock cases. ID0/private macro entry and oversized strings are
+not invoked. Aux-bound macros, all N_MACROS/length configurations, signed-key
+repair, full boot/parser and physical inputs remain unfinished.

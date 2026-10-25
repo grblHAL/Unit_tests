@@ -28,3 +28,14 @@ extern uint_fast16_t job_planner_free;
 void job_sync(bool enabled);
 void job_needle(void);
 int32_t job_serial_read(void);
+
+extern unsigned job_syncs, job_holds;
+void job_run_tasks(void);
+
+extern bool job_mist_on;
+extern unsigned job_mist_writes;
+
+extern bool job_break_sensor;
+void job_break(void);
+void job_delay(uint16_t milliseconds);
+void job_advance(uint32_t milliseconds);

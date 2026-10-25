@@ -7,6 +7,16 @@ or force private state to enter a path.
 
 ## Next source families
 
+- Keypad batch38 adds7 default PCA9654E LED display cases (state/output/register
+  writes, callbacks/reports, missing bus/device, write recovery). No physical LED
+  or alternate-provider claim. Coverage filter adds display/i2c_leds.c, so keep
+  new denominators visible. Batch38 adds10 original macro cases with EEPROM,
+  registered strings, M810/key execution and stream/status/reset recovery. One
+  correct signed-char macro-key regression is retained alongside its passing
+  unsigned peer. Do not call macro ID0
+  (source indexes macro-1) or bypass its string bounds. Protocol display and shared
+  MPG still need original-source integration; current30 keypad cases stay intact.
+
 - Batch37 storage authoring adds15 cases through public macro/file-stream hooks:
   nested return/reset, EOF/status recovery, directory commands/listing, mutation
   rejection, prescan replay and reporting. Actual O-code lookup/parameter-stack,
@@ -17,8 +27,11 @@ or force private state to enter a path.
   plus current pinned CORE headers. This is not runtime or target-link evidence.
   Batch37 adds7 coordinator conversion/NVS and streamed stepper/trigger/planner-
   capacity cases using actual EEPROM, CORE stream and registered trigger input.
-  Thread-break/hold recovery, jump timing, live queue refills, real planner and
-  physical needle timing remain. Original13 reader cases
+  Batch38 adds queue refills, early IRQ and thread-change/trim holds plus jump
+  look-ahead with explicit controller boundaries. Single-stitch jump output
+  remains an unregistered contract question. Thread-break recovery and delayed
+  spindle stop are now host-tested, including two registered input mappings and
+  actual EEPROM save/load. Real planner and physical needle timing remain. Original13 reader cases
   remain. DST stop conversion is unregistered because its color is uninitialized;
   resolve the source contract before a deterministic tool-number assertion.
   Source-clean/SHAs and syntax log are in build-evidence batch37.

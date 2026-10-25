@@ -13,17 +13,17 @@ short/long signed moves, paired-axis jump/trim, color change/end, format rejecti
 and parser fallback. PES dimensions are reported in the implementation's stored
 tenths-of-mm units; no coordinator scaling behavior is claimed.
 
-Seven coordinator cases now compile original embroidery.c and exercise public
+Fourteen coordinator cases now compile original embroidery.c and exercise public
 file-open conversion for DST signed moves/jumps and PES color/signed moves,
 plus missing NVS allocation, chained reset and streamed stepper/trigger/planner-space
-workflows. Original CORE VFS/embedded,
+workflows, queue refill, early-trigger gating and thread-change/trim hold/resume. Original CORE VFS/embedded,
 ioports/crossbar/stream/CRC and EEPROM plugin execute. One digital input bank is
 registered before initialization; settings restore/load uses the actual EEPROM
 backend. NVS allocation, settings registration and startup execution are explicit
 host boundaries. Motion requests, spindle on/off and planner capacity are captured
 callbacks; model initialization provides a valid spindle callback and zero machine
-position. Public registered trigger IRQ releases queued stitching; unused task and
-report callbacks fail fast. SD hardware, actual planner/stepper execution, full
+position. Public registered trigger IRQ releases queued stitching; foreground tasks and hold transitions are explicit bounded controller models;
+unused task/report paths fail fast. SD hardware, actual planner/stepper execution, full
 settings/parser, and physical stitch timing remain. Truncated input,
 long metadata and allocation-failure paths have not been exercised. Mixed-axis
 PEC flag precedence, persistent DST sequin state and coordinator unit contracts
@@ -45,3 +45,22 @@ rerun this proposal, initialize plugin-private storage in the fixture, or add an
 expected-failure allowance from an invented T0 contract. No production fix is
 made. Existing reader jump/stop assertions and the supported independent jump
 conversion case remain registered. PES initializes its palette color explicitly.
+
+## Unregistered single-stitch jump-output timing - 2026-10-25
+
+`proposals/coordinator_single_stitch_jump.c` preserves the first failed authoring
+assertion and is not registered. With one normal stitch followed immediately by
+a jump, the proposed mist-on assertion failed. Source onExecuteRealtime only
+arms jump_out(true) when already stitching and the next queued entry is a jump.
+A separate two-stitch look-ahead case verifies arm, rapid request, no premature
+next stitch, idle deassert and resumed stitching through public hooks. The
+single-stitch output contract needs maintainer review; do not hide the gap by
+forcing job.stitching or adding an invented timing allowance. Physical needle/
+jump timing remains unverified. This proposal was not rerun after source review.
+
+Batch38 also covers delayed spindle stop at249/250ms with virtual driver ticks,
+and thread-break hold/recovery after ordinary stitched work. Two input roles are
+set through registered float setters, saved through original EEPROM and loaded
+before real CORE claims/IRQ registration. Startup-break filtering and final XY
+requests are checked. These are controller/driver boundaries; no physical timing,
+actual planner path, live spindle-speed feedback or full boot/parser is claimed.
