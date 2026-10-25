@@ -9,9 +9,9 @@ supersedes earlier checkpoint habits and automatic end-of-turn delivery notes.
 - Use source review during authoring; focused execution only resolves uncertain
   behavior, failures, or changes to shared reporting/fixture infrastructure.
 - One full sanitizer/strict gate and one hosted run at a substantial cumulative
-  delivery boundary. Three hosted runs per hour is an absolute ceiling, not a
-  target; normally run substantially fewer. Do not dispatch redundant heads.
-- While hosted jobs run, continue independent test authoring. Do not wait or
+  delivery boundary. There is no fixed hourly run limit. Do not dispatch
+  redundant heads or run a full gate for a tiny increment of work.
+- While hosted jobs run, continue independent authorized work. Do not wait or
   repeatedly poll them. Refresh their results at the next useful checkpoint.
 - Do not manufacture 500 cases or duplicate covered behavior to meet a quota.
   Optimize newly exercised supported paths and bugs found per validation cycle.
