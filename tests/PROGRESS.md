@@ -1,3 +1,12 @@
+# Ordered PR merge checkpoint - 2026-10-25
+
+PR30 merged as6b6d147 after saved-output validation of its final inventory.
+Integrated that base into PR31; only documentation changed from the reviewed
+9aa51a01 integration. PR31 functional head26a3d5f remains fully hosted green
+(run40179484951); final diagnostic data addition was verified by offline replay
+and17 helper tests. No functional, fixture, compiler or CORE changes.
+Merge PR31 next as explicitly authorized; coverage expansion remains stopped.
+
 # Validated PR31 closeout integration - 2026-10-25
 
 Run40179484951 passed all five required jobs at26a3d5f/COREb01f481.
