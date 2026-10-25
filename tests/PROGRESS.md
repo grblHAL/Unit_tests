@@ -1,3 +1,28 @@
+# README badges and ordered PR delivery - 2026-10-25
+
+PR30 merged6b6d147; PR31 mergedca57aef, as explicitly authorized.
+Coverage expansion remains stopped. Original coverage checkout was preserved.
+CORE closeout hosted run40179484951 passed source/GCC/Clang/coverage/summary:
+4,508 cases, no unexpected failures/skips;17,491/17,757 lines98.50%,
+12,839/13,852 branches92.69%. Final data-only base integration was verified
+by saved-diagnostic replay and17 helper tests; no redundant full rebuild.
+
+README has66 component/suite rows and198 compile/line/branch badges with CSV
+provenance. Planned/incompatible/legacy rows remain explicit; other measured
+rows retain local snapshot labels. Hosted misc run40180256798 passes157 cases
+(147 clean/10 known),1602/1785 lines and879/1200 branches. Hosted H7 serial
+run40180258607 passes24 clean cases,332/336 lines and114/128 branches;
+ARM module job also passes. Both lock harness0fd7b0dc, COREb01f481 and the
+recorded component revisions. No full firmware/hardware coverage claim.
+
+Fixed Linux executable/directory collision by putting scratch paths undercases/.
+Real extensionless-executable CMake regression passes. All56 component suites
+classify1,281 local cases (1,212 clean/69 known), zero unexpected/skipped.
+All102 combined helper tests and four workflow lint checks pass. Shared fix
+and its regression are byte-identical to the successful hosted component head.
+Removed fixed hourly CI cap; substantial batching and no redundant runs remain.
+User authorized merging the badges after30/31; no further coverage work started.
+
 # Ordered PR merge checkpoint - 2026-10-25
 
 PR30 merged as6b6d147 after saved-output validation of its final inventory.

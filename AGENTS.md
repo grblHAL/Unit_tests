@@ -52,8 +52,8 @@ New tests must cover basic regressions in actual controller use. Avoid security-
 - Run one cumulative local sanitizer/strict gate at the substantial pre-push
   boundary, then one hosted validation/coverage checkpoint. After a failure rerun
   affected checks; broaden only for shared changes or remaining suite uncertainty.
-- Do not rerun unchanged helpers or generate per-case coverage reports. Three
-  hosted runs per hour is an absolute ceiling, never a target or work cadence.
+- Do not rerun unchanged helpers or generate per-case coverage reports. There
+  is no fixed hourly run limit; avoid redundant heads and checks for tiny changes.
 - Continue independent authoring while CI runs. Poll only at useful checkpoints.
   Confirm a specific live process/job before waiting; an observation timeout does
   not justify restarting a run or launching another worker.
