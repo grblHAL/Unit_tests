@@ -10,6 +10,8 @@ uint32_t vfd_ticks;
 bool vfd_bus_up = true, vfd_storage_ok = true;
 unsigned vfd_reject, vfd_exception;
 uint16_t vfd_feedback = 10000;
+uint16_t vfd_poles = 2, vfd_min_frequency = 100, vfd_max_frequency = 4000;
+unsigned vfd_resets;
 modbus_message_t vfd_messages[64];
 bool vfd_blocking[64];
 static foreground_task_ptr tasks[8];
@@ -40,10 +42,33 @@ static bool send_message(modbus_message_t *message, const modbus_callbacks_t *ca
         if (message->adu[1] == ModBus_ReadHoldingRegisters)
         {
             CHECK(message->rx_length == 7);
+            uint16_t value = vfd_feedback;
+#if TEST_H100
+            uint16_t reg = (message->adu[2] << 8) | message->adu[3];
+            if (reg == 143)
+                value = vfd_poles;
+            else if (reg == 11)
+                value = vfd_min_frequency;
+            else
+            {
+                CHECK(reg == 5);
+                value = vfd_max_frequency;
+            }
+#endif
             reply.adu[2] = 2;
+            reply.adu[3] = value >> 8;
+            reply.adu[4] = value & 255;
+        }
+#if TEST_H100
+        else if (message->adu[1] == ModBus_ReadInputRegisters)
+        {
+            CHECK(message->rx_length == 9);
+            reply.adu[2] = 4;
             reply.adu[3] = vfd_feedback >> 8;
             reply.adu[4] = vfd_feedback & 255;
+            reply.adu[5] = reply.adu[6] = 0;
         }
+#endif
         callbacks->on_rx_packet(&reply);
     }
     return true;
@@ -130,11 +155,13 @@ bool state_door_reopened(void)
     CHECK(false);
     return false;
 }
+static void base_reset(void) { vfd_resets++; }
 void vfd_prepare(bool transport)
 {
     prepare_eeprom();
     CHECK(i2c_eeprom_init());
     hal.get_elapsed_ticks = ticks;
+    hal.driver_reset = base_reset;
     settings.spindle.at_speed_tolerance = 5;
     settings.pwm_spindle.rpm_min = 0;
     settings.pwm_spindle.rpm_max = 24000;
@@ -234,3 +261,5 @@ bool protocol_buffer_synchronize(void)
     CHECK(false);
     return false;
 }
+
+bool task_run_on_reset(foreground_task_ptr fn, void *data) { return task_add_immediate(fn, data); }

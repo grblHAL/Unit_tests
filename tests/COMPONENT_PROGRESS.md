@@ -1,3 +1,34 @@
+# Local H-100 VFD protocol checkpoint - 2026-10-25
+
+Goal active. Added9 H-100 cases using existing real CORE Modbus/spindle registration
+and EEPROM-backed settings fixtures. Source discovery reads poles/min/max, locks
+reported range and converts2/4-pole frequency units; direction/stop coils, speed
+register writes/clamps, feedback/at-speed, failed discovery retry, deferred reset
+range refresh and absent transport/storage paths execute. Transport replies are
+bounded host register models, not serial hardware/VFD validation.
+
+Shared fixture expansion first gated all37 VFD cases in2.07s:28 existing GS20/
+MODVFD +8 new H100 clean, with1 feedback fixture failure. Source wrapper suppresses
+queries before150ms, so feedback now uses150/300ms; retry control also advances
+to150ms to exercise unready source rather than wrapper suppression. Rechecks found
+normal float limit rounding, resolved using existing VFD0.01RPM comparison policy,
+well below the modeled frequency step. Final feedback passes0.10s; affected retry
+also passes its focused recheck. No production defect/exception/diagnostic allowance
+added. No repeated unchanged global gate during authoring. Current whole VFD/full
+component gates remain due at combined delivery; initial red report is not green.
+
+Actual CORE spindle registration/control and Modbus routing execute. Device I/O,
+NVS, scheduled-reset services and feedback replies are captured boundaries. No
+private spindle pointers/capability mutation or production source edits. H100
+exception modes/other protocols, firmware scheduling and physical timing remain.
+
+VFD suite37 registered, compatible836 authored (822 delivered +5 local BLTouch
++9 H100); no new whole-suite count claim. Header incremental fix and unrun tooltable
+proposals remain local, excluded from passing-case additions. Accumulate related
+work then run combined gate/helpers once before push. Full goal remains active.
+
+---
+
 # Local incremental-header build checkpoint - 2026-10-25
 
 Goal active. Fixed component forwarding-header generation: file(CONFIGURE) writes

@@ -20,3 +20,6 @@ void vfd_clear_requests(void);
 void vfd_word(setting_id_t id, uint16_t value);
 void vfd_float(setting_id_t id, float value);
 void vfd_expect(unsigned index, uint8_t function, uint16_t reg, uint16_t value, bool blocking);
+
+extern uint16_t vfd_poles, vfd_min_frequency, vfd_max_frequency;
+extern unsigned vfd_resets;

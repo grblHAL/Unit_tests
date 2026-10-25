@@ -475,3 +475,13 @@ requires CMake on PATH like component builds. Run the combined gate and source
 helpers once at the next substantial pre-push boundary after this shared change;
 do not repeatedly rebuild unchanged targets during authoring. Firmware sources
 and source-lock contracts are unchanged.
+
+## H-100 VFD protocol
+
+Nine authoring cases now cover actual CORE registration/Modbus plus original
+H100 pole/range reads, commands, limits, feedback, discovery retry and reset refresh.
+Shared transport fixture returns standard bounded holding/input-register replies.
+Initial broad37-case gate had one feedback fixture failure; affected repairs pass
+but a fresh combined gate is due. Check150ms common wrapper before attributing
+missing feedback; use established0.01RPM float tolerance. Other VFD protocols,
+exception paths and actual serial/VFD/controller hardware remain open.

@@ -28,3 +28,20 @@ foreach(protocol gs20 modvfd)
 endforeach()
 set_source_files_properties("${HARNESS_ROOT}/plugins/spindle/vfd/gs20.c" "${HARNESS_ROOT}/plugins/spindle/vfd/modvfd.c" "${HARNESS_ROOT}/plugins/spindle/vfd/spindle.c" "${COMPONENT_CORE_ROOT}/spindle_control.c" PROPERTIES COMPILE_OPTIONS -Wno-error)
 set_source_files_properties("${COMPONENT_CORE_ROOT}/modbus.c" PROPERTIES COMPILE_OPTIONS -Wno-error)
+
+foreach(behavior discovery commands feedback limits retry reset four_poles no_transport no_storage)
+  if(behavior MATCHES "^no_")
+    set(test_source ${behavior}.c)
+  else()
+    set(test_source h100_${behavior}.c)
+  endif()
+  set(target plugin_spindle_vfd.h100_${behavior})
+  component_case(${target} ${test_source} vfd_host.c
+    "${HARNESS_ROOT}/plugins/spindle/vfd/h100.c" "${HARNESS_ROOT}/plugins/spindle/vfd/spindle.c"
+    "${COMPONENT_CORE_ROOT}/spindle_control.c" "${COMPONENT_CORE_ROOT}/modbus.c"
+    "${HARNESS_ROOT}/plugins/eeprom/eeprom_24AAxxx.c" "${HARNESS_ROOT}/tests/plugins/eeprom/eeprom_host.c"
+    "${COMPONENT_CORE_ROOT}/crc.c" "${COMPONENT_CORE_ROOT}/nuts_bolts.c")
+  target_include_directories(${target} PRIVATE "${HARNESS_ROOT}/plugins" "${HARNESS_ROOT}/tests/plugins/eeprom" "${HARNESS_ROOT}/plugins/eeprom")
+  target_compile_definitions(${target} PRIVATE SPINDLE_ENABLE=64 VFD_ENABLE=1 TEST_H100=1 TEST_MODVFD=0 EEPROM_ENABLE=128 EEPROM_IS_FRAM=1 NVS_SIZE=8192 NVS_SIZE_MAX=16384)
+endforeach()
+set_source_files_properties("${HARNESS_ROOT}/plugins/spindle/vfd/h100.c" PROPERTIES COMPILE_OPTIONS -Wno-error)
