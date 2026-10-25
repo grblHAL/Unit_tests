@@ -1,3 +1,15 @@
+# Validated PR31 closeout integration - 2026-10-25
+
+Run40179484951 passed all five required jobs at26a3d5f/COREb01f481.
+GCC:4,508 total/4,483 clean/25 known; Clang:4,508/4,480 clean/28 known.
+Zero unexpected failures/skips. Verified coverage17,491/17,757 lines98.50%
+and12,839/13,852 branches92.69%.
+Integrated PR30 reporting-only repair: exact inventory union adds one observed
+unsupported-tapping index29 signature; no functional cases, fixtures, compiler
+configuration, matcher or CORE changes. Saved diagnostic replay and helper
+tests validate the inventory. No redundant full rebuild for this data-only merge.
+User authorized merging PR30 then PR31. Coverage expansion remains stopped.
+
 # PR31 conflict repair - 2026-10-25
 
 The user explicitly authorized resolving and merging PR30/PR31; that overrides

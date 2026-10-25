@@ -825,3 +825,11 @@ result is4,504 total/4,476 clean/25 known/3 failed/zero skipped. Evidence lives 
 `build-asan/hosted40121790962/results-core-clang/build/known-crash-<test>.log`,
 `verified-clang.json`, `verified-new-workflows.json` and
 `verified-exact-diagnostic-replay.json`.
+
+### PR30 hosted diagnostic inventory repair - 2026-10-25
+
+Run40178911158 at56d63fd reported the existing gcode.c485 macro argument
+table overflow with index28 in the eight-axis fallback and index29 in both
+spindle-sync regressions. Record only those observed signatures, retaining
+the exact test, 27-entry table, source line, function and ASan category.
+Assertions after the fatal diagnostic remain unvalidated. No CORE change.
