@@ -543,3 +543,13 @@ partial discovery/exceptions/hooks/provider recovery and Huanyang v1 partial
 range discovery/RPM-current exception recovery execute. No source modification
 or allowance. Shared multi-spindle selection/settings variants still open;
 spindle onoff/PWM/offset/stepper/select sources remain next larger module gaps.
+
+## On/off spindle suite
+
+12 local ASan/UBSan/strict-clean cases, both on-only/direction variants, with
+real CORE port claims and spindle registration plus original EEPROM persistence.
+Registered in manifest/manual Plugin workflow; no runtime known exceptions.
+Physical GPIO direction/enable ordering, controller job lifecycle, duplicate
+on/dir port assignment policy and true process restart remain to assess. Source
+warning for unrecognized set_port ID is not executed; valid registered settings
+cover intended public contract. PWM/offset/stepper/select modules remain open.

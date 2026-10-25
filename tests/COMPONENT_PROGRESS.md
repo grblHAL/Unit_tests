@@ -1,3 +1,36 @@
+# Local on/off spindle suite checkpoint - 2026-10-25
+
+Goal active. New selectable plugin_spindle_onoff suite adds12 original-source
+cases across on-only and direction-enabled compile variants. Actual CORE
+spindle registration/selection, ioports/crossbar claims and EEPROM/CRC settings
+execute. Driver callbacks capture output physical pins; startup defaults off,
+forward/reverse/stop, mapped saved settings, fractional/unavailable setting
+rejection, missing/insufficient ports, allocation failure, disabled output and
+conflicting other-plugin claims pass. No mocked port-configuration helpers or
+private spindle source/state modification.
+
+Windows Clang ASan/UBSan12/12 passes0.69s with strict classification all clean.
+Original plugin/CORE warnings remain visible/nonfatal under existing policy;
+fixture-Werror retained. Existing Windows CRT string compatibility header is
+needed by original CORE strutils, matching other real-ioports suites. No ABI
+cast/source bypass, new known result or sanitizer allowance. Host scheduler
+executes warning callbacks at its boundary; deferred ordering is not tested.
+
+Manifest/Plugin workflow/README/inventory now register the suite.87 helper run
+had one missing-new-suite-diagnostics-list error; empty required list added,
+affected7 component suite checks pass0.045s. Other80 helpers passed initial run.
+Plugin workflow actionlint passes. No complete helper87 rerun claim. Updated
+VFD scope note to match seven protocol files already validated in batch33.
+
+43 compatible suites/908 authored after pending17 VFD +12 onoff cases; last
+full delivered batch33 remains879 across42 suites. No new global gate, source
+coverage, hosted firmware/SDK or hardware result claimed. GPIO electrical state,
+full parser/motion/controller jobs and separate-process onoff persistence remain
+unchecked. Continue PWM/offset/stepper/selection sources and broader driver work
+before one substantial cumulative gate/push. Goal stays active.
+
+---
+
 # Local VFD recovery gap checkpoint - 2026-10-25
 
 Goal active.17 new cases address source-reviewed recovery gaps after batch33
