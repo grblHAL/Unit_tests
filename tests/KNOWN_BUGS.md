@@ -730,3 +730,11 @@ diagnostics and zero-exit output remain rejected. No range/wildcard allowance or
 matcher implementation change. The hosted run remains failed; post-crash
 assertions remain unvalidated. Saved logs are under
 build-asan/hosted40107107939/results-core-clang/build/known-crash-<test>.log.
+
+### PR30 hosted diagnostic inventory repair - 2026-10-25
+
+Run40178911158 at56d63fd reported the existing gcode.c485 macro argument
+table overflow with index28 in the eight-axis fallback and index29 in both
+spindle-sync regressions. Record only those observed signatures, retaining
+the exact test, 27-entry table, source line, function and ASan category.
+Assertions after the fatal diagnostic remain unvalidated. No CORE change.

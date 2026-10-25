@@ -1,3 +1,11 @@
+# PR30 diagnostic reporting repair - 2026-10-25
+
+Fresh hosted GCC and coverage passed; Clang reported three existing fatal
+macro-argument regressions with diagnostic indices absent from this older
+branch inventory. Added only the three observed signatures from saved logs;
+offline matching passes and a changed source location is rejected.
+No functional case or CORE source changed. Fresh hosted validation pending.
+
 # PR30 conflict repair - 2026-10-25
 
 The user explicitly authorized resolving and merging PR30/PR31 in this chat;
