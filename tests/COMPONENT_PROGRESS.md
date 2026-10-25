@@ -1,3 +1,31 @@
+# Local stepper metadata/speed and clone laser-mode checkpoint - 2026-10-25
+
+Goal active. Four new cases: three stepper and one clone. Complete18-stepper
+Windows Clang ASan/UBSan gate passes1.05s with strict classification all clean
+after adding prior units-hook boundary. Timer-driven60->120->30RPM transitions
+execute original secondary engine and match5000/2500/10000us requested periods,
+while pulses continue forward; stop halts timer. Positive angular/index data
+matches captured emitted pulses; stopped RPM reports zero. Public spindle units
+are checked for step/rev, rev/min, rev/sec^2 and ignored dimensions, with prior
+hook fallback for other axes/settings and after rotary conversion. No mocked
+normalization algorithm was added; descriptions remain untested.
+
+Clone laser-mode case passes focused0.10s/strict clean: primary direction
+capability/routing follows mode, repeated same-spindle selection does not
+rewrap hooks, clone remains nondirectional/nonlaser and uses isolated conversion.
+Existing8 clone cases retain earlier complete gate; no new complete9 claim.
+No production edits, private state/context injection, known failures or sanitizer
+allowances. No physical motor/laser/PWM timing or full controller proof.
+
+48 registered suites/957 authored cases, pending27 since delivered batch34
+930/46:9 clone +18 stepper. No new coverage/global/hosted claim. Counter-reset
+reference behavior and fractional rotary startup contract remain to inspect;
+live timer reversal needs asynchronous IRQ delivery; metadata description
+normalization still unsupported in this boundary fixture. Other plugin/driver,
+SDK and hardware work remains. Continue substantial batch; goal stays active.
+
+---
+
 # Local stepper timer and position synchronization checkpoint - 2026-10-25
 
 Goal active. Six new original-source stepper cases bring suite to15. Complete

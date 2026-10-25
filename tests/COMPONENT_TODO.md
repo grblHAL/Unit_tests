@@ -624,3 +624,12 @@ IRQ/electrical timing proof. Live timer direction change enters a blocking loop
 with no polling callback in timer mode; needs independently delivered IRQs, not
 synchronous fake engine progress. Preserve this gap; do not force private motor
 state or treat a stopped/restarted direction test as live reversal coverage.
+
+## Stepper metadata/speed and clone mode follow-up
+
+Three new stepper cases18/18 strict clean: timer speed transitions, emitted-pulse
+angular/index relationships and units hook fallback/rotary units. Clone mode
+case focused clean. Counter-reset absolute reference semantics, fractional rotary
+startup, description normalization, repeated timer IRQ edge cases remain open.
+No copied normalization or direct private engine state introduced. Pending27
+local cases; retain substantial delivery cadence and measure source gain next.

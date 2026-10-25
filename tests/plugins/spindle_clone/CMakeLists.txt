@@ -6,7 +6,7 @@ foreach(file spindle_control.c ioports.c crossbar.c nuts_bolts.c crc.c strutils.
   list(APPEND sources "${COMPONENT_CORE_ROOT}/${file}")
   set_source_files_properties("${COMPONENT_CORE_ROOT}/${file}" PROPERTIES COMPILE_OPTIONS -Wno-error)
 endforeach()
-foreach(behavior primary clone switching settings no_base no_direction no_update no_storage)
+foreach(behavior primary clone switching settings laser_mode no_base no_direction no_update no_storage)
   set(target plugin_spindle_clone.${behavior})
   set(test_source ${behavior}.c)
   set(reject 0)

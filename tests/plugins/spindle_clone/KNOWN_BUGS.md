@@ -1,6 +1,6 @@
 # Known defects and scope
 
-Eight selected clone cases pass without runtime defect allowances. Original
+Nine selected clone cases pass without runtime defect allowances. Original
 Plugins_spindle8a3ae47f5a218834da9c742424c3dd22c5629fdb and
 COREb01f481072edecac33d5e40c25869359a5b3fa1f remain unchanged.
 
@@ -20,6 +20,10 @@ full parser/controller or machine safety behavior is validated.
 
 The initial host assumed startup tasks only carried warnings; CORE schedules
 secondary PWM initialization too. Bounded startup queue repairs that fixture
-contract; all eight rerun clean/strict. No production edit, private context
-injection or sanitizer allowance. Laser-mode variants, in-process metadata
+contract; all eight rerun clean/strict; the added laser-mode case also passes focused. No production edit, private context
+injection or sanitizer allowance. Additional laser-mode variants, in-process metadata
 refresh after range changes, target drivers and hardware remain open.
+
+Laser-mode primary routing now checks direction capability, repeated selection
+without rewrapping hooks and clone capability/output isolation. This checks
+callback semantics only, not physical laser safety or electrical timing.

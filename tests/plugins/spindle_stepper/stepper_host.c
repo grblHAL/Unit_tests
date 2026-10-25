@@ -95,6 +95,12 @@ static void previous_settings(settings_t *s, settings_changed_flags_t flags)
     (void)flags;
     stepper_previous_settings++;
 }
+static const char *previous_units(setting_id_t id, uint_fast8_t axis)
+{
+    (void)id;
+    CHECK(axis < N_AXIS);
+    return "driver unit";
+}
 static void save(void) { stepper_saves++; }
 driver_settings_save_ptr settings_claim_save(driver_settings_save_ptr fn)
 {
@@ -193,6 +199,7 @@ void stepper_prepare(void)
     grbl.on_execute_realtime = realtime;
     grbl.on_execute_delay = delay;
     grbl.on_settings_changed = previous_settings;
+    grbl.on_set_axis_setting_unit = previous_units;
     stepper_spindle_init();
     if (stepper_settings)
     {

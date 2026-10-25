@@ -1,6 +1,6 @@
 # Known defects and scope
 
-Fifteen selected polling/timer-boundary cases pass without known runtime exceptions. Original
+Eighteen selected polling/timer-boundary cases pass without known runtime exceptions. Original
 Plugins_spindle8a3ae47f5a218834da9c742424c3dd22c5629fdb and
 COREb01f481072edecac33d5e40c25869359a5b3fa1f remain unchanged.
 
@@ -27,6 +27,9 @@ conversion boundaries. This is not real planner/IRQ timing or electrical output.
 
 Live timer-backed direction reversal needs independently delivered asynchronous
 interrupts during the plugin's blocking stop loop; the synchronous event model
-does not exercise that path. Fractional rotary mode, counter reset/angle,
-units/descriptions and native controller jobs remain open. Unused settings
+does not exercise that path. Timer speed changes60->120->30RPM, positive angular revolutions/index counts
+and stopped RPM are checked against captured pulses/periods. Public units hook
+provides spindle units and chains prior hook for other axes/settings and after
+rotary conversion. Fractional rotary startup, counter-reset reference semantics,
+description normalization and native controller jobs remain open. Unused settings
 metadata helpers fail immediately; no silent fallback. No source edits, ABI casts or sanitizer allowances.
