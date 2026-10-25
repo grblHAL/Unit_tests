@@ -645,3 +645,13 @@ temperature callback passes, actual thermal report/alarm does not have support
 claimed. No analog-bank-absent null-provider reproduction. Delayed timing and
 virtual registry are host boundaries. Overdrive co2.c, native parser/hardware
 and remaining driver/plugin configurations remain independent work.
+
+## CO2 laser overdrive host support
+
+Eight strict-clean ASan/UBSan cases execute original co2.c with valid CORE PWM
+precompute/registration/update-caps. M129 percentage/range availability, actual
+CORE overdrive calculation/clamping, reset/completion and previous hooks execute.
+No full native parser/PSU/laser response claim. Inactive-spindle overdrive retention
+and alternate flags/configurations remain; avoid unsafe oversized conversion
+reproductions. Pending46 cases across clone/stepper/coolant/overdrive form next
+substantial cumulative validation/source-measurement boundary.

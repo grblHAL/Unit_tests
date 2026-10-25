@@ -767,5 +767,18 @@
     "test_regex": "^plugin_laser_coolant[.]",
     "coverage_filter": "plugins/laser/coolant\\.c$",
     "diagnostics_directory": "tests/plugins/laser_coolant"
+  },
+  "plugin_laser_overdrive": {
+    "repository": "grblHAL/Plugins_laser",
+    "ref": "master",
+    "path": "plugins/laser",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/laser_overdrive",
+    "cmake_options": [],
+    "test_regex": "^plugin_laser_overdrive[.]",
+    "coverage_filter": "plugins/laser/co2\\.c$",
+    "diagnostics_directory": "tests/plugins/laser_overdrive"
   }
 }

@@ -1,3 +1,34 @@
+# Local CO2 laser overdrive checkpoint - 2026-10-25
+
+Goal active. Eight original co2.c cases pass Windows Clang ASan/UBSan0.45s
+and strict classification all clean. Actual CORE precompute/update-caps and
+spindle registration supply valid driver PWM context; original plugin hooks
+execute. M129 availability follows selected laser capability and RPM-control
+settings, with unsupported basic-spindle/no-selection cases. Commands restore
+CORE consumed-word handoff; finite fractional/zero percentages execute while
+negative/NaN/missing P validation rejects. Real CORE PWM calculation verifies
+25% overdrive (base500->625) and configured1000 clamp from base900.
+
+Reset and M30/M2-completion hooks clear active overdrive and chain prior
+handlers; options/unknown M-code/settings callbacks preserve earlier behavior.
+Driver reconfiguration uses driver-owned descriptor and public caps update,
+not registry pointer mutation or plugin-private state. No unsafe percentage
+conversion reproduction, production edits, known result or diagnostic allowance.
+Actual native controller/queued parser and physical laser/PSU response remain
+unverified; computed overdrive cannot establish engraving or electrical safety.
+
+Registered plugin_laser_overdrive manifest/manual Plugin workflow/README and
+inventory with CORE-only dependency. Metadata7 helpers/actionlint pass.
+50 registered suites/976 authored cases; last full delivered batch34 remains
+930/46 with87 helpers. Pending46 local:9 clone +18 stepper +11 coolant +8
+overdrive. No fresh measured coverage/global/hosted claim. Inactive-spindle
+retention policy and broader configurations/hardware remain open. PWM/context,
+tool-setting and tooltable proposals stay unresolved/unregistered. Full goal
+stays active; cumulative source measurement/validation is now a substantial
+next delivery boundary before broader plugin/driver expansion.
+
+---
+
 # Local laser coolant startup/shutdown checkpoint - 2026-10-25
 
 Goal active. Eleven original coolant.c cases pass Windows Clang ASan/UBSan
