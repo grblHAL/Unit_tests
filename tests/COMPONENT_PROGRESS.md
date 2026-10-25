@@ -1,3 +1,22 @@
+# End-of-day handoff - 2026-10-25
+
+Stopped at the user's request; continue next week when requested. Existing PR29
+is draft/unmerged. Validated code head e18ea69 has1281 cases across56 suites:
+1212 clean +69 documented known, zero unexpected failures/skips. The subsequent
+handoff commit changes documentation only; no new full gate is needed.
+
+RP2040 continuation: the unchanged serial module and Pico2.1.1 SDK dependencies
+compile for Pico/Cortex-M0+ with ARM GCC14.2.1. Its serial object verifies as
+ELF32 ARM relocatable. This is an unregistered local compile probe, no new unit
+cases/coverage/firmware-link/runtime/hardware claim. Exact source/SDK/object
+hashes, original warnings, complete probe project and remaining work are saved
+in tests/drivers/rp2040_flash/ARM_CHECKPOINT.md. No production source was edited.
+
+Resume on plugin-driver-tests, preserve local evidence, read the scope/TODO,
+verify Git/PR/source state and continue substantial supported batches. Plugin/
+Driver hosted dispatch remains unavailable until default-branch installation;
+no hosted check exists for the delivered head. Do not merge the PR or alter CORE.
+
 # Batch49 cumulative ESP-AT gate - 2026-10-25
 
 Goal active. One fresh full Windows Clang ASan/UBSan plus strict gate passes1281
