@@ -1,3 +1,30 @@
+# Local YL620A VFD protocol checkpoint - 2026-10-25
+
+Goal active. Eleven new YL620 cases pass focused Windows Clang ASan/UBSan0.64s
+and strict classification, all clean with zero unexpected failures/skips. Original
+source uses existing real CORE spindle registration/Modbus and EEPROM-backed
+settings. Forward/reverse/stop and frequency words match selected protocol;
+nonblocking RPM update and configured RPM/Hz roundtrip execute. Shared150ms
+polling wrapper controls feedback/at-speed and preserves cached response between
+polls. Reused scenarios execute rejected mode commands, async exception threshold/
+reset-after-success, settings/report hooks, absent transport/storage and bus-down
+selection/recovery against the actual new protocol implementation.
+
+No new host transport implementation or private spindle/capability modifications.
+Existing holding-register framing suffices; all source remains unchanged. Native
+serial/VFD clocks, ACK timing, alternate protocol layouts, full parser/controller
+jobs and hardware remain unverified. Original source warnings stay visible/nonfatal
+only for this VFD file, matching existing VFD harness policy; no runtime sanitizer
+allowance or known result added.
+
+VFD48 registered;847 compatible authored, not a new full global gate. Last
+delivered batch32 remains836 plus26 separate reference cases and87 helper checks.
+Incremental forwarding headers prevent rebuild of unchanged existing VFD objects
+when registering new cases. No fresh coverage report/hosted run; accumulate next
+supported protocol group before combined validation/push. Full goal stays active.
+
+---
+
 # Latest component checkpoint - 2026-10-25 (batch32)
 
 Goal active. Deliver14 runtime cases:9 H-100 VFD +5 BLTouch provider/report cases,

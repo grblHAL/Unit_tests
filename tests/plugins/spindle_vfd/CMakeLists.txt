@@ -45,3 +45,20 @@ foreach(behavior discovery commands feedback limits retry reset four_poles no_tr
   target_compile_definitions(${target} PRIVATE SPINDLE_ENABLE=64 VFD_ENABLE=1 TEST_H100=1 TEST_MODVFD=0 EEPROM_ENABLE=128 EEPROM_IS_FRAM=1 NVS_SIZE=8192 NVS_SIZE_MAX=16384)
 endforeach()
 set_source_files_properties("${HARNESS_ROOT}/plugins/spindle/vfd/h100.c" PROPERTIES COMPILE_OPTIONS -Wno-error)
+
+foreach(behavior commands feedback configured_hz update_rpm mode_rejected async_exceptions exception_reset settings_hooks no_transport no_storage bus_down)
+  if(behavior MATCHES "^(commands|feedback|configured_hz|update_rpm)$")
+    set(test_source yl620_${behavior}.c)
+  else()
+    set(test_source ${behavior}.c)
+  endif()
+  set(target plugin_spindle_vfd.yl620_${behavior})
+  component_case(${target} ${test_source} vfd_host.c
+    "${HARNESS_ROOT}/plugins/spindle/vfd/yl620.c" "${HARNESS_ROOT}/plugins/spindle/vfd/spindle.c"
+    "${COMPONENT_CORE_ROOT}/spindle_control.c" "${COMPONENT_CORE_ROOT}/modbus.c"
+    "${HARNESS_ROOT}/plugins/eeprom/eeprom_24AAxxx.c" "${HARNESS_ROOT}/tests/plugins/eeprom/eeprom_host.c"
+    "${COMPONENT_CORE_ROOT}/crc.c" "${COMPONENT_CORE_ROOT}/nuts_bolts.c")
+  target_include_directories(${target} PRIVATE "${HARNESS_ROOT}/plugins" "${HARNESS_ROOT}/tests/plugins/eeprom" "${HARNESS_ROOT}/plugins/eeprom")
+  target_compile_definitions(${target} PRIVATE SPINDLE_ENABLE=16 VFD_ENABLE=1 TEST_MODVFD=0 EEPROM_ENABLE=128 EEPROM_IS_FRAM=1 NVS_SIZE=8192 NVS_SIZE_MAX=16384)
+endforeach()
+set_source_files_properties("${HARNESS_ROOT}/plugins/spindle/vfd/yl620.c" PROPERTIES COMPILE_OPTIONS -Wno-error)

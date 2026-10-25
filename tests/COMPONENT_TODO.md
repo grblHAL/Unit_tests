@@ -485,3 +485,11 @@ Initial broad37-case gate had one feedback fixture failure; fresh batch32
 combined gate now passes all37 VFD cases after the clock/tolerance repairs. Check150ms common wrapper before attributing
 missing feedback; use established0.01RPM float tolerance. Other VFD protocols,
 exception paths and actual serial/VFD/controller hardware remain open.
+
+## YL620A VFD protocol
+
+Eleven source-backed cases now cover commands, update conversion, configured
+RPM/Hz, feedback/polling, mode rejection, exception thresholds, hooks and provider
+failures using the shared real CORE registration/Modbus fixture. Transport/backend
+is unchanged. Other protocol families, full job/parser execution and physical
+RS485/VFD behavior remain; no new coverage measurement or global gate yet.
