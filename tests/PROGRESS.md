@@ -1,7 +1,8 @@
 # Current checkpoint - 2026-10-25
 
-User requested coverage expansion stop on2026-10-25. Finish the final PR and
-pause the goal; full supported coverage has not been proved. Never edit
+Coverage expansion STOPPED at the user's request on2026-10-25.
+Final draft PR31: https://github.com/grblHAL/Unit_tests/pull/31
+Full supported coverage has not been proved. Do not resume without a new request. Never edit
 CORE or merge PRs. Basic actual-use regressions only; Ponytail full and explicit
 RTK. Passing gates or PR checkpoints do not complete this goal.
 
@@ -10,9 +11,9 @@ C:/Users/User/Documents/Codex/2026-10-08/https-github-com-petervanderwalt-unit-t
 
 ## Current Git and delivery boundary
 
-- Branch coverage-batch-75, pushed/tracking ed5b142c589b3545de7e9f6e756854dbe2d1fba3.
-  Local evidence commit d30f189 reconciles the completed report and three exact
-  diagnostic entries. Later ordinary idle-lock reset work is below; no matcher change.
+- Branch coverage-batch-75 is delivered in final draft PR31. The last measured
+  hosted head is ed5b142; later closeout, exact diagnostic data and four locally
+  validated workflows are included in the PR. No matcher change.
 - CORE clean, HEAD and freshly fetched origin/master both
   b01f481072edecac33d5e40c25869359a5b3fa1f.
 - PR28 merged. PR30 is open, ready, unmerged at59b3ad9f9198d9973cc03b7af983c1d9899abc2d:
@@ -102,9 +103,9 @@ Saved probe-selector-status-{build,summary}.log and results.xml. No new allowanc
 Final cumulative local ASan/UBSan4,508 gate passes152.20s; strict classification:
 4,482 clean/25 known regressions/one known diagnostic/zero failed or skipped.
 Saved final-closeout-{build,tests,summary}.log and final-closeout-results.xml.
-Commit/push the closeout and create the requested final draft PR with the failed
-hosted matrix stated, then pause the active goal. No additional hosted run or
-coverage expansion is requested. Do not call full supported coverage achieved.
+Closeout pushed and final draft PR31 created/attached, with the failed hosted
+matrix stated. Coverage work is stopped. No additional hosted run or coverage
+expansion is requested. Do not call full supported coverage achieved.
 
 ## Further local laser-off positioning hold/resume workflow
 
@@ -172,7 +173,7 @@ resolution. Post-fatal assertions remain unvalidated.
 Evidence: hosted40118321363/verified-exact-diagnostic-replay.json and dated
 KNOWN_BUGS addendum. Never dispatch just to collect another signature.
 
-## Next work
+## Only if the user explicitly resumes coverage
 
 1. Current compiler/coverage evidence is complete and reconciled. Keep badges
    and PR30 at the fully green head. Commit the coherent evidence/data group;
