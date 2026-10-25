@@ -41,7 +41,7 @@ driver,SAM3X8E (Arduino Due),grblHAL/SAM3X8E,partial host tests,driver_sam3x8e_s
 driver,SAMD21,grblHAL/SAMD21,source review only,,Upstream ends support at CORE build20250518; assess actual modules and keep any explicit gitlink reference separate from current CORE.
 driver,STM32F1xx,grblHAL/STM32F1xx,partial host tests,driver_stm32f1_flash,Page flash helper tested with simulated HAL; add other SDK/IO/serial modules and board builds.
 driver,STM32F3xx,grblHAL/STM32F3xx,partial host tests,driver_stm32f3_flash,Retain first-halfword status regression; add other modules and actual SDK/board validation.
-driver,STM32F4xx,grblHAL/STM32F4xx,partial host tests,driver_stm32f4_flash,32-bit host flash module tested with simulated HAL; assess serial/IO and real SDK/board builds separately.
+driver,STM32F4xx,grblHAL/STM32F4xx,partial host tests,driver_stm32f4_flash;driver_stm32f4_serial,32-bit flash plus serial primary and three-stream1/3/6 cases with original SDK/board headers and CORE streams; serial324/345 lines and104/122 branches; add remaining serial/IO variants and real board builds.
 driver,STM32F7xx,grblHAL/STM32F7xx,partial host tests,driver_stm32f7_flash,Retain first-halfword failure regression; add other modules/configurations and real SDK/board validation.
 driver,Simulator,grblHAL/Simulator,partial host tests,driver_simulator;driver_simulator_vfs,VFS current-CORE compilation fails; reference gitlink tests reproduce three filesystem defects. Serial/timer fixtures remain.
 driver,TM4C123,grblHAL/TM4C123,partial host tests,driver_tm4c123_eeprom;driver_tm4c123_serial,Retain CRC8/error propagation and full-ring realtime regressions; UART0 and EEPROM only. Add other original driver modules and actual SDK/board builds.

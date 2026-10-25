@@ -1,3 +1,50 @@
+# Combined STM32F4 serial gate - 2026-10-25 (batch44)
+
+Goal active. All52 current-CORE-compatible suites pass fresh Windows Clang
+ASan/UBSan plus strict:1159 =1094 clean +65 documented known, zero unexpected or
+skipped.21 new cases since8ad14f6/batch43 in new driver_stm32f4_serial suite;
+all21 clean. Seven affected source-plan/report helpers pass0.059s; Driver/reusable
+actionlint passes. Unchanged broader87 helpers last passed40. Main CORE and
+historical reference suites excluded. No production edit, aliases, copied source,
+assertion weakening, allowance or merge.
+
+First selected serial.c coverage324/345 lines93.9%,104/122 branches85.2%,53/57
+functions. Native original ST HAL/CMSIS/main/driver/generic-map headers and real
+CORE stream/passthrough/VFS/formatting execute. Primary USART1 GPIOA9/10 and
+three-stream profile1/3/6(GPIOB10/11,GPIOC6/7) cover independent traffic, queues,
+realtime handlers, cancellation, baud/parity, RX mute/TX preservation, ownership,
+full/blocking TX and CORE tool-ACK suspend. Extra pins are free in the generic map.
+Unexecuted functions remain serial1Write/serial1SuspendInput/serial2RxCancel/
+serial2Write; other mappings/RS485 and timing/error configurations remain open.
+
+Fresh short build-st44 counters max213 chars; no stale counters reused. GitHub
+resolution matches STM32F4a6318ac9/COREb01f4810, SDK headers contained in driver
+revision.52 suites snapshot48 clean original checkouts. GPIO/NVIC/clock-frequency,
+register memory and RX/TX/IRQ side effects are explicit host boundaries, not real
+peripheral timing or full-controller/ARM firmware link proof. New suite is in
+separate Driver workflow choice list; hosted dispatch still awaits default-branch
+installation. Keep PR29 draft/unmerged and goal active; all configurations/plugins/
+drivers/controller/hardware scope is not complete.
+
+# Batch44 STM32F4 serial local validation - 2026-10-25
+
+Goal active.11 new original serial.c cases pass Windows Clang ASan/UBSan and
+strict0.63s, zero known/unexpected/skipped. Seven component-plan/report helpers
+pass0.059s; Driver/reusable actionlint passes. New driver_stm32f4_serial suite uses
+original ST HAL/CMSIS/main/driver/generic-map headers and real CORE streams.
+Native peripheral register memory, GPIO/IRQ calls and RX/TX side effects are
+host boundaries; no source edit, alias, copied algorithm or exception.
+
+Primary USART1 registration/claim and GPIOA9/10, clock/IRQ requests, RX FIFO/
+wrap/full/cancel, realtime, CORE tool-ACK suspend, binary/flush/full/blocking TX,
+parity/baud, RX-disable TX preservation and release/reclaim execute. Host fixture
+removes Windows ERROR macro collision without changing the SDK enum. New suite
+is selectable in Driver workflow; original SDK headers live in candidate checkout.
+Only primary USART1 tested; secondary/third ports, other maps, physical timing,
+RS485/errors, actual controller and ARM link remain open. Coverage/full gate
+pending; delivered baseline8ad14f6/batch43 remains1138. Keep local for cumulative
+measurement/delivery; don't infer full-driver coverage from these cases.
+
 # Combined upload/filesystem gate - 2026-10-25 (batch43)
 
 Goal active. All51 current-CORE-compatible suites pass fresh Windows Clang

@@ -765,3 +765,23 @@ CORE gcode.c, including remembered claimed axes. Existing callback fixture does
 not link that parser. Do not copy the axis-claim algorithm or provide a matching
 mock to claim parser integration. Add supported full-parser fixtures before
 validating this feature; production sources remain unchanged.
+
+## STM32F4 original-header serial support - batch44 local
+
+Eleven native-width primary USART1 cases pass sanitizer/strict with original
+ST HAL/CMSIS, driver/main/generic-map headers and actual CORE stream lifecycle.
+Registration, real RCC enable bit, captured GPIO/IRQ requests, RX/full/wrap/cancel,
+realtime, tool-ACK suspend, TX flush/full/blocking recovery, parity/baud, RX mute
+and release/reclaim are tested. Hardware register/IRQ/peripheral side effects
+remain explicit models. Add supported secondary/third ports, alternate maps,
+RS485/errors, ARM firmware/controller and physical checks; never force private
+ring/status state. Coverage/full cumulative checkpoint pending.
+
+## STM32F4 serial measured continuation - batch44
+
+First selected serial.c report324/345 lines and104/122 branches for primary1 and
+three-stream1/3/6.21 clean sanitizer cases; full52-suite1159 checkpoint passes.
+Next ordinary gaps: secondary binary write/suspend and third binary write/cancel
+(serial1Write/serial1SuspendInput/serial2Write/serial2RxCancel have no hits).
+Other pin mappings, RS485, actual error/interrupt timing, controller/ARM builds
+and hardware remain independent required work. No SDK/whole-driver coverage claim.
