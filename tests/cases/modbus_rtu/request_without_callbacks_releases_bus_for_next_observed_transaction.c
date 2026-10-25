@@ -11,10 +11,16 @@ int main(void)
     poll_rtu();
     CHECK(rx_calls == 0 && exceptions == 0);
     for(unsigned tick = 0; tick < 20; tick++) poll_rtu();
+    CHECK(modbus_send(&message, NULL, false));
+    poll_rtu(); poll_rtu();
+    CHECK(tx_calls == 2);
+    for(unsigned tick = 0; tick < 500; tick++) poll_rtu();
+    CHECK(!modbus_isbusy());
+    CHECK(rx_calls == 0 && exceptions == 0);
     modbus_callbacks_t callbacks = {.on_rx_packet = received, .on_rx_exception = failed};
     CHECK(modbus_send(&message, &callbacks, false));
     poll_rtu(); poll_rtu();
-    CHECK(tx_calls == 2);
+    CHECK(tx_calls == 3);
     inject_reply(false);
     poll_rtu();
     CHECK(rx_calls == 1 && exceptions == 0);

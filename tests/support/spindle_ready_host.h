@@ -10,6 +10,7 @@ static spindle_state_t ready_hardware;
 static uint32_t ready_after_ms;
 static unsigned ready_queries, ready_notifications;
 static float ready_rpm;
+static float ready_tolerance = 1;
 static bool ready_connected(void) { return true; }
 static control_signals_t ready_controls(void) { return (control_signals_t){0}; }
 static void ready_output(spindle_ptrs_t *spindle, spindle_state_t state, float rpm)
@@ -33,8 +34,9 @@ static inline void prepare_spindle_ready_capabilities(uint32_t feedback_delay, u
         .cap = {.direction = true, .variable = true, .rpm_range_locked = true, .at_speed = true},
         .set_state = ready_output, .get_state = ready_input};
     driver.cap = capabilities;
+    driver.at_speed_tolerance = ready_tolerance;
     CHECK(spindle_register(&driver, "Ready feedback") == 0);
-    settings.spindle.at_speed_tolerance = 1; settings.spindle.on_delay = timeout;
+    settings.spindle.at_speed_tolerance = ready_tolerance; settings.spindle.on_delay = timeout;
     CHECK(spindle_select(0));
     coord_system_data_t coordinates = {0};
     for(unsigned id = 0; id < N_CoordinateSystems; id++)

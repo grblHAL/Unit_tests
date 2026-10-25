@@ -1,20 +1,85 @@
-# Validation batching correction - 2026-10-22
+# Productive coverage continuation - 2026-10-24
 
-User correction: repeated hosted runs for 3-5 new cases waste time. This policy
-supersedes earlier checkpoint habits and automatic end-of-turn delivery notes.
+This policy supersedes historical batch, branch and validation instructions.
+The objective remains meaningful full CORE line and branch coverage across
+supported configurations. Never edit CORE or merge PRs. Use Ponytail full and
+explicit RTK for supported commands. Preserve all existing local changes.
 
-- Continue authoring across multiple remaining supported regions before delivery.
-- Do not run a full local suite, push or dispatch hosted CI merely because a
-  goal turn ends or a small module is finished. Keep accumulating local work.
-- Use source review during authoring; focused execution only resolves uncertain
-  behavior, failures, or changes to shared reporting/fixture infrastructure.
-- One full sanitizer/strict gate and one hosted run at a substantial cumulative
-  delivery boundary. Three hosted runs per hour is an absolute ceiling, not a
-  target; normally run substantially fewer. Do not dispatch redundant heads.
-- While hosted jobs run, continue independent test authoring. Do not wait or
-  repeatedly poll them. Refresh their results at the next useful checkpoint.
-- Do not manufacture 500 cases or duplicate covered behavior to meet a quota.
-  Optimize newly exercised supported paths and bugs found per validation cycle.
+## Task scope and handoff
+
+This is C firmware functional unit testing and coverage for grblHAL CORE.
+Sanitizers, allocation-failure fixtures and expected-failure regressions validate
+controller behavior; the task does not request penetration testing or exploitation.
+Describe the actual test work plainly and keep it within that functional scope.
+
+For a new chat, read this file and only the current TOP checkpoint of
+tests/PROGRESS.md first, then inspect live Git/source status and the relevant
+inventory rows. Do not reload the full historical chat or archived handoffs.
+Keep volatile PR/run/source state in PROGRESS, replacing stale top statements.
+A user-reported merged PR supersedes older frozen-PR notes; verify remotes and
+compare ancestry before preparing the next PR. Never merge PRs yourself.
+A new chat must check actual active workers before starting a competing runner.
+Do not assume goal state or an automation transfers automatically between chats.
+
+## Choose work that can add useful coverage
+
+New tests must cover basic regressions in actual controller use. Avoid security-research-style cases, far-fetched inputs and speculative faults. Prioritize ordinary jobs, settings, tool changes and hold/resume workflows.
+
+- Read the current checkpoint in tests/PROGRESS.md, current Git status and the
+  source-matched coverage inventory. Recheck actual source and harness revisions;
+  an old percentage or branch name is not current evidence.
+- Rank missing executable regions by supported lines reachable through a real
+  controller workflow. Prioritize line gaps; use branch gaps where they represent
+  distinct supported behavior. Reuse public APIs and existing valid fixtures.
+- Before writing a case, identify its missing lines/region, supported trigger and
+  observable expected result. Check existing tests once. Do not add dummy-value
+  permutations, duplicate assertions or tests solely to raise case counts.
+- Keep assertions about outputs, motion, state restoration, errors and ownership.
+  Executing a line without validating its behavior is insufficient. Do not force
+  private state, impossible startup conditions or speculative timing races.
+- For each residual region record a concrete next action or concise evidence for
+  TODO/unavailable implementation. Distinguish an unproven route from an
+  unreachable path. Move to independent work when a contract is unresolved.
+- If a measured batch adds zero covered lines, inspect the mapping and workflow
+  before authoring more of the same. Do not repeat ineffective permutations.
+
+## Spend time authoring, not repeatedly validating
+
+- Accumulate a substantial cross-module batch on the existing feature branch.
+  A turn ending, a few new cases, or one finished module is not a delivery boundary.
+- During authoring use source review. Focused builds/tests resolve uncertain
+  behavior, failures or fixture changes; they are not an automatic per-case ritual.
+- Run one cumulative local sanitizer/strict gate at the substantial pre-push
+  boundary, then one hosted validation/coverage checkpoint. After a failure rerun
+  affected checks; broaden only for shared changes or remaining suite uncertainty.
+- Do not rerun unchanged helpers or generate per-case coverage reports. Three
+  hosted runs per hour is an absolute ceiling, never a target or work cadence.
+- Continue independent authoring while CI runs. Poll only at useful checkpoints.
+  Confirm a specific live process/job before waiting; an observation timeout does
+  not justify restarting a run or launching another worker.
+
+## Failures, contracts and honest reporting
+
+- Confirmed CORE defects do not block independent coverage work. Retain correct
+  assertions, add narrow WILL_FAIL/known_bug handling and a dated entry in
+  tests/KNOWN_BUGS.md. Fixture errors must be fixed rather than exempted.
+- Fatal sanitizer defects require exact test/platform/source/diagnostic matching.
+  Reject unrelated crashes and missing expected diagnostics. Paths after a crash
+  remain unvalidated. Remove obsolete launchers, labels and allowances together
+  when upstream fixes the defect; keep the regression assertions.
+- Respect maintainer decisions: named files must be prescanned before execution;
+  synthetic scheduler saturation is not a confirmed timing defect. G76 main
+  taper, all polar/wall-plotter homing, and zero locate-feed homing stay on TODO.
+  Do not invent a successful or rejected contract for these unfinished decisions.
+- Compare coverage gains only on matching CORE revisions/configurations and
+  report covered/total lines and branches. Reconcile inventories after source
+  changes. Do not attribute source changes to new test coverage or hide gaps.
+- A passing coverage job does not make a failed compiler matrix green. Check the
+  exact PR head, required results and mergeability before calling a PR ready.
+  Frozen PRs and newer working branches are separate deliverables.
+- Keep current revisions, run status, unfinished edits and the next concrete
+  action at the TOP of tests/PROGRESS.md; keep this file reusable. Passing tests,
+  commits and PR checkpoints do not complete or stop the full coverage goal.
 
 # Repository working instructions
 
@@ -388,3 +453,12 @@ only for explicit documented expectations; clean them up when the chosen contrac
 is implemented. Keep small case files and validate substantial batches.
 
 The user's request to resume revokes the earlier overnight pause instruction.
+
+
+## Named macro contract - 2026-10-23 maintainer clarification
+
+Named macro files must be scanned for a matching ENDSUB before execution.
+First-pass body statements must not execute. Missing ENDSUB must reject without
+executing the body. Use valid SUB/ENDSUB file fixtures and distinguish prescan
+rewind from executed RETURN/ENDSUB cleanup. Do not propose enabling body execution
+on CALL's first pass or restoring the old implicit-EOF fixture behavior.

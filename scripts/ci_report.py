@@ -135,6 +135,20 @@ def merge_reports(reports):
     return list(merged.values())
 
 
+def coverage_totals(path, complete):
+    try:
+        data = ET.parse(path).getroot().attrib
+        values = {key: int(data[key]) for key in
+                  ("lines-covered", "lines-valid", "branches-covered", "branches-valid")}
+        if any(values[key] < 0 for key in values) or any(
+                values[covered] > values[total] for covered, total in
+                (("lines-covered", "lines-valid"), ("branches-covered", "branches-valid"))):
+            return None
+        return dict(values, complete=complete)
+    except (OSError, ET.ParseError, KeyError, ValueError):
+        return None
+
+
 def render(reports, lock, outcomes=None):
     findings = merge_reports(reports)
     errors = [f for f in findings if f.get("severity", "error") == "error"]
@@ -143,6 +157,27 @@ def render(reports, lock, outcomes=None):
     unexpected = [f for f in errors if f["kind"] != "known_changed"]
     lines = ["## Why this run failed" if errors else "## CI result", "",
              f"**{len(unexpected)} unexpected failures · {len(changed)} changed known-defect exceptions · {len(warnings)} coverage/review warnings**", ""]
+    coverage = next((r["coverage"] for r in reports if r.get("job") == "coverage" and r.get("coverage")), None)
+    if coverage:
+        if not coverage.get("complete"):
+            lines += ["**Partial coverage - build or execution did not complete successfully.**", ""]
+        lines += ["| Coverage | Covered / total | Remaining |", "|---|---:|---:|"]
+        for label, covered, total in (("Lines", "lines-covered", "lines-valid"),
+                                      ("Branches", "branches-covered", "branches-valid")):
+            hits, count = coverage[covered], coverage[total]
+            rate = f"{100 * hits / count:.2f}%" if count else "N/A"
+            lines.append(f"| **{label}: {rate}** | {hits:,} / {count:,} | {count - hits:,} |")
+        lines.append("")
+    elif outcomes is not None:
+        lines += ["**Coverage unavailable** - no measured coverage totals were collected.", ""]
+    lines += ["| Job | Tests | Clean passes | Known defects | Failed | Skipped |",
+              "|---|---:|---:|---:|---:|---:|"]
+    for report in reports:
+        counts = report.get("counts", {})
+        lines.append("| " + html.escape(report["job"]) + " | " + " | ".join(
+            f"{counts[key]:,}" if key in counts else "—"
+            for key in ("total", "clean", "known", "failed", "skipped")) + " |")
+    lines += ["", "Known defects are expected-failure regressions, separate from clean passes. Compiler rows run the same suite; do not add their totals together.", ""]
     if changed:
         lines.append("Changed known-defect exceptions need review: a regression may now pass while its expected-failure exception remains. Confirm the result, retain correct assertions, and remove only the fixed exception. A different fault is not proof of a fix.")
         lines.append("")
@@ -160,10 +195,7 @@ def render(reports, lock, outcomes=None):
             lines.append("  Reproduce: `" + html.escape(f["reproduce"]) + "`.")
     if len(findings) > 12:
         lines.append(f"{len(findings) - 12} more findings are in the attached JSON reports.")
-    lines += ["", "<details><summary>Job totals and source revisions</summary>", "", "| Job | Tests | Clean | Known | Failed | Skipped |", "|---|---:|---:|---:|---:|---:|"]
-    for r in reports:
-        c = r.get("counts", {})
-        lines.append("| " + html.escape(r["job"]) + " | " + " | ".join(str(c.get(k, "—")) for k in ("total", "clean", "known", "failed", "skipped")) + " |")
+    lines += ["", "<details><summary>Source revisions</summary>", ""]
     lines += ["", "Harness: `" + lock.get("harness_sha", "unavailable") + "`"]
     for s in lock.get("sources", []):
         lines.append("- " + s["repository"] + " at `" + s["sha"] + "`")
@@ -224,6 +256,12 @@ def main():
             failed_execution = report.get("counts", {}).get("failed", 0) > 0 or any(
                 stage["stage"] in ("build", "test", "classify") and stage["exit_code"]
                 for stage in report.get("stages", []))
+            stages = {stage["stage"]: stage["exit_code"] for stage in report.get("stages", [])}
+            complete = not failed_execution and all(stages.get(stage) == 0 for stage in
+                ("fetch", "tooling", "configure", "build", "test", "classify", "coverage"))
+            totals = coverage_totals(Path("coverage.xml"), complete)
+            if totals is not None:
+                report["coverage"] = totals
             if Path("coverage.xml").exists() and failed_execution:
                 report["findings"].append(finding("coverage_partial", "Partial coverage",
                     "Build or tests failed; annotated coverage is available for gap investigation, but execution is incomplete. Fix failures before judging changed-code coverage.", severity="warning"))
@@ -231,7 +269,7 @@ def main():
                 report["findings"].extend(assess(lock, Path("coverage.xml")))
         path.write_text(json.dumps(report, indent=2) + "\n")
         reports = [report]
-    text = render(reports, lock)
+    text = render(reports, lock, needs if args.aggregate else None)
     if os.environ.get("GITHUB_STEP_SUMMARY"):
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as f:
             f.write(text)

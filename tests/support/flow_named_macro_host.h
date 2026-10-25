@@ -5,7 +5,9 @@
 #include "ngc_params.h"
 #include "stream_file.h"
 #include "stream.h"
-static const embedded_file_t flow_macro_file = {.name = "fixture.macro", .size = 4, .data = {'G', '2', '1', '\n'}};
+static const embedded_file_t flow_macro_file = {.name = "fixture.macro",
+    .size = sizeof("O<fixture>SUB\nG21\nO<fixture>ENDSUB\n") - 1,
+    .data = "O<fixture>SUB\nG21\nO<fixture>ENDSUB\n"};
 static const embedded_file_t *flow_macro_files[] = {&flow_macro_file, NULL};
 static ngc_string_id_t named_macro_label;
 static void named_macro_filesystem_changed(const vfs_t *fs) { CHECK(fs != NULL); }

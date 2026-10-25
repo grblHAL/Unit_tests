@@ -1,4 +1,6 @@
 import json
+import io
+from contextlib import redirect_stdout
 from pathlib import Path
 import subprocess
 import sys
@@ -138,6 +140,111 @@ SUMMARY: AddressSanitizer: SEGV (<unknown module>)
                         output.replace("in vfs_chdir", "in other_function"),
                         output + "other.c:1:1: runtime error: overflow"]:
             self.assertFalse(matches_known_crash(NAME, changed, manifest), changed)
+
+    def test_memcpy_overread_requires_exact_core_caller_and_allocation(self):
+        manifest = [dict(kind="fatal_asan", test=NAME, source="core/fs_ram.c", lines=[184],
+                         function="fs_read", message_pattern="heap-buffer-overflow", interceptor="memcpy",
+                         allocation_frames=[dict(source="core/fs_ram.c", line=256, function="fs_truncate")])]
+        output = """ERROR: AddressSanitizer: heap-buffer-overflow on address 0x123
+    #0 0x123 in __asan_memcpy /runtime/asan.cpp:65:3
+    #1 0x234 in fs_read /repo/core/fs_ram.c:184:9
+allocated by thread T0 here:
+    #0 0x345 in realloc /runtime/asan.cpp:117:3
+    #1 0x456 in fs_truncate /repo/core/fs_ram.c:256:24
+SUMMARY: AddressSanitizer: heap-buffer-overflow /repo/core/fs_ram.c:184:9 in fs_read
+"""
+        self.assertTrue(matches_known_crash(NAME, output, manifest))
+        linux = output.replace("__asan_memcpy", "__interceptor_memcpy").replace(
+            "/repo/core/fs_ram.c:184:9 in fs_read", "/runtime/asan.cpp:65 in __interceptor_memcpy")
+        self.assertTrue(matches_known_crash(NAME, linux, manifest))
+        self.assertTrue(matches_known_crash(NAME, output.replace("/", "\\"), manifest))
+        for before, after in [("184", "185"), ("256", "257"), ("fs_read", "other_read"),
+                              ("fs_truncate", "other_alloc"), ("__asan_memcpy", "memmove"),
+                              ("fs_ram.c", "other.c"), ("#1 0x234", "#2 0x234"),
+                              ("heap-buffer-overflow", "heap-use-after-free")]:
+            self.assertFalse(matches_known_crash(NAME, output.replace(before, after), manifest))
+        self.assertFalse(matches_known_crash("other.case", output, manifest))
+        self.assertFalse(matches_known_crash(NAME, output + output, manifest))
+        self.assertFalse(matches_known_crash(NAME, output + "ERROR: LeakSanitizer: leak", manifest))
+
+    def test_memcpy_runner_output_retains_match_under_ctest_output_limit(self):
+        name = "fs_ram.truncate_committed_file_to_nonzero_length_preserves_prefix"
+        manifest = [dict(kind="fatal_asan", test=name, source="core/fs_ram.c", lines=[184],
+                         function="fs_read", message_pattern="heap-buffer-overflow", interceptor="memcpy",
+                         allocation_frames=[dict(source="core/fs_ram.c", line=256, function="fs_truncate")])]
+        output = """ERROR: AddressSanitizer: heap-buffer-overflow on address 0x123
+    #0 0x123 in __asan_memcpy /runtime/asan.cpp:65:3
+    #1 0x234 in fs_read /repo/core/fs_ram.c:184:9
+allocated by thread T0 here:
+    #0 0x345 in realloc /runtime/asan.cpp:117:3
+    #1 0x456 in fs_truncate /repo/core/fs_ram.c:256:24
+SUMMARY: AddressSanitizer: heap-buffer-overflow /repo/core/fs_ram.c:184:9 in fs_read
+""".replace("/repo", "/very-long-checkout-path" * 20)
+        captured = io.StringIO()
+        with patch("sys.argv", ["runner", name, "inventory", "executable"]), \
+                patch("known_crash.Path.read_text", return_value=json.dumps(manifest)), \
+                patch("known_crash.Path.write_text"), \
+                patch("known_crash.subprocess.run", return_value=subprocess.CompletedProcess([], 1, output)), \
+                redirect_stdout(captured):
+            self.assertEqual(main(), 1)
+        compact = captured.getvalue()
+        self.assertLess(len(compact), 1024)
+        self.assertTrue(matches_known_crash(name, compact, manifest))
+
+    def test_tapping_bounds_fault_requires_exact_table_source_and_frame(self):
+        name = "eight_axis.rigid_tapping_fallback_receives_a_axis_arguments_and_restores_caller_scope"
+        manifest = [dict(kind="fatal_asan", test=name, source="core/gcode.c", lines=[485],
+            function="macro_arguments_push", message_pattern="global-buffer-overflow",
+            preceding_ubsan_pattern=r"index 27 out of bounds for type 'const uint8_t\[27\]' \(aka 'const unsigned char\[27\]'\)")]
+        output = """/repo/core/gcode.c:485:32: runtime error: index 27 out of bounds for type 'const uint8_t[27]' (aka 'const unsigned char[27]')
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /repo/core/gcode.c:485:32
+ERROR: AddressSanitizer: global-buffer-overflow on address 0x123
+    #0 0x456 in macro_arguments_push /repo/core/gcode.c:485:32
+SUMMARY: AddressSanitizer: global-buffer-overflow /repo/core/gcode.c:485:32 in macro_arguments_push
+"""
+        self.assertTrue(matches_known_crash(name, output, manifest))
+        self.assertFalse(matches_known_crash("other.case", output, manifest))
+        for old, new in [("index 27", "index 28"), ("uint8_t[27]", "uint8_t[28]"),
+                         (":485", ":486"), ("macro_arguments_push", "other_function")]:
+            self.assertFalse(matches_known_crash(name, output.replace(old, new), manifest))
+        self.assertFalse(matches_known_crash(name, output + "other.c:1:1: runtime error: overflow", manifest))
+
+    def test_additional_tapping_faults_require_the_test_specific_index(self):
+        cases = {
+            "spindle_sync.recursive_tapping_macro_overflow_restores_scope_and_allows_next_cut": 30,
+            "spindle_sync.unsupported_rigid_tapping_preserves_position_and_next_supported_sync_move": 28,
+        }
+        for name, index in cases.items():
+            with self.subTest(name=name):
+                manifest = [dict(kind="fatal_asan", test=name, source="core/gcode.c", lines=[485],
+                    function="macro_arguments_push", message_pattern="global-buffer-overflow",
+                    preceding_ubsan_pattern=rf"index {index} out of bounds for type 'const uint8_t\[27\]' \(aka 'const unsigned char\[27\]'\)")]
+                output = (f"/repo/core/gcode.c:485:32: runtime error: index {index} out of bounds for type 'const uint8_t[27]' (aka 'const unsigned char[27]')\n"
+                    "SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /repo/core/gcode.c:485:32\n"
+                    "ERROR: AddressSanitizer: global-buffer-overflow on address 0x123\n"
+                    "    #0 0x456 in macro_arguments_push /repo/core/gcode.c:485:32\n"
+                    "SUMMARY: AddressSanitizer: global-buffer-overflow /repo/core/gcode.c:485:32 in macro_arguments_push\n")
+                self.assertTrue(matches_known_crash(name, output, manifest))
+                self.assertFalse(matches_known_crash("other.case", output, manifest))
+                self.assertFalse(matches_known_crash(name, output.replace(f"index {index}", "index 27"), manifest))
+                self.assertFalse(matches_known_crash(name, output.replace(":485", ":486"), manifest))
+
+    def test_recursive_tapping_accepts_only_two_observed_exact_indices(self):
+        name = "spindle_sync.recursive_tapping_macro_overflow_restores_scope_and_allows_next_cut"
+        manifest = [dict(kind="fatal_asan", test=name, source="core/gcode.c", lines=[485],
+            function="macro_arguments_push", message_pattern="global-buffer-overflow",
+            preceding_ubsan_pattern=rf"index {index} out of bounds for type 'const uint8_t\[27\]' \(aka 'const unsigned char\[27\]'\)")
+            for index in (27, 30)]
+        for index in (27, 28, 30, 31):
+            output = (f"/repo/core/gcode.c:485:32: runtime error: index {index} out of bounds for type 'const uint8_t[27]' (aka 'const unsigned char[27]')\n"
+                "SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /repo/core/gcode.c:485:32\n"
+                "ERROR: AddressSanitizer: global-buffer-overflow on address 0x123\n"
+                "    #0 0x456 in macro_arguments_push /repo/core/gcode.c:485:32\n"
+                "SUMMARY: AddressSanitizer: global-buffer-overflow /repo/core/gcode.c:485:32 in macro_arguments_push\n")
+            self.assertEqual(matches_known_crash(name, output, manifest), index in (27, 30))
+            self.assertFalse(matches_known_crash("other.case", output, manifest))
+            self.assertFalse(matches_known_crash(name, output.replace(":485", ":486"), manifest))
+        self.assertFalse(matches_known_crash(name, "", manifest))
 
     def test_runner_error_is_not_an_expected_failure(self):
         result = subprocess.run([sys.executable, str(SCRIPTS / "known_crash.py"), NAME,

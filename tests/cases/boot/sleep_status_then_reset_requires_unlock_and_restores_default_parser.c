@@ -1,15 +1,21 @@
 #include "support/boot_host.h"
-static unsigned sleep_turns;
+static unsigned sleep_turns, sleep_start_polls;
+static bool sleep_start_requested;
 static bool sleep_report_requested, sleep_reset_sent, warm_query_sent;
 static void observe_sleep_and_request_reset(sys_state_t state)
 {
+    if(sleep_start_requested && !sleep_reset_sent) CHECK(state == STATE_SLEEP);
     if(state != STATE_SLEEP) return;
     CHECK(++sleep_turns < 1000);
     CHECK(boot_enabled_axes.mask == 0 && boot_coolant_state.mask == 0);
     if(!sleep_report_requested) {
         CHECK(protocol_enqueue_realtime_command(CMD_STATUS_REPORT));
         sleep_report_requested = true;
-    } else if(!sleep_reset_sent && strstr(engine_output, "<Sleep|")) {
+    } else if(!sleep_start_requested && strstr(engine_output, "<Sleep|")) {
+        CHECK(protocol_enqueue_realtime_command(CMD_CYCLE_START));
+        sleep_start_requested = true;
+    } else if(sleep_start_requested && !sleep_reset_sent && ++sleep_start_polls == 4) {
+        for(unsigned axis = 0; axis < N_AXIS; axis++) CHECK(sys.position[axis] == 0);
         CHECK(protocol_enqueue_realtime_command(CMD_RESET));
         sleep_reset_sent = true;
     }
@@ -34,6 +40,7 @@ int main(void)
     boot_program = "M8\nG20\n$SLP\n\n\n";
     CHECK(grbl_enter() == 0);
     CHECK(boot_coolant_seen_on && sleep_report_requested && sleep_reset_sent && warm_query_sent);
+    CHECK(sleep_start_requested && sleep_start_polls == 4);
     CHECK(state_get() == STATE_ALARM && !sys.position_lost);
     CHECK(!gc_state.modal.units_imperial);
     CHECK(strstr(engine_output, "<Sleep|") != NULL);

@@ -10,8 +10,8 @@ int main(void)
     CHECK(gc_state.tool->tool_id == 0 && gc_state.g43_pending == 1);
     CHECK(m6_changed_calls == 0);
     NEAR(gc_state.modal.tool_length_offset[Z_AXIS], 0);
-    HOST_PARSER_FLAGS.tool_change = false;
-    state_update(EXEC_CYCLE_START);
+    CHECK(protocol_enqueue_realtime_command(CMD_CYCLE_START));
+    CHECK(protocol_exec_rt_system());
     CHECK(state_get() == STATE_IDLE);
     CHECK(sys.rt_exec_state & EXEC_STATUS_REPORT);
     CHECK(gc_state.tool == &offset_tool);

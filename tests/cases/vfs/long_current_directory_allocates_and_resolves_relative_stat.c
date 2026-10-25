@@ -8,6 +8,6 @@ int main(void)
     char expected[128] = "/"; memset(expected + 1, 'a', 110);
     strcpy(expected + 111, "/file");
     CHECK(strcmp(operation_path, expected) == 0);
-    CHECK(vfs_chdir("/") == 0); cleanup_operations();
+    cleanup_operations();
     return EXIT_SUCCESS;
 }

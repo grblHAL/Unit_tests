@@ -14,5 +14,11 @@ int main(void)
     CHECK(!digital_pins[Port_Output][0].mode.claimed);
     CHECK(!digital_pins[Port_Output][1].mode.claimed);
     CHECK(strcmp(digital_pins[Port_Output][0].description, "Fixture output") == 0);
+    CHECK(ioport_set_description(Port_Digital, Port_Output, 1, NULL));
+    CHECK(ioport_get_info(Port_Digital, Port_Output, 1)->description == NULL);
+    CHECK(ioport_find_free(Port_Digital, Port_Output, (pin_cap_t){0}, "Fixture output") == 0);
+    CHECK(ioport_find_free(Port_Digital, Port_Output, (pin_cap_t){0}, "Missing output") == IOPORT_UNASSIGNED);
+    CHECK(ioport_find_free(Port_Digital, Port_Output, (pin_cap_t){.claimable = true}, "1") == 1);
+    CHECK(ioports_unclaimed(Port_Digital, Port_Output) == 2);
     return EXIT_SUCCESS;
 }

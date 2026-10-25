@@ -5,6 +5,7 @@ static spindle_pwm_t pair_pwm[2];
 static spindle_pwm_settings_t pair_settings[2];
 static uint_fast16_t pair_output[2], pair_log[2][128];
 static unsigned pair_calls[2];
+static bool pair_enable_secondary = true;
 static uint_fast16_t pair_get_pwm(spindle_ptrs_t *spindle, float rpm)
 { return spindle->context.pwm->compute_value(spindle->context.pwm, rpm, false); }
 static void pair_update_pwm(spindle_ptrs_t *spindle, uint_fast16_t pwm)
@@ -40,9 +41,11 @@ static inline void prepare_paired_pwm_program_mode(machine_mode_t mode)
     settings.spindle.ref_id = 10;
     CHECK(settings_register(&spindle_slot_details));
     CHECK(spindle_select(0));
-    CHECK(spindle_enable(1) == 1);
+    if(pair_enable_secondary)
+        CHECK(spindle_enable(1) == 1);
     CHECK(spindle_get(0)->param->option.ramp_up);
-    CHECK(spindle_get(1)->param->option.ramp_up == (mode != Mode_Laser));
+    if(pair_enable_secondary)
+        CHECK(spindle_get(1)->param->option.ramp_up == (mode != Mode_Laser));
     coord_system_data_t coordinates = {0};
     for(unsigned id = 0; id < N_CoordinateSystems; id++)
         settings_write_coord_data((coord_system_id_t)id, &coordinates);

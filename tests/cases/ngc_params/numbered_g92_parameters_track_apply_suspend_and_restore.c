@@ -19,5 +19,7 @@ int main(void)
     CHECK(gc_execute_block(restore) == Status_OK);
     CHECK(ngc_param_get(5210, &value)); NEAR(value, 1);
     CHECK(ngc_param_get(5211, &value)); NEAR(value, 8);
+    CHECK(ngc_param_get(5214, &value)); NEAR(value, 0);
+    CHECK(ngc_param_get(5219, &value)); NEAR(value, 0);
     return EXIT_SUCCESS;
 }

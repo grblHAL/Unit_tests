@@ -27,7 +27,10 @@ static inline void prepare_static_macro_named(const char *macro_name)
     strcpy(static_macro_path, "/");
     strcat(static_macro_path, macro_name);
     strcat(static_macro_path, ".macro");
-    prepare_file_stream("G21\n");
+    static char macro_program[320];
+    int length = snprintf(macro_program, sizeof(macro_program), "O<%s>SUB\nG21\nO<%s>ENDSUB\n", macro_name, macro_name);
+    CHECK(length > 0 && (size_t)length < sizeof(macro_program));
+    prepare_file_stream(macro_program);
     static const vfs_t backend = {.fopen = open_static_macro, .fclose = close_file,
         .fread = read_file, .ftell = tell_file, .fseek = seek_file, .fstat = stat_static_macro};
     CHECK(vfs_mount(NULL, "/", &backend, (vfs_st_mode_t){.directory = true}));
@@ -44,4 +47,25 @@ static inline void prepare_static_macro_named(const char *macro_name)
 static inline void prepare_static_macro(void)
 {
     prepare_static_macro_named("fixture");
+}
+
+static inline void execute_static_macro_file(void)
+{
+    for(unsigned lines = 0; hal.stream.file != NULL; lines++) {
+        CHECK(lines < 10);
+        char block[160];
+        unsigned length = 0;
+        int16_t ch;
+        while((ch = hal.stream.read()) != '\n' && ch != ASCII_EOF) {
+            CHECK(ch >= 0 && length + 1 < sizeof(block));
+            block[length++] = (char)ch;
+        }
+        block[length] = 0;
+        if(ch == ASCII_EOF) {
+            CHECK(grbl.on_file_end(hal.stream.file, Status_OK) == Status_OK);
+        } else {
+            CHECK(gc_execute_block(block) == Status_OK);
+            CHECK(grbl.report.status_message(Status_OK) == Status_OK);
+        }
+    }
 }

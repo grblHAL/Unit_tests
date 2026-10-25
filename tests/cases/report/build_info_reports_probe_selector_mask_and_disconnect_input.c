@@ -6,12 +6,19 @@ int main(void)
 {
     prepare_build_report();
     hal.probe.get_state = build_probe_state;
-    hal.probe.select = build_probe_select;
-    hal.driver_cap.probe = hal.driver_cap.toolsetter = hal.driver_cap.probe2 = true;
-    hal.signals_cap.probe_disconnected = true;
-    build_report(true);
-    CHECK(strstr(engine_output, ",PROBES=7,") != NULL);
-    CHECK(strstr(engine_output, ",PC,") != NULL);
-    CHECK(strstr(engine_output, "NOPROBE") == NULL);
+    for(unsigned pass = 0; pass < 3; pass++) {
+        bool selectable = pass != 1;
+        hal.probe.select = selectable ? build_probe_select : NULL;
+        hal.driver_cap.probe = true;
+        hal.driver_cap.toolsetter = hal.driver_cap.probe2 = selectable;
+        hal.signals_cap.probe_disconnected = selectable;
+        engine_output[0] = 0;
+        build_options_calls = 0;
+        build_report(true);
+        CHECK((strstr(engine_output, ",PROBES=7,") != NULL) == selectable);
+        CHECK((strstr(engine_output, ",PC,") != NULL) == selectable);
+        if(!selectable) CHECK(strstr(engine_output, "PROBES=") == NULL);
+        CHECK(strstr(engine_output, "NOPROBE") == NULL);
+    }
     return EXIT_SUCCESS;
 }

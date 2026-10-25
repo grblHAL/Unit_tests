@@ -16,6 +16,8 @@ int main(void)
     strcat(end, name);
     strcat(end, ">ENDSUB[7]");
     CHECK(gc_execute_block(end) == Status_OK);
+    CHECK(file_closes == 0 && hal.stream.file != NULL && ngc_call_level() == 1);
+    CHECK(gc_execute_block(end) == Status_OK);
     CHECK(file_closes == 1 && hal.stream.file == NULL && ngc_call_level() == 0);
     CHECK(ngc_param_get(1, &value)); NEAR(value, 99);
     char result[] = "_value";

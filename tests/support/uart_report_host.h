@@ -2,10 +2,11 @@
 #include "support/report_host.h"
 #include "stream.h"
 static io_stream_status_t port_status;
+static bool uart_status_available = true;
 static const io_stream_status_t *get_port_status(uint8_t instance)
 {
     CHECK(instance == 1);
-    return &port_status;
+    return uart_status_available ? &port_status : NULL;
 }
 static inline bool report_character(uint8_t c)
 {

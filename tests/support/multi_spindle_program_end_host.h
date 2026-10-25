@@ -18,7 +18,10 @@ static inline void prepare_multi_spindle_program_end(bool restore)
     hal.coolant.set_state = end_set_coolant;
     hal.coolant.get_state = end_get_coolant;
     grbl.on_program_completed = end_completed;
-    char value[] = {restore ? '1' : '0', '\0'};
+    const setting_detail_t *actions = setting_get_details(Setting_RestoreOverrides, NULL);
+    CHECK(actions != NULL);
+    /* Keep these shutdown tests' G54 policy while varying override restoration. */
+    char value[] = {(char)((actions->datatype == Format_Bitfield ? '2' : '0') + restore), '\0'};
     CHECK(settings_store_setting(Setting_RestoreOverrides, value) == Status_OK);
     plan_feed_override(75, 50);
     CHECK(spindle_program_block("M8") == Status_OK && end_coolant.flood);
