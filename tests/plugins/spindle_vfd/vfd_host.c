@@ -11,7 +11,12 @@ bool vfd_bus_up = true, vfd_storage_ok = true;
 unsigned vfd_reject, vfd_exception;
 uint16_t vfd_feedback = 10000;
 uint16_t vfd_max_rpm = 24000;
-uint16_t vfd_poles = 2, vfd_min_frequency = 100, vfd_max_frequency = 4000;
+uint16_t vfd_poles = 2, vfd_min_frequency = 100;
+#if TEST_NOWFOREVER
+uint16_t vfd_max_frequency = 40000;
+#else
+uint16_t vfd_max_frequency = 4000;
+#endif
 unsigned vfd_resets;
 modbus_message_t vfd_messages[64];
 bool vfd_blocking[64];
@@ -28,7 +33,12 @@ static void silence(const modbus_silence_timeout_t *timeout)
 static uint32_t ticks(void) { return vfd_ticks; }
 static bool send_message(modbus_message_t *message, const modbus_callbacks_t *callbacks, bool block)
 {
-    CHECK(vfd_requests < 64 && message->tx_length == 8);
+    CHECK(vfd_requests < 64);
+#if TEST_NOWFOREVER
+    CHECK(message->tx_length == (message->adu[1] == ModBus_WriteRegisters ? 11 : 8));
+#else
+    CHECK(message->tx_length == 8);
+#endif
     CHECK(callbacks && callbacks->retries == VFD_RETRIES &&
           callbacks->retry_delay == VFD_RETRY_DELAY);
     vfd_messages[vfd_requests] = *message;
@@ -42,7 +52,20 @@ static bool send_message(modbus_message_t *message, const modbus_callbacks_t *ca
         modbus_message_t reply = *message;
         if (message->adu[1] == ModBus_ReadHoldingRegisters)
         {
-#if TEST_HUANYANG2
+#if TEST_NOWFOREVER
+            uint16_t reg = (message->adu[2] << 8) | message->adu[3];
+            CHECK(reg == 7 || reg == 0x502);
+            CHECK(message->rx_length == (reg == 7 ? 9 : 7));
+            reply.adu[2] = reg == 7 ? 4 : 2;
+            uint16_t value = reg == 7 ? vfd_max_frequency : vfd_feedback;
+            reply.adu[3] = value >> 8;
+            reply.adu[4] = value & 255;
+            if (reg == 7)
+            {
+                reply.adu[5] = vfd_min_frequency >> 8;
+                reply.adu[6] = vfd_min_frequency & 255;
+            }
+#elif TEST_HUANYANG2
             CHECK(message->rx_length == 8);
             uint16_t reg = (message->adu[2] << 8) | message->adu[3];
             CHECK(reg == 0xb005 || reg == 0x700c);

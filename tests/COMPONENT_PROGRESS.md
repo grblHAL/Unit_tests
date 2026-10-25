@@ -1,3 +1,30 @@
+# Local Nowforever VFD checkpoint - 2026-10-25
+
+Goal active. Eleven new original-source Nowforever scenarios cover frequency
+range discovery, forward/reverse/stop, nonblocking speed limits and duplicate
+suppression, RPM feedback/poll caching, reset range refresh, discovery retry,
+async exception thresholds/recovery, settings/report hooks and absent/down
+providers. Real CORE registration/Modbus and EEPROM-backed settings retained.
+Shared transport fixture explicitly models this protocol's11-byte multiple-
+register writes and9-byte range reply, with bounded captured packet assertions.
+
+Initial69-case ASan/UBSan run passed68 and failed the new command fixture: it
+changed direction while stopping, which resets cached programmed RPM to zero
+and suppresses a redundant speed write. Stop scenario now retains selected CCW
+while disabling output, checking stop word0 and minimum-frequency clamp100.
+Only this test source changed after that run. Focused repair11/11 passes0.46s
+with strict classification all clean. The58 existing protocols passed the
+initial shared-fixture run; no fresh combined69 green claim. No new known
+failure, assertion weakening, production edit or diagnostic allowance.
+
+Pending local VFD additions32 beyond delivered batch32;868 compatible authored.
+Last full global gate remains836 plus26 reference cases and87 helper checks.
+No new measured coverage, hosted GCC/Linux result, serial timing, full controller
+job or physical VFD validation. Huanyang v1 and remaining spindle variants are
+still open. Continue substantial authoring before combined delivery gate/push.
+
+---
+
 # Local Huanyang v2 VFD checkpoint - 2026-10-25
 
 Goal active. Ten new Huanyang v2 scenarios execute original protocol code with

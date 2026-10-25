@@ -499,5 +499,16 @@ RS485/VFD behavior remain; no new coverage measurement or global gate yet.
 Ten scenarios and all58 VFD cases pass local Clang ASan/UBSan/strict after shared
 transport response layout extension. Discovery/max-RPM scaling, direction/stop,
 feedback poll caching, reset refresh and first-start discovery retry execute.
-No new failures/allowances. Huanyang v1/Nowforever and physical/controller jobs
+No new failures/allowances. Huanyang v1 and physical/controller jobs
 remain; selected host behavior does not establish wire timing/hardware success.
+
+## Nowforever VFD protocol
+
+Eleven cases pass focused repaired ASan/UBSan/strict. Original69-case run had
+one command-fixture failure; other58 protocols passed shared backend change.
+Stop test retains direction instead of combining stop/direction change and
+expecting an extra speed write despite programmed-zero cache reset. Frequency
+range/limits, packet layout, polling, reset refresh and discovery retry execute.
+Huanyang v1, additional spindle output variants, controller jobs and hardware
+remain open. Source's1.667 conversion is tested as its selected approximation,
+not a physical frequency accuracy guarantee. No new coverage/global result.
