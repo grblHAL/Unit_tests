@@ -88,6 +88,23 @@ Evidence hosted40121790962/{report-core-clang,results-core-clang,verified-clang.
 verified-new-workflows.json,verified-exact-diagnostic-replay.json}. No CI retry for
 these entries alone; post-fatal assertions remain unvalidated.
 
+## Further local queued work-offset reporting workflow
+
+Added report/queued_g92_transition_reports_forced_work_offset_with_feed_override.c.
+An ordinary X20 cut remains queued while G92X0 and the next X5 cut are parsed
+with offset synchronization disabled. Before transition, status reports the first
+move's WCO0. At the real stepper block transition, a public110% feed override and
+ordinary status request report both Ov110 and forced WCO20; the next report does
+not repeat WCO. Both moves complete at2,000 physical X pulses / machine25mm,
+with G92 offset20 and no dropped motion. Public st_get_offset_id only observes
+the transition; no report flag or private state is injected.
+
+Focused ASan/UBSan and strict1/1 pass0.27s; saved queued-g92-status-{build,summary}.log
+and queued-g92-status-results.xml. Targets report1498's ForceWCO arm via its native
+stepper512 producer, plus corresponding work-offset refresh outcomes. No new
+allowance or measured coverage claim. Outside the full4,504 gate/ed5b142 report.
+Accumulate with the permanent-idle-lock sender reset before a substantial gate.
+
 ## Further local ordinary reset workflow
 
 Added boot/sender_reset_with_permanent_idle_lock_stops_step_timer_before_restart.c.
