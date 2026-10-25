@@ -685,3 +685,12 @@ reproduce unsafe path. Cwd buffer handling likewise remains source-only. Legacy
 API configurations, SDcard.c mount/detect lifecycle, physical disk/controller,
 mkfs-disabled provider formatting and other FAT variants remain open. Next use
 normal supported SD controller events over this original engine where compatible.
+
+## SD mount/detect lifecycle follow-up
+
+Seven new cases,14 combined strict-clean sanitizer. Original sdcard.c mounts
+actual FatFs/VFS from valid RAM media, commands/detect/startup/error/early setup/
+custom callbacks/report subscriptions execute. No physical GPIO/SPI/media timing
+or streamed full-controller job. Current source coverage filter includes both
+adapter and SD layer; record expanded denominator at next cumulative checkpoint.
+Remaining storage/driver configurations and root-stat/cwd source concerns remain.

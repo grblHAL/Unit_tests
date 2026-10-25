@@ -278,7 +278,7 @@ repository's default branch.
 | Plugin tests | `plugin_spindle_clone` | Primary/clone signal routing, CORE PWM conversion, switching and provider rejection |
 | Plugin tests | `plugin_spindle_stepper` | Original CORE secondary-stepper polling/timer callbacks, position sync and motor claims |
 | Plugin tests | `plugin_sdcard_stream` | File input, stream ownership, error/reset recovery and external macro repeats |
-| Plugin tests | `plugin_sdcard_fatfs` | Original FatFs adapter/engine on valid RAM-backed FAT12 media; file operations and read-error recovery |
+| Plugin tests | `plugin_sdcard_fatfs` | Original FatFs/SD mount and detect events on valid RAM-backed FAT12 media; file I/O and recovery |
 | Driver tests | `driver_simulator_vfs` | File/directory workflows; current CORE compile incompatibility recorded |
 | Plugin tests | `plugin_keypad` | I2C/UART jog commands, cancellation, overrides and NVS restart |
 | Plugin tests | `plugin_networking` | Interface events/enumeration, status reports and service/MAC helpers with real lwIP headers |

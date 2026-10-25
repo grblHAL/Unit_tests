@@ -798,7 +798,7 @@
     "cmake_source": "tests/plugins/sdcard_fatfs",
     "cmake_options": [],
     "test_regex": "^plugin_sdcard_fatfs[.]",
-    "coverage_filter": "plugins/sdcard/fs_fatfs\\.c$",
+    "coverage_filter": "plugins/sdcard/(fs_fatfs|sdcard)\\.c$",
     "diagnostics_directory": "tests/plugins/sdcard_fatfs"
   }
 }

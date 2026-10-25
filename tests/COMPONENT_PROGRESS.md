@@ -1,3 +1,31 @@
+# Local SD mount/detect lifecycle checkpoint - 2026-10-25
+
+Goal active. Seven new original sdcard.c cases bring FatFs/SD suite to14.
+Complete14-case Windows Clang ASan/UBSan run passes0.85s and strict classification
+all clean. Original engine/VFS adapter plus SD layer run against valid FAT12
+block device. Media initialization is separated from mounting; SD layer invokes
+actual f_mount/fs_fatfs_mount, not a premounted substitute. FM/FU command handlers,
+queued detect/unmount/remount, status dirty/all reporting and original files
+surviving remount execute. No private SD state injection or production edits.
+
+Startup automount failure reports then recovers with present media. Early mount
+wraps driver setup/settings callback and preserves previous handlers; absent
+active-low detection avoids early mount until public insert event. Custom mount/
+unmount callbacks still use original FatFs. No-detect hardware advertises mounted
+status correctly; options/prior report hooks chain. Scheduler and detect GPIO
+are explicit driver boundaries, not physical SPI/card or native controller job.
+
+Coverage filter now includes fs_fatfs.c and sdcard.c for this suite; future
+coverage denominator will expand, not imply same-file percentage gain. Metadata7
+helper checks pass.51 host suites/996 authored; last full delivered batch35
+976/50 plus87 helpers. Pending20 local:6 coolant +14 FatFs/SD. No fresh source
+coverage/global/hosted claim. Original plugin/CORE/STM32 FatFs remain unchanged;
+root-stat/cwd source concerns and littlefs compatibility remain separate.
+Physical media lifecycle, real IRQ timing, SDK firmware/controller integration,
+legacy/alternate filesystems and other modules stay open. Full goal stays active.
+
+---
+
 # Local original FatFs adapter/engine checkpoint - 2026-10-25
 
 Goal active. Seven new FatFs scenarios pass Windows Clang ASan/UBSan0.44s
