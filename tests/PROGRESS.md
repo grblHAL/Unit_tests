@@ -1,50 +1,452 @@
-# PR30 reviewed validation - 2026-10-25
+# Ordered PR merge checkpoint - 2026-10-25
 
-Run40180255067: source/GCC/coverage pass, Clang one known diagnostic mismatch.
-Saved output is the exact recursive-tapping index28 signature already accepted
-in fully green PR31 run40179484951. Added that one inventory entry. All three
-actual fatal logs pass the production runner offline replay, including its
-first1024 output bytes; unrelated location rejects. Functional code unchanged.
-No repeated full build for data-only repair. Hosted run remains labelled failed;
-manual review verifies the reporting repair. User explicitly authorized merge.
+PR30 merged as6b6d147 after saved-output validation of its final inventory.
+Integrated that base into PR31; only documentation changed from the reviewed
+9aa51a01 integration. PR31 functional head26a3d5f remains fully hosted green
+(run40179484951); final diagnostic data addition was verified by offline replay
+and17 helper tests. No functional, fixture, compiler or CORE changes.
+Merge PR31 next as explicitly authorized; coverage expansion remains stopped.
 
-# PR30 diagnostic reporting repair - 2026-10-25
+# Validated PR31 closeout integration - 2026-10-25
 
-Fresh hosted GCC and coverage passed; Clang reported three existing fatal
-macro-argument regressions with diagnostic indices absent from this older
-branch inventory. Added only the three observed signatures from saved logs;
-offline matching passes and a changed source location is rejected.
-No functional case or CORE source changed. Fresh hosted validation pending.
+Run40179484951 passed all five required jobs at26a3d5f/COREb01f481.
+GCC:4,508 total/4,483 clean/25 known; Clang:4,508/4,480 clean/28 known.
+Zero unexpected failures/skips. Verified coverage17,491/17,757 lines98.50%
+and12,839/13,852 branches92.69%.
+Integrated PR30 reporting-only repair: exact inventory union adds one observed
+unsupported-tapping index29 signature; no functional cases, fixtures, compiler
+configuration, matcher or CORE changes. Saved diagnostic replay and helper
+tests validate the inventory. No redundant full rebuild for this data-only merge.
+User authorized merging PR30 then PR31. Coverage expansion remains stopped.
 
-# PR30 conflict repair - 2026-10-25
+# PR31 conflict repair - 2026-10-25
 
-The user explicitly authorized resolving and merging PR30/PR31 in this chat;
-that request supersedes older no-merge/frozen-head notes for these two PRs only.
-Coverage expansion remains stopped. No CORE source or functional case changed.
+The user explicitly authorized resolving and merging PR30/PR31; that overrides
+older no-merge/frozen-head notes for these two PRs only. Coverage expansion stays
+stopped. Work occurs in isolated repair checkouts; the original coverage checkout
+and the unfinished badge branch are preserved.
 
-Merged current upstream master (PR29's component infrastructure) into PR30.
-The sole textual conflict was scripts/test_ci_report.py; retained both CORE
-coverage-summary tests and the component optional-ARM-job test. All101 helpers
-pass16.031s; all four workflow files pass actionlint. Existing exact functional
-head59b3ad9 was freshly verified against run40111349496: all five jobs succeeded.
-This integration is not represented as a fresh exact-head hosted functional run.
-Preserve the separate active coverage checkout and pending badge branch.
+Integrated PR30's base/conflict repair, including the merged PR29 infrastructure.
+Only this progress file required another textual resolution; retained PR31's
+newer closeout and diagnostic evidence rather than restoring PR30's older state.
+Functional cases, fixtures, CMake and existing exact diagnostic entries are
+unchanged from the delivered PR31 head. A new locked combined hosted gate is
+required before marking PR31 ready or merging it. No source fixes or widened
+failure matching are part of this repair.
 
-# Current checkpoint - 2026-10-24
+# Current checkpoint - 2026-10-25
+
+Coverage expansion STOPPED at the user's request on2026-10-25.
+Final draft PR31: https://github.com/grblHAL/Unit_tests/pull/31
+Full supported coverage has not been proved. Do not resume without a new request. Never edit
+CORE or merge PRs. Basic actual-use regressions only; Ponytail full and explicit
+RTK. Passing gates or PR checkpoints do not complete this goal.
+
+Active checkout:
+C:/Users/User/Documents/Codex/2026-10-08/https-github-com-petervanderwalt-unit-tests/work/Unit_tests
+
+## Current Git and delivery boundary
+
+- Branch coverage-batch-75 is delivered in final draft PR31. The last measured
+  hosted head is ed5b142; later closeout, exact diagnostic data and four locally
+  validated workflows are included in the PR. No matcher change.
+- CORE clean, HEAD and freshly fetched origin/master both
+  b01f481072edecac33d5e40c25869359a5b3fa1f.
+- PR28 merged. PR30 is open, ready, unmerged at59b3ad9f9198d9973cc03b7af983c1d9899abc2d:
+  https://github.com/grblHAL/Unit_tests/pull/30
+  Its exact run40111349496 passed all five jobs. Keep its head unchanged.
+- README badges remain that fully green run:98.50% lines/92.48% branches.
+  No PR75 readiness claim: the completed Clang matrix failed as described below.
+- Preserve/exclude unrelated changes: .github/workflows/reusable-tests.yml,
+  .gitignore, scripts/ci_report.py, the legacy optional-description ioports case,
+  and drivers/. No CORE edits, merge or unrelated staging performed.
+
+## Existing hosted run: do not redispatch
+
+Run40121790962, exact harnessed5b142 / COREb01f481:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/40121790962
+One dispatch after duplicate-head/hourly-ceiling checks; one prior run in the
+hour. Saved build-asan/batch75-modal-dispatch.json. No active local runner.
+
+Run COMPLETED FAILURE: source, GCC and coverage PASSED; Clang and results
+summary FAILED. No active hosted job remains. Do not redispatch this head or
+retry merely for diagnostic data. The failed matrix is not a readiness checkpoint.
+
+Downloaded evidence under build-asan/hosted40121790962:
+- source-lock-core and report-core-source locks match the exact harness/source/
+  core/.*\.[ch]$ filter. Helpers/resolve stages exit0; no findings.85 hosted
+  helper checks pass4.841s. Machine proof: verified-source.json.
+- coverage-core and report-core-coverage locks match. All seven stages exit0;
+  no findings.4,504 total/4,480 clean/24 known/zero failed or skipped.
+- GCC report/result locks match ed5b142/b01f481; all five stages exit0 and no
+  findings.4,504 total/4,479 clean/25 known/zero failed/skipped. Saved
+  report-core-gcc, results-core-gcc and verified-gcc.json.
+- Coverage17,491/17,757 lines98.50%;12,836/13,852 outcomes92.67%.
+  Raw remaining:266 lines and1,016 branch outcomes. No exclusions.
+- Same-source cf41105 comparison: eight new outcomes, zero new/lost lines and
+  no lost outcomes. Both inventories reconciled; all266 missing line keys match.
+  Machine proof: verified-comparison.json.
+
+## Delivered functional group and measured gains
+
+Six workflows since cf41105 are included in ed5b142:
+- Native full-probe status flags show all registered inputs and selected probe2
+  without an idle-protection marker. Gain: report1594.
+- Feed-only M70/M72 in the existing cutter build restores feed without configuring
+  disabled compensation. Gains: gcode541/542.
+- Primary-only spindle M70/M72 restores feed120, nominal3000RPM, override120%
+  and actual3600RPM without unused-driver calls. Gains: gcode511/4381.
+- Physical E-stop still permits $I identification while locked; release/reset/
+  explicit unlock and $G remain functional. Gain: system627.
+- Background USB DTR leaves the active Telnet sender and its realtime handler
+  intact, with no stray welcome banner. Gain: stream327.
+- Normal sleep request from forced startup alarm reaches its allowed guard
+  (system576), but CORE leaves the state Alarm. Correct Sleep assertion remains
+  under one exact WILL_FAIL/known_bug and a dated KNOWN_BUGS entry. Public
+  unlock-before-sleep control passes; no sanitizer allowance or private setup.
+
+One full cumulative local ASan/UBSan gate:4,504 cases pass62.62s. Strict summary:
+4,478 clean/25 known regressions/one known diagnostic/zero failed or skipped.
+Saved batch75-modal-delivery-{build,tests,summary}.log and results.xml. This is
+not a reason to rerun unchanged helpers or another full gate for a few cases.
+
+## Current Clang failure and exact saved-evidence handling
+
+Clang locks match ed5b142/b01f481. Fetch/configure/build stages pass; test/classify
+fail on only the three existing tapping cases.4,504 total/4,476 clean/25 known/
+3 failed/zero skipped. Actual saved indices are30 (eight-axis),28 (recursive),31
+(unsupported fallback), all gcode485:32/const27/macro_arguments_push followed by
+ASan global-buffer-overflow. Do not mistake diagnostic column32 for the index.
+All six new workflows classify as expected: five clean plus alarm-sleep known bug.
+
+Three local exact test/index entries pass saved-output production/first1024
+replay; changed index/source/table/function, absent and zero-exit controls reject.
+No matcher/assertion/flag/padding/wildcard/range change. Dated KNOWN_BUGS addendum.
+Evidence hosted40121790962/{report-core-clang,results-core-clang,verified-clang.json,
+verified-new-workflows.json,verified-exact-diagnostic-replay.json}. No CI retry for
+these entries alone; post-fatal assertions remain unvalidated.
+
+## Final user-requested closeout
+
+No further authoring or coverage chasing. Added COVERAGE_CLOSEOUT.md summarizing
+unfinished/deferred features, disabled/unrouted paths, unresolved contracts and
+all remaining evidence limits. The remaining1,016 branch outcomes are not all
+proved impossible. Latest measured coverage stays98.50% lines/92.67% branches.
+Four local workflows since ed5b142 include the probe-selector status case: actual
+G65P5Q1 selects the registered toolsetter and reports ID1 once via ordinary status,
+without a protection event or movement. Focused sanitizer/strict pass0.30s.
+Saved probe-selector-status-{build,summary}.log and results.xml. No new allowance.
+Final cumulative local ASan/UBSan4,508 gate passes152.20s; strict classification:
+4,482 clean/25 known regressions/one known diagnostic/zero failed or skipped.
+Saved final-closeout-{build,tests,summary}.log and final-closeout-results.xml.
+Closeout pushed and final draft PR31 created/attached, with the failed hosted
+matrix stated. Coverage work is stopped. No additional hosted run or coverage
+expansion is requested. Do not call full supported coverage achieved.
+
+## Further local laser-off positioning hold/resume workflow
+
+Added state_machine/laser_off_positioning_hold_resume_preserves_zero_output_until_explicit_m3.c.
+A normal G1X20M5S500 positioning move is held with the public hold-action setting0.
+Four held polls retain position and zero output. Resume finishes all1,600 X pulses
+with the driver off/zero at every step-service call and every recorded PWM update.
+A later explicit G1X21M3S500 cut powers the actual driver and reaches1,680 pulses,
+proving the preceding zero-output checks are not an inactive fixture.
+
+Uses existing registered PWM/stepper/hold fixtures and public hold/cycle-start
+commands. Initial control observation watched only PWM updates; constant-power
+set_state output is now included through the existing driver-level observer.
+No CORE defect, new allowance, host variant or private-state injection.
+Focused ASan/UBSan and strict1/1 pass0.28s; saved laser-off-hold-{build,summary}.log
+and laser-off-hold-results.xml. Expected target: spindle_control888's state.on
+false arm in native hold restoration. No measured gain claimed. Outside the
+full4,504 gate/ed5b142 report. Accumulate with the two other local workflows;
+no small full-run/hosted cycle or diagnostic-only dispatch.
+
+## Further local queued work-offset reporting workflow
+
+Added report/queued_g92_transition_reports_forced_work_offset_with_feed_override.c.
+An ordinary X20 cut remains queued while G92X0 and the next X5 cut are parsed
+with offset synchronization disabled. Before transition, status reports the first
+move's WCO0. At the real stepper block transition, a public110% feed override and
+ordinary status request report both Ov110 and forced WCO20; the next report does
+not repeat WCO. Both moves complete at2,000 physical X pulses / machine25mm,
+with G92 offset20 and no dropped motion. Public st_get_offset_id only observes
+the transition; no report flag or private state is injected.
+
+Focused ASan/UBSan and strict1/1 pass0.27s; saved queued-g92-status-{build,summary}.log
+and queued-g92-status-results.xml. Targets report1498's ForceWCO arm via its native
+stepper512 producer, plus corresponding work-offset refresh outcomes. No new
+allowance or measured coverage claim. Outside the full4,504 gate/ed5b142 report.
+Accumulate with the permanent-idle-lock sender reset before a substantial gate.
+
+## Further local ordinary reset workflow
+
+Added boot/sender_reset_with_permanent_idle_lock_stops_step_timer_before_restart.c.
+The existing actual-homing/positioning/reset fixture now also covers a machine
+configured with permanent motor idle lock ($1=255). A normal sender reset during
+queued positioning stops the real step timer before the public on_reset observer
+runs, keeps enable output asserted at that instant and queues the normal release
+delay. Captured motor pulses/positions remain unchanged through warm restart;
+parser position remains synchronized and $G answers. No motion-state injection,
+new host variant or allowance. The reset observer chains the installed callback.
+
+Focused ASan/UBSan and strict1/1 pass0.35s; saved idle-locked-reset-{build,summary}.log
+and idle-locked-reset-results.xml. Expected target: stepper267 pending-alarm arm
+under permanent idle lock. No measured gain claimed. Outside the full4,504 gate
+and ed5b142 hosted measurement. Accumulate independent useful workflows before
+another full gate/push/CI; do not dispatch for this case or diagnostic data alone.
+
+## Existing tapping diagnostics and previous failed matrix
+
+Previous40118321363/cf41105 passed coverage98.50%/92.61% and GCC but failed
+Clang on the existing recursive tapping index29, gcode485:32, const27-entry
+table, macro_arguments_push; followed by ASan global-buffer-overflow.
+The exact saved diagnostic entry is included in ed5b142. Production runner and
+first1024 replay accept that actual evidence; changed index/source/table/function,
+absent diagnostics and zero exits reject. No matcher/assertion weakening, ranges
+or wildcards. Earlier clean exits still reject; unchanged source does not prove
+resolution. Post-fatal assertions remain unvalidated.
+Evidence: hosted40118321363/verified-exact-diagnostic-replay.json and dated
+KNOWN_BUGS addendum. Never dispatch just to collect another signature.
+
+## Only if the user explicitly resumes coverage
+
+1. Current compiler/coverage evidence is complete and reconciled. Keep badges
+   and PR30 at the fully green head. Commit the coherent evidence/data group;
+   do not push/dispatch a signature-only checkpoint. Resume independent ordinary
+   coverage work before the next substantial delivery boundary.
+2. Continue supported line gaps before more branch permutations. Both recent
+   measured groups added useful distinct branch behavior but no lines. Do not
+   repeat settled audits or manufacture private states to fill the denominator.
+3. Keep Modbus42/69 switch-default proof and fs_ram fresh-allocation/exclusive-
+   reference/live-owner proof from the inventory; no invented transport, stale
+   handle or multiple-owner fixture. Stream614 ClearAll returns before its
+   observer; state819 changes handler before its restoring flag. Existing native
+   controls remain. Maintainer-deferred G76 taper and polar/wall homing stay TODO.
+4. Accumulate meaningful work on this branch; one full gate/hosted checkpoint at
+   a substantial delivery boundary. Prepare the next PR only from verified live
+   Git/PR ancestry and compiler evidence. Never merge PRs.
+
+# Archived detailed checkpoint - 2026-10-24 (superseded by TOP)
 
 Full objective remains meaningful supported CORE line AND branch coverage.
 Goal ACTIVE; never edit CORE or merge PRs. Use Ponytail full and explicit RTK.
 Work in C:/Users/User/Documents/Codex/2026-10-08/https-github-com-petervanderwalt-unit-tests/work/Unit_tests.
 
-Branch coverage-batch-74 is pushed49b18b0cb0e0e4f76d689173355cc0e5721ca55f and
-tracks origin/coverage-batch-74. PR28 is merged. Draft PR30 has this exact head:
+Branch coverage-batch-75 has validated local followups; pushed origin/coverage-batch-75
+remains atd05945e968eab3e3684ebbfcb0cffef5a1ae4218.
+PR30/origin74 remain at validated59b3ad9f9198d9973cc03b7af983c1d9899abc2d. PR28 is merged. PR30 is READY FOR REVIEW at this exact pushed head:
 https://github.com/grblHAL/Unit_tests/pull/30
-PR30 is NOT ready; no merge performed. Later local cases/config entries below
-are not included in its current pushed head.
+PR30 is exact-head validated and marked ready via GitHub; no merge performed. All eight cases and exact diagnostic
+entries below are included in its current pushed head.
+Exact-head hosted40111349496 COMPLETED SUCCESS against COREb01f481:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/40111349496
+Do not redispatch. All five source/GCC/Clang/coverage/summary jobs passed.
+Continue independent supported workflows; full coverage goal remains ACTIVE.
 CORE clean at b01f481072edecac33d5e40c25869359a5b3fa1f; latest fetched Terje ref
 matches. Do not switch/modify source without a deliberate compatibility pass.
 
-## Current local delivery validation
+## Batch75 hosted checkpoint and continuing work
+
+Exact-head run40114356917 COMPLETED FAILURE on d05945e/COREb01f481:
+https://github.com/petervanderwalt/Unit_tests/actions/runs/40114356917
+Dispatch accepted2026-10-24T17:03:06Z after checking duplicate heads and the
+three-per-hour ceiling (one prior run in that hour). Saved
+build-asan/batch75-dispatch.json. Do not redispatch on observation timeout.
+Coverage now PASSED and downloaded; both artifact/report locks verified exact
+d05945e/COREb01f481/filter core/.*\.[ch]$, allseven stages exit0/no findings.
+4,498 total/4,475 clean/23 known/zero fail/skip. New locked counts:
+17,491/17,757 lines98.50%;12,820/13,852 branch outcomes92.55%.
+266 missing lines/1,032 missing outcomes. Same-source40111349496 comparison:
+zero new/lost lines; +9 branches/no loss. Exact gains gcode122(two)/4622,
+ioports1214/1256/1316, motion_control1028, ngc_params753, report1581. These
+match all six actual-use regressions. Both inventories reconciled; exact raw
+line keys unchanged266. Saved build-asan/hosted40114356917 coverage/report
+artifacts and verified-comparison.json. GCC PASSED; exact report lock verified d05945e/b01f481, allstages0/no findings.
+GCC4,498 total/4,474 clean/24 known/zero failed or skipped. Saved
+report-core-gcc. Clang/Results summary FAILED; badges stay on
+fully green40111349496 and PR30 stays unchanged. Never report this matrix
+green before exact compiler evidence. Local full4,498 passed63.51s.
+
+Further authoring, outside pushed/measured head: existing spindle_control/
+pwm_laser_overdrive_adds_and_clamps_duty.c now also disables overdrive via
+its public callback, checks the flag/percentage clear and normal running/off
+PWM conversion. Targets spindle_control1043's documented zero-percent branch.
+No new case/helper/exception. Focused ASan/UBSan and strict summary PASSED1/1
+in0.28s, saved build-asan/laser-overdrive-disable-{build,summary}.log and
+laser-overdrive-disable-results.xml. This extension is local/uncommitted and
+outside d05945e/full4,498 gate. Accumulate the next group before any full gate/CI.
+
+Terminal Clang evidence: exact d05945e/b01f481 artifact lock verified; test/
+classify stages fail.4,498 total/4,471 clean/24 known/3 failed/0 skipped.
+All six newly authored workflows individually pass without any known-failure
+labels (verified-new-workflows.json). The failures are the existing tapping
+regressions: eight-axis index28, unsupported fallback index30, and recursive
+case exit0/no diagnostic. The actual XML/logs identify indices28/30, not the
+report summary's source-column32 text. Existing strict wrapper correctly rejects
+the absent recursive diagnostic. No new behavior defect or blanket allowance.
+
+Two local exact test/index entries for actually recorded28/30 pass production
+runner replay and compact first1024 evidence. Changed index/source/table/function
+and zero-exit diagnostic output reject; the actual saved recursive clean output
+still rejects. Matcher implementation and assertions unchanged. Dated KNOWN_BUGS
+addendum; saved report-core-clang/results-core-clang artifacts and
+verified-exact-diagnostic-replay.json. These manifest additions are outside
+pushed d05945e. Do not rerun CI for them alone; recursive case remains a strict
+red outcome until the underlying fault/exception is correctly resolved.
+
+Independent basic work: full-boot program_end_reenables_parking_for_next_cut_
+after_public_m56_disable.c uses public settings/$HZ/G0/M56/M2, physical door IRQ,
+Z retract/restore and next-cut completion. No synthetic homed/position state.
+Focused ASan/UBSan and strict summary PASSED1/1 in0.27s; logs/XML are
+program-end-parking-{build,summary}.log and program-end-parking-results.xml.
+$41=5 is enabled/override-control/initially-active; initial fixture used3,
+which correctly normalizes to7 (initially disabled), so fixture was corrected.
+No CORE defect. Public $HZ establishes actual homed Z; M56P0 disables parking,
+M2 restores active policy, door IRQ during next cut causes640-step retract,
+four parked polls and640-step restore, then exact160-step X endpoint. No
+synthetic homed/position state. Expected missing branch gcode5104; no measured
+gain for this local case or PWM extension until next cumulative checkpoint.
+One new case only; no full gate/hosted run for these followups alone.
+
+Current branch-route refinement (no new tests/count changes): Modbus42/69's
+three supported RTU/ASCII/TCP switch cases are all covered. The missing outcomes
+are switch defaults in source-block1, not omitted optional callbacks. is_up
+true/false counts108/2 and busy callback present/absent28/4; existing reset and
+ASCII cases already exercise omission. Both inventory rows now carry specific
+current evidence so this review is not repeated. No invented transport case.
+
+## Cumulative followup validation in progress
+
+Six independent ordinary workflows since d05945e are now accumulated: physical
+M2 parking reset, actual-homing reset policy, unchanged persistent G92 save,
+PWM overdrive disable, compatibility2 extended-coordinate query and tool-only
+modal notification. Two exact saved diagnostic entries also have production
+replay proof; recursive clean exit still rejects. No matcher code changes.
+
+New compat_2 case extension: public G59.3 selection remains unsupported while
+$#=5381 returns its compatibility placeholder0; previously saved G54 values,
+active coordinate system and machine position stay intact. Target ngc_params319.
+New report/realtime_tool_only_change_requests_modal_notification_without_repeated_events:
+public $10=512 and M61Q7, one tool callback and one modal notification, sender
+modal reportT7, no duplicate notification on unchanged report/no motion. Target
+report1636. Both focused sanitizer checks pass. Tool-report fixture needed its
+normal mandatory on_tool_changed observer and state_machine.h; no CORE defect
+or new allowance. No private tool-id assignment or new host variant.
+
+Fresh CORE fetch still b01f481 clean; PR30 remains open/ready/unmerged59b3ad9.
+One cumulative local ASan/UBSan/strict gate is now running before next push.
+Use build-asan/batch75-followup-delivery-{build,tests,summary}.log and results.xml.
+Do not start a competing runner or repeat unchanged helper checks. No new
+coverage attribution until its exact-source hosted report.
+
+## Continuing local ordinary workflows
+
+Extended existing gcode/m2_persistent_g92_updates_changed_saved_offset.c:
+a later M30 with the unchanged persistent G92 offset must not produce another
+coordinate-save notification, while the offset and second completion remain
+correct. Focused ASan/UBSan and strict1/1 pass0.29s, saved
+build-asan/persistent-offset-repeat-{build,summary}.log and
+persistent-offset-repeat-results.xml. No new case/exception; target gcode5122
+(equal saved/runtime offset). No new hosted measurement or full-gate claim.
+
+Added boot/keep_homed_reset_option_preserves_actual_homing_after_sender_cancels_cut.c.
+Public $22/$44 configure real Z homing, $676=14 disables clearing homed status
+when position is lost. $HZ establishes the axis before a real feed; sender reset
+cancels before endpoint, warm restart retains configured Z status, $X unlocks,
+$G responds, and physical pulses/software counters remain stable thereafter.
+The local service respects the driver's timer-running state. No synthetic
+homed mask/position/reset flags. Focused ASan/UBSan and strict1/1 pass0.28s,
+saved keep-homed-motion-reset-{build,summary}.log and results.xml. Expected
+missing branch grbllib459 (keep option evaluated during reset after motion).
+
+Fixture corrections: public Z cycle must be configured, since reset filters
+homed axes against configured cycles; reset during motion promises no mechanical
+position accuracy, so assertions verify stable stopped software/physical counters
+separately; idle/nonabort checks run before the host-only CMD_EXIT, which itself
+requests shutdown. No firmware defect or new allowance. Current CTest listing
+verifies4,500 registered; latest full gate remains4,498 before these two new
+boot cases and later existing-case extensions. No tiny full gate/CI.
+
+Current fs_ram branch review completed once for103/140/146/148/153. Fresh
+metadata is calloc-zeroed; open rejects nonzero refs before the sole increment;
+valid owners are0/1 refs; unlink callers retain live linked owners. False arms
+need altered allocator semantics, impossible multiple owners or stale handles.
+Existing exclusive-open and list-deletion cases already cover actual lifetimes.
+Five inventory rows now have specific current-source evidence, retaining all
+raw outcomes. No fabricated file, stale handle or duplicate multiple-reader test.
+
+## New coverage evidence and ongoing authoring
+
+Hosted40111349496 coverage PASSED, exact harness59b3ad9/COREb01f481/filter
+verified in both artifact locks, allseven stages exit0/no findings:
+17,491/17,757 lines98.50%;12,811/13,852 branches92.48%.
+266 missing lines/1,041 missing outcomes. +10 outcomes/zero new or lost lines
+against40107107939; no lost branches. Exact sites: gcode286/5142,
+machine_limits331/332, protocol757, spindle_control1416/1436, stepper2 425/429/435.
+Coverage4,492 total/4,469 clean/23 known/0 failed/skipped. Inventories reconciled;
+line inventory exact266 keys unchanged. Saved build-asan/hosted40111349496
+coverage/report artifacts and verified-comparison.json. GCC/Clang/Results summary now PASSED; all five jobs completed successfully.
+Both compiler report locks verified exact59b3ad9/b01f481; allstages exit0, nofindings.
+Clang4,492/4,465clean/27known; GCC4,492/4,468clean/24known; zerofail/skip.
+All eight new cases individually pass Clang. Existing exact tapping diagnostics
+reproduce29/27/28; post-crash assertions remain unvalidated. Saved compiler reports,
+Clang XML/logs and verified-new-workflows.json. README badges updated to this
+fully green run. PR30 validated at exacthead and marked ready for review; never merge.
+
+## Batch75 cumulative delivery validation
+
+Six added actual-use cases pass one cumulative full ASan/UBSan/strict gate:
+4,498 total in63.51s;4,473 clean/24 known regressions/1 known diagnostic/
+zero failed or skipped. Logs/XML: build-asan/batch75-delivery-{build,tests,summary}.log
+and batch75-delivery-results.xml. No unchanged helper rerun. Pushed d05945e; one exact-source hosted checkpoint is running above.
+Do not redispatch74 or75. Gains are now measured in the successful coverage job above; compilers pending.
+PR30 stays ready at59b3ad9. The first four cases are local828e4ff:
+- homing/named_homed_state_tracks_individual_switch_homing_without_combined_cycle:
+  public individual-axis configuration/no combined cycle; $HX/$HY/$HZ physically
+  finish70/110/150steps. Named and sender |H completion/masks track0/1/3/7;
+  completion becomes true only after Z. Normal foreground servicing between commands.
+- eight_axis/absolute_g28_rotary_return_keeps_intermediate_move_with_wrap_enabled:
+  public rotary/wrap settings and G28.1 saveA10; actual move toA90, then
+  G90G28A0 travels100degrees through the intermediate point to saved10. It does
+  not substitute the relative-mode shortest-angle shortcut. Other axes stay still.
+  Initial270degree setup exceeded the shared fixture's cumulative poll budget;
+  shorter90degree setup exercises the same distinct absolute-return contract.
+- gcode/dynamic_laser_spline_job_powers_both_curve_types_and_blanks_rapid:
+  real registered PWM driver/stepper execute cubic and quadratic cuts; both
+  produce powered motor steps at exact endpoints. Following rapidX3 adds no
+  powered steps; M5 shuts off. No fixture-private motion state injection.
+- motion_control/unhomed_manual_probe_keeps_hand_probe_without_toolsetter_selection:
+  public G38.2Z1F100 before homing with installed provider; no toolsetter callback,
+  contact latched40steps, physical axis decelerates before requested80, logical/
+  physical/pulse counts agree; probe disarmed and no alarm. Initial assertion
+  wrongly equated contact latch and stopped position; corrected to normal
+  deceleration contract. No CORE defect/allowance.
+
+Two additional normal dedicated-pin save cases pass focused2/2 sanitizer/strict
+in assigned-pin-save-results.xml (0.34s): assigned_probe_save_keeps_auxiliary_
+inversion_and_persists_probe_configuration and assigned_coolant_save_preserves_
+auxiliary_inversion_and_persists_open_drain. Public assignment removes the
+pin from generic inversion ownership; driver save retains neighbor mask2,
+persists dedicated probe inversion/pullup or coolant open-drain, then clears
+those options without changing the neighbor. NVS bytes are read back. Output
+assignment does not perform claim remapping; direct aux1 still reaches pin1.
+Expected new branch targets ioports1214/1256; no new CORE defect/exception.
+Fresh CORE fetch remainsb01f481 clean. PR30 live open/ready/mergeable at59b3ad9;
+no merge performed. Keep its validated head unchanged; successor75 is local.
+
+Saved individual CTest XMLs are combined without rerunning into
+build-asan/batch74-followup-focused-results.xml; strict summary passes4clean,
+zero failures/skips. No new coverage claim, exception or unchanged helper rerun.
+Expected new branch targets: gcode122/4622, ngc_params753, report1581,
+motion_control1028. Gains require next cumulative hosted report.
+Current stream_file73 review is now specific native reader/file-pairing proof:
+read installs both at160; close209-214 restores both. Only those two native
+stream_set_file callers exist. External NULL-file/retained-reader meaning is
+unestablished; no private stale-reader invocation added. Raw line remains.
+All existing unrelated workflow/reporting/driver scaffold edits remain excluded.
+
+## Prior batch74 local delivery validation
 
 Eight later actual-use workflows (listed below) now pass one cumulative full
 ASan/UBSan/strict gate:4,492 cases in63.97s,4,467 clean/24 known regressions/
@@ -53,10 +455,10 @@ build-asan/batch74-controller-workflows-{build,tests,summary}.log and
 batch74-controller-workflows-results.xml. No unchanged helper rerun.
 New exact diagnostic entries also pass saved production replay/first1024 and
 changed/absent/clean-exit negative controls. CORE fresh fetch stillb01f481 clean.
-Preparing commit/push and one new locked hosted checkpoint; do not report
-new gains or green matrix until it completes. Unrelated changes stay excluded.
+Committed/pushed59b3ad9; one exact-head hosted checkpoint completed successfully as recorded above.
+Unrelated edits excluded.
 
-## Exact latest hosted result
+## Prior hosted result (superseded by successful40111349496 above)
 
 Run40107107939 COMPLETED FAILURE on49b18b0/COREb01f481:
 https://github.com/petervanderwalt/Unit_tests/actions/runs/40107107939
@@ -77,13 +479,13 @@ Badges remain on fully green40074304720; this failed matrix is not green.
 Evidence: build-asan/hosted40107107939/{coverage-core,report-core-coverage,
 report-core-clang,results-core-clang}, verified-comparison.json and last-status.json.
 
-Current-head local full ASan/UBSan/strict gate PASSED4,484 in148.53s:
+Previous49b18b0 local full ASan/UBSan/strict gate PASSED4,484 in148.53s:
 4,459 clean/24 known regressions/1 known diagnostic/0 failed/skipped.
 Logs/XML: build-asan/batch74-normal-workflows-{build,tests,summary}.log and
 batch74-normal-workflows-results.xml.17 matcher helpers previously passed;
-matcher implementation is unchanged. No active local runner or newer hosted run.
+matcher implementation is unchanged. No active local runner. New exact-head run is listed above.
 
-## Existing Clang tapping fault and local exact entries
+## Prior Clang tapping fault and current exact entries
 
 Clang4,484 total/4,457 clean/25 known/2 failed. Eight-axis handoff now reports
 index29, unsupported fallback index27; recursive index27 matches. All identify
@@ -98,7 +500,7 @@ matcher implementation change. KNOWN_BUGS addendum records the evidence. Keep
 all correct assertions; post-crash paths remain unvalidated on Clang. No CORE edit.
 Do not force padding/private state or weaken assertions for a repeatable fault.
 
-## Validated next actual-use group (preparing delivery after49b18b0)
+## Current pushed actual-use group (after49b18b0)
 
 - homing.autosquare_minimum_tolerance_allows_normal_switch_separation:
   public1%/min2mm/max5mm permits normal0.5mm switch gap; motors release at70/110
@@ -128,16 +530,16 @@ Do not force padding/private state or weaken assertions for a repeatable fault.
   registered enable0/PWM0 board restores valid defaults with no direction pin;
   public getter reports direction -1, and configuration writes no output.
   Targets spindle1416. Both PWM cases sanitizer/strict pass0.10s together in
-  secondary-pwm-normal-ports-results.xml. Eight local cases now form the next
-  substantial controller-workflow group; one cumulative pre-push gate is next.
+  secondary-pwm-normal-ports-results.xml. Eight cases form the current
+  pushed group; the cumulative full4,492 gate passes63.97s.
 Both pass focused sanitizer/strict0.07s each: timer-finite-reversal-results.xml
 and check-mode-prescan-end-results.xml in build-asan. These two were validated before the later PWM cases.
 Earlier four focused sanitizer/strict checks pass: autosquare pair0.12s, jog0.07s,
 synchronized MPos0.07s. XML: autosquare-tolerances-results.xml,
 jog-mist-override-results.xml and mpos-synchronized-offset-results.xml in build-asan.
 No new CORE defect/exception or measured coverage gain for these cases.
-Full4,492 sanitizer/strict gate now passes63.97s; next is the cumulative
-commit/push and one hosted measurement. No CORE edits or new defect assertions.
+Full4,492 sanitizer/strict gate passes63.97s; committed/pushed59b3ad9 with
+one hosted measurement now running. No CORE edits or new defect assertions.
 
 ## Current-source line gap proof (no artificial tests)
 

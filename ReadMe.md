@@ -1,14 +1,17 @@
 # Unit tests for the grblHAL core
 
 [![Core tests](https://github.com/grblHAL/Unit_tests/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/grblHAL/Unit_tests/actions/workflows/tests.yml)
-[![Core line coverage: 98.46%](https://img.shields.io/badge/core_lines-98.46%25-brightgreen)](https://github.com/petervanderwalt/Unit_tests/actions/runs/40074304720)
-[![Core branch coverage: 92.07%](https://img.shields.io/badge/core_branches-92.07%25-green)](https://github.com/petervanderwalt/Unit_tests/actions/runs/40074304720)
+[![Core line coverage: 98.50%](https://img.shields.io/badge/core_lines-98.50%25-brightgreen)](https://github.com/petervanderwalt/Unit_tests/actions/runs/40111349496)
+[![Core branch coverage: 92.48%](https://img.shields.io/badge/core_branches-92.48%25-green)](https://github.com/petervanderwalt/Unit_tests/actions/runs/40111349496)
 
 Coverage badges show a verified successful report, not a live measurement of
 every source revision. Click either percentage for its run and coverage artifact.
 They cover the core across the tested configurations; they do not include board
 drivers or plugins. When updating the badges, use the line and branch totals in
 `coverage.xml` from a fully successful run, and update both run links together.
+
+The [coverage closeout](tests/COVERAGE_CLOSEOUT.md) records the stopping point,
+unfinished features and remaining gaps; it does not claim 100% coverage.
 
 Host tests compile actual source from an ordinary `core` checkout. No CNC
 controller is needed. Each new behavior lives in `tests/cases/<module>/<case>.c`

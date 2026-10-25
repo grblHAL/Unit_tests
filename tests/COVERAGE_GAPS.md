@@ -1,35 +1,58 @@
 # Remaining raw CORE coverage
 
-## Latest coverage job passed; compiler matrix remains failed
+## Latest verified coverage job; compiler matrix failed
 
-[Run40107107939](https://github.com/petervanderwalt/Unit_tests/actions/runs/40107107939)
-coverage passed on harness49b18b0cb0e0e4f76d689173355cc0e5721ca55f and
-COREb01f481072edecac33d5e40c25869359a5b3fa1f. Artifact/report locks and
-filter core/.*\.[ch]$ match; all seven coverage stages exit0, no findings.
-17,491/17,757 lines (**98.50%**) and12,801/13,852 outcomes (**92.41%**):
-266 missing lines and1,051 missing outcomes. Coverage4,484 total/4,461 clean/
-23 known/0 failed/skipped. Same-source40103625282 delta: zero new/lost lines,
-ten additional outcomes/no loss. Exact new sites: gcode2998, delta761/907,
-report395/1480/1498, settings2163(three outcomes)/2260. These match the authored
-ordinary workflows. All nine new cases individually pass on Clang.
+[Run40121790962](https://github.com/petervanderwalt/Unit_tests/actions/runs/40121790962)
+coverage PASSED on harnessed5b142c589b3545de7e9f6e756854dbe2d1fba3 and
+COREb01f481072edecac33d5e40c25869359a5b3fa1f. Both artifact/report locks and
+filter core/.*\.[ch]$ match; all seven stages0/no findings. Coverage4,504 total/
+4,480 clean/24 known/zero failed or skipped.
+17,491/17,757 lines (**98.50%**) and12,836/13,852 outcomes (**92.67%**):
+266 missing lines/1,016 missing outcomes. Against same-source40118321363:
+zero new/lost lines; eight additional outcomes/no loss. Exact gains:
 
-The nonblocking MPos case adds no outcome, so its mapping was inspected before
-more offset work. The remaining synchronized MPos path now has a local public
-$10=289/G92/actual-motion regression; gains remain unmeasured. Eight later local
-homing/jog/offset/timer/check-mode/PWM-settings workflows pass full4,492 local
-sanitizer/strict validation and await a new exact-head measurement. Both inventories
-match this report, preserving dispositions and function/source-block identities.
-Historical explanations below still require current-caller proof.
+- gcode511/541/542: primary-only spindle and feed-only cutter modal restoration.
+- gcode4381: modal save skips the unused spindle slot.
+- report1594: native full-status request includes the selected probe ID.
+- stream327: background USB DTR preserves the active network sender.
+- system576: ordinary sleep request from forced startup alarm reaches the allowed guard.
+- system627: identification query while the physical E-stop remains asserted.
 
-The run completed FAILURE: source/GCC/coverage passed; Clang/summary failed.
-Clang's existing tapping table fault varies across builds. This run reports
-eight-axis index29 and unsupported fallback index27 at the same27-entry table,
-gcode485 and macro_arguments_push. Recursive index27 matches. Two new local
-exact test/index entries pass saved production replay/first1024 and negative
-controls. Different/unseen diagnostics, absent diagnostics and zero-exit output
-remain red; no range/wildcard allowance. Post-crash assertions are unvalidated
-on Clang. Draft PR30 stays unready; badges retain fully green40074304720.
-No CORE edits, exclusions or dummy tests were added.
+Both inventories reconciled; unchanged line inventory266 exact keys checked.
+Evidence: build-asan/hosted40121790962/verified-comparison.json. The alarm-sleep
+workflow retains its correct Sleep assertion with one narrow known failure;
+coverage of the request guard does not mean the defect is fixed. No other new
+allowance. Full local4,504 ASan/UBSan and strict passed62.62s:4,478 clean,
+25 known regressions and one known diagnostic, zero failed/skipped.
+
+Source PASSED including85 helper checks. GCC PASSED with exact report/result
+locks, five stages0/no findings and4,504 total/4,479 clean/25 known/zero failed
+or skipped. Clang/summary FAILED:4,504 total/4,476 clean/25 known/3 failed/zero
+skipped. The failures are the existing tapping cases with saved indices30
+(eight-axis),28 (recursive),31 (unsupported fallback) at gcode485/const27/top
+frame macro_arguments_push. All six new workflows classify as expected, including
+the documented alarm-sleep known bug. Three exact local diagnostic entries pass
+production/first1024 replay and changed/absent/zero-exit negative controls. No
+matcher/assertion change or CI retry for these entries alone. No green matrix or
+PR readiness claim. README badges and ready PR30
+remain at fully green40111349496/59b3ad9 (98.50%/92.48%). Never merge PRs.
+
+Previous40118321363/cf41105 passed coverage98.50%/92.61% and GCC, but failed
+Clang on the existing recursive tapping index29 diagnostic. Only that observed
+exact test/index data was added; production matcher and correct assertions remain
+unchanged, and absent/changed/zero-exit negative controls reject. Those data are
+included in ed5b142. No retry was dispatched for diagnostic data alone.
+
+Specific branch-route proof in the CSV covers Modbus42/69 (all supported
+RTU/ASCII/TCP cases; remaining switch defaults) and fs_ram103/140/146/148/153
+(fresh allocation/exclusive refs/live linked owners). No invented transport,
+multiple owner or stale-handle tests. All raw outcomes remain in the denominator.
+
+Current b01 stream_file73 ownership review: native redirect installs a nonnull
+opened file and its reader together at160; close209-214 restores both saved
+values. These are the only native stream_set_file callers. Public NULL-file/
+retained-reader use has no established ordinary meaning. The fallback remains
+in the raw denominator, with a specific current native-route explanation.
 
 Current b01 source proof: report_driver_error's queued callback is removed by
 native failed-startup filtering (grbllib407-424/844-861); output_help is bypassed
@@ -38,8 +61,8 @@ line rows now have these specific current-source explanations. Raw counts remain
 existing public tests cover the actual routes, so no private-entry tests were added.
 
 Working checkout is now upstream `b01f481072edecac33d5e40c25869359a5b3fa1f`.
-The table and percentages below are the prior fully green CORE2e165a1
-snapshot; current coverage-job evidence is reported separately above.
+The historical table and percentages below are the prior CORE2e165a1
+snapshot; current successful matrix evidence is reported separately above.
 
 Verified coverage report: [run40074304720](https://github.com/petervanderwalt/Unit_tests/actions/runs/40074304720),
 harness `2d8b8d0f980c74dd6da5252a9a91cf17a50e93e8`, CORE `2e165a1ac4c74be8e68971972c6577775d856b05`,
@@ -53,7 +76,7 @@ were covered:273 raw missing lines and1,097 missing outcomes. Coverage job:
 Three additional lines and seven branch outcomes, no lost covered lines and the
 same denominator. New lines: machine_limits269 and delta320-321.
 
-Success badges show fully green40074304720 (98.46%/92.07%). New manual-auxiliary and compound-preparation-reset cases remain local and are
+Historical snapshot40074304720 was98.46%/92.07%; badges now show the newer verified matrix above. New manual-auxiliary and compound-preparation-reset cases remain local and are
 separate from this measured head. The earlier G76 preparation reset did not cover715.
 
 Raw coverage does not establish correctness or reachability. See [TODO](TODO.md)

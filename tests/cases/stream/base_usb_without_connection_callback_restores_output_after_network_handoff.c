@@ -13,6 +13,12 @@ int main(void)
     CHECK(stream_connect(&secondary_connection));
     CHECK(hal.stream.type == StreamType_Telnet);
     clear_connection_output();
+    stream_usb_linestate_changed(usb.instance, (serial_linestate_t){.dtr = true});
+    engine_ticks = 200;
+    engine_execute_tasks(STATE_IDLE);
+    CHECK(hal.stream.type == StreamType_Telnet && !hal.stream.state.is_usb);
+    CHECK(connection_changes == 2 && secondary_rt == protocol_enqueue_realtime_command);
+    CHECK(primary_output[0] == 0 && secondary_output[0] == 0);
     hal.stream.write_all("both");
     CHECK(strcmp(primary_output, "both") == 0 && strcmp(secondary_output, "both") == 0);
     stream_disconnect(&usb);

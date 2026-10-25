@@ -731,6 +731,101 @@ matcher implementation change. The hosted run remains failed; post-crash
 assertions remain unvalidated. Saved logs are under
 build-asan/hosted40107107939/results-core-clang/build/known-crash-<test>.log.
 
+
+### Tapping diagnostic evidence update - 2026-10-24, run40114356917
+
+[Run40114356917](https://github.com/petervanderwalt/Unit_tests/actions/runs/40114356917)
+at harnessd05945e/COREb01f481 passed source/GCC/coverage but failed Clang and
+summary. All six newly added normal controller workflows pass Clang individually.
+The existing eight-axis tapping handoff reports index28 and unsupported tapping
+fallback reports index30 at core/gcode.c485:32, const27-entry offset table,
+macro_arguments_push top frame and ASan global-buffer-overflow. Two separate
+exact test/index entries record only these actually saved diagnostics. Production
+runner replay and first1024 matching pass; changed index/source/table/function
+and zero-exit diagnostics reject. Matcher implementation and assertions unchanged.
+
+The recursive tapping regression exited0 with no diagnostic in this build.
+Its strict known-crash wrapper correctly remains red: CORE is unchanged and
+other builds still reproduce the fault, so this does not prove a firmware fix.
+No clean-exit allowance, wildcard/range, forced padding, private-state setup or
+new known failure was added. Assertions after fatal faults remain unvalidated.
+Do not rerun CI solely for these manifest additions. Saved logs and replay proof:
+build-asan/hosted40114356917/results-core-clang/build/known-crash-<test>.log,
+verified-exact-diagnostic-replay.json and verified-new-workflows.json.
+
+
+## Accepted sleep command is ignored while the controller is in alarm
+
+Confirmed2026-10-24 on clean CORE `b01f481072edecac33d5e40c25869359a5b3fa1f`.
+With saved forced-initialization alarm and sleep enabled, the normal sender
+command `$SLP` is acknowledged `ok` but the controller remains in alarm instead
+of entering sleep. The regression allows eight ordinary foreground polls after
+acknowledgement, then retains the correct `STATE_SLEEP` assertion. It fails on
+that assertion, without a sanitizer fault, read-limit failure or injected state.
+The same fixture/control using `$X` before `$SLP` enters sleep, reports Sleep,
+resets and explicitly unlocks successfully. It uses normal public commands.
+
+Source cause: [enter_sleep](https://github.com/terjeio/grblHAL_core/blob/b01f481072edecac33d5e40c25869359a5b3fa1f/system.c#L571)
+explicitly accepts Idle or Alarm and posts `EXEC_SLEEP`. The
+[alarm state](https://github.com/terjeio/grblHAL_core/blob/b01f481072edecac33d5e40c25869359a5b3fa1f/state_machine.c#L352)
+installs `state_noop`; state_update dispatches to that handler, so the accepted
+sleep request is ignored. The idle handler consumes the same request normally.
+CORE remains unchanged. Upstream should make accepted alarm-state sleep requests
+reach the sleep transition consistently with the public command's allowed states.
+
+[Regression](cases/boot/sleep_from_forced_startup_alarm_reports_sleep_and_allows_reset_unlock.c)
+has one exact `WILL_FAIL`/`known_bug` block in [known_bugs.cmake](known_bugs.cmake).
+No sanitizer allowance. Sleep/recovery assertions after the known failure remain
+in the case; their common fixture tail is validated by the explicit-unlock control.
+Evidence: build-asan/alarm-sleep-regression-raw-results.xml,
+alarm-sleep-unlock-control-results.xml and alarm-sleep-verification.json.
+After upstream fixes it, retain the case, remove only this expected-failure block
+and entry, and verify the complete workflow under ASan/UBSan before cleanup.
+
+
+### Tapping diagnostic evidence update - 2026-10-24, run40118321363
+
+[Run40118321363](https://github.com/petervanderwalt/Unit_tests/actions/runs/40118321363)
+at harnesscf41105/COREb01f481 passed source/GCC/coverage but failed Clang/summary
+on one existing recursive tapping diagnostic: index29 at core/gcode.c485:32,
+const27-entry table, macro_arguments_push top frame, ASan global-buffer-overflow.
+All six new normal workflows pass Clang individually without allowances. One
+additional exact recursive-test/index29 entry records only this actual saved
+output. Production runner/first1024 replay pass; changed index/source/table/
+function, absent diagnostic and zero-exit output reject. No matcher code,
+assertion, padding or wildcard/range changes. Earlier clean recursive exits still
+remain red; CORE has not changed. Do not rerun CI solely for this data addition.
+Evidence: build-asan/hosted40118321363/results-core-clang/build/known-crash-<test>.log,
+verified-exact-diagnostic-replay.json and verified-new-workflows.json.
+
+
+### Tapping diagnostic evidence update - 2026-10-25, run40121790962
+
+[Run40121790962](https://github.com/petervanderwalt/Unit_tests/actions/runs/40121790962)
+on harness `ed5b142` / CORE `b01f481` passed source, GCC and coverage, but failed
+Clang and the results summary on the same three existing tapping regressions.
+Actual saved logs show these exact indices at `core/gcode.c:485:32`, the
+`const uint8_t[27]` table and `macro_arguments_push` top frame, followed by
+ASan global-buffer-overflow:
+
+- Eight-axis fallback: index30.
+- Recursive tapping: index28.
+- Unsupported tapping fallback: index31.
+
+Three exact test/index entries record only these observations. The unchanged
+production runner accepts the saved nonzero diagnostics; its first1024 output
+bytes still match. Changed index/source/table/function, absent diagnostics and
+zero exits reject. No matcher/assertion, compiler flag, padding, wildcard or range
+change. Post-fatal assertions remain unvalidated; this does not establish a fix.
+Do not dispatch CI just for these data entries.
+
+All six new functional workflows classify as expected in Clang: five clean
+passes plus the documented sleep-from-alarm regression. The complete Clang
+result is4,504 total/4,476 clean/25 known/3 failed/zero skipped. Evidence lives in
+`build-asan/hosted40121790962/results-core-clang/build/known-crash-<test>.log`,
+`verified-clang.json`, `verified-new-workflows.json` and
+`verified-exact-diagnostic-replay.json`.
+
 ### PR30 hosted diagnostic inventory repair - 2026-10-25
 
 Run40178911158 at56d63fd reported the existing gcode.c485 macro argument
