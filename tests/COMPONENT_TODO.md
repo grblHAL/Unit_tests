@@ -7,6 +7,22 @@ or force private state to enter a path.
 
 ## Next source families
 
+- Batch37 storage authoring adds15 cases through public macro/file-stream hooks:
+  nested return/reset, EOF/status recovery, directory commands/listing, mutation
+  rejection, prescan replay and reporting. Actual O-code lookup/parameter-stack,
+  expressions-enabled ATC macros and full parser/planner remain open. Keep the
+  existing EOF regression assertions and original SDK configuration unchanged.
+- Embroidery coordinator embroidery.c passes native Clang23.1.3 syntax-only
+  compilation with EMBROIDERY_ENABLE1/SDCARD_ENABLE1 and unchanged driver_opts
+  plus current pinned CORE headers. This is not runtime or target-link evidence.
+  Batch37 adds7 coordinator conversion/NVS and streamed stepper/trigger/planner-
+  capacity cases using actual EEPROM, CORE stream and registered trigger input.
+  Thread-break/hold recovery, jump timing, live queue refills, real planner and
+  physical needle timing remain. Original13 reader cases
+  remain. DST stop conversion is unregistered because its color is uninitialized;
+  resolve the source contract before a deterministic tool-number assertion.
+  Source-clean/SHAs and syntax log are in build-evidence batch37.
+
 - Batch18 now validates WebUI13 helper/provider and MSP432P15 primary UART cases
   together. WebUI measured args/provider41/41 lines,41/44 branches, not HTTP/backend
   coverage. Primary MSP108/108 lines,37/41 branches uses original driver/board/

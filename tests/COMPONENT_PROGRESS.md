@@ -1,3 +1,116 @@
+# Combined storage/embroidery validation - 2026-10-25 (batch37)
+
+Goal active. All51 current-source host suites pass Windows Clang ASan/UBSan
+and strict reporting:1025 cases =962 clean +63 documented known, zero
+unexpected failures/skips.22 new cases since delivered36:15 macro/file-stream
++7 embroidery coordinator conversion/NVS/streamed workflow cases.87 helpers
+pass18.603s; Plugin/Driver/reusable actionlint passes. Main CORE and historical
+reference suites stay excluded. No new allowance, firmware edit or merge.
+The unchanged32-bit STM32F4 suite initially lacked runtime DLLs in PATH; resumed
+at that failed suite after adding the installed i686 runtime. Previously completed
+suites were reused through their batch37 XML/strict summaries, not rerun.
+
+Fresh coverage builds, selected files/configurations only:
+- Storage36 clean:634/843 lines75.2%,286/516 branches55.4%,72/87 functions;
+  same files/denominators as batch36: +182 lines and +131 branches. Macros85/105
+  lines and stream335/513. Root-stat special branch again0 hits.
+- Embroidery20 clean:384/581 lines66.1%,180/306 branches58.8%,22/39 functions.
+  Coordinator first measurement216/404 lines53.5%,84/198 branches42.4%; brother
+  62/63 and26/28; Tajima106/114 and70/80. No whole-plugin or all-config claim.
+
+Streamed cases verify six requested XYZ moves for two stepper-driven stitches,
+registered needle IRQ gating with no duplicate moves during held polls, and
+planner-capacity rejection/resume followed by reset. Original CORE stream/VFS/
+ioports/CRC plus EEPROM backend execute; planner/spindle/position initialization
+are explicit captured boundaries, not real planner/physical stitch execution.
+Unregistered DST stop proposal remains outside all counts: source leaves its
+color undefined; no invented T0 assertion or known allowance is registered.
+
+Fresh GitHub-resolved candidate/dependency locks match clean local SDd0fe753d,
+embroidery9a112c3c,COREb01f4810,STM32F4a6318ac9,EEPROM0c278db7. All gated
+sources have separate clean exact-SHA snapshot. Prepare one cumulative delivery
+on plugin-driver-tests/PR29, keep draft/unmerged, then continue remaining supported
+paths. Fresh fork Actions listing still exposes only reusable/core workflows; separate
+Plugin/Driver manual dispatch remains unavailable until default-branch installation.
+
+# Embroidery coordinator authoring checkpoint - 2026-10-25 (batch37, local)
+
+Goal active. Four new unchanged-source coordinator cases: DST signed-move
+conversion, DST jump-to-stitch mode switch, PES palette/signed-move conversion,
+and NVS allocation failure. All17 embroidery cases (13 readers +4 coordinator)
+pass Windows Clang ASan/UBSan0.65s and strict reporting17 clean. Actual CORE
+VFS/embedded/ioports/crossbar/stream/CRC plus EEPROM backend run; fixture provides
+valid registered trigger input, settings and startup/controller boundaries.
+No motion callbacks execute in conversion cases; queue/needle runtime remains.
+Manifest declares the newly required plugin_eeprom source dependency.
+
+Initial fixture failures were missing registered input, capturing unrelated
+I/O settings and assuming claimed user port0. Corrected to real CORE setup and
+mapping, with no production edits or allowances. Proposed DST stop conversion
+remains unregistered: color is not assigned by Tajima but consumed by coordinator;
+no deterministic T0 contract is established. Source/one failed authoring assertion
+recorded in suite notes; do not rerun or fabricate private state.
+
+Batch37 cumulative19 new cases;1022 registered across51 suites, not a full gate
+claim. Storage coverage remains the measured36-case result below. No new known
+allowances, changed existing assertions, push or hosted dispatch. Continue with
+streamed coordinator workflows before the combined checkpoint.
+
+# Storage coverage measurement - 2026-10-25 (batch37, local)
+
+Goal active. Fresh short build-fa37 LLVM coverage executes36/36 clean storage
+cases with strict reporting. Same four source files/configuration denominators
+as batch36:634/843 lines75.2% (+182 lines from452),286/516 branches55.4%
+(+131 from155),72/87 functions. Per-file lines/branches:
+- fs_fatfs.c108/118 (91.5%),31/46 (67.4%).
+- sdcard.c106/107 (99.1%),47/62 (75.8%).
+- fs_stream.c335/513 (65.3%),173/350 (49.4%).
+- macros.c85/105 (81.0%),35/58 (60.3%).
+
+Selected files/configuration only; expressions-enabled ATC and controller parsing
+are excluded by the actual build configuration, not waived as covered. XML again
+confirms fs_fatfs root-stat branch line309 has0 hits. Counter paths <=236 chars.
+Original SD/CORE/STM32F4 source SHAs remain clean and identical to batch36.
+All15 new cases have now executed together in this coverage build; sanitizer
+checks remain the authoring groups recorded below, not a fresh full1018 gate.
+Embroidery coordinator syntax passes unchanged sources, runtime work remains.
+No full cumulative gate/push/hosted dispatch yet; continue substantial authoring.
+
+# File-stream command authoring checkpoint - 2026-10-25 (batch37, local)
+
+Goal active. Six additional real-FatFs cases cover directory navigation/relative
+job start, recursive versus hierarchical listing, rejected file mutations,
+M98 prescan/replay, active100-percent reporting clamp, and public program-return
+rewind. Focused6/6 pass Windows Clang ASan/UBSan0.35s with strict classification.
+Initial fixture expectations corrected from source: TXT is an allowed job
+extension (BIN is filtered); prescan rewind emits a separator LF before replay.
+Mutation rejection retains the original stored job bytes. No production edits,
+new allowances, or known-assertion changes. Parser callbacks remain modeled.
+
+Batch37 now has15 new registered cases;36 storage cases and1018 cumulative
+registered cases. Latest complete source-locked coverage/full gate remains
+batch36; macro/shared-fixture validation is recorded below. Continue authoring
+before combined delivery. No push or hosted run for this small subgroup.
+
+# Macro lifecycle authoring checkpoint - 2026-10-25 (batch37, local)
+
+Goal active. Nine new real-FatFs macro lifecycle cases are registered: repeats,
+reset/reopen, check-mode lookup without redirect, missing-file recovery,
+delegation of IDs below100, nested return to the parent byte, nested reset,
+EOF-driven repeats, and status-error recovery. All30 storage cases pass Windows
+Clang ASan/UBSan1.57s with strict classification30 clean. Shared-fixture rebuild
+and all13 embedded stream cases pass0.69s:11 clean +2 unchanged known regressions.
+The FatFs variant of gc_macro_get_pos now accepts the actual active file and
+reports no inline definition; the embedded variant keeps its previous assertion.
+
+Public macro hooks and actual writable SDK filesystem are used. Controller
+parsing, inline O-code lookup and parameter-stack behavior remain outside this
+fixture. EOF test models protocol.c's public on_file_end callback after ASCII_EOF.
+No production changes, allowances or weakened assertions. Cumulative1012 is
+registration only, not a fresh full-suite result. Latest complete validation and
+coverage remains batch36 below. Keep accumulating related cases before the next
+combined delivery gate; no hosted run dispatched.
+
 # Combined storage delivery checkpoint - 2026-10-25 (batch36)
 
 Goal active. Complete51 current-source plugin/driver host suites pass Windows

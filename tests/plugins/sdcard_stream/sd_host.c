@@ -133,7 +133,12 @@ static void set_bits(volatile uint_fast16_t *value, uint_fast16_t flag) { *value
 void gc_filestream_changed(vfs_file_t *file) { CHECK(file == hal.stream.file); }
 size_t gc_macro_get_pos(macro_id_t id, vfs_file_t *file)
 {
+#if TEST_FATFS_STREAM
+    // This controller boundary reports no inline O-code definition in the active file.
+    CHECK(id >= 100 && file == hal.stream.file);
+#else
     CHECK(id == 100 && file == NULL);
+#endif
     return 0;
 }
 void sd_mount(void)

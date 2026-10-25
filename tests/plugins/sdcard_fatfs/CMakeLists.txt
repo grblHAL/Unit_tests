@@ -30,7 +30,7 @@ set_source_files_properties("${HARNESS_ROOT}/plugins/sdcard/sdcard.c" PROPERTIES
 set(stream_sources "${HARNESS_ROOT}/plugins/sdcard/fs_stream.c" "${HARNESS_ROOT}/plugins/sdcard/macros.c"
   "${COMPONENT_CORE_ROOT}/stream.c" "${COMPONENT_CORE_ROOT}/stream_file.c")
 set_source_files_properties(${stream_sources} PROPERTIES COMPILE_OPTIONS -Wno-error)
-foreach(behavior job eof_tail reset error_reopen tool_change progress writable_commands)
+foreach(behavior job eof_tail reset error_reopen tool_change progress writable_commands macro_repeat macro_reset macro_check macro_missing macro_delegate macro_nested macro_nested_reset macro_eof macro_error navigation listing_tree mutation_rejections prescan progress_complete return_rewind)
   set(target plugin_sdcard_fatfs.stream_${behavior})
   component_case(${target} stream_${behavior}.c fatfs_host.c "${HARNESS_ROOT}/tests/plugins/sdcard_stream/sd_host.c" ${sources} ${stream_sources})
   target_include_directories(${target} PRIVATE "${fatfs}" "${HARNESS_ROOT}/plugins/sdcard")

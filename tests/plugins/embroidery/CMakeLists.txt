@@ -16,3 +16,20 @@ foreach(behavior dst_metadata dst_stitches dst_large_moves dst_jump_stop dst_end
  target_compile_definitions(plugin_embroidery_readers.${behavior} PRIVATE EMBROIDERY_ENABLE=1)
 endforeach()
 set_source_files_properties("${HARNESS_ROOT}/plugins/embroidery/tajima.c" "${HARNESS_ROOT}/plugins/embroidery/brother.c" PROPERTIES COMPILE_OPTIONS -Wno-error)
+
+set(job_sources "${HARNESS_ROOT}/plugins/embroidery/embroidery.c"
+ "${HARNESS_ROOT}/plugins/eeprom/eeprom_24AAxxx.c"
+ "${HARNESS_ROOT}/tests/plugins/eeprom/eeprom_host.c")
+foreach(file ioports.c crossbar.c stream.c crc.c)
+ list(APPEND job_sources "${COMPONENT_CORE_ROOT}/${file}")
+ set_source_files_properties("${COMPONENT_CORE_ROOT}/${file}" PROPERTIES COMPILE_OPTIONS -Wno-error)
+endforeach()
+set_source_files_properties("${HARNESS_ROOT}/plugins/embroidery/embroidery.c" PROPERTIES COMPILE_OPTIONS -Wno-error)
+foreach(behavior dst pes no_storage jump stream_stepper stream_trigger stream_capacity)
+ set(target plugin_embroidery_readers.coordinator_${behavior})
+ component_case(${target} coordinator_${behavior}.c job_host.c ${job_sources} ${sources}
+ "${HARNESS_ROOT}/plugins/embroidery/tajima.c" "${HARNESS_ROOT}/plugins/embroidery/brother.c")
+ target_include_directories(${target} PRIVATE "${HARNESS_ROOT}/plugins/embroidery" "${HARNESS_ROOT}/tests/plugins/eeprom" "${HARNESS_ROOT}/plugins/eeprom")
+ target_compile_definitions(${target} PRIVATE EMBROIDERY_ENABLE=1 SDCARD_ENABLE=1 EEPROM_ENABLE=128 EEPROM_IS_FRAM=1 NVS_SIZE=8192 NVS_SIZE_MAX=16384)
+ target_compile_options(${target} PRIVATE "SHELL:-include \"${CMAKE_CURRENT_SOURCE_DIR}/job_platform.h\"")
+endforeach()

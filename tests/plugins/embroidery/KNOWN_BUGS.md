@@ -13,9 +13,18 @@ short/long signed moves, paired-axis jump/trim, color change/end, format rejecti
 and parser fallback. PES dimensions are reported in the implementation's stored
 tenths-of-mm units; no coordinator scaling behavior is claimed.
 
-These selected-file results omit the uncompiled embroidery.c coordinator. SD
-hardware, file-open/job callbacks, rendering, parser/planner motion, queue/needle
-synchronization, settings and physical stitch timing remain. Truncated input,
+Seven coordinator cases now compile original embroidery.c and exercise public
+file-open conversion for DST signed moves/jumps and PES color/signed moves,
+plus missing NVS allocation, chained reset and streamed stepper/trigger/planner-space
+workflows. Original CORE VFS/embedded,
+ioports/crossbar/stream/CRC and EEPROM plugin execute. One digital input bank is
+registered before initialization; settings restore/load uses the actual EEPROM
+backend. NVS allocation, settings registration and startup execution are explicit
+host boundaries. Motion requests, spindle on/off and planner capacity are captured
+callbacks; model initialization provides a valid spindle callback and zero machine
+position. Public registered trigger IRQ releases queued stitching; unused task and
+report callbacks fail fast. SD hardware, actual planner/stepper execution, full
+settings/parser, and physical stitch timing remain. Truncated input,
 long metadata and allocation-failure paths have not been exercised. Mixed-axis
 PEC flag precedence, persistent DST sequin state and coordinator unit contracts
 need source/spec review before assertions. Do not force private parser state or
@@ -24,3 +33,15 @@ exclude remaining implementations to imply whole-plugin coverage.
 Original warnings remain visible under -Wno-error; host fixtures remain strict.
 The Windows CRT string declaration shim is the existing shared host-only header.
 No production alias, patch, fallback CORE or board/firmware build is used.
+
+## Unregistered DST stop conversion contract - 2026-10-25
+
+`proposals/coordinator_dst_stop.c` is not built or registered. Its proposed
+T0 assertion failed during first authoring. Source review shows coordinator
+onFileOpen declares an uninitialized stitch_t and initializes only target.x/y;
+Tajima get_stitch sets Stitch_Stop without assigning color, and conversion prints
+stitch.color. No deterministic color/tool-number contract is established. Do not
+rerun this proposal, initialize plugin-private storage in the fixture, or add an
+expected-failure allowance from an invented T0 contract. No production fix is
+made. Existing reader jump/stop assertions and the supported independent jump
+conversion case remain registered. PES initializes its palette color explicitly.

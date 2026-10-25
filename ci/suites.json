@@ -295,7 +295,8 @@
     "ref": "master",
     "path": "plugins/embroidery",
     "dependencies": [
-      "core"
+      "core",
+      "plugin_eeprom"
     ],
     "cmake_source": "tests/plugins/embroidery",
     "cmake_options": [],

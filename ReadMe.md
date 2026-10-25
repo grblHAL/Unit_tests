@@ -278,7 +278,7 @@ repository's default branch.
 | Plugin tests | `plugin_spindle_clone` | Primary/clone signal routing, CORE PWM conversion, switching and provider rejection |
 | Plugin tests | `plugin_spindle_stepper` | Original CORE secondary-stepper polling/timer callbacks, position sync and motor claims |
 | Plugin tests | `plugin_sdcard_stream` | File input, stream ownership, error/reset recovery and external macro repeats |
-| Plugin tests | `plugin_sdcard_fatfs` | Original FatFs/SD lifecycle and file-stream hooks on RAM-backed FAT12 media; file I/O and recovery |
+| Plugin tests | `plugin_sdcard_fatfs` | Original FatFs/SD lifecycle, macro calls and file-stream commands on RAM-backed FAT12 media; file I/O and recovery |
 | Driver tests | `driver_simulator_vfs` | File/directory workflows; current CORE compile incompatibility recorded |
 | Plugin tests | `plugin_keypad` | I2C/UART jog commands, cancellation, overrides and NVS restart |
 | Plugin tests | `plugin_networking` | Interface events/enumeration, status reports and service/MAC helpers with real lwIP headers |
@@ -289,7 +289,7 @@ repository's default branch.
 | Plugin tests | `plugin_trinamic` | TMC2209 UART/settings/restart, dynamic current, warning polling and homing callbacks |
 | Plugin tests | `plugin_plasma` | Materials/imports, EEPROM-backed mode boot, arc retry/loss and up/down height control |
 | Plugin tests | `plugin_bluetooth` | HC-05 AT configuration, stream switching, settings and EEPROM restart |
-| Plugin tests | `plugin_embroidery_readers` | DST/PES metadata and stitch decoding through real VFS reads |
+| Plugin tests | `plugin_embroidery_readers` | DST/PES decoding, coordinator conversion and streamed needle/motion requests through real VFS reads |
 | Driver tests | `driver_rp2040_flash` | Flash-copy behavior with simulated SDK/IRQ calls |
 | Driver tests | `driver_esp32_nvs` | Partition storage, failures and realtime-handler restoration with simulated SDK calls |
 | Driver tests | `driver_stm32f4_flash` | Flash read/write, erase retry and failure handling with simulated HAL calls |
@@ -330,8 +330,9 @@ with simulated pins, time and controller state. Voltage regulation, full CORE
 suspension and hardware timing remain separate work.
 Bluetooth tests simulate HC-05 replies and STATE inputs while using real CORE
 stream/I/O registration; radio and shared-MPG operation remain separate. Embroidery
-reader tests compile Tajima/Brother modules; the job coordinator and physical
-needle control remain untested. Networking locks upstream lwIP headers separately; its common-interface suite
+tests compile Tajima/Brother readers and the job coordinator. Conversion and
+streamed stepper/trigger workflows use captured planner/spindle boundaries; actual
+planner motion, needle mechanics and physical timing remain untested. Networking locks upstream lwIP headers separately; its common-interface suite
 does not start protocol listeners. Laser tests observe simulated driver pulses
 and byte-stream transformations; no physical laser operation is established.
 Driver SDK boundaries are simulated; no actual Pico SDK/ESP-IDF/STM32/NXP firmware
