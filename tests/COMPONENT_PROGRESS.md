@@ -1,3 +1,45 @@
+# Latest component checkpoint - 2026-10-25 (batch32)
+
+Goal active. Deliver14 runtime cases:9 H-100 VFD +5 BLTouch provider/report cases,
+plus incremental-header fix and unregistered tool-table proposals. One full Windows
+Clang ASan/UBSan compatible gate passes42 suites,836 cases =773 clean +63 documented
+known, zero unexpected failures/skips. Known results remain59 correct assertion
+regressions +4 diagnostic-only cases;3 assertions also carry exact diagnostics,
+counted once. No new known result or sanitizer allowance. Fresh separate reference
+gates pass PSoC9 (8 clean +1 known) and TI17 (15 clean +2 known), excluded from836.
+
+VFD37 cases all pass in fresh combined gate, superseding initial authoring red
+report. H100 discovery/poles/ranges, CW/CCW/stop, limit clamping, feedback, retry,
+reset refresh and provider failure use actual CORE spindle/Modbus plus bounded
+device replies and EEPROM-backed storage. Feedback observes common150ms wrapper
+and established0.01RPM float policy. BLTouch15 cases retain only fractional-D known
+assertion; optional providers/report chains now pass. Physical device timing,
+other VFD protocols and actual controller jobs remain unverified.
+
+All87 source/report helper tests pass29.863s, including new CMake timestamp/CORE-
+path regression. Shared header generation preserves unchanged files, real target
+reconfigure/rebuild reports no work. Broader gate and both legacy source layouts
+now validate the shared change; no production header/source mutation or ABI alias.
+
+Fresh selected LLVM coverage: misc12 files1272/1373 lines,661/866 branches,123/128
+functions; BLTouch130/138 lines,92/110 branches. VFD4 files401/452 lines,121/199
+branches,51/57 functions; H100112/131 lines,40/63 branches. VFD denominator expands
+with H100; unbuilt files/configurations remain excluded. Strict reports pass misc129
+(121 clean +8 known assertions) and VFD37 clean. Counter paths max224/223.
+
+Seven tool-table proposals remain UNRUN and unregistered: current original setter
+ABI fails CORE; they are not passing cases, coverage or known labels. Source-only
+compatibility evidence is preserved without cast/fallback/source modifications.
+Exact main/reference source locks match clean originals. No helper/workflow edits
+beyond the new header regression; unchanged actionlint was not rerun.
+
+Fresh fork listing still exposes only reusable/core workflows; Plugin/Driver
+manual dispatch awaits default-branch installation. Keep PR29 draft/unmerged;
+no hosted GCC/Linux, full target/SDK or physical hardware success claimed.
+Continue the full plugin/core/driver goal with remaining modules/integration.
+
+---
+
 # Local H-100 VFD protocol checkpoint - 2026-10-25
 
 Goal active. Added9 H-100 cases using existing real CORE Modbus/spindle registration
