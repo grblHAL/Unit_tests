@@ -753,5 +753,19 @@
     "test_regex": "^plugin_spindle_stepper[.]",
     "coverage_filter": "plugins/spindle/stepper\\.c$",
     "diagnostics_directory": "tests/plugins/spindle_stepper"
+  },
+  "plugin_laser_coolant": {
+    "repository": "grblHAL/Plugins_laser",
+    "ref": "master",
+    "path": "plugins/laser",
+    "dependencies": [
+      "core",
+      "eeprom_backend"
+    ],
+    "cmake_source": "tests/plugins/laser_coolant",
+    "cmake_options": [],
+    "test_regex": "^plugin_laser_coolant[.]",
+    "coverage_filter": "plugins/laser/coolant\\.c$",
+    "diagnostics_directory": "tests/plugins/laser_coolant"
   }
 }

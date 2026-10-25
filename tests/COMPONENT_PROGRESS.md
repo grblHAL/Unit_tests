@@ -1,3 +1,38 @@
+# Local laser coolant startup/shutdown checkpoint - 2026-10-25
+
+Goal active. Eleven original coolant.c cases pass Windows Clang ASan/UBSan
+0.69s and strict classification all clean. Real CORE digital/analog port claims,
+original EEPROM/CRC and plugin hooks execute. Confirmed startup and timeout,
+flood-off with mist preserved, delayed shutdown/cancellation, reset immediate
+off, falling-edge loss alarm while on and ignored loss after off/pending stop,
+virtual coolant-ok/temp callbacks, reports and provider conflicts/failures execute.
+No private coolant state injection, source edits or diagnostic allowances.
+
+Initial8/11 run exposed host capability/settings preparation mistakes: Change
+and Falling IRQ are separate advertised bits; fresh erased settings must not be
+assumed valid port assignments. Host now advertises both and uses original
+plugin restore to create valid persisted defaults before load. Complete11 rerun
+supersedes initial failures. This deliberately does not prove erased-storage
+recovery; source restore leaves port fields unchanged after failed data read.
+Virtual parameter registration and delayed scheduler are boundaries, not actual
+NGC interpreter or elapsed-wall-time/physical coolant behavior.
+
+Temperature can_monitor stays false in original source; upstream README labels
+thermal features WIP. No temperature report/protection success or manufactured
+known bug claimed; public virtual temperature getter does execute independently.
+Erased/corrupted port-default contract and no-analog configuration need review.
+No unsafe null-provider path or private flag forcing. Firmware/controller flow,
+actual sensors/IRQs/thermal response and electrical timing remain unfinished.
+
+Registered plugin_laser_coolant in manifest/manual Plugin workflow/README and
+inventory, CORE+EEPROM dependencies. Metadata7 helpers/actionlint pass.
+49 registered suites/968 authored; last full delivered batch34 remains930/46.
+Pending38 local:9 clone +18 stepper +11 coolant. No new coverage/global gate,
+hosted GCC/Linux or hardware claim. Continue overdrive and remaining broader
+plugin/driver work; goal stays active.
+
+---
+
 # Local stepper metadata/speed and clone laser-mode checkpoint - 2026-10-25
 
 Goal active. Four new cases: three stepper and one clone. Complete18-stepper

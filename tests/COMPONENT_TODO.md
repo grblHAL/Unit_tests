@@ -633,3 +633,15 @@ case focused clean. Counter-reset absolute reference semantics, fractional rotar
 startup, description normalization, repeated timer IRQ edge cases remain open.
 No copied normalization or direct private engine state introduced. Pending27
 local cases; retain substantial delivery cadence and measure source gain next.
+
+## Laser coolant selected behavior
+
+11 strict-clean ASan/UBSan cases use real ioports/EEPROM. Explicit Change and
+Falling pin capabilities required. Valid defaults restored before load; erased
+storage can read unassigned port bytes and restore does not initialize those
+fields. Clarify intended default mapping; no fabricated default recovery claim.
+can_monitor remains false and thermal README features are WIP; public virtual
+temperature callback passes, actual thermal report/alarm does not have support
+claimed. No analog-bank-absent null-provider reproduction. Delayed timing and
+virtual registry are host boundaries. Overdrive co2.c, native parser/hardware
+and remaining driver/plugin configurations remain independent work.
