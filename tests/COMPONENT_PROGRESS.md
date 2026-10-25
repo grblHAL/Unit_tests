@@ -1,3 +1,30 @@
+# Local spindle offset motion-boundary checkpoint - 2026-10-25
+
+Goal active. Nine original-source offset cases pass Windows Clang ASan/UBSan
+0.65s and strict classification all clean. Actual CORE registers three driver
+spindles; original offset hooks/settings and EEPROM/CRC execute. Tests capture
+rapid offset/return XY requests preserving Z, synchronize/position update counts,
+optional G92/WCO adjustments, zero offset/startup/no-laser behavior, abort without
+G92 adjustment, original in-process settings persistence and previous reports.
+
+Motion gateway is an explicit boundary model, not actual planner/stepper. It
+returns documented Status_Handled for accepted motion, Status_Aborted on abort
+(CORE motion_control.c83-87), and converts configured80 steps/mm. These tests
+prove requested targets and callback behavior, not physical travel or native
+parser/controller integration. No public status-contract reinterpretation,
+private plugin-state injection, source edit, allowance or weakened assertion.
+
+New suite plugin_spindle_offset registered in manifest/manual Plugin workflow,
+README/inventory. Metadata7 helper checks/actionlint pass.46 suites/930 authored
+active cases; full delivered batch33 remains879 across42. Pending51 cases:
+17 VFD +12 onoff +6 PWM provider +7 select +9 offset. No fresh coverage/global
+or hosted result. Tool-setting ABI/PWM context proposals remain unregistered.
+Aborted-offset-followed-by-selection and repeat-same-laser policy need contract
+review; no invented failure asserted. Stepper/clone modules, other driver paths,
+actual board/SDK firmware and hardware remain unfinished. Goal stays active.
+
+---
+
 # Local spindle selection and tool-setting contract - 2026-10-25
 
 Goal active. Seven independent original-source selection cases pass fresh

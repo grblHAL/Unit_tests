@@ -274,6 +274,7 @@ repository's default branch.
 | Plugin tests | `plugin_spindle_onoff` | On/off and direction outputs; persisted port settings and resource conflicts |
 | Plugin tests | `plugin_spindle_pwm` | Resource rejection only; PWM activation proposals blocked by missing source context |
 | Plugin tests | `plugin_spindle_select` | M-code selection and binding checks; tool-threshold ABI proposals unregistered |
+| Plugin tests | `plugin_spindle_offset` | Requested offset/return motion and G92 behavior at the host motion boundary |
 | Plugin tests | `plugin_sdcard_stream` | File input, stream ownership, error/reset recovery and external macro repeats |
 | Driver tests | `driver_simulator_vfs` | File/directory workflows; current CORE compile incompatibility recorded |
 | Plugin tests | `plugin_keypad` | I2C/UART jog commands, cancellation, overrides and NVS restart |

@@ -571,3 +571,14 @@ was rejected by strict reporting despite ordinary CTest green. CORE public
 Format_Int16 uses uint_fast16_t; original callback takes uint32_t. Do not hide
 with source-specific casts or count restart validated. Original assertions
 remain proposals; native controller/SDK/hardware and remaining modules stay open.
+
+## Spindle offset scope
+
+Nine strict-clean ASan/UBSan cases use original offset plugin/EEPROM and real
+spindle registry with modeled motion completion/position conversion. Actual
+mc_line planner/step generation remains untested; preserve documented nonzero
+Status_Handled success contract. Offset/G92/abort/source hooks execute. Clarify
+repeat-same-laser selection and selection after abort before asserting desired
+behavior; no unsupported contract or known failure registered. Stepper/clone,
+full controller/target/hardware remain open. Pending51 additions form next
+substantial cumulative validation candidate after source review/coverage.
