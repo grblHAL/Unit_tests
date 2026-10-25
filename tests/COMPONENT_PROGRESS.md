@@ -1,3 +1,28 @@
+# Local incremental-header build checkpoint - 2026-10-25
+
+Goal active. Fixed component forwarding-header generation: file(CONFIGURE) writes
+only when content changes, replacing unconditional file(WRITE). Reconfiguring a
+suite no longer touches every forwarded CORE header and rebuilds unchanged cases.
+A new Python integration regression first failed on the original timestamp rewrite,
+then passed4.07s with the fix. It configures twice for each of two CORE paths with
+spaces and switches back, checking stable timestamps and correct include paths.
+The dummy header trees test generation only; no firmware source is substituted.
+
+Real existing BLTouch target was built, reconfigured and rebuilt: Ninja reports
+'no work to do'; its sanitizer/strict case still passes0.09s. No target semantics,
+source lock, production headers or firmware code changed. New helper joins normal
+scripts/test_*.py discovery and requires the existing CMake build dependency on PATH.
+Only this new helper was executed; unchanged prior86 helpers were not rerun yet.
+A broader component gate remains due at the next substantial delivery because
+this shared build helper changed. No new full-suite/coverage/hosted claim.
+
+Compatible authored counts remain827, last delivered822 plus26 separate legacy
+references. Five BLTouch cases and unrun tooltable proposals remain local from
+prior checkpoints; proposals never count. Continue supported module authoring
+with incremental builds and retain the full goal.
+
+---
+
 # Local tool-table compatibility checkpoint - 2026-10-25
 
 Goal active. Authored seven tool-table/VFS scenarios, but original tooltable.c

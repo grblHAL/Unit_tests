@@ -466,3 +466,12 @@ is unclassified until execution. Do not add casts/aliases/header bypasses/source
 edits or automatic legacy fallback. Resolve explicit upstream API compatibility,
 then validate fixtures/scenarios before registering. Oversized parser lines stay
 source-only; no unsafe runtime reproduction. Other supported module work continues.
+
+## Incremental component builds
+
+Forwarding headers now update only when include content changes, verified by a
+CORE-path-switch/stable-timestamp regression and real no-work rebuild. New helper
+requires CMake on PATH like component builds. Run the combined gate and source
+helpers once at the next substantial pre-push boundary after this shared change;
+do not repeatedly rebuild unchanged targets during authoring. Firmware sources
+and source-lock contracts are unchanged.
