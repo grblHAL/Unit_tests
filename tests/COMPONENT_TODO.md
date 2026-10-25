@@ -614,3 +614,13 @@ hardware timer proof. Timer callbacks, sync position, fractional rotary and
 unit/description metadata remain. Counter reset anchors whole-turn offset;
 confirm intended angular/counter semantics before asserting reset-to-zero.
 Broader board/SDK/controller/hardware integration remains independent work.
+
+## Stepper timer/source follow-up
+
+Six new cases, all15 strict-clean sanitizer cases after shared timer fixture.
+Timer32/16 capability fallback, timer allocation failure, stop/restart, integer
+and fractional step/rev position sync execute original engine/plugin. No actual
+IRQ/electrical timing proof. Live timer direction change enters a blocking loop
+with no polling callback in timer mode; needs independently delivered IRQs, not
+synchronous fake engine progress. Preserve this gap; do not force private motor
+state or treat a stopped/restarted direction test as live reversal coverage.

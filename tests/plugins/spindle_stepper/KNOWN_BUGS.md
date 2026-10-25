@@ -1,6 +1,6 @@
 # Known defects and scope
 
-Nine selected polling-mode cases pass without known runtime exceptions. Original
+Fifteen selected polling/timer-boundary cases pass without known runtime exceptions. Original
 Plugins_spindle8a3ae47f5a218834da9c742424c3dd22c5629fdb and
 COREb01f481072edecac33d5e40c25869359a5b3fa1f remain unchanged.
 
@@ -19,7 +19,14 @@ mocked st2 algorithm. Settings save is observed at the platform boundary;
 no EEPROM or full firmware/parser integration is claimed. Local driver.h only
 forwards the real grbl/hal.h layout used by original plugin includes.
 
-Interrupt/timer-driven execution, synchronized axis position, fractional rotary
-scaling, counter reset/angle semantics, units/descriptions and native controller
-jobs remain open. Unused system/planner helpers fail immediately; no silent
-fallback. No source edits, ABI casts or sanitizer allowances.
+Timer32 and16-bit fallback callbacks execute actual CORE engine; rejected
+timer allocation falls back to polling or warns with no clock. Stop halts timer
+callbacks, restart after stop reverses direction. Integer/fractional steps/rev
+position sync uses captured pulse totals and observed planner sync/coordinate
+conversion boundaries. This is not real planner/IRQ timing or electrical output.
+
+Live timer-backed direction reversal needs independently delivered asynchronous
+interrupts during the plugin's blocking stop loop; the synchronous event model
+does not exercise that path. Fractional rotary mode, counter reset/angle,
+units/descriptions and native controller jobs remain open. Unused settings
+metadata helpers fail immediately; no silent fallback. No source edits, ABI casts or sanitizer allowances.

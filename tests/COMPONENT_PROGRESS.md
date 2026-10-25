@@ -1,3 +1,34 @@
+# Local stepper timer and position synchronization checkpoint - 2026-10-25
+
+Goal active. Six new original-source stepper cases bring suite to15. Complete
+15-case Windows Clang ASan/UBSan gate passes0.85s and strict classification all
+clean after shared fixture extension.32-bit timer and16-bit fallback claims use
+actual HAL capability/timebase requests and register CORE callback/context.
+Driver timer model advances only by requested period then dispatches original
+callback; no copied motor algorithm. Real-time callback alone produces no timer
+pulses. Cruising60RPM/200 step/rev requests5000us; stop halts timer, then reverse
+restart works. Failed timer claims use polling or warn when no clock exists.
+
+Two sync-position cases use valid startup sys.position and public settings,
+then compare post-stop A position to total captured forward/reverse pulses,
+integer200 or fractional200.5 steps/revolution. Original plugin selects both
+integer/fractional paths, releases motor claim and requests planner sync. Host
+planner-sync/coordinate conversion are explicit boundary models; no actual
+planner/controller job or physical waveform claimed. Existing polling cases
+remain clean. No private motor mutation, production edits, allowances or weaker
+assertions. Timer-backed live reversal is not run synchronously: original
+blocking loop requires independent asynchronous IRQ delivery.
+
+48 registered suites/953 authored cases; last delivered full batch34 remains
+930/46 plus87 helpers. Pending23 local:8 clone +15 stepper. No fresh global gate,
+coverage, hosted or SDK/hardware claim. PWM context and tool-setting ABI proposals
+remain unresolved/unregistered. Fractional rotary configuration, reset/angle
+semantics, metadata callbacks, native full parser/planner, actual MCU timers and
+broader plugins/drivers remain open. Goal stays active; continue substantial
+batch before delivery.
+
+---
+
 # Local stepper spindle polling checkpoint - 2026-10-25
 
 Goal active. Nine original stepper-spindle cases pass Windows Clang ASan/UBSan

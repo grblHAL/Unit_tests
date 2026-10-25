@@ -11,6 +11,46 @@ unsigned stepper_pulses, stepper_forward, stepper_reverse, stepper_claims, stepp
 uint8_t stepper_enabled;
 driver_settings_save_ptr stepper_save;
 static uint64_t micros;
+bool stepper_timer_available, stepper_timer_32bit = true, stepper_timer_claim_ok = true;
+unsigned stepper_timer_claims, stepper_timer_starts, stepper_timer_stops, stepper_position_syncs;
+uint32_t stepper_timer_period;
+float stepper_resolution = 200;
+static uint8_t timer_handle;
+static timer_cfg_t timer_config;
+static bool timer_pending;
+static hal_timer_t timer_claim(timer_cap_t cap, uint32_t timebase)
+{
+    CHECK(!cap.periodic && timebase == 1000);
+    CHECK(cap.resolution == Timer_32bit || cap.resolution == Timer_16bit);
+    stepper_timer_claims++;
+    return stepper_timer_claim_ok &&
+                   cap.resolution == (stepper_timer_32bit ? Timer_32bit : Timer_16bit)
+               ? &timer_handle
+               : NULL;
+}
+static bool timer_configure(hal_timer_t timer, timer_cfg_t *cfg)
+{
+    CHECK(timer == &timer_handle && cfg && cfg->context && cfg->timeout_callback &&
+          !cfg->single_shot);
+    timer_config = *cfg;
+    return true;
+}
+static bool timer_start(hal_timer_t timer, uint32_t period)
+{
+    CHECK(timer == &timer_handle && period > 0);
+    CHECK(stepper_timer_32bit || period <= 65535);
+    stepper_timer_period = period;
+    timer_pending = true;
+    stepper_timer_starts++;
+    return true;
+}
+static bool timer_stop(hal_timer_t timer)
+{
+    CHECK(timer == &timer_handle);
+    timer_pending = false;
+    stepper_timer_stops++;
+    return true;
+}
 static foreground_task_ptr delayed;
 static void *delayed_data;
 static uint64_t get_micros(void)
@@ -98,6 +138,12 @@ void stepper_poll(unsigned count)
     while (count--)
     {
         grbl.on_execute_realtime(STATE_IDLE);
+        if (timer_pending)
+        {
+            timer_pending = false;
+            micros += stepper_timer_period;
+            timer_config.timeout_callback(timer_config.context);
+        }
         if (delayed)
         {
             foreground_task_ptr fn = delayed;
@@ -127,14 +173,21 @@ void stepper_stop(spindle_ptrs_t *s)
 }
 void stepper_prepare(void)
 {
-    settings.axis[3] =
-        (axis_settings_t){.steps_per_mm = 200, .max_rate = 600, .acceleration = 360000};
+    for (unsigned i = 0; i < N_AXIS; i++)
+        settings.axis[i].steps_per_mm = 80;
+    settings.axis[3] = (axis_settings_t){
+        .steps_per_mm = stepper_resolution, .max_rate = 600, .acceleration = 360000};
     settings.steppers.pulse_microseconds = 5;
     settings.spindle.at_speed_tolerance = 5;
     if (stepper_driver_ok)
         hal.stepper.output_step = output_step;
     if (stepper_clock_ok)
         hal.get_micros = get_micros;
+    if (stepper_timer_available)
+        hal.timer = (timer_ptrs_t){.claim = timer_claim,
+                                   .configure = timer_configure,
+                                   .start = timer_start,
+                                   .stop = timer_stop};
     hal.stepper.enable = enable;
     hal.stepper.claim_motor = claim;
     grbl.on_execute_realtime = realtime;
@@ -148,12 +201,12 @@ void stepper_prepare(void)
         grbl.on_settings_changed(&settings, (settings_changed_flags_t){.spindle = On});
     }
 }
-void plan_sync_position(void) { CHECK(false); }
+void plan_sync_position(void) { stepper_position_syncs++; }
 void system_convert_array_steps_to_mpos(float *position, int32_t *steps)
 {
-    (void)position;
-    (void)steps;
-    CHECK(false);
+    CHECK(steps == sys.position);
+    for (unsigned i = 0; i < N_AXIS; i++)
+        position[i] = steps[i] / settings.axis[i].steps_per_mm;
 }
 setting_id_t settings_get_axis_base(setting_id_t id, uint_fast8_t *idx)
 {

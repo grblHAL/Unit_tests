@@ -18,3 +18,9 @@ void stepper_poll(unsigned count);
 void stepper_cruise(spindle_ptrs_t *s);
 void stepper_stop(spindle_ptrs_t *s);
 void stepper_spindle_init(void);
+
+extern bool stepper_timer_available, stepper_timer_32bit, stepper_timer_claim_ok;
+extern unsigned stepper_timer_claims, stepper_timer_starts, stepper_timer_stops,
+    stepper_position_syncs;
+extern uint32_t stepper_timer_period;
+extern float stepper_resolution;
