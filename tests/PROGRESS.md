@@ -1,3 +1,13 @@
+# PR30 reviewed validation - 2026-10-25
+
+Run40180255067: source/GCC/coverage pass, Clang one known diagnostic mismatch.
+Saved output is the exact recursive-tapping index28 signature already accepted
+in fully green PR31 run40179484951. Added that one inventory entry. All three
+actual fatal logs pass the production runner offline replay, including its
+first1024 output bytes; unrelated location rejects. Functional code unchanged.
+No repeated full build for data-only repair. Hosted run remains labelled failed;
+manual review verifies the reporting repair. User explicitly authorized merge.
+
 # PR30 diagnostic reporting repair - 2026-10-25
 
 Fresh hosted GCC and coverage passed; Clang reported three existing fatal
