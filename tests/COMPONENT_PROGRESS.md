@@ -1,3 +1,34 @@
+# Local stepper spindle polling checkpoint - 2026-10-25
+
+Goal active. Nine original stepper-spindle cases pass Windows Clang ASan/UBSan
+0.52s and strict classification all clean. Added explicit prior realtime/delay
+hook assertions also pass focused1/1 with strict classification. Actual CORE stepper2/spindle registry
+runs with four axes and200 step/rev A spindle. Driver boundary captures engine
+pulse/direction masks, enables and motor claims; real engine acceleration,
+cruising and stop execute. Cases cover forward/reverse, counters versus captured
+pulses, calculated RPM, stop/no subsequent pulses, prior hook chaining, enabled
+XYZ-mask retention, optional axis release after stop, rotary settings roundtrip,
+maximum-rate settings/clamping, soft reset and missing output/clock providers.
+
+Polling clock advances10ms per read and deliberately undersamples some requested
+periods. This verifies state/step-event relationships and computed speed, not
+physical frequency, timer IRQ accuracy or motor travel. Delayed stop callback
+runs at host scheduler boundary. No copied st2 algorithm, private profile state,
+production edits, new allowance or assertion weakening. Removed unnecessary
+EEPROM/ioport sources; local driver.h only forwards actual CORE hal header.
+Settings save is an observed callback, not validated persisted restart.
+
+Registered plugin_spindle_stepper with CORE-only dependency in manifest/manual
+Plugin workflow, README and inventory. Metadata7 helpers/actionlint pass.
+48 registered suites/947 authored cases; last full delivered batch34 remains
+930 across46 plus87 helpers. Pending local17 cases:8 clone +9 stepper. No fresh
+coverage, cumulative gate, hosted GCC/Linux, actual SDK firmware or hardware
+claim. Timer-backed operation, position synchronization, fractional rotary,
+unit/report metadata, full controller jobs and other plugin/driver regions stay
+open. Existing PWM/tool-setting proposals unresolved; full goal stays active.
+
+---
+
 # Local cloned PWM spindle checkpoint - 2026-10-25
 
 Goal active. Eight original pwm_clone.c scenarios pass Windows Clang

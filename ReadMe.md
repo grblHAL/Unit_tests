@@ -276,6 +276,7 @@ repository's default branch.
 | Plugin tests | `plugin_spindle_select` | M-code selection and binding checks; tool-threshold ABI proposals unregistered |
 | Plugin tests | `plugin_spindle_offset` | Requested offset/return motion and G92 behavior at the host motion boundary |
 | Plugin tests | `plugin_spindle_clone` | Primary/clone signal routing, CORE PWM conversion, switching and provider rejection |
+| Plugin tests | `plugin_spindle_stepper` | Original CORE secondary-stepper polling, pulse/direction capture, motor claims and settings |
 | Plugin tests | `plugin_sdcard_stream` | File input, stream ownership, error/reset recovery and external macro repeats |
 | Driver tests | `driver_simulator_vfs` | File/directory workflows; current CORE compile incompatibility recorded |
 | Plugin tests | `plugin_keypad` | I2C/UART jog commands, cancellation, overrides and NVS restart |

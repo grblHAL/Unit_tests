@@ -740,5 +740,18 @@
     "test_regex": "^plugin_spindle_clone[.]",
     "coverage_filter": "plugins/spindle/pwm_clone\\.c$",
     "diagnostics_directory": "tests/plugins/spindle_clone"
+  },
+  "plugin_spindle_stepper": {
+    "repository": "grblHAL/Plugins_spindle",
+    "ref": "master",
+    "path": "plugins/spindle",
+    "dependencies": [
+      "core"
+    ],
+    "cmake_source": "tests/plugins/spindle_stepper",
+    "cmake_options": [],
+    "test_regex": "^plugin_spindle_stepper[.]",
+    "coverage_filter": "plugins/spindle/stepper\\.c$",
+    "diagnostics_directory": "tests/plugins/spindle_stepper"
   }
 }

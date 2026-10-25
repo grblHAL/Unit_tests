@@ -603,3 +603,14 @@ at driver callback boundary; real PWM timing/full parser not claimed. Laser
 mode and range metadata refresh are pending; provider base must be properly
 initialized through public API, never fabricate missing context for pwm.c.
 Stepper module with actual CORE stepper2/four-axis HAL remains next source gap.
+
+## Stepper spindle polling suite
+
+Nine ASan/UBSan/strict-clean cases execute actual CORE stepper2 and original
+plugin with public four-axis HAL callbacks. Engine pulses/counters/speed, stop,
+reversal, enable masks/claims, rotary settings, reset and provider failures
+execute.10ms clock polling undersamples some step periods; no physical speed or
+hardware timer proof. Timer callbacks, sync position, fractional rotary and
+unit/description metadata remain. Counter reset anchors whole-turn offset;
+confirm intended angular/counter semantics before asserting reset-to-zero.
+Broader board/SDK/controller/hardware integration remains independent work.
