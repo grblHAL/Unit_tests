@@ -797,3 +797,31 @@ assertion, padding or wildcard/range changes. Earlier clean recursive exits stil
 remain red; CORE has not changed. Do not rerun CI solely for this data addition.
 Evidence: build-asan/hosted40118321363/results-core-clang/build/known-crash-<test>.log,
 verified-exact-diagnostic-replay.json and verified-new-workflows.json.
+
+
+### Tapping diagnostic evidence update - 2026-10-25, run40121790962
+
+[Run40121790962](https://github.com/petervanderwalt/Unit_tests/actions/runs/40121790962)
+on harness `ed5b142` / CORE `b01f481` passed source, GCC and coverage, but failed
+Clang and the results summary on the same three existing tapping regressions.
+Actual saved logs show these exact indices at `core/gcode.c:485:32`, the
+`const uint8_t[27]` table and `macro_arguments_push` top frame, followed by
+ASan global-buffer-overflow:
+
+- Eight-axis fallback: index30.
+- Recursive tapping: index28.
+- Unsupported tapping fallback: index31.
+
+Three exact test/index entries record only these observations. The unchanged
+production runner accepts the saved nonzero diagnostics; its first1024 output
+bytes still match. Changed index/source/table/function, absent diagnostics and
+zero exits reject. No matcher/assertion, compiler flag, padding, wildcard or range
+change. Post-fatal assertions remain unvalidated; this does not establish a fix.
+Do not dispatch CI just for these data entries.
+
+All six new functional workflows classify as expected in Clang: five clean
+passes plus the documented sleep-from-alarm regression. The complete Clang
+result is4,504 total/4,476 clean/25 known/3 failed/zero skipped. Evidence lives in
+`build-asan/hosted40121790962/results-core-clang/build/known-crash-<test>.log`,
+`verified-clang.json`, `verified-new-workflows.json` and
+`verified-exact-diagnostic-replay.json`.

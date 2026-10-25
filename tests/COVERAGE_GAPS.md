@@ -2,52 +2,46 @@
 
 ## Latest verified coverage job; compiler matrix failed
 
-[Run40118321363](https://github.com/petervanderwalt/Unit_tests/actions/runs/40118321363)
-coverage PASSED on harnesscf41105519753520c5f2e0d2a31c2f1726b56be0 and
+[Run40121790962](https://github.com/petervanderwalt/Unit_tests/actions/runs/40121790962)
+coverage PASSED on harnessed5b142c589b3545de7e9f6e756854dbe2d1fba3 and
 COREb01f481072edecac33d5e40c25869359a5b3fa1f. Both artifact/report locks and
-filter core/.*\.[ch]$ match; allseven stages0/no findings. Coverage4,501 total/
-4,478 clean/23 known/zero failed or skipped.
-17,491/17,757 lines (**98.50%**) and12,828/13,852 outcomes (**92.61%**):
-266 missing lines/1,024 missing outcomes. Against same-source40114356917:
-zero new/lost lines; eight additional outcomes/no loss. Exact new sites:
-gcode5104/5122, grbllib459, ngc_params319, report1636, spindle_control1043,
-state_machine824/875. These match all six pushed workflows; actual parking
-also adds two resume-state outcomes. Both inventories reconciled; unchanged
-line inventory266 exact keys checked. Evidence: hosted40118321363/
-verified-comparison.json under build-asan.
+filter core/.*\.[ch]$ match; all seven stages0/no findings. Coverage4,504 total/
+4,480 clean/24 known/zero failed or skipped.
+17,491/17,757 lines (**98.50%**) and12,836/13,852 outcomes (**92.67%**):
+266 missing lines/1,016 missing outcomes. Against same-source40118321363:
+zero new/lost lines; eight additional outcomes/no loss. Exact gains:
 
-GCC PASSED with exact artifact lock/allstages0/no findings:4,501 total/4,477 clean/
-24 known/zero failed or skipped. Clang/summary FAILED:4,501 total/4,474 clean/
-26 known/one failed/zero skipped. All six newly pushed workflows pass without
-allowances. The only failure is existing recursive tapping index29 at gcode485.
-A local exact test/index entry passes production/first1024 and changed/absent/
-zero-exit negative controls; matcher/assertions unchanged, clean exits still red.
-No retry for this diagnostic alone; no green matrix claim. README
-badges and ready PR30 remain fully green40111349496 at59b3ad9 (98.50%/92.48%).
-Never merge PRs. Full local ASan/UBSan/strict passed4,501 in71.00s before push:
-4,476 clean/24 known regressions/1 known diagnostic/zero failures or skips.
+- gcode511/541/542: primary-only spindle and feed-only cutter modal restoration.
+- gcode4381: modal save skips the unused spindle slot.
+- report1594: native full-status request includes the selected probe ID.
+- stream327: background USB DTR preserves the active network sender.
+- system576: ordinary sleep request from forced startup alarm reaches the allowed guard.
+- system627: identification query while the physical E-stop remains asserted.
 
-Prior40114356917 on d05945e failed Clang/summary on the documented tapping
-fault. Its six new workflows all pass individually without allowances. Actually
-saved indices28/30 now have local exact entries, production/first1024 replay and
-changed/zero-exit negative controls. Recursive clean exit still correctly rejects;
-no wildcard/range or matcher/assertion weakening. Those data entries are included
-in cf41105; current compiler results must be inspected before readiness claims.
+Both inventories reconciled; unchanged line inventory266 exact keys checked.
+Evidence: build-asan/hosted40121790962/verified-comparison.json. The alarm-sleep
+workflow retains its correct Sleep assertion with one narrow known failure;
+coverage of the request guard does not mean the defect is fixed. No other new
+allowance. Full local4,504 ASan/UBSan and strict passed62.62s:4,478 clean,
+25 known regressions and one known diagnostic, zero failed/skipped.
 
-Later local work is outside cf41105: the existing full-probe status case now uses
-report_get_rt_flags_all and verifies selected probe ID/all registered inputs with
-no false idle-protection marker; a new feed-only M70/M72 test in the existing
-cutter-extension build restores feed without touching disabled compensation or
-its provider. Focused sanitizer/strict checks pass0.29s/0.34s. Targets report1594/
-1596 and gcode541/542/611 remain unmeasured. No new host variant, private-state
-setup or compensated-geometry claim; accumulate before any next full gate/CI.
+Source PASSED including85 helper checks. GCC PASSED with exact report/result
+locks, five stages0/no findings and4,504 total/4,479 clean/25 known/zero failed
+or skipped. Clang/summary FAILED:4,504 total/4,476 clean/25 known/3 failed/zero
+skipped. The failures are the existing tapping cases with saved indices30
+(eight-axis),28 (recursive),31 (unsupported fallback) at gcode485/const27/top
+frame macro_arguments_push. All six new workflows classify as expected, including
+the documented alarm-sleep known bug. Three exact local diagnostic entries pass
+production/first1024 replay and changed/absent/zero-exit negative controls. No
+matcher/assertion change or CI retry for these entries alone. No green matrix or
+PR readiness claim. README badges and ready PR30
+remain at fully green40111349496/59b3ad9 (98.50%/92.48%). Never merge PRs.
 
-A later normal sleep-from-startup-alarm regression confirms a functional defect:
-$SLP is accepted but the Alarm handler ignores EXEC_SLEEP. Correct Sleep assertion
-is retained with one exact WILL_FAIL/known_bug and a dated KNOWN_BUGS entry.
-The public $X-before-$SLP control validates the same fixture's sleep/reset/unlock
-tail. No sanitizer allowance or injected state. Focused strict classification
-passes; no new coverage claim or full run for this local case.
+Previous40118321363/cf41105 passed coverage98.50%/92.61% and GCC, but failed
+Clang on the existing recursive tapping index29 diagnostic. Only that observed
+exact test/index data was added; production matcher and correct assertions remain
+unchanged, and absent/changed/zero-exit negative controls reject. Those data are
+included in ed5b142. No retry was dispatched for diagnostic data alone.
 
 Specific branch-route proof in the CSV covers Modbus42/69 (all supported
 RTU/ASCII/TCP cases; remaining switch defaults) and fs_ram103/140/146/148/153
