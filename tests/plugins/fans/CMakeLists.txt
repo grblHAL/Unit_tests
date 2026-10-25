@@ -1,0 +1,23 @@
+cmake_minimum_required(VERSION 3.20)
+project(grblhal_fan_tests LANGUAGES C)
+include(../../components.cmake)
+foreach(behavior commands reset_and_end spindle_delay reports initialization_failure unavailable_ports port_settings delayed_program_end hook_chaining persisted_settings delayed_reset delayed_restart)
+  component_case(plugin_fans.${behavior} ${behavior}.c fan_host.c "${HARNESS_ROOT}/tests/plugins/misc/misc_host.c" "${COMPONENT_CORE_ROOT}/nuts_bolts.c" "${HARNESS_ROOT}/plugins/fans/fans.c")
+  target_compile_definitions(plugin_fans.${behavior} PRIVATE FANS_ENABLE=2)
+  target_include_directories(plugin_fans.${behavior} PRIVATE "${HARNESS_ROOT}/plugins/fans" "${HARNESS_ROOT}/tests/plugins/misc")
+endforeach()
+# Upstream callback signatures include intentionally unused context arguments.
+set_source_files_properties("${HARNESS_ROOT}/plugins/fans/fans.c" PROPERTIES COMPILE_OPTIONS "-Wno-unused-parameter;-Wno-missing-field-initializers")
+
+if(ENABLE_SANITIZERS AND CMAKE_C_COMPILER_ID STREQUAL "Clang")
+  set_tests_properties(plugin_fans.spindle_delay PROPERTIES LABELS known_sanitizer_bug)
+endif()
+
+foreach(count 1 3 4)
+  foreach(behavior configuration configured_disabled shutdown)
+    set(target plugin_fans.count${count}_${behavior})
+    component_case(${target} count_${behavior}.c fan_host.c "${HARNESS_ROOT}/tests/plugins/misc/misc_host.c" "${COMPONENT_CORE_ROOT}/nuts_bolts.c" "${HARNESS_ROOT}/plugins/fans/fans.c")
+    target_compile_definitions(${target} PRIVATE FANS_ENABLE=${count})
+    target_include_directories(${target} PRIVATE "${HARNESS_ROOT}/plugins/fans" "${HARNESS_ROOT}/tests/plugins/misc")
+  endforeach()
+endforeach()

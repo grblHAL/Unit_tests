@@ -207,6 +207,21 @@ class DiagnosisTests(unittest.TestCase):
             self.assertIn("Lines: 90.00%", summary)
             self.assertIn("Branches: 75.00%", summary)
             self.assertIn("| coverage | 1 | 1 | 0 | 0 | 0 |", summary)
+    def test_optional_arm_job_only_allows_skip_for_other_sources(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / 'reports').mkdir()
+            (root / 'reports/report-source.json').write_text(json.dumps(dict(job='source', findings=[])))
+            environment = os.environ.copy()
+            environment.pop('GITHUB_STEP_SUMMARY', None)
+            environment['NEEDS_JSON'] = json.dumps({
+                'source': {'result': 'success'}, 'arm-modules': {'result': 'skipped'}})
+            for path, expected_success in [('plugins/networking', True), ('drivers/stm32h7', False)]:
+                with self.subTest(path=path):
+                    (root / 'source-lock.json').write_text(json.dumps({'path': path}))
+                    result = subprocess.run([sys.executable, str(SCRIPTS / 'ci_report.py'), '--aggregate'],
+                                            cwd=root, env=environment, capture_output=True, text=True)
+                    self.assertEqual(result.returncode == 0, expected_success, result.stdout + result.stderr)
 
 if __name__=='__main__':
     unittest.main()

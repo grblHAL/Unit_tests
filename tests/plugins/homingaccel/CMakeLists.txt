@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.20)
+project(grblhal_homingaccel_tests LANGUAGES C)
+include(../../components.cmake)
+foreach(behavior default_restore axis_sequence multiple_axes zero_override failed_homing override_rejected persistence setting_family unit_chaining rotary_axis options init_failure optional_hooks)
+  component_case(plugin_homingaccel.${behavior} ${behavior}.c homing_host.c "${HARNESS_ROOT}/plugins/homingaccel/sienci_homing_acceleration.c")
+  target_compile_definitions(plugin_homingaccel.${behavior} PRIVATE HOMING_ACCEL_ENABLE=1 N_AXIS=4)
+endforeach()
+set_source_files_properties("${HARNESS_ROOT}/plugins/homingaccel/sienci_homing_acceleration.c" PROPERTIES COMPILE_OPTIONS -Wno-unused-parameter)

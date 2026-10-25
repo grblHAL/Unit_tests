@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.20)
+project(grblhal_esp32_nvs_tests LANGUAGES C)
+include(../../components.cmake)
+foreach(behavior roundtrip missing_partition no_init erase_failure write_failure read_failure reinitialize retry_write)
+ component_case(driver_esp32_nvs.${behavior} ${behavior}.c esp_host.c "${HARNESS_ROOT}/drivers/esp32/main/nvs.c")
+ target_include_directories(driver_esp32_nvs.${behavior} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/sdk")
+ target_compile_definitions(driver_esp32_nvs.${behavior} PRIVATE NVSDATA_BUFFER_ENABLE=1)
+endforeach()

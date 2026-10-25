@@ -1,0 +1,3937 @@
+# End-of-day handoff - 2026-10-25
+
+Stopped at the user's request; continue next week when requested. Existing PR29
+is draft/unmerged. Validated code head e18ea69 has1281 cases across56 suites:
+1212 clean +69 documented known, zero unexpected failures/skips. The subsequent
+handoff commit changes documentation only; no new full gate is needed.
+
+RP2040 continuation: the unchanged serial module and Pico2.1.1 SDK dependencies
+compile for Pico/Cortex-M0+ with ARM GCC14.2.1. Its serial object verifies as
+ELF32 ARM relocatable. This is an unregistered local compile probe, no new unit
+cases/coverage/firmware-link/runtime/hardware claim. Exact source/SDK/object
+hashes, original warnings, complete probe project and remaining work are saved
+in tests/drivers/rp2040_flash/ARM_CHECKPOINT.md. No production source was edited.
+
+Resume on plugin-driver-tests, preserve local evidence, read the scope/TODO,
+verify Git/PR/source state and continue substantial supported batches. Plugin/
+Driver hosted dispatch remains unavailable until default-branch installation;
+no hosted check exists for the delivered head. Do not merge the PR or alter CORE.
+
+# Batch49 cumulative ESP-AT gate - 2026-10-25
+
+Goal active. One fresh full Windows Clang ASan/UBSan plus strict gate passes1281
+cases across56 current-CORE-compatible suites:1212 clean +69 documented known,
+zero unexpected failures/skips.28 new ESP-AT cases beyond delivered f616781:
+26 clean +2 correct known assertions. Known categories65 assertions +4 diagnostic-
+only, with3 overlaps counted once;7 diagnostic-bearing cases unchanged. Main
+CORE and historical reference suites remain separate/excluded. No production
+source edit, copied algorithm, private-state/ABI alias or sanitizer allowance.
+
+The22 standalone cases now include registered CORE port function assignment and
+Boot0/reset order, incomplete-pair fallback and actual CORE tool-ACK suspension/
+queue restore. Six ETHERNET-enabled cases link original networking.c and lwIP
+headers for AP/STA flags/IP events, disconnect flags, active-stream report routing,
+initial server-stop rejection and prior-provider delegation. The correct listener
+assertion catches NETIF reporting0 after actual startup commands requested23.
+It is one exact WILL_FAIL/known_bug; the reserved-slot capacity assertion is the
+other. Modem/task/I2C/digital output delivery remain explicit host boundaries;
+no physical radio/socket/scheduler-timing claim. All48 original source checkouts
+are clean at recorded revisions; the five-source misc plan is locked separately.
+
+Seven affected component/source-plan helper tests pass0.057s after adding EEPROM,
+networking and lwIP dependencies. Broader91 helpers last passed batch48; unchanged
+helper code is not rerun. Fresh selected misc coverage1716/1897 lines90.5%,
+841/1146 branches73.4%,156/164 functions. New esp_at.c adds444/524 lines84.7%,
+180/280 branches64.3%,33/36 functions; previous selected files retain their exact
+batch32 totals. Thus+444covered/+524executable lines and+180covered/+280branches.
+Coverage execution passes157 cases (147clean/10known), counters fresh/max229chars.
+The unregistered IPv4 setter stays counted among uncovered executable code; no
+source exclusion or padding is used. Other module/configuration/controller paths
+remain open. PR29 remains draft/unmerged; deliver on the same feature branch.
+Fork exposes only Core/Reusable workflows; Plugin/Driver dispatch and hosted
+Linux checks remain unavailable pending default-branch installation. Keep goal
+active after this checkpoint; safe remaining configurations/modules are open.
+
+# Batch49 ESP-AT authoring checkpoint - 2026-10-25
+
+Goal active; local uncommitted work beyond delivered f616781.19 new ESP-AT cases
+pass focused ASan/UBSan plus strict1.26s:18 clean and1 documented correct capacity
+regression; zero unexpected failures/skips. Seven affected source-plan helpers
+pass0.065s after adding the existing source-only EEPROM backend dependency.
+No full gate/coverage/push/CI for this partial batch. Delivered baseline remains
+1253 cases across56 suites; don't claim a new cumulative count/coverage yet.
+
+Original misc265711922037cab6b6e47a9560ef11da3a6e5f83, COREb01f481 and EEPROM
+0c278db link actual stream/passthrough/IO ports/crossbar/VFS/CRC/storage code.
+Public registered settings/provider lifecycle and an explicitly claimed UART
+drive AP/STA/static startup, echo retry, existing-server shutdown, config-error/
+disabled/unavailable paths, stream connect/normal RX/binary TX/realtime routing,
+disconnect/reconnect, station disconnect, prompt-timeout recovery, full/wrap/
+flush/cancel and settings reload/checksum recovery. UART modem replies, I2C
+bytes and scheduler delivery remain host boundaries; no physical WiFi claim.
+
+The capacity function reports32 for the empty32-byte ring, whose producer
+reserves one slot. The correct31 assertion alone is WILL_FAIL/known_bug; a
+separate clean test retains31 bytes in order and drops the next. No sanitizer
+allowance or weakened assertion. See misc/KNOWN_BUGS.md for repair/removal guide.
+
+A normal IPv4 setter authoring check encountered an ASan boundary diagnostic in
+the original validator; source review records its terminator-scan contract gap.
+That invocation was removed and not executed again. It stays unregistered in
+misc/esp_at/SCOPE.md with no padding/source fix/crash allowance. Saved-settings
+reload and getter/default-address checks pass independently. Networking events,
+control pins, extra input/configuration/controller/hardware paths remain open.
+Continue substantial supported regions before the next cumulative gate.
+
+# Batch48 cumulative host gate - 2026-10-25
+
+Goal active. All56 current-CORE-compatible suites pass one fresh Windows Clang
+ASan/UBSan plus strict gate:1253 =1186 clean +67 documented known; zero unexpected
+failures/skips.23 new clean cases beyond delivered37d6188:22 WebUI file workflows
+and one MQTT client-ID helper (three valid vectors). No production source edits,
+copied algorithms, private-state/type aliases or new diagnostic allowances.
+Known categories remain63 assertions +4 diagnostic-only with3 overlaps counted
+once;7 diagnostic-bearing cases unchanged. Main CORE/reference suites excluded.
+
+WebUI file cases use original common handler plus original upload/multipart/SD/
+FatFs and actual CORE VFS/RAM-files/JSON.11 workflows compile under each v2/v3.
+Ordinary listing/free-space, directory lifecycle, delete/missing preservation,
+quiet response, download/drive selection, chained fragmented binary and empty
+uploads, maintenance attributes, hidden-file policy and context cleanup pass.
+HTTP request/status/pbuf delivery and disk sectors are explicit host boundaries.
+The fixture corrects its initial trailing-slash expectation to CORE normalization
+and fixes TZ=UTC0 for deterministic FAT-local-to-UTC formatting; no firmware defect.
+
+Fresh WebUI selected coverage266/291 lines91.4%,149/209 branches71.3%,19/19
+functions. Newly instrumented fs_handlers.c contributes225/250 lines90.0% and
+108/165 branches65.5%,15/15 functions; remaining server/login/commands/flash/
+wrapper/transport/browser/hardware scope is open. Counters are fresh, max224chars.
+Networking39 cases pass fresh coverage execution:611/726 lines84.2% and303/429
+branches70.6%,57/63 functions. MQTT-enabled networking.c becomes169/182 lines
+and90/114 branches; overall delta+12covered/+17executable lines and+6covered/
++8branches versus batch43. Its other selected files retain prior totals. No
+MQTT broker/connection claim; native address alignment contract remains open.
+Counter paths max227chars.91 helpers passed after ARM/report changes;7 affected
+component-plan helpers pass after WebUI dependencies0.054s.
+Actionlint passes. All48 source checkouts are clean at exact recorded revisions.
+PR29 remains draft/unmerged; deliver this substantial checkpoint on the same branch.
+Fork still exposes only Core/Reusable workflows; no hosted run can be claimed.
+
+# Batch48 original ARM module compilation - 2026-10-25
+
+Goal active; local cumulative work only. New repeatable check compiles15 complete
+original driver/SDK modules across F103/F303/F407/F756/H743/H723/LPC176x using the
+installed ARM GCC14.2.1, original SDK/CMSIS and CORE b01f481. All15 are verified
+ELF32 ARM relocatable objects; zero source edits or native fixture substitutions.
+LPC has18 original SDK-header warnings; STM32 zero. Revisions/scope are recorded
+in tests/drivers/ARM_MODULES.md; detailed locks/hashes/commands/results are under
+build-evidence/arm-repeatable-batch48. Full H7 HAL target compilation now passes,
+but ARM routine execution, firmware linking and hardware remain unvalidated.
+
+Existing Driver runs gain a separate arm-modules job for selected STM32/LPC
+sources, reusing the resolved lock and reporting compile artifacts independently
+from unit cases/coverage. Aggregate diagnostics reject a skipped required ARM
+job, allowing intentional skips for other sources.91 CI helpers pass14.262s,
+including4 added infrastructure checks; Driver/reusable actionlint passes.
+No hosted claim: fork default-branch workflow installation is still pending.
+No full gate/push for this partial batch; delivered batch47 remains1230 cases,
+with one clean local MQTT helper case pending cumulative integration/coverage.
+LPC runtime FIFO side effects need faithful emulation or hardware; no fake RX loop.
+Additional unregistered Due ARM probe: full original SDK USART unit compiles,
+driver serial fails original newlib st_mtime/CORE VFS header interaction plus
+known secondary callback signature (GCC14). Keep source/headers unchanged;
+ARM_MODULES.md records the exact boundary. No added test or allowance.
+
+# Batch48 MQTT source contract/client IDs - 2026-10-25
+
+Goal active. Source/caller review found a native settings-alignment gap before
+MQTT connection callbacks. Read-only type probe reports embedded address offset98
+and IPv4 alignment4(modulo2); original F4/H7/ESP network_settings_t callers use it.
+Drivers store binary IPv4 bytes, not a textual IP string. No misaligned access,
+broker execution, private context, padding/packing/type alias or source fix.
+MQTT callback integration remains unregistered pending maintainer contract.
+Evidence/probe kept in tests/plugins/networking/proposals/MQTT.md/mqtt_layout.c.
+
+One independent original networking.c client-ID helper case(three normal vectors)
+passes ASan/UBSan/strict1/1 in0.10s. It compiles MQTT1 headers but invokes no MQTT
+connection/message API. New coverage/full gate pending; delivered37d6188/batch47
+remains1230 cases. Keep local and accumulate other supported workflows before
+another cumulative gate/push. Broker/transport/RTOS/IPv6/hardware scope remains.
+
+# Combined H7 serial gate - 2026-10-25 (batch47)
+
+Goal active. All56 current-CORE-compatible suites pass fresh Windows Clang
+ASan/UBSan plus strict:1230 =1163 clean +67 documented known, zero unexpected or
+skipped.24 new H7 cases since9de67a5/batch46, all clean:23 H743 primary/three-
+stream workflows plus H723 native initialization. No source/CORE edit, type/API/
+instruction aliases, copied driver algorithm, assertion weakening or allowance.
+Known categories63 correct assertions +4 diagnostic-only(3 overlap/count once),
+diagnostic-bearing7 unchanged. Seven affected helpers pass0.061s; Driver/reusable
+actionlint passes. Broader unchanged87 helpers last passed40. Main CORE and
+historical reference suites excluded.
+
+First selected serial.c coverage353/357 lines98.9%,108/122 branches88.5%,57/57
+functions. Original H743/H723 ST HAL/CMSIS/main/driver/generic headers and actual
+CORE stream/passthrough/VFS/formatting execute. H743 primary USART3 D8/9, original
+secondary USART6 C6/7(AF7), added supported third USART1 A9/10 cover independent
+handlers/traffic, queue/full/wrap/cancel/binary, RX mute/TX preservation, baud/
+parity, ownership and CORE tool-ACK. H723 full workflows are not inferred from
+its one init case. Fresh build-sh47 counters max217 chars; no stale counters reused.
+
+H7 UART macro needs the SDK's immutable UARTPrescTable. Full UART HAL unit requires
+ARM-only exclusive-access intrinsics and remains uncompiled by the host suite.
+CMake compiles only its original data declaration verbatim from candidate source;
+no SDK function/algorithm is extracted. Equality self-check records original
+SDK line229 and SHA256 in sdk-prescaler-batch47.json. Source is a configure dependency;
+changed declaration shape fails rather than fabricating data. Actual macro/BRR
+writes execute;1042 at115200 verified. No ARM HAL or SDK coverage claim.
+
+Fresh GitHub lock H7bfe5d4f6/COREb01f4810;56 suites snapshot48 clean original
+checkouts. Register domains/GPIO/NVIC/IRQ/PCLK120MHz are host models. Remaining
+selected guard/third RX-disable branches, primary-USART6 AF8-vs-SDK-AF7 source
+contract, other maps/MCUs, FIFO/error/pending-baud/controller/ARM/hardware scope
+remain. New H7 suite in separate Driver workflow; keep PR29 draft/unmerged and
+goal active. Hosted dispatch still awaits default-branch workflow installation.
+
+# Batch47 H7 serial local validation - 2026-10-25
+
+Goal active.24 original H7 serial cases pass Windows Clang ASan/UBSan and strict
+1.19s, all clean. H743 primary/three-stream3/6/1 workflows plus H723 native init
+use original ST HAL/CMSIS/main/driver/generic-map headers and actual CORE streams.
+H7 AF7/FIFO flags/RCC register domains are native, with explicit host register/
+GPIO/NVIC/IRQ/PCLK120MHz models. H723 full stream workflow/hardware is not claimed.
+
+The original SDK UART unit cannot compile natively because of ARM exclusive-
+access intrinsics. CMake reuses only its original immutable prescaler-data
+statement in a generated unit; no source function/algorithm is extracted, no
+instruction/type/API aliases are supplied. It tracks the SDK file as configure
+dependency and fails on changed declaration shape. Actual UART macro/BRR1042 at
+115200 executes. ARM HAL routines remain explicitly untested; no SDK coverage.
+
+New driver_stm32h7_serial is in separate Driver workflow. No source/CORE edits or
+allowances. Coverage and full gate pending; delivered9de67a5/batch46 remains1206.
+Other ports/MCUs/RS485/FIFO/error/pending-baud/controller/ARM/hardware scope remains.
+
+# Combined F1/F3 serial gate - 2026-10-25 (batch46)
+
+Goal active. All55 current-CORE-compatible suites pass fresh Windows Clang
+ASan/UBSan and strict classification:1206 =1139 clean +67 documented known,
+zero unexpected/skipped.22 new cases since32b24d2/batch45: F112=11clean+1known;
+F310=9clean+1known. Two correct reserved-slot count regressions added, with exact
+WILL_FAIL/known_bug labels and maintainer repair/cleanup notes. No firmware/CORE
+edit, assertion weakening, diagnostic allowance or merge. Known categories now
+63 correct assertions +4 diagnostic-only(3 assertions also diagnosed/count once);
+diagnostic-bearing total7 unchanged. Seven affected helpers pass0.071s; Driver/
+reusable actionlint passes. Broader unchanged87 helpers last passed40. Main CORE
+and historical reference suites excluded.
+
+First selected-source LLVM coverage:
+- F1 serial115/119 lines96.6%,33/40 branches82.5%,19/20 functions. Primary F103xB
+  USART1 GPIOA9/10 uses separate native TX/RX GPIO modes and configurable baud.
+  serialRxCount is unexecuted; secondary/remapped ports and other configs remain.
+- F3 serial93/93 lines100%,30/32 branches93.8%,14/14 functions. Original F303xC
+  fixed115200 USART3 GPIOB10/11; only advertised callbacks tested. This is one
+  compiled serial configuration, not whole-driver/SDK/board coverage.
+- New build-s146/s346 counter paths max211 chars; no stale counters reused.
+
+Original ST HAL/CMSIS/main/driver/generic headers and actual CORE streams/VFS run.
+RX/full/wrap/cancel, realtime/tool-ACK lifecycle, TX/full/blocking recovery, supported
+baud/mute/ownership paths execute. F1/F3 producers reserve one slot but free-space
+functions report RX_BUFFER_SIZE-BUFCOUNT. Correct empty32-vs31 assertions first
+failed unlabelled; no memory fault was used. Paired FIFO controls preserve31 bytes
+and drop the next input. Production repair belongs to maintainers.
+
+Fresh GitHub locks match F1c2236235/F39a40877b/COREb01f4810; SDK headers contained
+in candidate revisions.55 suites snapshot48 clean original checkouts. Register/
+GPIO/NVIC/PCLK/IRQ side effects are models. Other maps/MCUs/RS485/errors, pending-
+baud contracts, full controller/parser/ARM link/hardware remain open. Both new
+suites are in separate Driver choices. Keep PR29 draft/unmerged and goal active;
+manual hosted dispatch still awaits default-branch workflow installation.
+
+# Batch46 fixed STM32F3 serial local validation - 2026-10-25
+
+Goal active.10 new original-header F303xC serial cases: first unlabelled ASan/UBSan
+run0.60s passes9 controls and fails one correct free-capacity assertion. Seven
+component-plan/report helpers pass0.066s; Driver/reusable actionlint passes. Original
+producer reserves one ring slot, but serialRxFree reports32 instead of31 empty.
+Only driver_stm32f3_serial.capacity gets exact WILL_FAIL/known_bug; focused recheck
+strict1 known0.05s, no diagnostic or new sanitizer allowance. Correct assertion
+and paired actual FIFO/wrap/full controls remain. No production source edits.
+
+Original main/driver/generic-map/ST HAL/CMSIS plus actual CORE stream/VFS run;
+USART3 GPIOB10/11 is fixed115200. Supported callback inventory is preserved:
+no invented baud/format/write_n/count/mute callbacks. Cases cover GPIO/clock/IRQ,
+RX/cancel/realtime/tool-ACK, binary bytes via write_char, full/blocking TX recovery
+and public ownership/fixed-baud guards. Driver9a40877b clean; COREb01f4810 unchanged.
+GPIO/NVIC/register/IRQ/PCLK36MHz are models, not ARM/controller/hardware proof.
+New driver_stm32f3_serial is in Driver workflow. Coverage/full gate pending;
+delivered32b24d2/batch45 remains1184. Keep local for a substantial checkpoint.
+
+# Combined F7/F4 serial gate - 2026-10-25 (batch45)
+
+Goal active. All53 current-CORE-compatible suites pass fresh Windows Clang
+ASan/UBSan plus strict:1184 =1119 clean +65 documented known, zero unexpected or
+skipped.25 new cases since c55401b/batch44:23 original-header F7 cases plus2 F4
+multi-stream follow-ups. Both serial suites23/23 clean. Seven affected component-
+plan/report helpers pass0.065s; Driver/reusable actionlint passes. Broader unchanged
+87 helpers last passed40. Main CORE and historical reference suites excluded.
+
+Fresh selected-source LLVM coverage:
+- F4 serial341/345 lines98.8%,108/122 branches88.5%,57/57 functions. Same source/
+  CORE/configuration denominator as44: +17 lines/+4 branches from binary writes,
+  secondary tool-ACK suspend and third cancel/reuse. No SDK/whole-driver claim.
+- First F7 serial353/357 lines98.9%,108/122 branches88.5%,57/57 functions. Native
+  F756 ST/CMSIS/main/driver/generic headers and CORE streams execute; primary
+  USART3 GPIOD8/9, original fixed secondary USART6 GPIOC6/7, third USART1 GPIOA9/10.
+  Tests retain original map; only supported SERIAL2_PORT1 is added for three streams.
+- Fresh build-st45/sf45 counter paths max217 chars; no stale counters reused.
+
+Shared serial_core_host.c extracts unchanged fail-fast unused CORE callbacks;
+F4/F7 hardware models remain separate, with native SR/DR vs ISR/RDR/TDR/M0 APIs.
+Both cover queue/full/wrap/binary/cancel, independent realtime handlers and traffic,
+RX mute/TX preservation, baud/parity, ownership and CORE tool-ACK lifecycle. No
+production edit, source conversion, type/API alias, new allowance or merge.
+Remaining selected lines: three driver claim-guard returns(CORE prefilters
+claimed providers) and third RX-disable branch; don't force private flags.
+F7 baud-change queue/IRQ contract remains source-only; no empty-queue IRQ forced.
+
+Fresh GitHub resolution matches F4a6318ac9/F785e6e800/COREb01f4810.53 suites
+snapshot48 clean original checkouts; SDK headers live in candidate revisions.
+GPIO/NVIC/PCLK/register/IRQ boundaries are host models. Full controller/parser/
+ARM firmware/physical timing/hardware and broader driver configurations remain.
+New F7 option is in separate Driver workflow. Keep PR29 draft/unmerged and goal
+active; hosted dispatch awaits default-branch workflow installation.
+
+# Batch45 F7 serial and F4 follow-up local validation - 2026-10-25
+
+Goal active.13 new cases:11 original-header STM32F7 primary USART3 cases plus2
+ordinary F4 multi-stream binary/tool-ACK/cancel workflows. Affected F711=11clean
+0.58s and F423=23clean1.54s pass ASan/UBSan and strict;34 total, zero known/
+unexpected/skipped. Seven component-plan/report helpers pass0.065s; Driver/
+reusable actionlint passes. Unchanged fail-fast unused CORE callbacks moved from F4
+fixture to serial_core_host.c; both link actual CORE stream/VFS and use separate
+native register/IRQ/GPIO/clock providers. No production edit or allowance.
+
+F7 original F756 HAL/CMSIS/main/driver/generic map uses USART3 GPIOD8/9, native
+ISR/RDR/TDR/M0 declarations. Local driver85e6e800 clean, COREb01f4810 unchanged.
+Windows-only ERROR/LPTR collisions resolved on OS side, preserving original SDK
+names. F7 baud-change queue/IRQ semantics remain a source-review contract; no
+unsafe/pending-empty IRQ reproduction. Actual ARM link/controller/hardware open.
+New driver_stm32f7_serial suite registered in Driver workflow. Full gate and fresh
+coverage pending; no total-suite or new source-count claim. Delivered baseline
+c55401b/batch44 remains1159. Keep local for cumulative checkpoint.
+
+# Combined STM32F4 serial gate - 2026-10-25 (batch44)
+
+Goal active. All52 current-CORE-compatible suites pass fresh Windows Clang
+ASan/UBSan plus strict:1159 =1094 clean +65 documented known, zero unexpected or
+skipped.21 new cases since8ad14f6/batch43 in new driver_stm32f4_serial suite;
+all21 clean. Seven affected source-plan/report helpers pass0.059s; Driver/reusable
+actionlint passes. Unchanged broader87 helpers last passed40. Main CORE and
+historical reference suites excluded. No production edit, aliases, copied source,
+assertion weakening, allowance or merge.
+
+First selected serial.c coverage324/345 lines93.9%,104/122 branches85.2%,53/57
+functions. Native original ST HAL/CMSIS/main/driver/generic-map headers and real
+CORE stream/passthrough/VFS/formatting execute. Primary USART1 GPIOA9/10 and
+three-stream profile1/3/6(GPIOB10/11,GPIOC6/7) cover independent traffic, queues,
+realtime handlers, cancellation, baud/parity, RX mute/TX preservation, ownership,
+full/blocking TX and CORE tool-ACK suspend. Extra pins are free in the generic map.
+Unexecuted functions remain serial1Write/serial1SuspendInput/serial2RxCancel/
+serial2Write; other mappings/RS485 and timing/error configurations remain open.
+
+Fresh short build-st44 counters max213 chars; no stale counters reused. GitHub
+resolution matches STM32F4a6318ac9/COREb01f4810, SDK headers contained in driver
+revision.52 suites snapshot48 clean original checkouts. GPIO/NVIC/clock-frequency,
+register memory and RX/TX/IRQ side effects are explicit host boundaries, not real
+peripheral timing or full-controller/ARM firmware link proof. New suite is in
+separate Driver workflow choice list; hosted dispatch still awaits default-branch
+installation. Keep PR29 draft/unmerged and goal active; all configurations/plugins/
+drivers/controller/hardware scope is not complete.
+
+# Batch44 STM32F4 serial local validation - 2026-10-25
+
+Goal active.11 new original serial.c cases pass Windows Clang ASan/UBSan and
+strict0.63s, zero known/unexpected/skipped. Seven component-plan/report helpers
+pass0.059s; Driver/reusable actionlint passes. New driver_stm32f4_serial suite uses
+original ST HAL/CMSIS/main/driver/generic-map headers and real CORE streams.
+Native peripheral register memory, GPIO/IRQ calls and RX/TX side effects are
+host boundaries; no source edit, alias, copied algorithm or exception.
+
+Primary USART1 registration/claim and GPIOA9/10, clock/IRQ requests, RX FIFO/
+wrap/full/cancel, realtime, CORE tool-ACK suspend, binary/flush/full/blocking TX,
+parity/baud, RX-disable TX preservation and release/reclaim execute. Host fixture
+removes Windows ERROR macro collision without changing the SDK enum. New suite
+is selectable in Driver workflow; original SDK headers live in candidate checkout.
+Only primary USART1 tested; secondary/third ports, other maps, physical timing,
+RS485/errors, actual controller and ARM link remain open. Coverage/full gate
+pending; delivered baseline8ad14f6/batch43 remains1138. Keep local for cumulative
+measurement/delivery; don't infer full-driver coverage from these cases.
+
+# Combined upload/filesystem gate - 2026-10-25 (batch43)
+
+Goal active. All51 current-CORE-compatible suites pass fresh Windows Clang
+ASan/UBSan plus strict:1138 =1073 clean +65 documented known, zero unexpected or
+skipped.10 new upload handler cases since b4acbe1/batch42; all38 networking cases
+clean. Seven affected source-plan/report helpers pass0.056s, including rejection
+of selecting the SD dependency as a test suite. Unchanged broader87/actionlint
+last passed40. Main CORE and historical reference suites excluded.
+
+Fresh expanded selected networking coverage599/709 lines84.5%,297/421 branches
+70.5%,56/62 functions. New http_upload.c119/124 lines96.0%,41/53 branches77.4%,
+14/14 functions. Prior three files unchanged: common157/165 and84/106; Telnet
+199/276 and72/120; multipart124/144 and100/142. New source adds119 executed lines
+and41 branch outcomes while denominator expands124 lines/53 branches; do not
+call this a same-scope percentage gain. Fresh build-nt43 counters max225 chars.
+
+Real CORE VFS/original SD adapter/STM32F4 FatFs engine/config/lwIP def.c execute
+over existing RAM sectors. Exact text/binary/empty-file readback, one-byte upload,
+path/size/filename routing, interrupted cleanup, sequential reuse, backend rejection,
+missing-directory non-output with existing-file preservation and case-insensitive
+headers pass. No production edit, copied algorithm, assertion weakening or new
+allowance. Standalone suite now declares SD and FatFs source dependencies.
+
+Fresh GitHub locks match networking0b665ee0/COREb01f4810/lwIPd08f4773/SDd0fe753d/
+STM32F4a6318ac9. All48 original checkouts remain clean/exact. Live HTTP listener,
+request scheduling/authentication, concurrency, real TCP/media/controller and board
+hardware remain open. OpenPNP jerk mode needs actual parser axis-claim integration;
+existing callback fixture is not that proof. Keep PR29 draft/unmerged and goal
+active. Separate hosted dispatch still requires default-branch workflow installation.
+
+# Batch43 real filesystem upload local validation - 2026-10-25
+
+Goal active.8 original http_upload.c cases pass focused Clang ASan/UBSan and strict
+0.53s, zero known/unexpected/skipped. Seven source-plan/report helper checks pass
+0.056s, including rejection of selecting the SD dependency as a test suite.
+Actual CORE VFS, original SD FatFs adapter,
+STM32F4 FatFs engine/config and lwIP def.c run over existing RAM sector media.
+Cases read back ordinary text/binary/empty files, one-byte fragments, path/size/
+filename callback routing, interrupted-file cleanup, sequential reuse and backend
+rejection. No copied production behavior or source edits; filesystem calls are real.
+
+Networking lock adds source-only sdcard_source plus fatfs_stm32f4, alongside CORE/
+lwIP, so standalone Actions builds fetch every implementation used. Candidate stays
+Plugin_networking. Coverage filter adds http_upload.c; fresh expanded denominator
+and full gate pending. Delivered baseline b4acbe1/batch42 remains1128 cases.
+Keep these8 local and accumulate supported implementation work before delivery.
+No HTTP listener/request scheduler/authentication/physical-media success claimed.
+
+# Combined networking source gate - 2026-10-25 (batch42)
+
+Goal active. All51 current-CORE-compatible host suites pass fresh Windows Clang
+ASan/UBSan and strict:1128 =1063 clean +65 documented known, zero unexpected or
+skipped.17 new networking cases since e5648be/batch41:11 Telnet daemon plus6
+multipart upload parser.28 networking cases are clean. No firmware/CORE edit,
+assertion weakening, sanitizer allowance or merge. Seven affected component-plan/
+report helper checks pass0.051s; unchanged broader87/actionlint last passed40.
+Main CORE and historical explicit references excluded from this gate.
+
+Fresh selected-source coverage480/585 lines82.1%,256/368 branches69.6%,42/48
+functions. networking.c unchanged157/165 lines,84/106 branches; telnetd.c199/276,
+72/120,24/29 functions; multipartparser.c124/144,100/142,3/3 functions. New
+source files add323 executed lines/172 branch outcomes while denominator expands
+by420 lines/262 branches. This is not an aggregate percentage-gain claim. Corrected
+the local baseline typo:41/41 belongs to WebUI helpers; networking was157/165.
+New build-nt42 counters max225 chars; no stale counters reused.
+
+Fresh GitHub resolution matches networking0b665ee0/COREb01f4810/lwIPd08f4773;
+all51-suite48 original checkouts verified clean/exact. Native TCP callbacks/pbuf
+lifetime and hardware boundaries are simulated, real CORE stream routing executes.
+Multipart uses public callbacks only with normal short valid boundaries and binary/
+empty files. No live stack, HTTP upload filesystem, authentication, physical link,
+full controller/parser or hardware success claimed. Partial-write compaction and
+null/malformed inputs remain source-only; do not force unsafe paths.
+
+Fresh fork Actions list still contains only reusable/core workflows. Separate
+Plugin/Driver manual dispatch waits default-branch installation; no redundant
+unavailable dispatch. Keep PR29 draft/unmerged; continue remaining implementation,
+configuration, SDK/controller and hardware gaps. Goal remains incomplete.
+
+# Batch42 original Telnet daemon local validation - 2026-10-25
+
+Goal active.11 new daemon cases plus existing11 common network cases pass22/22
+Clang ASan/UBSan and strict classification1.33s, zero known/unexpected/skipped.
+Seven component-plan/report helper checks pass0.062s after directing temporary
+files into the writable evidence directory; sandbox default-temp access failed.
+Original telnetd.c runs actual CORE stream connect/disconnect/passthrough/VFS;
+original pinned lwIP headers define native callbacks and TCP/pbuf structures.
+Host provider simulates TCP ACK/write/output/close/callback delivery and valid
+nonempty pbuf lifetime; no network stack/allocator/socket/physical claim.
+
+Cases cover connection/stop, chained input, realtime commands, cancel/flush/reuse,
+binary TX, recoverable provider-write error, output-full abort/recovery, MPG discard,
+remote close, link loss and bind rejection. No source edit or allowance. Fresh
+combined coverage pending: filter now includes networking.c and telnetd.c, so the
+old157/165 interface-only report is narrower. Cumulative gate pending; delivered
+baseline stays e5648be/batch41,1111. No isolated push/hosted run for this authoring
+group. Source-review partial-write compaction concern remains unexecuted; null/
+malformed pbuf/session paths are not forced. Continue other supported gaps.
+
+# Combined driver/expander gate - 2026-10-25 (batch41)
+
+Goal active. All51 current-CORE-compatible suites pass fresh Windows Clang
+ASan/UBSan plus strict classification:1111 =1046 clean +65 documented known,
+zero unexpected failures/skips. Eighteen new cases since70a8299/batch40:6 FlexGPIO
+and12 SAM3X8E serial. No new allowance, diagnostic, firmware edit or merge.
+Existing87 helpers/actionlint last verified batch40; reporting/workflows unchanged,
+so not redundantly rerun. Main CORE and historical reference suites excluded.
+
+Fresh short-build LLVM selected-source coverage:
+- FlexGPIO270/272 lines99.3%,128/150 branches85.3%,21/21 functions. Same source,
+  CORE and denominator as batch19: +1 line/+2 branches.31 cases:29 ordinary
+  passes+2 known assertions under coverage; sanitizer strict26 clean+5 known.
+- SAM3X8E276/278 lines99.3%,100/108 branches92.6%,39/39 functions, unchanged
+  from batch21.53 cases:46 clean+7 existing known. New hardware-port pairing
+  exercises distinct compile-time wiring with no selected-source count gain.
+- Fresh build-fl41/sa41 counters max210/209 chars; no stale counters reused.
+
+Fresh GitHub resolution matches clean FlexGPIObc8dab40/SAM2321092b/COREb01f4810/
+Arduino-SAM790ff2c8. All51-suite dependencies verified48 clean original checkouts.
+Fork workflow listing still exposes only reusable/core: separate Plugin/Driver
+manual runs await default-branch installation. No hosted GCC/Linux, ARM firmware
+link or physical-device success claimed. Keep existing PR29 draft/unmerged.
+Next continue real CORE aggregation, remaining plugins/transports/driver variants
+and supported controller workflows; counts do not establish goal completion.
+
+# Batch41 driver and expander local validation - 2026-10-25
+
+Goal active. Eighteen new cases remain local:6 FlexGPIO and12 SAM3X8E serial.
+Affected suite sanitizer/strict checks pass84 cases =72 clean +12 documented
+known; no unexpected failures/skips or changed diagnostics. FlexGPIO31=26+5;
+SAM53=46+7. Full current-CORE gate/coverage not yet run; last delivered baseline
+70a8299/batch40 remains1093. Do not add these18 to a full-suite validation claim.
+
+SAM adds supported primary USART2/secondary USART1 wiring for initialization,
+FIFO/wrap/cancel, queued/full/blocked TX, duplex isolation and claim/reclaim.
+Three metadata cases verify original registered SDK pins/ports/directions/groups
+for all tested pairings. Fixture peripheral/IRQ selection now follows compile-time
+SERIAL_PORT/SERIAL1_PORT. Focused12/12 pass0.77s; affected full53 strict pass.
+Existing-1/1 pairings and all7 known outcomes remain. Port0's status-array guard
+remains source-only; no aliases, production edits, physical timing or ARM build
+claim. Keep accumulating supported work before cumulative delivery.
+
+# Batch41 local FlexGPIO authoring - 2026-10-25
+
+Goal active. Six new cases cover public input/output function assignment and
+abort during edge/level waits in three/six-axis builds. Fresh focused ASan/UBSan
+6/6 passes0.39s; XML checked for diagnostics with none. The fixture now exposes
+realtime cancellation and counts delay/realtime requests. Abort ends each60-second
+requested wait after one virtual50ms delay and restores the existing change IRQ;
+a subsequent edge still reaches the original user-port callback.
+No production changes or new allowances. These six remain local: no full gate,
+coverage measurement, push or hosted run for this small group. Delivered baseline
+remains70a8299/batch40,1093 cases. Continue related supported regions before the
+next cumulative checkpoint. Physical expander/controller aggregation remain open.
+
+# Combined chip/voltage-control validation - 2026-10-25 (batch40)
+
+Goal active. Complete51 current-CORE-compatible host suites pass Windows Clang
+ASan/UBSan and strict:1093 cases =1028 clean +65 documented known, zero unexpected
+failures/skips.21 cases since delivered39:12 TMC2240 SPI/TMC2660 SPI20 basic cases,
+TMC2209 CRC recovery, one correct TMC2240 UART wrong-SPI regression, and5 plasma
+voltage workflows +2 NVS boot fixture cases.87 helpers pass22.909s; Plugin/Driver/
+reusable actionlint passes. Main CORE and historical reference suites excluded.
+Known categories now61 correct assertions +4 diagnostic-only;3 assertions also
+diagnosed and counted once. Diagnostic-bearing total7 unchanged. No production
+edit, assertion weakening, sanitizer allowance or merge.
+
+Fresh short-build selected source/configuration LLVM results:
+- Plasma30 clean:547/869 lines62.9%,274/553 branches49.5%,41/58 functions.
+  thc.c451/764 lines59.0%,222/474 branches46.8%; LinuxCNC51/56 and27/42;
+  SheetCam45/49 and25/37. Last same-source/CORE/denominator report was batch8 at
+  457/869 and222/553: +90 lines/+52 branches across intervening authoring, not
+  attributed solely to this batch's7 cases. Electrical calibration remains untested.
+- Trinamic55 =54 clean +1 known: selected plugin782/1021 lines76.6%,413/666
+  branches62.0%,42/48 functions. Expanded2240/2660/UART profile union; previous
+  three-chip771/1011 and403/660 is narrower. Library source not in this filter.
+- New build-th40/tm40 counter paths <=227/229 chars; no stale counters reused.
+
+Voltage uses real CORE analog-port claims, registered setter, original EEPROM
+fresh-process mode boot, PID and secondary-stepper pulses. Driver voltage/time/
+controller remain explicit models. Powermax is original-source disabled by
+PLASMA_ENABLE&&0 and was not forced on. Physical regulation/full controller and
+pierce/cut-height planner integration remain unfinished.
+
+TMC2240 UART startup first failed the correct no-SPI assertion: original HAL
+COOLCONF calls SPI directly. Only named .2240_uart_transport is expected failure;
+record-only SPI callback never forwards to UART. Wider2240 UART work remains open.
+TMC2660 retry assertion includes five outer startup cycles and375 ten-ms requests;
+virtual request counts are not a500ms wall-clock guarantee. Original UART CRC and
+SPI register callback boundaries remain explicit, actual board transport untested.
+
+Fresh locks match clean plasmad2f91b58/motor9229617c/COREb01f4810/library9b304175/
+EEPROM0c278db7. All51 suites snapshot48 clean source SHAs. Fork Actions still only
+lists reusable/core workflows; separate Plugin/Driver dispatch awaits default
+installation. Keep PR29 draft/unmerged; one cumulative delivery then continue gaps.
+
+# UART CRC/routing checkpoint - 2026-10-25 (batch40, local)
+
+Goal active. Two further cases: TMC2209 reply-CRC failure/recovery passes; original
+TMC2240 UART startup makes an unexpected SPI write and fails the retained correct
+zero-SPI assertion before allowance. Only plugin_trinamic.2240_uart_transport is
+WILL_FAIL/known_bug. No sanitizer waiver or source edit. A separate record-only
+SPI provider detects wrong transport; it never forwards that write to UART.
+The wider TMC2240 UART case list remains unregistered/unvalidated. Source points
+to tmc2240hal.c317 bypassing the selected tmc2240_write wrapper during COOLCONF.
+
+All55 Trinamic cases now pass Windows Clang ASan/UBSan3.92s with strict54 clean
++1 documented known. This refresh includes prior retry-count repair and all
+shared UART/SPI/SPI20 fixtures. Production/SDK source remains unchanged; native UART
+configuration symbols are used, no ABI/header aliases. Existing SPI/2209 assertions
+remain intact. Runtime packet and physical/controller boundaries remain explicit.
+
+Batch40 now14 new local cases beyond39;1086 registered. Latest full51-suite gate
+remains1072 (1008 clean+64 known), coverage39. New known categories pending full
+gate are61 correct assertions +4 diagnostic-only,7 diagnostic-bearing unchanged.
+Continue other supported regions before full gate/push; no hosted dispatch.
+
+# TMC2240/TMC2660 authoring checkpoint - 2026-10-25 (batch40, local)
+
+Goal active.12 additional original chip/library cases: six TMC2240 SPI and six
+TMC2660 SPI20 startup/current/settings/microstep/offline-recovery/capability
+workflows. First focused12/12 pass ASan/UBSan0.78s. Shared53-case component run
+passes52; new retry-count assertion initially assumed a single startup pass.
+Source onDriverSetup repeats five passes. Corrected strict assertion verifies
+five100ms startup requests plus375 ten-ms retries; affected1/1 rerun passes0.07s
+with strict reporting. No new full53-case aggregate claimed after that repair.
+No production edits, known allowances or removed assertions.
+
+A separate SPI20 fixture captures actual20-bit register addresses/payload and
+returns a valid idle status. SPI profile now includes2240 with native12kOhm R_REF;
+2660 uses50mOhm sense and advertises no StealthChop command. Microstep cases check
+actual register mres3 for32 microsteps on all SPI chips, preserving unrelated
+motor configuration. No physical wire/CS/pipeline/status-measurement claim.
+Existing UART/SPI32 fixtures remain, with ten-ms delays allowed only for2660.
+TMC2240 UART, chip fault/poll/homing variants, bridges and actual board drivers
+remain unfinished. Startup wall-clock budgeting is not established by virtual
+requested-delay counts.
+
+Latest delivered39 bf14751c80452761592c2616eabef5e4a9a7e262 is tracked/pushed;
+PR29 exact-head body was read back draft/open/unmerged. Worktree was clean before
+this group. Trinamic now53 cases,1084 cumulative registered. Full51-suite gate
+remains1072/1008 clean+64 known from39, coverage remains39. Continue substantial
+work before next full gate/push; separate Actions installation remains open.
+
+# Combined auxiliary-macro/Trinamic validation - 2026-10-25 (batch39)
+
+Goal active. Complete51 current-CORE-compatible plugin/driver host suites pass
+Windows Clang ASan/UBSan and strict reporting:1072 cases =1008 clean +64 documented
+known, zero unexpected failures/skips.23 cases since delivered38:5 auxiliary
+macros +6 TMC2209 public report/configuration +12 TMC2130/TMC5160 SPI-chip cases.
+87 helpers pass18.728s; Plugin/Driver/reusable actionlint passes. Main CORE and
+historical reference suites stay separate/excluded. Known categories unchanged:
+60 correct assertions +4 diagnostic-only (3 assertions also diagnosed, count once).
+No production edit, new allowance, assertion weakening or merge.
+
+Fresh short-build LLVM selected source/configuration results:
+- Keypad52 cases =47 clean +5 known:439/493 lines89.0%,204/298 branches68.5%,
+  38/47 functions. Auxiliary configs expand macros.c to167/209 lines79.9%,83/142
+  branches58.5%; prior MACROS_ENABLE2-only124/151 and54/93 are a narrower compiled
+  scope. keypad.c remains218/230 and109/144; default LED54/54 and12/12.
+- Trinamic41 clean, selected plugin file across tested UART/SPI/runtime profiles:
+  771/1011 lines76.3%,403/660 branches61.1%,42/48 functions. First measurement of
+  this expanded three-chip profile union; no whole-library or physical-bus claim.
+- Maximum counter paths236/229 chars in new build-ka39/tm39. Earlier embroidery,
+  storage and coolant results remain separately dated; no stale counters reused.
+
+SPI callbacks retain logical register images before physical framing. Original
+chip/HAL/common library code, plugin and EEPROM execute; status headers, actual
+board adapter/CS/daisy-chain/pipeline/IRQ/DMA timing, SPI-chip dynamic polling and
+homing remain unverified. UART CRC/IFCNT model unchanged. Forwarding headers use
+content-preserving CONFIGURE;14 timestamps preserved and next Ninja build idle.
+
+Protocol-display polling stays unexecuted: source/header-only native layout places
+its override member at byte49, requiring alignment2. No packing/private-state
+workaround, target fault claim or runtime exception. Auxiliary action getter type
+also remains a source-only CORE callback contract gap; matching setter is used.
+
+Fresh GitHub locks match clean keypadc3493309/motor9229617c/COREb01f4810/
+Trinamic-library9b304175/EEPROM0c278db7; all51 gated suites snapshot48 clean source
+checkouts with exact SHAs. Fork Actions still lists only reusable/core workflows;
+separate Plugin/Driver dispatch awaits default-branch installation. Keep existing
+PR29 draft/unmerged; prepare one cumulative delivery then continue broader gaps.
+
+# Trinamic reports/configuration checkpoint - 2026-10-25 (batch39, local)
+
+Goal active. Six new original TMC2209/plugin/library cases cover complete and
+axis-filtered M122 reports, M911 warning/over-temperature fields and M912 latch
+clearing, M913 mm/min-to-register threshold conversion/disable, M919 selected-axis
+chopper settings/query, and rejected chopper values without writes. Complete29
+Trinamic cases pass Windows Clang ASan/UBSan1.89s and strict29 clean after shared
+command-fixture refactor. New command helper preserves CORE consumed-word restore
+and only executes when public validation succeeds. No private driver state,
+production changes, new exceptions or weakened assertions.
+
+Trinamic forwarding headers now use content-preserving file(CONFIGURE) rather
+than unconditional file(WRITE). Verified14 unchanged header timestamps survive
+reconfiguration; following Ninja build reports no work. EEPROM/CRC and original
+UART register datagrams execute; parser/motor iteration and physical UART remain
+explicit host boundaries. Other chips/bridges, SG streaming and developer modes
+are still unfinished. No new source percentage until the combined measurement.
+
+Batch39 now11 local cases (aux macros5 +Trinamic6),1060 registered. Latest complete
+source-locked51-suite validation remains delivered38 at db1c68cc:1049 cases =985
+clean +64 known. Continue substantial supported work before full gate/push;
+existing PR29 stays draft/unmerged and separate Actions installation remains open.
+
+# Auxiliary macro authoring checkpoint - 2026-10-25 (batch39, local)
+
+Goal active. Five new original-source cases cover two auxiliary pin mappings,
+falling-edge/deferred execution, IRQ-to-foreground idle recheck, realtime button
+actions during active state, IRQ failure with usable M810, and MACROS_ENABLE1
+with no available ports. Original CORE ioports/crossbar and EEPROM execute.
+Complete52-case keypad suite passes ASan/UBSan2.15s and strict47 clean +5 existing
+known. No new allowance or production edits. Integer setting setters match the
+CORE callback type; the getter signature remains a source-only contract gap.
+
+Protocol display syntax-only compilation succeeds. Header-only native inspection
+finds message buffer offset45 with override alignment2, spindle-override member
+at field offset4: original polling assignment would target byte49. Polling was
+not executed; no sanitizer/target-board failure is claimed. No packing/header or
+private-state workaround added. Keep protocol runtime/connection recovery open.
+
+Latest delivered38 is db1c68ccd292ca365cffb3438a0898363d501bed, existing tracking
+branch and draft/open/unmerged PR29 with exact-head body readback. Worktree was
+clean before this group. Batch39 has5 local cases,1054 registered; latest full
+51-suite gate remains1049 (985 clean +64 known), source coverage remains38.
+Accumulate substantial further supported work before a full gate/push. Separate
+Plugin/Driver dispatch remains unavailable on default branch as verified38.
+
+# Combined keypad/embroidery validation - 2026-10-25 (batch38)
+
+Goal active. Complete51 current-source plugin/driver suites pass Windows Clang
+ASan/UBSan and strict reporting:1049 cases =985 clean +64 documented known,
+zero unexpected failures/skips.24 cases since delivered37:7 streamed embroidery
+recovery/timing +7 LED display +10 macro cases including one correct signed-char
+regression.87 helpers pass18.886s; Plugin/Driver/reusable actionlint passes. Main
+CORE/historical reference suites remain separate and excluded. No firmware edit,
+merge, weakened assertion or diagnostic allowance. One new exact known assertion
+brings categories to60 correct assertions +4 diagnostic-only cases;3 assertions
+also carry diagnostics and count once. Seven diagnostic-bearing cases unchanged.
+
+Fresh local LLVM selected source/configuration measurements:
+- Keypad47 cases =42 clean +5 known:396/435 lines91.0%,175/249 branches70.3%,
+  36/41 functions. Existing keypad.c218/230 lines,109/144 branches. Newly compiled
+  LED54/54 lines,12/12 branches (default PCA9654E only),7/7 functions; macro124/151
+  lines82.1%,54/93 branches58.1%,15/19 functions (MACROS_ENABLE2). These expanded
+  denominators are not directly comparable to the old keypad.c-only percentage.
+- Embroidery27 clean:502/581 lines86.4%,233/306 branches76.1%,32/39 functions.
+  Coordinator334/404 lines82.7%,137/198 branches69.2%,23/30 functions. Same
+  original source/configuration denominator as37: +118 lines/+53 branches.
+  Brother62/63 lines,26/28 branches; Tajima106/114,70/80 remain unchanged.
+- Fresh counters use new build-ka38/em38, maximum paths236/235 chars. Existing
+  storage36 result634/843 lines/286 of516 branches remains separately dated37.
+
+Macro signed-char keypress first failed unlabelled at the correct CMD_MACRO_0
+acceptance assertion; unchanged same assertion passes unsigned-char peer. Only
+plugin_keypad.macro_keypress_signed is added WILL_FAIL/known_bug. Actual EEPROM
+and registered string settings/M810/status/reset hooks execute; parser/keypad
+callback table/synchronization remain host boundaries. Macro ID0/private entry
+and oversized strings are not invoked. Aux macro and protocol-display runtime
+remain open; protocol display passes syntax-only current-CORE check (not runtime).
+
+Fresh GitHub-resolved locks match clean keypadc3493309/embroidery9a112c3c/
+COREb01f4810/EEPROM0c278db7. Keypad explicitly adds EEPROM dependency and
+coverage filter now includes keypad/macros/default LED files. All51 gated suites
+snapshot48 clean candidate/dependency SHAs. Fresh fork Actions still lists only
+reusable/core workflows; separate Plugin/Driver dispatch awaits default-branch
+installation. Keep PR29 draft/unmerged. Prepare one cumulative checkpoint, then
+continue broader plugin/driver configurations and hardware/controller gaps.
+
+# Keypad LED module authoring checkpoint - 2026-10-25 (batch38, local)
+
+Goal active. Seven new cases compile unchanged keypad display/i2c_leds.c using
+DISPLAY_ENABLE17/default PCA9654E. Focused7/7 pass Windows Clang ASan/UBSan0.53s
+and strict reporting7 clean: output register encoding/state transitions, preserved
+spindle/coolant hooks, report chaining, optional callbacks, startup/probe failures
+and complete-state write recovery. Startup sends config/inversion with blocking
+writes; runtime writes are nonblocking. Stock keypad cases/known properties are
+unchanged. Coverage filter now includes the LED source; no new percentage is
+claimed until its selected-file denominator is freshly measured.
+
+Fixture I2C and spindle-selection callbacks are explicit driver boundaries.
+No physical LED, actual CORE spindle registry, protocol display, alternate LED
+provider or full target/controller success is claimed. No production edits,
+new allowances or hosted run. Batch38 now14 cases beyond delivered37:7 embroidery
++7 LEDs;1039 registered in51 suites. Continue macros/protocol/other supported
+source families before cumulative gate and delivery. Latest complete gate is1025.
+
+# Embroidery delayed-stop/thread-break checkpoint - 2026-10-25 (batch38, local)
+
+Goal active. Two additional cases cover250ms delayed spindle shutdown (still on
+at249ms, off at250ms while awaiting needle) and thread-break startup filtering,
+hold/recovery/resume after14 stitches, retaining final1.6mm cumulative position.
+All27 embroidery cases pass Windows Clang ASan/UBSan with strict27 clean; shared
+one/two-input fixture and existing conversion/stream cases are rebuilt together.
+The two-input fixture initially let default needle selection chooseaux1, causing
+break-port conflict; registered float setters now select needleaux0/breakaux1,
+then original EEPROM save/load and real CORE claims activate both callbacks.
+No private port/context writes or production edits. Virtual ticks, planner motion
+capture and controller hold execution remain explicit host boundaries.
+
+Batch38 now7 new local cases (1032 registered); latest full51-suite1025-case gate
+and source coverage remain delivered37. No push/hosted dispatch or new exception.
+Continue other supported gaps before the next substantial cumulative gate.
+
+# Embroidery queue/hold authoring checkpoint - 2026-10-25 (batch38, local)
+
+Goal active. Five new original-coordinator cases cover18-stitch queue refill/
+wrap with54 ordered motion requests, early needle IRQ during active motion,
+PES thread-change hold/resume, jump look-ahead/mist output and idle completion,
+and trim hold/resume retaining accumulated XY targets. All25 embroidery cases
+pass Windows Clang ASan/UBSan1.40s and strict reporting25 clean. No production
+edits or expected-failure additions. Bounded foreground task execution and
+hold-state transitions now explicitly model controller callbacks; planner,
+spindle and physical timing remain host boundaries.
+
+A first single-stitch-before-jump output assertion failed. Source arms jump
+output through look-ahead while already stitching. That short-sequence proposal
+is preserved unregistered for contract review; independent two-stitch look-ahead
+assertions pass, with no guessed output timing accepted as covered. No repeat of
+the uncertain short sequence. Original DST stop-color proposal stays unregistered.
+
+Batch37 delivered a13fc670fcfaa651743b2cf13406fdce9e51d4b7 to the existing
+tracking branch and draft/open/unmerged PR29, exact head/body read back. Worktree
+was clean before this group. Latest full gate remains1025/51 from batch37;
+1030 now registered including these5 local cases. Coverage stays the fresh37
+measurement below. Accumulate additional supported work before full gate/push;
+separate Actions remain unavailable on default branch as verified at delivery37.
+
+# Combined storage/embroidery validation - 2026-10-25 (batch37)
+
+Goal active. All51 current-source host suites pass Windows Clang ASan/UBSan
+and strict reporting:1025 cases =962 clean +63 documented known, zero
+unexpected failures/skips.22 new cases since delivered36:15 macro/file-stream
++7 embroidery coordinator conversion/NVS/streamed workflow cases.87 helpers
+pass18.603s; Plugin/Driver/reusable actionlint passes. Main CORE and historical
+reference suites stay excluded. No new allowance, firmware edit or merge.
+The unchanged32-bit STM32F4 suite initially lacked runtime DLLs in PATH; resumed
+at that failed suite after adding the installed i686 runtime. Previously completed
+suites were reused through their batch37 XML/strict summaries, not rerun.
+
+Fresh coverage builds, selected files/configurations only:
+- Storage36 clean:634/843 lines75.2%,286/516 branches55.4%,72/87 functions;
+  same files/denominators as batch36: +182 lines and +131 branches. Macros85/105
+  lines and stream335/513. Root-stat special branch again0 hits.
+- Embroidery20 clean:384/581 lines66.1%,180/306 branches58.8%,22/39 functions.
+  Coordinator first measurement216/404 lines53.5%,84/198 branches42.4%; brother
+  62/63 and26/28; Tajima106/114 and70/80. No whole-plugin or all-config claim.
+
+Streamed cases verify six requested XYZ moves for two stepper-driven stitches,
+registered needle IRQ gating with no duplicate moves during held polls, and
+planner-capacity rejection/resume followed by reset. Original CORE stream/VFS/
+ioports/CRC plus EEPROM backend execute; planner/spindle/position initialization
+are explicit captured boundaries, not real planner/physical stitch execution.
+Unregistered DST stop proposal remains outside all counts: source leaves its
+color undefined; no invented T0 assertion or known allowance is registered.
+
+Fresh GitHub-resolved candidate/dependency locks match clean local SDd0fe753d,
+embroidery9a112c3c,COREb01f4810,STM32F4a6318ac9,EEPROM0c278db7. All gated
+sources have separate clean exact-SHA snapshot. Prepare one cumulative delivery
+on plugin-driver-tests/PR29, keep draft/unmerged, then continue remaining supported
+paths. Fresh fork Actions listing still exposes only reusable/core workflows; separate
+Plugin/Driver manual dispatch remains unavailable until default-branch installation.
+
+# Embroidery coordinator authoring checkpoint - 2026-10-25 (batch37, local)
+
+Goal active. Four new unchanged-source coordinator cases: DST signed-move
+conversion, DST jump-to-stitch mode switch, PES palette/signed-move conversion,
+and NVS allocation failure. All17 embroidery cases (13 readers +4 coordinator)
+pass Windows Clang ASan/UBSan0.65s and strict reporting17 clean. Actual CORE
+VFS/embedded/ioports/crossbar/stream/CRC plus EEPROM backend run; fixture provides
+valid registered trigger input, settings and startup/controller boundaries.
+No motion callbacks execute in conversion cases; queue/needle runtime remains.
+Manifest declares the newly required plugin_eeprom source dependency.
+
+Initial fixture failures were missing registered input, capturing unrelated
+I/O settings and assuming claimed user port0. Corrected to real CORE setup and
+mapping, with no production edits or allowances. Proposed DST stop conversion
+remains unregistered: color is not assigned by Tajima but consumed by coordinator;
+no deterministic T0 contract is established. Source/one failed authoring assertion
+recorded in suite notes; do not rerun or fabricate private state.
+
+Batch37 cumulative19 new cases;1022 registered across51 suites, not a full gate
+claim. Storage coverage remains the measured36-case result below. No new known
+allowances, changed existing assertions, push or hosted dispatch. Continue with
+streamed coordinator workflows before the combined checkpoint.
+
+# Storage coverage measurement - 2026-10-25 (batch37, local)
+
+Goal active. Fresh short build-fa37 LLVM coverage executes36/36 clean storage
+cases with strict reporting. Same four source files/configuration denominators
+as batch36:634/843 lines75.2% (+182 lines from452),286/516 branches55.4%
+(+131 from155),72/87 functions. Per-file lines/branches:
+- fs_fatfs.c108/118 (91.5%),31/46 (67.4%).
+- sdcard.c106/107 (99.1%),47/62 (75.8%).
+- fs_stream.c335/513 (65.3%),173/350 (49.4%).
+- macros.c85/105 (81.0%),35/58 (60.3%).
+
+Selected files/configuration only; expressions-enabled ATC and controller parsing
+are excluded by the actual build configuration, not waived as covered. XML again
+confirms fs_fatfs root-stat branch line309 has0 hits. Counter paths <=236 chars.
+Original SD/CORE/STM32F4 source SHAs remain clean and identical to batch36.
+All15 new cases have now executed together in this coverage build; sanitizer
+checks remain the authoring groups recorded below, not a fresh full1018 gate.
+Embroidery coordinator syntax passes unchanged sources, runtime work remains.
+No full cumulative gate/push/hosted dispatch yet; continue substantial authoring.
+
+# File-stream command authoring checkpoint - 2026-10-25 (batch37, local)
+
+Goal active. Six additional real-FatFs cases cover directory navigation/relative
+job start, recursive versus hierarchical listing, rejected file mutations,
+M98 prescan/replay, active100-percent reporting clamp, and public program-return
+rewind. Focused6/6 pass Windows Clang ASan/UBSan0.35s with strict classification.
+Initial fixture expectations corrected from source: TXT is an allowed job
+extension (BIN is filtered); prescan rewind emits a separator LF before replay.
+Mutation rejection retains the original stored job bytes. No production edits,
+new allowances, or known-assertion changes. Parser callbacks remain modeled.
+
+Batch37 now has15 new registered cases;36 storage cases and1018 cumulative
+registered cases. Latest complete source-locked coverage/full gate remains
+batch36; macro/shared-fixture validation is recorded below. Continue authoring
+before combined delivery. No push or hosted run for this small subgroup.
+
+# Macro lifecycle authoring checkpoint - 2026-10-25 (batch37, local)
+
+Goal active. Nine new real-FatFs macro lifecycle cases are registered: repeats,
+reset/reopen, check-mode lookup without redirect, missing-file recovery,
+delegation of IDs below100, nested return to the parent byte, nested reset,
+EOF-driven repeats, and status-error recovery. All30 storage cases pass Windows
+Clang ASan/UBSan1.57s with strict classification30 clean. Shared-fixture rebuild
+and all13 embedded stream cases pass0.69s:11 clean +2 unchanged known regressions.
+The FatFs variant of gc_macro_get_pos now accepts the actual active file and
+reports no inline definition; the embedded variant keeps its previous assertion.
+
+Public macro hooks and actual writable SDK filesystem are used. Controller
+parsing, inline O-code lookup and parameter-stack behavior remain outside this
+fixture. EOF test models protocol.c's public on_file_end callback after ASCII_EOF.
+No production changes, allowances or weakened assertions. Cumulative1012 is
+registration only, not a fresh full-suite result. Latest complete validation and
+coverage remains batch36 below. Keep accumulating related cases before the next
+combined delivery gate; no hosted run dispatched.
+
+# Combined storage delivery checkpoint - 2026-10-25 (batch36)
+
+Goal active. Complete51 current-source plugin/driver host suites pass Windows
+Clang ASan/UBSan/strict:1003 cases =940 clean +63 documented known, zero
+unexpected failures/skips.27 cases since delivered35:6 coolant mapping/restart
++21 FatFs/SD adapter/controller/file-stream integration. Fresh87 reporting/source
+helper checks pass20.718s; Plugin/Driver actionlint passes. No production edits,
+new allowances, weaker assertions or merges. Main CORE and historical reference
+suites remain separately tracked, excluded from1003.
+
+Fresh selected local LLVM coverage, two clean coverage executions:
+- Coolant17 clean:109/124 lines87.9%,48/68 branches70.6%,13/14 functions.
+  Same source/denominator as batch35: +16 lines/+6 branches (93/124,42/68).
+- FatFs/SD21 clean:452/843 lines53.6%,155/516 branches30.0%,57/87 functions.
+  First measured selected four-file configuration; no prior same-denominator gain.
+  fs_fatfs107/118 lines90.7%,28/46 branches60.9%,21/21 functions.
+  sdcard106/107 lines99.1%,47/62 branches75.8%,15/15 functions.
+  fs_stream226/513 lines44.1%,78/350 branches22.3%,19/41 functions.
+  macros13/105 lines12.4%,2/58 branches3.4%,2/10 functions.
+All compiled source denominators remain visible; no whole-module/configuration/
+repository percentage claim. Macro/stream regions remain substantial unfinished
+work. Root-stat special branch confirmed0 hits by fresh XML; source-only unsafe
+timestamp concern was not exercised or hidden through a diagnostic allowance.
+
+Actual adapter, FatFs ff.c/ffunicode.c/ffconf.h, CORE VFS/stream/stream_file and
+plugin SD/stream/macros run on valid2880-sector FAT12 disk. Native mount/detect/
+startup/custom hooks, ordinary file operations, sector-read recovery and modeled
+controller M30/tool/reset/error handlers execute. Older embedded13 gate retains
+11 clean+2 correct known EOF regressions unchanged; source/shared fixture change
+included full cumulative validation. No native parser/planner/physical SD claim.
+
+Fresh source locks match SDd0fe753d622e79a60e54e729ba83f7207276114c,
+laser26934c6c9607e0b5ba4a711516a60d4657bf142c,
+COREb01f481072edecac33d5e40c25869359a5b3fa1f,
+STM32F4a6318ac92f079f49fab91687530f832997396edc and
+EEPROM0c278db74edc38303b9d86583a7d51a1ec1be51e where applicable.
+Source-only FatFs dependency cannot be selected as a suite. All51 gated suites'
+candidates/dependencies snapshot48 clean Git checkouts/exact SHAs. Fresh short
+lc36/fa36 counters max234chars; evidence ignored build-evidence/*batch36* and
+per-build results-batch36.xml. No stale report or unbuilt-source denominator.
+
+Coolant valid mapped restart verified; erased recovery and thermal WIP remain.
+FatFs root-stat/cwd concerns, littlefs ABI, PWM missing context/tool-setting ABI/
+tooltable proposals remain unresolved and separate. No unsafe reproduction or
+private state forcing. Actual SD/SPI/IRQ timing, motors/laser/coolant response,
+full controller/SDK firmware and broad remaining configurations remain open.
+Fresh fork Actions listing still only reusable/core workflows. Separate Plugin/
+Driver manual dispatch awaits default-branch installation; keep PR29 draft/
+unmerged and never claim hosted GCC/Linux success. Full goal stays active.
+
+---
+
+# Local actual-disk file-stream integration checkpoint - 2026-10-25
+
+Goal active. Seven new FatFs-backed file-stream cases bring suite to21. Complete
+21-case Windows Clang ASan/UBSan run passes1.36s and strict classification all
+clean. Original fs_stream/macros plus CORE stream/stream_file run on actual
+FatFs/VFS disk. Existing serial fixture reused with explicit backend selection;
+no copied stream logic. Normal LF job bytes hand off to modeled controller M30
+completion, missing-terminator EOF appends newline/completes, reset/error reopen
+preserves stored file, tool-change suspend/ack restores input, progress matches
+stored file position and writable commands create/delete directories/files.
+
+Shared old fixture/driver changes validated by full13 embedded cases0.70s:
+11 clean +2 existing known regressions, strict no unexpected failures. Original
+mixed/trailing EOF assertions and allowances remain untouched. Modeled M30/error
+callbacks are controller boundaries, not native parser/motion execution; this
+integration does not claim that existing EOF defects are fixed. No new known
+result, sanitizer allowance, source edit or weakened assertion.
+
+FatFs native platform header orders original headers consistently; supported
+FF configuration supplied by actual SDK header on all stream compile units.
+No API aliases/context injection or edited FatFs config. Duplicated legacy
+boundary stubs are omitted only when actual CORE stream implementation links.
+Coverage filter includes fs_fatfs/sdcard/fs_stream/macros; expanded denominator
+will be measured at substantial checkpoint. Metadata7 helpers pass.
+
+51 current-source host suites/1003 authored. Last delivered batch35 remains
+976/50 plus87 helpers; pending27 cases:6 coolant +21 FatFs/SD. No fresh measured
+coverage/global/hosted claim. Actual SD media/IRQ/SPI, full controller/parser,
+macro/NGC variants, root-stat/cwd source concerns and broad remaining drivers
+stay unfinished. Goal active; continue substantial batch before delivery.
+
+---
+
+# Local SD mount/detect lifecycle checkpoint - 2026-10-25
+
+Goal active. Seven new original sdcard.c cases bring FatFs/SD suite to14.
+Complete14-case Windows Clang ASan/UBSan run passes0.85s and strict classification
+all clean. Original engine/VFS adapter plus SD layer run against valid FAT12
+block device. Media initialization is separated from mounting; SD layer invokes
+actual f_mount/fs_fatfs_mount, not a premounted substitute. FM/FU command handlers,
+queued detect/unmount/remount, status dirty/all reporting and original files
+surviving remount execute. No private SD state injection or production edits.
+
+Startup automount failure reports then recovers with present media. Early mount
+wraps driver setup/settings callback and preserves previous handlers; absent
+active-low detection avoids early mount until public insert event. Custom mount/
+unmount callbacks still use original FatFs. No-detect hardware advertises mounted
+status correctly; options/prior report hooks chain. Scheduler and detect GPIO
+are explicit driver boundaries, not physical SPI/card or native controller job.
+
+Coverage filter now includes fs_fatfs.c and sdcard.c for this suite; future
+coverage denominator will expand, not imply same-file percentage gain. Metadata7
+helper checks pass.51 host suites/996 authored; last full delivered batch35
+976/50 plus87 helpers. Pending20 local:6 coolant +14 FatFs/SD. No fresh source
+coverage/global/hosted claim. Original plugin/CORE/STM32 FatFs remain unchanged;
+root-stat/cwd source concerns and littlefs compatibility remain separate.
+Physical media lifecycle, real IRQ timing, SDK firmware/controller integration,
+legacy/alternate filesystems and other modules stay open. Full goal stays active.
+
+---
+
+# Local original FatFs adapter/engine checkpoint - 2026-10-25
+
+Goal active. Seven new FatFs scenarios pass Windows Clang ASan/UBSan0.44s
+and strict classification all clean. Original fs_fatfs.c, CORE VFS and actual
+STM32F4 FatFs ff.c/ffunicode.c/ffconf.h execute against a valid2880-sector FAT12
+block device. Cases cover multisector file roundtrip/seek/eof, directory/system
+entry filtering, truncate/rename/delete, regular-file timestamps, cwd/free-space,
+missing objects and normal sector-read error/reopen recovery. No copied FatFs
+API, modified SDK config or private file-system state injection.
+
+Actual source syntax first passes once native Windows headers load before CORE
+On; CMake repeated include grouping and local NEAR macro handling resolve host
+header collisions. Existing CRT string compatibility is retained; fixture-Werror
+stays enabled. Initial build/link repairs were harness setup only; actual source
+unchanged. Original plugin d0fe753d/COREb01f4810/STM32F4a6318ac9 pinned in scope.
+FatFs dependency is explicit source-only fatfs_stm32f4, never a selectable suite.
+
+Native driver geometry is a standard FAT12 test volume; actual FatFs performs
+all file-system operations. No malformed media or unsafe parser reproduction.
+Root-stat timestamp uses uninitialized FILINFO by source review, so that runtime
+path is not exercised; small-buffer cwd behavior remains source-only. Original
+config disables mkfs; no format/exFAT/FAT32 or SD/SPI hardware claim. SDcard.c
+mount/detect/stream lifecycle, littlefs compatibility, full controller and physical
+media/timing remain unfinished.
+
+Registered plugin_sdcard_fatfs manifest/manual Plugin workflow/README/inventory.
+Metadata7 helpers/actionlint pass.51 current-source host suites/989 authored;
+last delivered batch35 full gate976/50 plus87 helpers.13 local cases pending:
+6 coolant mapping/restart +7 FatFs. No fresh coverage/global/hosted result.
+Continue substantial storage/driver batch; full goal stays active.
+
+---
+
+# Local coolant port mapping and restart checkpoint - 2026-10-25
+
+Goal active. Six new cases bring coolant suite to17. Complete17-case Windows
+Clang ASan/UBSan run passes0.99s and strict classification all clean after shared
+input fixture expansion. Actual CORE setters/getters reject fractional and
+unavailable aux ports; valid saved aux1 mapping routes digital/analog reads and
+falling IRQ to physical1 after claims. Disabled temperature input (-1) omits
+its virtual provider while coolant still operates. Falling-only pin rejects
+required Change capability; original plugin does not install coolant hooks.
+
+Two real processes save complete original EEPROM image with mapped ports and
+on/off delays. Fresh reader loads without restoring defaults, uses physical1,
+waits via configured2s timeout and schedules6000ms off callback. Original
+EEPROM/CRC and plugin settings remain unchanged; no decoding/injection of
+private NVS layout or manufactured plugin state. Existing11 cases remain clean.
+No new runtime failure, allowance, weakened assertion or production edit.
+
+Two-port callbacks remain boundary models for sensors/IRQ/scheduler; physical
+flow/electrical timing/full native controller not claimed. Valid restart is now
+verified; erased/corrupt recovery and WIP thermal monitor flag remain separate
+unfinished contracts.50 suites/982 authored cases, last delivered batch35 full
+gate976/50 plus87 helpers. Six local cases pending substantial next batch; no
+fresh coverage/global/hosted claim. Continue remaining modules/configurations,
+never private thermal-state forcing. Full goal stays active.
+
+---
+
+# Combined clone/stepper/laser delivery - 2026-10-25 (batch35)
+
+Goal active. Complete50 current-source plugin/driver host suites pass Windows
+Clang ASan/UBSan/strict:976 cases =913 clean +63 documented known, zero
+unexpected failures/skips.46 new cases:clone9,stepper18,coolant11,overdrive8.
+Fresh87 reporting/source helper checks pass16.612s; Plugin/Driver actionlint
+passes. No production edits, weakened assertions, new diagnostic allowances or
+PR merges. Main CORE suite stays in separate active checkout; historical
+PSoC/TI/Simulator VFS references remain separately dated, excluded from976.
+
+Fresh selected local LLVM source coverage, four clean coverage executions:
+- pwm_clone.c71/72 lines98.6%,17/24 branches70.8%,8/8 functions;9 clean.
+- stepper.c153/161 lines95.0%,49/67 branches73.1%,14/16 functions;18 clean.
+- coolant.c93/124 lines75%,42/68 branches61.8%,11/14 functions;11 clean.
+- co2.c66/66 lines100%,38/48 branches79.2%,9/9 functions;8 clean.
+These are first measured selected configurations, not full-module/all-config or
+repository coverage. Coolant thermal WIP/default recovery stays visible in the
+denominator. Prior VFD910/940 lines301/417 branches remains batch34 evidence;
+not remeasured or summed into a new whole-spindle claim.
+
+Four fresh source locks match clean original spindle8a3ae47f,laser26934c6c,
+COREb01f4810,EEPROM0c278db7 (EEPROM only clone/coolant). All50 gated suites'
+candidates/dependencies additionally snapshot48 clean Git checkouts with exact
+SHAs in ignored all-sources-batch35.json. Fresh short cl35/st35/lc35/lo35
+coverage counters max225chars. No stale counters, source exclusions or claimed
+physical timing. Evidence ignored build-evidence/*batch35* and per-build XML.
+
+Clone uses genuine driver-owned CORE PWM precompute/update-caps, with startup
+queue after settings load; primary/clone routing and mode changes execute.
+Stepper compiles actual CORE secondary engine and captures pulses; deterministic
+timer callbacks and coarse polling are boundary models, not MCU timing. Integer/
+fractional position sync, unit hooks, speed changes and reset execute. Live
+IRQ-backed reversal still needs independent asynchronous delivery.
+
+Coolant checks real port claims/EEPROM, start/timeout/delayed cancellation/IRQ
+loss and virtual sensor callbacks. Valid stored defaults are created through
+original restore; erased recovery is not validated. Thermal can_monitor stays
+false and upstream marks thermal features WIP. Overdrive runs original M129
+hooks and real CORE calculation/clamping/reset/completion. Native parser/
+scheduler/stepper electrical behavior and motor/laser/flow response unverified.
+
+PWM activation missing-context, tool-setting ABI and tooltable proposals remain
+unregistered/incomplete; no unsafe reexecution or fixture workaround. Fresh
+fork Actions listing still only reusable/core workflows. Separate Plugin/Driver
+manual dispatch awaits default-branch installation; keep PR29 draft/unmerged.
+No hosted GCC/Linux, actual board SDK link or full controller/hardware success.
+Other modules/configurations and physical integration remain; goal stays active.
+
+---
+
+# Local CO2 laser overdrive checkpoint - 2026-10-25
+
+Goal active. Eight original co2.c cases pass Windows Clang ASan/UBSan0.45s
+and strict classification all clean. Actual CORE precompute/update-caps and
+spindle registration supply valid driver PWM context; original plugin hooks
+execute. M129 availability follows selected laser capability and RPM-control
+settings, with unsupported basic-spindle/no-selection cases. Commands restore
+CORE consumed-word handoff; finite fractional/zero percentages execute while
+negative/NaN/missing P validation rejects. Real CORE PWM calculation verifies
+25% overdrive (base500->625) and configured1000 clamp from base900.
+
+Reset and M30/M2-completion hooks clear active overdrive and chain prior
+handlers; options/unknown M-code/settings callbacks preserve earlier behavior.
+Driver reconfiguration uses driver-owned descriptor and public caps update,
+not registry pointer mutation or plugin-private state. No unsafe percentage
+conversion reproduction, production edits, known result or diagnostic allowance.
+Actual native controller/queued parser and physical laser/PSU response remain
+unverified; computed overdrive cannot establish engraving or electrical safety.
+
+Registered plugin_laser_overdrive manifest/manual Plugin workflow/README and
+inventory with CORE-only dependency. Metadata7 helpers/actionlint pass.
+50 registered suites/976 authored cases; last full delivered batch34 remains
+930/46 with87 helpers. Pending46 local:9 clone +18 stepper +11 coolant +8
+overdrive. No fresh measured coverage/global/hosted claim. Inactive-spindle
+retention policy and broader configurations/hardware remain open. PWM/context,
+tool-setting and tooltable proposals stay unresolved/unregistered. Full goal
+stays active; cumulative source measurement/validation is now a substantial
+next delivery boundary before broader plugin/driver expansion.
+
+---
+
+# Local laser coolant startup/shutdown checkpoint - 2026-10-25
+
+Goal active. Eleven original coolant.c cases pass Windows Clang ASan/UBSan
+0.69s and strict classification all clean. Real CORE digital/analog port claims,
+original EEPROM/CRC and plugin hooks execute. Confirmed startup and timeout,
+flood-off with mist preserved, delayed shutdown/cancellation, reset immediate
+off, falling-edge loss alarm while on and ignored loss after off/pending stop,
+virtual coolant-ok/temp callbacks, reports and provider conflicts/failures execute.
+No private coolant state injection, source edits or diagnostic allowances.
+
+Initial8/11 run exposed host capability/settings preparation mistakes: Change
+and Falling IRQ are separate advertised bits; fresh erased settings must not be
+assumed valid port assignments. Host now advertises both and uses original
+plugin restore to create valid persisted defaults before load. Complete11 rerun
+supersedes initial failures. This deliberately does not prove erased-storage
+recovery; source restore leaves port fields unchanged after failed data read.
+Virtual parameter registration and delayed scheduler are boundaries, not actual
+NGC interpreter or elapsed-wall-time/physical coolant behavior.
+
+Temperature can_monitor stays false in original source; upstream README labels
+thermal features WIP. No temperature report/protection success or manufactured
+known bug claimed; public virtual temperature getter does execute independently.
+Erased/corrupted port-default contract and no-analog configuration need review.
+No unsafe null-provider path or private flag forcing. Firmware/controller flow,
+actual sensors/IRQs/thermal response and electrical timing remain unfinished.
+
+Registered plugin_laser_coolant in manifest/manual Plugin workflow/README and
+inventory, CORE+EEPROM dependencies. Metadata7 helpers/actionlint pass.
+49 registered suites/968 authored; last full delivered batch34 remains930/46.
+Pending38 local:9 clone +18 stepper +11 coolant. No new coverage/global gate,
+hosted GCC/Linux or hardware claim. Continue overdrive and remaining broader
+plugin/driver work; goal stays active.
+
+---
+
+# Local stepper metadata/speed and clone laser-mode checkpoint - 2026-10-25
+
+Goal active. Four new cases: three stepper and one clone. Complete18-stepper
+Windows Clang ASan/UBSan gate passes1.05s with strict classification all clean
+after adding prior units-hook boundary. Timer-driven60->120->30RPM transitions
+execute original secondary engine and match5000/2500/10000us requested periods,
+while pulses continue forward; stop halts timer. Positive angular/index data
+matches captured emitted pulses; stopped RPM reports zero. Public spindle units
+are checked for step/rev, rev/min, rev/sec^2 and ignored dimensions, with prior
+hook fallback for other axes/settings and after rotary conversion. No mocked
+normalization algorithm was added; descriptions remain untested.
+
+Clone laser-mode case passes focused0.10s/strict clean: primary direction
+capability/routing follows mode, repeated same-spindle selection does not
+rewrap hooks, clone remains nondirectional/nonlaser and uses isolated conversion.
+Existing8 clone cases retain earlier complete gate; no new complete9 claim.
+No production edits, private state/context injection, known failures or sanitizer
+allowances. No physical motor/laser/PWM timing or full controller proof.
+
+48 registered suites/957 authored cases, pending27 since delivered batch34
+930/46:9 clone +18 stepper. No new coverage/global/hosted claim. Counter-reset
+reference behavior and fractional rotary startup contract remain to inspect;
+live timer reversal needs asynchronous IRQ delivery; metadata description
+normalization still unsupported in this boundary fixture. Other plugin/driver,
+SDK and hardware work remains. Continue substantial batch; goal stays active.
+
+---
+
+# Local stepper timer and position synchronization checkpoint - 2026-10-25
+
+Goal active. Six new original-source stepper cases bring suite to15. Complete
+15-case Windows Clang ASan/UBSan gate passes0.85s and strict classification all
+clean after shared fixture extension.32-bit timer and16-bit fallback claims use
+actual HAL capability/timebase requests and register CORE callback/context.
+Driver timer model advances only by requested period then dispatches original
+callback; no copied motor algorithm. Real-time callback alone produces no timer
+pulses. Cruising60RPM/200 step/rev requests5000us; stop halts timer, then reverse
+restart works. Failed timer claims use polling or warn when no clock exists.
+
+Two sync-position cases use valid startup sys.position and public settings,
+then compare post-stop A position to total captured forward/reverse pulses,
+integer200 or fractional200.5 steps/revolution. Original plugin selects both
+integer/fractional paths, releases motor claim and requests planner sync. Host
+planner-sync/coordinate conversion are explicit boundary models; no actual
+planner/controller job or physical waveform claimed. Existing polling cases
+remain clean. No private motor mutation, production edits, allowances or weaker
+assertions. Timer-backed live reversal is not run synchronously: original
+blocking loop requires independent asynchronous IRQ delivery.
+
+48 registered suites/953 authored cases; last delivered full batch34 remains
+930/46 plus87 helpers. Pending23 local:8 clone +15 stepper. No fresh global gate,
+coverage, hosted or SDK/hardware claim. PWM context and tool-setting ABI proposals
+remain unresolved/unregistered. Fractional rotary configuration, reset/angle
+semantics, metadata callbacks, native full parser/planner, actual MCU timers and
+broader plugins/drivers remain open. Goal stays active; continue substantial
+batch before delivery.
+
+---
+
+# Local stepper spindle polling checkpoint - 2026-10-25
+
+Goal active. Nine original stepper-spindle cases pass Windows Clang ASan/UBSan
+0.52s and strict classification all clean. Added explicit prior realtime/delay
+hook assertions also pass focused1/1 with strict classification. Actual CORE stepper2/spindle registry
+runs with four axes and200 step/rev A spindle. Driver boundary captures engine
+pulse/direction masks, enables and motor claims; real engine acceleration,
+cruising and stop execute. Cases cover forward/reverse, counters versus captured
+pulses, calculated RPM, stop/no subsequent pulses, prior hook chaining, enabled
+XYZ-mask retention, optional axis release after stop, rotary settings roundtrip,
+maximum-rate settings/clamping, soft reset and missing output/clock providers.
+
+Polling clock advances10ms per read and deliberately undersamples some requested
+periods. This verifies state/step-event relationships and computed speed, not
+physical frequency, timer IRQ accuracy or motor travel. Delayed stop callback
+runs at host scheduler boundary. No copied st2 algorithm, private profile state,
+production edits, new allowance or assertion weakening. Removed unnecessary
+EEPROM/ioport sources; local driver.h only forwards actual CORE hal header.
+Settings save is an observed callback, not validated persisted restart.
+
+Registered plugin_spindle_stepper with CORE-only dependency in manifest/manual
+Plugin workflow, README and inventory. Metadata7 helpers/actionlint pass.
+48 registered suites/947 authored cases; last full delivered batch34 remains
+930 across46 plus87 helpers. Pending local17 cases:8 clone +9 stepper. No fresh
+coverage, cumulative gate, hosted GCC/Linux, actual SDK firmware or hardware
+claim. Timer-backed operation, position synchronization, fractional rotary,
+unit/report metadata, full controller jobs and other plugin/driver regions stay
+open. Existing PWM/tool-setting proposals unresolved; full goal stays active.
+
+---
+
+# Local cloned PWM spindle checkpoint - 2026-10-25
+
+Goal active. Eight original pwm_clone.c scenarios pass Windows Clang
+ASan/UBSan0.67s and strict classification all clean. Real CORE precomputes the
+base driver's PWM context using its public API before registration; original
+clone plugin provides its own context/conversion. Real CORE spindle registry,
+secondary settings and EEPROM/CRC execute. Tests capture primary-on routing
+to direction, clone-on routing to enable, reverse-state bookkeeping, RPM/PWM
+conversion at1MHz/1000Hz, off state, stop-before-switch and prior selected hooks,
+settings-driven conversion update, missing base/direction/update and storage.
+
+Initial8-case run failed four host checks because startup callback handling
+assumed warning only. CORE queues secondary PWM initialization; fixture now
+uses bounded startup queue executed after settings load. Complete8 rerun clean
+supersedes those fixture failures. Default primary10000RPM/secondary2000RPM
+are explicit normal startup configurations. No hidden context repair/private
+plugin state, source edit, known allowance or weakened assertion. This clone
+success does not fix incompatible pwm.c activation or tool-setting proposals.
+
+Registered plugin_spindle_clone manifest/manual Plugin workflow/README/inventory.
+Metadata7 helper checks/actionlint pass.47 registered suites/938 authored cases;
+last delivered batch34 full gate remains930/46 plus87 helpers. Eight local cases
+have no fresh cumulative/coverage/hosted claim. Laser-mode variants, configured
+range metadata refresh, full controller parser, actual PWM timer/electrical
+waveforms and physical motors remain unverified. Next stepper module requires
+original CORE stepper2 and four-axis HAL; broad remaining drivers/configurations
+and SDK hardware remain unfinished. Goal stays active.
+
+---
+
+# Combined spindle delivery gate - 2026-10-25 (batch34)
+
+Goal active. Full registered Windows Clang ASan/UBSan/strict gate passes930 cases
+across46 suites:867 clean +63 documented known, zero unexpected failures/skips.
+Fresh87 reporting/source helper checks pass19.184s; Plugin/Driver actionlint
+passes.51 new registered cases:17 VFD recovery,12 onoff,6 PWM resource-only,
+7 selection,9 offset. Four new suites register in manifest/manual Plugin workflow.
+No production edits, source-specific ABI casts, new allowances or weakened
+assertions. Reference26 cases retain separately dated batch32 evidence unchanged
+and are not counted in930 or claimed rerun.
+
+Fresh selected LLVM coverage, clean separate coverage executions:
+- VFD97 clean:910/940 lines96.8%,301/417 branches72.2%,113/115 functions98.3%.
+  Same denominator/source as batch33: +22 lines/+19 branches. H100128/131 lines
+  and49/63 branches; Huanyang v1 149/152 and54/69; other protocols retained.
+- On/off12 clean:56/59 lines94.9%,16/20 branches80%,9/9 functions.
+- Selection7 clean:147/225 lines65.3%,97/177 branches54.8%,14/22 functions.
+- Offset9 clean:63/65 lines96.9%,28/30 branches93.3%,8/9 functions.
+- PWM6 resource cases clean:4/76 lines5.3%,1/32 branches3.1%,1/8 functions.
+  This deliberately honest low coverage does not prove working PWM activation.
+
+Fresh five source locks resolve original spindle8a3ae47f5a218834da9c742424c3dd22c5629fdb,
+COREb01f481072edecac33d5e40c25869359a5b3fa1f and
+EEPROM0c278db74edc38303b9d86583a7d51a1ec1be51e; each local source is clean.
+Fresh short build-on34/pw34/se34/of34/vf34 counter paths max223chars; no stale
+coverage counters, unbuilt-source denominator or full-repository coverage claim.
+Evidence ignored build-evidence/*batch34* and per-build results-batch34.xml.
+
+PWM activation remains incompatible: original plugin's SpindleType_PWM lacks
+context.pwm required by CORE activation. Six activation proposals unregistered.
+Tool-threshold setter uint32_t conflicts with registered uint_fast16_t setting
+API; strict reporting rejected three recovering diagnostics despite ordinary
+CTest green. Four dependent tool/persistence proposals unregistered. No current
+PWM activation or tool-threshold/process-restart success claimed, no unsafe
+rerun/workaround. Seven older tooltable proposals also remain unregistered.
+
+Offset models requested motion/accepted completion, not real planner/stepper;
+its mc_line boundary follows Status_Handled/Status_Aborted contract. Other suites
+use real CORE registry/port claims and EEPROM but do not establish full native
+controller jobs. Actual electrical timing, motors, board SDK links/hardware,
+stepper/clone modules and broad remaining driver/plugin configurations stay open.
+Fresh fork Actions listing still only reusable/core workflows. Separate manual
+Plugin/Driver hosted dispatch awaits default-branch installation; keep PR29
+draft/unmerged and never claim hosted GCC/Linux success. Full goal stays active.
+
+---
+
+# Local spindle offset motion-boundary checkpoint - 2026-10-25
+
+Goal active. Nine original-source offset cases pass Windows Clang ASan/UBSan
+0.65s and strict classification all clean. Actual CORE registers three driver
+spindles; original offset hooks/settings and EEPROM/CRC execute. Tests capture
+rapid offset/return XY requests preserving Z, synchronize/position update counts,
+optional G92/WCO adjustments, zero offset/startup/no-laser behavior, abort without
+G92 adjustment, original in-process settings persistence and previous reports.
+
+Motion gateway is an explicit boundary model, not actual planner/stepper. It
+returns documented Status_Handled for accepted motion, Status_Aborted on abort
+(CORE motion_control.c83-87), and converts configured80 steps/mm. These tests
+prove requested targets and callback behavior, not physical travel or native
+parser/controller integration. No public status-contract reinterpretation,
+private plugin-state injection, source edit, allowance or weakened assertion.
+
+New suite plugin_spindle_offset registered in manifest/manual Plugin workflow,
+README/inventory. Metadata7 helper checks/actionlint pass.46 suites/930 authored
+active cases; full delivered batch33 remains879 across42. Pending51 cases:
+17 VFD +12 onoff +6 PWM provider +7 select +9 offset. No fresh coverage/global
+or hosted result. Tool-setting ABI/PWM context proposals remain unregistered.
+Aborted-offset-followed-by-selection and repeat-same-laser policy need contract
+review; no invented failure asserted. Stepper/clone modules, other driver paths,
+actual board/SDK firmware and hardware remain unfinished. Goal stays active.
+
+---
+
+# Local spindle selection and tool-setting contract - 2026-10-25
+
+Goal active. Seven independent original-source selection cases pass fresh
+Windows Clang ASan/UBSan/strict, all clean. Two basic spindles register through
+actual CORE; original select.c M-code/settings/setup hooks execute. P/Q selection,
+default return, invalid/missing/both words, duplicate/out-of-range/disabled
+binding rejection, prior M-code chaining, reports, no storage and failed setup
+are covered. Command helper restores CORE consumed-word validation handoff.
+
+Initial ordinary11/11 CTest was misleading: strict reporting found three UBSan
+function-type mismatches and classified8 clean/3 failed. Original tool-threshold
+setter uses uint32_t; its registered Format_Int16 dispatch calls
+setting_set_int_ptr(uint_fast16_t), confirmed CORE settings.h1098/settings.c3648.
+Four dependent tool/persistence source files now remain unregistered proposals,
+not verified restart support. Assertions retained; no source-specific cast,
+production edit, sanitizer allowance or unsafe rerun on unchanged pins. Public
+metadata contract, not a driver-provided private object, needs upstream repair.
+
+Manifest/Plugin workflow/README/inventory register the seven active cases only.
+Component metadata7 checks and workflow actionlint passed. N_SPINDLE2/
+N_SYS_SPINDLE1 only; actual controller/parser/motion/hardware, tool selection,
+process restart and multi-system variants remain unfinished. Source pins remain
+spindle8a3ae47f/COREb01f4810.45 suites/921 authored active cases, last full
+batch33 delivered879/42. Pending42:17 VFD +12 onoff +6 PWM provider +7 select.
+Offset/stepper/clone and other driver work remain independent next steps. Goal
+stays active; no new coverage, global gate or hosted success claimed.
+
+---
+
+# Local PWM resource tests and activation incompatibility - 2026-10-25
+
+Goal active. New selectable plugin_spindle_pwm executes six provider-rejection
+cases: no analog bank, non-PWM-capable analog pin and absent NVS allocation,
+each with direction/no-direction compile variants. Real CORE ioports/crossbar,
+secondary-spindle settings registration and original EEPROM/CRC compile. Six
+active cases pass Windows Clang ASan/UBSan0.22s and strict classification clean.
+Manifest/Plugin workflow/README registration included; component suite helper7
+checks and actionlint pass. No new diagnostic allowance or known runtime label.
+
+Initial12-case authoring run: six resource cases passed, six activation cases
+failed with null context.pwm access in CORE spindle_control.c122. Source review:
+original pwm.c declares SpindleType_PWM without context.pwm; spindleConfig
+forwards driver configuration without establishing the required CORE PWM object.
+No fixture/private context injection, production edit, cast or header bypass.
+The six activation scenarios (three files x two direction variants) are moved
+unchanged to unregistered tests/proposals/spindle_pwm. They remain unfinished,
+not passing cases/coverage. Do not rerun unsafe activation on unchanged sources.
+The passing provider subset does not fulfill PWM activation/controller support.
+
+Original plugin8a3ae47f/COREb01f4810 source contract remains incompatible for
+this activation path; fix belongs upstream. Hardware PWM timing, target SDK and
+full controller execution remain unverified.44 compatible/provider suites and
+914 authored registered cases; last complete delivered gate remains batch33
+879 across42 suites. Six PWM proposals excluded. Pending local additions35
+including17 VFD +12 onoff +6 PWM resource tests. Continue other spindle modules
+and broader driver work; full goal remains active.
+
+---
+
+# Local on/off spindle suite checkpoint - 2026-10-25
+
+Goal active. New selectable plugin_spindle_onoff suite adds12 original-source
+cases across on-only and direction-enabled compile variants. Actual CORE
+spindle registration/selection, ioports/crossbar claims and EEPROM/CRC settings
+execute. Driver callbacks capture output physical pins; startup defaults off,
+forward/reverse/stop, mapped saved settings, fractional/unavailable setting
+rejection, missing/insufficient ports, allocation failure, disabled output and
+conflicting other-plugin claims pass. No mocked port-configuration helpers or
+private spindle source/state modification.
+
+Windows Clang ASan/UBSan12/12 passes0.69s with strict classification all clean.
+Original plugin/CORE warnings remain visible/nonfatal under existing policy;
+fixture-Werror retained. Existing Windows CRT string compatibility header is
+needed by original CORE strutils, matching other real-ioports suites. No ABI
+cast/source bypass, new known result or sanitizer allowance. Host scheduler
+executes warning callbacks at its boundary; deferred ordering is not tested.
+
+Manifest/Plugin workflow/README/inventory now register the suite.87 helper run
+had one missing-new-suite-diagnostics-list error; empty required list added,
+affected7 component suite checks pass0.045s. Other80 helpers passed initial run.
+Plugin workflow actionlint passes. No complete helper87 rerun claim. Updated
+VFD scope note to match seven protocol files already validated in batch33.
+
+43 compatible suites/908 authored after pending17 VFD +12 onoff cases; last
+full delivered batch33 remains879 across42 suites. No new global gate, source
+coverage, hosted firmware/SDK or hardware result claimed. GPIO electrical state,
+full parser/motion/controller jobs and separate-process onoff persistence remain
+unchecked. Continue PWM/offset/stepper/selection sources and broader driver work
+before one substantial cumulative gate/push. Goal stays active.
+
+---
+
+# Local VFD recovery gap checkpoint - 2026-10-25
+
+Goal active.17 new cases address source-reviewed recovery gaps after batch33
+measurement: H100 seven, Huanyang v1 six, Huanyang v2 two, Nowforever two.
+Shared rejected-mode/startup-exception cases now clear discovery requests before
+injecting the next transport result, preserving existing assertions and enabling
+valid execution for discovery protocols. No transport backend change.
+
+Partial H100/Huanyang v1 discovery rejects the minimum-frequency transaction,
+verifies range remains unlocked, then retries discovery on first start and
+reaches programmed speed. Reused scenarios exercise H100 async exception
+threshold/reset, cold-start deferred alarm, settings/report hooks and bus-down
+selection. Huanyang v1 RPM/current exception contexts execute independently;
+repeated current errors interleaved with successful RPM replies preserve valid
+speed and avoid cumulative alarm because successful RPM resets the counter.
+Recovery then accepts both replies. Huanyang v2/Nowforever now execute rejected
+mode and deferred cold-start failure, beyond their prior feedback error cases.
+
+Focused32-case Windows Clang ASan/UBSan gate passes1.57s and strict classification
+all clean, including existing scenarios affected by clearing discovery packets.
+97 VFD/896 compatible authored; no fresh full global gate or coverage claimed.
+Last delivered batch33 remains879/42 suites with63 documented known, and
+VFD80 clean/888of940 lines282of417 branches. No production edits, assertions
+weakened, new known failures or sanitizer allowances. Accumulate other spindle
+implementations before another substantial gate/push. Actual hardware, native
+bus timing, controller integration and hosted runs remain unverified.
+
+---
+
+# Combined VFD delivery checkpoint - 2026-10-25 (batch33)
+
+Goal active. Full current-compatible Windows Clang ASan/UBSan/strict gate passes
+879 cases across42 suites:816 clean +63 documented known, zero unexpected
+failures/skips.43 added original-source VFD cases:11 YL620 +10 Huanyang v2 +
+11 Nowforever +11 Huanyang v1. All80 VFD cases pass clean in this combined gate;
+fresh separate coverage execution also passes80 clean4.42s. Initial authoring
+fixture failures are superseded by both complete results. No new allowances,
+production source edits, assertion weakening or CORE/PR merges.
+
+Fresh local LLVM coverage of8 selected VFD .c files:888/940 lines94.5%,
+282/417 branches67.6%,109/115 functions94.8%. Prior batch32 built4 selected
+files401/452 lines and121/199 branches. Added protocol sources expand the
+denominator; this is not a whole-plugin/repository or same-denominator gain.
+Previously built files retain coverage; shared wrapper improves93/117 to115/121
+lines and24/54 to34/54 branches by executing load reporting. Conditional source
+line denominator changes with compiled features. All seven protocol .c files now
+execute host scenarios; alternate configurations and full integration remain.
+
+Per-new-source lines/branches:YL62093/97 and26/39;Huanyang v2 110/113 and35/51;
+Nowforever119/122 and42/59;Huanyang v1 143/152 and48/69. Original sources remain
+clean at spindle8a3ae47f/COREb01f4810/EEPROM0c278db7; fresh GitHub-resolved locks
+match each local revision. Coverage counters use fresh build-vf33, max223chars;
+no stale counters or unbuilt-source denominator claims. Evidence is ignored
+build-evidence/*batch33* and short build results-batch33.xml files.
+
+87 reporting/source helper checks and26 separate legacy reference cases retain
+batch32 evidence: unchanged helpers/shared-header generation/reference code,
+not rerun or folded into879. No new miscellaneous measurement; its batch32
+coverage remains separately dated. Fresh fork Actions listing still exposes
+only reusable/core workflows. Separate Plugin/Driver manual dispatch awaits
+default-branch installation; no hosted GCC/Linux success claimed. Keep PR29
+draft/unmerged. Actual full controller jobs, target/SDK link, VFD serial timing,
+board hardware and remaining modules/configurations remain open.
+
+---
+
+# Local Huanyang v1 VFD checkpoint - 2026-10-25
+
+Goal active. Eleven new original-source Huanyang v1 cases cover four-parameter
+discovery, direction/stop commands, RPM conversion and duplicate suppression,
+RPM/current polling,150ms cached feedback, reset refresh, failed-first-read
+retry, zero RPM calibration fallback, settings/report hooks and absent/down
+providers. Two cases exercise public realtime load reporting:25% then50%,
+unchanged suppression and requested full report; absent current rating reports
+zero without division. No private spindle state or production source edits.
+
+Shared fixture explicitly checks protocol-specific6/7/8-byte request lengths,
+returns bounded parameter/current replies and validates requested bus silence
+settings16/8/6ms by baud group. All78 existing+new cases pass Windows Clang
+ASan/UBSan4.77s and strict classification. Two subsequently added load cases
+pass focused0.19s, strict2 clean.80 registered total; no new global80-case run
+claimed. No new failures, known exceptions or diagnostic allowances. Previous
+Nowforever command repair is included in the successful78-case combined check.
+
+Pending local additions43 beyond delivered batch32;879 compatible authored.
+Last full global gate remains836 plus26 separate references and87 helper checks.
+All seven selected VFD protocol implementations now have host behavior cases;
+this does not prove all configurations or full protocol coverage. Source-matched
+fresh coverage and cumulative delivery validation remain due. Real ACK timing,
+RS485 behavior, electrical drive/load response, full parser/controller jobs and
+hosted GCC/Linux are unverified. Continue broader source coverage, never CORE
+edits or PR merges. Full goal remains active.
+
+---
+
+# Local Nowforever VFD checkpoint - 2026-10-25
+
+Goal active. Eleven new original-source Nowforever scenarios cover frequency
+range discovery, forward/reverse/stop, nonblocking speed limits and duplicate
+suppression, RPM feedback/poll caching, reset range refresh, discovery retry,
+async exception thresholds/recovery, settings/report hooks and absent/down
+providers. Real CORE registration/Modbus and EEPROM-backed settings retained.
+Shared transport fixture explicitly models this protocol's11-byte multiple-
+register writes and9-byte range reply, with bounded captured packet assertions.
+
+Initial69-case ASan/UBSan run passed68 and failed the new command fixture: it
+changed direction while stopping, which resets cached programmed RPM to zero
+and suppresses a redundant speed write. Stop scenario now retains selected CCW
+while disabling output, checking stop word0 and minimum-frequency clamp100.
+Only this test source changed after that run. Focused repair11/11 passes0.46s
+with strict classification all clean. The58 existing protocols passed the
+initial shared-fixture run; no fresh combined69 green claim. No new known
+failure, assertion weakening, production edit or diagnostic allowance.
+
+Pending local VFD additions32 beyond delivered batch32;868 compatible authored.
+Last full global gate remains836 plus26 reference cases and87 helper checks.
+No new measured coverage, hosted GCC/Linux result, serial timing, full controller
+job or physical VFD validation. Huanyang v1 and remaining spindle variants are
+still open. Continue substantial authoring before combined delivery gate/push.
+
+---
+
+# Local Huanyang v2 VFD checkpoint - 2026-10-25
+
+Goal active. Ten new Huanyang v2 scenarios execute original protocol code with
+real CORE spindle registration/Modbus and EEPROM-backed settings. Discovery
+reads maximum RPM; forward/reverse/stop, nonblocking updates and unchanged-speed
+suppression check packet words. Feedback uses RPM directly and the shared150ms
+poll interval. Driver reset defers discovery and refreshed maximum RPM changes
+speed scaling; rejected initial discovery recovers on first start. Reused async
+exception threshold/recovery, settings/report hooks, missing transport/storage
+and bus-down scenarios execute against this protocol.
+
+The shared transport fixture adds the protocol-specific eight-byte holding
+response layout with explicit compile selection. All58 VFD cases pass Windows
+Clang ASan/UBSan3.53s and strict classification:58 clean, zero known/unexpected/
+skipped. Existing GS20/MODVFD/H100/YL620 cases included after shared fixture change.
+No production source changes, sanitizer allowances or new known failures.
+
+Pending local work now21 new VFD cases beyond delivered batch32:857 compatible
+authored, not a fresh global gate or coverage result. Batch32 remains last full
+compatible836 plus26 separate reference cases and87 helper checks. Actual serial
+ACK timing, physical VFD behavior, full controller/parser integration and hosted
+GCC/Linux remain unchecked. Accumulate other supported regions before one
+combined delivery gate. Full goal remains active.
+
+---
+
+# Local YL620A VFD protocol checkpoint - 2026-10-25
+
+Goal active. Eleven new YL620 cases pass focused Windows Clang ASan/UBSan0.64s
+and strict classification, all clean with zero unexpected failures/skips. Original
+source uses existing real CORE spindle registration/Modbus and EEPROM-backed
+settings. Forward/reverse/stop and frequency words match selected protocol;
+nonblocking RPM update and configured RPM/Hz roundtrip execute. Shared150ms
+polling wrapper controls feedback/at-speed and preserves cached response between
+polls. Reused scenarios execute rejected mode commands, async exception threshold/
+reset-after-success, settings/report hooks, absent transport/storage and bus-down
+selection/recovery against the actual new protocol implementation.
+
+No new host transport implementation or private spindle/capability modifications.
+Existing holding-register framing suffices; all source remains unchanged. Native
+serial/VFD clocks, ACK timing, alternate protocol layouts, full parser/controller
+jobs and hardware remain unverified. Original source warnings stay visible/nonfatal
+only for this VFD file, matching existing VFD harness policy; no runtime sanitizer
+allowance or known result added.
+
+VFD48 registered;847 compatible authored, not a new full global gate. Last
+delivered batch32 remains836 plus26 separate reference cases and87 helper checks.
+Incremental forwarding headers prevent rebuild of unchanged existing VFD objects
+when registering new cases. No fresh coverage report/hosted run; accumulate next
+supported protocol group before combined validation/push. Full goal stays active.
+
+---
+
+# Latest component checkpoint - 2026-10-25 (batch32)
+
+Goal active. Deliver14 runtime cases:9 H-100 VFD +5 BLTouch provider/report cases,
+plus incremental-header fix and unregistered tool-table proposals. One full Windows
+Clang ASan/UBSan compatible gate passes42 suites,836 cases =773 clean +63 documented
+known, zero unexpected failures/skips. Known results remain59 correct assertion
+regressions +4 diagnostic-only cases;3 assertions also carry exact diagnostics,
+counted once. No new known result or sanitizer allowance. Fresh separate reference
+gates pass PSoC9 (8 clean +1 known) and TI17 (15 clean +2 known), excluded from836.
+
+VFD37 cases all pass in fresh combined gate, superseding initial authoring red
+report. H100 discovery/poles/ranges, CW/CCW/stop, limit clamping, feedback, retry,
+reset refresh and provider failure use actual CORE spindle/Modbus plus bounded
+device replies and EEPROM-backed storage. Feedback observes common150ms wrapper
+and established0.01RPM float policy. BLTouch15 cases retain only fractional-D known
+assertion; optional providers/report chains now pass. Physical device timing,
+other VFD protocols and actual controller jobs remain unverified.
+
+All87 source/report helper tests pass29.863s, including new CMake timestamp/CORE-
+path regression. Shared header generation preserves unchanged files, real target
+reconfigure/rebuild reports no work. Broader gate and both legacy source layouts
+now validate the shared change; no production header/source mutation or ABI alias.
+
+Fresh selected LLVM coverage: misc12 files1272/1373 lines,661/866 branches,123/128
+functions; BLTouch130/138 lines,92/110 branches. VFD4 files401/452 lines,121/199
+branches,51/57 functions; H100112/131 lines,40/63 branches. VFD denominator expands
+with H100; unbuilt files/configurations remain excluded. Strict reports pass misc129
+(121 clean +8 known assertions) and VFD37 clean. Counter paths max224/223.
+
+Seven tool-table proposals remain UNRUN and unregistered: current original setter
+ABI fails CORE; they are not passing cases, coverage or known labels. Source-only
+compatibility evidence is preserved without cast/fallback/source modifications.
+Exact main/reference source locks match clean originals. No helper/workflow edits
+beyond the new header regression; unchanged actionlint was not rerun.
+
+Fresh fork listing still exposes only reusable/core workflows; Plugin/Driver
+manual dispatch awaits default-branch installation. Keep PR29 draft/unmerged;
+no hosted GCC/Linux, full target/SDK or physical hardware success claimed.
+Continue the full plugin/core/driver goal with remaining modules/integration.
+
+---
+
+# Local H-100 VFD protocol checkpoint - 2026-10-25
+
+Goal active. Added9 H-100 cases using existing real CORE Modbus/spindle registration
+and EEPROM-backed settings fixtures. Source discovery reads poles/min/max, locks
+reported range and converts2/4-pole frequency units; direction/stop coils, speed
+register writes/clamps, feedback/at-speed, failed discovery retry, deferred reset
+range refresh and absent transport/storage paths execute. Transport replies are
+bounded host register models, not serial hardware/VFD validation.
+
+Shared fixture expansion first gated all37 VFD cases in2.07s:28 existing GS20/
+MODVFD +8 new H100 clean, with1 feedback fixture failure. Source wrapper suppresses
+queries before150ms, so feedback now uses150/300ms; retry control also advances
+to150ms to exercise unready source rather than wrapper suppression. Rechecks found
+normal float limit rounding, resolved using existing VFD0.01RPM comparison policy,
+well below the modeled frequency step. Final feedback passes0.10s; affected retry
+also passes its focused recheck. No production defect/exception/diagnostic allowance
+added. No repeated unchanged global gate during authoring. Current whole VFD/full
+component gates remain due at combined delivery; initial red report is not green.
+
+Actual CORE spindle registration/control and Modbus routing execute. Device I/O,
+NVS, scheduled-reset services and feedback replies are captured boundaries. No
+private spindle pointers/capability mutation or production source edits. H100
+exception modes/other protocols, firmware scheduling and physical timing remain.
+
+VFD suite37 registered, compatible836 authored (822 delivered +5 local BLTouch
++9 H100); no new whole-suite count claim. Header incremental fix and unrun tooltable
+proposals remain local, excluded from passing-case additions. Accumulate related
+work then run combined gate/helpers once before push. Full goal remains active.
+
+---
+
+# Local incremental-header build checkpoint - 2026-10-25
+
+Goal active. Fixed component forwarding-header generation: file(CONFIGURE) writes
+only when content changes, replacing unconditional file(WRITE). Reconfiguring a
+suite no longer touches every forwarded CORE header and rebuilds unchanged cases.
+A new Python integration regression first failed on the original timestamp rewrite,
+then passed4.07s with the fix. It configures twice for each of two CORE paths with
+spaces and switches back, checking stable timestamps and correct include paths.
+The dummy header trees test generation only; no firmware source is substituted.
+
+Real existing BLTouch target was built, reconfigured and rebuilt: Ninja reports
+'no work to do'; its sanitizer/strict case still passes0.09s. No target semantics,
+source lock, production headers or firmware code changed. New helper joins normal
+scripts/test_*.py discovery and requires the existing CMake build dependency on PATH.
+Only this new helper was executed; unchanged prior86 helpers were not rerun yet.
+A broader component gate remains due at the next substantial delivery because
+this shared build helper changed. No new full-suite/coverage/hosted claim.
+
+Compatible authored counts remain827, last delivered822 plus26 separate legacy
+references. Five BLTouch cases and unrun tooltable proposals remain local from
+prior checkpoints; proposals never count. Continue supported module authoring
+with incremental builds and retain the full goal.
+
+---
+
+# Local tool-table compatibility checkpoint - 2026-10-25
+
+Goal active. Authored seven tool-table/VFS scenarios, but original tooltable.c
+cannot compile with pinned current CORE. Independent unchanged-source Clang23
+syntax check confirms tooltable.c452 assigns bool writeTools(tool_data_t *) to
+CORE's bool (*)(tool_data_t *, bool persist) callback. This is separate from
+fixture caller errors, which were corrected to CORE's actual two-argument API.
+No cast, source/header modification or older-CORE fallback conceals rejection.
+
+Scenarios and bounded file backend are preserved UNREGISTERED under
+ tests/proposals/misc_tooltable (README records source pins/contracts). They have
+not executed and are excluded from counts, coverage and known-result labels.
+Random sparse pockets remains an unverified candidate, not a classified defect.
+Original source also warns about uint_fast8_t index against300-byte bound; no
+oversized/malformed-line runtime is executed. Syntax evidence is ignored under
+build-evidence/tooltable-syntax-batch32.{json,log}; original checkouts remain clean.
+
+Removed the tentative default registration completely and reconfigured the
+active misc project; ctest -N -R tooltable confirms0 registered cases. Existing
+suite configuration is restored. This is compatibility evidence/proposal work,
+not new passing unit coverage. BLTouch's five local validated cases remain from
+prior checkpoint. Authored compatible total stays827, last delivered gate822
+plus26 separately validated legacy references. No full gate/hosted claim.
+
+Next: retain tool-table source/API requirement for upstream resolution, continue
+remaining supported I/O/controller workflows and accumulate a substantial batch.
+The full goal remains active; this module mismatch does not block other work.
+
+---
+
+# Local BLTouch optional-provider checkpoint - 2026-10-25
+
+Goal active. Five new cases plus all10 prior BLTouch cases pass focused Windows
+Clang ASan/UBSan1.04s and strict classification:14 clean +1 unchanged fractional-D
+assertion, zero unexpected failures/skips. Original source's no-readback fallback
+remembers commanded angle and suppresses repeated stow/deploy writes and delays.
+Available/unavailable option reporting chains the previous handler and emits the
+correct plugin identity without output changes. Native toolsetter capability
+bypasses automatic deployment while retaining manual commands. Missing prior
+probe-start/completed hooks still permit deploy/stow through the installed hooks.
+
+Fixture choices represent optional driver providers/capabilities assigned before
+plugin initialization, not private plugin state. Actual CORE numeric/delay helpers
+remain unchanged and executing; servo readback/output, port claims, reports and
+tasks are captured host boundaries. No production edits, new exception/diagnostic
+allowance or weakened assertion. Physical servo/relay timing, actual CORE parser/
+controller integration and remaining configurations remain open.
+
+BLTouch15, misc129 and827 compatible are authored totals, not a new full global
+gate. Latest delivered batch31 remains822 compatible plus26 separate legacy
+references. No fresh coverage measurement or hosted/hardware claim; accumulate
+related supported workflows before next combined gate/push. Goal stays active.
+
+---
+
+# Latest component checkpoint - 2026-10-25 (batch31)
+
+Goal active. Corrected an M-code dispatch fixture error and added3 BLTouch option/
+validation cases. Full Windows Clang ASan/UBSan gate was justified by the shared
+contract repair across ATCi/BLTouch/PPI/RGB fixtures:42 compatible suites,822 cases
+=759 clean +63 documented known, zero unexpected failures/skips. Known results
+remain59 correct assertion regressions +4 diagnostic-only cases;3 assertions also
+carry exact diagnostics, counted once. One false ATCi allowance removed; one
+correct BLTouch fractional-D assertion added. No sanitizer allowance added.
+
+IMPORTANT CORRECTION: prior ATCi M960 P0 failure was a harness error, not a
+confirmed upstream defect. CORE gcode.c2349-2355 records consumed word bits and
+4494 restores them before execute. Host helper omitted restoration. Corrected
+helper preserves every assertion; all18 ATCi cases now clean and obsolete exact
+WILL_FAIL/known_bug entry is removed. Earlier checkpoint claims about that defect
+are superseded. PPI/RGB helpers now apply the same consumed-word handoff; their
+registered results remain unchanged. No production source/header changes.
+
+BLTouch S/D/H options work with the faithful handoff. Tests cover high-speed and
+auto-deploy on/off, H reporting, S/R numeric rejections and valid ignored R values.
+Actual D0.5 validation defect remains: D's integer check reads values.s instead
+of values.d, accepts fractional D. Invalid command is never executed. Keep one
+correct BadNumberFormat assertion under exact known_bug with source/removal guide.
+These remain driver/API boundary tests, not actual CORE parser/controller jobs.
+
+Fresh misc selected-source LLVM report:1267/1373 lines92.3%,655/866 branches75.6%,
+122/128 functions across12 files. BLTouch125/138 lines (+24 same configuration).
+Strict coverage classification passes124 misc cases (116 clean +8 known assertions).
+Counter paths max224. Other modules/configurations/hardware remain unverified.
+Exact source locks cover unchanged misc2657119/ATCi671f145/PPI26934c6/RGBdf340905
+and CORE b01f481. Unchanged86 helper/actionlint checks were not rerun.
+
+Unchanged26 legacy serial references retain separate batch24 validation. Latest
+workflow listing remains batch29's reusable/core-only availability; separate
+Plugin/Driver dispatch awaits default installation. Keep PR29 draft/unmerged.
+No hosted GCC/Linux, physical timing or full controller/SDK success claimed.
+Continue remaining modules and integration with the full goal intact.
+
+---
+
+# Latest component checkpoint - 2026-10-25 (batch30)
+
+Goal active. Deliver19 accumulated cases:12 MCP23017 wait/handler and7 BLTouch
+cases. One full Windows Clang ASan/UBSan compatible gate passes42 suites,819 cases
+=756 clean +63 documented known, zero unexpected failures/skips. Known results
+remain59 correct assertion regressions +4 diagnostic-only cases;3 assertions also
+carry exact diagnostics, counted once. No new known result or sanitizer allowance.
+Unchanged26 legacy serial references retain separate batch24 validation.
+
+MCP waits cover level/edge success, timeout, abort, previously disabled IRQ masks
+and registered-handler retention across completion/timeout in mixed/input-only
+builds. Existing edge-filter defect limits independent observation of internal
+mode restoration through callbacks. BLTouch covers remapped servo claim/startup
+stow, no-argument M401/M402 and duplicate commands, probe hooks/select/rejection,
+native-probe bypass, deferred reset stow, BLTEST/BLRESET scheduling/cancellation
+and claim failure. Actual original CORE nuts_bolts numeric/format/delay helpers
+execute; realtime/delay/task/port boundaries remain modeled driver services.
+
+Fresh selected-source LLVM report spans12 misc files:1243/1373 lines90.5%,620/866
+branches71.6%,122/128 functions. BLTouch101/138 lines; expanded denominator differs
+from prior11-file report. Strict coverage classification passes121 misc cases
+(114 clean +7 unchanged known assertions); fresh counter paths max224. Unbuilt
+modules, alternate layouts, BLTouch S/D/R/high-speed/no-readback modes and physical
+servo timing remain open. No whole-plugin/repository coverage claim.
+
+GitHub-resolved Plugins_misc2657119 and CORE b01f481 locks match clean originals.
+No production header/source edits, private state modifications or weakened
+assertions. Unchanged86 helper/actionlint checks were not rerun. Latest workflow
+availability remains batch29's reusable/core-only listing; Plugin/Driver manual
+dispatch needs default-branch installation. Keep PR29 draft/unmerged. No hosted
+GCC/Linux, target linking, controller motion or hardware success claimed. Continue
+remaining modules and actual CORE/driver integration on the same branch.
+
+---
+
+# Local MCP23017 active-handler wait checkpoint - 2026-10-25
+
+Goal active. Four new mixed/input-only cases pass focused Windows Clang ASan/
+UBSan0.27s and strict classification, all clean with zero unexpected failures/
+skips. Existing IRQ_Mode_Change registration/user-port11 survives a successful
+rise wait and a separate wait timeout: GPINTEN remains enabled, descriptor keeps
+its configured mode and a later captured low event reaches the registered handler.
+Matching wait event also delivers normally. Public registration and source IRQ/
+deferred paths execute; no private callback or mode writes are used.
+
+These establish observable enabled-mask/handler retention, not independent proof
+of internal edge-mode restoration: the documented opposite-edge callback defect
+limits what subsequent callback delivery alone can distinguish. Keep correct
+regression assertions elsewhere and do not weaken their known labels. Actual
+CORE scheduling, hardware IRQ timing and transport failures remain untested.
+
+No new exception/diagnostic allowance or production edit. Four authoring cases
+are not a new full gate or coverage report. Misc114 cases,812 compatible authored;
+latest delivered batch29 remains800 plus26 separate legacy references. Together
+with earlier wait cases,12 local cases accumulate toward the next combined batch.
+Continue configuration/module and actual controller integration work.
+
+---
+
+# Local MCP23017 blocking-wait checkpoint - 2026-10-25
+
+Goal active. Eight new blocking-wait cases plus prior17 affected input/IRQ cases
+pass Windows Clang ASan/UBSan1.72s and strict classification:21 clean +4 unchanged
+edge-filter regressions, zero unexpected failures/skips. Original source polls
+for high/low levels, returns immediately for already-matching level, times out
+without input, and exits after public controller abort during realtime polling.
+Both mixed8-bit and input-only16-bit configurations execute these workflows.
+
+Accepted IRQ source callbacks and deferred reads provide matching rise/fall waits;
+completion and timeout restore previously unregistered IRQ mask to disabled.
+After timeout, immediate input reads still work. Host realtime callback supplies
+normal level/IRQ/abort events; delay boundary records finite <=50ms requests and
+poll limits prevent accidental hangs. No private plugin state or invalid IDs.
+This verifies return values/control flow/register restoration, not actual elapsed
+seconds, CORE scheduler behavior, serial reset handling or physical timing.
+
+No production edit, new known result or sanitizer allowance. Config/inversion
+callback ABI, active-handler restoration, transfer failure/uninitialized reads
+and hardware remain open. Misc110 cases;808 compatible authored, not a fresh
+full global gate. Latest delivered batch29 remains800 plus26 separate legacy
+references. No new coverage measurement; accumulate next supported workflows
+before combined validation/push. Original checkouts remain unchanged.
+
+---
+
+# Latest component checkpoint - 2026-10-25 (batch29)
+
+Goal active. Deliver23 accumulated MCP23017 cases across ENABLE1 mixed8/8,
+ENABLE2 output-only16 and ENABLE3 input-only16. One full Windows Clang ASan/UBSan
+compatible gate passes42 suites,800 cases =737 clean +63 documented known, zero
+unexpected failures/skips. Known results now59 correct assertion regressions +4
+diagnostic-only cases;3 assertions also carry exact diagnostics, counted once.
+Unchanged26 legacy serial reference cases retain separate batch24 validation.
+
+Output bit/packet ordering, duplicate writes, descriptors/nonzero bank offsets,
+startup failures, input samples/enumeration and mixed isolation execute. Polling-
+only driver capability rejects IRQ registration/edge waits without transport work.
+Accepted IRQ callback queues original deferred reads; valid flags/capture data
+route to distinct user ports, empty flags do not dispatch and detach before queued
+execution prevents callback delivery. IRQ fixture holds one deferred task at a
+time; it does not test bursts, actual CORE scheduling or MCU electrical interrupts.
+
+Four correct known assertions cover rising/falling in mixed/input-only modes.
+Matching edge passes; opposite edge still increments callback count because source
+clears the flag then calls handler unconditionally. Keep exact WILL_FAIL/known_bug
+entries, source/removal guide and correct assertions. No new sanitizer allowance,
+unsafe data/ID injection or production edits. Blocking waits/config ABI, transport
+failure/local uninitialized reads and hardware remain untested/source-reviewed.
+
+Fresh selected-source LLVM report spans11 misc files:1119/1235 lines90.6%,552/756
+branches73.0%,109/114 functions. Expanded denominator differs from prior10-file
+report and excludes unbuilt modules/configurations; no whole-plugin claim.
+Strict coverage classification passes102 misc cases (95 clean +7 known assertions),
+fresh counter paths max224. Exact source details remain in ignored batch29 reports.
+
+GitHub-resolved Plugins_misc2657119 and CORE b01f481 locks match clean originals.
+Unchanged86 helper/actionlint checks were not rerun. Fresh fork workflow listing
+still exposes only reusable/core entries; Plugin/Driver manual dispatch awaits
+default-branch installation. Keep PR29 draft/unmerged; no hosted GCC/Linux,
+actual controller/target linking or physical hardware success claimed. Continue.
+
+---
+
+# Local MCP23017 mixed/input checkpoint - 2026-10-25
+
+Goal active. Nine new cases pass Windows Clang ASan/UBSan0.55s and strict
+classification, all clean with zero unexpected failures/skips. Original ENABLE1
+mixed8-input/8-output and ENABLE3 input-only16 configurations execute documented
+IOCON/direction/interrupt-disable setup, mandatory initial read, immediate sampling
+of zero/all-high/alternating GPIO patterns through both bank and descriptor APIs,
+and A/B descriptor enumeration. Input/output isolation retains independent mixed
+bank values. Input endpoints cover every valid bit and reject the unavailable port.
+
+Fixture driver declines IRQ ownership. Source advertises IRQ_Mode_None, rejects
+interrupt registration/edge waits without I2C writes or realtime polling, and
+preserves normal immediate sampling. This is supported polling-only behavior,
+not IRQ delivery coverage. Original IRQ/deferred code compiles but task dispatch,
+blocking polls/delays and settings-config calls fail fast if unexpectedly invoked.
+Successful reads initialize exactly the requested1/2 bytes; failed receive paths
+remain source-only rather than executing uninitialized local read behavior.
+
+No source edits, private state changes, new known result or sanitizer allowance.
+Actual CORE aggregation/I2C SDK/electrical registers, IRQ/wait/config and transport
+failure behavior remain open. Misc94 cases,792 compatible authored; latest
+delivered batch28 remains777 plus26 separate legacy references. Together with
+output-only cases,15 local MCP cases accumulate for next combined gate/push.
+No new full gate or coverage measurement; continue supported IRQ/controller work.
+
+---
+
+# Local MCP23017 output-bank checkpoint - 2026-10-25
+
+Goal active. Six new MCP23017_ENABLE2 output-only cases pass Windows Clang
+ASan/UBSan0.35s and strict classification, all clean with zero unexpected failures/
+skips. Original mcp23017.c executes IOCON/direction/initial GPIO writes,16-bit
+GPIO A/B packet ordering, each output bit's preservation/clearing, duplicate write
+suppression, public descriptors/function/description and native enumeration.
+Bus-start/probe failure registers no bank and performs no writes. Nonzero pin_base2
+descriptor reads/writes correctly use local id for both port0 and15; no PCA-style
+offset failure occurs in these controls. Only valid descriptor IDs are used.
+
+One original output-only unused direction argument receives a source-scoped
+compiler warning option; no production source edit or runtime sanitizer allowance.
+I2C and ioports registration are bounded public boundary models, not actual CORE
+aggregation or MCU SDK/device execution. Mixed8-input/8-output and input-only16
+configurations, input IRQ/wait/error recovery, inversion/config ABI and actual
+hardware remain open. No new coverage or full-suite gate for this authoring group.
+
+Misc85 registered cases;783 compatible is authored, not newly gated. Latest
+delivered batch28 remains777 compatible plus26 separate legacy references.
+Keep accumulating supported MCP input/transport and remaining modules before the
+next combined validation/push. Original checkouts remain unchanged; goal active.
+
+---
+
+# Latest component checkpoint - 2026-10-25 (batch28)
+
+Goal active. Deliver16 accumulated cases:11 HC595 SPI and5 deferred event-control/
+startup cases. One full Windows Clang ASan/UBSan compatible gate passes42 suites,
+777 cases =718 clean +59 documented known, zero unexpected failures/skips. Known
+results remain55 correct assertion regressions +4 diagnostic-only cases;3 assertions
+also carry exact diagnostics, counted once. No new known result or sanitizer
+allowance. Unchanged26 legacy serial references retain separate batch24 validation.
+
+HC5951/2/3-chip configurations execute8/16/24 bits, wire byte ordering, duplicate
+successful-write suppression, bus selection failure/retry, startup failure and
+public descriptors. Event controls execute via bounded FIFO with source-created
+indexes0..3; optional stop/single-block/block-delete deferred outputs, unrelated
+signal filtering and disabled binding before dispatch pass. No-port/allocation
+startup failures preserve original hooks and queue warning; two available ports
+bound settings iteration, coolant output mapping and reset. Remaining4-chip
+highest-bit shift/config ABI and full CORE scheduler/hardware remain untested.
+
+Fresh LLVM selected-source report spans10 misc files:887/921 lines96.3%,476/607
+branches78.4%,92/95 functions. Eventout202/204 lines,111/127 branches; same-config
+line increase33 from batch27. HC59585/96 lines,28/44 branches across1/2/3 chips.
+Expanded total denominator differs from prior9-file report; unbuilt modules and
+other configurations remain excluded. Strict coverage classification passes79
+misc cases (76 clean +3 unchanged known assertions), fresh counter paths max224.
+
+GitHub-resolved Plugins_misc2657119 and CORE b01f481 locks match clean originals.
+No production source/header edits, private state changes or new diagnostic waiver.
+Unchanged86 helper/actionlint checks were not repeated. Port/NVS/scheduler/SPI
+boundaries are host models; no physical power-on state, SPI timing or controller
+motion claim. Latest workflow availability remains batch26's core/reusable-only
+listing; manual Plugin/Driver dispatch awaits default-branch installation.
+Keep draft PR29 unmerged. Continue remaining modules and actual integration.
+
+---
+
+# Local HC595 SPI output checkpoint - 2026-10-25
+
+Goal active. Eleven new cases pass focused Windows Clang ASan/UBSan0.71s plus
+strict classification, all clean with zero unexpected failures/skips. Original
+hc595.c executes one/two/three-chip builds:8/16/24 output bits, single-byte versus
+multi-byte big-endian transmission, each bit's preservation and clearing,
+suppression of duplicate successful writes and retry after SPI selection failure.
+Pin metadata/ports_id, public descriptor/function/description updates, bounds,
+failed SPI startup and native enumeration chaining execute. Default4MHz and
+explicit1MHz slave settings plus CS pin7 are checked at the driver boundary.
+
+Original source performs no startup shift transfer; tests assert registration/
+software state only, not physical power-on outputs. Four-chip highest-bit signed
+shift remains source-only and is not deliberately executed. Nonzero descriptor
+bank offsets, config/inversion callback ABI, SPI write/deselect failures, optional
+CS-port and physical timing remain open. No source edits, private state changes,
+new known result or sanitizer allowance. SPI/port registration remain bounded
+host models, not actual CORE aggregator or MCU SPI SDK execution.
+
+Misc76 cases,774 compatible authored; latest delivered batch27 remains761 plus26
+separate legacy references. This adds11 to the2 local event-control cases for13
+accumulated cases. No fresh whole-suite gate, coverage, hosted or hardware claim.
+Continue substantial related work before the next combined validation/push.
+
+---
+
+# Local deferred event-control checkpoint - 2026-10-25
+
+Goal active. Two new control workflows plus all7 existing event-output cases pass
+Windows Clang ASan/UBSan0.70s and strict classification:9 clean, zero unexpected
+failures/skips. Original signal_out executes from a bounded FIFO boundary with
+only source-created event indexes0..3; queue admission verifies uintptr_t values
+before storing them. Optional-stop-disable, single-block and block-delete flags
+update outputs on dispatch, preserve isolation and chain the previous control hook.
+Cycle-start alone schedules no event work. Disabling a binding before dispatch
+prevents its pending output change. No injected private callback/index or unsafe
+pointer dereference, production edit or sanitizer allowance.
+
+The original pointer/integer cast paths now execute only for validated tiny
+indices in this host configuration; do not infer arbitrary pointer portability.
+The queue remains a simulated scheduler, not actual CORE task execution. Public
+controller flags and driver signals are host event inputs, not a real serial/job
+or physical-input workflow. Trigger getter callback ABI and other layouts still
+need source review. No fresh coverage measurement or full global gate for2 cases.
+Misc65 cases,763 compatible authored; delivered batch27 remains761 plus26 separate
+legacy references. Keep accumulating supported work before next combined push.
+
+---
+
+# Latest component checkpoint - 2026-10-25 (batch27)
+
+Goal active. Deliver21 accumulated cases:14 probe-relay and7 event-output cases.
+One full Windows Clang ASan/UBSan compatible gate passes42 suites,761 cases =702
+clean +59 documented known, zero unexpected failures/skips. Known results remain
+55 correct assertion regressions +4 diagnostic-only cases;3 assertions also carry
+exact diagnostics and are counted once. No new known result or sanitizer allowance.
+Unchanged26 legacy serial reference cases retain separate batch24 validation.
+
+Probe-relay selection covers native/relay combinations, exclusive levels/default
+selection, delay requests, disabled/failed ports, saved/deferred mapping, reports
+and absent prior selector. Event outputs cover spindle/laser/at-speed, coolant,
+state/reset, trigger rebind, settings iteration/early-stop/normalization and
+saved/deferred mapping. Claimed/missing/disabled ports reject without unintended
+output; valid remaining mapping still responds. Original CORE strgetentry executes.
+
+Fresh LLVM selected-source coverage spans9 misc files:769/825 lines93.2%,429/563
+branches76.2%,81/85 functions. Eventout169/204 lines,92/127 branches; probe relays
+91/94 lines,60/65 branches. Expanded denominator differs from prior7-file report;
+these numbers exclude unbuilt modules and alternative layouts. No whole-plugin
+coverage claim. Fresh counter paths max224; strict coverage classification passes
+63 misc cases (60 clean +3 unchanged known assertions).
+
+Deferred control-signal tasks remain fail-fast boundaries; pointer-width casts
+and trigger getter ABI need review before invocation. MinGW's supported CRT
+NO_OLDNAMES option avoids its optional strset alias clash; no production header/
+source edit, rename or bypass. Port configuration, scheduler, NVS, debounce and
+outputs are host models; actual controller/parser/probe motion/hardware remain.
+
+GitHub-resolved Plugins_misc2657119 and CORE b01f481 locks match clean originals.
+Unchanged86 source/report helpers and actionlint were not rerun. Batch26 fork
+workflow listing exposes only reusable/core workflows; separate Plugin/Driver
+manual dispatch awaits default-branch installation. Keep PR29 draft/unmerged;
+no hosted/target/hardware success claimed. Continue remaining modules/integration.
+
+---
+
+# Local event-output callback checkpoint - 2026-10-25
+
+Goal active. Four new workflow cases pass focused Windows Clang ASan/UBSan0.33s
+and strict classification, all clean with zero unexpected failures/skips. Original
+eventout.c restores settings, resolves public port descriptors during startup and
+registers native hooks. Spindle/laser enabled outputs stay separate; at-speed has
+its own output. Mist/flood masks remain independent; state outputs track hold,
+alarm and homing/cycle/jog, with duplicate state notifications suppressing extra
+writes while chaining the previous hook. Reset clears non-alarm bound outputs
+and preserves alarm indication. Live mist-to-flood-to-ignore rebinding preserves
+single hook ownership and original coolant calls; reports chain.
+
+Original CORE strgetentry executes from unchanged strutils.c. MinGW's supported
+NO_OLDNAMES option disables its optional CRT strset alias, avoiding a name clash
+with CORE's unrelated string API; no macro renaming or header/source bypass.
+Signed-comparison warnings in original strutils and pointer/integer-width cast
+warnings in original eventout are source-scoped. Deferred control-signal tasks
+are unexecuted: task_add_immediate fails fast. No runtime sanitizer suppression
+or new known allowance. Unused ftoa link dependency is a fail-fast boundary.
+
+Port registry/configuration, startup scheduling and outputs are captured host
+boundaries; native spindle descriptors are host event inputs, not executed CORE
+spindle registration/parser/motion. Remaining event settings, control toggles,
+other slot counts and real controller/hardware remain open. Misc60 cases;
+758 compatible is authored, not a new full global gate. Latest delivered batch26
+remains740 compatible plus26 separate references. Accumulate next group before
+combined delivery. Original source checkouts remain unchanged.
+
+---
+
+# Local probe-relay selection checkpoint - 2026-10-25
+
+Goal active. Fourteen new cases pass focused Windows Clang ASan/UBSan plus strict
+classification:11 cases0.83s +3 added controls0.25s, all clean with zero unexpected
+failures/skips. Original probe_relays.c registers settings, restores/persists port
+assignments and wraps hal.probe.select. Tests select toolsetter/second/default,
+check output exclusivity and50ms debounce requests, retain existing native probe
+selection, handle absent previous selector and reject disabled relay selection
+without changing the active relay or requesting another delay.
+
+Saved reversed port mapping loads before first hook installation. Live settings
+changes/save retain currently claimed mapping, matching reboot-required settings.
+Both disabled ports and failed claims leave the prior selector intact. No probe,
+both native probes, no AUX ports and failed NVS allocation preserve existing hooks;
+reports/setting availability chain correctly. Native-state reader fails fast if
+unexpectedly called. No private state, source edits or new known allowances.
+
+Port configuration/claims, NVS, output levels and delays are captured driver/API
+boundaries. Actual CORE port aggregation, G65/P5 routing, probe motion, physical
+relay settling and target builds remain untested. Repeated settings load after
+hook installation needs ownership review: source saves current hal.probe.select
+again; these cases do not force recursion. Original production checkout clean.
+Misc suite56 registered;754 compatible is authored, not a new full global gate.
+Latest delivered batch26 remains740 compatible +26 separate reference cases.
+Accumulate next supported module work before combined validation/push; no new
+coverage/hosted/hardware claim. Goal remains active.
+
+---
+
+# Latest component checkpoint - 2026-10-25 (batch26)
+
+Goal active. Deliver18 accumulated cases:8 PCA9654E output-bank and10 per-axis
+homing pull-off. One full Windows Clang ASan/UBSan compatible gate passes42 suites,
+740 cases =681 clean +59 documented known, zero unexpected failures/skips. Known
+results now55 correct assertion regressions +4 diagnostic-only cases;3 assertions
+also carry exact diagnostics, counted once. The26 legacy serial reference cases
+retain separate unchanged batch24 validation, not included in740.
+
+PCA tests cover startup/bus/probe failures, all8 physical output bits, duplicate
+successful writes, descriptor boundaries and native enumeration/function/description
+chaining. Retain two correct known descriptor bank-offset assertions: ordinary
+port0 writes bit0, descriptor0 with pin_base2 reads/writes bit2 instead. No unsafe
+shift, invalid ID, private state edit or new sanitizer allowance. Registration is
+modeled from CORE's actual pin_base assignment, not full aggregator execution.
+
+Pull-off tests cover three/six-axis registered settings, defaults, save/load,
+per-axis limits requests, global inherited/default changes and hook failures/
+chaining. Configured Y/Z/A/B/C defaults and persistence execute. Actual settings
+dispatch, limits/planner/stepper implementation and physical homing are boundaries.
+
+One fresh selected-source LLVM report across7 instrumented misc files:509/527
+lines96.6%,277/371 branches74.7%,54/55 functions. Pull-off74/74 lines,29/31 branches;
+PCA86/97 lines,29/42 branches; ADC49/50 and DAC62/63 lines. This excludes unbuilt
+misc modules and alternate configurations: not whole-plugin/repository coverage.
+Fresh counter paths max224. Next largest source groups include event outputs,
+probe relays and MCP23017; PCA inversion ABI and failure/retry contract stay open.
+
+GitHub-resolved Plugins_misc2657119 and CORE b01f481 locks match clean originals.
+Unchanged86 reporting/source helpers and actionlint were not repeated. Latest fork
+workflow listing still contains only Reusable host tests and Core tests; separate
+Plugin/Driver dispatch needs default-branch installation. No hosted/target/hardware
+success or merge claimed. Continue remaining modules and controller integration.
+
+---
+
+# Local per-axis homing pull-off checkpoint - 2026-10-25
+
+Goal active. Ten new cases pass focused Windows Clang ASan/UBSan and strict
+classification:7 three-axis cases0.42s +3 six-axis cases0.25s, all clean with
+zero unexpected failures/skips. Original homing_pulloff.c registers settings,
+restores first-boot defaults, updates per-axis limits requests, persists/reloads
+all axes and retains hook chains. Global setting changes update matching inherited
+distances while preserving custom axes; unchanged global value avoids extra writes.
+Explicit restore uses current global default plus configured axis defaults.
+Allocation/registration failure leaves existing hooks intact. Reports chain.
+
+Six-axis builds cover Y/Z/A/B/C compile-time defaults and each axis's update/
+persistence independently. X12 is the pinned source's own unconditional default,
+not a hardware recommendation. Public settings-family decoding, NVS and limits
+requests are host boundaries; actual CORE settings dispatcher, limits machinery,
+planner/stepper homing and physical pull-off are NOT executed. No production
+source edit, new exception or diagnostic allowance; original checkout clean.
+
+Misc suite42 cases;740 compatible is authored, not a fresh full global gate.
+Latest delivered batch25 remains722 compatible +26 separate legacy references.
+Together with the local PCA group this accumulates18 cases for the next combined
+delivery. No new coverage/hosted/hardware claim. Continue remaining module and
+controller integration work on the existing branch.
+
+---
+
+# Local PCA9654E output-bank checkpoint - 2026-10-25
+
+Goal active. Eight new cases pass focused Windows Clang ASan/UBSan0.63s and
+strict classification:6 clean +2 documented correct descriptor-offset regressions,
+zero unexpected failures/skips. Original module executes startup configuration/
+inversion/output register order, bus/probe failure, all8 output bits, suppression
+of duplicate successful writes, valid descriptor read/write, public boundary
+rejection and native enumeration/function/description chaining.
+
+Two modeled preceding outputs assign pin_base2 through ioports_add_digital, per
+actual CORE registration contract. Descriptor0 then reads bit2 rather than bit0,
+and descriptor write changes bit2 rather than bit0. Retain both correct assertions
+under exact WILL_FAIL/known_bug; zero-base controls pass. No production edits,
+private pointer/ID changes, unsafe shifts or sanitizer allowance. Actual CORE bank
+aggregation is not executed by this boundary fixture. Inversion configuration's
+callback ABI and I2C-failure/cache semantics remain source review, not claimed.
+
+Misc suite now32 cases;730 compatible is authored, not a new full global gate.
+Latest delivered batch25 remains722 compatible +26 separately validated legacy
+serial references. No new coverage measurement or hosted/hardware success.
+Accumulate remaining supported module work before another combined gate/push.
+
+---
+
+# Latest component checkpoint - 2026-10-25 (batch25)
+
+Goal active. Deliver23 accumulated cases:12 fan persistence/configuration and11
+MCP3221 ADC/MCP4725 DAC cases. One full Windows Clang ASan/UBSan compatible gate
+passes42 suites,722 cases =665 clean +57 documented known, zero unexpected
+failures/skips. Known results now53 correct assertion regressions +4 diagnostic-
+only cases;3 assertions also carry exact diagnostics and are counted once.
+The26 legacy serial reference cases retain separate batch24 validation, unchanged.
+
+New analog cases run original registered callbacks with bounded synchronous I2C:
+startup/probe failures,12-bit sample/packet boundaries, initial DAC state, bank
+metadata/remapping descriptions and native enumeration chaining. DAC failed send
+correctly retains cached output but returns true; keep correct false assertion
+in exact WILL_FAIL/known_bug with source/removal guide. Recovery write succeeds.
+No new sanitizer allowance, production source edit or unsafe receive-failure run.
+ADC failed receive leaves local bytes uninitialized by source review; that path
+stays unexecuted pending upstream contract/repair. Host registration is captured,
+not actual CORE bank aggregation. Physical I2C/device behavior stays unverified.
+
+Fan21 cases now include one/two/three/four configurations, saved port/delay first
+load and delayed shutdown cancellation by reset/new command. Existing setter
+diagnostic unchanged. Fresh batch25 selected one/two/four coverage before adding
+three-fan builds:184/190 lines,102/119 branches,23/24 functions. No new analog or
+three-fan coverage measurement. Final descriptor assertions tightened after the
+global gate and both affected cases pass0.17s; strict classification clean.
+
+GitHub-resolved source locks match clean unchanged Plugins_misc2657119, fans
+c5c3613 and CORE b01f481. Unchanged86 helper/actionlint checks were not rerun.
+Draft PR29 remains unmerged; no hosted GCC/Linux or target/hardware success claim.
+Continue remaining modules and actual controller integration on this branch.
+
+---
+
+# Local fan configuration checkpoint - 2026-10-25
+
+Goal active. Nine new cases build original fans.c with FANS_ENABLE1/3/4 and pass
+focused Windows Clang ASan/UBSan0.68s plus strict classification:9 clean, zero
+unexpected failures/skips. Each configuration checks its actual registered port
+settings, boolean/bitfield format, M106 physical mapping, fan count/report mask,
+stored disabled last port and shutdown/reset across every configured output.
+Only valid public fan indexes are used; no private state or production edits.
+
+Host output storage now bounds four pins and respects advertised port counts.
+After this shared fixture change, the initial18-case fan gate passed1.23s and
+strict classification17 clean +1 unchanged spindle-setter diagnostic. The later
+three-fan expansion changes only case registration/report expectations; all9
+configuration cases then passed. The original diagnostic source line is untouched.
+
+One fresh local coverage measurement, before adding three-fan configuration,
+covers selected one/two/four-fan builds:184/190 lines,102/119 branches,23/24 functions.
+Counter paths max237; original fan pin c5c3613 remains clean. Do not describe this
+as three-fan measurement or whole-repository coverage. Current fan suite21 cases;
+711 compatible cases is authored, not a new completed global gate. Batch24 remains
+latest delivered699 compatible +26 separate reference cases. Accumulate further
+work before combined delivery; actual settings/parser/scheduler, physical outputs
+and hosted execution remain unverified.
+
+---
+
+# Local fan persistence and delayed-shutdown checkpoint - 2026-10-25
+
+Goal active. Three new fan cases pass focused Windows Clang ASan/UBSan0.27s
+and strict classification:3 clean, zero unexpected failures/skips. Saved port
+remapping/delay survive live-setting changes before the first registered load;
+program completion then uses the persisted physical mapping and7500ms delay.
+Driver reset cancels pending shutdown, clears both outputs and permits a later
+fan cycle. M106 in check mode preserves the timer; real execution cancels it,
+and the next program end schedules a fresh shutdown. Original registered plugin
+callbacks execute; scheduler/NVS/physical outputs remain bounded host models.
+
+No fixture/production source edit or new known allowance. Existing spindle setter
+diagnostic case is untouched. Fan suite now12 registered cases; compatible702 is
+an authored total, not a newly completed global gate. Latest delivered batch24
+remains699 compatible plus26 separate reference cases. Accumulate more supported
+work before the next full combined gate/push. Hardware/hosted checks remain open.
+
+---
+
+# Latest component checkpoint - 2026-10-25 (batch24)
+
+Goal active. Combined pre-push Windows Clang ASan/UBSan gate passes all42
+current-compatible suites:699 cases =643 clean +56 documented known results,
+zero unexpected failures/skips. Separate full legacy reference gates pass:
+PSoC9 =8 clean +1 known; TI shared serial17 =15 clean +2 known. These26 cases
+remain outside699 and the older Simulator VFS reference evidence.
+
+Nine accumulated cases add actual070f80 CORE stream connection/suspend/ACK/
+backup/restore under explicit char modes and optional TI UART7 public workflows.
+Correct signed-char ACK and secondary descriptor instance assertions remain exact
+known_bug regressions; PSoC capacity regression remains. No new sanitizer allowance,
+production source edit, cast or fallback. UART7 explicitly enables RX before IRQs;
+physical startup policy and MCU default char signedness are not inferred.
+
+Fresh selected-source LLVM coverage: PSoC59/59 lines,14/16 branches,13/13 functions;
+TI primary plus optional secondary168/173 lines,48/60 branches,23/24 functions.
+TI's expanded configuration changes the denominator from primary-only batch23;
+these percentages are not a same-configuration gain or whole-repository coverage.
+Original candidate/reference CORE/SDK pins remain unchanged. Existing86 helper
+and actionlint checks from batch23 were not repeated: no helper/workflow changes.
+Physical hardware, target linking, full task/protocol execution and remaining
+components stay open. Draft PR29 remains unmerged; no hosted success claimed.
+
+---
+
+# Local TI secondary-UART checkpoint - 2026-10-25
+
+Goal active. Added5 source-supported SERIAL2_MOD/UART7 cases:4 clean +1 correct
+metadata regression. Full affected TI legacy reference suite17 cases passes
+Windows Clang ASan/UBSan1.28s and strict classification:15 clean +2 known, zero
+unexpected failures/skips. Existing current-compatible TM4C12314 cases also pass
+0.69s after shared SDK fixture expansion (13 clean +1 unchanged known result).
+No new sanitizer allowance, CORE/SDK/driver edits or weakened assertion.
+
+Dual-port bounded SDK model separates UART0/UART7 masks/inputs/handlers and checks
+original GPIOA/PC4/PC5/UART clock/pin constants. Tests cover independent RX,
+flush/cancel/wrap, full-ring realtime, separate installed handlers/public enqueue,
+and secondary mute/re-enable without affecting primary RX. Secondary TX remains
+unsupported/fail-fast. Every RX control explicitly enables via disable_rx(false);
+serial2Init startup enablement is not force-classified. Returned secondary
+io_stream_t reports0 while registered property advertises1; retain correct
+instance1 assertion under exact known_bug, with source/removal guide in suite docs.
+
+TI now17 reference cases; PSoC9 pending reference cases remain from prior local
+checkpoint. No addition to current-compatible699-case delivered baseline. A short
+owned build path avoids the long Windows object path warning; no build deletion
+or restart of live work. Original sources/dependency checkouts remain clean.
+No new coverage measurement, global gate or hosted result. Keep accumulating
+before next combined delivery; full MCU/parent/SDK startup and hardware remain.
+
+---
+
+# Local legacy CORE stream checkpoint - 2026-10-25
+
+Goal active. Four new reference cases pass focused Windows Clang ASan/UBSan and
+strict classification:3 clean +1 correct signed-char portability assertion, zero
+unexpected failures/skips. TI adds handler lifecycle and actual legacy CORE
+registration/open/connect/suspend under explicit signed/unsigned char builds;
+PSoC adds unsigned primary connection/suspend/backup/restore. TI3 cases0.22s;
+PSoC1 case0.08s. No source copies/edits, private ring writes or diagnostic allowance.
+
+Original070f80 CORE's char callback cannot match CMD_TOOL_ACK0xA3 under signed-char:
+0 acknowledgements rather than1. Correct assertion retained in one exact known_bug;
+identical unsigned control accepts ACK and restores original queued input. This
+establishes a host compiler-character portability difference, not an unspecified
+MCU default or physical board failure. Existing PSoC capacity regression remains.
+PSoC now9 and TI shared serial12 registered reference cases, separate from all
+current-compatible totals. The prior delivered baseline remains batch23.
+
+One small shared hardware-independent boundary file supplies unused report/task
+stubs that fail fast; original CORE stream.c executes. Physical UART/FIFO/IRQ,
+full protocol/task execution and SDK firmware builds remain untested. Shared
+fixture has explicit LEGACY_CORE_STREAM branches only for these new targets.
+No new global gate/coverage/hosted claim; accumulate before combined delivery.
+
+---
+
+# Latest component checkpoint - 2026-10-25 (batch23)
+
+Goal active. Deliver two new explicit fixed-CORE legacy reference suites plus
+Thermistor normal first boot. One complete Windows Clang ASan/UBSan compatible
+gate:42 suites,699 cases =643 clean +56 documented known results, zero unexpected
+failures/skips. Existing52 correct assertion regressions +4 diagnostic-only cases
+remain;3 assertions also carry exact diagnostics, counted once. Separate reference
+gates: PSoC8 =7 clean +1 correct free-capacity regression (0.45s); TI shared serial9
+clean (1.46s). These17 reference cases are NOT added to compatible699 or any older
+Simulator VFS reference count. No production edits or new sanitizer allowance.
+
+PSoC uses its actual documented070f80 CORE gitlink with declaration-only generated
+UART boundaries; no Cypress SDK claim. New shared serial runs original6adcc848
+primary UART0 with real Tiva header mirror and old CORE types. It is not archived
+TM4C1294 parent shared3e7873 or an MSP432E SDK/parent build. Existing SDK host
+fixture reused with explicit API-signature/metadata branches; current TM4C14
+cases pass the full compatible gate. Shared reference tests cover initialization,
+FIFO/wrap/cancel, full-ring realtime, queued TX/backpressure/recovery, RX disable
+preserving TX and public baud/duplicate-claim rejection. Actual legacy CORE stream
+execution and suspension remain boundaries. Current-CORE syntax rejection for
+both modules recorded without aliases or fallback. SDK/firmware/hardware untested.
+
+Source-only legacy dependency now has shared descriptive key core_20250518_reference;
+manifest choices reject core_ref overrides and exclude dependencies from runnable
+suites. Regression coverage verifies both plans and avoids parent substitution.
+All86 helper checks pass9.465s; actionlint/whitespace pass. New reference choices
+remain subject to default-branch workflow installation; no hosted pass claimed.
+
+Fresh local LLVM: PSoC57/59 lines96.6%,14/16 branches87.5%,12/13 functions;
+TI serial92/108 lines85.2%,31/42 branches73.8%,10/15 functions, both explicit
+reference configurations. Thermistor138/139 lines99.3%,69/74 branches93.2%,12/12
+functions adds1 current-compatible exercised line via real missing-NVS first load.
+Reference coverage never implies current compatibility or whole repository gain.
+Fresh counter paths max216; strict source locks match clean originals. CORE current
+b01f481 and reference070f80 stay separate; Tiva SDKc23bf8ba, PSoCc9d72125,
+shared6adcc848 and Thermistor4fae94b9 locked exactly in ignored build-evidence.
+
+Keep existing PR29 draft/unmerged. MSP430 SDK/compiler investigation remains
+source-only evidence; actual16-bit target runtime, remaining modules and physical/
+controller validation remain open. No goal completion claimed.
+
+---
+
+# Local reference-handler/SDK checkpoint - 2026-10-25
+
+Goal active. Added one PSoC legacy-reference realtime handler lifecycle case:
+public enqueue and RX callbacks reach the replacement, direct rejected input is
+not queued, restoration recovers normal filtering and ordered RX. Focused Windows
+Clang ASan/UBSan1/1 passes0.08s with strict classification;8 reference cases now
+registered. No new allowance, production edit or compatible-suite count change.
+Keep reference results separate from batch22's698 current-compatible baseline.
+
+MSP430 SDK investigation located/downloaded official TI support package1.207,
+verified SHA256 and inspected original F5529/iomacros headers. Word registers use
+target-width unsigned int and assembler-bound addresses; native host replacement
+would not establish the16-bit target ABI. Installed Clang backend inventory has no
+MSP430 target. Archive/source metadata and compiler target list are saved ignored
+under build-evidence; no toolchain installer executed. Exact provenance/remaining
+compiler boundary are in COMPONENT_TODO. MSP430 runtime remains unclaimed.
+
+PSoC reference workflow/plan helper checks remain last85 pass from prior checkpoint;
+unchanged scripts/workflows were not rerun. No full compatible gate/coverage/hosted
+result; accumulate pending reference/first-boot work before combined delivery.
+
+---
+
+# Local legacy-reference/first-boot checkpoint - 2026-10-25
+
+Goal active. PSoC5 now has an explicit registered Driver-tests reference choice
+with fixed documented CORE070f80 dependency in deps/core-20250518. Seven original
+serial-source cases pass Windows Clang ASan/UBSan0.50s with strict classification:
+6 clean +1 correct free-capacity assertion, zero unexpected failures/skips.
+Candidatec9d721259783ca578ee1b0c3f6111839610c26a4 and reference CORE API-match clean
+originals; actual driver gitlink confirms the pin. Current CORE b01f481 unchanged
+serial syntax check rejects historical callback signatures. No type aliases or
+production edits; no automatic legacy fallback. These seven results are separate
+from42 current-compatible suites / batch22's698-case delivered baseline.
+
+Reference uses declaration-only generated UART symbols with bounded FIFO/TX/IRQ
+host callbacks; no actual Cypress SDK or UDB/firmware claim. Actual legacy CORE
+stream execution/suspend, driver.c/NVS and hardware remain untested. Dependency
+and forwarding headers are system includes; fixture warnings remain strict.
+One correct RX free-capacity assertion retains31 usable bytes versus32 reported;
+separate normal capacity/full-ring realtime controls pass. No diagnostic allowance.
+
+Thermistor also adds one ordinary missing-NVS first-boot case, focused1/1 pass0.09s:
+normal first load restores/persists disabled defaults once, claims/reads no sensor
+and keeps the existing report chain. No repeated-load recursion invoked.
+Thermistor now18 registered cases, pending combined delivery/measurement.
+
+Manifest/Driver workflow expose only the reference test suite; fixed CORE is
+source-only and not selectable, core_ref overrides reject. Regression tests lock
+that distinction and preserve ordinary candidate/current-CORE selection. All85
+reporting/source-plan helpers pass9.751s; actionlint and whitespace pass. No new
+full compatible gate, coverage or hosted result; accumulate before next delivery.
+
+---
+
+# Latest component checkpoint - 2026-10-25 (batch22)
+
+Goal active. Combined11 new plugin settings/configuration cases: Interlock6,
+PneumaSeal3 and Thermistor2. One complete Windows Clang ASan/UBSan gate:42
+compatible suites,698 cases =642 clean +56 documented known results, zero
+unexpected failures/skips. Known results remain52 correct expected assertions
+plus4 diagnostic-only cases;3 assertion cases also carry exact diagnostics and
+are counted once. No new allowances, weakened assertions, CORE or plugin edits.
+Strict classification ran every suite. Unchanged84 reporting helpers last passed
+batch17; unchanged workflows not relinted. Whitespace passes.
+
+Fresh local LLVM selected-source coverage: Interlock185/185 lines100%,72/84
+branches85.7%,23/23 functions (+12 lines); PneumaSeal140/141 lines99.3%,43/52
+branches82.7%,26/26 functions (+12 lines); Thermistor137/139 lines98.6%,68/74
+branches91.9%,12/12 functions (+4 lines). Adds28 exercised lines; fresh counter
+paths max215 characters. Full physical safety, whole repositories, controller
+shutdown, settings-parser validation and actual scheduler behavior not established.
+
+Interlock covers registered readback/save/load/restore, inverse-slot disable,
+direction/polarity, default4/4 and supported1/2 plus2/1 forward/inverse layouts.
+PneumaSeal covers registered getters, persisted timeout/mask values, restore and
+pending port changes without abandoning/reclaiming the remapped active output.
+Thermistor covers port availability/getter/reboot flag, pending disable, restore
+of resistance/calibration/alarm defaults and continued monitoring on the existing
+claimed port. Repeated Thermistor load-hook ownership and invalid-sample alarm
+counting remain unclassified; no recursive failure or arbitrary threshold contract
+is forced. Host ports, alarm/reset requests, NVS and timing remain boundaries.
+
+API source locks match clean originals: Interlock5893ea35645c334ec96333ccd0519eac03128ee6;
+PneumaSeal3127ab8c15982569d7e89822a9e1095cdce89cbb;
+Thermistor4fae94b9b553604f2f41222bbc04fa45669c2bdf;
+COREb01f481072edecac33d5e40c25869359a5b3fa1f. Locks/evidence ignored in
+build-evidence. Deliver on existing PR29, keep draft/unmerged. Hosted workflow
+installation, remaining components and physical/controller checks remain open.
+
+---
+
+# Local PneumaSeal settings checkpoint - 2026-10-25 (next combined batch)
+
+Goal active. Three additional settings lifecycle cases pass focused Windows Clang
+ASan/UBSan0.22s and strict classification:3 clean, zero known/failures/skips.
+Registered getters verify persisted timeout/mask values and configured port,
+with corresponding state/timer/output behavior. Port changes/disable require a
+reboot per the public setting flag; reload retains the existing remapped claim
+and active output, rather than treating changed configuration as immediate
+hardware reassignment. Restore persists default timing/masks and subsequent
+state transitions use the restored delays without reclaiming the port.
+
+PneumaSeal now18 registered cases. Shared fixture extracts its existing registered
+setting lookup and adds typed getter/port callbacks; no production source changes,
+new assertion allowances or diagnostics. Original candidate
+3127ab8c15982569d7e89822a9e1095cdce89cbb verified clean. Public CORE io_port_cfg helpers remain
+host boundaries, timer expiry is explicit host delivery, full settings parsing
+and actual scheduler/controller/air-pressure behavior remain untested. Combine
+with pending Interlock6 and further work before next cumulative gate/delivery.
+No new coverage measurement or hosted result; batch21 remains delivered baseline.
+
+---
+
+# Local Interlock settings checkpoint - 2026-10-25 (next combined batch)
+
+Goal active. Six additional cases pass focused Windows Clang ASan/UBSan0.44s and
+strict classification:6 clean, zero known/failures/skips. Registered getters now
+check every default slot through save/load and restore; inverse guards can be
+individually disabled while other configured guards still suppress writes;
+direction and active-level changes select the correct observed port/polarity.
+Two additional source-supported configurations (forward/inverse1/2 and2/1) verify
+runtime-generated setting IDs/names/getters and actual forward/inverse decisions.
+Existing default4/4 cases remain. No production edits or new known allowances.
+
+Interlock now19 registered cases. Helper additions invoke original registered
+getter callbacks with CORE's exact typed signatures. Ports/NVS/spindle output,
+reset/alarm requests and task/realtime boundaries remain simulations; these tests
+do not establish controller emergency-stop timing, protocol permission to change
+settings during motion, physical machine safety, real settings parser behavior or
+multi-spindle ownership. Source5893ea35645c334ec96333ccd0519eac03128ee6 verified
+clean. No new coverage measurement, cumulative gate or hosted result; batch21
+below remains delivered baseline. Accumulate related modules before delivery.
+
+---
+
+# Latest component checkpoint - 2026-10-25 (batch21)
+
+Goal active. Delivered accumulated17 new driver behavior cases: SAM6, TeensyPWM9,
+TM4C123UART2. One complete Windows Clang ASan/UBSan gate:42 compatible suites,
+687 cases =631 clean +56 documented known results, zero unexpected failures/skips.
+Known results remain52 correct expected assertion regressions +4 diagnostic-only;
+3 assertion cases also carry exact existing diagnostics, counted once. No new
+assertion/sanitizer allowances, weakened assertions, SDK or production edits.
+Strict classifier ran every suite. Unchanged84 reporting helpers last passed
+batch17; no redundant rerun or relint of unchanged workflows. Whitespace passes.
+
+Fresh local LLVM selected-source results: SAM serial276/278 lines99.3%,100/108
+branches92.6%,39/39 functions; adds2 exercised lines and1 function. Teensy PWM
+88/88 lines100%,31/37 branches83.8%,6/6 functions; TM4C123 serial112/112 lines100%,
+44/48 branches91.7%,14/14 functions. Latter two source-coverage counts unchanged;
+new cases verify additional observable workflows, not a percentage gain. Fresh
+counter paths max216 characters. These files/configurations are not whole drivers,
+board startup, physical timing, SDK linking or target firmware build evidence.
+
+SAM cases cover supported even/odd/none parity changes retaining other mode bits,
+independent simultaneous RX/TX on both UARTs, and primary public realtime handler
+routing/restoration in UART(-1)/USART1-primary builds. PWM cases cover repeated
+configuration/duty updates, independent FlexPWM submodules and QuadTimer channels
+across Teensy4.0/4.1/MicroMod. TMUART timeout-RX and simultaneous TX/RX IRQ delivery
+use a bounded SDK event fixture; TX completion preserves receive interrupts.
+Known primary/secondary disable and full-ring realtime regressions remain intact.
+No opaque PWM handle forging, sixth ownership claim or unsafe memory reproduction.
+
+API source locks match clean originals: COREb01f481072edecac33d5e40c25869359a5b3fa1f;
+SAM2321092b02cbbdecf2eba2b168a74b085e573418 with Arduino SDK
+790ff2c852bf159787a9966bddee4d9f55352d15; Teensyd1f8d1ed904242ee08b0a5583e78f490afd9ae93
+with SDK7f107ee0a309f3813ed13f0d8f615497eca2ee49; TM4C12314fdf8de2126316c14d88656f3a19337800ad1c1
+with Tiva mirrorc23bf8ba7a82b20421aa04d4df3f77501c5883ea. Locks/evidence ignored in
+build-evidence. Keep existing PR29 draft/unmerged. Hosted workflow installation,
+full controller integration and remaining components/hardware checks remain.
+Fresh fork API lists only Reusable host tests and Core tests; the separate
+Plugin/Driver workflows are still unavailable for manual dispatch. No dispatch
+retry or merge is performed to install them.
+
+---
+
+# Local Teensy PWM checkpoint - 2026-10-25 (next combined batch)
+
+Goal active. Nine new cases pass focused Windows Clang ASan/UBSan0.49s and strict
+classification:9 clean, zero known/failures/skips. Three behavior files execute
+under Teensy4.0/4.1/MicroMod: reconfigure already-claimed X/A/B/QuadTimer handles
+through period/prescaler/inversion changes, retain exact duty images, preserve
+independent FlexPWM submodule/QuadTimer outputs, and independently configure/update
+three QuadTimer channels in the same module. All handles come from public claim;
+never exceed five claims or forge opaque signals. No shared fixture/source edits,
+new known assertions or sanitizer allowances.
+
+PWM suite now36 registered cases. Driverd1f8d1ed904242ee08b0a5583e78f490afd9ae93
+and Teensy SDK7f107ee0a309f3813ed13f0d8f615497eca2ee49 verified clean. Together
+with pending SAM6 authoring cases, keep accumulating before combined validation
+and delivery. Batch20 below remains delivered baseline; no new source coverage or
+hosted result. These tests verify register images, not actual clock source/edge
+frequency, physical output timing or board startup. Shared FlexPWM A/B channels
+within one submodule still need their separate board-level ownership contract.
+
+---
+
+# Local SAM serial checkpoint - 2026-10-25 (next combined batch)
+
+Goal active. Six new SAM3X8E cases pass focused Windows Clang ASan/UBSan0.38s and
+strict classification:6 clean, zero known/failures/skips. Three separate behavior
+files run with primary UART(-1)/USART1 and secondary USART2: supported8-bit/one-stop
+parity transitions even/odd/none update status and preserve all other mode bits;
+queued two-port TX with simultaneous RX retains exact independent payloads; primary
+public realtime enqueue and actual RX IRQ use the installed handler, then restore
+normal filtering without queuing the direct callback's rejected bytes.
+
+SAM suite now41 registered cases. No shared fixture, source, known assertion or
+sanitizer allowance changes. Original driver2321092b02cbbdecf2eba2b168a74b085e573418
+and Arduino SDK790ff2c852bf159787a9966bddee4d9f55352d15 verified clean. Existing
+CORE b01f481 contract retained. This is focused authoring evidence, not a new
+cumulative gate, source coverage measurement, hosted or physical UART result.
+Batch20 below remains delivered baseline. Keep accumulating before next full gate.
+
+---
+
+# Latest component checkpoint - 2026-10-25 (batch20)
+
+Goal active. Combined16 additional MPG cases:7 callback cases,6 original CORE
+stream integration cases and3 passive command cases. Complete Windows Clang
+ASan/UBSan gate:42 compatible suites,670 cases =614 clean +56 documented known
+results, zero unexpected failures/skips. Known results now52 correct expected
+assertion regressions plus4 diagnostic-only cases;3 assertion cases also carry
+existing exact diagnostics, counted once. No new sanitizer exception or firmware
+source edits. Strict classifier ran for every suite. Unchanged84 reporting helpers
+were not rerun (last full batch17); unchanged workflows need no actionlint rerun.
+Whitespace passes; API source lock matches clean original MPG/CORE checkouts.
+
+Fresh local LLVM MPG .c438/468 lines93.6%,166/234 branches70.9%,47/48 functions;
+wire header25/25 lines and10/10 branches. Adds15 exercised original plugin lines
+since batch19. Counter paths max226 characters; strict profiling checks pass.
+CORE integration executes original source but its coverage is not included in the
+plugin filter: do not infer CORE-wide or controller coverage from these numbers.
+
+Original CORE stream registration/claim ownership, passive filtering, busy refusal,
+mode reader selection/restoration, baud table, broadcast ownership and queued
+passive status now execute. Nine integrated cases supplement36 capture cases.
+Six integration cases explicitly use MPG_BUFFER_SIZE=0; three enable128 bytes for
+command buffering. Single/fragmented commands, realtime filtering, CRLF, blank
+commands, G-code rejection and handler error/recovery controls pass in both modes.
+Host system handler records strings and emits an explicit marker; actual system
+commands, parser, CORE task allocator/executor, primary UART and hardware are not
+linked/executed. Bounded FIFO task delivery matches reviewed grbllib.c append order.
+
+New correct regression m1_core_command_burst: valid framed `$I`, `$G`, `$$` burst
+queues three jobs, each reads the shared overwritten input and delivers `$$`.
+Correct ordered-command assertion retained under one exact WILL_FAIL/known_bug;
+source cause/proposed repair/removal guide in suite KNOWN_BUGS. No malformed wire,
+unsafe memory failure or private test seam. No claim of physical controller fault.
+Manual-tool ownership remains unresolved: CORE MPG mode retains primary suspend
+and handler setters while replacing read routing. Do not force a test contract.
+
+Pinned candidate503b422d0aa92c4d2b6a190e92ce25344bcc629e and
+COREb01f481072edecac33d5e40c25869359a5b3fa1f. Evidence/source lock ignored in
+build-evidence. Deliver together to existing PR29, keep draft/unmerged. Hosted
+workflow installation, remaining components and physical/target checks remain.
+
+---
+
+# Local MPG CORE-stream checkpoint - 2026-10-24 (next combined batch)
+
+Goal active. Six new integration cases use original CORE stream.c, stream_passthru.c,
+vfs.c, strutils.c and nuts_bolts.c with original MPG source in plain/framed builds.
+Complete affected MPG suite42/42 passes Windows Clang ASan/UBSan2.30s and strict
+classification:42 clean, zero known/failures/skips. Existing36 capture cases remain
+unchanged in behavior. Integration builds exclude the capture replacements for
+CORE APIs and link the real functions; fixtures stay strict, original CORE warnings
+remain visible under source-specific rules. No production edits or new allowance.
+
+Tests exercise real stream property registration/claim ownership, descriptor-copy
+registration, passive filtering, busy refusal/active reader selection, restoration
+on disable, runtime baud table and output broadcast ownership. Passive status
+requests pass through real stream_mpg_check_enable and queued report delivery,
+then original transport output/ACK handling. The host report formatter emits an
+explicit marker; no controller report-format claim. CORE's normal null stream
+provides the console baseline; physical UART callbacks and time/task/protocol
+boundaries remain simulations. MPG_BUFFER_SIZE=0 explicitly disables passive
+command buffering, which is untested here. No full parser or driver task loop.
+
+CORE b01f481072edecac33d5e40c25869359a5b3fa1f and candidate
+503b422d0aa92c4d2b6a190e92ce25344bcc629e verified clean. Tool-ACK remains unresolved:
+mode switching retains primary suspend_read/set_enqueue_rt_handler while replacing
+input routing. Establish supported primary-driver ownership before asserting MPG
+manual-tool behavior; no forced private state or artificial failure registered.
+No new whole-repository coverage or hosted result; batch19 remains delivered
+baseline. Accumulate the next substantial group before cumulative gate/push.
+
+---
+
+# Local MPG callback checkpoint - 2026-10-24 (next combined batch)
+
+Goal active. Seven additional public callback cases pass focused Windows Clang
+ASan/UBSan0.47s and strict classification:7 clean, zero known/failures/skips.
+Delay-time polling chains the existing hook and performs ACK/retry/retirement;
+plain/framed realtime callback replacement, removal and restoration control actual
+incoming bytes and public enqueue semantics; missing consumers drop/count bytes
+without filling RX. RX mute leaves the transport decoder running in both modes,
+while realtime filtering controls what reaches the captured parser stream.
+Public byte writes preserve output order and framed ACK sequencing.
+
+MPG now36 registered cases. No shared fixture, production, sanitizer allowance or
+assertion expectation change. Not yet cumulative validation, coverage measurement
+or delivery; batch19 below remains the delivered baseline. Keep accumulating.
+Actual CORE stream registration/mode switching/tool-ACK remains a distinct next
+integration group: source review confirms stream.c owns proxy copies, passive
+realtime filtering, mode selection and suspend backup/restore. Existing capture
+fixture must not be called proof of those CORE behaviors. Delay/time/stream/task
+callbacks remain explicit simulations.
+
+---
+
+# Latest component checkpoint - 2026-10-24 (batch19)
+
+Goal active. Combined23 new public behavior cases: MPG8, FlexGPIO8 and SienciRGB7.
+One complete Windows Clang ASan/UBSan gate:42 compatible suites,654 cases =599
+clean +55 documented known results, zero unexpected failures/skips. Existing51
+correct expected assertion regressions and4 diagnostic-only results remain;3
+assertion cases also have exact diagnostics, counted once. No assertion weakening,
+new known failures, diagnostic allowance, production edits or CORE changes.
+Strict classifier ran for every suite. Unchanged84 reporting helpers were not
+rerun (last full pass batch17); unchanged workflows need no new actionlint run.
+Whitespace passes. Source locks API-match candidate/CORE SHAs and clean originals.
+
+Fresh local LLVM configured-source coverage:
+- MPG original .c423/468 lines90.4%,160/234 branches68.4%,43/48 functions;
+  public wire header25/25 lines,10/10 branches. Adds19 exercised lines.
+- FlexGPIO269/272 lines98.9%,126/150 branches84.0%,21/21 functions. Adds12 lines.
+- Sienci legacy200/200 lines100%,118/125 branches94.4%; advanced345/357 lines96.6%,
+  176/186 branches94.6%; all49 functions exercised. Combined545/557 lines97.8%,
+  294/311 branches94.5%. Adds12 lines. All three add43 exercised lines; fresh
+  counter paths max226 characters. Not whole repositories or controller coverage.
+
+MPG settings changes retain queued output, enforce runtime ACK/attempt/payload
+limits, persist/restore defaults, keep transport pending through soft reset, and
+separate discarded output from fresh acknowledgements. Both plain/framed modes
+run byte-only UART fallback. FlexGPIO covers each input/output value callback in
+three-/six-axis builds, configuration-send alarm and read-failure edge recovery.
+RGB covers absent optional hooks/driver callbacks, offboard green/off/automatic,
+and stopping/resuming E-stop pulses via overrides. In active animation mode,
+offboard changes render on the next scheduled frame; the fixture now waits for
+that real callback before asserting the unchanged exact requested colors.
+
+Pinned COREb01f481072edecac33d5e40c25869359a5b3fa1f;
+MPG503b422d0aa92c4d2b6a190e92ce25344bcc629e;
+Flexbc8dab40162b49718179bffe973c4533fc73436f;
+RGBdf3409058f8bb9c202f560e562bb2671a0829561.
+Evidence/locks are ignored in build-evidence. Keep PR29 draft/unmerged; hosted
+workflow installation, controller integration and hardware validation remain.
+See COMPONENT_TODO for remaining executable workflows and compatibility gaps.
+
+---
+
+# Local FlexGPIO authoring checkpoint - 2026-10-24 (next combined batch)
+
+Goal active. Eight additional cases (four behaviors in three-/six-axis builds)
+pass focused Windows Clang ASan/UBSan0.45s and strict classification:8 clean,
+zero known/failures/skips. Saved public descriptors read each input after walking
+physical snapshots and each output after nonzero float/zero commands; expected
+wire masks include every spindle/coolant/motor-disable/output mapping. Initial
+configuration-send failure raises the expander alarm while the input refresh still
+runs. A failed input read preserves the last snapshot and emits no false edge;
+subsequent successful IRQ refresh delivers exactly the missing change. No source
+or shared fixture edits, sanitizer allowances or assertion changes.
+
+FlexGPIO now25 registered cases. MPG29 and these new cases are local authoring
+work, pending a substantial combined full gate and delivery; delivered baseline
+remains batch18. Existing FlexGPIO callback diagnostics and two correct expected
+assertion regressions remain untouched. Actual CORE ioports aggregation/remapping,
+no-IRQ mode, target builds and physical timing remain unverified.
+
+---
+
+# Local authoring checkpoint - 2026-10-24 (next combined batch)
+
+Goal active. Eight additional MPG transport cases; complete affected suite29/29
+passes Windows Clang ASan/UBSan in1.71s with strict classification:29 clean,
+zero known/failures/skips. Shared fixture adds only byte-only UART capability;
+plain/framed fallback both validate original output. Registered setting changes
+preserve queued/in-flight output and apply a500ms acknowledgement floor;
+transport changes stay pending through soft reset and apply after persisted
+settings reload; output discard separates sequence numbers so stale ACKs cannot
+retire fresh output. Restore returns exact default settings/status and persists;
+runtime payload limit preserves ordered chunks and runtime attempt limit bounds
+retransmission without restarting the healthy link. No production source edits.
+
+This is affected-suite authoring validation, not a new cumulative gate, coverage
+measurement or hosted result; batch18 below remains delivered baseline. Keep
+accumulating before full validation/push. Original candidate503b422d0aa92c4d2b6a190e92ce25344bcc629e
+and COREb01f481072edecac33d5e40c25869359a5b3fa1f checkouts verified clean.
+Legacy driver review confirms original CORE070f80 commit exists locally, but no
+legacy runtime suite or SDK compatibility result is claimed. Never silently
+substitute legacy CORE. Actual MPG selection/tool-ACK/controller and physical
+transport behavior still require integration checks.
+
+---
+
+# Latest component checkpoint - 2026-10-24 (batch18)
+
+Goal remains active. Delivered the accumulated WebUI13 authoring cases together
+with15 new MSP432P401R primary UART cases, rather than a standalone small WebUI
+checkpoint. Separate Plugin/Driver tests choices lock original candidate/CORE/SDK
+sources. No production edits, source guard replacements, concurrent CORE changes
+or merges.
+
+One cumulative Windows Clang ASan/UBSan gate:42 compatible suites,631 cases =
+576 clean +55 documented known results, zero unexpected failures/skips. Known
+results comprise51 correct assertion regressions +4 passed-assertion diagnostic
+cases;3 assertion cases also have exact existing diagnostics, counted once. New
+MSP regression requires RX mute to preserve pending TX interrupts/output. No new
+sanitizer diagnostic allowance. Targeted source-plan helper passes0.027s; actionlint
+and whitespace pass. Unchanged reporting helpers were not rerun; last full84 pass
+is batch17 below. Strict per-suite classification ran for this complete gate.
+
+Fresh local LLVM selected-file/configuration coverage: MSP primary serial108/108
+lines100%,37/41 branches90.2%,16/16 functions. WebUI args38/38 lines100%,41/44
+branches93.2%,3/3 functions; embedded provider3/3 lines100%,1/1 function. Adds149
+exercised executable lines. Fresh counter paths max228 characters; strict profiling
+checks pass. No secondary UART or HTTP backend coverage inferred from percentages.
+
+MSP original driver/board/TI device/CMSIS headers compile. Real CMSIS NVIC functions
+execute against host-owned mapped registers; exactly two CPU interrupt intrinsic
+macros are rebound after normal original header inclusion to observable host calls.
+No source guard or legacy type is replaced. Real CORE stream registration/claim/
+close, connection and tool-ACK suspend backup/restore execute. This does not prove
+CPU interrupt scheduling, target SDK linking or physical UART timing. Secondary
+status-table guard remains source-review-only; never force a memory failure.
+WebUI uses actual CORE VFS with three asset configurations and normal argument
+helpers; server/login/v2/v3/upload/lwIP/browser/controller work remains untested.
+
+Pinned CORE b01f481072edecac33d5e40c25869359a5b3fa1f;
+MSP432P1fa8bc31d8e8669d4d569e768154a0532ec5311e;
+TI/CMSIS header distribution energia/msp432-core7c9a3689dc4dc3c9a7d00fa6cb51c4ed5b260afb;
+WebUI3712523bc98f0bce343b56e03bdf881cc7fd4aa0.
+All API-matched local original checkouts clean. Not a latest official SDK claim.
+Source locks/evidence ignored in build-evidence. PR29 stays draft/unmerged. Hosted
+default-branch workflow installation and physical target checks remain outstanding.
+Remaining legacy driver source-review details and next gaps are in COMPONENT_TODO.
+
+---
+
+# Latest component checkpoint - 2026-10-24 (batch17)
+
+Goal remains active. Added39 cases: ATCi18 and MPG transport21. New separate
+Plugin tests choices lock candidate/CORE revisions; ATCi defaults main and MPG
+master. No production source or concurrent CORE changes, no merge. Public hooks,
+registered settings and source-supported configurations only; no private test seams.
+
+One cumulative Windows Clang ASan/UBSan gate:40 compatible suites,603 cases =
+549 clean +54 documented known results, zero unexpected failures/skips. Known
+results comprise50 correct assertion regressions +4 passed-assertion diagnostic
+cases;3 assertion cases also have exact existing diagnostics, counted once.
+New correct ATCi M960 disable assertion reproduces consumed-word execution defect.
+MPG21 cases clean. No new sanitizer expectation/allowance. All84 reporting helpers
+pass14.056s; actionlint and whitespace pass.
+
+Fresh local LLVM selected-file coverage: ATCi292/305 lines95.7%,156/193 branches
+80.8%,20/20 functions. MPG .c404/468 lines86.3%,146/234 branches62.4%,41/48
+functions; public .h25/25 lines100%,10/10 branches100%,3/3 functions. MPG combined
+429/493 lines87%,156/244 branches63.9%. Adds721 exercised executable lines.
+Fresh counter paths max224 characters, strict profiling checks pass. Remaining
+source/configuration/integration gaps stay explicit in TODO and per-suite guides.
+
+ATCi uses logical host GPIO/planner/NVS callbacks, not actual LongBoard pin maps
+or complete native motion safety. Geometry assertions retain four clipping sides,
+other-axis preservation and boundary behavior; initial unsupported exact chained-
+callback count removed, unrestricted chaining independently controlled. MPG uses
+captured stream registration and active byte consumer, not CORE MPG mode switching,
+broadcast ownership or tool-ACK suspend. Valid peer frames/retries only.
+
+Pinned CORE b01f481072edecac33d5e40c25869359a5b3fa1f;
+ATCi671f145530ec8ec9f5828897477dc0192593b3d8;
+MPG503b422d0aa92c4d2b6a190e92ce25344bcc629e.
+API-matched local source/CORE HEADs clean. PicoHAL babac83b030fdc053b66f711e82f92b6fdfcc455
+fails current-CORE syntax compilation on removed probe-fixture APIs and changed
+probe-completed argument. No source aliases, runtime suite or compatibility
+fallback registered. Source locks/evidence ignored in build-evidence. PR29 stays
+draft/unmerged; default-branch hosted workflow installation and physical checks
+remain outstanding. Existing564-case delivered checkpoint below is preserved.
+
+---
+
+# Latest component checkpoint - 2026-10-24 (batch16)
+
+Goal remains active. Added41 cases: Sienci RGB24 (legacy2 and advanced3 modes),
+FlexGPIO17 (three-axis behaviors and six-axis registration). New Plugin tests
+choices source-lock candidate/CORE separately. Corrected both component workflow
+run names to suite default instead of assuming master; Sienci defaults SLB32_DEV.
+No production source changes, concurrent CORE edits or merges.
+
+One cumulative Windows Clang ASan/UBSan gate:38 compatible suites,564 cases =
+511 clean +53 documented known results, zero unexpected failures/skips. Known
+results comprise49 correct assertion regressions +4 passed-assertion diagnostic
+cases;3 assertion cases also have exact diagnostics, counted once. New assertions
+retain legacy delayed tool color, FlexGPIO IRQ-disable result and unsupported
+pull-mode acceptance. Four new exact test/file/line/function/type expectations
+cover original FlexGPIO config callbacks through CORE's GNU transparent-union API;
+this records the Clang signature diagnostic separately from functional defects.
+No sanitizer disabled; unknown/missing diagnostics fail strict reporting. Actual
+mixed assertion/diagnostic summary verified. All84 helpers pass17.106s; actionlint
+and whitespace pass after workflow label correction.
+
+Fresh local LLVM selected-file coverage: Sienci rgb.c194/200 lines97%,104/125
+branches83.2%,15/15 functions; rgbv2.c339/357 lines95%,163/186 branches87.6%,
+34/34 functions. Combined533/557 lines,267/311 branches. FlexGPIO257/272 lines
+94.5%,123/150 branches82%,19/21 functions. Adds790 exercised executable lines.
+Fresh counter paths max212 characters, strict profiling checks pass. No full
+controller/parser/CORE task scheduling/port aggregation or hardware claim.
+
+Pinned CORE b01f481072edecac33d5e40c25869359a5b3fa1f;
+Sienci RGB df3409058f8bb9c202f560e562bb2671a0829561;
+FlexGPIO bc8dab40162b49718179bffe973c4533fc73436f.
+API-matched local source/CORE HEADs clean. Datron RGB672ebd8beeed746b5c668be18b4e4c48b6c14883
+fails unchanged-source syntax compilation due private static bit_count versus
+CORE declaration; ffsl is additionally undeclared on Windows. No source aliases,
+header bypasses or compatibility fallback; no runtime choice registered for it.
+Remaining scope in TODO/per-suite guides; evidence and source locks ignored in
+build-evidence. PR29 stays draft/unmerged. Hosted workflow installation on default
+branch and physical target checks remain outstanding.
+
+---
+
+# Latest component checkpoint - 2026-10-24 (batch15)
+
+Goal remains active. Added35 cases: TM4C123 EEPROM12/UART012 and standalone TI
+shared EEPROM11. Three new Driver tests choices source-lock original driver/
+shared code, CORE and a declared TivaWare vendor-header mirror. Actual driver.h,
+tiva.h and board headers compile unchanged. CORE CRC and full stream support
+execute; hardware calls are explicit bounded EEPROM and UART/IRQ simulations.
+No production edits, no concurrent CORE checkout changes, no merges.
+
+One cumulative Windows Clang ASan/UBSan gate:36 compatible suites,523 cases =
+476 clean +47 documented known results, zero unexpected failures/skips. Known
+results now46 correct expected assertion regressions +1 fan-only diagnostic;
+two existing SAM assertion cases also retain exact diagnostics, counted once.
+Added12 correct assertion regressions: CRC8 read location, shared checksum layout/
+read location, ignored hardware/allocation errors in both EEPROM modules, and
+full RX ring dropping realtime dispatch. No new sanitizer allowance. All84
+reporting helpers pass16.302s; actionlint and whitespace pass.
+
+Fresh local LLVM selected-file coverage: TM4C123 EEPROM49/51 lines96.1%,17/20
+branches85%,7/7 functions; shared EEPROM49/51 lines96.1%,17/20 branches85%,7/7
+functions; TM4C123 UART0112/112 lines100%,44/48 branches91.7%,14/14 functions.
+Adds210 exercised executable lines. Fresh counter paths max227 characters;
+strict profiling checks pass. Missing EEPROM direct-transfer branches cannot be
+entered by valid alignment: alignend is always1..4. Retained without exclusions.
+
+Pinned CORE b01f481072edecac33d5e40c25869359a5b3fa1f;
+TM4C12314fdf8de2126316c14d88656f3a19337800ad1c1;
+TI shared6adcc848946fe69075f6ed062afa31f11c5a4c97;
+TivaWare mirror c23bf8ba7a82b20421aa04d4df3f77501c5883ea(yuvadm/tiva-c).
+API-matched upstream/CORE/SDK HEADs clean. Shared is a standalone candidate;
+archived TM4C1294 parent pins a different shared source3e7873 and remains unbuilt.
+No latest-official-SDK, full target-link, timing/endurance or physical-board claim.
+Evidence/source locks in ignored build-evidence; remaining scope in TODO and
+per-suite guides. PR29 remains draft/unmerged; hosted component workflow default-
+branch installation remains separate from these local results.
+
+---
+
+# Latest component checkpoint - 2026-10-24 (batch14)
+
+Goal remains active; no production sources or concurrent CORE edits, no merges.
+Added34 cases:21 Virtual Inputs and13 Homing Acceleration. Separate Plugin tests
+choices resolve candidate and CORE independently into immutable source locks.
+Topology-independent Virtual Inputs cases run once; only sensor behavior varies
+across shared/separate registration. Original CORE probe.c and formatting execute
+with public registration/select/configure/IRQ boundaries and simulated pins.
+Homing cases capture public per-axis settings/override requests, including
+restoration, failures, persistence and rotary units; real settings.c backup and
+planner/stepper homing are not executed by that suite.
+
+One cumulative Windows Clang ASan/UBSan gate:33 compatible suites,488 cases =
+453 clean +35 documented known results, zero unexpected failures/skips. Same34
+correct expected assertion regressions plus1 fan-only diagnostic; two existing
+SAM assertion cases also have exact callback diagnostics, counted once. All34
+new cases clean; no new exception/diagnostic allowance. All84 reporting helpers
+pass16.345s; actionlint and whitespace pass.
+
+Fresh local LLVM selected-file coverage: Virtual Inputs146/146 lines100%,66/71
+branches93.0%,17/17 functions; Homing Acceleration101/101 lines100%,43/44
+branches97.7%,14/14 functions. Adds247 exercised executable lines. Fresh counter
+paths max226 characters; strict profiling checks pass. These are selected host
+configurations, not complete plugin/controller or hardware coverage.
+
+Pinned CORE b01f481072edecac33d5e40c25869359a5b3fa1f;
+Virtual Inputs e943e0c5da8a70ac9cfa91234bfa0a35a388c5f6;
+Homing Acceleration a06b7cd6095a40478dde5bb1b44323d0e10373c2.
+API-matched local source/CORE HEADs clean. Panel09c90184288a09d7357fd994c395911dec38683f
+fails unchanged-source syntax checks in CAN and README-required Modbus64 configs:
+obsolete one-argument system_execute_line at707 versus CORE two-argument API.
+No panel runtime suite/Actions choice or source alias; evidence in build-evidence.
+Remaining TI families fetched/read for next batch; details and ownership concerns
+in COMPONENT_TODO. PR29 stays draft/unmerged. Hosted component workflows still
+need default-branch installation; no Linux/GCC/physical-board success claimed.
+
+---
+
+# Latest component checkpoint - 2026-10-24 (batch13)
+
+Goal remains active. Added50 unchanged-source third-party plugin cases in separate
+behavior files: AUXP7, Interlock13, PneumaSeal15 and Thermistor15. Added four
+Plugin tests workflow choices with immutable candidate/CORE plans. Default branches
+are main, not master. No production source or concurrent CORE edits, no merge.
+
+One cumulative Windows Clang ASan/UBSan gate:31 compatible suites,454 cases =
+419 clean +35 documented known results, zero unexpected failures/skips. This is
+34 correct expected assertion regressions plus1 fan-only diagnostic; two SAM
+assertion cases also retain exact callback diagnostics without double counting.
+All50 new cases clean, no new exception/diagnostic allowance. All84 CI/reporting
+helpers pass15.879s; actionlint and whitespace checks pass. Clang23's original
+Interlock default-const-field initialization warning stays visible/nonfatal only
+for that source; fixtures remain strict.
+
+Fresh local LLVM selected-file coverage:
+- AUXP45/45 lines100%,24/24 branches100%,5/5 functions.
+- Interlock173/185 lines93.5%,67/84 branches79.8%,19/23 functions.
+- PneumaSeal128/141 lines90.8%,43/52 branches82.7%,20/26 functions.
+- Thermistor133/139 lines95.7%,68/74 branches91.9%,10/12 functions.
+These add479 exercised lines across510 selected executable lines. Fresh counter
+paths max215 characters; strict profiling checks pass. No full-plugin, complete
+settings parser, physical sensor/solenoid or actual emergency-stop timing claim.
+Port/settings/NVS/task/alarm boundaries are explicit host simulations; original
+CORE formatting is linked where used. No private plugin state is modified.
+
+Pinned CORE remains b01f481072edecac33d5e40c25869359a5b3fa1f.
+AUXP ded4a654f9ad17eec449431a51310b44f6da86c9;
+Interlock5893ea35645c334ec96333ccd0519eac03128ee6;
+PneumaSeal3127ab8c15982569d7e89822a9e1095cdce89cbb;
+Thermistor4fae94b9b553604f2f41222bbc04fa45669c2bdf.
+All local upstream/CORE HEADs API-matched and clean. Source locks, classification,
+coverage and helper evidence are ignored under build-evidence. Remaining settings
+getters/parser integration and lifecycle contract questions are in COMPONENT_TODO.
+PR29 remains draft/unmerged. Hosted component workflows still require default-
+branch installation; no hosted Linux/GCC or hardware result is claimed.
+
+---
+
+# Latest component checkpoint - 2026-10-24 (batch12)
+
+Goal remains active across48 inventoried implementations. Added62 driver cases:
+27 Teensy PWM across4.0/4.1/MicroMod and35 SAM3X8E serial across UART/USART1.
+Original production sources, actual board/device headers and pinned SDK register
+layouts compile unchanged; host memory, clock and IRQ callbacks model hardware
+boundaries. No production or concurrent CORE checkout changes, no merges.
+
+One cumulative Windows Clang ASan/UBSan gate covers27 compatible suites:
+404 cases =369 clean +34 correct expected assertion regressions +1 fan-only
+passed-assertion diagnostic. Two of the34 assertion cases also reproduce exact
+SAM callback type diagnostics; they are counted once, with explicit mixed labels.
+Zero unexpected failures/skips. All84 reporting helpers pass9.514s; actionlint
+and whitespace pass. Two new narrowly scoped SAM diagnostic expectations retain
+the actual callback defect; no blanket sanitizer suppression.
+
+SAM regressions cover RX disable writing IER instead of IDR, secondary realtime
+routing to the primary handler, and USART1 TX pin peripheral selection. The
+secondary callback also has a char versus uint8_t signature mismatch. Correct
+assertions and repair/removal guides remain in the suite KNOWN_BUGS.md. Reporting
+now distinguishes mixed assertion/diagnostic cases without double counting or
+claiming their assertions passed.
+
+Fresh local LLVM selected-file coverage: Teensy pwm.c88/88 lines100%,31/37
+branches83.8%,6/6 functions; SAM serial.c274/278 lines98.6%,100/108 branches92.6%,
+38/39 functions. Fresh counter paths max210 characters; strict profiling checks
+pass. These are selected-file host results, not whole-driver/board coverage.
+
+Pinned CORE b01f481072edecac33d5e40c25869359a5b3fa1f;
+iMXRT1062 d1f8d1ed904242ee08b0a5583e78f490afd9ae93;
+SAM3X8E2321092b02cbbdecf2eba2b168a74b085e573418;
+Teensy SDK7f107ee0a309f3813ed13f0d8f615497eca2ee49;
+Arduino SAM SDK790ff2c852bf159787a9966bddee4d9f55352d15.
+Source locks and local evidence live in ignored build-evidence. Separate Driver
+tests choices added for both suites. PR29 stays draft/unmerged; fork default
+branch still registers only Core tests and Reusable host tests. No hosted GCC,
+Linux, full ARM SDK or physical-board success is claimed. Remaining public APIs,
+other modules and SAMD21 legacy support boundary are in COMPONENT_TODO.md.
+
+---
+
+# Latest component checkpoint - 2026-10-24 (batch11)
+
+All-plugin/driver/CORE goal remains active across48 inventoried implementations.
+No production sources or concurrent CORE work changed. Existing PR29 verified
+OPEN/draft/unmerged at prior pushed head20fa750. Fork still registers only Core
+tests and Reusable host tests; no hosted component success or merge is claimed.
+
+Added37 cases:18 H7 (nine each H743/H723),9 F1 and10 F3. All three have separate
+Driver tests choices and immutable host_bits32 source plans. One cumulative
+Windows Clang ASan/UBSan gate covers all25 compatible suites:342 cases =314 clean
++27 correct known assertion regressions +1 previously scoped fan diagnostic.
+Zero unexpected failures/skips. All83 CI/reporting helpers pass9.325s; actionlint
+and whitespace pass. No new sanitizer allowance. New STM32 sources/fixtures stay
+-Werror; native LPC fixed-address cast warnings remain visible under one narrow
+original-source warning rule, and its fixture remains strict.
+
+H7 compiles original Src/flash.c and original Inc/flash.h in actual source-supported
+H743 dual-bank/H723 single-bank configurations. Inspected CMSIS/HAL headers define
+8 sectors and32-byte flash words for both; BANK_2 only applies to H743. The host
+HAL uses the real32-bit DataAddress third argument. Cases cover bank/sector
+selection, aligned and exact-length36-byte source writes with zero-padded tail,
+readback/unchanged handling, unlock/erase/first/second word failures and retry.
+No invented16-byte write configuration is compiled despite the source comment.
+
+F1 uses the shared halfword fixture with its actual page erase layout and linker
+page-count/address symbols. Its unlock status is unchecked; locked erase errors
+are returned by the HAL model rather than becoming fixture assertions. Erase
+retry/failure, both halfword failures, recovery and copy/read controls pass.
+Existing F4/F7 layout/lock checks remain intact and pass the cumulative gate.
+
+F3 keeps FLASH_TARGET calculation unchanged. Dedicated test-process mappings
+supply actual F303xC flash base0x08000000 and size register0x1FFFF7CC with2KB pages.
+Separate128/256KB cases validate end-minus4KB target selection; full2KB-page,
+read/unchanged, unlock/erase/program failure and retry controls execute. One new
+correct first-halfword failure assertion reproduces its F7-like overwritten
+status defect. Exact WILL_FAIL/known_bug plus dated guidance retain the proper
+false result/immediate-stop contract without changing firmware.
+
+Initial cumulative execution caught an intermittent address collision in the old
+32-bit LPC fixture. Its original module does not convert RAM pointers to32-bit
+integers, so that host restriction was unnecessary. It now uses native64-bit RAM
+pointers with unchanged32-bit physical flash addresses and normal ASLR. Mappings
+still refuse occupied addresses. All10 affected cases pass three repetitions,
+then cumulative strict classification and fresh coverage. Failed evidence is kept
+as lpc-batch11-address-collision.xml. Earlier passing suites were retained after
+this isolated repair; they were not repeatedly rerun. LPC CORE2048 allocation/
+4096-copy compatibility remains unresolved and is not masked by padded tests.
+
+Fresh LOCAL LLVM compiled-file/configuration coverage, strict profiling checks pass:
+
+| Suite / original selected file | Covered/total lines | Covered/total branch outcomes |
+|---|---:|---:|
+| driver_stm32h7_flash / Src/flash.c | 21/21 (100%) | 12/12 (100%) |
+| driver_stm32f1_flash / Src/flash.c | 20/20 (100%) | 10/10 (100%) |
+| driver_stm32f3_flash / Src/flash.c | 20/20 (100%) | 6/6 (100%) |
+| driver_lpc176x_flash / src/flash.c, native host repair | 14/14 (100%) | 4/4 (100%) |
+
+Maximum counter paths219/220/214/213 in fresh short builds. These are selected
+storage-module results including retained regressions, not whole-driver/SDK/board
+coverage. No Linux/GCC execution, physical flash/cache/IRQ timing or ARM firmware
+build is claimed. Default-branch workflow installation remains unavailable.
+
+GitHub-resolved locks match clean unchanged sources:
+H7bfe5d4f6ec271cc9929336244c3b1c8e55d1d040 (dresco/STM32H7xx),
+F1c22362352f6abeea94897bb0346ae8042cdf3210,
+F39a40877b87b6fffbb475f753f0e12cc6c5126770,
+COREb01f481072edecac33d5e40c25869359a5b3fa1f.
+LPC source remains ea6e9f78fa349e86fbd58a203760b614f513684a; its updated native
+source lock is part of this checkpoint. Ignored build-evidence/*batch11* contains
+classification, locks, coverage XML/JSON/HTML and logs. Local short builds:
+build-sh7-asan/build-sf1-asan/build-sf3-asan; PATH needs LLVM bin plus its
+i686-w64-mingw32/bin for STM32 ASan DLLs. LPC now uses the normal native LLVM bin.
+
+Continue the remaining driver families and untested plugin modules/configurations.
+No full-goal completion claim, CORE edits or merges.
+
+---
+
+# Previous batch10 checkpoint - 2026-10-24
+
+All-plugin/driver/CORE goal remains active across48 inventoried implementations.
+No production sources or concurrent CORE work changed. Continue PR29, freshly
+OPEN/draft/unmerged. Fork still registers only Core tests and Reusable host tests;
+component dispatch/32-bit runtime installation awaits default-branch workflow
+installation. No hosted component run or merge is claimed.
+
+Added27 driver cases:9 STM32F4 flash,8 STM32F7 flash and10 LPC176x IAP storage.
+All three have separate Driver tests choices and immutable source plans with
+host_bits32. One cumulative Windows Clang ASan/UBSan gate covers all22 compatible
+suites:305 cases =278 clean +26 correct known assertion regressions +1 previously
+scoped fan callback diagnostic. Zero unexpected failures/skips. All83 CI/reporting
+helpers pass17.915s; actionlint/whitespace checks pass. No new sanitizer allowance.
+Existing plugin/CORE source warning policies remain; these new storage sources
+and their fixtures compile with -Werror.
+
+STM32 cases compile original flash.c with -m32, a pointer-width assertion and
+linker-style region/sector symbols. No original pointer type or source is patched.
+Shared HAL fixture models the distinct F4/F7 erase structures, unlock/erase/
+halfword program/lock, byte output and failure state. Cases cover read/copy,
+unchanged suppression, unlock failure, F4 erase retry, exhausted erase failure,
+first/second halfword failure, recovery and selected word-aligned buffer sizes.
+CORE nvs_buffer_init253 explicitly requires word alignment. These helper tests
+are not complete CORE settings boot/integration or real STM32 HAL execution.
+
+F7 first-halfword write failure is a confirmed source defect: its second call
+unconditionally overwrites failure status with success, continuing and returning
+true despite missing data. One exact program_first_failure WILL_FAIL/known_bug
+retains the correct false assertion, with dated source/removal guidance. F4's
+corresponding failure path and F7's second-halfword failure controls pass.
+
+LPC tests compile original src/flash.c and map its fixed0x78000 region inside the
+dedicated test process. Windows VirtualAlloc refuses an occupied address; Linux
+MAP_FIXED_NOREPLACE is authored but not executed here. Simulated IAP callbacks
+validate sector29, preparation/blank-state requirements, writes and IRQ restoration.
+Cases cover erased reads,1024/4096 copy/readback, unchanged suppression, failure
+at either preparation/erase/copy stage and retry. The2048 configured-size case
+supplies4096 source bytes because original code copies4096 except for size1024.
+It does not establish safety for normal CORE2048 allocation; unpadded overread is
+not reproduced. Earlier IAP errors are overwritten in source; provider state
+preserves failed prerequisites so final copy reports failure. Immediate abort,
+allocation/copy-size compatibility and full CORE integration remain TODO.
+
+Reusable jobs now install gcc-multilib/libclang-rt-dev only for source-locked32-bit
+plans; existing plans default64. Host width is validated before source resolution.
+Two new helpers verify default/accepted/rejected widths; component plan checks
+also validate width metadata. The target Linux STM32 flags disable PIE to retain
+absolute sector-symbol semantics. No Linux/GCC/multilib execution is claimed until
+actual hosted runs exist. Source and fixture SDK boundaries remain simulated.
+
+Fresh LOCAL LLVM compiled-file/configuration coverage, strict profiling checks pass:
+
+| Suite / original selected file | Covered/total lines | Covered/total branch outcomes |
+|---|---:|---:|
+| driver_stm32f4_flash / Src/flash.c | 20/20 (100%) | 12/12 (100%) |
+| driver_stm32f7_flash / Src/flash.c | 19/19 (100%) | 8/8 (100%) |
+| driver_lpc176x_flash / src/flash.c | 14/14 (100%) | 4/4 (100%) |
+
+Maximum counter paths220/223/213 in fresh short builds. These numbers cover only
+three storage modules, including the retained F7 regression; no full-driver,
+board, cache/IRQ timing, ARM firmware or real SDK validation is claimed.
+
+GitHub-resolved locks match unchanged clean original sources:
+STM32F4a6318ac92f079f49fab91687530f832997396edc,
+STM32F785e6e800b16fb1a46bc00b87b7015489b9d3ec93,
+LPC176x ea6e9f78fa349e86fbd58a203760b614f513684a,
+COREb01f481072edecac33d5e40c25869359a5b3fa1f.
+Ignored build-evidence/*batch10* contains immutable source locks, classification,
+coverage XML/JSON/HTML and logs. Local short builds are build-sf4-asan,
+build-sf7-asan and build-lpc-asan; PATH needs LLVM bin plus its i686-w64-mingw32/bin
+for32-bit ASan DLLs. Historical compatibility limits remain unchanged.
+
+Continue remaining driver families and plugin modules/configurations with public
+interfaces. Do not narrow the full goal to these storage helpers, modify CORE or
+merge PRs. The requested full supported coverage is not complete.
+
+---
+
+# Previous batch9 checkpoint - 2026-10-24
+
+All-plugin/driver/CORE goal remains active across48 inventoried implementations.
+No production sources or concurrent CORE work changed. Continue existing PR29,
+freshly verified OPEN/draft/unmerged. Fork still registers only Core tests and
+Reusable host tests. No hosted component run or merge is claimed.
+
+Added34 registered cases:21 Bluetooth HC-05 and13 embroidery reader cases. Both
+suites are now selectable in Plugin tests with their own immutable source plans.
+One cumulative Windows Clang ASan/UBSan gate covers all19 compatible suites:
+278 cases =252 clean +25 correct known assertion regressions +1 previously scoped
+fan callback diagnostic. Zero unexpected failures/skips. All81 reporting/helper
+checks pass17.050s; actionlint/whitespace checks pass. No new sanitizer allowance.
+Source warnings remain visible under documented rules; fixtures retain -Werror.
+
+Bluetooth compiles original hc_05.c with actual CORE stream registry/selection,
+I/O registration and EEPROM/CRC. Simulated UART module replies, ticks and STATE
+IRQs exercise all four AT command stages, failure/timeout, custom name, baud and
+handler restoration, manual enable/disable, missing dependencies, port settings,
+claimed-pin rejection, reports and fresh-process persisted auto-configuration.
+Actual CORE selects/restores streams and sends the welcome message; no stream
+switch stub is used. No radio/hardware or full protocol execution is claimed.
+
+Two correct regressions reproduce original source defects and retain exact
+WILL_FAIL/known_bug labels plus dated source/removal guidance in KNOWN_BUGS.md:
+- Factory default selects highest free STATE pin but load rejects it using
+  >= port_max, although CORE port_max is the highest valid index. No setup runs.
+  Other workflow controls explicitly select the valid lower pin through settings.
+- An enabled, boot-high STATE input selects Bluetooth and sends welcome but its
+  connection predicate stays false; setup updates only a local variable.
+
+Reserved options from erased storage are masked to the defined enable bit in
+fixture getter checks; their broader Format_Bool contract remains a TODO. Shared
+MPG mode and IRQ-provider failure notification remain untested, not excluded.
+
+Embroidery compiles original tajima.c/brother.c readers with actual CORE VFS and
+embedded backend. Valid DST/PES fixtures cover metadata/counts/dimensions/palette,
+small/large signed movement, jump/trim/stop/color/end and format fallback/rewind.
+No replacement decoder or private state forcing. Results omit the uncompiled
+embroidery.c job coordinator: rendering, planner/needle synchronization, settings,
+SD hardware and physical stitch timing remain. Mixed-axis flag precedence and
+sequin lifetime need contract review before assertions.
+
+Fresh LOCAL LLVM compiled-file/configuration coverage, strict profiling checks pass:
+
+| Suite | Covered/total lines | Covered/total branch outcomes |
+|---|---:|---:|
+| plugin_bluetooth / HC-05 serial mode | 122/124 (98.39%) | 56/66 (84.85%) |
+| plugin_embroidery_readers / two readers | 168/177 (94.92%) | 96/108 (88.89%) |
+
+Reader detail: Brother62/63 lines and26/28 branches; Tajima106/114 and70/80.
+Both fresh short builds have maximum counter path212. No source exclusions or
+whole-plugin/catalogue claim. No hosted/GCC/firmware/board validation is claimed.
+
+GitHub-resolved locks match clean unchanged sources:
+Bluetooth3fc40665af6d49250f09fec665ec267a988ee148,
+embroidery9a112c3c2509563aa5c745d5773aba5a62046d7c,
+COREb01f481072edecac33d5e40c25869359a5b3fa1f,
+EEPROM0c278db74edc38303b9d86583a7d51a1ec1be51e.
+Ignored build-evidence/*batch9* contains source locks, strict classifications,
+coverage XML/JSON/HTML and validation logs. Prior source compatibility limits and
+known assertions remain unchanged. Full goal is not complete.
+
+Next: remaining supported modules/configurations and additional driver families.
+STM32F4 sourcea6318ac92f079f49fab91687530f832997396edc was fetched/read only;
+flash.c uses linker-address symbols and a32-bit target address contract. Establish
+an appropriate target/linker fixture before runtime assertions; no driver result
+or SDK/board build is inferred from this source review.
+
+---
+
+# Previous batch8 checkpoint - 2026-10-24
+
+Goal remains active across48 inventoried implementation repositories. No production
+sources or concurrent CORE work changed. Existing PR29 verified OPEN/draft/unmerged.
+Fork still registers only Core tests and Reusable host tests: component workflows
+await default-branch installation. No merge or hosted component success claimed.
+
+Added20 registered cases:9 Trinamic runtime cases plus7 plasma runtime cases and
+4 fresh-process EEPROM setup/cleanup cases. One cumulative Windows Clang ASan/UBSan
+gate covers all17 current-compatible suites:244 cases =220 clean +23 correct known
+assertion regressions +1 previously scoped fan callback diagnostic. Zero unexpected
+failures/skips. Both expanded suites pass23/23. All81 reporting/helper checks pass
+9.554s; actionlint and whitespace checks pass. Source warnings remain visible under
+documented rules; host fixtures remain -Werror. No new exception/diagnostic waiver.
+Formatting reordered two dependent headers; restoring the host include first fixed
+those fixture builds. Completed unaffected suite results were retained, not rerun.
+
+Trinamic enables actual status polling and dynamic current in nine targets while
+keeping the existing default targets. Registered task/stepper/limit callbacks cover
+hold/block/idle current, quiet polls, persistent/recovered over-temperature reports,
+moving feed-hold requests and homing seek/locate sensitivity plus IRQ routing.
+Disable retains the homing-rate callback but inactive axes prevent register writes;
+assert that observable behavior. The source Pending holding-state assignment is
+commented out; no private state is forced. Current is configured/register behavior,
+not measured electrical current; actual homing motion and stall timing remain.
+
+Plasma saves its registered reboot-required Mode setting through actual EEPROM/CRC
+then boots a fresh process into Arc-ok or Up/down mode. Actual CORE spindle registry,
+I/O registration and secondary-stepper polling execute with simulated torch/pins,
+clock and controller state. Cases cover successful ignition/shutdown, three failed
+attempts, third-attempt success, lost-arc hold requests, positive/negative Z output,
+velocity lock/recovery and reset. No private init_ok/state handler is assigned.
+Mode3 does not claim cutter inputs: fixture setup now initializes physical values
+without demanding those unregistered descriptions. Full CORE suspension, primary XY
+motion, voltage/PID regulation, pierce/cut-height planner moves, PowerMax, expression
+integration and physical timing remain. These are not board/firmware build results.
+
+Fresh LOCAL LLVM compiled-file/configuration coverage, strict profiling checks pass:
+
+| Suite | Covered/total lines | Covered/total branch outcomes |
+|---|---:|---:|
+| plugin_trinamic / trinamic.c | 446/1001 (44.56%) | 192/652 (29.45%) |
+| plugin_plasma / THC + two importers | 457/869 (52.59%) | 222/553 (40.14%) |
+
+Trinamic gained126 covered lines while the denominator expanded885->1001 because
+polling/dynamic configurations now compile. Plasma gained194 covered lines with
+unchanged denominator: THC361/764; importers remain LinuxCNC51/56 and SheetCam45/49.
+Fresh short coverage builds have maximum counter paths223/225. No source exclusions,
+whole-plugin/library/catalogue coverage claim or reused old counter graphs.
+
+GitHub-resolved locks match unchanged clean source checkouts:
+COREb01f481072edecac33d5e40c25869359a5b3fa1f,
+motor9229617c1d8a3cc7a71fd584896500a779978b02,
+plasma d2f91b5887db6550ddec0fc0229cd87ec0af1a56,
+EEPROM0c278db74edc38303b9d86583a7d51a1ec1be51e,
+Trinamic library9b304175318d93818c8967faadc89dd101b17e92 (explicit RP2040 gitlink pin).
+Ignored build-evidence/*batch8* contains strict classifications, source locks, logs
+and coverage XML/JSON/HTML. Existing source compatibility limits remain recorded.
+No hosted/GCC/hardware validation is claimed. Continue remaining supported modules
+and configurations; the all-plugin/driver/CORE goal is not complete.
+
+---
+
+# Previous batch7 checkpoint - 2026-10-24
+
+Full all-plugin/driver/CORE goal remains active across48 implementation repos.
+No production sources or concurrent CORE work changed. Isolated branch continues
+existing PR29, freshly OPEN/draft/unmerged. Fork list still registers only Core
+tests and Reusable host tests. No hosted component run or merge is claimed.
+
+Added26 cases:14 Trinamic and12 plasma. One cumulative Windows Clang ASan/UBSan
+gate rebuilds/rechecks all seventeen compatible suites against pinned COREb01f481:
+224 cases =200 clean +23 correct known assertions +1 previously scoped fan
+callback diagnostic. Zero unexpected failures/skips. All81 CI/reporting helpers
+pass9.677s; actionlint/whitespace checks pass. Original source warnings remain
+visible under documented rules; fixtures stay -Werror. No new sanitizer allowance.
+
+Trinamic executes original plugin plus actual TMC2209 chip/HAL/common library
+against a simulated UART register device with CRC-checked packets and real IFCNT
+accounting. Cases cover3 registered motors, setup/address callbacks, current and
+mode commands, current/microstep settings/rejection, communication/setup/storage
+failure, recovery/status reset, fault IRQ, callback chaining and EEPROM-backed
+restart in two processes. Current checks concern configured values, not measured
+motor current. Host parser/settings boundaries model named axis words and their
+consumption/restoration; full CORE parser execution is not claimed. An initial
+fixture mistake caused NaN conversions and was corrected to the real public
+parser contract before classification; no diagnostic was waived.
+
+Plasma compiles original THC/SheetCam/LinuxCNC modules with actual CORE I/O
+registration, secondary stepper, PID, VFS/embedded backend and real EEPROM/CRC.
+Cases use its normal initial Off mode and do not fabricate private ready state.
+Initialization failures, material validation/add/overwrite/enumeration, comments/
+rejection/recovery, registered listing and report hooks pass. Both external file
+formats load through actual VFS mount listeners with the read-only host backend
+mounted through public APIs. I/O and plasma settings are distinct registrations
+and receive separate NVS allocations. Full torch/arc/voltage/up-down motion,
+PowerMax, expression integration and hardware timing remain untested. MinGW's
+exported isnanf lacks a math.h declaration; the Windows-only host declaration
+uses the actual runtime function, without replacement code or production aliases.
+
+Fresh LOCAL LLVM measured compiled-file/configuration coverage:
+
+| Suite | Covered/total lines | Covered/total branch outcomes |
+|---|---:|---:|
+| plugin_trinamic / trinamic.c | 320/885 (36.16%) | 122/570 (21.40%) |
+| plugin_plasma / THC + two importers | 263/869 (30.26%) | 150/553 (27.12%) |
+
+Plasma detail: THC167/764 lines, LinuxCNC51/56, SheetCam45/49. Remaining runtime
+code stays in the denominator; no whole-plugin, library or catalogue claim.
+All coverage result sets pass strict profiling-error checks; maximum counter
+paths222/227. The largest remaining supported runtime regions are recorded in
+COMPONENT_TODO.md rather than excluded or entered through private state.
+
+GitHub-resolved locks match clean local sources:
+motor9229617c1d8a3cc7a71fd584896500a779978b02,
+plasma d2f91b5887db6550ddec0fc0229cd87ec0af1a56,
+COREb01f481072edecac33d5e40c25869359a5b3fa1f,
+EEPROM0c278db74edc38303b9d86583a7d51a1ec1be51e,
+Trinamic-library9b304175318d93818c8967faadc89dd101b17e92. The latter is an
+explicit dependency-only pin from the inspected RP2040 gitlink, not an implicit
+fallback. Full immutable locks/classification/logs are in ignored build-evidence/
+*batch7*, alongside per-suite coverage XML/JSON/HTML. New Plugin tests choices
+await default-branch installation. No hosted/GCC/board/physical-device pass claim.
+
+Continue supported plasma/TMC runtime and remaining catalogue/modules/configs.
+The full goal is not complete.
+
+---
+
+# Previous batch6 checkpoint - 2026-10-24
+
+Full all-plugin/driver/CORE goal remains active across48 inventoried repositories.
+No production sources or concurrent CORE work changed. This isolated branch
+continues PR29, freshly OPEN/draft/unmerged. Fork workflow list still exposes
+only Core tests and Reusable host tests; no hosted component run is claimed.
+
+Added31 cases:11 common networking,12 laser PPI and8 LightBurn cluster cases.
+One cumulative Windows Clang ASan/UBSan gate rebuilds/rechecks all fifteen
+current-compatible suites:198 cases =174 clean +23 correct known assertions
++1 previously scoped fan callback diagnostic. Zero unexpected failures/skips.
+All81 CI/reporting helpers pass11.915s; actionlint/whitespace checks pass.
+Source warnings remain visible under documented rules; fixture warnings stay
+strict. No sanitizer allowances added.
+
+Networking uses the original public event/provider/enumeration API and registered
+NETIF/report hooks. Cases cover Ethernet/STA/AP notifications, unavailable provider,
+enumeration/short-circuit, listening-port/status reports, one hostname, cached
+stream selection across file mode, enabled service labels, MAC conversion and
+idempotent init/hook chaining. Actual lwIP headers are source-locked with a local
+NO_SYS IPv4 architecture/configuration boundary. No actual listeners/packets,
+stack runtime, wireless or Ethernet hardware is exercised by this suite.
+
+PPI tests compile actual CORE spindle registration/selection. Driver step/pulse/
+PWM/RPM callbacks and gc_laser_ppi_enable are simulated public boundaries. Normal
+spacing/width, zero RPM, enabling/disabling, check mode, reset/program-end,
+zero configuration, hardware delegation and callback chaining pass. One correct
+regression demonstrates ppiUpdatePWM requests pulse_on even when PWM becomes
+zero. Driver callback observation does not establish physical emitted energy.
+
+LightBurn tests execute the original decoder with simulated normal/file byte
+sources and real CORE numeric helpers. Valid X/Y/negative moves divide distance,
+preserve feed/power, restore initial S when required and acknowledge one input
+cluster. Paired EOL, fragment reset, source changes and report chaining pass.
+Default unscaled16-value configuration only; not full parser/motion or physical
+LightBurn integration. Coolant/overdrive/alternate PPI and decoder modes remain.
+
+Fresh LOCAL LLVM measured-file/configuration coverage:
+
+| Suite / file | Covered/total lines | Covered/total branch outcomes |
+|---|---:|---:|
+| plugin_networking / networking.c | 157/165 (95.15%) | 84/106 (79.25%) |
+| plugin_laser_ppi / ppi.c | 144/146 (98.63%) | 83/100 (83.00%) |
+| plugin_laser_cluster / lb_clusters.c | 181/209 (86.60%) | 97/141 (68.79%) |
+
+All coverage result sets pass strict profiling-error checks; maximum counter
+paths229/198/203. Uncovered code remains in denominators. These are not whole
+repository/catalogue percentages. Known defects remain despite line coverage.
+
+GitHub-resolved source locks match clean local checkouts and master defaults:
+networking0b665ee0c0be5161d5044bdf2dcdf59ad62509f8,
+laser26934c6c9607e0b5ba4a711516a60d4657bf142c,
+lwIPd08f4773edd0182b7910fc8f046eed82ffcd67c9,
+COREb01f481072edecac33d5e40c25869359a5b3fa1f. Local immutable locks,
+classification and sanitizer logs are in ignored build-evidence/*batch6*, with
+per-suite coverage XML/JSON/HTML and build logs. lwIP is dependency-only and
+cannot be selected as a suite. New choices are in the separate Plugin tests
+workflow, awaiting default-branch installation. No hosted/GCC/hardware pass claim.
+
+Plasma d2f91b5 and motor9229617 sources were fetched unchanged and assessed for
+real registration/dependency requirements; no test suite or runtime support is
+claimed for them yet. RP2040's actual Trinamic-library gitlink was identified.
+Continue THC/material/Trinamic workflows and remaining modules/configurations
+from COMPONENT_TODO.md. The full goal is not complete.
+
+---
+
+# Previous batch5 checkpoint - 2026-10-24
+
+Goal remains active across all48 implementation repositories. No production
+sources or concurrent CORE work changed. The isolated plugin-driver-tests branch
+continues existing PR29, freshly confirmed OPEN/draft/unmerged. Fork workflow
+listing still contains only Core tests and Reusable host tests; no hosted plugin/
+driver success or merge is claimed.
+
+Added43 cases:30 keypad cases and13 driver-storage cases. One cumulative Windows
+Clang ASan/UBSan gate rebuilds/rechecks all twelve current-compatible suites:
+167 cases =144 clean +22 correct known assertions +1 previously scoped fan
+callback diagnostic. Zero unexpected failures/skips. All81 CI/reporting helpers
+pass9.743s. Actionlint and whitespace checks pass. Keypad source warnings remain
+visible under documented production-source rules; fixtures and both small driver
+sources retain -Werror. No sanitizer allowances added.
+
+Keypad cases cover I2C strobe/UART registration, fast/slow/step and diagonal jog
+commands, modifiers, preview hooks, released-key suppression before foreground
+processing, successful/rejected enqueue cancellation, legacy control, real CORE
+override queues, settings/report callbacks, initialization failures and NVS
+restart. The NVS provider is opaque CRC-backed RAM, with two-process persisted
+bytes and actual CORE CRC; no private serialized plugin structure is copied.
+Initial jog string expectations were corrected to CORE ftoa's trailing decimal
+point; actual numeric distances/feed assertions remain exact.
+
+Four correct regressions reproduce extended keys lost when char is signed:
+I2C/UART extended control and override cases. The identical unsigned-char controls
+pass. Compile modes are explicit, not inferred as universal firmware behavior.
+UART failed stream opening leaves no settings registration but init returns NVS
+allocation success; intended bool semantics remain TODO, not a declared defect.
+
+RP2040 original flash.c executes against a RAM XIP mapping and simulated erase/
+program/IRQ calls. Five cases verify erased reads, bytes copied, unchanged-write
+avoidance, page rounding with a padded source and readback verification failure.
+The host preinclude omits board driver.h setup intentionally; it does not compile
+the actual Pico SDK/PIO/pins or prove timing/multicore safety. ESP32 original
+main/nvs.c executes through simulated partition APIs. Eight cases verify discovery,
+absent/uninitialized storage, bytes, erase/write/read failures, invalidation,
+reinitialization and retry. Every erase checks all256 input values through the
+original temporary realtime filter; handler restoration is observed on success
+and failure. No physical flash/cache/UART timing or full-driver claim.
+
+Fresh LOCAL LLVM coverage, selected compiled files/configurations only:
+
+| Suite / measured file | Covered/total lines | Covered/total branch outcomes |
+|---|---:|---:|
+| plugin_keypad / keypad.c | 218/230 (94.78%) | 109/144 (75.69%) |
+| driver_rp2040_flash / flash.c | 12/12 (100.00%) | 2/2 (100.00%) |
+| driver_esp32_nvs / main/nvs.c | 16/16 (100.00%) | 14/14 (100.00%) |
+
+All coverage result sets pass strict profiling-error classification. Maximum
+counter paths237/203/199. Initial local keypad aggregation failed because the
+two conditional keypad_init definitions occupy different lines. Re-reading the
+same counters with --merge-mode-functions=separate, already used by hosted CI,
+fixes reporting; no source changes, ignored errors, denominator exclusion or
+redundant test run. Rejected attempt/log retained. These are not percentages for
+whole drivers/catalogues. Source/configuration gaps remain in the inventory.
+
+GitHub-resolved locks match clean source checkouts and verified master defaults:
+keypad c34933091df668d009fe11ed7397a9b78c9bfd79,
+RP2040 2f5bc4a06ecea3b1f78c1644623810f9b6416376,
+ESP32 0b2d3e1bb7da3b0ae0e03490b71275374eb84c67,
+CORE b01f481072edecac33d5e40c25869359a5b3fa1f. Local evidence is in ignored
+build-evidence/*batch5* plus per-suite sanitizer/coverage logs/XML/JSON/HTML.
+SDK boundary declarations are local test fixtures, not SDK version-lock claims.
+
+The new choices are wired into separate Plugin tests / Driver tests workflows,
+available after default-branch installation. No hosted/GCC/hardware pass claim.
+Next: remaining catalogue families, VFD/SD/MPG gaps and other driver modules;
+keep source incompatibilities and reference-only results visible below. The full
+goal is not complete.
+
+---
+
+# Previous batch4 checkpoint - 2026-10-24
+
+Goal remains active across all48 inventoried implementation repositories. No
+production sources or concurrent CORE work changed. Isolated plugin-driver-tests
+continues the existing OPEN/draft/unmerged PR29. Fresh fork API still registers
+only Core tests and Reusable host tests; no hosted component success is claimed.
+
+Added41 cases:28 GS20/MODVFD cases and13 SD streaming cases. One cumulative
+Windows Clang ASan/UBSan gate rebuilds/rechecks all nine current-compatible suites:
+124 cases =105 clean +18 correct assertion regressions +1 previously scoped fan
+callback diagnostic. Zero unexpected failures/skips. A subsequent fixture-only
+cancellation assertion verifies EXEC_MOTION_CANCEL before simulating the stop;
+its affected connection-change case and strict summary pass0.11s. All81 helpers pass9.626s;
+actionlint and whitespace checks pass. Original-source compiler warnings remain
+visible under documented production-source rules; fixtures retain -Werror.
+
+VFD tests use original coordinator/protocols, real CORE spindle registration,
+selection, at-speed math and Modbus API dispatch. A registered RTU fixture verifies
+exact requests and returns replies/rejections/exceptions. Tests cover CW/CCW/stop,
+asynchronous speed updates, query throttling, measured RPM, exception thresholds
+and success reset, cold-start alarm deferral, settings/report hook chaining,
+missing transport/storage, down-bus recovery and custom registers/conversions.
+Two-process EEPROM-backed restarts verify saved protocol settings without copying
+private serialized layouts. Initial feedback equality was replaced with0.01 RPM
+float tolerance; exact Modbus byte assertions remain.
+
+SD tests use original fs_stream.c/macros.c with real CORE VFS, stream, redirect
+and embedded read-only filesystem mounted at / via public VFS calls. Job byte
+streaming/completion, final newline, status-error recovery, reset, tool-change
+ack/suspend/resume, rejected startup, filtered/all listings, progress, realtime
+input filtering, connection-change termination and external M98-style macro repeat
+are observed. Parameter-local G65, expression ATC and physical SD are not claimed.
+Two correct known assertions reproduce extra EOF blank lines in already terminated
+job input and dumps. Unterminated job/dump controls pass. No new sanitizer waivers.
+
+The separate original SD littlefs adapter syntax check fails against current CORE
+on removed vfs_path_t (fs_littlefs.c58/64), after resolving real CORE/littlefs
+headers. No source alias/fallback masks it. Streaming success does not establish
+adapter or FATFS/SD hardware compatibility. Simulator reference-only results from
+batch3 below remain separate and unchanged.
+
+Fresh LOCAL LLVM coverage (only compiled original files/configurations):
+
+| Suite | Covered/total lines | Covered/total branch outcomes |
+|---|---:|---:|
+| plugin_spindle_vfd | 288/320 (90.00%) | 81/136 (59.56%) |
+| plugin_sdcard_stream | 394/591 (66.67%) | 174/378 (46.03%) |
+
+All coverage cases pass strict result/profile-error checks; max counter paths
+226/209. Unused supported paths remain counted. No catalogue-wide percentages.
+Coverage includes coordinator plus GS20/MODVFD and stream/macros configurations;
+other files/configurations remain in COMPONENT_INVENTORY.csv/COMPONENT_TODO.md.
+
+GitHub-resolved locks match clean source checkouts: spindle
+8a3ae47f5a218834da9c742424c3dd22c5629fdb, SD card
+d0fe753d622e79a60e54e729ba83f7207276114c, CORE
+b01f481072edecac33d5e40c25869359a5b3fa1f, EEPROM backend
+0c278db74edc38303b9d86583a7d51a1ec1be51e. Local evidence is retained in ignored
+build-evidence/*batch4* plus per-suite coverage HTML/XML/JSON and compile logs.
+Both suites are selectable in the separate Plugin tests workflow after default
+branch installation; no merge/hosted/hardware/GCC completion claim.
+
+Next: remaining VFD protocols, supported SD adapter/job paths, I2C keypad and
+host-testable driver helpers. The full goal is not complete.
+
+---
+
+# Previous batch3 checkpoint - 2026-10-24
+
+Continuing the active all-plugin/driver/CORE goal on isolated plugin-driver-tests.
+No production source edits or merges. The separate CORE chat remains untouched.
+PR29 is freshly confirmed OPEN/draft/unmerged; its fork still registers only
+Core tests and Reusable host tests. No hosted component success is claimed.
+
+83 cases against CORE b01f481072edecac33d5e40c25869359a5b3fa1f pass strict
+Windows Clang ASan/UBSan classification:66 clean,16 correct known assertions,
+1 previously scoped fan callback diagnostic,0 unexpected failures/skips.
+All81 Python helpers pass9.906s; actionlint and whitespace checks pass.
+The combined gate rebuilt/rechecked all seven current-compatible suites after
+CORE-root selection changes. Fixture files retain strict compiler warnings;
+original-source portability warnings remain visible and documented.
+
+New odometer10 cases use real EEPROM/CRC storage and pulse/state/time callbacks:
+restart persistence runs in two processes, reset preserves previous readings,
+foreground work persists spindle time, and settings callbacks reclaim pulse
+observation. Encoder12 cases use real CORE registration/claim/enumeration,
+actual EEPROM restart and observed realtime command bytes. Four correct
+regressions reproduce rapid command mapping and early enumeration termination.
+No encoder sanitizer allowances. Unsupported MPG routes remain TODO.
+
+Simulator VFS is separate from its EEPROM suite. Current CORE compilation fails
+on removed vfs_path_t; the failure log is retained, with no alias/fallback.
+The driver's own CORE gitlink4ec1ae44b857a70d2f9298344feac4b43ed0eb6b was fetched
+unchanged to a separate directory. Its explicit reference build passes strict
+classification:9 cases,6 clean/3 known assertions,0 unexpected/skipped/diagnostics.
+These confirm nested-directory metadata, stale remount success and buffered
+truncate defects. Reference success does not validate current CORE.
+
+New local LLVM coverage, selected original files/configurations only:
+
+| Suite / CORE selection | Lines | Branch outcomes |
+|---|---:|---:|
+| plugin_odometer / b01f481 | 124/124 (100.00%) | 44/50 (88.00%) |
+| plugin_encoder / b01f481 | 186/346 (53.76%) | 77/195 (39.49%) |
+| driver_simulator_vfs / reference4ec1ae4 | 125/139 (89.93%) | 54/72 (75.00%) |
+
+Each measured JUnit file passes strict profiling-error classification. Maximum
+counter paths217/229/223; no counters lost. Unused/unproven encoder code remains
+in the denominator. Earlier five-suite coverage below remains unchanged.
+Source locks were independently resolved through GitHub and verified against
+clean local source checkouts; odometer a752dc6, encoder b3e31df, EEPROM backend
+0c278db, Simulator150e3f9. Immutable full revisions are in ignored build-evidence
+*-batch3-source-lock.json alongside sanitizer/coverage logs, XML, JSON and HTML.
+
+Next substantial work: SD-card stream/job ownership and spindle integrations;
+resolve valid public encoder MPG contracts without private-state forcing. The
+48-repository inventory is partial; this checkpoint does not complete the goal.
+
+---
+
+# Plugin and driver coverage - 2026-10-24
+
+Goal: meaningful functional tests across all plugin/driver catalogue implementations
+and CORE. Never edit CORE/plugin/driver production sources or merge PRs. Preserve
+other work and use substantial batches. CORE coverage continues in its active chat.
+
+## Previous validated checkpoint
+
+Draft https://github.com/grblHAL/Unit_tests/pull/29 is OPEN/draft, not merged
+(fresh API check). Branch plugin-driver-tests tracks origin/plugin-driver-tests;
+initial checkpoint200ecaf was already published. Tested implementation:
+6bcfb404aacdaf39a1ff69150dd372ff1b134129; a documentation-only checkpoint records these results.
+Do not touch the concurrent CORE checkout or merge the PR.
+
+61 Windows Clang ASan/UBSan cases pass strict classification:48 clean,
+12 correct expected-failure regressions,1 exact known recovering fan-setting
+callback diagnostic; no unexpected failures/skips. Suite times: misc0.81s,
+EEPROM1.56s, fans0.88s, Simulator0.38s, OpenPNP0.51s. All81 CI helpers pass9.590s;
+actionlint also passes. No production source was edited.
+
+The batch adds OpenPNP, real EEPROM-backed littlefs format/write/unmount/remount/
+read with settings-region preservation, upper-bank CRC blocks, persisted fan
+ports, delayed program end, callback chaining and RGB/RGBW/servo readback.
+Dependency-only littlefs is independently locked and cannot be selected as a
+suite. Correct regressions additionally record M42 fractional output ports and
+littlefs physical read/program failures reported as success.
+
+One misc coverage attempt lost a counter file at Windows path length263 and is
+REJECTED. Both reporters now fail Clang/GCC profiling errors even for known tests;
+positive/negative helper controls and the saved real failure prove this. Verified
+misc coverage uses the shorter attached-workspace build-plugin-cov directory
+(max counter path226), reading this isolated branch's source. All five accepted
+coverage JUnit files have zero counter errors and pass strict classification.
+
+Latest LOCAL LLVM measured coverage (instrumented files/configurations only):
+
+| Suite | Covered/total lines | Covered/total branch outcomes |
+|---|---:|---:|
+| plugins_misc | 238/243 (97.94%) | 178/238 (74.79%) |
+| plugin_eeprom | 156/156 (100.00%) | 52/58 (89.66%) |
+| plugin_fans | 184/190 (96.84%) | 101/119 (84.87%) |
+| plugin_openpnp | 141/148 (95.27%) | 86/113 (76.11%) |
+| driver_simulator | 48/54 (88.89%) | 19/26 (73.08%) |
+
+These are not full repository/catalogue coverage: uncompiled files/configurations
+remain in the inventory. Same-source/configuration misc gains20 lines/31 outcomes
+and fans22 lines/18 outcomes over the initial checkpoint. EEPROM additionally
+instruments its littlefs adapter, so its denominator expanded; do not present its
+percentage change as a like-for-like gain. Known defects remain despite coverage.
+
+PR29 remains draft: the fork only registered Core tests and Reusable host tests
+at the last workflow-list check. New manual workflows require default-branch
+installation; no hosted component success or hardware verification is claimed.
+Do not repeatedly dispatch/poll unavailable workflows. Continue substantial
+independent batches from COMPONENT_TODO.md, starting Simulator VFS and the next
+catalogue implementations. Keep the full goal active; this checkpoint is not
+completion. Local logs/locks/HTML/XML/JSON remain in ignored build directories.
+
+## Current branch and source locks
+
+`plugin-driver-tests`, isolated from concurrent `coverage-batch-74` authoring,
+initially based on 58774aa; moved onto merged upstream for focused delivery. Only this chat's verified edits were moved from the shared
+checkout; original source checkouts and all existing work remain preserved.
+
+| Suite | Repository | Local revision |
+|---|---|---|
+| plugins_misc | grblHAL/Plugins_misc | 265711922037cab6b6e47a9560ef11da3a6e5f83 |
+| plugin_eeprom | grblHAL/Plugin_EEPROM | 0c278db74edc38303b9d86583a7d51a1ec1be51e |
+| plugin_fans | grblHAL/Plugin_fans | c5c3613c8d311b43427ec32d551a1e62a5a68531 |
+| driver_simulator | grblHAL/Simulator | 150e3f935e4b7cab7b90263b6b90b78912d9158d |
+| plugin_openpnp | grblHAL/Plugin_OpenPNP | 76dbbc1420dd9773b1008a21f9d97b266f564bc9 |
+
+CORE dependency: b01f481072edecac33d5e40c25869359a5b3fa1f.
+littlefs dependency: 6cb4e86540eca0d9ba62500a298385c9d863c8be. Sources are unchanged.
+Separate manual-only Plugin tests and Driver tests Actions callers reuse the
+compiler/sanitizer/coverage/reporter workflow. Each resolves immutable candidate
+and CORE revisions and uses separate artifacts, diagnostics and coverage filters.
+
+## Implemented workflows and confirmed defects
+
+- Misc plugins: M220 override validation/backup/restore; M150 RGB strip routing,
+  masks and brightness; M280 servo attachment, PWM configuration, angle and readback.
+- EEPROM plugin: single-/two-byte address layouts, 16/32/64/256-byte pages,
+  upper bank, CRC roundtrip/corruption, write failure and EEPROM versus FRAM delay.
+- Fan plugin: M106/M107, check mode, reset/program end, spindle-linked delayed
+  shutdown, realtime reports, toggling and unavailable resources/ports.
+- Simulator driver: erased-file creation, persistence, close-before-open,
+  block roundtrip and checksum regressions.
+
+Correct assertions retained for confirmed defect groups, documented under
+suite-specific KNOWN_BUGS.md with individual expected-failure properties:
+Simulator checksum writer/reader; EEPROM failed reads reported as successful;
+two-byte-address EEPROM writes checksums after failed payload transfer; fan
+spindle-link setter integer type differs from CORE callback contract.
+One exact Clang-only fan-setting callback type diagnostic is tracked; all other sanitizer diagnostics fail. Checksum-reader fixture provides spare valid
+caller buffer room so it validates rejection without relying on an overread.
+
+These are callback-level unit tests using original source and real CORE headers,
+math and CRC helpers. Full parser/firmware integration and board electrical/timing
+behavior are additional work, not implied by a host pass.
+
+## Full catalogue backlog and next action
+
+COMPONENT_INVENTORY.csv includes official and third-party plugin repositories,
+plus drivers.json and all architecture links from the driver overview. Duplicate
+laser features share their implementation repository; per-file/configuration
+coverage remains unfinished within each repository. SDKs, examples, senders,
+hardware accessories and unrelated WebUI dependencies are not driver entries.
+
+Catalogue snapshots: grblHAL/plugins f642e7f82fcf91077048cea7833dbdff6afde743;
+grblHAL/drivers 9f443d40ccb7060b8bdcaece2b67100e5c2dfc25. Reconcile future
+catalogue additions before claiming all implementations are accounted for.
+
+## Initial validation checkpoint
+
+43 Windows Clang ASan/UBSan component cases classified strictly: 33 clean,
+9 correct expected-failure regressions, 1 exact known recovering fan-setting
+function-type diagnostic; zero unexpected failures or skipped cases. Individual
+suite wall times: misc0.85s, EEPROM1.74s, fans0.58s, Simulator0.52s.
+CI helpers78/78 passed7.271s. YAML parsing and checksum-verified actionlint1.7.7
+passed for the new callers/reusable workflow. Live resolver plus preservation
+checks verified all four candidate/CORE locks against unchanged local checkouts.
+Sandbox temp-directory failures were infrastructure-only; retry with a workspace
+temp directory passed. No production source changes were needed.
+
+Local LLVM coverage measurements (same source revisions above):
+
+| Suite | Covered/total measured lines | Covered/total branch outcomes |
+|---|---:|---:|
+| plugins_misc | 218/243 (89.71%) | 147/238 (61.76%) |
+| plugin_eeprom | 134/136 (98.53%) | 46/50 (92.00%) |
+| plugin_fans | 162/190 (85.26%) | 83/119 (69.75%) |
+| driver_simulator | 48/54 (88.89%) | 19/26 (73.08%) |
+
+These denominators contain instrumented files/configurations only; they do NOT
+include uncompiled implementations in these repositories or the full catalogue.
+Inventory/report missing-file rows remain essential. Windows LLVM results are
+not substituted for hosted Linux GCC/Clang evidence. Local build-evidence and
+build-coverage-* directories retain logs, source locks and HTML/XML/JSON reports.
+
+Next: publish one focused initial-support draft PR against current upstream,
+then continue the highest-value remaining fan/misc workflows and additional
+catalogue implementations. New manual workflows require installation on the
+default branch before GitHub exposes dispatch controls; do not merge them
+yourself or claim hosted success. No hosted run or full-coverage claim is made.

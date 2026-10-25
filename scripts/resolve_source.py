@@ -60,9 +60,13 @@ def resolve(suite, repository="", ref="", pr="", request=api):
 
 
 def resolve_plan(suites, suite_name, repository="", ref="", pr="", core_ref="", request=api, source_base_ref="", source_base_repository=""):
-    if suite_name not in suites:
+    if suite_name not in suites or suites[suite_name].get("source_only", False):
         raise ValueError("Suite has no tests registered: " + suite_name)
+    host_bits = suites[suite_name].get("host_bits", 64)
+    if type(host_bits) is not int or host_bits not in (32, 64):
+        raise ValueError("Suite host_bits must be 32 or 64")
     source = resolve(suites[suite_name], repository, ref, pr, request)
+    source["host_bits"] = host_bits
     if source_base_repository and not source_base_ref:
         raise ValueError("source-base-repository requires source-base-ref")
     if source_base_ref and source_base_ref != "0" * 40:
@@ -99,8 +103,8 @@ def main():
     print(json.dumps(source, indent=2))
     if os.environ.get("GITHUB_OUTPUT"):
         with open(os.environ["GITHUB_OUTPUT"], "a") as output:
-            for key in ("repository", "sha", "path", "coverage_filter"):
-                output.write(key + "=" + source[key] + "\n")
+            for key in ("repository", "sha", "path", "coverage_filter", "host_bits"):
+                output.write(key + "=" + str(source[key]) + "\n")
     if os.environ.get("GITHUB_STEP_SUMMARY"):
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as summary:
             summary.write("### Tested sources\n\n")

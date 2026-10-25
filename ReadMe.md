@@ -254,28 +254,166 @@ repository needs an explicit ref or PR number. Unknown suites and ambiguous
 PR/ref combinations fail before building. Caller inputs are passed as data,
 not evaluated as shell commands. Core-only calls should leave `core_ref` empty.
 
-### Extending to plugins
+### Plugin and driver tests
 
-[ci/callers/plugin.yml.example](ci/callers/plugin.yml.example) is intentionally a
-template until the plugin's tests exist. Install callers in actual plugin repos;
-the Plugins overview is a catalogue, not a combined source checkout.
+Actions has separate manual **Plugin tests** and **Driver tests** workflows.
+Choose an implementation suite, optional candidate repository/ref/PR, and
+optional `core_ref`. Each run records both source revisions, runs GCC/Clang with
+sanitizers, measures that implementation's code, and publishes its own test
+results, known defects, diagnostics and coverage artifacts. **Core tests** remains
+separate. New dispatch workflows become available after installation on the
+repository's default branch.
 
-To add a suite, register its repository, branch, path under `plugins/<name>`,
-`dependencies: ["core"]`, CMake source/options, CTest regex, diagnostics directory
-and coverage filter in `ci/suites.json`. Add its fixtures/tests and CMake support
-first, then replace the template's suite/run label and install it upstream.
-Unknown suites fail explicitly instead of silently running only core tests.
-The resolver already locks dependency sources independently: a plugin candidate
-is selected from its PR or commit, while `core_ref` defaults to core's configured
-branch and can select another branch/tag/SHA. All jobs fetch both exact SHAs.
-Each invocation must have a unique `run_label` when multiple suites/core versions
-are called in one upstream run, to keep artifacts distinct.
+STM32 F1/F3/F4/F7/H7 and LPC176x runs also have an **arm-modules** job.
+It compiles the original serial module and full vendor UART unit (plus LPC
+IOCON) for selected Cortex-M targets with `arm-none-eabi-gcc`. Its artifacts
+record the same source lock, compiler version, commands, source/object hashes
+and ELF architecture. These compile checks are separate from unit-test counts
+and coverage; they do not link firmware or run on a controller. Locally, after
+fetching one of these driver locks, run `python scripts/check_arm_modules.py`.
+Use `--compiler /path/to/arm-none-eabi-gcc` if it is outside `PATH`.
 
-Core and plugin tests share compiler/sanitizer/coverage execution, but each suite
-selects its tests, diagnostic inventory and coverage files. Plugin fixtures may
-also require representative core tests in their regex. Defect cleanup retains
-correct regression assertions; new upstream fixes may legitimately fail the
-existing expected-failure inventory until that inventory is updated.
+| Workflow | Suite | Initial tested behavior |
+|---|---|---|
+| Plugin tests | `plugins_misc` | M220/M150/M280, expanders, probes, homing/event outputs and ESP-AT startup/session/storage/networking through real CORE streams/ports |
+| Plugin tests | `plugin_eeprom` | I2C EEPROM/FRAM page/block storage |
+| Plugin tests | `plugin_fans` | One/two/three/four-fan commands, saved settings, delayed shutdown, spindle links and reports |
+| Driver tests | `driver_simulator` | Simulator EEPROM storage |
+| Plugin tests | `plugin_openpnp` | Digital/analog I/O, ADC scaling, position reports and synchronization |
+| Plugin tests | `plugin_odometer` | Pulse distance, elapsed/spindle time, EEPROM restart and reset backup |
+| Plugin tests | `plugin_encoder` | Registered encoder ownership, override commands and persisted settings |
+| Plugin tests | `plugin_spindle_vfd` | GS20/MODVFD/H100/YL620/Huanyang v1/v2/Nowforever commands and feedback; load reporting and protocol recovery |
+| Plugin tests | `plugin_spindle_onoff` | On/off and direction outputs; persisted port settings and resource conflicts |
+| Plugin tests | `plugin_spindle_pwm` | Resource rejection only; PWM activation proposals blocked by missing source context |
+| Plugin tests | `plugin_spindle_select` | M-code selection and binding checks; tool-threshold ABI proposals unregistered |
+| Plugin tests | `plugin_spindle_offset` | Requested offset/return motion and G92 behavior at the host motion boundary |
+| Plugin tests | `plugin_spindle_clone` | Primary/clone signal routing, CORE PWM conversion, switching and provider rejection |
+| Plugin tests | `plugin_spindle_stepper` | Original CORE secondary-stepper polling/timer callbacks, position sync and motor claims |
+| Plugin tests | `plugin_sdcard_stream` | File input, stream ownership, error/reset recovery and external macro repeats |
+| Plugin tests | `plugin_sdcard_fatfs` | Original FatFs/SD lifecycle, macro calls and file-stream commands on RAM-backed FAT12 media; file I/O and recovery |
+| Driver tests | `driver_simulator_vfs` | File/directory workflows; current CORE compile incompatibility recorded |
+| Plugin tests | `plugin_keypad` | I2C/UART jog commands, overrides and NVS restart; LED outputs and stored macro execution/recovery |
+| Plugin tests | `plugin_networking` | Interface reports, Telnet/CORE streams and multipart uploads through VFS/FatFs |
+| Plugin tests | `plugin_laser_ppi` | Registered laser PPI spacing, mode changes, shutdown and hardware delegation |
+| Plugin tests | `plugin_laser_coolant` | Start confirmation, delayed shutoff, coolant-loss IRQs and virtual sensor callbacks |
+| Plugin tests | `plugin_laser_overdrive` | M129 availability/validation, CORE PWM overdrive calculation and reset/program cleanup |
+| Plugin tests | `plugin_laser_cluster` | LightBurn cluster expansion, acknowledgement suppression and stream/reset hooks |
+| Plugin tests | `plugin_trinamic` | TMC2209 UART/reports/runtime; TMC2130/TMC5160 SPI-register startup, current, microsteps and recovery |
+| Plugin tests | `plugin_plasma` | Materials/imports, EEPROM-backed mode boot, arc retry/loss and up/down/voltage PID height control |
+| Plugin tests | `plugin_bluetooth` | HC-05 AT configuration, stream switching, settings and EEPROM restart |
+| Plugin tests | `plugin_embroidery_readers` | DST/PES decoding, coordinator conversion and streamed needle/motion requests through real VFS reads |
+| Driver tests | `driver_rp2040_flash` | Flash-copy behavior with simulated SDK/IRQ calls |
+| Driver tests | `driver_esp32_nvs` | Partition storage, failures and realtime-handler restoration with simulated SDK calls |
+| Driver tests | `driver_stm32f4_flash` | Flash read/write, erase retry and failure handling with simulated HAL calls |
+| Driver tests | `driver_stm32f7_flash` | Flash read/write and halfword failure regression with simulated HAL calls |
+| Driver tests | `driver_lpc176x_flash` | IAP storage, failures and IRQ restoration in a mapped host flash region |
+| Driver tests | `driver_stm32h7_flash` | H743/H723 flash-word writes, tail padding and bank selection |
+| Driver tests | `driver_stm32f1_flash` | Page erase/retry and halfword storage failure handling |
+| Driver tests | `driver_stm32f3_flash` | Flash-size register geometry, page storage and halfword failure regression |
+| Plugin tests | `plugin_auxp` | Digital output change reports and reset/chaining |
+| Plugin tests | `plugin_interlock` | Forward/inverse spindle interlock requests and settings |
+| Plugin tests | `plugin_pneumaseal` | Air-seal state, spindle and delayed-off lifecycle |
+| Plugin tests | `plugin_thermistor` | ADC reports, calibration and thermal alarm requests |
+| Plugin tests | `plugin_virtual_inputs` | Real CORE probe registration, virtual contacts, commands and reset |
+| Plugin tests | `plugin_homingaccel` | Per-axis homing override requests, restoration, units and persistence |
+| Plugin tests | `plugin_rgb_sienci` | Legacy/advanced RGB state, override, animation and tool-change callbacks |
+| Plugin tests | `plugin_flexgpio` | I2C expander registration, packets, input edges and configuration |
+| Plugin tests | `plugin_atci` | Keepout checks, jog clipping, rack sensors and M960 regression |
+| Plugin tests | `plugin_mpg_transport` | Framed/plain transport; CORE stream claim, mode selection, broadcast and passive status/command routing |
+| Plugin tests | `plugin_webui` | Argument/assets plus v2/v3 file listing and upload handlers through real CORE VFS/JSON and FatFs; HTTP transport and board storage remain |
+| Driver tests | `driver_imxrt1062_pwm` | Teensy 4.0/4.1/MicroMod PWM register, routing and ownership workflows |
+| Driver tests | `driver_stm32f7_serial` | Original F756 SDK one/three-stream queues, IRQ routing, format and CORE stream lifecycle |
+| Driver tests | `driver_stm32h7_serial` | Native H743 one/three-stream workflows and H723 initialization with original SDK prescaler data |
+| Driver tests | `driver_stm32f1_serial` | Original F103 SDK USART1 baud, queues and CORE stream lifecycle |
+| Driver tests | `driver_stm32f3_serial` | Original F303 SDK fixed USART3/115200 queues and CORE stream lifecycle |
+| Driver tests | `driver_stm32f4_serial` | Original ST/CMSIS one/three-stream queues, IRQ routing, format and CORE stream lifecycle |
+| Driver tests | `driver_sam3x8e_serial` | Dual UART/USART queues, callbacks, settings and CORE stream suspend |
+| Driver tests | `driver_tm4c123_eeprom` | Aligned EEPROM, CRC storage and transfer failures |
+| Driver tests | `driver_ti_shared_eeprom` | Standalone TI shared EEPROM candidate and CRC regressions |
+| Driver tests | `driver_tm4c123_serial` | Original UART0 queues, realtime dispatch and CORE stream suspend |
+| Driver tests | `driver_msp432p_serial` | Primary UART queues and CORE stream lifecycle with real TI/CMSIS headers |
+| Driver tests | `driver_psoc5_serial_reference` | Explicit legacy CORE reference; PSoC UART callbacks, not current-CORE/SDK validation |
+| Driver tests | `driver_ti_shared_serial_reference` | Standalone shared UART0 with fixed legacy CORE/Tiva headers; not a parent firmware build |
+
+These are initial host tests, not full plugin/driver coverage or board validation.
+The explicit PSoC5/TI-shared serial references lock the selected20250518 CORE
+dependency separately and reject `core_ref` overrides. They never fall back from
+current CORE or contribute to current-compatible totals. PSoC generated UART APIs
+are host declarations, not Cypress SDK/firmware validation; shared serial tests
+use Tiva headers without claiming an MSP432E or archived TM4C1294 parent build.
+Trinamic locks and compiles the actual chip library. TMC2209 UART devices and
+TMC2130/TMC2240/TMC5160 SPI and TMC2660 SPI20 register callbacks are simulated; physical wire/CS/pipeline
+timing and electrical measurements remain untested. Plasma tests use real CORE I/O/secondary-stepper/spindle/VFS APIs
+with simulated pins, voltage, time and controller state. Voltage PID uses the
+original secondary-stepper implementation; full CORE suspension, real electrical
+calibration and hardware timing remain separate work.
+Bluetooth tests simulate HC-05 replies and STATE inputs while using real CORE
+stream/I/O registration; radio and shared-MPG operation remain separate. Embroidery
+tests compile Tajima/Brother readers and the job coordinator. Conversion and
+streamed stepper/trigger workflows use captured planner/spindle boundaries; actual
+planner motion, needle mechanics and physical timing remain untested. Networking
+locks upstream lwIP headers separately. Telnet tests run original daemon callbacks
+and real CORE stream routing with simulated TCP/pbuf boundaries; multipart tests
+parse ordinary uploads. File-upload handlers read back actual VFS/FatFs files
+over RAM media. No live TCP stack, HTTP upload server or network hardware
+is exercised. Laser tests observe simulated driver pulses
+and byte-stream transformations; no physical laser operation is established.
+Driver SDK boundaries are simulated; no actual Pico SDK/ESP-IDF/STM32/NXP firmware
+build or physical flash/interrupt timing is established. STM32 storage suites use 32-bit host targets. LPC keeps 32-bit physical flash
+addresses with native-width RAM pointers. Linux jobs install multilib runtimes
+only when the locked suite requests them. LPC's padded-source case does not establish safety
+for a normal unpadded CORE allocation. Teensy PWM uses actual SDK register
+headers with simulated memory and pin-mux lookup. SAM serial uses actual device/
+Arduino headers and CORE streams with simulated clocks/NVIC/IRQ delivery. SDK
+revisions are locked separately; these are not Arduino/ARM firmware builds. Keypad tests explicitly compare
+signed/unsigned char builds; extended-key and macro-key defects are compiler-specific.
+Macro cases use registered settings and original EEPROM. LED register writes and
+macro parser/transport callbacks remain driver/controller boundaries; auxiliary
+macros, protocol-display runtime and physical devices are not established by them.
+See [component progress](tests/COMPONENT_PROGRESS.md) and the
+[repository backlog](tests/COMPONENT_INVENTORY.csv) for remaining work. Each suite
+has its own `KNOWN_BUGS.md`; keep correct regression assertions when removing
+expected-failure handling for an upstream fix.
+
+The [plugins](https://github.com/grblHAL/plugins) and
+[drivers](https://github.com/grblHAL/drivers) overviews are catalogues. Register
+actual implementation repositories in `ci/suites.json`. Add a standalone CMake
+project under `tests/plugins/<name>` or `tests/drivers/<name>` before adding its
+suite to a workflow's choices. Unknown suites and zero selected tests fail.
+
+For a local run in a fresh checkout:
+
+```sh
+python scripts/resolve_source.py --suite plugin_eeprom --core-ref CORE_SHA
+python scripts/prepare_sources.py
+python scripts/configure_suite.py --mode sanitizers --compiler clang
+python scripts/build_suite.py
+python scripts/run_suite.py test
+python scripts/run_suite.py summary
+```
+
+Replace `CORE_SHA` with a real core commit, or omit `core_ref` to select the
+configured default. Use a fresh checkout when switching locked sources: source
+preparation preserves existing directories rather than overwriting them.
+Host callbacks validate original component behavior against CORE interfaces;
+complete board builds and electrical/timing behavior need separate SDK/hardware
+checks. [ci/callers/plugin.yml.example](ci/callers/plugin.yml.example) remains
+an upstream caller template; each invocation needs a unique `run_label`.
+
+Simulator VFS currently fails to compile against CORE `b01f481` because its
+`vfs_path_t` dependency was removed. Its separate reference run uses the
+Simulator gitlink CORE `4ec1ae44b857a70d2f9298344feac4b43ed0eb6b`: select that
+exact `core_ref` in a fresh checkout to reproduce it. There is no automatic
+fallback. A passing reference run does not establish current-CORE compatibility.
+
+The EEPROM suite also locks the actual littlefs dependency and tests a complete
+format/write/unmount/remount/read workflow without touching the settings region.
+Odometer, encoder and VFD suites also lock the actual EEPROM backend for
+persistent storage. SD streaming uses real CORE VFS/stream modules with a
+read-only host filesystem; it does not establish FATFS/SD hardware or littlefs
+adapter compatibility. The latter currently fails its CORE API compile check.
+Dependency-only registry entries use `source_only: true`: they are fetched at an
+exact resolved revision and cannot be selected as test suites.
 
 ### Source registry fields and a future plugin example
 
@@ -285,7 +423,8 @@ The registry contains metadata, not source code or submodule commit hashes:
 |---|---|
 | `repository`, `ref` | Public source repository and default branch/tag |
 | `path` | Ignored checkout directory inside this workspace |
-| `dependencies` | Other registered source suites to fetch, such as `core` |
+| `dependencies` | Registered source entries to fetch, such as `core` or `littlefs` |
+| `source_only` | `true` for a dependency checkout that has no selectable test suite |
 | `cmake_source`, `cmake_options` | CMake project directory and configure arguments |
 | `test_regex` | CTest names included in this suite; selecting zero tests fails |
 | `coverage_filter` | gcovr file filter for this suite's measured code |

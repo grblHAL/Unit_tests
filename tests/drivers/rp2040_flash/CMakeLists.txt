@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.20)
+project(grblhal_rp2040_flash_tests LANGUAGES C)
+include(../../components.cmake)
+foreach(behavior erased_read roundtrip unchanged page_rounding verification_failure)
+ component_case(driver_rp2040_flash.${behavior} ${behavior}.c rp_host.c "${HARNESS_ROOT}/drivers/rp2040/flash.c")
+ target_include_directories(driver_rp2040_flash.${behavior} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/sdk")
+ target_compile_options(driver_rp2040_flash.${behavior} PRIVATE -include "${CMAKE_CURRENT_SOURCE_DIR}/rp_host.h")
+endforeach()

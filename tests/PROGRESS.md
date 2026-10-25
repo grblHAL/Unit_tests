@@ -1,3 +1,18 @@
+# PR31 conflict repair - 2026-10-25
+
+The user explicitly authorized resolving and merging PR30/PR31; that overrides
+older no-merge/frozen-head notes for these two PRs only. Coverage expansion stays
+stopped. Work occurs in isolated repair checkouts; the original coverage checkout
+and the unfinished badge branch are preserved.
+
+Integrated PR30's base/conflict repair, including the merged PR29 infrastructure.
+Only this progress file required another textual resolution; retained PR31's
+newer closeout and diagnostic evidence rather than restoring PR30's older state.
+Functional cases, fixtures, CMake and existing exact diagnostic entries are
+unchanged from the delivered PR31 head. A new locked combined hosted gate is
+required before marking PR31 ready or merging it. No source fixes or widened
+failure matching are part of this repair.
+
 # Current checkpoint - 2026-10-25
 
 Coverage expansion STOPPED at the user's request on2026-10-25.

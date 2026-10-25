@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.20)
+project(grblhal_auxp_tests LANGUAGES C)
+include(../../components.cmake)
+foreach(behavior initial_report output_changes unchanged_output untracked_ports driver_reset plugin_options optional_hooks)
+  component_case(plugin_auxp.${behavior} ${behavior}.c auxp_host.c "${COMPONENT_CORE_ROOT}/nuts_bolts.c" "${HARNESS_ROOT}/plugins/auxp/auxp.c")
+  target_compile_definitions(plugin_auxp.${behavior} PRIVATE AUXP_ENABLE=1)
+endforeach()

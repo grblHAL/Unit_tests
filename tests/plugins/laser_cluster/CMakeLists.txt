@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.20)
+project(grblhal_laser_cluster_tests LANGUAGES C)
+include(../../components.cmake)
+foreach(behavior plain_stream x_expansion y_equal_power file_expansion fragment_reset stream_change reports paired_endings)
+ component_case(plugin_laser_cluster.${behavior} ${behavior}.c cluster_host.c "${HARNESS_ROOT}/plugins/laser/lb_clusters.c" "${COMPONENT_CORE_ROOT}/nuts_bolts.c")
+ target_compile_definitions(plugin_laser_cluster.${behavior} PRIVATE LB_CLUSTERS_ENABLE=1)
+endforeach()
+set_source_files_properties("${HARNESS_ROOT}/plugins/laser/lb_clusters.c" PROPERTIES COMPILE_OPTIONS -Wno-error)
