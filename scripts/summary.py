@@ -48,6 +48,12 @@ else:
             expected_diagnostic = any(p.get("name") == "cmake_labels" and "known_sanitizer_bug" in p.get("value", "").split(";") for p in case.findall("./properties/property"))
             diagnostics = []
             output = "\n".join(case.findtext(tag, "") for tag in ("system-out", "system-err"))
+            profile_errors = [line for line in output.splitlines() if line.lstrip().startswith(("profiling:", "libgcov profiling error:"))]
+            if profile_errors:
+                case.set("coverage_error", "true")
+                failed += 1
+                ET.SubElement(case, "failure", message="Coverage counter data could not be saved; check writable output paths and rerun coverage.").text = "\n".join(profile_errors)
+                continue
             fatal = any(p.get("name") == "cmake_labels" and "known_crash" in p.get("value", "").split(";") for p in case.findall("./properties/property"))
             expected_diagnostic = expected_diagnostic or fatal
             if fatal and matches_known_crash(case.get("name"), output, manifest):
@@ -78,16 +84,22 @@ else:
         failed += len(sanitizer_failures)
         known = sum(any(p.get("name") == "cmake_labels" and "known_bug" in p.get("value", "").split(";") for p in c.findall("./properties/property"))
                     and not any(c.find(tag) is not None for tag in ("failure", "error", "skipped"))
-                    and c.get("sanitizer_status") is None for c in cases)
+                    and c.get("sanitizer_status") in (None, "known") for c in cases)
+        passed_diagnostics = len(known_diagnostics) - sum(
+            c.get("sanitizer_status") == "known" and any(
+                p.get("name") == "cmake_labels" and "known_bug" in p.get("value", "").split(";")
+                for p in c.findall("./properties/property")) for c in cases)
         skipped = sum(c.find("skipped") is not None for c in cases)
-        lines = [f"## {args.suite_name} test results", f"Tests labelled `known_bug` are expected failures confirming documented defects (known crashes do not validate assertions after the fault); see {args.diagnostics_directory.as_posix()}/KNOWN_BUGS.md.", f"**{len(cases) - failed - skipped - known - len(known_diagnostics)} clean passes · {len(known_diagnostics)} passed with known sanitizer diagnostics · {known} known regressions reproduced · {failed} failed · {skipped} skipped**", "", "| Test | Result | Seconds |", "|---|---|---:|"]
+        lines = [f"## {args.suite_name} test results", f"Tests labelled `known_bug` are expected failures confirming documented defects (known crashes do not validate assertions after the fault); see {args.diagnostics_directory.as_posix()}/KNOWN_BUGS.md.", f"**{len(cases) - failed - skipped - known - passed_diagnostics} clean passes · {passed_diagnostics} passed with known sanitizer diagnostics · {known} known regressions reproduced · {failed} failed · {skipped} skipped**", "", "| Test | Result | Seconds |", "|---|---|---:|"]
         affected = [case for case in cases if case.find("failure") is not None or case.find("error") is not None or case.get("sanitizer_status") in ("failed", "missing")]
         if affected:
             guidance = ["", "### Failure guidance", ""]
             for case in affected:
                 name = html.escape(case.get("name", "unknown")).replace("|", "&#124;")
                 labelled = any(p.get("name") == "cmake_labels" and any(label in p.get("value", "").split(";") for label in ("known_bug", "known_sanitizer_bug")) for p in case.findall("./properties/property"))
-                if labelled:
+                if case.get("coverage_error"):
+                    advice = "Coverage counter data could not be saved. Check writable output paths, path length and free disk space, then rerun coverage."
+                elif labelled:
                     advice = "See " + known_link + "; it may be a fixed regression. Inspect the actual assertion/diagnostic before concluding it is fixed. If the correct expectations now pass, retain the test, remove only its linked WILL_FAIL/sanitizer/wrapper exception, delete the resolved known-bug entry, and rerun the suite plus summary. An unrelated crash or different failure is not proof of a fix."
                 else:
                     advice = "Inspect the failing assertion and LastTest.log; reproduce with `ctest --test-dir build -V -R` and this test's name. Compare the selected source change with the intended contract and fixture startup/configuration. Fix a source regression, or update the test/fixture only for a confirmed intended API/behavior change. Add boundary/error coverage for new behavior; do not weaken assertions or broadly suppress sanitizer failures."
@@ -102,10 +114,16 @@ else:
                 status = "❌ Known regression changed; see guidance"
             if case.get("sanitizer_status"):
                 status = "⚠️ Assertions passed; known sanitizer diagnostic" if case.get("sanitizer_status") == "known" else "❌ Known sanitizer diagnostic absent; review exception" if case.get("sanitizer_status") == "missing" else "❌ Unexpected sanitizer diagnostic"
+                if case.get("sanitizer_status") == "known" and any(
+                        p.get("name") == "cmake_labels" and "known_bug" in p.get("value", "").split(";")
+                        for p in case.findall("./properties/property")):
+                    status = "Known defect and sanitizer diagnostic reproduced"
                 if case.get("sanitizer_status") == "failed" and os.environ.get("GITHUB_ACTIONS") == "true":
                     message = (case.get("name", "unknown") + "\n" + case.get("sanitizer_output"))[-6000:].replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
                     print(f"::error title=Unexpected sanitizer diagnostic::{message}")
             name = html.escape(case.get("name", "unknown")).replace("|", "&#124;")
+            if case.get("coverage_error"):
+                status = "Coverage counter write failed"
             lines.append(f"| {name} | {status} | {case.get('time', '0')} |")
             for tag in ("failure", "error"):
                 detail = case.find(tag)
@@ -122,7 +140,7 @@ else:
             if case.get("sanitizer_output"):
                 lines.extend(["", "<details><summary>Sanitizer output: " + html.escape(case.get("name", "unknown")) + "</summary><pre>" + html.escape(case.get("sanitizer_output")) + "</pre></details>", ""])
         if known_diagnostics and os.environ.get("GITHUB_ACTIONS") == "true":
-            print(f"::warning title=Known sanitizer diagnostics::{len(known_diagnostics)} tests passed assertions but reproduced diagnostics documented in {args.diagnostics_directory.as_posix()}/KNOWN_BUGS.md; review its known_sanitizer_diagnostics.json when updating sources.")
+            print(f"::warning title=Known sanitizer diagnostics::{len(known_diagnostics)} tests reproduced diagnostics documented in {args.diagnostics_directory.as_posix()}/KNOWN_BUGS.md; review its known_sanitizer_diagnostics.json when updating sources.")
     else:
         measured = {entry.get("filename", "").replace("\\", "/"): entry for entry in root.iter("class")}
         inventory = sorted(path.as_posix() for path in args.source_directory.rglob("*") if path.is_file() and path.suffix in {".c", ".h"})

@@ -1,0 +1,10 @@
+[
+  {
+    "test": "plugin_fans.spindle_delay",
+    "source": "tests/plugins/fans/spindle_delay.c",
+    "lines": [
+      8
+    ],
+    "message_pattern": "call to function set_spindle_link through pointer to incorrect function type 'status_code_t \\(\\*\\)\\(setting_id_t, unsigned (short|long)\\)'"
+  }
+]

@@ -1,3 +1,17 @@
+# PR30 conflict repair - 2026-10-25
+
+The user explicitly authorized resolving and merging PR30/PR31 in this chat;
+that request supersedes older no-merge/frozen-head notes for these two PRs only.
+Coverage expansion remains stopped. No CORE source or functional case changed.
+
+Merged current upstream master (PR29's component infrastructure) into PR30.
+The sole textual conflict was scripts/test_ci_report.py; retained both CORE
+coverage-summary tests and the component optional-ARM-job test. All101 helpers
+pass16.031s; all four workflow files pass actionlint. Existing exact functional
+head59b3ad9 was freshly verified against run40111349496: all five jobs succeeded.
+This integration is not represented as a fresh exact-head hosted functional run.
+Preserve the separate active coverage checkout and pending badge branch.
+
 # Current checkpoint - 2026-10-24
 
 Full objective remains meaningful supported CORE line AND branch coverage.

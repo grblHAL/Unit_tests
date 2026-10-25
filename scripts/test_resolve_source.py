@@ -62,6 +62,20 @@ class SourceResolutionTests(unittest.TestCase):
             resolve(SUITE, ref="master", request=lambda *args: {"sha": "master"})
 
 class DependencyPlanTests(unittest.TestCase):
+    def test_host_width_is_locked_with_default_or_explicit_target(self):
+        for width in (None, 32, 64):
+            suite = dict(SUITE)
+            if width is not None:
+                suite["host_bits"] = width
+            lock = resolve_plan({"core": suite}, "core", request=lambda *args: {"sha": SHA})
+            self.assertEqual(lock["host_bits"], width or 64)
+
+    def test_invalid_host_width_is_rejected_before_fetch(self):
+        for width in (0, 16, 128, "32", True):
+            with self.subTest(width=width), self.assertRaisesRegex(ValueError, "host_bits"):
+                resolve_plan({"core": dict(SUITE, host_bits=width)}, "core",
+                             request=lambda *args: self.fail("network requested"))
+
     def test_plugin_candidate_and_core_are_locked_independently(self):
         suites = {"core": SUITE, "fixture": {"repository": "owner/plugin", "ref": "master", "path": "plugins/fixture", "dependencies": ["core"]}}
         calls = []
