@@ -1,3 +1,33 @@
+# Local tool-table compatibility checkpoint - 2026-10-25
+
+Goal active. Authored seven tool-table/VFS scenarios, but original tooltable.c
+cannot compile with pinned current CORE. Independent unchanged-source Clang23
+syntax check confirms tooltable.c452 assigns bool writeTools(tool_data_t *) to
+CORE's bool (*)(tool_data_t *, bool persist) callback. This is separate from
+fixture caller errors, which were corrected to CORE's actual two-argument API.
+No cast, source/header modification or older-CORE fallback conceals rejection.
+
+Scenarios and bounded file backend are preserved UNREGISTERED under
+ tests/proposals/misc_tooltable (README records source pins/contracts). They have
+not executed and are excluded from counts, coverage and known-result labels.
+Random sparse pockets remains an unverified candidate, not a classified defect.
+Original source also warns about uint_fast8_t index against300-byte bound; no
+oversized/malformed-line runtime is executed. Syntax evidence is ignored under
+build-evidence/tooltable-syntax-batch32.{json,log}; original checkouts remain clean.
+
+Removed the tentative default registration completely and reconfigured the
+active misc project; ctest -N -R tooltable confirms0 registered cases. Existing
+suite configuration is restored. This is compatibility evidence/proposal work,
+not new passing unit coverage. BLTouch's five local validated cases remain from
+prior checkpoint. Authored compatible total stays827, last delivered gate822
+plus26 separately validated legacy references. No full gate/hosted claim.
+
+Next: retain tool-table source/API requirement for upstream resolution, continue
+remaining supported I/O/controller workflows and accumulate a substantial batch.
+The full goal remains active; this module mismatch does not block other work.
+
+---
+
 # Local BLTouch optional-provider checkpoint - 2026-10-25
 
 Goal active. Five new cases plus all10 prior BLTouch cases pass focused Windows

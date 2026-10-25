@@ -454,3 +454,15 @@ and its known allowance is removed. Earlier progress notes claiming that defect
 are superseded. BLTouch S/D/H option flow works. Retain separate correct fractional-
 D rejection regression; no invalid input is executed. Full parser integration
 still needs tests; do not treat isolated callback handoff as controller execution.
+
+## Tool table: current CORE callback incompatibility
+
+Original Plugins_misc2657119 tooltable.c452 registers one-argument writeTools as
+CORE b01f481's two-argument set_tool_data_ptr(tool_data_t *, bool persist).
+Independent Clang syntax check rejects it unchanged. Seven unregistered proposals
+and an unvalidated bounded file backend live in tests/proposals/misc_tooltable;
+none execute or count toward coverage/results. The sparse-random-pocket scenario
+is unclassified until execution. Do not add casts/aliases/header bypasses/source
+edits or automatic legacy fallback. Resolve explicit upstream API compatibility,
+then validate fixtures/scenarios before registering. Oversized parser lines stay
+source-only; no unsafe runtime reproduction. Other supported module work continues.
