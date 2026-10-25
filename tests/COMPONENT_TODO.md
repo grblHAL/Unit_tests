@@ -582,3 +582,14 @@ repeat-same-laser selection and selection after abort before asserting desired
 behavior; no unsupported contract or known failure registered. Stepper/clone,
 full controller/target/hardware remain open. Pending51 additions form next
 substantial cumulative validation candidate after source review/coverage.
+
+## Batch34 measured next regions
+
+Full930/46-suite gate and87 helpers pass; VFD same-source coverage improves
++22 lines/+19 branches. On/off56/59, selection147/225, offset63/65 and PWM
+provider-only4/76 lines expose residual scope instead of excluding it. Next
+independent supported work: clone source with real driver PWM precompute/registry
+(no private pointer injection), then stepper plugin with original CORE stepper2
+and four-axis HAL callbacks. Tool setter/PWM context contracts remain upstream
+incompatibilities, not completed support. Native controller jobs and remaining
+board/SDK/hardware configurations remain required separate work.

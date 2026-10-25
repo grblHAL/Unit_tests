@@ -1,3 +1,50 @@
+# Combined spindle delivery gate - 2026-10-25 (batch34)
+
+Goal active. Full registered Windows Clang ASan/UBSan/strict gate passes930 cases
+across46 suites:867 clean +63 documented known, zero unexpected failures/skips.
+Fresh87 reporting/source helper checks pass19.184s; Plugin/Driver actionlint
+passes.51 new registered cases:17 VFD recovery,12 onoff,6 PWM resource-only,
+7 selection,9 offset. Four new suites register in manifest/manual Plugin workflow.
+No production edits, source-specific ABI casts, new allowances or weakened
+assertions. Reference26 cases retain separately dated batch32 evidence unchanged
+and are not counted in930 or claimed rerun.
+
+Fresh selected LLVM coverage, clean separate coverage executions:
+- VFD97 clean:910/940 lines96.8%,301/417 branches72.2%,113/115 functions98.3%.
+  Same denominator/source as batch33: +22 lines/+19 branches. H100128/131 lines
+  and49/63 branches; Huanyang v1 149/152 and54/69; other protocols retained.
+- On/off12 clean:56/59 lines94.9%,16/20 branches80%,9/9 functions.
+- Selection7 clean:147/225 lines65.3%,97/177 branches54.8%,14/22 functions.
+- Offset9 clean:63/65 lines96.9%,28/30 branches93.3%,8/9 functions.
+- PWM6 resource cases clean:4/76 lines5.3%,1/32 branches3.1%,1/8 functions.
+  This deliberately honest low coverage does not prove working PWM activation.
+
+Fresh five source locks resolve original spindle8a3ae47f5a218834da9c742424c3dd22c5629fdb,
+COREb01f481072edecac33d5e40c25869359a5b3fa1f and
+EEPROM0c278db74edc38303b9d86583a7d51a1ec1be51e; each local source is clean.
+Fresh short build-on34/pw34/se34/of34/vf34 counter paths max223chars; no stale
+coverage counters, unbuilt-source denominator or full-repository coverage claim.
+Evidence ignored build-evidence/*batch34* and per-build results-batch34.xml.
+
+PWM activation remains incompatible: original plugin's SpindleType_PWM lacks
+context.pwm required by CORE activation. Six activation proposals unregistered.
+Tool-threshold setter uint32_t conflicts with registered uint_fast16_t setting
+API; strict reporting rejected three recovering diagnostics despite ordinary
+CTest green. Four dependent tool/persistence proposals unregistered. No current
+PWM activation or tool-threshold/process-restart success claimed, no unsafe
+rerun/workaround. Seven older tooltable proposals also remain unregistered.
+
+Offset models requested motion/accepted completion, not real planner/stepper;
+its mc_line boundary follows Status_Handled/Status_Aborted contract. Other suites
+use real CORE registry/port claims and EEPROM but do not establish full native
+controller jobs. Actual electrical timing, motors, board SDK links/hardware,
+stepper/clone modules and broad remaining driver/plugin configurations stay open.
+Fresh fork Actions listing still only reusable/core workflows. Separate manual
+Plugin/Driver hosted dispatch awaits default-branch installation; keep PR29
+draft/unmerged and never claim hosted GCC/Linux success. Full goal stays active.
+
+---
+
 # Local spindle offset motion-boundary checkpoint - 2026-10-25
 
 Goal active. Nine original-source offset cases pass Windows Clang ASan/UBSan
