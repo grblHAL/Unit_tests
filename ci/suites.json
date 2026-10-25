@@ -780,5 +780,25 @@
     "test_regex": "^plugin_laser_overdrive[.]",
     "coverage_filter": "plugins/laser/co2\\.c$",
     "diagnostics_directory": "tests/plugins/laser_overdrive"
+  },
+  "fatfs_stm32f4": {
+    "repository": "grblHAL/STM32F4xx",
+    "ref": "master",
+    "path": "drivers/stm32f4",
+    "source_only": true
+  },
+  "plugin_sdcard_fatfs": {
+    "repository": "grblHAL/Plugin_SD_card",
+    "ref": "master",
+    "path": "plugins/sdcard",
+    "dependencies": [
+      "core",
+      "fatfs_stm32f4"
+    ],
+    "cmake_source": "tests/plugins/sdcard_fatfs",
+    "cmake_options": [],
+    "test_regex": "^plugin_sdcard_fatfs[.]",
+    "coverage_filter": "plugins/sdcard/fs_fatfs\\.c$",
+    "diagnostics_directory": "tests/plugins/sdcard_fatfs"
   }
 }

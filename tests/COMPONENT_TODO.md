@@ -674,3 +674,14 @@ CORE port validation/mapping, optional temperature disable and Change capability
 rejection execute. Two-process original EEPROM restart verifies valid aux1 and
 delay settings; no private stored-byte decoding. Erased/corrupt recovery, thermal
 monitor WIP, actual scheduler/IRQ timing and physical controller remain open.
+
+## FatFs adapter/engine host suite
+
+Seven strict-clean sanitizer cases use unchanged plugin adapter, CORE VFS and
+actual STM32F4 R0.14b source/config on valid FAT12 RAM disk. Source-only dependency
+fatfs_stm32f4 records provider repo; no fake FatFs functions or config overrides.
+Root-stat timestamp reads uninitialized FILINFO by source inspection; do not
+reproduce unsafe path. Cwd buffer handling likewise remains source-only. Legacy
+API configurations, SDcard.c mount/detect lifecycle, physical disk/controller,
+mkfs-disabled provider formatting and other FAT variants remain open. Next use
+normal supported SD controller events over this original engine where compatible.

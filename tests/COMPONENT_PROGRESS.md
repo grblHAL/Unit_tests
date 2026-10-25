@@ -1,3 +1,36 @@
+# Local original FatFs adapter/engine checkpoint - 2026-10-25
+
+Goal active. Seven new FatFs scenarios pass Windows Clang ASan/UBSan0.44s
+and strict classification all clean. Original fs_fatfs.c, CORE VFS and actual
+STM32F4 FatFs ff.c/ffunicode.c/ffconf.h execute against a valid1.44MiB FAT12
+block device. Cases cover multisector file roundtrip/seek/eof, directory/system
+entry filtering, truncate/rename/delete, regular-file timestamps, cwd/free-space,
+missing objects and normal sector-read error/reopen recovery. No copied FatFs
+API, modified SDK config or private file-system state injection.
+
+Actual source syntax first passes once native Windows headers load before CORE
+On; CMake repeated include grouping and local NEAR macro handling resolve host
+header collisions. Existing CRT string compatibility is retained; fixture-Werror
+stays enabled. Initial build/link repairs were harness setup only; actual source
+unchanged. Original plugin d0fe753d/COREb01f4810/STM32F4a6318ac9 pinned in scope.
+FatFs dependency is explicit source-only fatfs_stm32f4, never a selectable suite.
+
+Native driver geometry is a standard FAT12 test volume; actual FatFs performs
+all file-system operations. No malformed media or unsafe parser reproduction.
+Root-stat timestamp uses uninitialized FILINFO by source review, so that runtime
+path is not exercised; small-buffer cwd behavior remains source-only. Original
+config disables mkfs; no format/exFAT/FAT32 or SD/SPI hardware claim. SDcard.c
+mount/detect/stream lifecycle, littlefs compatibility, full controller and physical
+media/timing remain unfinished.
+
+Registered plugin_sdcard_fatfs manifest/manual Plugin workflow/README/inventory.
+Metadata7 helpers/actionlint pass.51 current-source host suites/989 authored;
+last delivered batch35 full gate976/50 plus87 helpers.13 local cases pending:
+6 coolant mapping/restart +7 FatFs. No fresh coverage/global/hosted result.
+Continue substantial storage/driver batch; full goal stays active.
+
+---
+
 # Local coolant port mapping and restart checkpoint - 2026-10-25
 
 Goal active. Six new cases bring coolant suite to17. Complete17-case Windows
