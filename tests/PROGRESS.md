@@ -1,3 +1,30 @@
+# Focused Modbus RTU regressions - 2026-11-10
+
+Requested integration for core PR1055. Branch `test-modbus-short-exception-responses`
+adds four native cases through the existing registered-UART/clock fixture and
+updates the existing truncated blocking-header expectation. CMake discovers
+these cases automatically; no extracted-source runner or firmware edits are added.
+
+Focused validation compiled the 53 original CORE/host objects listed by the
+existing CMake project with Clang and AddressSanitizer/UndefinedBehaviorSanitizer,
+then compiled test cases with `-Wall -Wextra -Werror`. All five changed/new cases
+passed against proposed fix `81d8d3122d59b59771463c0510d1f360963ee9f6`.
+All 59 RTU cases were checked: 58 passed; the sole failure was the already-documented
+blocking CRC callback code-zero issue, with its existing allowance.
+There were no sanitizer diagnostics. The local equivalent command is
+`python3 build-modbus/run_subset.py --all-rtu --reuse-objects` (ignored validation
+helper; raw exit 1 reflects that existing known failure). The default focused
+ten-case command passes: `python3 build-modbus/run_subset.py`. Use the ordinary
+CMake targets in a configured environment.
+
+Replacing only `modbus_rtu.c` with upstream baseline
+`ffbb587ad527ca7caef2c2ec219a4f755dbd348e` produces the four expected assertion
+failures documented in KNOWN_BUGS; the partial normal-response control passes.
+Narrow allowances remain until PR1055 lands. The full repository suite and hosted
+workflows were not run.
+Next: review the focused changes, coordinate removal of allowances with the core
+fix, and validate the selected source through the normal source-lock/CMake workflow.
+
 # README badges and ordered PR delivery - 2026-10-25
 
 PR30 merged6b6d147; PR31 mergedca57aef, as explicitly authorized.

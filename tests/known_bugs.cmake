@@ -1,6 +1,18 @@
 # Outstanding allowances only. Keep regression assertions when removing a block.
 # Dated evidence and cleanup: KNOWN_BUGS.md; storage policy: TODO.md.
 
+# Short RTU exceptions must be complete and CRC-valid, CORE ffbb587, 2026-11-10.
+# Remove these exact allowances after core PR1055 is merged and verified.
+foreach(case_name
+    async_short_exception_reports_device_code_without_timeout
+    fragmented_short_exception_waits_for_complete_frame
+    async_short_exception_validates_crc_when_normal_reply_does_not
+    blocking_partial_replies_classify_device_errors_and_recover)
+  if(TEST modbus_rtu.${case_name})
+    set_tests_properties(modbus_rtu.${case_name} PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+  endif()
+endforeach()
+
 if(TEST nvs_buffer.failed_version_only_write_remains_pending_for_retry)
   set_tests_properties(nvs_buffer.failed_version_only_write_remains_pending_for_retry PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
