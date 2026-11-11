@@ -26,6 +26,41 @@ in [storage write-failure policy](TODO.md#storage-write-failure-policy), includi
 its observations, existing test exceptions and cleanup links. It is not a
 settled requirement to retry physical writes a specific number of times.
 
+## Short Modbus RTU exceptions are reported as asynchronous timeouts
+
+Confirmed 2026-11-10 on upstream CORE
+`ffbb587ad527ca7caef2c2ec219a4f755dbd348e`. A read expecting a seven-byte
+normal reply can receive a valid five-byte Illegal Data Address reply.
+The registered-UART fixture generates this reply from synthetic protocol data.
+The asynchronous transport waits for seven bytes, then calls its timeout
+observer with code zero. It increments timeouts while leaving RX exceptions
+at zero.
+
+The registered-UART fixture retains correct expectations in:
+
+- [Complete asynchronous exception](cases/modbus_rtu/async_short_exception_reports_device_code_without_timeout.c):
+  preserve request context, deliver device code 2 once, release the bus, and
+  count one RX exception with no timeout.
+- [Fragmented exception](cases/modbus_rtu/fragmented_short_exception_waits_for_complete_frame.c):
+  leave two- and four-byte prefixes pending before accepting the complete frame.
+- [Corrupt exception CRC](cases/modbus_rtu/async_short_exception_validates_crc_when_normal_reply_does_not.c):
+  report the CRC error even when normal reply CRC checking is disabled.
+- [Truncated blocking replies](cases/modbus_rtu/blocking_partial_replies_classify_device_errors_and_recover.c):
+  a two-byte header is a timeout, not a complete CRC-validated exception.
+
+These four exact cases have `WILL_FAIL`/`known_bug` allowances in
+[known_bugs.cmake](known_bugs.cmake). The companion
+[partial normal reply control](cases/modbus_rtu/blocking_partial_normal_reply_does_not_report_no_connection.c)
+passes on both sources and verifies that received bytes do not become a false
+"No connection" diagnostic while rejecting the incomplete response.
+
+[Proposed core fix](https://github.com/grblHAL/core/pull/1055) at
+`81d8d3122d59b59771463c0510d1f360963ee9f6` passes all four cases and the control
+with AddressSanitizer/UndefinedBehaviorSanitizer. After the fix lands, retain
+the assertions, remove these four allowances and this entry, and validate against
+the selected fixed source. Source:
+[response deadline handling](https://github.com/grblHAL/core/blob/ffbb587ad527ca7caef2c2ec219a4f755dbd348e/modbus_rtu.c#L175).
+
 ## Blocking Modbus CRC failure reports NoException to its error callback
 
 Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.

@@ -29,7 +29,8 @@ int main(void)
     grbl.on_execute_realtime = service_partial_reply;
     CHECK(!modbus_send(&message, &callbacks, true));
     CHECK(partial_injected && tx_calls == 1 && rx_calls == 0 && exceptions == 1);
-    CHECK(exception_code == ModBus_UnknownException);
+    /* A header alone is not a CRC-validated device exception. */
+    CHECK(exception_code == ModBus_Timeout);
     partial_header[1] = 3;
     CHECK(!modbus_send(&message, &callbacks, true));
     CHECK(tx_calls == 2 && rx_calls == 0 && exceptions == 2 && exception_code == ModBus_Timeout);
