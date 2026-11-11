@@ -1,3 +1,31 @@
+# Optional VFD spindle-enable output regressions - 2026-11-10
+
+Branch `test-vfd-spindle-enable-output` is based on upstream master `10eed2b`;
+the separate Modbus RTU test branch is preserved. Five native spindle_vfd cases
+exercise auxiliary-output allocation/remapping, initialization off, commanded
+on/S0/off and ordering before transport, reset and real device-exception cleanup,
+selected-callback chaining and deselect/reselect, port conflicts, and the
+undefined-option control. They reuse the production VFD, CORE ioports/spindle
+APIs, and existing Modbus/EEPROM fixture. No expected-failure allowances added.
+
+Focused local Clang/ASan/UBSan validation passes all five cases plus existing
+MODVFD commands, settings_hooks and no_transport controls. Tests/fixtures compile
+with `-Werror`; production warnings remain visible. Sources: Plugins_spindle
+`b945c2ca64649d55f910f8a08409f17bdbef485c`, CORE
+`81d8d3122d59b59771463c0510d1f360963ee9f6`, Plugin_EEPROM
+`0c278db74edc38303b9d86583a7d51a1ec1be51e`. CMake is unavailable locally, so
+the component's actual source list was compiled directly with system Clang;
+no extracted source or tracked runner was added. No full suite/hosted run or
+coverage measurement was performed.
+
+These tests depend on
+[Plugins_spindle PR48](https://github.com/grblHAL/Plugins_spindle/pull/48).
+Existing Plugin tests workflow supports suite `plugin_spindle_vfd`,
+source repository `makermelissa-ai-assistant/Plugins_spindle` and the feature SHA
+above; select this harness branch/SHA and the recorded CORE ref. Stock upstream
+does not implement the option, so do not characterize a stock-source run as
+feature validation or hide its expected assertion failures.
+
 # README badges and ordered PR delivery - 2026-10-25
 
 PR30 merged6b6d147; PR31 mergedca57aef, as explicitly authorized.

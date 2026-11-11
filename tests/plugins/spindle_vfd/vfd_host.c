@@ -19,6 +19,9 @@ uint16_t vfd_max_frequency = 40000;
 uint16_t vfd_max_frequency = 4000;
 #endif
 unsigned vfd_resets;
+unsigned vfd_warnings;
+void (*vfd_request_observer)(const modbus_message_t *message, bool blocking);
+void (*vfd_selection_observer)(spindle_ptrs_t *spindle);
 modbus_message_t vfd_messages[64];
 bool vfd_blocking[64];
 static foreground_task_ptr tasks[8];
@@ -40,6 +43,8 @@ static uint32_t ticks(void) { return vfd_ticks; }
 static bool send_message(modbus_message_t *message, const modbus_callbacks_t *callbacks, bool block)
 {
     CHECK(vfd_requests < 64);
+    if(vfd_request_observer)
+        vfd_request_observer(message, block);
 #if TEST_HUANYANG1
     CHECK(message->tx_length == (message->adu[1] == ModBus_WriteCoil ? 7 :
                                 message->adu[1] == ModBus_ReadHoldingRegisters ? 6 : 8));
@@ -148,6 +153,8 @@ nvs_address_t nvs_alloc(size_t size)
 }
 bool settings_register(setting_details_t *details)
 {
+    if(details->is_core)
+        return true;
     CHECK(!vfd_settings);
     vfd_settings = details;
     return true;
@@ -162,7 +169,7 @@ void report_plugin(const char *name, const char *version)
 {
     CHECK(name && *name && version && *version);
 }
-void report_warning(void *message) { CHECK(message); }
+void report_warning(void *message) { CHECK(message); vfd_warnings++; }
 void system_raise_alarm(alarm_code_t alarm)
 {
     CHECK(alarm == Alarm_ModbusException);
@@ -189,6 +196,8 @@ static void previous_selected(spindle_ptrs_t *motor)
 {
     CHECK(motor);
     vfd_previous_selected++;
+    if(vfd_selection_observer)
+        vfd_selection_observer(motor);
 }
 bool task_add_immediate(foreground_task_ptr fn, void *data)
 {

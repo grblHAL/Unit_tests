@@ -24,3 +24,6 @@ void vfd_expect(unsigned index, uint8_t function, uint16_t reg, uint16_t value, 
 
 extern uint16_t vfd_poles, vfd_min_frequency, vfd_max_frequency;
 extern unsigned vfd_resets;
+extern unsigned vfd_warnings;
+extern void (*vfd_request_observer)(const modbus_message_t *message, bool blocking);
+extern void (*vfd_selection_observer)(spindle_ptrs_t *spindle);
