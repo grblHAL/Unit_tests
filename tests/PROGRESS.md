@@ -2,16 +2,18 @@
 
 Branch `test-vfd-spindle-enable-output` is based on upstream master `10eed2b`;
 the separate Modbus RTU test branch is preserved. Five native spindle_vfd cases
-exercise auxiliary-output allocation/remapping, initialization off, commanded
+run in six configurations, reusing the disabled case for explicit `-1` opt-out.
+They exercise auxiliary-output allocation/remapping, initialization off, commanded
 on/S0/off and ordering before transport, reset and real device-exception cleanup,
 selected-callback chaining and deselect/reselect, port conflicts, and the
-undefined-option control. They reuse the production VFD, CORE ioports/spindle
-APIs, and existing Modbus/EEPROM fixture. No expected-failure allowances added.
+undefined-option and explicit opt-out controls. They reuse the production VFD,
+CORE ioports/spindle APIs, and existing Modbus/EEPROM fixture. No expected-failure
+allowances added.
 
-Focused local Clang/ASan/UBSan validation passes all five cases plus existing
-MODVFD commands, settings_hooks and no_transport controls. Tests/fixtures compile
+Focused local Clang/ASan/UBSan validation passes all six configurations plus
+existing MODVFD commands, settings_hooks and no_transport controls. Tests/fixtures compile
 with `-Werror`; production warnings remain visible. Sources: Plugins_spindle
-`b945c2ca64649d55f910f8a08409f17bdbef485c`, CORE
+`4cb55a2d8690f5b663a7b7dc0271d62ed2b62a8b` (includes explicit `-1` opt-out), CORE
 `81d8d3122d59b59771463c0510d1f360963ee9f6`, Plugin_EEPROM
 `0c278db74edc38303b9d86583a7d51a1ec1be51e`. CMake is unavailable locally, so
 the component's actual source list was compiled directly with system Clang;

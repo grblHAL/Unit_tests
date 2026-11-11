@@ -115,9 +115,14 @@ endforeach()
 set_source_files_properties("${HARNESS_ROOT}/plugins/spindle/vfd/huanyang.c" PROPERTIES COMPILE_OPTIONS -Wno-error)
 
 # Opt-in local run output uses the actual CORE auxiliary-port allocator.
-foreach(behavior commands reset_and_failure selection unavailable disabled)
+foreach(behavior commands reset_and_failure selection unavailable disabled optout)
   set(target plugin_spindle_vfd.modvfd_enable_${behavior})
-  component_case(${target} enable_${behavior}.c enable_host.c vfd_host.c
+  if(behavior STREQUAL "optout")
+    set(test_source enable_disabled.c)
+  else()
+    set(test_source enable_${behavior}.c)
+  endif()
+  component_case(${target} ${test_source} enable_host.c vfd_host.c
     "${HARNESS_ROOT}/plugins/spindle/vfd/modvfd.c" "${HARNESS_ROOT}/plugins/spindle/vfd/spindle.c"
     "${COMPONENT_CORE_ROOT}/spindle_control.c" "${COMPONENT_CORE_ROOT}/modbus.c"
     "${COMPONENT_CORE_ROOT}/ioports.c" "${COMPONENT_CORE_ROOT}/crossbar.c" "${COMPONENT_CORE_ROOT}/strutils.c"
@@ -126,7 +131,9 @@ foreach(behavior commands reset_and_failure selection unavailable disabled)
   target_include_directories(${target} PRIVATE "${HARNESS_ROOT}/plugins" "${HARNESS_ROOT}/tests/plugins/eeprom" "${HARNESS_ROOT}/plugins/eeprom")
   target_compile_definitions(${target} PRIVATE SPINDLE_ENABLE=32 VFD_ENABLE=1 TEST_MODVFD=1
     EEPROM_ENABLE=128 EEPROM_IS_FRAM=1 NVS_SIZE=8192 NVS_SIZE_MAX=16384)
-  if(NOT behavior STREQUAL "disabled")
+  if(behavior STREQUAL "optout")
+    target_compile_definitions(${target} PRIVATE VFD_SPINDLE_ENABLE_PORT=-1)
+  elseif(NOT behavior STREQUAL "disabled")
     target_compile_definitions(${target} PRIVATE VFD_SPINDLE_ENABLE_PORT=3)
   endif()
   if(behavior STREQUAL "selection")
