@@ -19,7 +19,15 @@ Tests compile with strict warnings. Result: 57 pass, two existing sender-statist
 warning assertions fail, and no sanitizer diagnostics occur. The raw command
 `python3 build-modbus/run_subset.py --all-rtu --reuse-objects` returns 1 for those
 two documented failures; this ignored local helper is not part of the PR.
-CMake/CTest, the full repository suite, hosted workflows and coverage were not run.
+This native checkpoint does not establish full-suite or hosted coverage.
+The first normal GitHub run on ec72fd30 passed source/helper validation, but GCC
+and coverage builds failed before most binaries were created: Linux system math
+prototypes were parsed after CORE's function-like powr wrapper. The test build
+now preincludes math.h for Linux GNU/Clang only, preserving strict warnings and
+unchanged production source. That attempt was superseded for this build repair:
+https://github.com/makermelissa-ai-assistant/Unit_tests/actions/runs/44179687675
+Final source-locked CI results for the current head are recorded in PR34's
+live description; this paragraph records the pre-repair/native checkpoint.
 
 The two diagnostic tests pass with the original ffbb587 RTU module substituted
 as a control; all other linked CORE/host objects remain at 4b6a348, and the public
@@ -33,9 +41,10 @@ the two correct connection-warning assertions with exact known-failure entries.
 Current no_rx updates cannot set the flag true, so both warnings are missing;
 see KNOWN_BUGS.md. CORE files are unchanged.
 
-PR34 stays draft. Next: maintain the focused regressions against upstream,
-resolve the two diagnostic failures with the maintainer, and complete ordinary
-source-locked CMake/hosted validation before calling the PR ready.
+PR34 was kept draft pending ordinary source-locked CMake/hosted validation.
+Maintain the focused regressions against upstream and the two exact diagnostic
+allowances. Check the latest committed head and CI results in PR34 before
+changing its review status; do not infer readiness from the native-only run.
 
 # README badges and ordered PR delivery - 2026-10-25
 
