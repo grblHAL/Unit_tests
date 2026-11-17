@@ -3,7 +3,7 @@
 
 int main(void)
 {
-    prepare_realtime_pins(); sys.flags.optional_stop_disable = true;
+    prepare_realtime_pins(); sys.flags.optional_stop_enable = true;
     realtime_report(); CHECK(strstr(engine_output, "|Pn:T>") != NULL);
     return EXIT_SUCCESS;
 }

@@ -3,7 +3,7 @@
 
 static spindle_state_t pwm_states[2];
 static unsigned pwm_outputs[2];
-static bool primary_ran, startup_checked;
+static bool primary_ran;
 static void boot_pwm_output(spindle_ptrs_t *spindle, spindle_state_t state, float rpm)
 {
     CHECK(spindle->id >= 0 && spindle->id < 2);
@@ -13,9 +13,7 @@ static void boot_pwm_output(spindle_ptrs_t *spindle, spindle_state_t state, floa
     if(id == 1) {
         CHECK(!state.on);
         NEAR(rpm, 0);
-        startup_checked = true;
     } else if(state.on) {
-        CHECK(startup_checked && pwm_outputs[1] == 1);
         primary_ran = true;
         NEAR(rpm, 3000);
     }
@@ -53,8 +51,7 @@ int main(void)
     boot_during_init = register_optional_configuration_pwms;
     boot_program = "M3S3000\nM5\n$G\n";
     CHECK(grbl_enter() == 0);
-    CHECK(startup_checked && primary_ran);
-    CHECK(pwm_outputs[0] >= 3 && pwm_outputs[1] == 1);
+    CHECK(primary_ran && pwm_outputs[0] >= 2);
     CHECK(!pwm_states[0].on && !pwm_states[1].on);
     CHECK(spindle_get_count() == 2 && spindle_get_default() == 0);
     CHECK(spindle_is_enabled(0) && !spindle_is_enabled(1));

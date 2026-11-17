@@ -1,6 +1,15 @@
 # Outstanding allowances only. Keep regression assertions when removing a block.
 # Dated evidence and cleanup: KNOWN_BUGS.md; storage policy: TODO.md.
 
+# Confirmed CORE4b6a348, 2026-11-17: timeout diagnostics never report missing RX.
+foreach(case_name
+    sender_statistics_explain_connection_lost_after_valid_reply
+    sender_statistics_explain_device_that_never_replied)
+  if(TEST modbus_rtu.${case_name})
+    set_tests_properties(modbus_rtu.${case_name} PROPERTIES WILL_FAIL TRUE LABELS known_bug)
+  endif()
+endforeach()
+
 if(TEST nvs_buffer.failed_version_only_write_remains_pending_for_retry)
   set_tests_properties(nvs_buffer.failed_version_only_write_remains_pending_for_retry PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
@@ -86,12 +95,6 @@ if(TEST gcode.m6_unloading_tool_with_g43_clears_previous_offset_after_sender_ack
     PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 
-# Confirmed CORE2e165a1, 2026-10-24: blocking CRC failure reports NoException.
-if(TEST modbus_rtu.blocking_crc_error_reports_crc_code_and_allows_next_request)
-  set_tests_properties(modbus_rtu.blocking_crc_error_reports_crc_code_and_allows_next_request
-    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
 # Confirmed CORE2e165a1, 2026-10-24: manual A homing rewrites stationary delta XYZ coordinates.
 if(TEST boot_delta_aux.manual_auxiliary_homing_preserves_delta_joint_coordinates)
   set_tests_properties(boot_delta_aux.manual_auxiliary_homing_preserves_delta_joint_coordinates
@@ -107,50 +110,5 @@ endif()
 # Confirmed CORE2e165a1, 2026-10-24: delta forwards motor-coordinate flag to Cartesian auxiliary checker.
 if(TEST boot_delta_aux.valid_cartesian_cut_with_stationary_homed_auxiliary_axis_does_not_raise_soft_limit)
   set_tests_properties(boot_delta_aux.valid_cartesian_cut_with_stationary_homed_auxiliary_axis_does_not_raise_soft_limit
-    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
-# Confirmed CORE2e165a1, 2026-10-24: utime path allocation loses ENOMEM.
-if(TEST vfs.utime_path_allocation_failure_preserves_errno_skips_backend_and_allows_retry)
-  set_tests_properties(vfs.utime_path_allocation_failure_preserves_errno_skips_backend_and_allows_retry
-    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
-# Confirmed CORE2e165a1, 2026-10-24: accepted async follow-up from blocking reply is discarded.
-if(TEST modbus_rtu.blocking_reply_followup_is_transmitted_if_send_reports_acceptance)
-  set_tests_properties(modbus_rtu.blocking_reply_followup_is_transmitted_if_send_reports_acceptance
-    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
-# Confirmed CORE2e165a1, 2026-10-24: decoder mistakes valid server address high bit for exception.
-if(TEST modbus_rtu.high_bit_server_address_delivers_register_reply_and_preserves_next_request)
-  set_tests_properties(modbus_rtu.high_bit_server_address_delivers_register_reply_and_preserves_next_request
-    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
-# Confirmed COREb01f481, 2026-10-24: failed embedded mount changes unrelated root visibility.
-if(TEST fs_embedded.allocation_failure_first_mount_preserves_root_mode_and_allows_asset_retry)
-  set_tests_properties(fs_embedded.allocation_failure_first_mount_preserves_root_mode_and_allows_asset_retry
-    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
-# Confirmed COREb01f481 on hosted Linux Clang: exact macro argument table bounds fault.
-if(HOST_TAPPING_KNOWN_CRASH)
-  foreach(tapping_case IN LISTS HOST_TAPPING_CRASH_CASES)
-    if(TEST ${tapping_case})
-      set_tests_properties(${tapping_case} PROPERTIES WILL_FAIL TRUE LABELS "known_bug;known_crash")
-    endif()
-  endforeach()
-endif()
-
-# Confirmed COREb01f481, 2026-10-24: 29-argument CALL omits initialization of inherited local30.
-if(TEST ngc_flowctrl.call_with_twenty_nine_arguments_inherits_last_local_and_restores_caller)
-  set_tests_properties(ngc_flowctrl.call_with_twenty_nine_arguments_inherits_last_local_and_restores_caller
-    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
-# Confirmed COREb01f481, 2026-10-24: accepted $SLP is ignored by alarm state handler.
-if(TEST boot.sleep_from_forced_startup_alarm_reports_sleep_and_allows_reset_unlock)
-  set_tests_properties(boot.sleep_from_forced_startup_alarm_reports_sleep_and_allows_reset_unlock
     PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()

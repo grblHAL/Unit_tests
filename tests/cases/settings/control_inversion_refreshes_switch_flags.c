@@ -4,7 +4,7 @@ static unsigned control_reads;
 static control_signals_t enabled_control_switches(void)
 {
     control_reads++;
-    return (control_signals_t){.block_delete = true, .single_block = true, .stop_disable = true};
+    return (control_signals_t){.block_delete = true, .single_block = true, .stop_enable = true};
 }
 
 int main(void)
@@ -16,6 +16,6 @@ int main(void)
     CHECK(control_reads == 1);
     CHECK(sys.flags.block_delete_enabled);
     CHECK(sys.flags.single_block);
-    CHECK(sys.flags.optional_stop_disable);
+    CHECK(sys.flags.optional_stop_enable);
     return EXIT_SUCCESS;
 }

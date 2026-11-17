@@ -1,3 +1,56 @@
+# Upstream Modbus tests and harness refresh - 2026-11-17
+
+PR34 tests unmodified upstream CORE
+`4b6a348556336bfc8f9a63ae7bd430c4814b8c7d`, on harness base `10eed2b`.
+CORE PR1055 was closed after the maintainer implemented short exceptions directly
+in build 20261112. Upstream unit-test master has no equivalent asynchronous
+short-error or fragmented-error cases, so the four new regressions remain useful.
+They check complete and fragmented errors, corrupt error CRC with checking enabled,
+and an incomplete normal-response control. Complete errors must invoke the callback
+on the next poll, before timeout. The existing blocking-prefix expectation remains
+UnknownException; no stronger disabled-CRC policy is assumed.
+
+The first full source-matched run on harness `44e666d` passed all four new cases
+under GCC sanitizers, Clang sanitizers and coverage, but the suite failed on older
+fixtures and obsolete failure expectations:
+https://github.com/makermelissa-ai-assistant/Unit_tests/actions/runs/44181663933
+This branch now updates optional-stop enable fields, advertised input capabilities,
+the MPG lower bound, spindle startup/count expectations and the renamed string API.
+The string-test selector retains older API compatibility, including MinGW's
+string-header workaround. Linux builds preinclude system math declarations before
+CORE's real wrappers. Strict warnings and sanitizer checks remain enabled.
+
+Verified obsolete failure allowances are removed for six ordinary regressions:
+VFS timestamp allocation, embedded first-mount allocation, accepted Modbus follow-up,
+high-bit Modbus server address, inherited CALL local30 and sleep from startup alarm.
+The three tapping regressions also run directly now: their exact fatal-diagnostic
+wrappers, labels and 13 obsolete manifest entries were removed together. Regression
+assertions remain; the independent ioports_32 sanitizer allowance is unchanged.
+The cleanup commit records the verification date and selected CORE revision.
+
+Local focused CMake validation uses native Clang with AddressSanitizer and
+UndefinedBehaviorSanitizer. All 38 affected non-wrapper cases pass, including
+all three formerly crashing tapping regressions. No sanitizer diagnostics occur.
+The CI helper suite passes all 102 tests. GNU linker-wrap cases require the hosted Linux jobs. Independent review
+of the fixtures and allowance cleanup found additional renamed-field references,
+which were corrected before the hosted rerun. No CORE source is edited.
+
+Two existing Modbus connection-warning assertions retain exact documented
+known-failure entries. The current no_rx update cannot set the flag true; see
+KNOWN_BUGS.md. An earlier native run passed 57 of 59 RTU cases with no sanitizer
+diagnostics. Substituting the original ffbb587 RTU object makes the three new async
+regressions fail and the two warnings pass; other objects remain at 4b6a348, and
+modbus.h is unchanged. This is a module comparison, not a full older-core build.
+
+The final normal GCC/Clang/coverage workflow must use this committed harness head
+and the CORE SHA above. Download and verify all source locks and classification
+reports, including unexpected sanitizer diagnostics and not-run tests. Final run
+links, counts and readiness are maintained in PR34's live description so a status
+update does not change the tested harness head. Do not mark ready from native-only
+results or from a coverage job while either compiler job is red. Never merge PR34.
+Coverage expansion remains stopped; unrelated plugin/driver suites are outside
+this compatibility pass.
+
 # README badges and ordered PR delivery - 2026-10-25
 
 PR30 merged6b6d147; PR31 mergedca57aef, as explicitly authorized.
