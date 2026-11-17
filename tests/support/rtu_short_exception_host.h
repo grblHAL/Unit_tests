@@ -26,7 +26,7 @@ static inline void start_short_exception_request(void)
 {
     prepare_rtu();
     modbus_message_t message = {.context = &short_context, .tx_length = 8,
-        .rx_length = 7, .crc_check = false, .adu = {1, 3, 0, 0, 0, 1, 0, 0}};
+        .rx_length = 7, .crc_check = true, .adu = {1, 3, 0, 0, 0, 1, 0, 0}};
     modbus_callbacks_t callbacks = {.on_rx_packet = short_received,
         .on_rx_exception = short_failed, .on_rx_timeout = short_timed_out};
     CHECK(modbus_send(&message, &callbacks, false));
@@ -51,9 +51,11 @@ static inline void append_short_reply(const uint8_t *bytes, unsigned length)
 }
 static inline void finish_short_exception(uint8_t expected_code)
 {
-    for(unsigned tick = 0; tick < 60; tick++) poll_rtu();
+    /* A complete reply is handled on the next poll, before the RX timeout. */
+    poll_rtu();
     CHECK(short_rx_calls == 0 && short_exceptions == 1 && short_timeouts == 0);
     CHECK(short_code == expected_code);
+    for(unsigned tick = 0; tick < 60; tick++) poll_rtu();
     CHECK(!modbus_isbusy());
     for(unsigned tick = 0; tick < 10; tick++) poll_rtu();
     CHECK(short_exceptions == 1 && short_timeouts == 0 && short_rx_calls == 0);

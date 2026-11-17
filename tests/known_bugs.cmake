@@ -1,13 +1,10 @@
 # Outstanding allowances only. Keep regression assertions when removing a block.
 # Dated evidence and cleanup: KNOWN_BUGS.md; storage policy: TODO.md.
 
-# Short RTU exceptions must be complete and CRC-valid, CORE ffbb587, 2026-11-10.
-# Remove these exact allowances after core PR1055 is merged and verified.
+# Confirmed CORE4b6a348, 2026-11-17: timeout diagnostics never report missing RX.
 foreach(case_name
-    async_short_exception_reports_device_code_without_timeout
-    fragmented_short_exception_waits_for_complete_frame
-    async_short_exception_validates_crc_when_normal_reply_does_not
-    blocking_partial_replies_classify_device_errors_and_recover)
+    sender_statistics_explain_connection_lost_after_valid_reply
+    sender_statistics_explain_device_that_never_replied)
   if(TEST modbus_rtu.${case_name})
     set_tests_properties(modbus_rtu.${case_name} PROPERTIES WILL_FAIL TRUE LABELS known_bug)
   endif()
@@ -95,12 +92,6 @@ endif()
 # Confirmed CORE2e165a1, 2026-10-24: deferred tool-zero G43 retains the previous offsets.
 if(TEST gcode.m6_unloading_tool_with_g43_clears_previous_offset_after_sender_ack)
   set_tests_properties(gcode.m6_unloading_tool_with_g43_clears_previous_offset_after_sender_ack
-    PROPERTIES WILL_FAIL TRUE LABELS known_bug)
-endif()
-
-# Confirmed CORE2e165a1, 2026-10-24: blocking CRC failure reports NoException.
-if(TEST modbus_rtu.blocking_crc_error_reports_crc_code_and_allows_next_request)
-  set_tests_properties(modbus_rtu.blocking_crc_error_reports_crc_code_and_allows_next_request
     PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
 

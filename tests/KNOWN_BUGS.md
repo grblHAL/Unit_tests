@@ -26,63 +26,31 @@ in [storage write-failure policy](TODO.md#storage-write-failure-policy), includi
 its observations, existing test exceptions and cleanup links. It is not a
 settled requirement to retry physical writes a specific number of times.
 
-## Short Modbus RTU exceptions are reported as asynchronous timeouts
+## Modbus timeout statistics omit missing-connection warnings
 
-Confirmed 2026-11-10 on upstream CORE
-`ffbb587ad527ca7caef2c2ec219a4f755dbd348e`. A read expecting a seven-byte
-normal reply can receive a valid five-byte Illegal Data Address reply.
-The registered-UART fixture generates this reply from synthetic protocol data.
-The asynchronous transport waits for seven bytes, then calls its timeout
-observer with code zero. It increments timeouts while leaving RX exceptions
-at zero.
+Confirmed 2026-11-17 on unmodified upstream CORE
+`4b6a348556336bfc8f9a63ae7bd430c4814b8c7d`. Two existing registered-UART tests
+complete a silent blocking request and query `$MODBUSSTATS`. The timeout counter
+is correct, but the expected connection warning is absent both before any valid
+reply and after a previously successful reply. There are no sanitizer diagnostics.
 
-The registered-UART fixture retains correct expectations in:
+The existing regressions keep their warning assertions:
 
-- [Complete asynchronous exception](cases/modbus_rtu/async_short_exception_reports_device_code_without_timeout.c):
-  preserve request context, deliver device code 2 once, release the bus, and
-  count one RX exception with no timeout.
-- [Fragmented exception](cases/modbus_rtu/fragmented_short_exception_waits_for_complete_frame.c):
-  leave two- and four-byte prefixes pending before accepting the complete frame.
-- [Corrupt exception CRC](cases/modbus_rtu/async_short_exception_validates_crc_when_normal_reply_does_not.c):
-  report the CRC error even when normal reply CRC checking is disabled.
-- [Truncated blocking replies](cases/modbus_rtu/blocking_partial_replies_classify_device_errors_and_recover.c):
-  a two-byte header is a timeout, not a complete CRC-validated exception.
+- [No device reply](cases/modbus_rtu/sender_statistics_explain_device_that_never_replied.c).
+- [Lost connection after a valid reply](cases/modbus_rtu/sender_statistics_explain_connection_lost_after_valid_reply.c).
 
-These four exact cases have `WILL_FAIL`/`known_bug` allowances in
-[known_bugs.cmake](known_bugs.cmake). The companion
-[partial normal reply control](cases/modbus_rtu/blocking_partial_normal_reply_does_not_report_no_connection.c)
-passes on both sources and verifies that received bytes do not become a false
-"No connection" diagnostic while rejecting the incomplete response.
+`stats.no_rx` starts false, is cleared by statistics reset, and is only updated
+with `&=` in the current timeout paths. It therefore cannot become true, leaving
+both warnings unreachable. The earlier source `ffbb587` used assignment instead.
+The current parser can consume a partial reply before timeout, so any repair also
+needs to account for received bytes already stored in the packet.
 
-[Proposed core fix](https://github.com/grblHAL/core/pull/1055) at
-`81d8d3122d59b59771463c0510d1f360963ee9f6` passes all four cases and the control
-with AddressSanitizer/UndefinedBehaviorSanitizer. After the fix lands, retain
-the assertions, remove these four allowances and this entry, and validate against
-the selected fixed source. Source:
-[response deadline handling](https://github.com/grblHAL/core/blob/ffbb587ad527ca7caef2c2ec219a4f755dbd348e/modbus_rtu.c#L175).
-
-## Blocking Modbus CRC failure reports NoException to its error callback
-
-Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
-A blocking RTU read with CRC checking and no retries receives a normal-length
-reply with one corrupted CRC byte. The call correctly returns false and invokes
-its exception observer once, but reports0 (`ModBus_NoException`) instead of254
-(`ModBus_CRCError`). The asynchronous CRC control reports the correct CRC code.
-
-[Regression](cases/modbus_rtu/blocking_crc_error_reports_crc_code_and_allows_next_request.c)
-uses the existing registered serial fixture, actual CRC calculation and public
-`modbus_send`. Before its final correct CRC-code assertion, it proves one failed
-request, no receive callback for corrupt data, and successful next request with
-one valid response and expected address/function/data bytes. No transport lockup,
-corrupt data acceptance or sanitizer fault is claimed. Exactly one named
-`WILL_FAIL`/`known_bug` applies in [known_bugs.cmake](known_bugs.cmake).
-
-Source: [CRC detection](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/modbus_rtu.c#L212)
-sets `ModBus_Exception` for blocking requests but does not assign the CRC error
-to the stored exception code. The [blocking dispatcher](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/modbus_rtu.c#L295)
-passes that stored code to the observer. Review assigning the CRC code for that
-path; CORE is unchanged here. Keep the assertions and remove the allowance and
-this entry after a fixed source passes sanitizer validation and recovery controls.
+Source: [asynchronous timeout](https://github.com/grblHAL/core/blob/4b6a348556336bfc8f9a63ae7bd430c4814b8c7d/modbus_rtu.c#L254)
+and [blocking timeout](https://github.com/grblHAL/core/blob/4b6a348556336bfc8f9a63ae7bd430c4814b8c7d/modbus_rtu.c#L317).
+Only these two named tests have `WILL_FAIL` / `known_bug` allowances in
+[known_bugs.cmake](known_bugs.cmake). Keep their assertions, and remove the
+allowances and this entry once the selected upstream source passes them.
+CORE is unchanged here.
 
 ## Acknowledged tool-zero G43 retains the previous tool offsets
 
