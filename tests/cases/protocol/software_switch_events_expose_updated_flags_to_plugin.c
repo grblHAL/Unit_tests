@@ -5,10 +5,10 @@ static unsigned events;
 static void switch_event(control_signals_t signals)
 {
     if(events < 2) {
-        CHECK(signals.stop_disable && !signals.single_block);
-        CHECK(sys.flags.optional_stop_disable == (events == 0));
+        CHECK(signals.stop_enable && !signals.single_block);
+        CHECK(sys.flags.optional_stop_enable == (events == 0));
     } else {
-        CHECK(signals.single_block && !signals.stop_disable);
+        CHECK(signals.single_block && !signals.stop_enable);
         CHECK(sys.flags.single_block == (events == 2));
     }
     events++;
@@ -22,6 +22,6 @@ int main(void)
     CHECK(protocol_enqueue_realtime_command(CMD_SINGLE_BLOCK_TOGGLE));
     CHECK(protocol_enqueue_realtime_command(CMD_SINGLE_BLOCK_TOGGLE));
     CHECK(events == 4);
-    CHECK(!sys.flags.optional_stop_disable && !sys.flags.single_block);
+    CHECK(!sys.flags.optional_stop_enable && !sys.flags.single_block);
     return EXIT_SUCCESS;
 }

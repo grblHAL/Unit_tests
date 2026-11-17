@@ -10,6 +10,7 @@ static bool assign_control(xbar_t *pin, pin_function_t function)
 int main(void)
 {
     prepare_io_settings();
+    hal.driver_cap.control_pull_up = true;
     hal.control.get_state = read_controls;
     xbar_t *hold = hal.port.get_pin_info(Port_Digital, Port_Input, 0);
     hold->set_function = assign_control;

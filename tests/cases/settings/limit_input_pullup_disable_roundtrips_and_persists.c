@@ -2,6 +2,7 @@
 int main(void)
 {
     prepare_settings_store();
+    hal.driver_cap.limits_pull_up = true;
     CHECK(store_setting(Setting_LimitPullUpDisableMask, "5") == Status_OK);
     CHECK(settings.limits.disable_pullup.mask == 5);
     const setting_detail_t *detail = setting_get_details(Setting_LimitPullUpDisableMask, NULL);

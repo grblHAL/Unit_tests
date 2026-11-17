@@ -1,50 +1,55 @@
-# Upstream Modbus RTU regression refresh - 2026-11-17
+# Upstream Modbus tests and harness refresh - 2026-11-17
 
-PR34 remains useful: upstream master has no equivalent asynchronous short-error
-or fragmented-error cases. CORE PR1055 was closed after the maintainer handled
-short exceptions directly in upstream build 20261112. This branch now targets
-unmodified upstream CORE `4b6a348556336bfc8f9a63ae7bd430c4814b8c7d` rather than the
-unmerged proposed fix. The harness base is upstream `10eed2b`.
+PR34 tests unmodified upstream CORE
+`4b6a348556336bfc8f9a63ae7bd430c4814b8c7d`, on harness base `10eed2b`.
+CORE PR1055 was closed after the maintainer implemented short exceptions directly
+in build 20261112. Upstream unit-test master has no equivalent asynchronous
+short-error or fragmented-error cases, so the four new regressions remain useful.
+They check complete and fragmented errors, corrupt error CRC with checking enabled,
+and an incomplete normal-response control. Complete errors must invoke the callback
+on the next poll, before timeout. The existing blocking-prefix expectation remains
+UnknownException; no stronger disabled-CRC policy is assumed.
 
-The four new cases pass: complete asynchronous error, fragmented error, corrupt
-error CRC with CRC checking enabled, and incomplete normal-response control.
-Complete frames must invoke their error callback on the next poll, before the
-response timeout. The existing two-byte blocking-prefix expectation remains
-UnknownException, matching the maintainer's behavior. CRC checking follows the
-request's public crc_check flag; no stronger disabled-CRC policy is assumed.
+The first full source-matched run on harness `44e666d` passed all four new cases
+under GCC sanitizers, Clang sanitizers and coverage, but the suite failed on older
+fixtures and obsolete failure expectations:
+https://github.com/makermelissa-ai-assistant/Unit_tests/actions/runs/44181663933
+This branch now updates optional-stop enable fields, advertised input capabilities,
+the MPG lower bound, spindle startup/count expectations and the renamed string API.
+The string-test selector retains older API compatibility, including MinGW's
+string-header workaround. Linux builds preinclude system math declarations before
+CORE's real wrappers. Strict warnings and sanitizer checks remain enabled.
 
-Focused local Clang/AddressSanitizer/UndefinedBehaviorSanitizer validation compiled
-53 original CORE/host objects from the CMake source lists and all 59 RTU cases.
-Tests compile with strict warnings. Result: 57 pass, two existing sender-statistics
-warning assertions fail, and no sanitizer diagnostics occur. The raw command
-`python3 build-modbus/run_subset.py --all-rtu --reuse-objects` returns 1 for those
-two documented failures; this ignored local helper is not part of the PR.
-This native checkpoint does not establish full-suite or hosted coverage.
-The first normal GitHub run on ec72fd30 passed source/helper validation, but GCC
-and coverage builds failed before most binaries were created: Linux system math
-prototypes were parsed after CORE's function-like powr wrapper. The test build
-now preincludes math.h for Linux GNU/Clang only, preserving strict warnings and
-unchanged production source. That attempt was superseded for this build repair:
-https://github.com/makermelissa-ai-assistant/Unit_tests/actions/runs/44179687675
-Final source-locked CI results for the current head are recorded in PR34's
-live description; this paragraph records the pre-repair/native checkpoint.
+Verified obsolete failure allowances are removed for six ordinary regressions:
+VFS timestamp allocation, embedded first-mount allocation, accepted Modbus follow-up,
+high-bit Modbus server address, inherited CALL local30 and sleep from startup alarm.
+The three tapping regressions also run directly now: their exact fatal-diagnostic
+wrappers, labels and 13 obsolete manifest entries were removed together. Regression
+assertions remain; the independent ioports_32 sanitizer allowance is unchanged.
+The cleanup commit records the verification date and selected CORE revision.
 
-The two diagnostic tests pass with the original ffbb587 RTU module substituted
-as a control; all other linked CORE/host objects remain at 4b6a348, and the public
-modbus.h is unchanged between those revisions. The three new async regressions
-fail at their immediate-delivery assertion with that original module. These are
-module comparisons, not a full build of the older CORE revision.
+Local focused CMake validation uses native Clang with AddressSanitizer and
+UndefinedBehaviorSanitizer. All 38 affected non-wrapper cases pass, including
+all three formerly crashing tapping regressions. No sanitizer diagnostics occur.
+The CI helper suite passes all 102 tests. GNU linker-wrap cases require the hosted Linux jobs. Independent review
+of the fixtures and allowance cleanup found additional renamed-field references,
+which were corrected before the hosted rerun. No CORE source is edited.
 
-Removed the resolved short-exception allowances and the obsolete blocking-CRC
-allowance/bug entry; the unchanged blocking-CRC regression now passes. Retained
-the two correct connection-warning assertions with exact known-failure entries.
-Current no_rx updates cannot set the flag true, so both warnings are missing;
-see KNOWN_BUGS.md. CORE files are unchanged.
+Two existing Modbus connection-warning assertions retain exact documented
+known-failure entries. The current no_rx update cannot set the flag true; see
+KNOWN_BUGS.md. An earlier native run passed 57 of 59 RTU cases with no sanitizer
+diagnostics. Substituting the original ffbb587 RTU object makes the three new async
+regressions fail and the two warnings pass; other objects remain at 4b6a348, and
+modbus.h is unchanged. This is a module comparison, not a full older-core build.
 
-PR34 was kept draft pending ordinary source-locked CMake/hosted validation.
-Maintain the focused regressions against upstream and the two exact diagnostic
-allowances. Check the latest committed head and CI results in PR34 before
-changing its review status; do not infer readiness from the native-only run.
+The final normal GCC/Clang/coverage workflow must use this committed harness head
+and the CORE SHA above. Download and verify all source locks and classification
+reports, including unexpected sanitizer diagnostics and not-run tests. Final run
+links, counts and readiness are maintained in PR34's live description so a status
+update does not change the tested harness head. Do not mark ready from native-only
+results or from a coverage job while either compiler job is red. Never merge PR34.
+Coverage expansion remains stopped; unrelated plugin/driver suites are outside
+this compatibility pass.
 
 # README badges and ordered PR delivery - 2026-10-25
 

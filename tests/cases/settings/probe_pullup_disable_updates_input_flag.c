@@ -6,6 +6,7 @@ static void configure_probe(bool away, bool probing) { CHECK(!away && !probing);
 int main(void)
 {
     prepare_settings_store();
+    hal.driver_cap.probe_pull_up = true;
     hal.probe.get_state = probe_state;
     hal.probe.configure = configure_probe;
     CHECK(store_setting(Setting_ProbePullUpDisable, "1") == Status_OK);

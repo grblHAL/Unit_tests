@@ -5,8 +5,8 @@ int main(void)
 {
     prepare_system_command();
     CHECK(system_command("$O") == Status_OK);
-    CHECK(sys.flags.optional_stop_disable && changed_controls.stop_disable);
+    CHECK(sys.flags.optional_stop_enable && changed_controls.stop_enable);
     CHECK(system_command("$O") == Status_OK);
-    CHECK(!sys.flags.optional_stop_disable && control_change_calls == 2);
+    CHECK(!sys.flags.optional_stop_enable && control_change_calls == 2);
     return EXIT_SUCCESS;
 }

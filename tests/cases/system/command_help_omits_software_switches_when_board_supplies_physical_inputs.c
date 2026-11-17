@@ -8,7 +8,7 @@ int main(void)
     CHECK(strstr(metadata_output, "$S - toggle single stepping switch") != NULL);
     metadata_output[0] = 0;
     hal.signals_cap.block_delete = true;
-    hal.signals_cap.stop_disable = true;
+    hal.signals_cap.stop_enable = true;
     hal.signals_cap.single_block = true;
     CHECK(system_command("$HELP COMMANDS") == Status_OK);
     CHECK(strstr(metadata_output, "$B - toggle block delete switch") == NULL);
