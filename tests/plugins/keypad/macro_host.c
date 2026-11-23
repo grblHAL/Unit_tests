@@ -1,4 +1,5 @@
 #include "macro_host.h"
+#include "../../plugin_version.h"
 grbl_t grbl;
 system_t sys;
 settings_t settings;
@@ -193,7 +194,7 @@ void report_message(const char *text, message_type_t type)
 }
 void report_plugin(const char *name, const char *version)
 {
-    CHECK(!strcmp(name, "Macros") && !strcmp(version, "0.23"));
+    CHECK(!strcmp(name, "Macros") && plugin_version_valid(version));
 }
 void report_warning(void *message)
 {

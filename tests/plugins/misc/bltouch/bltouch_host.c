@@ -1,6 +1,7 @@
 #include "bltouch_host.h"
 #include <string.h>
 #include <stdio.h>
+#include "../../../plugin_version.h"
 grbl_hal_t hal;
 grbl_t grbl;
 settings_t settings;
@@ -88,7 +89,7 @@ static void options(bool newopt)
 }
 void report_plugin(const char *name, const char *version)
 {
-    CHECK(name && strcmp(version, "0.06") == 0 && strlen(name) < sizeof(plugin_name));
+    CHECK(name && plugin_version_valid(version) && strlen(name) < sizeof(plugin_name));
     strcpy(plugin_name, name);
     plugin_reports++;
 }

@@ -1,5 +1,6 @@
 #include "table_host.h"
 #include <string.h>
+#include "../../plugin_version.h"
 grbl_hal_t hal;
 grbl_t grbl;
 settings_t settings;
@@ -88,7 +89,7 @@ static void option_report(bool newopt)
 }
 void report_plugin(const char *name, const char *version)
 {
-    CHECK(strcmp(name, "Tool table") == 0 && strcmp(version, "0.04") == 0);
+    CHECK(strcmp(name, "Tool table") == 0 && plugin_version_valid(version));
     reports++;
 }
 void system_register_commands(sys_commands_t *commands)

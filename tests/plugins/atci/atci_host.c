@@ -1,4 +1,5 @@
 #include "atci_host.h"
+#include "../../plugin_version.h"
 grbl_hal_t hal;
 grbl_t grbl;
 system_t sys;
@@ -69,7 +70,7 @@ void report_message(const char *text, message_type_t type)
 }
 void report_plugin(const char *name, const char *version)
 {
-    CHECK(strcmp(name, "SIENCI ATCi plugin") == 0 && strcmp(version, "0.5.0") == 0);
+    CHECK(strcmp(name, "SIENCI ATCi plugin") == 0 && plugin_version_valid(version));
     chains++;
 }
 static bool previous_check(float *target, axes_signals_t axes, bool cartesian,

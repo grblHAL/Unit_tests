@@ -1,4 +1,5 @@
 #include "led_host.h"
+#include "../../plugin_version.h"
 grbl_hal_t hal;
 grbl_t grbl;
 bool led_bus_ok = true, led_probe_ok = true, led_send_ok = true;
@@ -52,7 +53,7 @@ static void report_options(bool newopt)
 }
 void report_plugin(const char *name, const char *version)
 {
-    CHECK(!strcmp(name, "I2C LEDS") && !strcmp(version, "0.04"));
+    CHECK(!strcmp(name, "I2C LEDS") && plugin_version_valid(version));
     led_plugins++;
 }
 void report_warning(void *message)

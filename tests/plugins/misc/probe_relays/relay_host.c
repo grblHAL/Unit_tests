@@ -1,5 +1,6 @@
 #include "relay_host.h"
 #include <string.h>
+#include "../../../plugin_version.h"
 grbl_hal_t hal;
 grbl_t grbl;
 setting_details_t *relay_details;
@@ -105,7 +106,7 @@ static void report_options(bool newopt)
 }
 void report_plugin(const char *name, const char *version)
 {
-    CHECK(strcmp(name, "Probe relay") == 0 && strcmp(version, "0.02") == 0);
+    CHECK(strcmp(name, "Probe relay") == 0 && plugin_version_valid(version));
     reports++;
 }
 void prepare_relays(void)

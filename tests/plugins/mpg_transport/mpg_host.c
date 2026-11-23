@@ -1,4 +1,5 @@
 #include "mpg_host.h"
+#include "../../plugin_version.h"
 grbl_hal_t hal;
 grbl_t grbl;
 system_t sys;
@@ -200,7 +201,7 @@ bool task_add_immediate(foreground_task_ptr fn, void *data)
 #endif
 void report_plugin(const char *name, const char *version)
 {
-    CHECK(strcmp(name, "MPG/DRO framed transport") == 0 && strcmp(version, "1.00") == 0);
+    CHECK(strcmp(name, "MPG/DRO framed transport") == 0 && plugin_version_valid(version));
     chains++;
 }
 bool protocol_execute_realtime(void)

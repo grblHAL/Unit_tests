@@ -1,4 +1,5 @@
 #include "interlock_host.h"
+#include "../../plugin_version.h"
 grbl_hal_t hal;
 grbl_t grbl;
 system_t sys;
@@ -85,7 +86,7 @@ void report_message(const char *text, message_type_t type)
 }
 void report_plugin(const char *name, const char *version)
 {
-    CHECK(strcmp(name, "Interlock") == 0 && strcmp(version, "0.6") == 0);
+    CHECK(strcmp(name, "Interlock") == 0 && plugin_version_valid(version));
     chains++;
 }
 void mc_reset(void) { resets++; }

@@ -1,6 +1,7 @@
 #include "event_host.h"
 #include <string.h>
 #include <stdio.h>
+#include "../../../plugin_version.h"
 grbl_hal_t hal;
 grbl_t grbl;
 system_t sys;
@@ -169,7 +170,7 @@ static void report_options(bool newopt)
 }
 void report_plugin(const char *name, const char *version)
 {
-    CHECK(strcmp(name, "Events plugin") == 0 && strcmp(version, "0.14") == 0);
+    CHECK(strcmp(name, "Events plugin") == 0 && plugin_version_valid(version));
     reports++;
 }
 void prepare_event_driver(void)

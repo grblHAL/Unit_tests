@@ -1,4 +1,5 @@
 #include "flex_host.h"
+#include "../../plugin_version.h"
 grbl_hal_t hal;
 grbl_t grbl;
 system_t sys;
@@ -136,7 +137,7 @@ static void options(bool newopt)
 }
 void report_plugin(const char *name, const char *version)
 {
-    CHECK(strcmp(name, "FLEXGPIO") == 0 && strcmp(version, "0.04") == 0);
+    CHECK(strcmp(name, "FLEXGPIO") == 0 && plugin_version_valid(version));
     chains++;
 }
 static void enumerate(bool low_level, pin_info_ptr fn, void *data)
