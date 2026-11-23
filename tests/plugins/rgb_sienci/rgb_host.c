@@ -1,4 +1,5 @@
 #include "rgb_host.h"
+#include "../../plugin_version.h"
 grbl_hal_t hal;
 grbl_t grbl;
 system_t sys;
@@ -87,9 +88,9 @@ void report_plugin(const char *name, const char *version)
 {
     CHECK(strcmp(name, "SIENCI Indicator Light") == 0);
 #if STATUS_LIGHT_ENABLE == 2
-    CHECK(strcmp(version, "2.0") == 0);
+    CHECK(plugin_version_major(version, "2"));
 #else
-    CHECK(strcmp(version, "3.0") == 0);
+    CHECK(plugin_version_major(version, "3"));
 #endif
     chains++;
 }

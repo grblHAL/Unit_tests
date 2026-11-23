@@ -1,4 +1,5 @@
 #include "therm_host.h"
+#include "../../plugin_version.h"
 grbl_hal_t hal;
 grbl_t grbl;
 system_t sys;
@@ -111,7 +112,7 @@ bool task_run_on_startup(foreground_task_ptr fn, void *data)
 }
 void report_plugin(const char *name, const char *version)
 {
-    CHECK(strcmp(name, "Thermistor") == 0 && strcmp(version, "1.4") == 0);
+    CHECK(strcmp(name, "Thermistor") == 0 && plugin_version_valid(version));
     options++;
 }
 static void previous_report(stream_write_ptr write, report_tracking_flags_t flags)

@@ -1,4 +1,5 @@
 #include "homing_host.h"
+#include "../../plugin_version.h"
 grbl_hal_t hal;
 grbl_t grbl;
 system_t sys;
@@ -60,7 +61,7 @@ bool settings_override_acceleration(uint8_t axis, float value)
 }
 void report_plugin(const char *name, const char *version)
 {
-    CHECK(strcmp(name, "Sienci Homing Acceleration Plugin") == 0 && strcmp(version, "0.01") == 0);
+    CHECK(strcmp(name, "Sienci Homing Acceleration Plugin") == 0 && plugin_version_valid(version));
     options++;
 }
 static void previous_rate(axes_signals_t axes, coord_data_t *feedrate, homing_mode_t mode)

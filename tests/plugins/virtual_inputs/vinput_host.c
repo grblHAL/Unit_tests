@@ -1,4 +1,5 @@
 #include "vinput_host.h"
+#include "../../plugin_version.h"
 grbl_hal_t hal;
 grbl_t grbl;
 system_t sys;
@@ -65,7 +66,7 @@ void system_register_commands(sys_commands_t *commands)
 }
 void report_plugin(const char *name, const char *version)
 {
-    CHECK(strcmp(name, "Virtual inputs") == 0 && strcmp(version, "0.05") == 0);
+    CHECK(strcmp(name, "Virtual inputs") == 0 && plugin_version_valid(version));
     option_calls++;
 }
 bool protocol_execute_realtime(void)

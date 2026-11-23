@@ -1,5 +1,6 @@
 #include "pulloff_host.h"
 #include <string.h>
+#include "../../../plugin_version.h"
 grbl_hal_t hal;
 grbl_t grbl;
 settings_t settings;
@@ -70,7 +71,7 @@ static void report_options(bool newopt)
 }
 void report_plugin(const char *name, const char *version)
 {
-    CHECK(strcmp(name, "Homing pulloff") == 0 && strcmp(version, "0.02") == 0);
+    CHECK(strcmp(name, "Homing pulloff") == 0 && plugin_version_valid(version));
     reports++;
 }
 void prepare_pulloff(void)

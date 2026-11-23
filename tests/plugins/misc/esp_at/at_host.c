@@ -2,6 +2,7 @@
 #include "eeprom_host.h"
 #include "grbl/state_machine.h"
 #include <stdio.h>
+#include "../../../plugin_version.h"
 grbl_t grbl;
 system_t sys;
 settings_t settings;
@@ -278,7 +279,7 @@ void report_warning(void *message)
 }
 void report_plugin(const char *name, const char *version)
 {
-    CHECK(!strcmp(version, "0.08"));
+    CHECK(plugin_version_valid(version));
     output(name);
 }
 void report_message(const char *text, message_type_t type)
