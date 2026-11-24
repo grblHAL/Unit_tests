@@ -121,12 +121,3 @@ if(TEST boot_delta_aux.valid_cartesian_cut_with_stationary_homed_auxiliary_axis_
   set_tests_properties(boot_delta_aux.valid_cartesian_cut_with_stationary_homed_auxiliary_axis_does_not_raise_soft_limit
     PROPERTIES WILL_FAIL TRUE LABELS known_bug)
 endif()
-
-# Confirmed COREb01f481 on hosted Linux Clang: exact macro argument table bounds fault.
-if(HOST_TAPPING_KNOWN_CRASH)
-  foreach(tapping_case IN LISTS HOST_TAPPING_CRASH_CASES)
-    if(TEST ${tapping_case})
-      set_tests_properties(${tapping_case} PROPERTIES WILL_FAIL TRUE LABELS "known_bug;known_crash")
-    endif()
-  endforeach()
-endif()

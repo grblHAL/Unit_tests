@@ -1,7 +1,7 @@
 # SAM3X8E serial scope and regressions
 
-Original driver2321092b02cbbdecf2eba2b168a74b085e573418, CORE
-b01f481072edecac33d5e40c25869359a5b3fa1f and Arduino SAM SDK
+Rechecked 2026-11-24: driver77583d617551c215d5e8f27355d1d5dc7774466e, CORE
+a53a16a4d756f12a27006152ba3a99b5ec46b2c7 and Arduino SAM SDK
 790ff2c852bf159787a9966bddee4d9f55352d15 remain unchanged. Original serial.c,
 serial.h/driver.h/generic map, actual Arduino/device register headers and real
 CORE stream registration/claim/status/suspend logic are compiled. Clocks, CPU
@@ -29,7 +29,8 @@ reach the secondary handler in the paired controls.
 
 The callback also takes char while CORE's callback type takes uint8_t. Clang
 rejects that initializer by default; only the original source gets a narrow
--Wno-error=incompatible-function-pointer-types rule so its warning remains visible.
+-Wno-error=incompatible-function-pointer-types rule; GCC uses its corresponding
+-Wno-error=incompatible-pointer-types rule. Both warnings remain visible.
 The typed public call produces one recovering function-type UBSan diagnostic per
 case. Exact caller file/line/function/type manifest entries and Clang-sanitizer
 labels require that diagnostic; unrelated or missing diagnostics fail reporting.

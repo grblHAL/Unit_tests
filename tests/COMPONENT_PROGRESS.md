@@ -19,9 +19,15 @@ assertions remain unvalidated. No firmware edits or hardware coverage claim.
 ARM GCC module checks pass for six registered families (STM32F1/F3/F4/F7/H7,
 LPC176x), including both H7 configurations. Local results above supersede old
 runtime snapshots; old coverage badge measurements retain their own provenance.
-PR37 is submitted and pushing/GCC/Clang validation is explicitly approved.
-Hosted validation is starting on a separate validation branch; no new hosted
-result or updated coverage badge is claimed yet.
+PR37 is merged. Follow-up PR38 repairs Linux compiler/fixture compatibility.
+All 59 component suites now have successful upstream GCC/Clang sanitizer and
+coverage runs, with registered ARM module checks passing where applicable.
+[HOSTED_REFRESH.csv](HOSTED_REFRESH.csv) records each tested harness/source/CORE
+SHA and run URL; unaffected suites retain their earlier passing harness SHA.
+The two legacy references remain explicitly pinned. Plasma's exact sanitizer
+wrappers and one Linux GCC coverage assertion reproduce its documented listing
+buffer defect; post-fault assertions remain unvalidated. Coverage badges below
+retain their historical provenance; no hardware claim is made.
 
 # End-of-day handoff - 2026-10-25
 

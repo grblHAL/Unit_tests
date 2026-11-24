@@ -10,6 +10,7 @@
 _Static_assert(sizeof(void *) == 4, "STM32F3 fixture requires a32-bit host target");
 grbl_hal_t hal;
 uint16_t f3_source[1024];
+uint16_t f3_flash_kb;
 unsigned f3_unlocks, f3_locks, f3_erases, f3_programs, f3_fail_program;
 bool f3_unlock_ok = true, f3_erase_ok = true;
 uintptr_t f3_address;
@@ -31,7 +32,6 @@ void f3_prepare(unsigned kb, unsigned size)
     if (!mapped)
     {
         map_region(FLASH_BASE, 256 * 1024);
-        map_region(0x1fff0000, 65536);
         mapped = true;
     }
     *(uint16_t *)FLASH_SIZE_DATA_REGISTER = kb;

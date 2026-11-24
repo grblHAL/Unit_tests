@@ -7,7 +7,6 @@ foreach(behavior file_io directories listing nested_listing missing_paths remoun
     "${COMPONENT_CORE_ROOT}/strutils.c" "${COMPONENT_CORE_ROOT}/nuts_bolts.c"
     "${HARNESS_ROOT}/tests/plugins/misc/misc_host.c")
   target_include_directories(driver_simulator_vfs.${behavior} PRIVATE "${HARNESS_ROOT}/drivers/simulator/src" "${HARNESS_ROOT}/tests/plugins/misc")
-  target_compile_definitions(driver_simulator_vfs.${behavior} PRIVATE FS_ENABLE=32)
   if(MINGW)
     target_compile_options(driver_simulator_vfs.${behavior} PRIVATE -include "${HARNESS_ROOT}/tests/include/windows_string_compat.h")
   endif()

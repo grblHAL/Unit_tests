@@ -647,7 +647,8 @@
     "cmake_options": [],
     "test_regex": "^driver_msp432p_serial[.]",
     "coverage_filter": "drivers/msp432p401r/serial\\.c$",
-    "diagnostics_directory": "tests/drivers/msp432p_serial"
+    "diagnostics_directory": "tests/drivers/msp432p_serial",
+    "host_bits": 32
   },
   "core_20250518_reference": {
     "repository": "grblHAL/core",

@@ -6,6 +6,13 @@ set(COMPONENT_CORE_ROOT "${HARNESS_ROOT}/core" CACHE PATH "CORE source checkout 
 if(NOT EXISTS "${COMPONENT_CORE_ROOT}/hal.h")
   message(FATAL_ERROR "Fetch the suite's source lock with scripts/prepare_sources.py first")
 endif()
+if(NOT MSVC)
+  # Match the main harness: CORE warnings stay visible; fixtures remain strict.
+  file(GLOB_RECURSE component_core_sources "${COMPONENT_CORE_ROOT}/*.c")
+  if(component_core_sources)
+    set_source_files_properties(${component_core_sources} PROPERTIES COMPILE_OPTIONS -Wno-error)
+  endif()
+endif()
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include/grbl")
 # Plugins use the firmware driver's grbl/ include layout.
 file(GLOB headers "${COMPONENT_CORE_ROOT}/*.h")
@@ -18,6 +25,8 @@ function(component_case name)
   target_compile_features(${name} PRIVATE c_std_11)
   target_include_directories(${name} PRIVATE "${COMPONENT_CORE_ROOT}" "${HARNESS_ROOT}/tests" "${CMAKE_CURRENT_BINARY_DIR}/include" "${CMAKE_CURRENT_SOURCE_DIR}")
   if(NOT MSVC)
+    # Read libc prototypes before CORE's powr macro on newer glibc.
+    target_compile_options(${name} PRIVATE "SHELL:-include math.h")
     target_compile_options(${name} PRIVATE -Wall -Wextra -Werror)
     target_link_libraries(${name} PRIVATE m)
     if(ENABLE_SANITIZERS)
