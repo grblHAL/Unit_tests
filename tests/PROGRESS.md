@@ -25,9 +25,11 @@ sections removed in PR37. GCC and coverage jobs passed in that run; a full rerun
 must validate the cleanup before calling this follow-up complete.
 
 Plasma's four exact ASan wrappers pass hosted GCC and Clang. Its uninstrumented
-coverage overwrite listing still fails; added pre-list enumeration assertions
-and actual listing output to distinguish storage behavior from report corruption.
-No new exception is added without confirming the cause. Repair validation is
+Linux GCC coverage overwrite listing is corrupted by the same label overflow.
+Run45362565627 verifies stored material fields before listing, then reports
+missing parameter labels/separators. The correct listing assertion is retained
+under an exact Linux/GNU coverage-only known-bug allowance; sanitizer matchers
+remain unchanged. Post-list assertions remain unvalidated until source repair. Repair validation is
 pending; earlier measurements below keep their original provenance.
 
 # Source compatibility refresh - 2026-11-24

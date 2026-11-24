@@ -15,13 +15,24 @@ their correct assertions. Sanitizer builds use the exact test/source/line/functi
 diagnostic matcher in [known_sanitizer_diagnostics.json](known_sanitizer_diagnostics.json)
 through known_crash.py, with named WILL_FAIL/known_crash registrations in
 [CMakeLists.txt](CMakeLists.txt). Unrelated crashes or missing diagnostics fail.
-Assertions after the fatal listing are unvalidated. Hosted run45357783766 passes both sanitizer jobs with the exact matcher;
-its GCC coverage job still fails the overwrite listing assertion and is under
-investigation. Do not broaden the matcher to accept changes.
+Assertions after the fatal listing are unvalidated. Hosted run45362565627 passes
+the exact Clang matcher; the previous run45357783766 passes both GCC and Clang.
+No diagnostic matcher is broadened.
 
-After a source fix, remove those four wrapper registrations and manifest objects,
-retain all four tests, run the complete sanitizer suite and summary, then remove
-this defect section. No production source is patched.
+The same unchanged source also corrupts the uninstrumented Linux GCC coverage
+listing. Run45362565627 first verifies via public enumeration that rejected
+overwrite retained feed900 and name Steel, then reports
+`[MATERIAL:o:2|nu:4|na:Steel|th:130.59001]`: parameter labels and separators are
+missing. In ml_enumerate, lbl's out-of-bounds terminator can overwrite the
+adjacent el separator buffer. The retained correct fr:900 assertion fails.
+Only plugin_plasma.overwrite in Linux/GNU coverage without sanitizers has a
+WILL_FAIL/known_bug allowance for this same defect. Other plain cases remain
+ordinary tests. Post-list overwrite assertions remain unvalidated in this job.
+
+After a source fix, remove the four sanitizer wrappers and manifest objects,
+the exact coverage allowance, and this defect section. Retain all tests and run
+the complete GCC/Clang sanitizer suite, coverage and strict summary. No production
+source is patched.
 
 ## Tested scope
 

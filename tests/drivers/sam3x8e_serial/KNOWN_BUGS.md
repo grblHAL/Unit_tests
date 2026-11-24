@@ -1,6 +1,6 @@
 # SAM3X8E serial scope and regressions
 
-Rechecked 2026-11-24: driver77583d617551c215d5e8f27355d1dc7774466e, CORE
+Rechecked 2026-11-24: driver77583d617551c215d5e8f27355d1d5dc7774466e, CORE
 a53a16a4d756f12a27006152ba3a99b5ec46b2c7 and Arduino SAM SDK
 790ff2c852bf159787a9966bddee4d9f55352d15 remain unchanged. Original serial.c,
 serial.h/driver.h/generic map, actual Arduino/device register headers and real
