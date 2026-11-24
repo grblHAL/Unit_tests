@@ -1,3 +1,25 @@
+# Linux hosted compatibility follow-up - 2026-11-24
+
+PR37 merged as aa6958d8f325e4d282ab0530c40899cb445c397e. Continue on
+`fix-linux-host-tests`, based on merged upstream master. The user approved
+pushing/GCC/Clang and explicitly selected grblHAL/Unit_tests Actions for further
+validation. Do not merge the follow-up PR automatically.
+
+The initial fork matrix45355061107 exposed Linux build compatibility problems:
+glibc powr declarations after the CORE macro, redundant simulator FS_ENABLE,
+CORE signedness warnings promoted by some component projects, missing SAM SDK
+intrinsic declarations and an unsupported older-Clang ATCI warning flag.
+Fixes preserve source warnings and strict fixture checks; no firmware is edited.
+The CMake/header regression covers math include order and multiple forced headers.
+Both helper cases and local simulator/OpenPNP/SAM/keypad/laser-cluster/SD-stream/
+ATCI build/test/strict checks pass after the repair.
+
+One independent Linux Clang SD/FatFs listing assertion needs investigation;
+actual listing diagnostics are added while correct filename/size/filter assertions
+remain unchanged. No new allowance is added without confirming its cause.
+Previous local measurements below retain their original harness/source provenance;
+the initial fork run is incomplete failing evidence, not a passing baseline.
+
 # Source compatibility refresh - 2026-11-24
 
 Requested scope: update the existing functional tests for latest grblHAL/core,

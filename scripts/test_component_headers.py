@@ -14,14 +14,20 @@ class ComponentHeaderTests(unittest.TestCase):
             project, build, core = root / "project", root / "build", root / "core"
             project.mkdir()
             core.mkdir()
-            (core / "hal.h").write_text("#pragma once\n")
-            (project / "main.c").write_text("int main(void) { return 0; }\n")
+            (core / "hal.h").write_text("#pragma once\n#define powr(a, b) powf(a, b)\n")
+            (core / "forced.h").write_text("#pragma once\n")
+            (project / "main.c").write_text(
+                '#include "grbl/hal.h"\n#include <math.h>\n'
+                'int main(void) { return powr(2.0f, 3.0f) == 8.0f ? 0 : 1; }\n')
             helper = (ROOT / "tests/components.cmake").as_posix()
             (project / "CMakeLists.txt").write_text(
                 'cmake_minimum_required(VERSION 3.20)\n'
                 'project(component_runtime C)\n'
                 f'include("{helper}")\n'
                 'component_case(component.runtime main.c)\n'
+                'if(NOT MSVC)\n'
+                f'  target_compile_options(component.runtime PRIVATE -include "{core.as_posix()}/forced.h")\n'
+                'endif()\n'
                 'set_target_properties(component.runtime PROPERTIES SUFFIX "")\n'
             )
             subprocess.run(["cmake", "-S", str(project), "-B", str(build),

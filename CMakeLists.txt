@@ -5,6 +5,8 @@ if(MINGW)
   add_compile_options(-include "${CMAKE_CURRENT_SOURCE_DIR}/tests/include/windows_string_compat.h")
 endif()
 if(NOT MSVC)
+  # Read libc prototypes before CORE's powr macro on newer glibc.
+  add_compile_options("SHELL:-include math.h")
   file(GLOB_RECURSE CORE_SOURCES CONFIGURE_DEPENDS core/*.c)
   set_source_files_properties(${CORE_SOURCES} PROPERTIES COMPILE_OPTIONS -Wno-error)
 endif()

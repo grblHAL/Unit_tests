@@ -7,14 +7,17 @@ int main(void)
     fatfs_put_file("/JOBS/NOTES.BIN", "note", 4);
     settings.fs_options.hierarchical_listing = false;
     CHECK(sd_command("F", NULL) == Status_OK);
+    fprintf(stderr, "Filtered listing:\n%s", sd_output);
     CHECK(strstr(sd_output, "JOBS/PART.NC|SIZE:2"));
     CHECK(!strstr(sd_output, "NOTES.BIN"));
     sd_clear_output();
     CHECK(sd_command("F+", NULL) == Status_OK);
+    fprintf(stderr, "Full listing:\n%s", sd_output);
     CHECK(strstr(sd_output, "JOBS/NOTES.BIN|SIZE:4"));
     sd_clear_output();
     settings.fs_options.hierarchical_listing = true;
     CHECK(sd_command("F", NULL) == Status_OK);
+    fprintf(stderr, "Hierarchical listing:\n%s", sd_output);
     CHECK(strstr(sd_output, "JOBS|SIZE:-1"));
     CHECK(!strstr(sd_output, "PART.NC"));
     return 0;
