@@ -1,10 +1,3 @@
-# RAM nonzero truncation confirmed - 2026-10-23
-
-The ordinary upload/shrink/seek/read candidate is now reproduced and tracked in
-[KNOWN_BUGS](KNOWN_BUGS.md#ram-nonzero-truncate-loses-the-retained-file-allocation).
-Its correct public workflow remains registered with one narrow failure allowance;
-continue independent coverage work. Zero-truncate/replacement controls still pass.
-
 # Pending core features and maintainer follow-ups
 
 Pending implementation and design questions are separate from confirmed defects.

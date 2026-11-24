@@ -19,7 +19,8 @@ assertions remain unvalidated. No firmware edits or hardware coverage claim.
 ARM GCC module checks pass for six registered families (STM32F1/F3/F4/F7/H7,
 LPC176x), including both H7 configurations. Local results above supersede old
 runtime snapshots; old coverage badge measurements retain their own provenance.
-Hosted GCC/Clang/coverage validation is the next delivery check.
+Hosted GCC/Clang/coverage validation awaits explicit push approval after automatic
+review rejected publication. No new hosted result or updated coverage badge is claimed.
 
 # End-of-day handoff - 2026-10-25
 

@@ -4,7 +4,8 @@ Requested scope: update the existing functional tests for latest grblHAL/core,
 drivers and plugins, preserving correct assertions and the original exception
 cleanup policy. No firmware edits or coverage-expansion campaign.
 
-Checkout: branch `refresh-upstream-tests` in the current UNIT_TESTS workspace.
+Checkout: `C:/Users/User/Documents/ChatGPT/UNIT_TESTS/upstream`, branch
+`refresh-upstream-tests`; code commit `c83d3f0b77be84ae61cab317a2f631b38bada317`.
 CORE is clean grblHAL/core `a53a16a4d756f12a27006152ba3a99b5ec46b2c7`.
 Registry defaults follow six upstream master-to-main renames (seven entries).
 Local component sources/dependencies are recorded in [COMPONENT_REFRESH.csv](COMPONENT_REFRESH.csv).
@@ -36,10 +37,29 @@ Keep their narrow assertions/diagnostic matches; see the owning KNOWN_BUGS files
 The coverage delta case remains an ordinary passing sanitizer test; its reason
 for differing under coverage is unresolved. Do not broaden its platform scope.
 
-Remaining checkpoint work: fresh local coverage after ending allocator injection
-before profiler shutdown; hosted GCC/Clang/coverage against the reviewed branch;
-refresh source-matched coverage evidence and delivery status. Existing README
-badges and old inventories below remain historical until replaced by a matched run.
+Fresh Windows Clang coverage passes all 4,510 tests: 4,487 clean, 23 known,
+zero unexpected failures/skips. Coverage is 18,630/18,898 lines (98.58%) and
+12,020/12,924 branch outcomes (93.01%); 268 line gaps and 904 branch gaps.
+[CORE_REFRESH_COVERAGE.json](CORE_REFRESH_COVERAGE.json) records the exact code/
+source/compiler evidence. Both CSV gap inventories are regenerated from that
+report, with unchanged line-contract notes mapped from the prior source. Their
+gap totals are checked against the Cobertura report. Old Linux/GCC measurements
+below are not comparable test-coverage gains: both source and compiler changed.
+Removed a stale TODO link to an already-cleared RAM truncation defect; its
+ordinary regressions pass. All 50 source checkouts remain clean at locked SHAs,
+and grblHAL/core master still matches the tested revision at final verification.
+
+Local reports are under ignored `reports/refresh/`, including HTML, XML/JSON,
+full/strict test logs, source locks and ARM compiler evidence. Windows U: source
+paths were normalized to repository-relative report paths without changing counts.
+Existing README badges retain prior hosted evidence; no new hosted pass is claimed.
+
+Remaining delivery step: push this isolated branch to petervanderwalt/Unit_tests
+and run hosted GCC/Clang/coverage. Automatic approval review rejected the push as
+an unapproved code export because the user's request did not explicitly authorize
+publication. An explicit approval question is pending; do not retry or publish
+until the user approves. No remote branch or PR was created. Hardware remains
+untested. Source owners must resolve documented firmware defects; do not edit CORE.
 
 # README badges and ordered PR delivery - 2026-10-25
 
