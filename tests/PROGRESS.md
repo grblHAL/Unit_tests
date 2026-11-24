@@ -3,9 +3,14 @@
 PR37 merged as aa6958d8f325e4d282ab0530c40899cb445c397e. Follow-up PR38
 uses `fix-linux-host-tests`. No firmware source is changed.
 
-All 60 suites ran in grblHAL/Unit_tests Actions at harness76ee233f:
-49 successful runs and 11 failed runs. Source snapshots remain those recorded
-below. The initial fork run was superseded and is not passing evidence.
+All 60 registered suites now have successful grblHAL/Unit_tests Actions runs:
+GCC and Clang ASan/UBSan, coverage, strict reporting, and ARM module checks where
+registered. [HOSTED_REFRESH.csv](HOSTED_REFRESH.csv) records every run URL,
+harness SHA, source SHA and CORE dependency. The initial batch at 76ee233f had
+49 successful and 11 failed runs. Affected suites were repaired and rerun at
+02628e4a; plasma's final run is at 4b4e115a. Unaffected successes retain their
+76ee233f provenance; this is not a claim that all suites ran at one commit.
+The initial fork run was superseded and is not passing evidence.
 
 The repair batch fixes host compiler warnings, libc math declaration order,
 SAM SDK declarations, and unsupported ATCI warning options. Fixture checks stay
@@ -21,16 +26,24 @@ Linux Clang run45357684796 shows all three former tapping crash regressions
 exiting zero without sanitizer diagnostics. Removed their wrappers, WILL_FAIL
 labels, diagnostic manifest entries and KNOWN_BUGS section per README; all three
 correct regression tests remain. This is additional to the seven resolved CORE
-sections removed in PR37. GCC and coverage jobs passed in that run; a full rerun
-must validate the cleanup before calling this follow-up complete.
+sections removed in PR37. Full rerun
+[45362543355](https://github.com/grblHAL/Unit_tests/actions/runs/45362543355)
+passes GCC 15.2.0, Clang 21.1.8 and coverage after cleanup. All 4,510 cases run
+with zero unexpected failures/skips. Clang reports 4,488 clean, one known
+recovering diagnostic and 21 known assertions. Coverage reports 4,489 clean
+and 21 known assertions; its separate Linux GCC measurement is recorded in
+[CORE_REFRESH_COVERAGE.json](CORE_REFRESH_COVERAGE.json). All 103 Python helper
+tests pass locally; all affected component rebuild/test/strict checks pass.
 
 Plasma's four exact ASan wrappers pass hosted GCC and Clang. Its uninstrumented
 Linux GCC coverage overwrite listing is corrupted by the same label overflow.
 Run45362565627 verifies stored material fields before listing, then reports
 missing parameter labels/separators. The correct listing assertion is retained
 under an exact Linux/GNU coverage-only known-bug allowance; sanitizer matchers
-remain unchanged. Post-list assertions remain unvalidated until source repair. Repair validation is
-pending; earlier measurements below keep their original provenance.
+remain unchanged. Post-list assertions remain unvalidated until source repair. Final plasma run
+[45363036924](https://github.com/grblHAL/Unit_tests/actions/runs/45363036924)
+passes both sanitizer jobs and coverage. Earlier measurements below keep their
+original provenance. No firmware edits or hardware validation are claimed.
 
 # Source compatibility refresh - 2026-11-24
 

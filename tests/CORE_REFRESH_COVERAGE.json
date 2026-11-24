@@ -16,5 +16,33 @@
   "branches_total": 12924,
   "measured_source_files": 59,
   "source_inventory_files": 114,
-  "hosted_validation": "approved; starting for PR37"
+  "hosted_validation": "Passed GCC 15.2.0 and Clang 21.1.8 sanitizers plus coverage: https://github.com/grblHAL/Unit_tests/actions/runs/45362543355; full suite provenance in HOSTED_REFRESH.csv",
+  "hosted_coverage": {
+    "date": "2026-11-24",
+    "run_url": "https://github.com/grblHAL/Unit_tests/actions/runs/45362543355",
+    "harness_code_commit": "02628e4a498d0391540da4a32b7b9bf147497803",
+    "core_sha": "a53a16a4d756f12a27006152ba3a99b5ec46b2c7",
+    "compiler": "GCC 15.2.0",
+    "platform": "Linux ubuntu-latest",
+    "configuration": "Debug coverage, no sanitizers",
+    "tests": 4510,
+    "clean": 4489,
+    "known_assertions": 21,
+    "unexpected_failures": 0,
+    "skipped": 0,
+    "lines_covered": 17627,
+    "lines_total": 17915,
+    "functions_covered": 1236,
+    "functions_total": 1249,
+    "branches_covered": 16490,
+    "branches_total": 29453
+  },
+  "hosted_clang_sanitizers": {
+    "tests": 4510,
+    "clean": 4488,
+    "known_diagnostics": 1,
+    "known_assertions": 21,
+    "unexpected_failures": 0,
+    "skipped": 0
+  }
 }
