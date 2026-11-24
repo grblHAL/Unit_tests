@@ -49,6 +49,8 @@ set_source_files_properties("${HARNESS_ROOT}/drivers/sam3x8e/grblHAL_Due/src/ser
 
 if(CMAKE_C_COMPILER_ID STREQUAL "Clang")
  set_source_files_properties("${HARNESS_ROOT}/drivers/sam3x8e/grblHAL_Due/src/serial.c" PROPERTIES COMPILE_OPTIONS "-Wno-error;-Wno-error=incompatible-function-pointer-types")
+elseif(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+ set_property(SOURCE "${HARNESS_ROOT}/drivers/sam3x8e/grblHAL_Due/src/serial.c" APPEND PROPERTY COMPILE_OPTIONS -Wno-error=incompatible-pointer-types)
 endif()
 
 foreach(port -1 1)

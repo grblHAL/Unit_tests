@@ -38,7 +38,7 @@ io_port_cfg_t *ioports_cfg(io_port_cfg_t *p, io_port_type_t type, io_port_direct
     // The real API provides persistent decimal limits in this inline field.
     char max[4] = {0};
     if (n)
-        snprintf(max, sizeof(max), "%u", n - 1);
+        snprintf(max, sizeof(max), "%u", (unsigned)cfg.port_max);
     memcpy((char *)p + offsetof(io_port_cfg_t, port_maxs), max, sizeof(max));
     return p;
 }

@@ -1,24 +1,34 @@
 # Linux hosted compatibility follow-up - 2026-11-24
 
-PR37 merged as aa6958d8f325e4d282ab0530c40899cb445c397e. Continue on
-`fix-linux-host-tests`, based on merged upstream master. The user approved
-pushing/GCC/Clang and explicitly selected grblHAL/Unit_tests Actions for further
-validation. Do not merge the follow-up PR automatically.
+PR37 merged as aa6958d8f325e4d282ab0530c40899cb445c397e. Follow-up PR38
+uses `fix-linux-host-tests`. No firmware source is changed.
 
-The initial fork matrix45355061107 exposed Linux build compatibility problems:
-glibc powr declarations after the CORE macro, redundant simulator FS_ENABLE,
-CORE signedness warnings promoted by some component projects, missing SAM SDK
-intrinsic declarations and an unsupported older-Clang ATCI warning flag.
-Fixes preserve source warnings and strict fixture checks; no firmware is edited.
-The CMake/header regression covers math include order and multiple forced headers.
-Both helper cases and local simulator/OpenPNP/SAM/keypad/laser-cluster/SD-stream/
-ATCI build/test/strict checks pass after the repair.
+All 60 suites ran in grblHAL/Unit_tests Actions at harness76ee233f:
+49 successful runs and 11 failed runs. Source snapshots remain those recorded
+below. The initial fork run was superseded and is not passing evidence.
 
-One independent Linux Clang SD/FatFs listing assertion needs investigation;
-actual listing diagnostics are added while correct filename/size/filter assertions
-remain unchanged. No new allowance is added without confirming its cause.
-Previous local measurements below retain their original harness/source provenance;
-the initial fork run is incomplete failing evidence, not a passing baseline.
+The repair batch fixes host compiler warnings, libc math declaration order,
+SAM SDK declarations, and unsupported ATCI warning options. Fixture checks stay
+strict and original-source warnings stay visible. FatFs suites now select the
+locked API with NEW_FATFS without falsely selecting STM32 printf integer widths.
+MSP432 serial uses a 32-bit host so its real peripheral addresses avoid the
+64-bit ASan shadow gap. F3's mock flash-size register uses owned storage so it
+does not overlap 32-bit ASan shadow memory; actual flash addresses and geometry
+assertions are retained.
+
+CORE a53a16a4d756f12a27006152ba3a99b5ec46b2c7, verified 2026-11-24:
+Linux Clang run45357684796 shows all three former tapping crash regressions
+exiting zero without sanitizer diagnostics. Removed their wrappers, WILL_FAIL
+labels, diagnostic manifest entries and KNOWN_BUGS section per README; all three
+correct regression tests remain. This is additional to the seven resolved CORE
+sections removed in PR37. GCC and coverage jobs passed in that run; a full rerun
+must validate the cleanup before calling this follow-up complete.
+
+Plasma's four exact ASan wrappers pass hosted GCC and Clang. Its uninstrumented
+coverage overwrite listing still fails; added pre-list enumeration assertions
+and actual listing output to distinguish storage behavior from report corruption.
+No new exception is added without confirming the cause. Repair validation is
+pending; earlier measurements below keep their original provenance.
 
 # Source compatibility refresh - 2026-11-24
 

@@ -12,7 +12,7 @@ foreach(behavior motion_time spindle_foreground settings_reclaim reset_previous 
     target_compile_options(plugin_odometer.${behavior} PRIVATE -include "${HARNESS_ROOT}/tests/include/windows_string_compat.h")
   endif()
 endforeach()
-set_source_files_properties("${HARNESS_ROOT}/plugins/odometer/odometer.c" PROPERTIES COMPILE_OPTIONS "-Wno-unused-parameter;-Wno-error=format")
+set_source_files_properties("${HARNESS_ROOT}/plugins/odometer/odometer.c" PROPERTIES COMPILE_OPTIONS "-Wno-unused-parameter;-Wno-error=format;-Wno-error=sign-compare")
 set_source_files_properties("${COMPONENT_CORE_ROOT}/strutils.c" PROPERTIES COMPILE_OPTIONS -Wno-error)
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/odometer-persistent")
 set_tests_properties(plugin_odometer.persist_write PROPERTIES FIXTURES_SETUP odometer_nvs)

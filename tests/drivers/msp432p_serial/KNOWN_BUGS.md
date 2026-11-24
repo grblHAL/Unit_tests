@@ -1,6 +1,7 @@
 # Known regression - 2026-10-24
 
-MSP432P401R source1fa8bc31d8e8669d4d569e768154a0532ec5311e, original serial.c.
+Rechecked 2026-11-24: MSP432P401R45aa53e38c1efe20a241deda1ddbbeabbdd83098,
+COREa53a16a4d756f12a27006152ba3a99b5ec46b2c7, original serial.c.
 mute_preserves_tx queues normal output while the UART is busy, then uses public
 stream.disable_rx(true). serialDisable assigns the whole IE register to0,
 clearing TXIE as well as RXIE; disable_rx(false) only restores RXIE. Correct
@@ -32,3 +33,8 @@ Source review: SERIAL2_MOD expands to A2, but its status-table entry is under
 #if SERIAL2_MOD while properties/functions use #ifdef SERIAL2_MOD. Do not open
 that secondary instance or force a status-table memory failure; establish/fix its
 supported guard contract first. No secondary runtime coverage is claimed.
+
+The host target is 32-bit, matching the MCU pointer width. This keeps the real
+0xE0000000 NVIC mapping outside the 64-bit Linux ASan shadow gap. Mappings still
+require the requested address without replacing existing memory; no register
+addresses or firmware sources are changed.

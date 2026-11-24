@@ -3,7 +3,7 @@
 ## Material listing overflows its label buffer
 
 Confirmed 2026-11-24 on Plugin_plasma `5608649a18f7821f7d2ecbc1dd0c45d189113d03`
-and CORE `a53a16a4d756f12a27006152ba3a99b5ec46b2c7`, Windows Clang ASan.
+and CORE `a53a16a4d756f12a27006152ba3a99b5ec46b2c7`, Windows Clang ASan and hosted Linux GCC/Clang ASan.
 `$EM` listing of an ordinary material reaches
 [ml_enumerate](https://github.com/grblHAL/Plugin_plasma/blob/5608649a18f7821f7d2ecbc1dd0c45d189113d03/thc.c#L678).
 Its three-byte lbl buffer receives the three-character `ph=` token and its
@@ -15,8 +15,9 @@ their correct assertions. Sanitizer builds use the exact test/source/line/functi
 diagnostic matcher in [known_sanitizer_diagnostics.json](known_sanitizer_diagnostics.json)
 through known_crash.py, with named WILL_FAIL/known_crash registrations in
 [CMakeLists.txt](CMakeLists.txt). Unrelated crashes or missing diagnostics fail.
-Assertions after the fatal listing are unvalidated. GCC/Linux matching remains
-to be checked in hosted validation; do not broaden the matcher to accept changes.
+Assertions after the fatal listing are unvalidated. Hosted run45357783766 passes both sanitizer jobs with the exact matcher;
+its GCC coverage job still fails the overwrite listing assertion and is under
+investigation. Do not broaden the matcher to accept changes.
 
 After a source fix, remove those four wrapper registrations and manifest objects,
 retain all four tests, run the complete sanitizer suite and summary, then remove

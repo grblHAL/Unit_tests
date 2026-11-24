@@ -2,7 +2,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #define FLASH_BASE 0x08000000U
-#define FLASH_SIZE_DATA_REGISTER 0x1FFFF7CCU
+extern uint16_t f3_flash_kb;
+#define FLASH_SIZE_DATA_REGISTER (&f3_flash_kb)
 #define FLASH_PAGE_SIZE 2048U
 #define FLASH_TYPEERASE_PAGES 0U
 #define FLASH_TYPEPROGRAM_HALFWORD 1U

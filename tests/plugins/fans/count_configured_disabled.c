@@ -16,8 +16,8 @@ int main(void)
     for (unsigned i = 0; i < FANS_ENABLE; i++)
     {
         fan_set_state(i, true);
-        CHECK(fan_get_state(i) == (i < FANS_ENABLE - 1));
-        CHECK(outputs[i] == (i < FANS_ENABLE - 1));
+        CHECK(fan_get_state(i) == (i + 1 < FANS_ENABLE));
+        CHECK(outputs[i] == (i + 1 < FANS_ENABLE));
     }
     CHECK(output_calls == FANS_ENABLE - 1);
     grbl.on_report_options(false);

@@ -573,29 +573,3 @@ confirms the first cut completed (XYZpulse0 increases98->108) before the second
 cut falsely alarms, with7 acknowledgements and A0. Classified four-case evidence
 is `build-asan/delta-aux74-classified-results.xml`; the independent mixed-jog
 control passes with physical/logical motor agreement and a non-cuboid endpoint.
-
-
-## Linux Clang tapping argument handoff reads beyond its offset table
-
-Confirmed 2026-10-24 on CORE `b01f481072edecac33d5e40c25869359a5b3fa1f`,
-hosted run40082861198, harness7bf1306. The correct eight-axis tapping handoff
-regression reaches macro_arguments_push at gcode.c485 with index27 for its
-27-entry offset table. Hosted Clang reports the exact bounds UBSan followed
-by an ASan global-buffer-overflow at that function/line. Windows Clang, hosted
-GCC sanitizer and GCC coverage execute the assertions successfully.
-
-[Regression](cases/eight_axis/rigid_tapping_fallback_receives_a_axis_arguments_and_restores_caller_scope.c)
-retains exact argument/scope/override assertions. Only Linux Clang sanitizer
-builds use the diagnostic launcher and WILL_FAIL/known_crash. The manifest
-requires index27, const27-entry table, source485, macro_arguments_push, and
-the global-buffer-overflow signature. Changed/unrelated faults and absent
-diagnostics make that exception red; assertions after the fatal fault are
-unvalidated on the reproducing platform. No broad crash acceptance or CORE edit.
-
-The handoff initializes named bitfields of parameter_words_t, then the helper
-iterates its full32-bit mask against27 offset entries. Unused/padding bits in
-that initialization are a source hypothesis, not a proven exclusive cause.
-Upstream should ensure the complete mask is initialized and bound offset
-accesses. Remove only this platform-scoped launcher/allowance and manifest
-entry after unchanged assertions run without diagnostics. Hosted evidence:
-build-asan/hosted40082861198/report-core-clang/logs/clang-test.log.

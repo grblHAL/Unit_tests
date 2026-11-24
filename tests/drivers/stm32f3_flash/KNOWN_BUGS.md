@@ -1,7 +1,7 @@
 # STM32F3 flash scope and regression
 
-Original source9a40877b87b6fffbb475f753f0e12cc6c5126770 and CORE
-b01f481072edecac33d5e40c25869359a5b3fa1f remain unchanged.
+Rechecked 2026-11-24: original sourcebff8acc49510cc74e14aaef721e15aeffd0df4f6
+and COREa53a16a4d756f12a27006152ba3a99b5ec46b2c7 remain unchanged.
 
 ## 2026-10-24: first halfword programming error is overwritten
 
@@ -32,3 +32,8 @@ restoration remains required. No erased-memory or private state is fabricated to
 force paths. Linux mappings, other device geometries, full controller allocation/
 settings boot, physical flash/cache/IRQ timing and SDK/board builds remain
 unverified. These are selected storage-module results, not whole-driver coverage.
+
+The mock flash-size register uses owned uint16_t storage. Its former factory
+address overlapped 32-bit Linux ASan shadow memory. Real flash mapping and
+128/256 KiB geometry assertions are retained; no production register definition
+is replaced.

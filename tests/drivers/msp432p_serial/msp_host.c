@@ -9,6 +9,7 @@
 #include <sys/mman.h>
 #endif
 #include "msp_host.h"
+_Static_assert(sizeof(void *) == 4, "MSP432 fixture requires a 32-bit host target");
 grbl_hal_t hal;
 grbl_t grbl;
 system_t sys;
