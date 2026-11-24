@@ -2,7 +2,7 @@
 static unsigned found;
 static bool visit(material_t *m, void *data)
 {
-    CHECK(data == &found && m->id == 4 && m->pierce_height == 3);
+    CHECK(data == &found && m->id == 4 && m->param.pierce_height == 3);
     found++;
     return false;
 }

@@ -17,7 +17,7 @@ int main(void)
     const modbus_api_t api = {.interface = Modbus_InterfaceRTU, .send = transport_send};
     CHECK(modbus_register_api(&api));
     uint16_t values[1] = {0};
-    const uint8_t invalid_functions[] = {0, 255};
+    const uint8_t invalid_functions[] = {0, 127};
     for(unsigned i = 0; i < sizeof(invalid_functions); i++) {
         reply_function = invalid_functions[i];
         CHECK(modbus_message(7, ModBus_ReadHoldingRegisters, 16, values, 1, bus_completed) == Status_OK);

@@ -7,11 +7,11 @@
 int main(void)
 {
     string_t text = {0};
-    CHECK(strset(&text, 128, "fixture_panel.nc") != NULL);
+    CHECK(strset_(&text, 128, "fixture_panel.nc") != NULL);
     char *original = text.data;
-    CHECK(strset(&text, 32, "next_panel.nc") == original);
+    CHECK(strset_(&text, 32, "next_panel.nc") == original);
     CHECK(strcmp(text.data, "next_panel.nc") == 0 && text.len >= 128);
-    CHECK(strset(&text, 32, NULL) == original);
+    CHECK(strset_(&text, 32, NULL) == original);
     CHECK(text.data[0] == '\0');
     free(text.data);
     return EXIT_SUCCESS;

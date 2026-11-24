@@ -7,6 +7,8 @@ extern settings_t settings;
 extern system_t sys;
 extern setting_details_t *clone_settings;
 extern bool clone_storage;
+extern bool clone_available;
+extern machine_mode_t clone_mode;
 extern unsigned clone_calls, clone_selected, clone_warnings;
 extern spindle_state_t clone_output;
 extern float clone_rpm;

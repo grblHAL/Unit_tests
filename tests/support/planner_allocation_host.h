@@ -46,4 +46,5 @@ static inline void check_bounded_planner_fallback(unsigned requested, unsigned b
     CHECK(capacity < requested && capacity <= budget);
     CHECK(settings.planner_buffer_blocks == requested);
     check_planner_capacity_is_usable();
+    planner_heap_limit = (size_t)-1; /* Do not constrain the coverage runtime at process exit. */
 }

@@ -15,6 +15,8 @@ static void boot_pwm_output(spindle_ptrs_t *spindle, spindle_state_t state, floa
         NEAR(rpm, 0);
         startup_checked = true;
     } else if(state.on) {
+        fprintf(stderr, "Additional PWM initialized=%u off writes=%u before primary start\n",
+                (unsigned)startup_checked, pwm_outputs[1]);
         CHECK(startup_checked && pwm_outputs[1] == 1);
         primary_ran = true;
         NEAR(rpm, 3000);

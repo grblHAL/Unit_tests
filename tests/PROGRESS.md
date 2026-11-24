@@ -1,3 +1,46 @@
+# Source compatibility refresh - 2026-11-24
+
+Requested scope: update the existing functional tests for latest grblHAL/core,
+drivers and plugins, preserving correct assertions and the original exception
+cleanup policy. No firmware edits or coverage-expansion campaign.
+
+Checkout: branch `refresh-upstream-tests` in the current UNIT_TESTS workspace.
+CORE is clean grblHAL/core `a53a16a4d756f12a27006152ba3a99b5ec46b2c7`.
+Registry defaults follow six upstream master-to-main renames (seven entries).
+Local component sources/dependencies are recorded in [COMPONENT_REFRESH.csv](COMPONENT_REFRESH.csv).
+
+Windows LLVM-MinGW Clang 23.1.3 ASan/UBSan: 4,510 CORE tests, 4,487 clean,
+one known recovering diagnostic, 22 known assertion failures, zero unexpected
+failures/skips. Subsequent profiler-fixture changes pass all five affected
+sanitizer cases. All 103 Python helper tests pass; the two component/CMake
+helper tests also pass after adding exact component crash registration.
+
+All 59 registered component suites pass local build/test/strict summary: 1,318
+cases, 1,239 clean, 75 known assertions/crashes and four known recovering
+diagnostics, no unexpected failures/skips. Two suites intentionally retain the
+2025 legacy CORE reference; they do not establish current CORE compatibility.
+ARM GCC 14.2.1 module checks pass for STM32F1/F3/F4/F7/H7 and LPC176x,
+including both H7 configurations. These are module checks, not firmware/hardware tests.
+
+Seven fixed CORE exceptions and their KNOWN_BUGS sections were removed after
+raw clean passes. Regression assertions remain. API/default updates cover
+optional-stop enable semantics, pullup capabilities, MPG minimum25ms, strset_,
+peck-cycle dwell, active spindle lookup and clone/plugin interfaces. Added two
+profiled-jog pulse regressions, plasma material-parameter coverage and an
+unavailable-clone-binding control. Summary now rejects skipped/unbuilt tests.
+
+New documented observations: additional PWM initialization, failed-secondary
+configuration stopping the primary, missing Modbus no-reply warnings, plasma
+material-listing overflow, and a Windows Clang coverage-only delta jog failure.
+Keep their narrow assertions/diagnostic matches; see the owning KNOWN_BUGS files.
+The coverage delta case remains an ordinary passing sanitizer test; its reason
+for differing under coverage is unresolved. Do not broaden its platform scope.
+
+Remaining checkpoint work: fresh local coverage after ending allocator injection
+before profiler shutdown; hosted GCC/Clang/coverage against the reviewed branch;
+refresh source-matched coverage evidence and delivery status. Existing README
+badges and old inventories below remain historical until replaced by a matched run.
+
 # README badges and ordered PR delivery - 2026-10-25
 
 PR30 merged6b6d147; PR31 mergedca57aef, as explicitly authorized.

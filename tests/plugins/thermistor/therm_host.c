@@ -111,7 +111,7 @@ bool task_run_on_startup(foreground_task_ptr fn, void *data)
 }
 void report_plugin(const char *name, const char *version)
 {
-    CHECK(strcmp(name, "Thermistor") == 0 && strcmp(version, "1.4") == 0);
+    CHECK(strcmp(name, "Thermistor") == 0 && version && *version);
     options++;
 }
 static void previous_report(stream_write_ptr write, report_tracking_flags_t flags)

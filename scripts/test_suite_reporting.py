@@ -10,7 +10,7 @@ import unittest
 SCRIPTS = Path(__file__).resolve().parent
 
 class SuiteReportingTests(unittest.TestCase):
-    def run_report(self, stage, warning=False, failure=False, known=False, partial=False, headers=False):
+    def run_report(self, stage, warning=False, failure=False, known=False, partial=False, headers=False, skipped=False):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             (root / "scripts").mkdir()
@@ -24,6 +24,8 @@ class SuiteReportingTests(unittest.TestCase):
             output = "source.c:1:1: runtime error: unexpected warning" if warning else ""
             properties = '<properties><property name="cmake_labels" value="known_bug"/></properties>' if known else ''
             failed = '<failure message="failure">fixture assertion</failure>' if failure else ''
+            if skipped:
+                failed = '<skipped message="Unable to find executable"/>'
             (root / "build/results.xml").write_text('<testsuite><testcase name="example_plugin.case">' + properties + failed + '<system-out>' + output + '</system-out></testcase></testsuite>')
             (root / "plugins/example_plugin").mkdir(parents=True)
             (root / "plugins/example_plugin/code.c").write_text("/* fixture */")
@@ -54,6 +56,12 @@ class SuiteReportingTests(unittest.TestCase):
         result = self.run_report("summary", warning=True)
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("1 failed", result.stdout)
+
+    def test_unbuilt_executable_cannot_pass_summary(self):
+        result = self.run_report("summary", skipped=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("0 clean passes", result.stdout)
+        self.assertIn("1 skipped", result.stdout)
 
     def test_partial_coverage_is_explicitly_not_a_passing_baseline(self):
         result = self.run_report("coverage-summary", partial=True)

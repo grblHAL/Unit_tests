@@ -8,6 +8,30 @@ unsigned plasma_warnings, plasma_prior_comments, plasma_prior_reports, plasma_st
 char plasma_output[8192];
 bool plasma_storage_ok = true;
 static sys_commands_t *commands;
+static struct {
+    const char *name;
+    ngc_named_param_get_ptr get;
+} named_params[4];
+static unsigned named_param_count;
+bool ngc_virtual_ro_param_add(const char *name, ngc_named_param_get_ptr get)
+{
+    CHECK(name && get);
+    for(unsigned i = 0; i < named_param_count; i++)
+        if(!strcmp(named_params[i].name, name))
+            return false;
+    CHECK(named_param_count < 4);
+    named_params[named_param_count].name = name;
+    named_params[named_param_count++].get = get;
+    return true;
+}
+float plasma_param(const char *name)
+{
+    for(unsigned i = 0; i < named_param_count; i++)
+        if(!strcmp(named_params[i].name, name))
+            return named_params[i].get();
+    CHECK(false);
+    return NAN;
+}
 static xbar_t pins[3];
 uint64_t plasma_micros;
 float plasma_inputs[3] = {1, 1, 1};
@@ -111,13 +135,21 @@ bool settings_register(setting_details_t *details)
 }
 void system_register_commands(sys_commands_t *value)
 {
-    CHECK(value->n_commands == 1 && !strcmp(value->commands[0].command, "EM"));
+    CHECK(value && value->n_commands);
     commands = value;
+}
+status_code_t plasma_command(const char *name)
+{
+    CHECK(commands);
+    for(unsigned i = 0; i < commands->n_commands; i++)
+        if(!strcmp(commands->commands[i].command, name))
+            return commands->commands[i].execute(STATE_IDLE, NULL);
+    CHECK(false);
+    return Status_Unhandled;
 }
 status_code_t plasma_list(void)
 {
-    CHECK(commands);
-    return commands->commands[0].execute(STATE_IDLE, NULL);
+    return plasma_command("EM");
 }
 status_code_t plasma_comment(char *text)
 {
@@ -196,18 +228,19 @@ void plasma_load(void)
 }
 material_t plasma_material(int id)
 {
-    material_t result = {.id = id, .thc_status = true};
+    material_t result = {.id = id, .param.thc_enabled = true};
     for (unsigned i = 0; i < 12; i++)
-        result.params[i] = NAN;
-    result.pierce_height = 3;
-    result.pierce_delay = 0.5f;
-    result.cut_height = 1;
-    result.feed_rate = 900;
+        result.param.values[i] = NAN;
+    result.param.pierce_height = 3;
+    result.param.pierce_delay = 0.5f;
+    result.param.cut_height = 1;
+    result.param.feed_rate = 900;
     strcpy(result.name, "Steel");
     return result;
 }
 void plasma_mount(const embedded_file_t **files)
 {
+    sys.driver_started = true;
     CHECK(fs_embedded_mount(files));
     vfs_drives_t *dh = vfs_drives_open();
     CHECK(dh);

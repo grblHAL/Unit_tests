@@ -9,8 +9,8 @@ int main(void)
     run_event_tasks();
     CHECK(!levels[0] && !levels[1] && !levels[2]);
     unsigned before = writes;
-    sys.flags.optional_stop_disable = On;
-    grbl.on_control_signals_changed((control_signals_t){.stop_disable = On});
+    sys.flags.optional_stop_enable = On;
+    grbl.on_control_signals_changed((control_signals_t){.stop_enable = On});
     CHECK(pending_tasks == 3 && writes == before && control_calls == 1);
     run_event_tasks();
     CHECK(levels[0] && !levels[1] && !levels[2]);
@@ -22,9 +22,9 @@ int main(void)
     grbl.on_control_signals_changed((control_signals_t){.block_delete = On});
     run_event_tasks();
     CHECK(levels[0] && levels[1] && levels[2] && !levels[3]);
-    sys.flags.optional_stop_disable = sys.flags.single_block = sys.flags.block_delete_enabled = Off;
+    sys.flags.optional_stop_enable = sys.flags.single_block = sys.flags.block_delete_enabled = Off;
     grbl.on_control_signals_changed(
-        (control_signals_t){.stop_disable = On, .single_block = On, .block_delete = On});
+        (control_signals_t){.stop_enable = On, .single_block = On, .block_delete = On});
     run_event_tasks();
     CHECK(!levels[0] && !levels[1] && !levels[2] && control_calls == 4);
     return 0;

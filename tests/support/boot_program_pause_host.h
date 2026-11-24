@@ -14,7 +14,7 @@ static void pause_pallet_shuttle(void)
 static void pause_switch_capability(settings_t *current)
 {
     CHECK(current == &settings);
-    hal.signals_cap.stop_disable = true;
+    hal.signals_cap.stop_enable = true;
     hal.signals_cap.single_block = true;
     if(pause_use_pallet) hal.pallet_shuttle = pause_pallet_shuttle;
 }
@@ -49,7 +49,7 @@ static inline void run_boot_program_pause(const char *pause, bool disable_option
         strcpy(pause_stream_program, "G1X1F100\nG91G1X1F100\n");
     else
         snprintf(pause_stream_program, sizeof(pause_stream_program), "G1X1F100\n%s\nG91G1X1F100\n", pause);
-    boot_control_signals.stop_disable = disable_optional;
+    boot_control_signals.stop_enable = !disable_optional;
     boot_control_signals.single_block = pause_single_block;
     boot_during_setup = pause_switch_capability;
     prepare_boot_stream_motion(pause_stream_program);

@@ -6,8 +6,8 @@
 int main(void)
 {
     engine_prepare();
-    hal.signals_cap.stop_disable = true;
+    hal.signals_cap.stop_enable = true;
     CHECK(protocol_enqueue_realtime_command(CMD_OPTIONAL_STOP_TOGGLE));
-    CHECK(!sys.flags.optional_stop_disable);
+    CHECK(!sys.flags.optional_stop_enable);
     return EXIT_SUCCESS;
 }

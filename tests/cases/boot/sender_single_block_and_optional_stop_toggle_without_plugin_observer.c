@@ -8,19 +8,19 @@ static const char first_options[] = "$S\n$O\n$G\n";
 static void observe_sender_options(void)
 {
     CHECK(grbl.on_control_signals_changed == NULL);
-    CHECK(!hal.signals_cap.single_block && !hal.signals_cap.stop_disable);
+    CHECK(!hal.signals_cap.single_block && !hal.signals_cap.stop_enable);
     if(!initialized) {
         initial_single_block = sys.flags.single_block;
-        initial_optional_stop = sys.flags.optional_stop_disable;
+        initial_optional_stop = sys.flags.optional_stop_enable;
         initialized = true;
     }
     if(boot_reads == strlen(first_options)) {
         CHECK(sys.flags.single_block != initial_single_block);
-        CHECK(sys.flags.optional_stop_disable != initial_optional_stop);
+        CHECK(sys.flags.optional_stop_enable != initial_optional_stop);
         changed_seen = true;
     } else if(boot_reads == strlen(first_options) * 2) {
         CHECK(sys.flags.single_block == initial_single_block);
-        CHECK(sys.flags.optional_stop_disable == initial_optional_stop);
+        CHECK(sys.flags.optional_stop_enable == initial_optional_stop);
         restored_seen = true;
     }
     if(boot_reads == strlen(deleted_block)) {

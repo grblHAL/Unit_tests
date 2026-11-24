@@ -12,6 +12,7 @@ int main(void)
     boot_during_setup = configure_constrained_driver;
     boot_program = "$G\n";
     CHECK(grbl_enter() == 0);
+    planner_heap_limit = (size_t)-1; /* End controller allocation injection before profiler shutdown. */
     CHECK(planner_rejected_allocations > 0);
     CHECK(plan_get_buffer_size() >= 30 && plan_get_buffer_size() <= 128);
     CHECK(settings.planner_buffer_blocks == 256);

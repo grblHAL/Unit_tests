@@ -245,8 +245,9 @@ For changed Python helpers, run unittest discovery under `scripts/`. If sandbox
 temporary writes fail, set TEMP/TMP to an existing workspace-local directory.
 Read/write text with explicit UTF-8; avoid wholesale recoding of historical
 `KNOWN_BUGS.md` content. The tracked README filename is `ReadMe.md`.
-GitHub CLI was not installed here; GitHub REST with the existing Git credential
-helper is an available fallback. Never print credentials or pass them to CORE.
+GitHub CLI is installed; verify its authentication before hosted delivery.
+GitHub REST with the existing Git credential helper is an available fallback.
+Never print credentials or pass them to CORE.
 
 ## Write and validate tests
 

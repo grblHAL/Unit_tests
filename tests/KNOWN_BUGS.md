@@ -26,28 +26,74 @@ in [storage write-failure policy](TODO.md#storage-write-failure-policy), includi
 its observations, existing test exceptions and cleanup links. It is not a
 settled requirement to retry physical writes a specific number of times.
 
-## Blocking Modbus CRC failure reports NoException to its error callback
+## Additional PWM spindle is not initialized off before the primary job
 
-Confirmed 2026-10-24 on clean CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
-A blocking RTU read with CRC checking and no retries receives a normal-length
-reply with one corrupted CRC byte. The call correctly returns false and invokes
-its exception observer once, but reports0 (`ModBus_NoException`) instead of254
-(`ModBus_CRCError`). The asynchronous CRC control reports the correct CRC code.
+Confirmed 2026-11-24 on CORE `a53a16a4d756f12a27006152ba3a99b5ec46b2c7`
+with Windows Clang ASan/UBSan. The existing
+[boot regression](cases/boot_multi_spindle/additional_pwm_without_config_callback_starts_off_and_preserves_primary_job.c)
+registers two PWM drivers without optional configuration callbacks. At the first
+primary M3, the additional spindle has received no off write. The retained
+assertion requires that initialization before starting the job; later assertions
+are not reached. This is host callback evidence, not an electrical measurement.
 
-[Regression](cases/modbus_rtu/blocking_crc_error_reports_crc_code_and_allows_next_request.c)
-uses the existing registered serial fixture, actual CRC calculation and public
-`modbus_send`. Before its final correct CRC-code assertion, it proves one failed
-request, no receive callback for corrupt data, and successful next request with
-one valid response and expected address/function/data bytes. No transport lockup,
-corrupt data acceptance or sanitizer fault is claimed. Exactly one named
-`WILL_FAIL`/`known_bug` applies in [known_bugs.cmake](known_bugs.cmake).
+[Registration](https://github.com/grblHAL/core/blob/a53a16a4d756f12a27006152ba3a99b5ec46b2c7/spindle_control.c#L185)
+now comments out the startup task for additional PWM spindles. Primary-only boot
+and registered-default selection controls pass. Remove this test's entry from
+the opening regression list in [known_bugs.cmake](known_bugs.cmake) and this
+section once the unchanged off-before-start assertion passes under sanitizers.
 
-Source: [CRC detection](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/modbus_rtu.c#L212)
-sets `ModBus_Exception` for blocking requests but does not assign the CRC error
-to the stored exception code. The [blocking dispatcher](https://github.com/terjeio/grblHAL_core/blob/2e165a1ac4c74be8e68971972c6577775d856b05/modbus_rtu.c#L295)
-passes that stored code to the observer. Review assigning the CRC code for that
-path; CORE is unchanged here. Keep the assertions and remove the allowance and
-this entry after a fixed source passes sanitizer validation and recovery controls.
+## Failed secondary spindle configuration stops the running primary
+
+Confirmed 2026-11-24 on the same CORE revision with Windows Clang ASan/UBSan.
+[Regression](cases/multi_spindle/failed_secondary_configuration_leaves_slot_free_and_primary_running.c)
+starts the primary at 3000 RPM, then attempts to enable a secondary whose
+configuration callback returns false. The secondary remains unavailable, but
+the primary receives an off command before the failed configuration. Its
+output-preservation assertion fails; subsequent recovery assertions are unvalidated.
+
+[Activation](https://github.com/grblHAL/core/blob/a53a16a4d756f12a27006152ba3a99b5ec46b2c7/spindle_control.c#L108)
+calls gc_spindle_off before configuration succeeds. Keep the correct state and
+RPM assertions. Remove the named opening-list exception in
+[known_bugs.cmake](known_bugs.cmake) and this section after the full regression
+passes without an exception. No CORE source was changed.
+
+## Modbus statistics omit the no-reply connection warning
+
+Confirmed 2026-11-24 on the same CORE revision with Windows Clang ASan/UBSan.
+The existing [never-connected](cases/modbus_rtu/sender_statistics_explain_device_that_never_replied.c)
+and [lost-connection](cases/modbus_rtu/sender_statistics_explain_connection_lost_after_valid_reply.c)
+regressions use a real registered RTU transport and a blocking timeout, then
+query `$MODBUSSTATS`. Timeout handling completes, but the expected distinguishing
+connection warning is absent.
+
+The initially false no_rx flag is only AND-assigned in the
+[blocking timeout](https://github.com/grblHAL/core/blob/a53a16a4d756f12a27006152ba3a99b5ec46b2c7/modbus_rtu.c#L317)
+and [asynchronous timeout](https://github.com/grblHAL/core/blob/a53a16a4d756f12a27006152ba3a99b5ec46b2c7/modbus_rtu.c#L254)
+paths. Both warning assertions remain correct. Remove their two opening-list
+exceptions in [known_bugs.cmake](known_bugs.cmake) and this section when both
+tests pass normally. No transport lockup or hardware failure is claimed.
+
+## Delta manual-reference jog differs in Windows Clang coverage
+
+Observed 2026-11-24 on CORE `a53a16a4d756f12a27006152ba3a99b5ec46b2c7`.
+The existing [manual-A-first regression](cases/boot_delta_aux/manual_a_before_xyz_home_allows_mixed_soft_limited_jog.c)
+passes Windows Clang ASan/UBSan, including its exact pulse and endpoint checks.
+The same compiler's non-sanitized coverage build reproducibly rejects both
+subsequent valid jogs with error15. It retains A=5 steps (0.0625 mm), outside
+its reported [-10,0] envelope, instead of completing the -1 mm auxiliary jog.
+This difference also reproduces when the executable runs alone.
+
+The [delta homing position callback](https://github.com/grblHAL/core/blob/a53a16a4d756f12a27006152ba3a99b5ec46b2c7/kinematics/delta.c#L523)
+sets XYZ regardless of the requested cycle and does not reference A. That is
+relevant to the existing auxiliary-homing defects below; the reason the two
+instrumentation modes differ has not been established. Do not infer a platform-
+independent failure or a new source change from this observation.
+
+The correct assertions and diagnostics remain intact. A single named exception
+in [known_bugs.cmake](known_bugs.cmake) applies only to MinGW Clang coverage.
+Sanitizer and other compiler/platform configurations remain ordinary tests.
+Remove that complete conditional and this entry once the same coverage build
+passes all pulse/endpoint assertions without an exception.
 
 ## Acknowledged tool-zero G43 retains the previous tool offsets
 
@@ -529,103 +575,6 @@ is `build-asan/delta-aux74-classified-results.xml`; the independent mixed-jog
 control passes with physical/logical motor agreement and a non-cuboid endpoint.
 
 
-## VFS timestamp path allocation failure loses ENOMEM
-
-Confirmed 2026-10-24 on CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
-The [regression](cases/vfs/utime_path_allocation_failure_preserves_errno_skips_backend_and_allows_retry.c)
-uses a valid relative filename under a mounted working directory and rejects only
-its path-copy allocation. `vfs_utime` returns -1 but exposes errno 0 instead of
-ENOMEM. The backend is untouched, the working directory survives, and a retry
-sets the expected timestamp on the expected file. These controls pass before
-the retained errno assertion fails. Raw ASan/UBSan evidence:
-`build-asan/vfs-utime-errno74-raw-results.xml`.
-
-`parse_path` sets ENOMEM, but vfs.c643 forwards its NULL result to `get_mount`,
-whose unconditional errno reset precedes its NULL guard at272. Unlike `vfs_stat`,
-`vfs_utime` does not short-circuit on path allocation failure. Suggested repair:
-retain the parse error before mount lookup. One exact WILL_FAIL/known_bug, no
-sanitizer allowance or CORE changes. Remove the allowance when the unchanged
-assertion passes.
-
-
-## Blocking Modbus reply acknowledges an asynchronous follow-up without queuing it
-
-Confirmed 2026-10-24 on CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
-A successful blocking register-read callback requests the next register through
-public modbus_send(..., false). It returns true, but the follow-up never reaches
-the UART. There is no queue-pressure or interrupt race: the attempt occurs in
-the normal reply observer. A later independent request completes successfully.
-
-[Regression](cases/modbus_rtu/blocking_reply_followup_is_transmitted_if_send_reports_acceptance.c)
-checks the first reply bytes, exactly one follow-up attempt, no unsolicited
-output, and transport recovery before its correct final assertion. It permits
-explicit rejection; a true return requires exactly one transmission and reply.
-Raw ASan/UBSan evidence `build-asan/rtu-followup74-raw-results.xml` reports
-accepted=1, transmissions=0, and successful independent recovery, then fails
-that final assertion. One exact WILL_FAIL/known_bug; no sanitizer allowance.
-
-At modbus_rtu.c329 the asynchronous enqueue guard examines the active packet
-against sync_msg, rather than the new request. During the blocking callback
-packet points to sync_msg and its function byte is nonzero, so all three terms
-are false. Enqueue is skipped, but return !block at337 is true. Suggested
-upstream repair: queue the follow-up safely or report refusal explicitly.
-Keep the unchanged acceptance/delivery assertion and remove this entry and
-allowance once it passes. CORE remains unmodified.
-
-
-## Modbus register replies from valid high-bit server addresses lose completion
-
-Confirmed 2026-10-24 on CORE `2e165a1ac4c74be8e68971972c6577775d856b05`.
-The [serial specification](https://www.modbus.org/file/secure/modbusoverserial.pdf)
-section2.2 permits individual server addresses1 through247. Server200 is valid.
-A normal function3 register reply from that server is silently discarded by the
-common decoder, so modbus_message returns Status_OK without its completion
-callback. The same register read at server7 completes before and after it.
-
-[Regression](cases/modbus_rtu/high_bit_server_address_delivers_register_reply_and_preserves_next_request.c)
-uses the real registered RTU transport, scheduler and common decoder. Its driver
-fixture returns a complete CRC-valid reply with the transmitted server address.
-Outgoing frame bytes and CRC are checked; all three replies are consumed, TX3
-and zero CRC errors/timeouts are reported, and both server7 controls deliver
-register0x1234. Only the correct server200 callback assertion then fails.
-Raw ASan/UBSan evidence: `build-asan/rtu-high-address74-raw-results.xml`,
-callbacks=0. This replaces the initial decoder-only regression, preserving one
-case and one exact allowance. It is host UART-callback evidence, not physical
-hardware validation.
-
-modbus.c217 tests msg->adu[0]&0x80, the server address byte, before decoding.
-The exception flag belongs to the function byte msg->adu[1]. The wrong byte
-therefore drops legitimate replies from addresses128..247. Suggested repair:
-classify exception responses by their function field while preserving normal
-address bits. Keep the callback/function/value assertions unchanged. One exact
-WILL_FAIL/known_bug; remove it and this entry when the unchanged regression
-passes. No CORE changes or sanitizer allowance.
-
-
-## Failed embedded mount changes the unrelated root mount visibility
-
-Confirmed 2026-10-24 on CORE `b01f481072edecac33d5e40c25869359a5b3fa1f`.
-Reject the first embedded mount's allocation through the public VFS path. The
-mount correctly returns false and emits no mount notification, but changes the
-existing root mode from hidden1 to hidden0. Failure must preserve unrelated
-mount policy. This establishes a metadata mutation, not a claim of file leakage.
-
-[Regression](cases/fs_embedded/allocation_failure_first_mount_preserves_root_mode_and_allows_asset_retry.c)
-uses the normal initial root state and a real embedded asset list. Retry mounts
-exactly once; its mount observer can already read the asset. Directory contents
-and later reads are correct before the retained root-preservation assertion
-fails. Raw ASan/UBSan evidence: `build-asan/analog-embedded-b01-raw-results.xml`,
-root hidden1->0. One exact WILL_FAIL/known_bug, no sanitizer allowance.
-
-fs_embedded.c252 correctly clears the asset pointer when vfs_mount fails, but
-the later !all_hidden arm still calls vfs_mount_set_mode("/embedded", ...).
-That API resolves the absent path to the root mount and updates its mode.
-Suggested upstream repair: change embedded visibility only after a successful
-mount/append, preserving other mount metadata on failure. Keep the regression
-and remove only its allowance and this entry when unchanged assertions pass.
-No CORE edits.
-
-
 ## Linux Clang tapping argument handoff reads beyond its offset table
 
 Confirmed 2026-10-24 on CORE `b01f481072edecac33d5e40c25869359a5b3fa1f`,
@@ -650,196 +599,3 @@ Upstream should ensure the complete mask is initialized and bound offset
 accesses. Remove only this platform-scoped launcher/allowance and manifest
 entry after unchanged assertions run without diagnostics. Hosted evidence:
 build-asan/hosted40082861198/report-core-clang/logs/clang-test.log.
-
-
-## Twenty-nine-argument CALL fails to inherit the final caller local
-
-Confirmed 2026-10-24 on CORE `b01f481072edecac33d5e40c25869359a5b3fa1f`;
-Terje's master still resolves to that revision at classification.
-[Regression](cases/ngc_flowctrl/call_with_twenty_nine_arguments_inherits_last_local_and_restores_caller.c)
-uses the real RAM backend and protocol loop. A thirty-argument control receives
-#29=29/#30=30; both calls restore caller #1=99/#29=72/#30=73 and the following
-root statement executes. The twenty-nine-argument call receives #29 correctly,
-but its omitted #30 fails the correct inherited73 assertion. No prescan or
-named-file execution-policy change is requested.
-
-The [O-call contract](https://www.linuxcnc.org/docs/html/gcode/o-code.html#_subroutines)
-requires omitted arguments through #30 to retain their calling-context values.
-CORE's own argument-fill loop implements this contract for shorter calls.
-At ngc_flowctrl.c754-760, parsing29 arguments increments param_id to30, then
-`param_id < 30` skips the fill loop entirely. The later copy reads the unfilled
-params[29] stack slot. Its incidental value is not part of the test contract;
-no particular corrupt value or sanitizer diagnostic is required.
-
-Raw sanitizer evidence: `build-asan/call-argument-boundary-raw-results.xml`.
-One exact WILL_FAIL/known_bug retains all correct assertions. Suggested upstream
-repair: initialize every omitted parameter through30 before pushing scope.
-Keep the regression and remove only its allowance and this entry after the
-unchanged assertions pass. No CORE edits or sanitizer suppression.
-
-
-### Additional Linux Clang tapping occurrences - 2026-10-24
-
-Run40093560650 at harness8b189a9/COREb01f481 reproduces the same table read in
-spindle_sync.recursive_tapping_macro_overflow_restores_scope_and_allows_next_cut
-(index30) and spindle_sync.unsupported_rigid_tapping_preserves_position_and_next_supported_sync_move
-(index28). Both diagnostics identify the27-entry table, gcode.c485 and the
-macro_arguments_push top frame, followed by ASan global-buffer-overflow. The
-existing eight-axis index27 exception reproduced correctly in this run.
-
-Two additional exact test/index entries and Linux-Clang-only launchers retain
-all correct assertions; assertions after these crashes remain unvalidated on
-that platform. Hosted GCC/coverage and local Windows Clang execute them without
-these faults. Different indices, locations or unrelated diagnostics remain red;
-no blanket sanitizer acceptance. Remove each entry/launcher/label when its
-unchanged regression passes after an upstream fix. No CORE edits.
-
-
-### Tapping diagnostic varies on the same source - 2026-10-24
-
-Exact-head run40103625282 (harness58774aa, COREb01f481) confirms that this
-fault is intermittent across builds. The eight-axis handoff executable exits0
-with no diagnostic; its strict expected-diagnostic wrapper therefore correctly
-fails. The recursive tapping case now reports index27 at gcode.c485 with the
-same27-entry table and macro_arguments_push top frame; run40093560650 reported
-index30. The unsupported fallback still reproduces index28 and matches.
-Saved evidence: build-asan/hosted40103625282/results-core-clang/build/
-known-crash-spindle_sync.recursive_tapping_macro_overflow_restores_scope_and_allows_next_cut.log.
-
-One additional exact recursive-test/index27 manifest entry recognizes that saved
-diagnostic. All other test/source/table/function matching remains unchanged;
-missing expected diagnostics still fail. Do not force padding/private bits or
-weaken the functional assertions to obtain repeatable crashes. Complete mask
-initialization remains an upstream source hypothesis. Terje origin/master was
-freshly fetched and remainsb01f481. No CORE edits. This run remains failed;
-post-crash assertions remain unvalidated on Clang, and no PR-ready claim follows.
-
-
-### Further observed tapping variants - 2026-10-24
-
-Run40107107939 at harness49b18b0/COREb01f481 reports eight-axis handoff index29
-and unsupported tapping fallback index27 at gcode.c485:32, the same27-entry
-const offset table and macro_arguments_push top frame, followed by ASan
-global-buffer-overflow. Recursive tapping index27 matches its existing entry.
-All nine newly authored ordinary workflows pass on Clang; its only two reported
-failures are these previously unlisted diagnostic variants.
-
-Two additional exact test/index entries recognize these saved outputs. Production
-runner replay and first1024 checks pass; different indices/source lines, missing
-diagnostics and zero-exit output remain rejected. No range/wildcard allowance or
-matcher implementation change. The hosted run remains failed; post-crash
-assertions remain unvalidated. Saved logs are under
-build-asan/hosted40107107939/results-core-clang/build/known-crash-<test>.log.
-
-
-### Tapping diagnostic evidence update - 2026-10-24, run40114356917
-
-[Run40114356917](https://github.com/petervanderwalt/Unit_tests/actions/runs/40114356917)
-at harnessd05945e/COREb01f481 passed source/GCC/coverage but failed Clang and
-summary. All six newly added normal controller workflows pass Clang individually.
-The existing eight-axis tapping handoff reports index28 and unsupported tapping
-fallback reports index30 at core/gcode.c485:32, const27-entry offset table,
-macro_arguments_push top frame and ASan global-buffer-overflow. Two separate
-exact test/index entries record only these actually saved diagnostics. Production
-runner replay and first1024 matching pass; changed index/source/table/function
-and zero-exit diagnostics reject. Matcher implementation and assertions unchanged.
-
-The recursive tapping regression exited0 with no diagnostic in this build.
-Its strict known-crash wrapper correctly remains red: CORE is unchanged and
-other builds still reproduce the fault, so this does not prove a firmware fix.
-No clean-exit allowance, wildcard/range, forced padding, private-state setup or
-new known failure was added. Assertions after fatal faults remain unvalidated.
-Do not rerun CI solely for these manifest additions. Saved logs and replay proof:
-build-asan/hosted40114356917/results-core-clang/build/known-crash-<test>.log,
-verified-exact-diagnostic-replay.json and verified-new-workflows.json.
-
-
-## Accepted sleep command is ignored while the controller is in alarm
-
-Confirmed2026-10-24 on clean CORE `b01f481072edecac33d5e40c25869359a5b3fa1f`.
-With saved forced-initialization alarm and sleep enabled, the normal sender
-command `$SLP` is acknowledged `ok` but the controller remains in alarm instead
-of entering sleep. The regression allows eight ordinary foreground polls after
-acknowledgement, then retains the correct `STATE_SLEEP` assertion. It fails on
-that assertion, without a sanitizer fault, read-limit failure or injected state.
-The same fixture/control using `$X` before `$SLP` enters sleep, reports Sleep,
-resets and explicitly unlocks successfully. It uses normal public commands.
-
-Source cause: [enter_sleep](https://github.com/terjeio/grblHAL_core/blob/b01f481072edecac33d5e40c25869359a5b3fa1f/system.c#L571)
-explicitly accepts Idle or Alarm and posts `EXEC_SLEEP`. The
-[alarm state](https://github.com/terjeio/grblHAL_core/blob/b01f481072edecac33d5e40c25869359a5b3fa1f/state_machine.c#L352)
-installs `state_noop`; state_update dispatches to that handler, so the accepted
-sleep request is ignored. The idle handler consumes the same request normally.
-CORE remains unchanged. Upstream should make accepted alarm-state sleep requests
-reach the sleep transition consistently with the public command's allowed states.
-
-[Regression](cases/boot/sleep_from_forced_startup_alarm_reports_sleep_and_allows_reset_unlock.c)
-has one exact `WILL_FAIL`/`known_bug` block in [known_bugs.cmake](known_bugs.cmake).
-No sanitizer allowance. Sleep/recovery assertions after the known failure remain
-in the case; their common fixture tail is validated by the explicit-unlock control.
-Evidence: build-asan/alarm-sleep-regression-raw-results.xml,
-alarm-sleep-unlock-control-results.xml and alarm-sleep-verification.json.
-After upstream fixes it, retain the case, remove only this expected-failure block
-and entry, and verify the complete workflow under ASan/UBSan before cleanup.
-
-
-### Tapping diagnostic evidence update - 2026-10-24, run40118321363
-
-[Run40118321363](https://github.com/petervanderwalt/Unit_tests/actions/runs/40118321363)
-at harnesscf41105/COREb01f481 passed source/GCC/coverage but failed Clang/summary
-on one existing recursive tapping diagnostic: index29 at core/gcode.c485:32,
-const27-entry table, macro_arguments_push top frame, ASan global-buffer-overflow.
-All six new normal workflows pass Clang individually without allowances. One
-additional exact recursive-test/index29 entry records only this actual saved
-output. Production runner/first1024 replay pass; changed index/source/table/
-function, absent diagnostic and zero-exit output reject. No matcher code,
-assertion, padding or wildcard/range changes. Earlier clean recursive exits still
-remain red; CORE has not changed. Do not rerun CI solely for this data addition.
-Evidence: build-asan/hosted40118321363/results-core-clang/build/known-crash-<test>.log,
-verified-exact-diagnostic-replay.json and verified-new-workflows.json.
-
-
-### Tapping diagnostic evidence update - 2026-10-25, run40121790962
-
-[Run40121790962](https://github.com/petervanderwalt/Unit_tests/actions/runs/40121790962)
-on harness `ed5b142` / CORE `b01f481` passed source, GCC and coverage, but failed
-Clang and the results summary on the same three existing tapping regressions.
-Actual saved logs show these exact indices at `core/gcode.c:485:32`, the
-`const uint8_t[27]` table and `macro_arguments_push` top frame, followed by
-ASan global-buffer-overflow:
-
-- Eight-axis fallback: index30.
-- Recursive tapping: index28.
-- Unsupported tapping fallback: index31.
-
-Three exact test/index entries record only these observations. The unchanged
-production runner accepts the saved nonzero diagnostics; its first1024 output
-bytes still match. Changed index/source/table/function, absent diagnostics and
-zero exits reject. No matcher/assertion, compiler flag, padding, wildcard or range
-change. Post-fatal assertions remain unvalidated; this does not establish a fix.
-Do not dispatch CI just for these data entries.
-
-All six new functional workflows classify as expected in Clang: five clean
-passes plus the documented sleep-from-alarm regression. The complete Clang
-result is4,504 total/4,476 clean/25 known/3 failed/zero skipped. Evidence lives in
-`build-asan/hosted40121790962/results-core-clang/build/known-crash-<test>.log`,
-`verified-clang.json`, `verified-new-workflows.json` and
-`verified-exact-diagnostic-replay.json`.
-
-### PR30 hosted diagnostic inventory repair - 2026-10-25
-
-Run40178911158 at56d63fd reported the existing gcode.c485 macro argument
-table overflow with index28 in the eight-axis fallback and index29 in both
-spindle-sync regressions. Record only those observed signatures, retaining
-the exact test, 27-entry table, source line, function and ASan category.
-Assertions after the fatal diagnostic remain unvalidated. No CORE change.
-
-### PR30 final diagnostic replay - 2026-10-25
-
-Run40180255067 passed source, GCC and coverage. Clang classified4,491/4,492,
-with one changed known signature: recursive tapping index28 at gcode.c485,
-const27-entry table and macro_arguments_push top frame, followed by ASan
-global-buffer-overflow. This signature was already inventoried and validated
-in PR31. Add that exact entry here; saved-output replay through the production
-runner and first1024 bytes passes. Wrong source locations still reject.
-No full rebuild for this data-only repair; do not call the hosted run green.

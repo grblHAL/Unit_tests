@@ -6,6 +6,9 @@ int main(void)
     CHECK(manual_a_finished && manual_a_homing_events == 2 && sys.homed.mask == AXES_BITMASK);
     fprintf(stderr, "Manual-first mixed jog: acks=%u A=%ld output=%s\n",
         boot_motion_ack_count(), (long)sys.position[A_AXIS], engine_output);
+    fprintf(stderr, "A envelope=[%g,%g] travel=%g parser A=%g Z=%g\n",
+        (double)sys.work_envelope.min.values[A_AXIS], (double)sys.work_envelope.max.values[A_AXIS],
+        (double)settings.axis[A_AXIS].max_travel, (double)gc_state.position[A_AXIS], (double)gc_state.position[Z_AXIS]);
     CHECK(boot_motion_ack_count() == 8 && strstr(engine_output, "error:") == NULL);
     CHECK(sys.position[A_AXIS] == -80 && boot_motor_position[A_AXIS] == -80 && boot_motor_pulses[A_AXIS] == 80);
     mpos_t joint_steps;

@@ -5,7 +5,7 @@ int main(void)
     clone_storage = false;
 #endif
     clone_prepare();
-    CHECK(!clone_settings && !clone_warnings && !spindle_get_hal(1, SpindleHAL_Raw));
+    CHECK(!clone_settings && clone_warnings == 1 && !spindle_get_hal(1, SpindleHAL_Raw));
     CHECK(!clone_calls);
     return 0;
 }

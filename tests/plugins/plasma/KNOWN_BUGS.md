@@ -1,8 +1,28 @@
 # Known defects and scope
 
-No runtime defect is classified for these tested plasma scenarios.
-Original plasma source d2f91b5887db6550ddec0fc0229cd87ec0af1a56 and CORE
-b01f481072edecac33d5e40c25869359a5b3fa1f are unchanged.
+## Material listing overflows its label buffer
+
+Confirmed 2026-11-24 on Plugin_plasma `5608649a18f7821f7d2ecbc1dd0c45d189113d03`
+and CORE `a53a16a4d756f12a27006152ba3a99b5ec46b2c7`, Windows Clang ASan.
+`$EM` listing of an ordinary material reaches
+[ml_enumerate](https://github.com/grblHAL/Plugin_plasma/blob/5608649a18f7821f7d2ecbc1dd0c45d189113d03/thc.c#L678).
+Its three-byte lbl buffer receives the three-character `ph=` token and its
+terminating NUL from strgetentry, causing a stack-buffer-overflow at
+[CORE strutils.c:179](https://github.com/grblHAL/core/blob/a53a16a4d756f12a27006152ba3a99b5ec46b2c7/strutils.c#L179).
+
+The existing materials, comments, overwrite and comment_rejection tests retain
+their correct assertions. Sanitizer builds use the exact test/source/line/function/
+diagnostic matcher in [known_sanitizer_diagnostics.json](known_sanitizer_diagnostics.json)
+through known_crash.py, with named WILL_FAIL/known_crash registrations in
+[CMakeLists.txt](CMakeLists.txt). Unrelated crashes or missing diagnostics fail.
+Assertions after the fatal listing are unvalidated. GCC/Linux matching remains
+to be checked in hosted validation; do not broaden the matcher to accept changes.
+
+After a source fix, remove those four wrapper registrations and manifest objects,
+retain all four tests, run the complete sanitizer suite and summary, then remove
+this defect section. No production source is patched.
+
+## Tested scope
 
 Real CORE I/O registration, secondary-stepper allocation/configuration, PID,
 VFS/embedded file backend and actual EEPROM/CRC provider are compiled. The host
@@ -27,8 +47,8 @@ expression integration and physical timing remain untested.
 Original plugin/CORE warnings remain visible under -Wno-error; fixtures retain
 -Werror. MinGW exports isnanf in its math runtime without a math.h declaration,
 so the host driver header declares it on Windows. No replacement implementation,
-production type alias or source patch is used. No sanitizer allowance and no
-whole-plugin coverage claim.
+production type alias or source patch is used. The listing exception above does
+not establish the assertions after its crash or whole-plugin coverage.
 
 Batch40 adds five voltage-mode workflows plus EEPROM boot setup/cleanup,30 cases
 total. A real CORE analog-input bank exposes a host voltage callback; voltage port

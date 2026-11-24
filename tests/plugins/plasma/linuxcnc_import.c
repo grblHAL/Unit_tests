@@ -8,9 +8,9 @@ static const embedded_file_t *files[] = {&config, NULL};
 static unsigned found;
 static bool visit(material_t *m, void *data)
 {
-    CHECK(data == &found && m->id == 4 && !strcmp(m->name, "Steel") && m->thc_status);
-    CHECK(m->pierce_height == 3 && m->pierce_delay == 0.5f && m->cut_height == 1 &&
-          m->feed_rate == 900);
+    CHECK(data == &found && m->id == 4 && !strcmp(m->name, "Steel") && m->param.thc_enabled);
+    CHECK(m->param.pierce_height == 3 && m->param.pierce_delay == 0.5f && m->param.cut_height == 1 &&
+          m->param.feed_rate == 900);
     found++;
     return false;
 }
@@ -19,6 +19,9 @@ int main(void)
     plasma_prepare(3, true);
     plasma_load();
     plasma_mount(files);
+    CHECK(!plasma_enumerate_materials(visit, &found) && found == 1);
+    found = 0;
+    CHECK(plasma_command("MLOAD") == Status_OK);
     CHECK(!plasma_enumerate_materials(visit, &found) && found == 1);
     return 0;
 }

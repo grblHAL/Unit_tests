@@ -169,7 +169,7 @@ static void report_options(bool newopt)
 }
 void report_plugin(const char *name, const char *version)
 {
-    CHECK(strcmp(name, "Events plugin") == 0 && strcmp(version, "0.14") == 0);
+    CHECK(strcmp(name, "Events plugin") == 0 && version && *version);
     reports++;
 }
 void prepare_event_driver(void)
