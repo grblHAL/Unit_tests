@@ -11,8 +11,7 @@ Local coverage measures 18,630/18,898 lines (98.58%) and 12,020/12,924 branch
 outcomes (93.01%). See [PROGRESS.md](PROGRESS.md),
 [CORE_REFRESH_COVERAGE.json](CORE_REFRESH_COVERAGE.json) and the regenerated CSV
 inventories for current evidence. These measurements use a different source and
-compiler from the historical result below. Hosted validation awaits explicit
-push approval; the full-coverage goal is not proved by this compatibility refresh.
+compiler from the historical result below. Hosted validation is approved and starting for PR37; the full-coverage goal is not proved by this compatibility refresh.
 
 # Historical functional coverage closeout — 2026-10-25
 

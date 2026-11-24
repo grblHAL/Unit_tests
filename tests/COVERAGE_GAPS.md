@@ -16,7 +16,7 @@ contract is now proven. Counts reconcile exactly with
 differ from the old hosted baseline, so the numerical difference is not a gain
 attributable to new tests. Full supported coverage has not been established.
 
-Hosted GCC/Clang/coverage awaits explicit publication approval. Historical
+Hosted GCC/Clang/coverage is approved and starting for PR37. Historical
 measurements and source-line discussions below retain their original scope;
 use the current CSV inventories for current source locations.
 

@@ -54,12 +54,12 @@ full/strict test logs, source locks and ARM compiler evidence. Windows U: source
 paths were normalized to repository-relative report paths without changing counts.
 Existing README badges retain prior hosted evidence; no new hosted pass is claimed.
 
-Remaining delivery step: push this isolated branch to petervanderwalt/Unit_tests
-and run hosted GCC/Clang/coverage. Automatic approval review rejected the push as
-an unapproved code export because the user's request did not explicitly authorize
-publication. An explicit approval question is pending; do not retry or publish
-until the user approves. No remote branch or PR was created. Hardware remains
-untested. Source owners must resolve documented firmware defects; do not edit CORE.
+PR: https://github.com/grblHAL/Unit_tests/pull/37. The user explicitly approved
+pushing and GCC/Clang validation on 2026-11-24. The reviewed branch is published
+to petervanderwalt/Unit_tests. Hosted validation is starting on a separate
+validation branch because the fork default branch lacks component dispatch
+workflows; no test source changes are part of that validation branch.
+Hardware remains untested; source owners must resolve documented firmware defects.
 
 # README badges and ordered PR delivery - 2026-10-25
 
