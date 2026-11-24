@@ -12,7 +12,7 @@
   },
   "plugins_misc": {
     "repository": "grblHAL/Plugins_misc",
-    "ref": "master",
+    "ref": "main",
     "path": "plugins/misc",
     "dependencies": [
       "core",
@@ -55,7 +55,7 @@
   },
   "plugin_fans": {
     "repository": "grblHAL/Plugin_fans",
-    "ref": "master",
+    "ref": "main",
     "path": "plugins/fans",
     "dependencies": [
       "core"
@@ -68,7 +68,7 @@
   },
   "plugin_openpnp": {
     "repository": "grblHAL/Plugin_OpenPNP",
-    "ref": "master",
+    "ref": "main",
     "path": "plugins/openpnp",
     "dependencies": [
       "core"
@@ -284,7 +284,7 @@
   },
   "plugin_bluetooth": {
     "repository": "grblHAL/Plugins_Bluetooth",
-    "ref": "master",
+    "ref": "main",
     "path": "plugins/bluetooth",
     "dependencies": [
       "core",
@@ -298,7 +298,7 @@
   },
   "plugin_embroidery_readers": {
     "repository": "grblHAL/Plugin_embroidery",
-    "ref": "master",
+    "ref": "main",
     "path": "plugins/embroidery",
     "dependencies": [
       "core",
@@ -326,7 +326,7 @@
   },
   "driver_stm32f7_flash": {
     "repository": "grblHAL/STM32F7xx",
-    "ref": "master",
+    "ref": "main",
     "path": "drivers/stm32f7",
     "dependencies": [
       "core"
@@ -833,7 +833,7 @@
   },
   "driver_stm32f7_serial": {
     "repository": "grblHAL/STM32F7xx",
-    "ref": "master",
+    "ref": "main",
     "path": "drivers/stm32f7",
     "dependencies": [
       "core"

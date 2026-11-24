@@ -7,8 +7,8 @@ int main(void)
 {
     engine_prepare();
     CHECK(protocol_enqueue_realtime_command(CMD_OPTIONAL_STOP_TOGGLE));
-    CHECK(sys.flags.optional_stop_disable);
+    CHECK(sys.flags.optional_stop_enable);
     CHECK(protocol_enqueue_realtime_command(CMD_OPTIONAL_STOP_TOGGLE));
-    CHECK(!sys.flags.optional_stop_disable);
+    CHECK(!sys.flags.optional_stop_enable);
     return EXIT_SUCCESS;
 }

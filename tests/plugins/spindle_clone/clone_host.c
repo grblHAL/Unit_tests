@@ -4,6 +4,8 @@ system_t sys;
 settings_t settings;
 setting_details_t *clone_settings;
 bool clone_storage = true;
+bool clone_available = true;
+machine_mode_t clone_mode = Mode_Standard;
 unsigned clone_calls, clone_selected, clone_warnings;
 spindle_state_t clone_output;
 float clone_rpm;
@@ -38,7 +40,9 @@ static spindle_state_t get_state(spindle_ptrs_t *s)
 }
 static bool configure(spindle_ptrs_t *s)
 {
-    return spindle_precompute_pwm_values(s, &base_pwm, &settings.pwm_spindle, 1000000);
+    bool ok = spindle_precompute_pwm_values(s, &base_pwm, &settings.pwm_spindle, 1000000);
+    spindle_update_caps(s, &base_pwm);
+    return ok;
 }
 static void previous_selected(spindle_ptrs_t *s)
 {
@@ -54,7 +58,7 @@ void clone_prepare(void)
 {
     prepare_eeprom();
     CHECK(i2c_eeprom_init());
-    settings.mode = Mode_Standard;
+    settings.mode = clone_mode;
     settings.pwm_spindle = (spindle_pwm_settings_t){
         .rpm_min = 0, .rpm_max = 10000, .pwm_freq = 1000, .pwm_max_value = 100};
     grbl.on_spindle_selected = previous_selected;
@@ -122,6 +126,16 @@ void report_warning(void *message)
     CHECK(message);
     clone_warnings++;
 }
+void report_message(const char *message, message_type_t type)
+{
+    CHECK(message && type == Message_Warning);
+    clone_warnings++;
+}
+bool spindle_select_available(uint8_t ref_id)
+{
+    CHECK(ref_id == SPINDLE_PWM0_CLONE);
+    return clone_available;
+}
 bool task_run_on_startup(foreground_task_ptr fn, void *data)
 {
     CHECK(fn && task_count < 4);
@@ -153,7 +167,6 @@ bool state_door_reopened(void)
 void st_rpm_changed(float rpm)
 {
     (void)rpm;
-    CHECK(false);
 }
 bool protocol_buffer_synchronize(void)
 {
@@ -205,6 +218,6 @@ void setting_remove_elements(setting_id_t id, uint32_t mask, bool trim)
     (void)id;
     (void)mask;
     (void)trim;
-    CHECK(id == Setting_SpindleInvertMask1 && trim);
+    CHECK((id == Setting_SpindleInvertMask1 || id == Setting_SpindlePWMOptions1) && trim);
 }
 void settings_write_global(void) { CHECK(false); }

@@ -1,3 +1,28 @@
+# Source refresh - 2026-11-24
+
+All 59 registered component suites pass Windows Clang ASan/UBSan builds, CTest
+and strict summary against the current registry sources: 1,318 cases, 1,239
+clean, 75 known assertions/crashes, four known recovering diagnostics, zero
+unexpected failures/skips. Exact source, CORE/dependency revisions and counts
+are in [COMPONENT_REFRESH.csv](COMPONENT_REFRESH.csv). The two legacy-reference
+suites retain their explicit 2025 CORE dependency; other suites use clean
+grblHAL/core a53a16a4d756f12a27006152ba3a99b5ec46b2c7.
+
+Updated fan spindle hook, optional-stop event flags, plasma material/command/
+virtual-parameter interfaces, clone selection/capability/startup fixtures and
+stale release-string assertions. New plasma parameter and unavailable-clone
+tests exercise public boundaries; selection availability is a mocked dependency
+in clone tests, with the original selection plugin tested by its own suite.
+Plasma's four material-listing crashes have exact diagnostic wrappers; later
+assertions remain unvalidated. No firmware edits or hardware coverage claim.
+
+ARM GCC module checks pass for six registered families (STM32F1/F3/F4/F7/H7,
+LPC176x), including both H7 configurations. Local results above supersede old
+runtime snapshots; old coverage badge measurements retain their own provenance.
+PR37 is submitted and pushing/GCC/Clang validation is explicitly approved.
+Hosted validation is starting on a separate validation branch; no new hosted
+result or updated coverage badge is claimed yet.
+
 # End-of-day handoff - 2026-10-25
 
 Stopped at the user's request; continue next week when requested. Existing PR29

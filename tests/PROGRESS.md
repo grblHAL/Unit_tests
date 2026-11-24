@@ -1,3 +1,66 @@
+# Source compatibility refresh - 2026-11-24
+
+Requested scope: update the existing functional tests for latest grblHAL/core,
+drivers and plugins, preserving correct assertions and the original exception
+cleanup policy. No firmware edits or coverage-expansion campaign.
+
+Checkout: `C:/Users/User/Documents/ChatGPT/UNIT_TESTS/upstream`, branch
+`refresh-upstream-tests`; code commit `c83d3f0b77be84ae61cab317a2f631b38bada317`.
+CORE is clean grblHAL/core `a53a16a4d756f12a27006152ba3a99b5ec46b2c7`.
+Registry defaults follow six upstream master-to-main renames (seven entries).
+Local component sources/dependencies are recorded in [COMPONENT_REFRESH.csv](COMPONENT_REFRESH.csv).
+
+Windows LLVM-MinGW Clang 23.1.3 ASan/UBSan: 4,510 CORE tests, 4,487 clean,
+one known recovering diagnostic, 22 known assertion failures, zero unexpected
+failures/skips. Subsequent profiler-fixture changes pass all five affected
+sanitizer cases. All 103 Python helper tests pass; the two component/CMake
+helper tests also pass after adding exact component crash registration.
+
+All 59 registered component suites pass local build/test/strict summary: 1,318
+cases, 1,239 clean, 75 known assertions/crashes and four known recovering
+diagnostics, no unexpected failures/skips. Two suites intentionally retain the
+2025 legacy CORE reference; they do not establish current CORE compatibility.
+ARM GCC 14.2.1 module checks pass for STM32F1/F3/F4/F7/H7 and LPC176x,
+including both H7 configurations. These are module checks, not firmware/hardware tests.
+
+Seven fixed CORE exceptions and their KNOWN_BUGS sections were removed after
+raw clean passes. Regression assertions remain. API/default updates cover
+optional-stop enable semantics, pullup capabilities, MPG minimum25ms, strset_,
+peck-cycle dwell, active spindle lookup and clone/plugin interfaces. Added two
+profiled-jog pulse regressions, plasma material-parameter coverage and an
+unavailable-clone-binding control. Summary now rejects skipped/unbuilt tests.
+
+New documented observations: additional PWM initialization, failed-secondary
+configuration stopping the primary, missing Modbus no-reply warnings, plasma
+material-listing overflow, and a Windows Clang coverage-only delta jog failure.
+Keep their narrow assertions/diagnostic matches; see the owning KNOWN_BUGS files.
+The coverage delta case remains an ordinary passing sanitizer test; its reason
+for differing under coverage is unresolved. Do not broaden its platform scope.
+
+Fresh Windows Clang coverage passes all 4,510 tests: 4,487 clean, 23 known,
+zero unexpected failures/skips. Coverage is 18,630/18,898 lines (98.58%) and
+12,020/12,924 branch outcomes (93.01%); 268 line gaps and 904 branch gaps.
+[CORE_REFRESH_COVERAGE.json](CORE_REFRESH_COVERAGE.json) records the exact code/
+source/compiler evidence. Both CSV gap inventories are regenerated from that
+report, with unchanged line-contract notes mapped from the prior source. Their
+gap totals are checked against the Cobertura report. Old Linux/GCC measurements
+below are not comparable test-coverage gains: both source and compiler changed.
+Removed a stale TODO link to an already-cleared RAM truncation defect; its
+ordinary regressions pass. All 50 source checkouts remain clean at locked SHAs,
+and grblHAL/core master still matches the tested revision at final verification.
+
+Local reports are under ignored `reports/refresh/`, including HTML, XML/JSON,
+full/strict test logs, source locks and ARM compiler evidence. Windows U: source
+paths were normalized to repository-relative report paths without changing counts.
+Existing README badges retain prior hosted evidence; no new hosted pass is claimed.
+
+PR: https://github.com/grblHAL/Unit_tests/pull/37. The user explicitly approved
+pushing and GCC/Clang validation on 2026-11-24. The reviewed branch is published
+to petervanderwalt/Unit_tests. Hosted validation is starting on a separate
+validation branch because the fork default branch lacks component dispatch
+workflows; no test source changes are part of that validation branch.
+Hardware remains untested; source owners must resolve documented firmware defects.
+
 # README badges and ordered PR delivery - 2026-10-25
 
 PR30 merged6b6d147; PR31 mergedca57aef, as explicitly authorized.

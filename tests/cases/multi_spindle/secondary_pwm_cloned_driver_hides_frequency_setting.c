@@ -3,7 +3,7 @@
 
 int main(void)
 {
-    prepare_secondary_pwm_settings_with_cap(false, (spindle_cap_t){.variable = true, .cloned = true});
+    prepare_secondary_pwm_settings_with_cap(false, (spindle_cap_t){.variable = true, .clone = true});
     CHECK(setting_get_details(Setting_RpmMax1, NULL) != NULL);
     CHECK(setting_get_details(Setting_PWMFreq1, NULL) == NULL);
     nvs_buffer_free();

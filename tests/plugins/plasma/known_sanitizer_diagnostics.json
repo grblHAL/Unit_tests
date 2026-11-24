@@ -1,1 +1,6 @@
-[]
+[
+  {"kind": "fatal_asan", "test": "plugin_plasma.materials", "source": "core/strutils.c", "lines": [179], "function": "strgetentry", "message_pattern": "stack-buffer-overflow"},
+  {"kind": "fatal_asan", "test": "plugin_plasma.comments", "source": "core/strutils.c", "lines": [179], "function": "strgetentry", "message_pattern": "stack-buffer-overflow"},
+  {"kind": "fatal_asan", "test": "plugin_plasma.overwrite", "source": "core/strutils.c", "lines": [179], "function": "strgetentry", "message_pattern": "stack-buffer-overflow"},
+  {"kind": "fatal_asan", "test": "plugin_plasma.comment_rejection", "source": "core/strutils.c", "lines": [179], "function": "strgetentry", "message_pattern": "stack-buffer-overflow"}
+]

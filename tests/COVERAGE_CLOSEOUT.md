@@ -1,4 +1,19 @@
-# Functional coverage closeout — 2026-10-25
+# Current compatibility refresh — 2026-11-24
+
+The existing suite is updated for clean grblHAL/core
+`a53a16a4d756f12a27006152ba3a99b5ec46b2c7` and current registered components.
+Windows Clang sanitizer and coverage runs classify all 4,510 CORE tests with
+zero unexpected failures/skips. All 59 component suites also pass their strict
+local gates, including explicitly separate legacy references. Known defects and
+fatal post-crash limits remain documented; no firmware or hardware claim is made.
+
+Local coverage measures 18,630/18,898 lines (98.58%) and 12,020/12,924 branch
+outcomes (93.01%). See [PROGRESS.md](PROGRESS.md),
+[CORE_REFRESH_COVERAGE.json](CORE_REFRESH_COVERAGE.json) and the regenerated CSV
+inventories for current evidence. These measurements use a different source and
+compiler from the historical result below. Hosted validation is approved and starting for PR37; the full-coverage goal is not proved by this compatibility refresh.
+
+# Historical functional coverage closeout — 2026-10-25
 
 Coverage expansion stopped at the user's request. This is a handoff, not a claim
 of 100% coverage or that every remaining branch is impossible to exercise.

@@ -7,9 +7,9 @@
 int main(void)
 {
     string_t text = {0};
-    CHECK(strset(&text, 1, "") != NULL);
+    CHECK(strset_(&text, 1, "") != NULL);
     CHECK(text.len >= 1 && text.data[0] == '\0');
-    CHECK(strset(&text, 1, "X") == text.data);
+    CHECK(strset_(&text, 1, "X") == text.data);
     CHECK(strcmp(text.data, "X") == 0);
     free(text.data);
     return EXIT_SUCCESS;

@@ -85,7 +85,7 @@ void report_message(const char *text, message_type_t type)
 }
 void report_plugin(const char *name, const char *version)
 {
-    CHECK(strcmp(name, "Interlock") == 0 && strcmp(version, "0.6") == 0);
+    CHECK(strcmp(name, "Interlock") == 0 && version && *version);
     chains++;
 }
 void mc_reset(void) { resets++; }

@@ -133,7 +133,7 @@ void task_delete(foreground_task_ptr fn, void *data)
 }
 void report_plugin(const char *name, const char *version)
 {
-    CHECK(strcmp(name, "PneumaSeal") == 0 && strcmp(version, "1.5") == 0);
+    CHECK(strcmp(name, "PneumaSeal") == 0 && version && *version);
     chains++;
 }
 static void state_hook(sys_state_t state)

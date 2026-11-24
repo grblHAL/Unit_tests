@@ -4,7 +4,7 @@
 int main(void)
 {
     prepare_build_report();
-    hal.signals_cap.stop_disable = true;
+    hal.signals_cap.stop_enable = true;
     hal.signals_cap.block_delete = true;
     hal.signals_cap.e_stop = true;
     hal.driver_cap.mpg_mode = true;

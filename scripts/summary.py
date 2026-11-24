@@ -31,6 +31,7 @@ def harness_link(path):
 
 known_link = "[known bugs](" + harness_link(args.diagnostics_directory / "KNOWN_BUGS.md") + ")"
 failed = 0
+skipped = 0
 lines = []
 sanitizer_failures = []
 known_diagnostics = []
@@ -170,5 +171,5 @@ if target := os.environ.get("GITHUB_STEP_SUMMARY"):
 else:
     print(report.encode("ascii", "backslashreplace").decode("ascii"))
 
-if sanitizer_failures or failed or not args.path.exists():
+if sanitizer_failures or failed or skipped or not args.path.exists():
     raise SystemExit(1)

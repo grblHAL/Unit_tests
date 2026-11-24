@@ -11,6 +11,7 @@ static status_code_t report_program_flow(program_flow_t flow, bool check_mode)
 int main(void)
 {
     prepare_report(); grbl.on_execute_realtime=protocol_execute_noop;
+    sys.flags.optional_stop_enable = true;
     grbl.on_program_paused=report_program_flow; char block[]="M1"; CHECK(gc_execute_block(block)==Status_OK);
     CHECK(flow_reports==1); CHECK(strncmp(engine_output,"[GC:",4)==0);
     CHECK(strstr(engine_output," M1 M5")!=NULL); CHECK(strstr(engine_output,"]" ASCII_EOL)!=NULL);

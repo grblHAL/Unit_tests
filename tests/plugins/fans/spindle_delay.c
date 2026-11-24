@@ -7,7 +7,8 @@ int main(void)
  const setting_detail_t *link = fan_setting(Setting_FanToSpindleLink);
  CHECK(((setting_set_int_ptr)link->value)(link->id, 1) == Status_OK);
  *(float *)fan_setting(Setting_Fan0OffDelay)->value = 0.5f;
- spindle_ptrs_t spindle = {.set_state = spindle_state}; CHECK(grbl.on_spindle_select(&spindle));
+ spindle_ptrs_t spindle = {.set_state = spindle_state}; CHECK(grbl.on_spindle_selected != NULL);
+ grbl.on_spindle_selected(&spindle);
  spindle.set_state(&spindle, (spindle_state_t){.on = On}, 500); CHECK(outputs[0] && !outputs[1]);
  spindle.set_state(&spindle, (spindle_state_t){0}, 500);
  CHECK(delayed_task && delayed_ms == 30000 && outputs[0]); run_delayed_fan(); CHECK(!outputs[0]);

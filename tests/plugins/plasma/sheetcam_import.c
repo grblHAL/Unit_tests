@@ -8,9 +8,9 @@ static const embedded_file_t *files[] = {&config, NULL};
 static unsigned found;
 static bool visit(material_t *m, void *data)
 {
-    CHECK(data == &found && m->id == 7 && !strcmp(m->name, "Steel") && m->thc_status);
-    CHECK(m->pierce_height == 3 && m->pierce_delay == 0.5f && m->cut_height == 1 &&
-          m->feed_rate == 900);
+    CHECK(data == &found && m->id == 7 && !strcmp(m->name, "Steel") && m->param.thc_enabled);
+    CHECK(m->param.pierce_height == 3 && m->param.pierce_delay == 0.5f && m->param.cut_height == 1 &&
+          m->param.feed_rate == 900);
     found++;
     return false;
 }

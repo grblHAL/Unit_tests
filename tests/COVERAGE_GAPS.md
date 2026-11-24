@@ -1,5 +1,25 @@
 # Remaining raw CORE coverage
 
+## Current local source refresh - 2026-11-24
+
+Windows LLVM-MinGW Clang 23.1.3, code commit c83d3f0, clean grblHAL/core
+a53a16a4d756f12a27006152ba3a99b5ec46b2c7: 18,630/18,898 lines (98.58%),
+12,020/12,924 branch outcomes (93.01%). All 4,510 coverage tests pass classification:
+4,487 clean, 23 documented known assertions, zero unexpected failures/skips.
+The extra coverage-only exception is the documented Windows delta jog difference.
+
+Current gap inventories contain 268 uncovered physical lines and 904 missing
+branch outcomes. They are regenerated from this source-matched report; unchanged
+statement notes are mapped forward, without assuming a previously unresolved
+contract is now proven. Counts reconcile exactly with
+[CORE_REFRESH_COVERAGE.json](CORE_REFRESH_COVERAGE.json). Source and compiler
+differ from the old hosted baseline, so the numerical difference is not a gain
+attributable to new tests. Full supported coverage has not been established.
+
+Hosted GCC/Clang/coverage is approved and starting for PR37. Historical
+measurements and source-line discussions below retain their original scope;
+use the current CSV inventories for current source locations.
+
 ## Latest verified coverage job; compiler matrix failed
 
 [Run40121790962](https://github.com/petervanderwalt/Unit_tests/actions/runs/40121790962)
